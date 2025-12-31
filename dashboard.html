@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Paneli - SEBS Global</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="SEBS.png">
+    <link rel="apple-touch-icon" href="SEBS.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Dashboard Specific Styles */
+        .dashboard-main {
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .dashboard-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100px 100px;
+            }
+        }
+
+        .dashboard-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 0.95;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .stats-grid .stat-card {
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .stats-grid .stat-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .stats-grid .stat-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stats-grid .stat-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stats-grid .stat-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Animated Counter */
+        .stat-number.animated {
+            animation: countUp 1.5s ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pulse Animation for Icons */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .stat-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Gradient Text */
+        .stat-number.gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Fade In Up Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress Fill Animation */
+        .progress-fill {
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-fill.animate {
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Badge Styles */
+        .badge-success {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%); }
+        .stat-icon.green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .stat-icon.purple { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
+        .stat-icon.orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+
+        /* Progress Section */
+        .progress-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .progress-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .progress-item {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .progress-item:hover::before {
+            left: 100%;
+        }
+
+        .progress-item:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-5px) scale(1.01);
+            border-color: var(--primary-color);
+        }
+
+        .progress-item:active {
+            transform: translateY(-2px) scale(0.99);
+        }
+
+        .progress-item-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .progress-info {
+            flex: 1;
+        }
+
+        .progress-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-detail {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .progress-circle {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
+            transition: all 0.6s ease;
+        }
+
+        .progress-circle-circle {
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .progress-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .progress-item:hover .progress-circle-text {
+            transform: translate(-50%, -50%) scale(1.1);
+            color: #667eea;
+        }
+
+        .progress-item:hover .progress-circle svg {
+            transform: rotate(-90deg) scale(1.05);
+        }
+
+        .progress-bar-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-action {
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            gap: 1rem;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .no-data i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-data h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-title {
+                font-size: 2rem;
+            }
+            .progress-item-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .progress-circle {
+                margin: 0 auto;
+            }
+        }
+
+        /* Certificates Section */
+        .certificates-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .certificate-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .certificate-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: height 0.3s ease;
+        }
+
+        .certificate-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            pointer-events: none;
+        }
+
+        .certificate-card:hover::before {
+            height: 8px;
+        }
+
+        .certificate-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .certificate-card:active {
+            transform: translateY(-5px) scale(1);
+        }
+
+        .certificate-header-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-card:hover .certificate-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .certificate-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .certificate-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .certificate-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* AI Report Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .modal-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: #f1f5f9;
+            border: none;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .ai-report-section {
+            margin-bottom: 2rem;
+        }
+
+        .report-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .report-item {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+
+        .report-item.strength {
+            border-left-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .report-item.strength:hover {
+            background: #dcfce7;
+        }
+
+        .report-item.improvement {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .report-item.improvement:hover {
+            background: #fef3c7;
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" id="navLogo">
+                <img src="SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: block;">
+                    <i class="fas fa-tachometer-alt"></i> Panel
+                </a>
+                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: block;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main -->
+    <main class="dashboard-main">
+        <!-- Hero Section -->
+        <div class="dashboard-hero">
+            <div class="hero-content">
+                <div class="welcome-title" id="welcomeTitle">Hoş Geldiniz!</div>
+                <div class="welcome-subtitle">Eğitim yolculuğunuzda size özel içerikler ve ilerleme takibi</div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-label">Tamamlanan Modül</div>
+                </div>
+                <div class="stat-number" id="completedModules">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="stat-label">Sertifika</div>
+                </div>
+                <div class="stat-number" id="totalCertificates">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-label">Çalışma Saati</div>
+                </div>
+                <div class="stat-number" id="studyHours">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-label">Günlük Seri</div>
+                </div>
+                <div class="stat-number" id="currentStreak">0</div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2 class="section-title">Eğitim İlerlemesi</h2>
+            </div>
+            <div class="progress-list" id="progressList">
+                <div class="no-data">
+                    <i class="fas fa-book-reader"></i>
+                    <h3>Henüz modül başlatmadınız</h3>
+                    <p>Eğitim modüllerine göz atarak başlayın!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchases Section -->
+        <div class="certificates-section">
+            <div class="progress-header">
+                <h2 class="section-title">Satın Alınan Paketler</h2>
+            </div>
+            <div class="certificates-grid" id="purchasesGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Paketler yükleniyor...
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificates Section -->
+        <div class="certificates-section">
+            <div class="progress-header">
+                <h2 class="section-title">Sertifikalarım</h2>
+            </div>
+            <div class="certificates-grid" id="certificatesGrid">
+                <div class="no-data">
+                    <i class="fas fa-certificate"></i>
+                    <h3>Henüz sertifika kazanmadınız</h3>
+                    <p>Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI Report Modal -->
+    <div class="modal" id="aiReportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AI Analiz Raporu</h2>
+                <button class="modal-close" onclick="closeReportModal()">&times;</button>
+            </div>
+            <div id="aiReportContent">
+                <div class="loading">Rapor yükleniyor...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SEBS - Abidin Samet Çay
+        function animateCounter(element, start, end, duration = 1500) {
+            if (!element) return;
+            
+            // SEBS - Abidin Samet Çay
+            if (start === end) {
+                element.textContent = end;
+                element.classList.add('animated');
+                return;
+            }
+            
+            const range = end - start;
+            const steps = Math.min(Math.abs(range), 100); // Max 100 steps
+            const stepTime = duration / steps;
+            const increment = range / steps;
+            let current = start;
+            let step = 0;
+            
+            element.textContent = start;
+            
+            const timer = setInterval(() => {
+                step++;
+                current = start + (increment * step);
+                
+                // SEBS - Abidin Samet Çay
+                if (Math.abs(end - current) < Math.abs(increment)) {
+                    current = end;
+                }
+                
+                element.textContent = Math.round(current);
+                
+                if (step >= steps || current === end) {
+                    clearInterval(timer);
+                    element.textContent = end;
+                    element.classList.add('animated');
+                }
+            }, stepTime);
+        }
+
+        // SEBS - Abidin Samet Çay
+        function createCircleProgress(percent, elementId, size = 100, strokeWidth = 8) {
+            // SEBS - Abidin Samet Çay
+            percent = Math.max(0, Math.min(100, percent || 0));
+            
+            const radius = (size - strokeWidth) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percent / 100) * circumference;
+            
+            // SEBS - Abidin Samet Çay
+            const safeId = elementId.replace(/[^a-zA-Z0-9]/g, '-');
+            
+            return `
+                <svg class="progress-circle-svg" width="${size}" height="${size}">
+                    <circle
+                        cx="${size / 2}"
+                        cy="${size / 2}"
+                        r="${radius}"
+                        stroke="#e2e8f0"
+                        stroke-width="${strokeWidth}"
+                        fill="none"
+                    />
+                    <circle
+                        id="circle-${safeId}"
+                        class="progress-circle-circle"
+                        cx="${size / 2}"
+                        cy="${size / 2}"
+                        r="${radius}"
+                        stroke="url(#gradient-${safeId})"
+                        stroke-width="${strokeWidth}"
+                        fill="none"
+                        stroke-dasharray="${circumference}"
+                        stroke-dashoffset="${circumference}"
+                        stroke-linecap="round"
+                        style="transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);"
+                    />
+                    <defs>
+                        <linearGradient id="gradient-${safeId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="progress-circle-text">${Math.round(percent)}%</div>
+            `;
+        }
+        
+        // SEBS - Abidin Samet Çay
+        function animateCircleProgress(percent, elementId) {
+            const safeId = elementId.replace(/[^a-zA-Z0-9]/g, '-');
+            const radius = (100 - 8) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (Math.max(0, Math.min(100, percent || 0)) / 100) * circumference;
+            
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    const circle = document.querySelector(`#circle-${safeId}`);
+                    if (circle) {
+                        circle.style.strokeDashoffset = `${offset}`;
+                    }
+                });
+            }, 300);
+        }
+
+        // SEBS - Abidin Samet Çay
+        function initDashboard() {
+            // SEBS - Abidin Samet Çay
+            
+            // SEBS - Abidin Samet Çay
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isVerified = localStorage.getItem('isVerified');
+            
+            if (isLoggedIn !== 'true' || isVerified !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load user info
+            loadUserInfo();
+            
+            // Load purchases
+            loadPurchases();
+            
+            // Load progress
+            loadProgress();
+        }
+
+        // Load user info from database
+        async function loadUserInfo() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    return;
+                }
+
+                const response = await fetch('http://localhost:8006/api/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        const firstName = result.data.firstName || 'Kullanıcı';
+                        document.getElementById('userName').textContent = firstName;
+                        document.getElementById('welcomeTitle').textContent = `Hoş Geldiniz, ${firstName}!`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                // Fallback to localStorage if API fails
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                const firstName = userData.firstName || userData.name || 'Kullanıcı';
+                document.getElementById('userName').textContent = firstName;
+                document.getElementById('welcomeTitle').textContent = `Hoş Geldiniz, ${firstName}!`;
+            }
+        }
+
+        // Load purchases from database
+        async function loadPurchases() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    displayNoPurchases();
+                    return;
+                }
+
+                const response = await fetch('http://localhost:8006/api/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    displayNoPurchases();
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.success && result.data.purchases) {
+                    displayPurchases(result.data.purchases);
+                } else {
+                    displayNoPurchases();
+                }
+            } catch (error) {
+                console.error('Error loading purchases:', error);
+                displayNoPurchases();
+            }
+        }
+
+        // Display purchases
+        function displayPurchases(purchases) {
+            const purchasesGrid = document.getElementById('purchasesGrid');
+            if (!purchasesGrid) return;
+
+            if (purchases.length === 0) {
+                displayNoPurchases();
+                return;
+            }
+
+            const categoryNames = {
+                cybersecurity: 'Siber Güvenlik',
+                cloud: 'Bulut Bilişim',
+                'data-science': 'Veri Bilimleri'
+            };
+
+            const levelNames = {
+                beginner: 'Temel Paket',
+                intermediate: 'Orta Paket',
+                advanced: 'Final Paketi'
+            };
+
+            const levelColors = {
+                beginner: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                intermediate: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                advanced: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)'
+            };
+
+            const categoryIcons = {
+                cybersecurity: 'fas fa-shield-alt',
+                cloud: 'fas fa-cloud',
+                'data-science': 'fas fa-chart-line'
+            };
+
+            purchasesGrid.innerHTML = purchases.map((purchase, index) => {
+                const purchaseDate = new Date(purchase.purchasedAt).toLocaleDateString('tr-TR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                return `
+                    <div class="certificate-card" style="animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;">
+                        <div class="certificate-header-card">
+                            <div class="certificate-icon" style="background: ${levelColors[purchase.level] || levelColors.beginner};">
+                                <i class="${categoryIcons[purchase.category] || 'fas fa-shopping-bag'}"></i>
+                            </div>
+                            <div class="certificate-title">${levelNames[purchase.level] || purchase.level}</div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                            <strong>${categoryNames[purchase.category] || purchase.category}</strong> alanında ${levelNames[purchase.level] || purchase.level} satın alındı.
+                        </p>
+                        <div class="certificate-meta">
+                            <span><i class="fas fa-tag"></i> ₺${purchase.price.toFixed(2)}</span>
+                            <span><i class="fas fa-calendar"></i> ${purchaseDate}</span>
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="btn-secondary" onclick="window.location.href='modules.html'" style="flex: 1;">
+                                <i class="fas fa-book"></i> Modülleri Görüntüle
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Display no purchases message
+        function displayNoPurchases() {
+            const purchasesGrid = document.getElementById('purchasesGrid');
+            if (!purchasesGrid) return;
+
+            purchasesGrid.innerHTML = `
+                <div class="no-data" style="grid-column: 1/-1;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>Henüz paket satın almadınız</h3>
+                    <p>Eğitim paketlerini satın alarak modüllere erişebilirsiniz!</p>
+                    <button class="btn-primary" onclick="window.location.href='pricing.html'" style="margin-top: 1.5rem;">
+                        <i class="fas fa-shopping-cart"></i> Paketleri Görüntüle
+                    </button>
+                </div>
+            `;
+        }
+
+        // SEBS - Abidin Samet Çay
+        async function loadProgress() {
+            
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.log('No token, cannot load progress');
+                return;
+            }
+            
+            // SEBS - Abidin Samet Çay
+            if (token) {
+                try {
+                    
+                    // SEBS - Abidin Samet Çay
+                    const progressResponse = await fetch('http://localhost:8006/api/progress/overview', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (progressResponse.ok) {
+                        const progressData = await progressResponse.json();
+                        
+                        if (progressData.success && progressData.data) {
+                            const modules = progressData.data.modules || [];
+                            const completedModules = modules.filter(m => m.isCompleted).length;
+                            const totalStudyTime = modules.reduce((total, m) => total + (m.timeSpentMinutes || 0), 0);
+                            
+                            // SEBS - Abidin Samet Çay
+                            const completedEl = document.getElementById('completedModules');
+                            const hoursEl = document.getElementById('studyHours');
+                            
+                            if (completedEl) {
+                                animateCounter(completedEl, 0, completedModules, 1500);
+                                completedEl.classList.add('gradient');
+                            }
+                            
+                            if (hoursEl) {
+                                animateCounter(hoursEl, 0, Math.round(totalStudyTime / 60), 1500);
+                                hoursEl.classList.add('gradient');
+                            }
+                            
+                            // SEBS - Abidin Samet Çay
+                            displayModulesFromBackend(modules);
+                            
+                            // SEBS - Abidin Samet Çay
+                            await loadCertificates();
+                            return;
+                        }
+                    }
+                } catch (error) {
+                }
+            }
+            
+            // Fallback to localStorage
+            
+            const userId = userData.email || userData.id || 'guest';
+            const storageKey = 'userProgress_' + userId;
+            
+            // Get saved progress
+            const savedProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            
+            // Get modules
+            const modules = savedProgress.modules || {};
+            
+            // Calculate stats
+            const completedModules = Object.values(modules).filter(p => p.status === 'Tamamlandı').length;
+            const studyHours = Object.values(modules).reduce((total, p) => total + (p.timeSpentMinutes || p.time_spent || 0), 0);
+            const streak = parseInt(localStorage.getItem('currentStreak') || '0');
+            
+            // Update stats with animation
+            const completedEl = document.getElementById('completedModules');
+            const hoursEl = document.getElementById('studyHours');
+            const streakEl = document.getElementById('currentStreak');
+            
+            if (completedEl) {
+                animateCounter(completedEl, 0, completedModules, 1500);
+                completedEl.classList.add('gradient');
+            }
+            
+            if (hoursEl) {
+                animateCounter(hoursEl, 0, Math.round(studyHours / 60), 1500);
+                hoursEl.classList.add('gradient');
+            }
+            
+            if (streakEl) {
+                animateCounter(streakEl, 0, streak, 1500);
+                streakEl.classList.add('gradient');
+            }
+
+            // Display modules
+            displayModules(modules);
+            
+            // Load certificates
+            await loadCertificates();
+        }
+        
+        function displayModulesFromBackend(modules) {
+            const progressList = document.getElementById('progressList');
+            if (!progressList) return;
+            
+            if (modules.length === 0) {
+                progressList.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Henüz modül başlatmadınız</h3>
+                        <p>Eğitim modüllerine göz atarak başlayın!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const timestamp = Date.now();
+            progressList.innerHTML = modules.map((module, index) => {
+                const percent = module.percentComplete || 0;
+                const moduleId = `module-${index}-${timestamp}`;
+                
+                return `
+                <div class="progress-item" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
+                    <div class="progress-item-header">
+                        <div class="progress-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="progress-info" style="flex: 1;">
+                            <div class="progress-name">${module.title || module.module?.title || 'Modül'}</div>
+                            <div class="progress-detail">
+                                ${module.timeSpentMinutes || 0} dakika • 
+                                ${module.isCompleted ? 'Tamamlandı' : 'Devam Ediyor'}
+                            </div>
+                            <div class="progress-bar-container" style="margin-top: 1rem;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-circle" style="position: relative;">
+                            ${createCircleProgress(percent, moduleId)}
+                        </div>
+                    </div>
+                    ${module.isCompleted ? `
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <span class="badge-success" style="padding: 0.5rem 1rem; border-radius: 20px;">
+                                <i class="fas fa-check-circle"></i> Tamamlandı
+                            </span>
+                        </div>
+                    ` : `
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(module.title)}'">
+                                <i class="fas fa-play"></i> Devam Et
+                            </button>
+                        </div>
+                    `}
+                </div>
+            `;
+            }).join('');
+            
+            // Animate circle progress and progress bars after DOM insertion
+            const animationTimestamp = timestamp || Date.now();
+            modules.forEach((module, index) => {
+                const percent = module.percentComplete || 0;
+                const moduleId = `module-${index}-${animationTimestamp}`;
+                
+                setTimeout(() => {
+                    // Animate circle progress
+                    animateCircleProgress(percent, moduleId);
+                    
+                    // Animate progress bar
+                    const progressFill = document.querySelector(`.progress-item:nth-child(${index + 1}) .progress-fill`);
+                    if (progressFill) {
+                        progressFill.style.width = `${percent}%`;
+                    }
+                }, index * 100 + 500);
+            });
+        }
+        
+        // Load certificates from API
+        async function loadCertificates() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                
+                if (!token || !userData.publicId) {
+                    return;
+                }
+                
+                const response = await fetch('http://localhost:8006/api/certificates', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.certificates) {
+                    displayCertificates(data.data.certificates);
+                    
+                    // Update certificate count with animation
+                    const certCountEl = document.getElementById('totalCertificates');
+                    if (certCountEl) {
+                        animateCounter(certCountEl, 0, data.data.certificates.length, 1500);
+                        certCountEl.classList.add('gradient');
+                    }
+                }
+            } catch (error) {
+            }
+        }
+        
+        // Display certificates
+        function displayCertificates(certificates) {
+            const certificatesGrid = document.getElementById('certificatesGrid');
+            certificatesGrid.innerHTML = '';
+            
+            if (certificates.length === 0) {
+                certificatesGrid.innerHTML = `
+                    <div class="no-data" style="grid-column: 1/-1;">
+                        <i class="fas fa-certificate"></i>
+                        <h3>Henüz sertifika kazanmadınız</h3>
+                        <p>Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            certificates.forEach((cert, index) => {
+                const card = document.createElement('div');
+                card.className = 'certificate-card';
+                card.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;`;
+                
+                const categoryIcons = {
+                    'siber-guvenlik': 'fas fa-shield-alt',
+                    'bulut-bilisim': 'fas fa-cloud',
+                    'veri-bilimi': 'fas fa-chart-line'
+                };
+                
+                const iconColors = {
+                    'siber-guvenlik': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'bulut-bilisim': 'linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%)',
+                    'veri-bilimi': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                };
+                
+                card.innerHTML = `
+                    <div class="certificate-header-card">
+                        <div class="certificate-icon" style="background: ${iconColors[cert.category] || iconColors['siber-guvenlik']};">
+                            <i class="${categoryIcons[cert.category] || 'fas fa-certificate'}"></i>
+                        </div>
+                        <div class="certificate-title">${cert.title}</div>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${cert.description || ''}</p>
+                    <div class="certificate-meta">
+                        <span><i class="fas fa-clock"></i> ${Math.round(cert.completionTime / 60)} saat</span>
+                        <span><i class="fas fa-calendar"></i> ${new Date(cert.earnedAt).toLocaleDateString('tr-TR')}</span>
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn-secondary" onclick="viewCertificate('${cert.certificateUrl || ''}')">
+                            <i class="fas fa-eye"></i> Görüntüle
+                        </button>
+                        <button class="btn-secondary" onclick="viewAIReport('${cert.id}')">
+                            <i class="fas fa-robot"></i> AI Rapor
+                        </button>
+                    </div>
+                `;
+                
+                certificatesGrid.appendChild(card);
+            });
+        }
+        
+        // View certificate
+        function viewCertificate(url) {
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                alert('Sertifika henüz oluşturulmamış.');
+            }
+        }
+        
+        // View AI report
+        async function viewAIReport(certificateId) {
+            
+            const modal = document.getElementById('aiReportModal');
+            const content = document.getElementById('aiReportContent');
+            
+            modal.classList.add('active');
+            content.innerHTML = '<div class="loading">Rapor yükleniyor...</div>';
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    throw new Error('Giriş yapmanız gerekiyor');
+                }
+                
+                const response = await fetch(`http://localhost:8006/api/certificates/${certificateId}/report`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                
+                if (!response.ok) {
+                    throw new Error(`API hatası: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.report) {
+                    const report = data.data.report;
+                    
+                    // Build detailed report HTML
+                    let reportHTML = `
+                        <div class="ai-report-section">
+                            <h3 class="report-section-title">📊 Özet</h3>
+                            <div class="report-item">${report.summary}</div>
+                        </div>
+                    `;
+                    
+                    // Performance Analysis
+                    if (report.performanceAnalysis && report.performanceAnalysis.overall) {
+                        const perf = report.performanceAnalysis.overall;
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🎯 Performans Analizi</h3>
+                                <div class="report-item">
+                                    <strong>Genel Seviye:</strong> ${perf.level || 'Değerlendiriliyor'}<br>
+                                    ${perf.description || ''}<br>
+                                    ${perf.trend ? `<strong>Trend:</strong> ${perf.trend} - ${perf.trendDescription || ''}` : ''}<br>
+                                    ${perf.consistency ? `<strong>Tutarlılık:</strong> ${perf.consistency} - ${perf.consistencyDescription || ''}` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Learning Pattern
+                    if (report.learningPattern) {
+                        const lp = report.learningPattern;
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🧠 Öğrenme Paterni</h3>
+                                <div class="report-item">
+                                    <strong>Öğrenme Hızı:</strong> ${lp.pace || ''} - ${lp.paceDescription || ''}<br>
+                                    <strong>Odak Noktası:</strong> ${lp.focus || ''} - ${lp.focusDescription || ''}<br>
+                                    <strong>Öğrenme Stili:</strong> ${lp.learningStyle || ''} - ${lp.learningStyleDescription || ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Strengths
+                    if (report.strengths && report.strengths.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">✅ Güçlü Yönler</h3>
+                                ${report.strengths.map(s => {
+                                    if (typeof s === 'object') {
+                                        return `<div class="report-item strength">
+                                            <strong>${s.title || s}</strong><br>
+                                            ${s.description || ''}
+                                            ${s.impact ? `<br><small>Etki: ${s.impact}</small>` : ''}
+                                        </div>`;
+                                    }
+                                    return `<div class="report-item strength">${s}</div>`;
+                                }).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Areas for Improvement
+                    if (report.areasForImprovement && report.areasForImprovement.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">📈 Geliştirilmesi Gereken Alanlar</h3>
+                                ${report.areasForImprovement.map(a => {
+                                    if (typeof a === 'object') {
+                                        let html = `<div class="report-item improvement">
+                                            <strong>${a.title || a}</strong><br>
+                                            ${a.description || ''}
+                                            ${a.priority ? `<br><small>Öncelik: ${a.priority}</small>` : ''}`;
+                                        
+                                        if (a.specificTopics && a.specificTopics.length > 0) {
+                                            html += `<br><strong>Konular:</strong> ${a.specificTopics.join(', ')}`;
+                                        }
+                                        
+                                        if (a.actionPlan && a.actionPlan.length > 0) {
+                                            html += `<br><strong>Aksiyon Planı:</strong><ul style="margin-left: 1.5rem; margin-top: 0.5rem;">`;
+                                            a.actionPlan.forEach(plan => {
+                                                html += `<li>${plan}</li>`;
+                                            });
+                                            html += `</ul>`;
+                                        }
+                                        
+                                        html += `</div>`;
+                                        return html;
+                                    }
+                                    return `<div class="report-item improvement">${a}</div>`;
+                                }).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Detailed Recommendations
+                    if (report.detailedRecommendations && report.detailedRecommendations.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">💡 Detaylı Öneriler</h3>
+                                ${report.detailedRecommendations.map(category => `
+                                    <div class="report-item" style="margin-bottom: 1.5rem;">
+                                        <strong style="color: var(--primary-color);">${category.category}</strong>
+                                        ${category.items.map(item => `
+                                            <div style="margin-top: 1rem; padding-left: 1rem; border-left: 3px solid var(--primary-color);">
+                                                <strong>${item.title}</strong><br>
+                                                <small>${item.description}</small>
+                                                ${item.priority ? `<br><small>Öncelik: ${item.priority}</small>` : ''}
+                                                ${item.resources && item.resources.length > 0 ? `
+                                                    <br><strong>Kaynaklar:</strong>
+                                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                                        ${item.resources.map(r => `<li>${r}</li>`).join('')}
+                                                    </ul>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Next Steps
+                    if (report.nextSteps && report.nextSteps.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🎯 Sonraki Adımlar</h3>
+                                ${report.nextSteps.map(step => `
+                                    <div class="report-item" style="margin-bottom: 1rem;">
+                                        <strong>Adım ${step.step}: ${step.title}</strong><br>
+                                        ${step.description}<br>
+                                        <small>⏱️ Tahmini Süre: ${step.estimatedTime || ''}</small>
+                                        ${step.deadline ? `<br><small>📅 Hedef: ${step.deadline}</small>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Resources
+                    if (report.resources && report.resources.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">📚 Önerilen Kaynaklar</h3>
+                                ${report.resources.map(resource => `
+                                    <div class="report-item" style="margin-bottom: 0.75rem;">
+                                        <strong>${resource.title}</strong>
+                                        <br><small>${resource.type} • ${resource.difficulty} Seviye</small>
+                                        ${resource.description ? `<br>${resource.description}` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    content.innerHTML = reportHTML;
+                } else {
+                    content.innerHTML = `
+                        <div class="report-item" style="color: red;">
+                            <strong>Rapor bulunamadı.</strong><br>
+                            <small>API yanıtı: ${JSON.stringify(data, null, 2)}</small>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="report-item" style="color: red;">
+                        <strong>Rapor yüklenirken hata oluştu.</strong><br>
+                        <small>Hata: ${error.message}</small><br>
+                        <small>Lütfen konsolu kontrol edin (F12) ve hatayı bildirin.</small>
+                    </div>
+                `;
+            }
+        }
+        
+        // Close report modal
+        function closeReportModal() {
+            document.getElementById('aiReportModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('aiReportModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReportModal();
+            }
+        });
+
+        // Display modules
+        function displayModules(modules) {
+            const progressList = document.getElementById('progressList');
+            progressList.innerHTML = '';
+
+            const moduleIcons = {
+                'Temel Siber Güvenlik': 'fas fa-shield-alt',
+                'Network Güvenliği': 'fas fa-network-wired',
+                'Malware Analizi': 'fas fa-bug',
+                'Threat Hunting': 'fas fa-search',
+                'AWS Temelleri': 'fas fa-cloud',
+                'Azure Temelleri': 'fas fa-cloud',
+                'Google Cloud Platform': 'fas fa-cloud'
+            };
+
+            if (Object.keys(modules).length === 0) {
+                progressList.innerHTML = '<div class="no-data"><i class="fas fa-book-reader"></i><h3>Henüz modül başlatmadınız</h3><p>Eğitim modüllerine göz atarak başlayın!</p></div>';
+                return;
+            }
+
+            const timestamp = Date.now();
+            const moduleArray = Object.entries(modules).map(([moduleName, progress], index) => ({
+                name: moduleName,
+                progress: progress,
+                index: index
+            }));
+            
+            moduleArray.forEach(({ name: moduleName, progress, index }) => {
+                // Skip duplicates and wrong formats
+                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Network Güvenliği')) {
+                    return;
+                }
+
+                const status = progress.status || 'Başlanmadı';
+                const percentage = Math.min(progress.percentage || 0, 100);
+                const completedLessons = progress.completedLessons?.length || progress.completedSections || 0;
+                const totalLessons = progress.totalLessons || progress.totalSections || 0;
+                const timeSpent = progress.timeSpentMinutes || progress.time_spent || 0;
+                const moduleId = `local-module-${index}-${timestamp}`;
+
+                const item = document.createElement('div');
+                item.className = 'progress-item';
+                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0;`;
+                
+                let iconClass = moduleIcons[moduleName] || 'fas fa-book';
+                let statusColor = '#667eea';
+                if (status === 'Tamamlandı') {
+                    iconClass = 'fas fa-trophy';
+                    statusColor = '#22c55e';
+                } else if (percentage > 0) {
+                    statusColor = '#3b82f6';
+                }
+
+                item.innerHTML = `
+                    <div class="progress-item-header">
+                        <div class="progress-icon" style="background: ${statusColor};">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <div class="progress-info" style="flex: 1;">
+                            <div class="progress-name">${moduleName}</div>
+                            <div class="progress-detail">
+                                ${timeSpent > 0 ? Math.round(timeSpent) + ' dakika' : completedLessons + '/' + totalLessons + ' ders'} • 
+                                ${status}
+                            </div>
+                            <div class="progress-bar-container" style="margin-top: 1rem;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%; background: ${statusColor};"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-circle" style="position: relative;">
+                            ${createCircleProgress(percentage, moduleId)}
+                        </div>
+                    </div>
+                    ${status === 'Tamamlandı' ? `
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <span class="badge-success" style="padding: 0.5rem 1rem; border-radius: 20px;">
+                                <i class="fas fa-check-circle"></i> Tamamlandı
+                            </span>
+                        </div>
+                    ` : `
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(moduleName)}'">
+                                <i class="fas fa-play"></i> Devam Et
+                            </button>
+                        </div>
+                    `}
+                `;
+                
+                progressList.appendChild(item);
+                
+                // Animate circle progress and progress bar
+                setTimeout(() => {
+                    animateCircleProgress(percentage, moduleId);
+                    
+                    // Animate progress bar
+                    const progressFill = item.querySelector('.progress-fill');
+                    if (progressFill) {
+                        progressFill.style.width = `${percentage}%`;
+                    }
+                }, index * 100 + 500);
+            });
+
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('isVerified');
+                localStorage.removeItem('userData');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initDashboard);
+    </script>
+    <!-- Navigation Script -->
+    <script src="js/navigation.js?v=2.0"></script>
+</body>
+</html>

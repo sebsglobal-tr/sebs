@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security Lab - Evil Twin Attack - SEBS Global</title>
+    <meta name="description" content="Evil Twin saldırısı simülasyonu. Cafe network'ünü hack et ve sahte ağ oluştur.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .simulation-header {
+            background: var(--primary-gradient);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon {
+            font-size: 2rem;
+        }
+
+        .simulation-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .task-progress {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 100px);
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1rem;
+            overflow-y: auto;
+            border: 2px solid #334155;
+        }
+        
+        /* Terminal Area */
+        .terminal-area {
+            flex: 1;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .terminal-header {
+            background: #1e293b;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .terminal-header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+        
+        .terminal-button.close {
+            background: #ef4444;
+        }
+        
+        .terminal-button.minimize {
+            background: #facc15;
+        }
+        
+        .terminal-button.maximize {
+            background: #22c55e;
+        }
+        
+        .terminal-title {
+            margin-left: auto;
+            color: #94a3b8;
+        }
+        
+        .terminal-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #0a0a0a;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .terminal-input-line {
+            background: #1e293b;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .terminal-prompt {
+            color: #facc15;
+            font-weight: 600;
+        }
+        
+        .command-text {
+            color: #22c55e;
+            min-width: 1px;
+            display: inline-block;
+        }
+        
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #22c55e;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap;
+        }
+        
+        .terminal-line.output {
+            color: #00ff00;
+        }
+        
+        .terminal-line.error {
+            color: #ff5555;
+        }
+        
+        .terminal-line.warning {
+            color: #ffff55;
+        }
+        
+        .terminal-line.info {
+            color: #5555ff;
+        }
+        
+        .terminal-line.success {
+            color: #55ff55;
+        }
+        
+        .cursor-blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Scenario Card */
+        .scenario-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid #475569;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-icon {
+            font-size: 3rem;
+        }
+
+        .scenario-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--danger-color);
+        }
+
+        .scenario-description {
+            color: #94a3b8;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Network Visualization */
+        .network-visualization {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .device-card {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .device-card.connected {
+            border-color: var(--success-color);
+            background: rgba(34, 197, 94, 0.1);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .device-card.hijacked {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .device-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .device-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .device-status {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .device-ip {
+            font-size: 0.85rem;
+            color: #3b82f6;
+            font-family: 'Courier New', monospace;
+            margin-top: 0.5rem;
+        }
+
+        /* Connection Lines */
+        .network-connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .action-btn {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-btn.completed {
+            background: var(--success-color);
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+        }
+
+        /* Task List */
+        .task-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .task-item {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed {
+            border-color: var(--success-color);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .task-item.active {
+            border-color: var(--warning-color);
+            background: rgba(250, 204, 21, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            background: #334155;
+            color: #fff;
+        }
+
+        .task-item.completed .task-icon {
+            background: var(--success-color);
+        }
+
+        .task-item.active .task-icon {
+            background: var(--warning-color);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-description {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        /* Terminal Output */
+        .terminal-output {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1.5rem;
+        }
+
+        .terminal-line {
+            color: #22c55e;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .terminal-line.error {
+            color: var(--danger-color);
+        }
+
+        .terminal-line.warning {
+            color: var(--warning-color);
+        }
+
+        .terminal-line.info {
+            color: var(--info-color);
+        }
+
+        /* Progress Modal */
+        .progress-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-description {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="simulation-header">
+        <div class="header-left">
+            <span class="header-icon">📡</span>
+            <h1 class="simulation-title">Evil Twin Attack Simulation</h1>
+        </div>
+        <div class="task-progress">
+            Görev: <span id="taskNumber">1</span>/6
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="scenario-card" style="margin-bottom: 1rem;">
+                <div class="scenario-header">
+                    <span class="scenario-icon">☕</span>
+                    <h2 class="scenario-title" style="font-size: 1.2rem; margin-bottom: 0.5rem;">Cafe Hack</h2>
+                </div>
+                <div class="scenario-description" style="font-size: 0.9rem;">
+                    Tüm cihazları düşür ve sahte network'e yönlendir!
+                </div>
+            </div>
+
+            <div class="network-visualization" id="networkVisualization" style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+                <!-- Devices will be added dynamically -->
+            </div>
+
+            <div class="scenario-card" style="margin-top: 1rem;">
+                <h3 style="margin-bottom: 1rem; color: #fff; font-size: 1rem;">📋 Görevler</h3>
+                <ul class="task-list" id="taskList">
+                    <li class="task-item active" data-task="1">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">Network'ü Tara</div>
+                            <div class="task-description">Tüm cihazları tespit et</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="2">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">Cihazları Kes</div>
+                            <div class="task-description">Bağlantıları kes</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="3">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">Sahte Ağ Oluştur</div>
+                            <div class="task-description">Evil Twin'i başlat</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="4">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">Yönlendir</div>
+                            <div class="task-description">Cihazları sahte ağa bağla</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="5">
+                        <div class="task-icon">5</div>
+                        <div class="task-content">
+                            <div class="task-title">Veri Yakala</div>
+                            <div class="task-description">Paketleri yakala</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="6">
+                        <div class="task-icon">6</div>
+                        <div class="task-content">
+                            <div class="task-title">Rapor</div>
+                            <div class="task-description">Raporu oluştur</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Terminal Area -->
+        <div class="terminal-area">
+            <div class="terminal-header">
+                <div class="terminal-header-buttons">
+                    <div class="terminal-button close"></div>
+                    <div class="terminal-button minimize"></div>
+                    <div class="terminal-button maximize"></div>
+                </div>
+                <span class="terminal-title">Terminal — root@kali</span>
+            </div>
+            
+            <div class="terminal-content" id="terminalOutput" tabindex="0">
+                <div class="terminal-line output">Welcome to Kali Linux 2024.3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="progress-modal" id="progressModal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">Başarılı!</h2>
+            <p class="modal-description" id="modalDescription">
+                Tüm görevler tamamlandı!
+            </p>
+            <div class="modal-buttons">
+                <button class="btn btn-success" onclick="location.reload()">
+                    🔄 Yeniden Başla
+                </button>
+                <button class="btn btn-primary" onclick="closeModal()">
+                    ❌ Kapat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTask = 1;
+        const devices = [
+            { id: 1, name: 'Router', icon: '📟', ip: '192.168.1.1', status: 'online', type: 'router' },
+            { id: 2, name: 'Masa PC', icon: '💻', ip: '192.168.1.2', status: 'online', type: 'pc' },
+            { id: 3, name: 'Masa PC', icon: '💻', ip: '192.168.1.3', status: 'online', type: 'pc' },
+            { id: 4, name: 'Mobile', icon: '📱', ip: '192.168.1.4', status: 'online', type: 'mobile' },
+            { id: 5, name: 'Mobile', icon: '📱', ip: '192.168.1.5', status: 'online', type: 'mobile' },
+            { id: 6, name: 'Tablet', icon: '📲', ip: '192.168.1.6', status: 'online', type: 'mobile' }
+        ];
+        
+        let hijackedDevices = [];
+        
+        function initNetworkVisualization() {
+            const container = document.getElementById('networkVisualization');
+            container.innerHTML = devices.map(device => `
+                <div class="device-card" id="device-${device.id}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; font-size: 0.85rem;">
+                    <div class="device-icon" style="font-size: 2rem;">${device.icon}</div>
+                    <div style="flex: 1;">
+                        <div class="device-name" style="font-size: 0.9rem; font-weight: 600;">${device.name}</div>
+                        <div class="device-ip" style="font-size: 0.75rem;">${device.ip}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        const commandHistory = [];
+        let historyIndex = 0;
+        let currentCommand = '';
+        let isWaitingForInput = false;
+        
+        function addNewPrompt() {
+            const terminal = document.getElementById('terminalOutput');
+            const promptLine = document.createElement('div');
+            promptLine.className = 'terminal-line output';
+            promptLine.innerHTML = `<span class="terminal-prompt">root@kali:~#</span> <span class="command-text" id="commandText"></span><span class="cursor-blink">█</span>`;
+            promptLine.id = 'currentPrompt';
+            
+            terminal.appendChild(promptLine);
+            terminal.scrollTop = terminal.scrollHeight;
+            
+            currentCommand = '';
+            isWaitingForInput = true;
+            
+            // Focus terminal
+            terminal.focus();
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (!isWaitingForInput) return;
+            
+            const promptElement = document.getElementById('currentPrompt');
+            if (!promptElement) return;
+            
+            const commandText = promptElement.querySelector('.command-text');
+            if (!commandText) return;
+            
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Execute command
+                if (currentCommand.trim()) {
+                    const command = currentCommand.trim();
+                    commandHistory.push(command);
+                    historyIndex = commandHistory.length - 1;
+                    executeCommand(command);
+                } else {
+                    // Empty command, just add new prompt
+                    addNewPrompt();
+                }
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                if (currentCommand.length > 0) {
+                    currentCommand = currentCommand.slice(0, -1);
+                    commandText.textContent = currentCommand;
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0 && historyIndex < commandHistory.length) {
+                    currentCommand = commandHistory[historyIndex];
+                    commandText.textContent = currentCommand;
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                    }
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    currentCommand = commandHistory[historyIndex] || '';
+                    commandText.textContent = currentCommand;
+                } else if (historyIndex === commandHistory.length - 1) {
+                    currentCommand = '';
+                    commandText.textContent = '';
+                    historyIndex = Math.max(0, commandHistory.length);
+                }
+            } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                currentCommand += e.key;
+                commandText.textContent = currentCommand;
+            }
+            
+            // Scroll to bottom
+            const terminal = document.getElementById('terminalOutput');
+            terminal.scrollTop = terminal.scrollHeight;
+        });
+        
+        function executeCommand(command) {
+            isWaitingForInput = false;
+            
+            // Mark the prompt as completed (not input line)
+            const promptElement = document.getElementById('currentPrompt');
+            if (promptElement) {
+                // The command text is already showing, just remove the cursor
+                promptElement.querySelector('.cursor-blink').textContent = '';
+                promptElement.id = '';
+            }
+            
+            // Parse command
+            const parts = command.split(/\s+/);
+            const cmd = parts[0];
+            const args = parts.slice(1);
+            
+            // Execute command based on input
+            if (cmd === 'ls') {
+                executeLs(command, args);
+            } else if (cmd === 'cd') {
+                executeCd(command, args);
+            } else if (cmd === 'pwd') {
+                executePwd(command);
+            } else if (cmd === 'cat') {
+                executeCat(command, args);
+            } else if (cmd === 'whoami') {
+                executeWhoami(command);
+            } else if (cmd === 'uname') {
+                executeUname(command, args);
+            } else if (cmd === 'ifconfig') {
+                executeIfconfig(command);
+            } else if (cmd === 'clear') {
+                clearTerminal();
+            } else if (cmd === 'nmap') {
+                executeNmap(command);
+            } else if (cmd === 'arp-scan') {
+                executeArpScan(command);
+            } else if (command.includes('aireplay-ng')) {
+                executeAireplay(command);
+            } else if (command.includes('airmon-ng')) {
+                executeAirmon(command);
+            } else if (command.includes('hostapd')) {
+                executeHostapd(command);
+            } else if (command.includes('ettercap') || command.includes('arp-spoof')) {
+                executeEttercap(command);
+            } else if (cmd === 'dnsmasq') {
+                executeDnsmasq(command);
+            } else if (cmd === 'tcpdump') {
+                executeTcpdump(command);
+            } else if (cmd === 'iwconfig') {
+                executeIwconfig(command);
+            } else if (command.includes('report') && command.includes('cat')) {
+                executeReport(command);
+            } else if (cmd === 'help' || cmd === '--help') {
+                showHelp();
+            } else if (cmd === 'exit') {
+                addTerminalLine('Terminal session ended.', 'warning');
+            } else {
+                addTerminalLine(`bash: ${cmd}: command not found`, 'error');
+                addTerminalLine('Try: help for available commands', 'info');
+            }
+        }
+        
+        let currentDir = '/root';
+        
+        // Basic Linux commands
+        function executeLs(command, args) {
+            const files = ['config', 'tools', 'Desktop', 'Documents', 'Downloads', 'scripts', 'data.pcap'];
+            addTerminalLine(files.join('  '), 'output', () => addNewPrompt());
+        }
+        
+        function executeCd(command, args) {
+            if (args.length === 0 || args[0] === '~') {
+                currentDir = '/root';
+            } else if (args[0] === '..') {
+                const parts = currentDir.split('/').filter(p => p);
+                if (parts.length > 1) parts.pop();
+                currentDir = '/' + parts.join('/');
+            } else {
+                currentDir += '/' + args[0];
+            }
+            addTerminalLine('', 'output', () => addNewPrompt());
+        }
+        
+        function executePwd(command) {
+            addTerminalLine(currentDir, 'output', () => addNewPrompt());
+        }
+        
+        function executeCat(command, args) {
+            if (args.length === 0) {
+                addTerminalLine('cat: missing file operand', 'error');
+                addTerminalLine('Try \'cat --help\' for more information.', 'error', () => addNewPrompt());
+                return;
+            }
+            
+            const file = args[0];
+            if (file === 'config' || file.includes('config')) {
+                addTerminalLine('interface=wlan1mon', 'output');
+                addTerminalLine('ssid=Cafe_WiFi_Free', 'output');
+                addTerminalLine('channel=6', 'output', () => addNewPrompt());
+            } else if (file.includes('report')) {
+                addTerminalLine('=== Evil Twin Attack Report ===', 'output');
+                addTerminalLine(`Devices scanned: ${devices.length}`, 'output');
+                addTerminalLine(`Devices hijacked: ${devices.length}`, 'output', () => addNewPrompt());
+            } else {
+                addTerminalLine(`${file}: No such file or directory`, 'error', () => addNewPrompt());
+            }
+        }
+        
+        function executeWhoami(command) {
+            addTerminalLine('root', 'output', () => addNewPrompt());
+        }
+        
+        function executeUname(command, args) {
+            const output = args.length === 0 || args[0] === '-a' 
+                ? 'Linux kali 6.1.0-kali9-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.46-1'
+                : args[0] === '-r' ? '6.1.0-kali9-amd64' : 'Linux';
+            addTerminalLine(output, 'output', () => addNewPrompt());
+        }
+        
+        // Real command implementations
+        function executeNmap(command) {
+            addTerminalLine('Starting Nmap 7.94 ( https://nmap.org )', 'info');
+            setTimeout(() => {
+                addTerminalLine('Nmap scan report for 192.168.1.0/24', 'info');
+                addTerminalLine('Host is up (0.001s latency).', 'info');
+                
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        const port = device.type === 'router' ? '80/tcp open' : '22/tcp filtered';
+                        addTerminalLine(`Starting Nmap 7.94 ( https://nmap.org ) at 2025-01-21 10:30 UTC`, 'output');
+                        addTerminalLine(`Nmap scan report for ${device.ip}`, 'info');
+                        addTerminalLine(`Host is up (0.00s latency).`, 'info');
+                        addTerminalLine(`PORT   STATE SERVICE`, 'output');
+                        addTerminalLine(`22/tcp filtered ssh`, 'warning');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.add('connected');
+                    }, index * 300);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine(`Nmap done: ${devices.length} IP addresses (${devices.length} hosts up) scanned in 6.45 seconds`, 'info');
+                    // Task 1 complete only when nmap is run
+                    if (currentTask === 1) {
+                        markTaskComplete(1);
+                        activateNextTask(2);
+                        currentTask = 2;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 300 + 500);
+            }, 300);
+        }
+        
+        function executeArpScan(command) {
+            addTerminalLine('Interface: wlan0, datalink type: EN10MB', 'info');
+            addTerminalLine('Starting arp-scan 1.10.0 with 256 hosts', 'info');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`${device.ip}\t${device.mac || generateMAC()}\t${device.name}`, 'normal');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.add('connected');
+                    }, index * 200);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine(`${devices.length} packets received by filter, 0 packets dropped`, 'info');
+                    markTaskComplete(1);
+                    activateNextTask(2);
+                    currentTask = 2;
+                    updateTaskProgress();
+                }, devices.length * 200 + 300);
+            }, 200);
+        }
+        
+        function generateMAC() {
+            const hex = '0123456789abcdef';
+            let mac = '';
+            for (let i = 0; i < 12; i++) {
+                mac += hex[Math.floor(Math.random() * hex.length)];
+                if ((i + 1) % 2 === 0 && i < 11) mac += ':';
+            }
+            return mac;
+        }
+        
+        function executeAireplay(command) {
+            addTerminalLine('The interface MAC (XX:XX:XX:XX:XX:XX) doesn\'t match the specified, -0', 'warning');
+            addTerminalLine('Using wlan1 for -0 attacks.', 'warning');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`Sending 64 directed DeAuth. STMAC: [${generateMAC()}]`, 'warning');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.remove('connected');
+                        deviceCard.classList.add('hijacked');
+                        device.status = 'disconnected';
+                    }, index * 300);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine('Deauth packets sent successfully!', 'warning');
+                    if (currentTask === 2) {
+                        markTaskComplete(2);
+                        activateNextTask(3);
+                        currentTask = 3;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 300 + 500);
+            }, 300);
+        }
+        
+        function executeAirmon(command) {
+            addTerminalLine('Interface\tChipset\t\tDriver', 'info');
+            addTerminalLine('wlan0\t\tRealtek RTL8187\t\t    rtl8187', 'normal');
+            addTerminalLine('wlan1\t\tAtheros AR9271\t\t    ath9k_htc', 'normal');
+            addTerminalLine('');
+            addTerminalLine('Putting interface wlan1 into monitor mode...', 'info');
+            
+            setTimeout(() => {
+                addTerminalLine('Interface wlan1mon enabled', 'info');
+                addTerminalLine('Monitor mode enabled on wlan1', 'normal');
+                if (currentTask === 2) {
+                    markTaskComplete(2);
+                    activateNextTask(3);
+                    currentTask = 3;
+                    updateTaskProgress();
+                }
+            }, 500);
+        }
+        
+        function executeHostapd(command) {
+            addTerminalLine('Starting hostapd daemon...', 'error');
+            addTerminalLine('Configuration file: /etc/hostapd/hostapd.conf', 'error');
+            
+            setTimeout(() => {
+                addTerminalLine('wlan1mon: IEEE 802.11 Configured channel 6', 'error');
+                addTerminalLine('IEEE 802.11 AP: SSID=Cafe_WiFi_Free', 'error');
+                addTerminalLine('IEEE 802.11: AP mode enabled', 'error');
+                addTerminalLine('Using interface wlan1mon with hwaddr 02:00:00:00:00:00', 'error');
+                addTerminalLine('DHCP server started: 192.168.2.1', 'error');
+                
+                if (currentTask === 3) {
+                    markTaskComplete(3);
+                    activateNextTask(4);
+                    currentTask = 4;
+                    updateTaskProgress();
+                }
+            }, 1000);
+        }
+        
+        function executeEttercap(command) {
+            addTerminalLine('Ettercap 0.8.4.0 (built on poison tap)', 'error');
+            addTerminalLine('Starting Unified sniffing...', 'error');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`${device.ip} poisoned via ARP`, 'error');
+                    }, index * 300);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine('ARP spoofing active. Redirecting traffic...', 'error');
+                    if (currentTask === 4) {
+                        markTaskComplete(4);
+                        activateNextTask(5);
+                        currentTask = 5;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 300 + 500);
+            }, 500);
+        }
+        
+        function executeDnsmasq(command) {
+            addTerminalLine('Starting dnsmasq...', 'error');
+            setTimeout(() => {
+                addTerminalLine('dnsmasq: started, version 2.85 cachesize 150', 'error');
+                addTerminalLine('dnsmasq: compile time options: IPv6 GNU-getopt DBus i18n IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth DNSSEC loop-detect inotify dumpfile', 'error');
+                addTerminalLine('dnsmasq: using nameserver 8.8.8.8#53 for domain google.com', 'error');
+            }, 300);
+        }
+        
+        function executeTcpdump(command) {
+            addTerminalLine('tcpdump: verbose output suppressed, use -v or -vv', 'error');
+            addTerminalLine('listening on wlan1mon, link-type IEEE802_11_RADIO (802.11 plus radiotap header), capture size 262144 bytes', 'error');
+            
+            setTimeout(() => {
+                setTimeout(() => addTerminalLine('[+] HTTP Request: GET /login.php', 'error'), 500);
+                setTimeout(() => addTerminalLine('[+] HTTP Credentials: username=admin&password=pass123', 'error'), 800);
+                setTimeout(() => addTerminalLine('[+] FTP Login: user=ftpclient', 'error'), 1000);
+                setTimeout(() => {
+                    addTerminalLine('^C', 'error');
+                    addTerminalLine('129 packets captured, 45 packets by filter', 'error');
+                    if (currentTask === 5) {
+                        markTaskComplete(5);
+                        activateNextTask(6);
+                        currentTask = 6;
+                        updateTaskProgress();
+                    }
+                }, 1200);
+            }, 500);
+        }
+        
+        function executeIfconfig(command) {
+            addTerminalLine('wlan1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500', 'info');
+            addTerminalLine('        inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255', 'info');
+            addTerminalLine('        inet6 fe80::a00:27ff:fec0:9886  prefixlen 64  scopeid 0x20<link>', 'info');
+            addTerminalLine('        ether 08:00:27:c0:98:86  txqueuelen 1000  (Ethernet)', 'info');
+        }
+        
+        function executeIwconfig(command) {
+            addTerminalLine('wlan1mon    IEEE 802.11  Mode:Monitor  Tx-Power=20 dBm', 'info');
+            addTerminalLine('            Retry short limit:7   RTS thr:off   Fragment thr:off', 'info');
+            addTerminalLine('            Power Management:off', 'info');
+        }
+        
+        function executeReport(command) {
+            addTerminalLine('=== Evil Twin Attack Report ===', 'normal');
+            addTerminalLine(`Devices scanned: ${devices.length}`, 'normal');
+            addTerminalLine(`Devices hijacked: ${devices.length}`, 'normal');
+            addTerminalLine(`Packets captured: ${Math.floor(Math.random() * 9000) + 10000}`, 'normal');
+            
+            setTimeout(() => {
+                if (currentTask === 6) {
+                    markTaskComplete(6);
+                    showSuccessModal();
+                }
+            }, 500);
+        }
+        
+        function clearTerminal() {
+            const terminal = document.getElementById('terminalOutput');
+            terminal.innerHTML = '';
+            const welcomeMsg = document.createElement('div');
+            welcomeMsg.className = 'terminal-line info';
+            welcomeMsg.textContent = 'Welcome to Kali Linux Virtual Lab';
+            terminal.appendChild(welcomeMsg);
+            addNewPrompt();
+        }
+        
+        function showHelp() {
+            addTerminalLine('Available commands:', 'info');
+            addTerminalLine('  nmap -S -sV 192.168.1.0/24\tScan network for devices', 'info');
+            addTerminalLine('  arp-scan -l\t\t\t\tScan network with ARP', 'info');
+            addTerminalLine('  airmon-ng start wlan1\t\tEnable monitor mode', 'info');
+            addTerminalLine('  aireplay-ng -0 50 -a <AP_MAC> wlan1mon\t\tDeauth devices', 'info');
+            addTerminalLine('  hostapd /etc/hostapd/hostapd.conf\t\tCreate fake AP', 'info');
+            addTerminalLine('  ettercap -TqM arp // //\t\tARP spoofing attack', 'info');
+            addTerminalLine('  tcpdump -i wlan1mon -w capture.pcap\t\tCapture packets', 'info');
+            addTerminalLine('  ifconfig\t\t\t\tShow interfaces', 'info');
+            addTerminalLine('  iwconfig\t\t\t\tShow wireless interfaces', 'info');
+            addTerminalLine('  clear\t\t\t\t\tClear terminal', 'info');
+            addTerminalLine('  help\t\t\t\t\tShow this help', 'info');
+        }
+        
+        function deauthCommand() {
+            addTerminalLine('Starting aireplay-ng deauthentication attack...', 'warning');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`[!] Sending 50 deauth packets to ${device.ip}...`, 'warning');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.remove('connected');
+                        deviceCard.classList.add('hijacked');
+                    }, index * 300);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine('Deauthentication complete! All devices disconnected.', 'warning');
+                    if (currentTask === 2) {
+                        markTaskComplete(2);
+                        activateNextTask(3);
+                        enableButton('fakeBtn');
+                        currentTask = 3;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 300 + 500);
+            }, 500);
+        }
+        
+        function createFakeCommand() {
+            addTerminalLine('Starting hostapd fake access point...', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('[+] Evil Twin AP created: Cafe_WiFi_Free', 'error');
+                addTerminalLine('[+] DNS server configured: 192.168.2.1', 'error');
+                addTerminalLine('[+] Packet capture started on wlan1', 'error');
+                addTerminalLine('');
+                addTerminalLine('Evil Twin network is now active!', 'error');
+                
+                markTaskComplete(3);
+                activateNextTask(4);
+                enableButton('hijackBtn');
+                currentTask = 4;
+                updateTaskProgress();
+            }, 1500);
+        }
+        
+        function hijackCommand() {
+            addTerminalLine('Configuring ARP spoofing and routing...', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`[+] ${device.name} redirected to fake network...`, 'error');
+                        device.status = 'hijacked';
+                        hijackedDevices.push(device);
+                    }, index * 300);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine(`All devices (${devices.length}) successfully hijacked!`, 'error');
+                    if (currentTask === 4) {
+                        markTaskComplete(4);
+                        activateNextTask(5);
+                        enableButton('captureBtn');
+                        currentTask = 5;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 300 + 500);
+            }, 500);
+        }
+        
+        function captureCommand() {
+            addTerminalLine('Analyzing captured packets...', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('[+] Captured credentials from 192.168.1.2 (Masa PC)', 'error');
+                addTerminalLine('[+] Captured HTTP traffic from 192.168.1.4 (Mobile)', 'error');
+                addTerminalLine('[+] Captured emails from 192.168.1.6 (Tablet)', 'error');
+                addTerminalLine('[+] Captured session tokens and cookies', 'error');
+                addTerminalLine('');
+                
+                setTimeout(() => {
+                    addTerminalLine(`Total packets captured: ${Math.floor(Math.random() * 9000) + 10000}`, 'error');
+                    
+                    if (currentTask === 5) {
+                        markTaskComplete(5);
+                        activateNextTask(6);
+                        enableButton('reportBtn');
+                        currentTask = 6;
+                        updateTaskProgress();
+                    }
+                }, 1500);
+            }, 500);
+        }
+        
+        function reportCommand() {
+            addTerminalLine('Generating attack report...', 'normal');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('Report generated: attack_report.txt', 'normal');
+                addTerminalLine('');
+                addTerminalLine('Statistics:', 'normal');
+                addTerminalLine(`  - Devices scanned: ${devices.length}`, 'normal');
+                addTerminalLine(`  - Devices hijacked: ${devices.length}`, 'normal');
+                addTerminalLine(`  - Data packets captured: ${Math.floor(Math.random() * 9000) + 10000}`, 'normal');
+                addTerminalLine(`  - Attack duration: ${Math.floor(Math.random() * 5) + 3} minutes`, 'normal');
+                addTerminalLine(`  - Success rate: 100%`, 'normal');
+                
+                if (currentTask === 6) {
+                    markTaskComplete(6);
+                    currentTask = 7;
+                    updateTaskProgress();
+                }
+                
+                setTimeout(() => {
+                    showSuccessModal();
+                }, 1000);
+            }, 1000);
+        }
+        
+        function addTerminalLine(text, type = 'output', callback = null) {
+            const terminal = document.getElementById('terminalOutput');
+            const line = document.createElement('div');
+            line.className = `terminal-line ${type}`;
+            
+            if (type === 'output') {
+                // Type out the text character by character
+                let i = 0;
+                const typingInterval = setInterval(() => {
+                    if (i < text.length) {
+                        line.textContent = text.substring(0, i + 1);
+                        i++;
+                        terminal.scrollTop = terminal.scrollHeight;
+                    } else {
+                        clearInterval(typingInterval);
+                        terminal.scrollTop = terminal.scrollHeight;
+                        if (callback) callback();
+                    }
+                }, 10);
+            } else {
+                line.textContent = text;
+            }
+            
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        function markTaskComplete(taskNum) {
+            const task = document.querySelector(`[data-task="${taskNum}"]`);
+            if (task && !task.classList.contains('completed')) {
+                task.classList.remove('active');
+                task.classList.add('completed');
+                const icon = task.querySelector('.task-icon');
+                icon.innerHTML = '✓';
+            }
+        }
+        
+        function activateNextTask(taskNum) {
+            const task = document.querySelector(`[data-task="${taskNum}"]`);
+            if (task) {
+                task.classList.add('active');
+            }
+        }
+        
+        function updateTaskProgress() {
+            document.getElementById('taskNumber').textContent = currentTask;
+        }
+        
+        function enableButton(btnId) {
+            document.getElementById(btnId).disabled = false;
+        }
+        
+        function markButtonCompleted(btnId) {
+            const btn = document.getElementById(btnId);
+            btn.classList.add('completed');
+            btn.disabled = false;
+        }
+        
+        function scanNetwork() {
+            addTerminalLine('==========================================', 'info');
+            addTerminalLine('Starting network scan...', 'info');
+            addTerminalLine('Scanning IP range: 192.168.1.0/24', 'info');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`[+] Found device: ${device.name} (${device.ip})`, 'normal');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.add('connected');
+                    }, index * 200);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine(`Scan complete: ${devices.length} devices found`, 'normal');
+                    markTaskComplete(1);
+                    activateNextTask(2);
+                    enableButton('deauthBtn');
+                    currentTask = 2;
+                    updateTaskProgress();
+                }, devices.length * 200 + 500);
+            }, 500);
+        }
+        
+        function deauthDevices() {
+            addTerminalLine('');
+            addTerminalLine('==========================================', 'warning');
+            addTerminalLine('Starting deauthentication attack...', 'warning');
+            addTerminalLine('Sending deauth packets to all devices...', 'warning');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`[!] Deauth sent to ${device.name} (${device.ip})`, 'warning');
+                        const deviceCard = document.getElementById(`device-${device.id}`);
+                        deviceCard.classList.remove('connected');
+                        deviceCard.classList.add('hijacked');
+                    }, index * 200);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine('All devices disconnected from original network!', 'warning');
+                    markTaskComplete(2);
+                    activateNextTask(3);
+                    enableButton('fakeBtn');
+                    currentTask = 3;
+                    updateTaskProgress();
+                }, devices.length * 200 + 500);
+            }, 500);
+        }
+        
+        function createFakeNetwork() {
+            addTerminalLine('');
+            addTerminalLine('==========================================', 'error');
+            addTerminalLine('Creating Evil Twin network...', 'error');
+            addTerminalLine('SSID: Cafe_WiFi_Free (FAKE)', 'error');
+            addTerminalLine('Channel: 6', 'error');
+            addTerminalLine('Network: 192.168.2.0/24', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('[+] Fake access point created successfully', 'error');
+                addTerminalLine('[+] DNS server configured', 'error');
+                addTerminalLine('[+] Packet capture started', 'error');
+                addTerminalLine('');
+                addTerminalLine('Evil Twin network is now active and broadcasting!', 'error');
+                
+                markTaskComplete(3);
+                activateNextTask(4);
+                enableButton('hijackBtn');
+                currentTask = 4;
+                updateTaskProgress();
+            }, 2000);
+        }
+        
+        function hijackDevices() {
+            addTerminalLine('');
+            addTerminalLine('==========================================', 'error');
+            addTerminalLine('Redirecting devices to fake network...', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                devices.forEach((device, index) => {
+                    setTimeout(() => {
+                        addTerminalLine(`[+] ${device.name} connecting to fake network...`, 'error');
+                        device.status = 'hijacked';
+                        hijackedDevices.push(device);
+                    }, index * 200);
+                });
+                
+                setTimeout(() => {
+                    addTerminalLine(`Success! ${devices.length} devices hijacked`, 'error');
+                    if (currentTask === 4) {
+                        markTaskComplete(4);
+                        activateNextTask(5);
+                        enableButton('captureBtn');
+                        currentTask = 5;
+                        updateTaskProgress();
+                    }
+                }, devices.length * 200 + 500);
+            }, 500);
+        }
+        
+        function captureData() {
+            addTerminalLine('');
+            addTerminalLine('==========================================', 'error');
+            addTerminalLine('Capturing data from hijacked devices...', 'error');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('[+] Captured credentials from Masa PC', 'error');
+                addTerminalLine('[+] Captured HTTP traffic from Mobile device', 'error');
+                addTerminalLine('[+] Captured emails from Tablet', 'error');
+                addTerminalLine('[+] Captured cookies and session tokens', 'error');
+                addTerminalLine('[+] Captured social media logins', 'error');
+                addTerminalLine('');
+                
+                setTimeout(() => {
+                    addTerminalLine('Data capture complete!', 'error');
+                    addTerminalLine(`Total packets captured: ${Math.floor(Math.random() * 9000) + 10000}`, 'error');
+                    
+                    if (currentTask === 5) {
+                        markTaskComplete(5);
+                        activateNextTask(6);
+                        enableButton('reportBtn');
+                        currentTask = 6;
+                        updateTaskProgress();
+                    }
+                }, 1500);
+            }, 500);
+        }
+        
+        function generateReport() {
+            addTerminalLine('');
+            addTerminalLine('==========================================', 'normal');
+            addTerminalLine('Generating attack report...', 'normal');
+            addTerminalLine('');
+            
+            setTimeout(() => {
+                addTerminalLine('Report generated successfully!', 'normal');
+                addTerminalLine('');
+                addTerminalLine('Statistics:', 'normal');
+                addTerminalLine(`  - Devices scanned: ${devices.length}`, 'normal');
+                addTerminalLine(`  - Devices hijacked: ${devices.length}`, 'normal');
+                addTerminalLine(`  - Data packets captured: ${Math.floor(Math.random() * 9000) + 10000}`, 'normal');
+                addTerminalLine(`  - Attack duration: ${Math.floor(Math.random() * 5) + 3} minutes`, 'normal');
+                addTerminalLine(`  - Success rate: 100%`, 'normal');
+                
+                if (currentTask === 6) {
+                    markTaskComplete(6);
+                    currentTask = 7;
+                    updateTaskProgress();
+                }
+                
+                setTimeout(() => {
+                    showSuccessModal();
+                }, 1000);
+            }, 1000);
+        }
+        
+        function showSuccessModal() {
+            document.getElementById('progressModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('progressModal').classList.remove('active');
+        }
+        
+        // Initialize
+        initNetworkVisualization();
+        updateTaskProgress();
+        
+        // Show welcome message and first prompt
+        const terminal = document.getElementById('terminalOutput');
+        const welcomeMsg = document.createElement('div');
+        welcomeMsg.className = 'terminal-line info';
+        welcomeMsg.textContent = 'Welcome to Kali Linux Virtual Lab';
+        terminal.appendChild(welcomeMsg);
+        
+        addNewPrompt();
+    </script>
+</body>
+</html>
+    <!-- Configuration & API Integration -->
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+

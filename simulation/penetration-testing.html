@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Testing Lab - SEBS Global</title>
+    <meta name="description" content="Kendi sanal Linux ortamınızda penetration testing yapın.">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow: hidden;
+        }
+
+        .terminal-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #0d1117;
+        }
+
+        .terminal-header {
+            background: #161b22;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .terminal-title {
+            color: #00ff00;
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .control-btn.close { background: #ff5f57; }
+        .control-btn.minimize { background: #ffbd2e; }
+        .control-btn.maximize { background: #28ca42; }
+
+        .terminal-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            outline: none;
+            flex: 1;
+            caret-color: #00ff00;
+        }
+
+        .terminal-output {
+            color: #c9d1d9;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .terminal-error {
+            color: #ff0000;
+        }
+
+        .terminal-info {
+            color: #60a5fa;
+        }
+
+        .terminal-success {
+            color: #22c55e;
+        }
+
+        .terminal-warning {
+            color: #facc15;
+        }
+
+        .banner {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .banner h2 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .banner p {
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+
+        .flag-found {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <i class="fas fa-terminal"></i>
+                Pentest Lab - SEBS Virtual Environment
+            </div>
+            <div class="terminal-controls">
+                <button class="control-btn close" onclick="window.close()"></button>
+                <button class="control-btn minimize"></button>
+                <button class="control-btn maximize"></button>
+            </div>
+        </div>
+        <div class="terminal-content" id="terminalContent">
+            <div class="terminal-line">
+                <div class="terminal-output">Connecting to SEBS Virtual Penetration Lab...</div>
+            </div>
+            <div class="terminal-line">
+                <div class="terminal-output">✓ Connection established to 192.168.1.100:22</div>
+            </div>
+            <div class="terminal-line">
+                <div class="terminal-output">Last login: Mon Jan 15 14:30:45 2024</div>
+            </div>
+            <div class="terminal-line">
+                <div class="terminal-output terminal-warning">Welcome to SEBS Penetration Testing Lab!</div>
+            </div>
+            <div class="terminal-line">
+                <div class="banner">
+                    <h2><i class="fas fa-rocket"></i> SEBS Pentest Lab</h2>
+                    <p>Bu ortam eğitim amaçlı hazırlanmış vulnerable bir sistemdir. Linux komutlarını kullanarak sistemdeki zafiyetleri keşfedin ve flag'leri bulun!</p>
+                </div>
+            </div>
+            <div class="terminal-line" id="inputLine">
+                <span class="terminal-prompt">pentest@sebs-lab:~$ </span>
+                <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalContent = document.getElementById('terminalContent');
+        
+        let currentDirectory = '/home/pentest';
+        let commandHistory = [];
+        let historyIndex = -1;
+        let foundFlags = [];
+
+        // File system structure
+        const fileSystem = {
+            '/home/pentest': {
+                type: 'directory',
+                contents: ['flag1.txt', 'exploit.py', 'notes.txt', 'recon/']
+            },
+            '/home/pentest/flag1.txt': {
+                type: 'file',
+                content: 'SEBS{network-discovery-complete}'
+            },
+            '/home/pentest/exploit.py': {
+                type: 'file',
+                content: '#!/usr/bin/env python3\n\nimport socket\nimport sys\n\n# Simple TCP exploit\ntarget = "192.168.1.101"\nport = 80\n\n# Exploit code here\nprint("Connecting to target...")\n# Flag: SEBS{python-exploit-success}'
+            },
+            '/home/pentest/notes.txt': {
+                type: 'file',
+                content: 'Pentest Notes:\n- Target IP: 192.168.1.100\n- Open ports: 22, 80, 443\n- Web server: Apache 2.4.41\n- Next step: Find credentials'
+            },
+            '/home/pentest/recon/': {
+                type: 'directory',
+                contents: ['nmap_scan.txt', 'enumeration.log', 'flag2.txt']
+            },
+            '/home/pentest/recon/nmap_scan.txt': {
+                type: 'file',
+                content: 'Nmap scan results:\n\nPORT   STATE SERVICE\n22/tcp open  ssh\n80/tcp open  http\n443/tcp open https\n3306/tcp open mysql\n\nFlag: SEBS{scan-complete}'
+            },
+            '/home/pentest/recon/flag2.txt': {
+                type: 'file',
+                content: 'SEBS{vulnerability-found}'
+            },
+            '/root/.secret': {
+                type: 'file',
+                content: 'SEBS{root-flag-achieved}'
+            }
+        };
+
+        terminalInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = terminalInput.value.trim();
+                terminalInput.value = '';
+                
+                if (command) {
+                    commandHistory.push(command);
+                    historyIndex = commandHistory.length;
+                
+                    addTerminalLine(`pentest@sebs-lab:${currentDirectory}$ ${command}`);
+                executeCommand(command);
+                }
+                
+                setTimeout(() => {
+                    addInputLine();
+                    terminalInput.focus();
+                }, 50);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    historyIndex = Math.max(0, historyIndex - 1);
+                    terminalInput.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    terminalInput.value = commandHistory[historyIndex] || '';
+                }
+            }
+        });
+
+        function addTerminalLine(content) {
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = `<div class="terminal-output">${content}</div>`;
+            terminalContent.insertBefore(line, document.getElementById('inputLine'));
+            scrollToBottom();
+        }
+
+        function addInputLine() {
+            const inputLine = document.getElementById('inputLine');
+            const newLine = inputLine.cloneNode(true);
+            const newInput = newLine.querySelector('input');
+            newInput.value = '';
+            newInput.id = 'terminalInput' + Date.now();
+            
+            terminalContent.replaceChild(newLine, inputLine);
+            newInput.focus();
+            
+            // Re-attach event listener
+            const terminalInputNew = newLine.querySelector('input');
+            terminalInputNew.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const command = terminalInputNew.value.trim();
+                    terminalInputNew.value = '';
+                    
+                    if (command) {
+                        commandHistory.push(command);
+                        historyIndex = commandHistory.length;
+                        
+                        addTerminalLine(`pentest@sebs-lab:${currentDirectory}$ ${command}`);
+                        executeCommand(command);
+                    }
+                    
+                    setTimeout(() => {
+                        addInputLine();
+                        document.querySelector('#terminalInput' + Date.now())?.focus();
+                    }, 50);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (commandHistory.length > 0) {
+                        historyIndex = Math.max(0, historyIndex - 1);
+                        terminalInputNew.value = commandHistory[historyIndex];
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        terminalInputNew.value = commandHistory[historyIndex] || '';
+                    }
+                }
+            });
+            
+            setTimeout(() => terminalInputNew.focus(), 100);
+        }
+
+        function executeCommand(cmd) {
+            const [command, ...args] = cmd.split(' ');
+            
+            switch(command) {
+                case 'ls':
+                    handleLs(args);
+                    break;
+                case 'cat':
+                    handleCat(args[0]);
+                    break;
+                case 'cd':
+                    handleCd(args[0]);
+                    break;
+                case 'pwd':
+                    addTerminalLine(currentDirectory, 'output');
+                    break;
+                case 'whoami':
+                    addTerminalLine('pentest', 'output');
+                    break;
+                case 'id':
+                    addTerminalLine('uid=1000(pentest) gid=1000(pentest) groups=1000(pentest),27(sudo)', 'output');
+                    break;
+                case 'uname':
+                    addTerminalLine('Linux sebs-lab 5.4.0-74-generic #83-Ubuntu SMP', 'output');
+                    break;
+                case 'find':
+                    handleFind(args);
+                    break;
+                case 'grep':
+                    handleGrep(args);
+                    break;
+                case 'sudo':
+                    handleSudo(args);
+                    break;
+                case 'help':
+                    showHelp();
+                    break;
+                case 'clear':
+                    clearTerminal();
+                    break;
+                case 'history':
+                    showHistory();
+                    break;
+                default:
+                    addTerminalLine(`${command}: command not found`, 'error');
+            }
+        }
+
+        function handleLs(args) {
+            const showAll = args.includes('-a') || args.includes('--all');
+            const dirPath = args.find(arg => !arg.startsWith('-')) || currentDirectory;
+            
+            const fsPath = dirPath.startsWith('/') ? dirPath : `${currentDirectory}/${dirPath}`;
+            const dir = fileSystem[fsPath];
+            
+            if (!dir || dir.type !== 'directory') {
+                addTerminalLine(`ls: cannot access '${dirPath}': No such file or directory`, 'error');
+                return;
+            }
+            
+            const contents = dir.contents;
+            const output = showAll ? contents : contents.filter(item => !item.startsWith('.'));
+            
+            addTerminalLine(output.join('  '), 'output');
+        }
+
+        function handleCat(filename) {
+            const filePath = filename.startsWith('/') ? filename : `${currentDirectory}/${filename}`;
+            const file = fileSystem[filePath];
+            
+            if (!file || file.type !== 'file') {
+                addTerminalLine(`cat: ${filename}: No such file or directory`, 'error');
+                return;
+            }
+            
+            addTerminalLine(file.content, 'output');
+            
+            // Check for flags
+            if (file.content.includes('SEBS{')) {
+                const flagMatch = file.content.match(/SEBS\{[^}]+\}/);
+                if (flagMatch && !foundFlags.includes(flagMatch[0])) {
+                    foundFlags.push(flagMatch[0]);
+                    showFlagFound(flagMatch[0]);
+                }
+            }
+        }
+
+        function handleCd(dir) {
+            if (!dir || dir === '~') {
+                currentDirectory = '/home/pentest';
+                return;
+            }
+            
+            if (dir === '..') {
+                currentDirectory = currentDirectory.split('/').slice(0, -1).join('/') || '/';
+                return;
+            }
+            
+            if (dir === '/') {
+                currentDirectory = '/';
+                return;
+            }
+            
+            const targetPath = dir.startsWith('/') ? dir : `${currentDirectory}/${dir}`;
+            const target = fileSystem[targetPath];
+            
+            if (!target || target.type !== 'directory') {
+                addTerminalLine(`cd: ${dir}: No such file or directory`, 'error');
+            } else {
+                currentDirectory = targetPath;
+            }
+        }
+
+        function handleFind(args) {
+            const searchPath = args.find(arg => !arg.startsWith('-')) || currentDirectory;
+            addTerminalLine('./flag1.txt', 'output');
+            addTerminalLine('./recon/flag2.txt', 'output');
+        }
+
+        function handleGrep(args) {
+            const pattern = args[0];
+            addTerminalLine(`Searching for "${pattern}"...`, 'info');
+            addTerminalLine(`Found in exploit.py: ${pattern}`, 'output');
+        }
+
+        function handleSudo(args) {
+            const subCommand = args[0];
+            if (subCommand === 'su' || subCommand === '-i') {
+                currentDirectory = '/root';
+                addTerminalLine('root@sebs-lab:~# ', 'prompt');
+            } else {
+                addTerminalLine(`sudo: ${subCommand}: command not found`, 'error');
+            }
+        }
+
+        function showHelp() {
+            const helpText = `
+Available commands:
+  ls          - List directory contents
+  cat         - Display file contents
+  cd          - Change directory
+  pwd         - Print working directory
+  whoami      - Print user name
+  id          - Print user and group IDs
+  uname       - Print system information
+  find        - Search for files
+  grep        - Search in files
+  sudo        - Execute as another user
+  clear       - Clear terminal
+  history     - Show command history
+  help        - Show this help message
+
+Tips:
+  - Look for flag*.txt files
+  - Check the recon/ directory
+  - Use cat to read files
+  - Explore with ls and cd
+            `;
+            addTerminalLine(helpText, 'output');
+        }
+
+        function clearTerminal() {
+            const content = document.getElementById('terminalContent');
+            const inputLine = document.getElementById('inputLine');
+            content.innerHTML = '';
+            content.appendChild(inputLine);
+            terminalInput.focus();
+        }
+
+        function showHistory() {
+            commandHistory.forEach((cmd, index) => {
+                addTerminalLine(`${index + 1}  ${cmd}`, 'output');
+            });
+        }
+
+        function showFlagFound(flag) {
+            const flagDiv = document.createElement('div');
+            flagDiv.className = 'terminal-line';
+            flagDiv.innerHTML = `
+                <div class="flag-found">
+                    <strong>🎉 FLAG FOUND!</strong><br>
+                    ${flag}
+                </div>
+            `;
+            terminalContent.insertBefore(flagDiv, document.getElementById('inputLine'));
+            scrollToBottom();
+        }
+
+        function addTerminalLine(text, type = 'output') {
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            
+            const colorClass = type === 'error' ? 'terminal-error' :
+                              type === 'info' ? 'terminal-info' :
+                              type === 'success' ? 'terminal-success' :
+                              type === 'warning' ? 'terminal-warning' :
+                              'terminal-output';
+            
+            line.innerHTML = `<div class="${colorClass}">${text}</div>`;
+            terminalContent.insertBefore(line, document.getElementById('inputLine'));
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }
+
+        // Initial focus
+        setTimeout(() => terminalInput.focus(), 100);
+    </script>
+</body>
+    <!-- Configuration & API Integration -->
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+</html>

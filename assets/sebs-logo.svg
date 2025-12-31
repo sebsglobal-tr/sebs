@@ -1,0 +1,50 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6B46C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6B46C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Circle border -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#6B46C1" stroke-width="2"/>
+  
+  <!-- Open book (bottom) -->
+  <path d="M 50 130 Q 60 140 70 135 L 70 165 Q 60 170 50 165 Z" fill="url(#bookGradient)" opacity="0.9"/>
+  <path d="M 70 135 L 130 135 Q 140 140 150 130 Q 140 160 130 165 L 70 165 Z" fill="url(#bookGradient)" opacity="0.9"/>
+  <path d="M 100 135 L 100 165" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  
+  <!-- Pages fanning out -->
+  <path d="M 70 135 Q 75 125 80 130 L 80 160 Q 75 165 70 160 Z" fill="url(#bookGradient)" opacity="0.7"/>
+  <path d="M 130 135 Q 125 125 120 130 L 120 160 Q 125 165 130 160 Z" fill="url(#bookGradient)" opacity="0.7"/>
+  
+  <!-- Small stars emerging from book -->
+  <path d="M 85 110 L 87 115 L 92 115 L 88 118 L 90 123 L 85 120 L 80 123 L 82 118 L 78 115 L 83 115 Z" fill="url(#starGradient)" opacity="0.8"/>
+  <path d="M 110 100 L 111 103 L 114 103 L 112 105 L 113 108 L 110 106 L 107 108 L 108 105 L 106 103 L 109 103 Z" fill="url(#starGradient)" opacity="0.8"/>
+  <path d="M 125 105 L 126 108 L 129 108 L 127 110 L 128 113 L 125 111 L 122 113 L 123 110 L 121 108 L 124 108 Z" fill="url(#starGradient)" opacity="0.8"/>
+  
+  <!-- Shooting star trail -->
+  <circle cx="120" cy="75" r="2" fill="#EC4899" opacity="0.6"/>
+  <circle cx="125" cy="70" r="1.5" fill="#EC4899" opacity="0.5"/>
+  <circle cx="130" cy="65" r="1.5" fill="#EC4899" opacity="0.5"/>
+  <circle cx="135" cy="60" r="1" fill="#EC4899" opacity="0.4"/>
+  <circle cx="140" cy="55" r="1" fill="#EC4899" opacity="0.4"/>
+  
+  <!-- Large five-pointed star (top right) -->
+  <path d="M 155 40 L 157 47 L 164 47 L 159 51 L 161 58 L 155 54 L 149 58 L 151 51 L 146 47 L 153 47 Z" fill="url(#starGradient)" filter="url(#glow)" opacity="1"/>
+  
+  <!-- "Sebs" text below -->
+  <text x="100" y="195" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6B46C1" text-anchor="middle">Sebs</text>
+</svg>
+

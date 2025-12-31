@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - SEBS Global</title>
+    <meta name='description' content="SEBS Global'e giriş yapın ve eğitim modüllerine erişim sağlayın.">
+    <meta name="keywords" content="giriş yap, login, eğitim, SEBS Global">
+    <meta name="author" content="SEBS Global">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="SEBS.png?v=1.0">
+    <link rel="apple-touch-icon" href="SEBS.png?v=1.0">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --card-bg: #ffffff;
+            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            /* Modern Dark Theme - Professional Design */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e0;
+            --text-tertiary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --navbar-bg: rgba(15, 23, 42, 0.95);
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group input.error {
+            border-color: var(--danger-color);
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(49, 130, 206, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .signup-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .login-status {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .login-status.success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .login-status.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid var(--danger-color);
+        }
+
+
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Giriş Yap</h1>
+                <p>SEBS Global'e hoş geldiniz</p>
+            </div>
+
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">E-posta</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span class="loading-spinner" id="loadingSpinner"></span>
+                    <span id="btnText">Giriş Yap</span>
+                </button>
+            </form>
+
+            <div class="login-status" id="loginStatus">
+                <div id="loginMessage"></div>
+            </div>
+
+            <div class="signup-link">
+                <p>Hesabınız yok mu? <a href="signup.html">Üye Olun</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ Login page script loaded');
+        
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e);
+            if (e.filename && e.filename.includes('navigation.js')) {
+                console.warn('⚠️ Navigation.js yüklenirken hata oluştu. Login sayfasında navigation.js kullanılmıyor.');
+                // Don't prevent default - let it show but don't break the page
+            }
+        }, true);
+        
+        // Prevent uncaught promise rejections from breaking the page
+        window.addEventListener('unhandledrejection', function(e) {
+            console.warn('Unhandled promise rejection:', e.reason);
+        });
+
+        // Show loading state
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'inline-block';
+            document.getElementById('btnText').textContent = 'Giriş Yapılıyor...';
+            document.getElementById('loginBtn').disabled = true;
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('btnText').textContent = 'Giriş Yap';
+            document.getElementById('loginBtn').disabled = false;
+        }
+
+        // Show login status
+        function showLoginStatus(message, isSuccess) {
+            const statusDiv = document.getElementById('loginStatus');
+            const messageDiv = document.getElementById('loginMessage');
+            
+            statusDiv.className = `login-status ${isSuccess ? 'success' : 'error'}`;
+            messageDiv.innerHTML = message;
+            statusDiv.style.display = 'block';
+        }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+            document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                document.getElementById('emailError').textContent = 'E-posta alanı zorunludur';
+                document.getElementById('email').classList.add('error');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                document.getElementById('emailError').textContent = 'Geçerli bir e-posta adresi girin';
+                document.getElementById('email').classList.add('error');
+                isValid = false;
+            }
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Şifre alanı zorunludur';
+                document.getElementById('password').classList.add('error');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Email format validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // NO LONGER NEEDED - All progress is stored directly in database
+        // This function is kept for backward compatibility but does nothing
+        async function syncProgressToDatabase(authToken) {
+            // All progress is now stored directly in database
+            // No need to sync from localStorage
+            console.log('Progress sync skipped - all data stored in database');
+            return;
+
+                // Get all courses to map module names to IDs
+                const coursesResponse = await fetch('http://localhost:8006/api/courses', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!coursesResponse.ok) {
+                    console.warn('Failed to fetch courses for sync');
+                    return;
+                }
+
+                const coursesData = await coursesResponse.json();
+                if (!coursesData.success || !coursesData.data) {
+                    return;
+                }
+
+                // Build module name to ID mapping
+                const moduleNameToId = {};
+                coursesData.data.forEach(course => {
+                    if (course.modules) {
+                        course.modules.forEach(module => {
+                            moduleNameToId[module.title] = module.id;
+                        });
+                    }
+                });
+
+                // Prepare progress data for sync
+                const progressData = [];
+                Object.entries(savedProgress.modules).forEach(([moduleName, moduleProgress]) => {
+                    const moduleId = moduleNameToId[moduleName];
+                    if (moduleId && moduleProgress) {
+                        progressData.push({
+                            moduleId: moduleId,
+                            percentComplete: moduleProgress.percentage || 0,
+                            lastStep: JSON.stringify({
+                                completedLessons: moduleProgress.completedLessons || [],
+                                totalLessons: moduleProgress.totalLessons || 0,
+                                lastLesson: moduleProgress.completedLessons?.[moduleProgress.completedLessons.length - 1] || null
+                            }),
+                            isCompleted: moduleProgress.status === 'Tamamlandı' || moduleProgress.percentage === 100
+                        });
+                    }
+                });
+
+                if (progressData.length === 0) {
+                    console.log('No valid progress data to sync');
+                    return;
+                }
+
+                // Sync to database
+                const syncResponse = await fetch('http://localhost:8006/api/progress/sync', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        progressData: progressData
+                    })
+                });
+
+                const syncResult = await syncResponse.json();
+                if (syncResult.success) {
+                    console.log(`✅ Synced ${syncResult.data.synced.length} module(s) to database`);
+                    if (syncResult.data.errors && syncResult.data.errors.length > 0) {
+                        console.warn('Some modules failed to sync:', syncResult.data.errors);
+                    }
+                } else {
+                    console.warn('Progress sync failed:', syncResult.message);
+                }
+            } catch (error) {
+                console.error('Error syncing progress:', error);
+            }
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                
+                // API login call
+                const response = await fetch('http://localhost:8006/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('🔍 Login response:', result);
+                
+                if (result.success) {
+                    // Login successful
+                    // Handle both response formats: { data: { tokens: { accessToken } } } or { data: { token } }
+                    const accessToken = result.data.tokens?.accessToken || result.data.token || result.data.accessToken;
+                    const userRole = result.data.user?.role || result.data.role || 'user';
+                    
+                    if (!accessToken) {
+                        console.error('❌ No access token in response:', result);
+                        showLoginStatus(`
+                            <h4><i class="fas fa-exclamation-triangle"></i> Hata</h4>
+                            <p>Login başarılı ancak token alınamadı. Lütfen tekrar deneyin.</p>
+                        `, false);
+                        return;
+                    }
+                    
+                    console.log('✅ Login successful');
+                    console.log('   Access Token:', accessToken ? 'Present' : 'Missing');
+                    console.log('   User Role:', userRole);
+                    console.log('   User Data:', result.data.user || result.data);
+                    
+                    // Get full user data including purchases from /api/users/me
+                    let fullUserData = result.data.user || result.data;
+                    try {
+                        const userMeResponse = await fetch('http://localhost:8006/api/users/me', {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        });
+                        if (userMeResponse.ok) {
+                            const userMeResult = await userMeResponse.json();
+                            if (userMeResult.success && userMeResult.data) {
+                                fullUserData = userMeResult.data;
+                                console.log('✅ Full user data with purchases loaded:', fullUserData);
+                            }
+                        }
+                    } catch (err) {
+                        console.warn('Could not fetch full user data, using login response:', err);
+                    }
+                    
+                    // Store only essential data in localStorage (token and basic info)
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('isVerified', 'true');
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('authToken', accessToken);
+                    localStorage.setItem('userRole', userRole);
+                    
+                    // Store minimal user data (ID only for API calls)
+                    localStorage.setItem('userId', fullUserData.id || '');
+                    
+                    // DO NOT store full user data, purchases, or progress in localStorage
+                    // All data will be fetched from database when needed
+                    console.log('✅ Login successful - data will be fetched from database');
+                    
+                    // Check if user is admin
+                    const isAdmin = userRole === 'admin';
+                    const redirectUrl = isAdmin ? 'admin.html' : 'dashboard.html';
+                    const panelName = isAdmin ? 'Admin Panel' : 'Kişisel Panel';
+                    
+                    console.log('   Is Admin:', isAdmin);
+                    console.log('   Redirect URL:', redirectUrl);
+                    
+                    // No need to sync - all data is in database
+                    console.log('✅ Login successful - all data will be loaded from database');
+                    
+                    showLoginStatus(`
+                        <h4><i class="fas fa-check-circle"></i> Giriş Başarılı!</h4>
+                        <p>Hoş geldiniz! ${panelName}inize yönlendiriliyorsunuz...</p>
+                        <button onclick="window.location.href='${redirectUrl}'" class="btn-login" style="margin-top: 15px;">
+                            ${panelName}e Git
+                        </button>
+                    `, true);
+                    
+                    // Auto redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                    
+                    // Clear form
+                    document.getElementById('loginForm').reset();
+                    
+                } else {
+                    showLoginStatus(`
+                        <h4><i class="fas fa-exclamation-triangle"></i> Giriş Başarısız</h4>
+                        <p>${result.message}</p>
+                    `, false);
+                }
+
+            } catch (error) {
+                showLoginStatus(`
+                    <h4><i class="fas fa-exclamation-triangle"></i> Hata</h4>
+                    <p>Giriş işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.</p>
+                `, false);
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // Check if already logged in
+        function checkIfLoggedIn() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const userRole = localStorage.getItem('userRole') || 'user';
+            
+            if (isLoggedIn) {
+                // Already logged in, redirect to appropriate panel
+                const redirectUrl = userRole === 'admin' ? 'admin.html' : 'dashboard.html';
+                console.log('Already logged in, redirecting to:', redirectUrl);
+                window.location.href = redirectUrl;
+                return true;
+            }
+            return false;
+        }
+
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Login page DOM loaded');
+            
+            // Check if already logged in
+            if (checkIfLoggedIn()) {
+                return; // Will redirect, so don't continue
+            }
+            
+            // Clear any existing values
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            
+            if (emailInput) emailInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            
+            // Verify form elements exist
+            const form = document.getElementById('loginForm');
+            if (!form) {
+                console.error('❌ Login form not found!');
+                return;
+            }
+            
+            console.log('✅ Login form found, page ready');
+        });
+        
+        // Handle 304 cache issues - force page reload if needed
+        window.addEventListener('load', function() {
+            console.log('✅ Login page fully loaded');
+            
+            // Check if page actually rendered
+            const loginContainer = document.querySelector('.login-container');
+            if (!loginContainer) {
+                console.error('❌ Login container not found - possible cache issue');
+                console.log('Try: Ctrl+Shift+R (hard refresh) to clear cache');
+            } else {
+                console.log('✅ Login page rendered successfully');
+            }
+        });
+    </script>
+</body>
+</html>

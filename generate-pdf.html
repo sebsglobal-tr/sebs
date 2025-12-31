@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Oluşturucu - SEBS Global</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #667eea;
+        }
+        h2 {
+            color: #764ba2;
+            margin-top: 30px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>📥 SEBS Global - Dosya İndirme Merkezi</h1>
+    
+    <div class="section">
+        <h2>📊 Proje Özeti</h2>
+        <p><strong>Dosya:</strong> PROJE_OZETI.md</p>
+        <p>Projenin gün gün geliştirme özeti, teknik detaylar ve istatistikler.</p>
+        <a href="PROJE_OZETI.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>🎤 Sunum İçeriği</h2>
+        <p><strong>Dosya:</strong> SUNUM_İÇERİĞİ.md</p>
+        <p>Sunum için hazırlanmış içerik ve notlar.</p>
+        <a href="SUNUM_İÇERİĞİ.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>🖥️ Sunum Slaytları</h2>
+        <p><strong>Dosya:</strong> SEBS_Global_Sunum.html</p>
+        <p>8 slaytlık interaktif sunum. PDF'e çevirmek için:</p>
+        <ol>
+            <li>Dosyayı tarayıcıda açın</li>
+            <li><code>Ctrl+P</code> (Windows) veya <code>Cmd+P</code> (Mac) basın</li>
+            <li>"Hedef: PDF olarak kaydet" seçin</li>
+            <li>"Sayfa yönlendirme: Yatay" seçin</li>
+            <li>Kaydet</li>
+        </ol>
+        <a href="SEBS_Global_Sunum.html" class="download-btn" target="_blank">🖼️ Sunumu Aç</a>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Sistem Kontrol Raporu</h2>
+        <p><strong>Dosya:</strong> SYSTEM_AUDIT_REPORT.md</p>
+        <p>Production hazırlık kontrolü ve gereksiz dosya raporu.</p>
+        <a href="SYSTEM_AUDIT_REPORT.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>📋 Yorum Satırları Raporu</h2>
+        <p><strong>Dosya:</strong> YORUM_SATIRLARI_RAPORU.md</p>
+        <p>Tüm kod dosyalarındaki yorum ve console.log analizi.</p>
+        <a href="YORUM_SATIRLARI_RAPORU.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>💡 PDF Oluşturma Notları</h2>
+        <p><strong>Sunum için PDF:</strong></p>
+        <ol>
+            <li><code>SEBS_Global_Sunum.html</code> dosyasını Chrome/Edge'de açın</li>
+            <li><code>Ctrl+P</code> veya <code>Cmd+P</code> ile print dialog'u açın</li>
+            <li><strong>Hedef:</strong> "PDF olarak kaydet" seçin</li>
+            <li><strong>Sayfa:</strong> "Tümü" seçin</li>
+            <li><strong>Yönlendirme:</strong> "Yatay" seçin</li>
+            <li><strong>Kenar Boşlukları:</strong> "Yok" seçin</li>
+            <li>"Seçenekler" bölümünde "Arka plan grafikleri" işaretleyin</li>
+            <li>"Kaydet" butonuna tıklayın</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📂 Tüm Dosyalar</h2>
+        <p>Aşağıdaki komutla tüm raporları tek seferde indirebilirsiniz:</p>
+        <code style="display: block; padding: 10px; background: #1e293b; color: #fff; border-radius: 5px;">
+            # Terminal'de çalıştırın:<br>
+            wget https://your-domain.com/PROJE_OZETI.md<br>
+            wget https://your-domain.com/SUNUM_İÇERİĞİ.md<br>
+            wget https://your-domain.com/SEBS_Global_Sunum.html
+        </code>
+    </div>
+</body>
+</html>
+

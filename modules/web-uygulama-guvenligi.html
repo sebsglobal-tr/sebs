@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Uygulama Güvenliği Eğitimi - SEBS Global</title>
+    <meta name="description" content="Web uygulamaları güvenlik açıkları, OWASP Top 10 ve güvenli kodlama teknikleri.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../modules.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --text-color: #1e293b;
+            --primary-color: #667eea;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --light-text-color: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+        }
+
+        .coming-soon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 2rem;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .coming-soon-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .coming-soon-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .coming-soon-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .coming-soon-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .coming-soon-title {
+                font-size: 2rem;
+            }
+            
+            .coming-soon-subtitle {
+                font-size: 1rem;
+            }
+            
+            .coming-soon-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo" id="navLogo">
+                <img src="../SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="../index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="../login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="../signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="../dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
+                    <i class="fas fa-tachometer-alt"></i> Panel
+                </a>
+                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="coming-soon-container">
+            <div class="coming-soon-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            
+            <h1 class="coming-soon-title">Web Uygulama Güvenliği Modülü</h1>
+            
+            <p class="coming-soon-subtitle">
+                Web uygulamaları güvenlik açıkları, OWASP Top 10 ve güvenli kodlama teknikleri yakında yüklenecek. Web güvenliği, penetration testing ve güvenli geliştirme konularında detaylı içerikler hazırlanıyor.
+            </p>
+            
+            <div class="coming-soon-features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="feature-title">OWASP Top 10</h3>
+                    <p class="feature-description">En kritik web uygulaması güvenlik açıkları</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Güvenli Kodlama</h3>
+                    <p class="feature-description">Güvenli yazılım geliştirme teknikleri</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Web Güvenliği</h3>
+                    <p class="feature-description">Web uygulamaları güvenlik kontrolleri</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="feature-title">Penetration Testing</h3>
+                    <p class="feature-description">Web uygulamaları güvenlik testleri</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SEBS Global</h3>
+                <p>Kapsamlı eğitim platformu</p>
+            </div>
+            <div class="footer-section">
+                <h4>Hızlı Linkler</h4>
+                <ul>
+                    <li><a href="../index.html">Anasayfa</a></li>
+                    <li><a href="../modules.html">Modüller</a></li>
+                    <li><a href="../about.html">Hakkımızda</a></li>
+                    <li><a href="../contact.html">İletişim</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Eğitim Alanları</h4>
+                <ul>
+                    <li>Siber Güvenlik</li>
+                    <li>Bulut Bilişim</li>
+                    <li>Veri Bilimi</li>
+                    <li>Teknoloji</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SEBS Global. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+    <!-- Navigation Script -->
+    <script src="../js/navigation.js"></script>
+    <!-- Access Control -->
+    <script src="../utils/access-control.js"></script>
+    <script src="module-access-check.js"></script>
+</body>
+    <!-- Configuration & API Integration -->
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+</html>

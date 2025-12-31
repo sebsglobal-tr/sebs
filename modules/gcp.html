@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Cloud Platform - SEBS Global</title>
+    <meta name='description' content="Google Cloud Platform modülü ile Google'ın bulut bilişim servislerini öğrenin. Compute Engine, Cloud Storage ve BigQuery kullanımını öğrenin.">
+    <meta name="keywords" content="GCP, Google Cloud Platform, bulut bilişim, cloud computing, Compute Engine, Cloud Storage, BigQuery, SEBS Global">
+    <meta name="author" content="SEBS Global">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sebs-global.com/modules/gcp.html">
+    <meta property="og:title" content="Google Cloud Platform - SEBS Global">
+    <meta property="og:description" content="Google Cloud Platform modülü ile Google'ın bulut bilişim servislerini öğrenin. Compute Engine, Cloud Storage ve BigQuery kullanımını öğrenin.">
+    <meta property="og:image" content="https://sebs-global.com/og-gcp.jpg">
+    <meta property="og:site_name" content="SEBS Global">
+    <meta property="og:locale" content="tr_TR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Google Cloud Platform - SEBS Global">
+    <meta name="twitter:description" content="Google Cloud Platform modülü ile Google'ın bulut bilişim servislerini öğrenin. Compute Engine, Cloud Storage ve BigQuery kullanımını öğrenin.">
+    <meta name="twitter:image" content="https://sebs-global.com/og-gcp.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sebs-global.com/modules/gcp.html">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --text-color: #1e293b;
+            --primary-color: #667eea;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --light-text-color: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .loading-subtext {
+            font-size: 1rem;
+            opacity: 0.8;
+            animation: fadeInOut 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .module-hero {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .module-content {
+            padding: 80px 0;
+        }
+
+        .content-sidebar {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .sidebar {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .main-content {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .lesson-content {
+            display: none;
+        }
+
+        .lesson-content.active {
+            display: block;
+        }
+
+        .lesson-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .lesson-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 15px 0;
+            color: var(--text-primary);
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .lesson-content ul,
+        .lesson-content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .lesson-content li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #d97706;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #16a34a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .progress-bar {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .progress-bar h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+        }
+
+        .progress-item.completed {
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .progress-item.completed .progress-text {
+            color: #16a34a;
+        }
+
+        .progress-item.completed .progress-icon {
+            color: #16a34a;
+        }
+
+        .progress-text {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .progress-icon {
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .content-sidebar {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .sidebar {
+                position: static;
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="loading-logo">
+                <i class="fab fa-google"></i>
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Google Cloud Platform</div>
+            <div class="loading-subtext">Yükleniyor...</div>
+        </div>
+    </div>
+
+        <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo" id="navLogo">
+                <img src="../SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="../index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="../contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="../login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="../signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="../dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
+                    <i class="fas fa-tachometer-alt"></i> Panel
+                </a>
+                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Module Hero -->
+    <section class="module-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Google Cloud Platform</h1>
+                <p>Google'ın bulut bilişim platformu ile veri analizi, makine öğrenmesi ve modern uygulamalar geliştirin</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module Content -->
+    <section class="module-content">
+        <div class="container">
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <h3>Modül İlerlemesi</h3>
+                <div class="progress-item completed">
+                    <span class="progress-text">Ders 1: GCP'ye Giriş</span>
+                    <i class="fas fa-check-circle progress-icon"></i>
+                </div>
+                <div class="progress-item completed">
+                    <span class="progress-text">Ders 2: Compute Engine</span>
+                    <i class="fas fa-check-circle progress-icon"></i>
+                </div>
+                <div class="progress-item completed">
+                    <span class="progress-text">Ders 3: Cloud Storage</span>
+                    <i class="fas fa-check-circle progress-icon"></i>
+                </div>
+                <div class="progress-item completed">
+                    <span class="progress-text">Ders 4: BigQuery</span>
+                    <i class="fas fa-check-circle progress-icon"></i>
+                </div>
+                <div class="progress-item completed">
+                    <span class="progress-text">Ders 5: Cloud Functions</span>
+                    <i class="fas fa-check-circle progress-icon"></i>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-text">Ders 6: AI/ML Servisleri</span>
+                    <i class="fas fa-circle progress-icon"></i>
+                </div>
+            </div>
+
+            <div class="content-sidebar">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <h3>Ders İçeriği</h3>
+                    <ul>
+                        <li><a href="#lesson1" class="nav-link active" data-lesson="lesson1">Ders 1: GCP'ye Giriş</a></li>
+                        <li><a href="#lesson2" class="nav-link" data-lesson="lesson2">Ders 2: Compute Engine</a></li>
+                        <li><a href="#lesson3" class="nav-link" data-lesson="lesson3">Ders 3: Cloud Storage</a></li>
+                        <li><a href="#lesson4" class="nav-link" data-lesson="lesson4">Ders 4: BigQuery</a></li>
+                        <li><a href="#lesson5" class="nav-link" data-lesson="lesson5">Ders 5: Cloud Functions</a></li>
+                        <li><a href="#lesson6" class="nav-link" data-lesson="lesson6">Ders 6: AI/ML Servisleri</a></li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Lesson 1 -->
+                    <div id="lesson1" class="lesson-content active">
+                        <h2>Ders 1: GCP'ye Giriş</h2>
+                        
+                        <h3>Google Cloud Platform Nedir?</h3>
+                        <p>Google Cloud Platform (GCP), Google tarafından sunulan kapsamlı bir bulut bilişim platformudur. GCP ile veri analizi, makine öğrenmesi, uygulama geliştirme ve altyapı yönetimi yapabilirsiniz.</p>
+
+                        <div class="info-box">
+                            <h4>💡 GCP'nin Avantajları</h4>
+                            <ul>
+                                <li><strong>Data Analytics:</strong> BigQuery ile güçlü veri analizi</li>
+                                <li><strong>AI/ML:</strong> TensorFlow ve AutoML entegrasyonu</li>
+                                <li><strong>Global Network:</strong> Dünya çapında hızlı ağ</li>
+                                <li><strong>Cost Optimization:</strong> Akıllı maliyet yönetimi</li>
+                                <li><strong>Kubernetes:</strong> Google Kubernetes Engine</li>
+                                <li><strong>Security:</strong> Endüstri lideri güvenlik</li>
+                            </ul>
+                        </div>
+
+                        <h3>GCP Temel Servisleri</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Servis</th>
+                                    <th>Kategori</th>
+                                    <th>Açıklama</th>
+                                    <th>Kullanım Alanı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Compute Engine</td>
+                                    <td>Compute</td>
+                                    <td>Sanal sunucu servisleri</td>
+                                    <td>VM instances, containers</td>
+                                </tr>
+                                <tr>
+                                    <td>Cloud Storage</td>
+                                    <td>Storage</td>
+                                    <td>Nesne depolama servisi</td>
+                                    <td>Dosya depolama, backup</td>
+                                </tr>
+                                <tr>
+                                    <td>BigQuery</td>
+                                    <td>Analytics</td>
+                                    <td>Veri ambarı servisi</td>
+                                    <td>Veri analizi, BI</td>
+                                </tr>
+                                <tr>
+                                    <td>Cloud Functions</td>
+                                    <td>Serverless</td>
+                                    <td>Sunucusuz fonksiyonlar</td>
+                                    <td>Event-driven apps</td>
+                                </tr>
+                                <tr>
+                                    <td>Cloud AI</td>
+                                    <td>AI/ML</td>
+                                    <td>Yapay zeka servisleri</td>
+                                    <td>Machine learning, NLP</td>
+                                </tr>
+                                <tr>
+                                    <td>Kubernetes Engine</td>
+                                    <td>Containers</td>
+                                    <td>Kubernetes yönetimi</td>
+                                    <td>Container orchestration</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>GCP Hesabı Oluşturma</h3>
+                        <p>GCP'ye başlamak için öncelikle bir Google Cloud hesabı oluşturmanız gerekir:</p>
+                        
+                        <ol>
+                            <li>Google Cloud Console'a gidin (console.cloud.google.com)</li>
+                            <li>Google hesabınızla giriş yapın</li>
+                            <li>"Get started for free" butonuna tıklayın</li>
+                            <li>Ülke ve hesap türünü seçin</li>
+                            <li>Kredi kartı bilgilerinizi ekleyin</li>
+                            <li>Free trial'ı başlatın</li>
+                        </ol>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Önemli Notlar</h4>
+                            <ul>
+                                <li>Free trial ile $300 kredi ve 90 gün</li>
+                                <li>Kredi kartı bilgileri doğrulama amaçlıdır</li>
+                                <li>Free tier limitlerini aşmamaya dikkat edin</li>
+                                <li>Billing alerts ayarlayın</li>
+                                <li>Always Free tier servisleri mevcuttur</li>
+                            </ul>
+                        </div>
+
+                        <h3>Google Cloud Console</h3>
+                        <p>Google Cloud Console, GCP servislerini yönetmek için kullanılan web tabanlı arayüzdür. Console üzerinden:</p>
+                        
+                        <ul>
+                            <li>Servisleri görüntüleyebilir ve yönetebilirsiniz</li>
+                            <li>Kaynaklarınızı izleyebilirsiniz</li>
+                            <li>Faturalandırma bilgilerinizi kontrol edebilirsiniz</li>
+                            <li>Güvenlik ayarlarınızı yapılandırabilirsiniz</li>
+                            <li>Cloud Shell ile terminal erişimi sağlayabilirsiniz</li>
+                        </ul>
+
+                        <h3>Projects ve Billing</h3>
+                        <p>GCP'de her şey bir Project altında organize edilir:</p>
+                        
+                        <ul>
+                            <li><strong>Project:</strong> Kaynakların mantıksal gruplandırması</li>
+                            <li><strong>Billing Account:</strong> Faturalandırma hesabı</li>
+                            <li><strong>IAM:</strong> Kimlik ve erişim yönetimi</li>
+                            <li><strong>APIs:</strong> Servis API'leri</li>
+                            <li><strong>Quotas:</strong> Servis limitleri</li>
+                        </ul>
+
+                        <div class="code-block">
+# gcloud CLI ile project oluşturma
+gcloud projects create my-gcp-project \
+    --name="My GCP Project" \
+    --labels=environment=dev,team=engineering
+
+# Project'i aktifleştirme
+gcloud config set project my-gcp-project
+                        </div>
+
+                        <h3>GCP Pricing Model</h3>
+                        <p>GCP'nin fiyatlandırma modeli:</p>
+                        
+                        <ul>
+                            <li><strong>Pay-as-you-go:</strong> Kullandığınız kadar ödeme</li>
+                            <li><strong>Sustained Use Discounts:</strong> Sürekli kullanım indirimleri</li>
+                            <li><strong>Committed Use Discounts:</strong> Taahhüt indirimleri</li>
+                            <li><strong>Preemptible Instances:</strong> Düşük maliyetli VM'ler</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>💰 Maliyet Optimizasyonu İpuçları</h4>
+                            <ul>
+                                <li>Preemptible instances kullanın</li>
+                                <li>Committed use discounts'ları değerlendirin</li>
+                                <li>Unused resources'ları temizleyin</li>
+                                <li>Billing alerts ayarlayın</li>
+                                <li>Cost reports'ları düzenli kontrol edin</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 2 -->
+                    <div id="lesson2" class="lesson-content">
+                        <h2>Ders 2: Compute Engine</h2>
+                        
+                        <h3>Compute Engine Nedir?</h3>
+                        <p>Compute Engine, Google Cloud'un sanal sunucu servisidir. Linux ve Windows işletim sistemleri çalıştırabilir, ölçeklenebilir ve güvenilir altyapı oluşturabilirsiniz.</p>
+
+                        <h3>Machine Types</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Machine Type</th>
+                                    <th>Kullanım Alanı</th>
+                                    <th>Özellikler</th>
+                                    <th>Maliyet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>e2-micro</td>
+                                    <td>Test ve Geliştirme</td>
+                                    <td>1 vCPU, 1 GB RAM</td>
+                                    <td>En düşük</td>
+                                </tr>
+                                <tr>
+                                    <td>e2-small</td>
+                                    <td>Küçük Uygulamalar</td>
+                                    <td>2 vCPU, 2 GB RAM</td>
+                                    <td>Düşük</td>
+                                </tr>
+                                <tr>
+                                    <td>e2-medium</td>
+                                    <td>Orta Seviye</td>
+                                    <td>2 vCPU, 4 GB RAM</td>
+                                    <td>Orta</td>
+                                </tr>
+                                <tr>
+                                    <td>c2-standard-4</td>
+                                    <td>Compute Optimized</td>
+                                    <td>4 vCPU, 16 GB RAM</td>
+                                    <td>Yüksek</td>
+                                </tr>
+                                <tr>
+                                    <td>n2-highmem-4</td>
+                                    <td>Memory Optimized</td>
+                                    <td>4 vCPU, 32 GB RAM</td>
+                                    <td>En yüksek</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>VM Instance Oluşturma</h3>
+                        <div class="info-box">
+                            <h4>🔧 VM Instance Oluşturma Adımları</h4>
+                            <ol>
+                                <li>Google Cloud Console'da "Compute Engine" servisine gidin</li>
+                                <li>"Create Instance" butonuna tıklayın</li>
+                                <li>Instance adını ve region'ı belirleyin</li>
+                                <li>Machine type seçin</li>
+                                <li>Boot disk image seçin</li>
+                                <li>Firewall rules ayarlayın</li>
+                                <li>SSH key ekleyin</li>
+                                <li>Instance'ı oluşturun</li>
+                            </ol>
+                        </div>
+
+                        <h3>Disk Türleri</h3>
+                        <p>Compute Engine için farklı disk türleri mevcuttur:</p>
+
+                        <ul>
+                            <li><strong>Standard Persistent Disk:</strong> Düşük maliyetli, HDD tabanlı</li>
+                            <li><strong>SSD Persistent Disk:</strong> Yüksek performanslı, SSD tabanlı</li>
+                            <li><strong>Local SSD:</strong> En yüksek performans, geçici</li>
+                            <li><strong>Balanced Persistent Disk:</strong> Dengeli performans/maliyet</li>
+                        </ul>
+
+                        <div class="code-block">
+# gcloud CLI ile VM oluşturma
+gcloud compute instances create my-instance \
+    --zone=us-central1-a \
+    --machine-type=e2-medium \
+    --image-family=ubuntu-2004-lts \
+    --image-project=ubuntu-os-cloud \
+    --boot-disk-size=10GB \
+    --boot-disk-type=pd-standard
+                        </div>
+
+                        <h3>Instance Groups</h3>
+                        <p>Instance Groups, birden fazla VM'yi yönetmenizi sağlar:</p>
+
+                        <ul>
+                            <li><strong>Managed Instance Groups:</strong> Otomatik yönetim</li>
+                            <li><strong>Unmanaged Instance Groups:</strong> Manuel yönetim</li>
+                            <li><strong>Auto Scaling:</strong> Otomatik ölçekleme</li>
+                            <li><strong>Load Balancing:</strong> Yük dengeleme</li>
+                        </ul>
+
+                        <h3>Preemptible Instances</h3>
+                        <p>Preemptible instances, düşük maliyetli VM'lerdir:</p>
+
+                        <ul>
+                            <li><strong>%80'e kadar indirim</strong></li>
+                            <li><strong>24 saat maksimum çalışma süresi</strong></li>
+                            <li><strong>Batch işler için ideal</strong></li>
+                            <li><strong>Fault-tolerant uygulamalar için uygun</strong></li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>✅ Compute Engine En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Preemptible instances ile maliyet tasarrufu yapın</li>
+                                <li>Custom machine types kullanın</li>
+                                <li>Persistent disks için snapshot alın</li>
+                                <li>Instance templates kullanın</li>
+                                <li>Monitoring ve alerting ayarlayın</li>
+                                <li>Startup scripts ile otomatik konfigürasyon</li>
+                            </ul>
+                        </div>
+
+                        <h3>Networking ve Security</h3>
+                        <p>Compute Engine güvenlik özellikleri:</p>
+
+                        <ul>
+                            <li><strong>Firewall Rules:</strong> Gelen ve giden trafik kontrolü</li>
+                            <li><strong>VPC Networks:</strong> Sanal özel ağlar</li>
+                            <li><strong>Subnets:</strong> Ağ segmentasyonu</li>
+                            <li><strong>Cloud NAT:</strong> Outbound internet erişimi</li>
+                            <li><strong>Private Google Access:</strong> Google servislerine özel erişim</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>🔒 Güvenlik En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Firewall rules'ları minimum privilege ile ayarlayın</li>
+                                <li>SSH key'leri güvenli saklayın</li>
+                                <li>OS Login kullanın</li>
+                                <li>Service accounts ile güvenli erişim sağlayın</li>
+                                <li>Regular security updates uygulayın</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 3 -->
+                    <div id="lesson3" class="lesson-content">
+                        <h2>Ders 3: Cloud Storage</h2>
+                        
+                        <h3>Cloud Storage Nedir?</h3>
+                        <p>Cloud Storage, Google Cloud'un nesne depolama servisidir. Dosyalarınızı güvenli bir şekilde saklayabilir ve dünyanın her yerinden erişebilirsiniz.</p>
+
+                        <h3>Storage Classes</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Storage Class</th>
+                                    <th>Kullanım Alanı</th>
+                                    <th>Avantajlar</th>
+                                    <th>Maliyet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Standard</td>
+                                    <td>Sık erişilen veriler</td>
+                                    <td>En yüksek performans</td>
+                                    <td>En yüksek</td>
+                                </tr>
+                                <tr>
+                                    <td>Nearline</td>
+                                    <td>Ayda 1 kez erişilen veriler</td>
+                                    <td>Düşük maliyet</td>
+                                    <td>Düşük</td>
+                                </tr>
+                                <tr>
+                                    <td>Coldline</td>
+                                    <td>Yılda 1 kez erişilen veriler</td>
+                                    <td>Çok düşük maliyet</td>
+                                    <td>Çok düşük</td>
+                                </tr>
+                                <tr>
+                                    <td>Archive</td>
+                                    <td>Arşiv veriler</td>
+                                    <td>En düşük maliyet</td>
+                                    <td>En düşük</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Bucket Oluşturma</h3>
+                        <div class="info-box">
+                            <h4>📁 Bucket Oluşturma Adımları</h4>
+                            <ol>
+                                <li>Google Cloud Console'da "Cloud Storage" servisine gidin</li>
+                                <li>"Create bucket" butonuna tıklayın</li>
+                                <li>Bucket adını girin (global olarak benzersiz)</li>
+                                <li>Storage class seçin</li>
+                                <li>Location seçin</li>
+                                <li>Access control ayarlarını yapın</li>
+                                <li>Bucket'ı oluşturun</li>
+                            </ol>
+                        </div>
+
+                        <h3>Bucket Policies</h3>
+                        <p>Bucket Policies, Cloud Storage bucket'larınızın erişim izinlerini kontrol etmenizi sağlar:</p>
+
+                        <div class="code-block">
+# Bucket policy örneği
+{
+  "bindings": [
+    {
+      "role": "roles/storage.objectViewer",
+      "members": [
+        "allUsers"
+      ]
+    }
+  ]
+}
+                        </div>
+
+                        <h3>Lifecycle Management</h3>
+                        <p>Lifecycle Management, object'lerinizin yaşam döngüsünü otomatik olarak yönetmenizi sağlar:</p>
+
+                        <ul>
+                            <li><strong>Age-based:</strong> Yaşa göre işlemler</li>
+                            <li><strong>Storage class transitions:</strong> Storage class değişimi</li>
+                            <li><strong>Deletion:</strong> Otomatik silme</li>
+                        </ul>
+
+                        <div class="code-block">
+# gsutil ile bucket oluşturma
+gsutil mb -c STANDARD -l us-central1 gs://my-bucket-name
+
+# Lifecycle policy uygulama
+gsutil lifecycle set lifecycle.json gs://my-bucket-name
+                        </div>
+
+                        <h3>Cloud Storage Security</h3>
+                        <p>Cloud Storage güvenlik özellikleri:</p>
+
+                        <ul>
+                            <li><strong>IAM:</strong> Identity and Access Management</li>
+                            <li><strong>ACLs:</strong> Access Control Lists</li>
+                            <li><strong>Encryption:</strong> Veri şifreleme</li>
+                            <li><strong>Audit Logs:</strong> Aktivite logları</li>
+                            <li><strong>VPC Service Controls:</strong> Ağ seviyesi güvenlik</li>
+                        </ul>
+
+                        <h3>Transfer Service</h3>
+                        <p>Cloud Storage Transfer Service ile:</p>
+
+                        <ul>
+                            <li><strong>On-premises'den cloud'a:</strong> Büyük veri transferi</li>
+                            <li><strong>Cloud-to-cloud:</strong> Farklı cloud provider'lar arası</li>
+                            <li><strong>Scheduled transfers:</strong> Zamanlanmış transferler</li>
+                            <li><strong>Incremental sync:</strong> Artımlı senkronizasyon</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>🔒 Cloud Storage En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Bucket'ları region'a yakın oluşturun</li>
+                                <li>Lifecycle policies kullanın</li>
+                                <li>Versioning'i aktifleştirin</li>
+                                <li>Monitoring ve alerting ayarlayın</li>
+                                <li>Regular backup stratejisi oluşturun</li>
+                                <li>Encryption at rest ve in transit</li>
+                                <li>Access logs'ları izleyin</li>
+                            </ul>
+                        </div>
+
+                        <h3>Cloud Storage FUSE</h3>
+                        <p>Cloud Storage FUSE ile bucket'larınızı dosya sistemi olarak mount edebilirsiniz:</p>
+
+                        <div class="code-block">
+# Cloud Storage FUSE kurulumu
+sudo apt-get update
+sudo apt-get install gcsfuse
+
+# Bucket'ı mount etme
+mkdir /mnt/gcs-bucket
+gcsfuse my-bucket-name /mnt/gcs-bucket
+                        </div>
+
+                        <h3>Performance Optimization</h3>
+                        <p>Cloud Storage performans optimizasyonu:</p>
+
+                        <ul>
+                            <li><strong>Parallel uploads:</strong> Paralel yükleme</li>
+                            <li><strong>Composite uploads:</strong> Büyük dosyalar için</li>
+                            <li><strong>Compression:</strong> Dosya sıkıştırma</li>
+                            <li><strong>CDN integration:</strong> Cloud CDN entegrasyonu</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Dikkat Edilecekler</h4>
+                            <ul>
+                                <li>Bucket adları global olarak benzersiz olmalı</li>
+                                <li>Storage class değişiklikleri maliyetli olabilir</li>
+                                <li>Lifecycle policies dikkatli planlanmalı</li>
+                                <li>Access patterns'ı optimize edin</li>
+                                <li>Regular cost monitoring yapın</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 4 -->
+                    <div id="lesson4" class="lesson-content">
+                        <h2>Ders 4: BigQuery</h2>
+                        
+                        <h3>BigQuery Nedir?</h3>
+                        <p>BigQuery, Google Cloud'un serverless veri ambarı servisidir. Petabyte ölçeğinde verileri hızlı bir şekilde analiz edebilirsiniz.</p>
+
+                        <h3>BigQuery Temel Kavramları</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kavram</th>
+                                    <th>Açıklama</th>
+                                    <th>Örnek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dataset</td>
+                                    <td>Tablo koleksiyonu</td>
+                                    <td>my_dataset</td>
+                                </tr>
+                                <tr>
+                                    <td>Table</td>
+                                    <td>Veri tablosu</td>
+                                    <td>my_dataset.users</td>
+                                </tr>
+                                <tr>
+                                    <td>View</td>
+                                    <td>Sanal tablo</td>
+                                    <td>my_dataset.user_summary</td>
+                                </tr>
+                                <tr>
+                                    <td>Job</td>
+                                    <td>SQL sorgusu</td>
+                                    <td>Query job</td>
+                                </tr>
+                                <tr>
+                                    <td>Slot</td>
+                                    <td>İşlem gücü birimi</td>
+                                    <td>2000 slots</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>BigQuery Pricing</h3>
+                        <p>BigQuery'nin fiyatlandırma modeli:</p>
+
+                        <ul>
+                            <li><strong>On-demand:</strong> Sorgu başına ödeme</li>
+                            <li><strong>Flat-rate:</strong> Sabit ücret</li>
+                            <li><strong>Storage:</strong> Depolama ücreti</li>
+                            <li><strong>Streaming:</strong> Gerçek zamanlı veri ekleme</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>📊 BigQuery Dataset Oluşturma</h4>
+                            <ol>
+                                <li>Google Cloud Console'da "BigQuery" servisine gidin</li>
+                                <li>"Create Dataset" butonuna tıklayın</li>
+                                <li>Dataset ID girin</li>
+                                <li>Data location seçin</li>
+                                <li>Default table expiration ayarlayın</li>
+                                <li>Dataset'i oluşturun</li>
+                            </ol>
+                        </div>
+
+                        <h3>SQL Sorguları</h3>
+                        <p>BigQuery, standart SQL kullanır:</p>
+
+                        <div class="code-block">
+-- Basit SELECT sorgusu
+SELECT 
+  name,
+  age,
+  city
+FROM 
+  `my-project.my-dataset.users`
+WHERE 
+  age > 18
+ORDER BY 
+  age DESC
+LIMIT 10;
+
+-- JOIN sorgusu
+SELECT 
+  u.name,
+  o.order_date,
+  o.total_amount
+FROM 
+  `my-project.my-dataset.users` u
+JOIN 
+  `my-project.my-dataset.orders` o
+ON 
+  u.id = o.user_id
+WHERE 
+  o.order_date >= '2024-01-01';
+                        </div>
+
+                        <h3>Data Types</h3>
+                        <p>BigQuery'de desteklenen veri türleri:</p>
+
+                        <ul>
+                            <li><strong>STRING:</strong> Metin verileri</li>
+                            <li><strong>INT64:</strong> Tam sayılar</li>
+                            <li><strong>FLOAT64:</strong> Ondalık sayılar</li>
+                            <li><strong>BOOL:</strong> Boolean değerler</li>
+                            <li><strong>DATE:</strong> Tarih</li>
+                            <li><strong>TIMESTAMP:</strong> Zaman damgası</li>
+                            <li><strong>ARRAY:</strong> Dizi</li>
+                            <li><strong>STRUCT:</strong> Yapı</li>
+                            <li><strong>GEOGRAPHY:</strong> Coğrafi veriler</li>
+                        </ul>
+
+                        <h3>BigQuery ML</h3>
+                        <p>BigQuery ML, SQL kullanarak makine öğrenmesi modelleri oluşturmanızı sağlar:</p>
+
+                        <ul>
+                            <li><strong>Linear Regression:</strong> Doğrusal regresyon</li>
+                            <li><strong>Logistic Regression:</strong> Lojistik regresyon</li>
+                            <li><strong>K-means:</strong> Kümeleme</li>
+                            <li><strong>Matrix Factorization:</strong> Matris faktörizasyonu</li>
+                            <li><strong>ARIMA:</strong> Zaman serisi analizi</li>
+                        </ul>
+
+                        <div class="code-block">
+# gcloud CLI ile BigQuery sorgusu
+bq query --use_legacy_sql=false '
+SELECT 
+  COUNT(*) as total_users,
+  AVG(age) as avg_age,
+  COUNT(DISTINCT city) as unique_cities
+FROM 
+  `my-project.my-dataset.users`
+WHERE 
+  created_date >= "2024-01-01"
+'
+                        </div>
+
+                        <h3>Data Import/Export</h3>
+                        <p>BigQuery'ye veri aktarma yöntemleri:</p>
+
+                        <ul>
+                            <li><strong>Cloud Storage:</strong> CSV, JSON, Avro, Parquet</li>
+                            <li><strong>Streaming:</strong> Gerçek zamanlı veri ekleme</li>
+                            <li><strong>Data Transfer Service:</strong> Otomatik veri transferi</li>
+                            <li><strong>Cloud Data Fusion:</strong> ETL işlemleri</li>
+                        </ul>
+
+                        <h3>Partitioning ve Clustering</h3>
+                        <p>BigQuery performans optimizasyonu:</p>
+
+                        <ul>
+                            <li><strong>Partitioning:</strong> Tabloları bölümleme</li>
+                            <li><strong>Clustering:</strong> Veri kümeleme</li>
+                            <li><strong>Materialized Views:</strong> Önceden hesaplanmış görünümler</li>
+                            <li><strong>Query Caching:</strong> Sorgu önbellekleme</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>📈 BigQuery En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Partitioned tables kullanın</li>
+                                <li>Clustered tables ile performansı artırın</li>
+                                <li>Query optimization yapın</li>
+                                <li>Cost controls ayarlayın</li>
+                                <li>Data validation uygulayın</li>
+                                <li>Regular maintenance yapın</li>
+                                <li>Monitoring ve alerting ayarlayın</li>
+                            </ul>
+                        </div>
+
+                        <h3>BigQuery Data Transfer Service</h3>
+                        <p>Data Transfer Service ile:</p>
+
+                        <ul>
+                            <li><strong>Google Ads:</strong> Reklam verileri</li>
+                            <li><strong>Google Analytics:</strong> Web analitik verileri</li>
+                            <li><strong>YouTube Analytics:</strong> Video analitik verileri</li>
+                            <li><strong>Cloud Storage:</strong> Dosya tabanlı veriler</li>
+                            <li><strong>Third-party:</strong> Üçüncü parti servisler</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>⚠️ BigQuery Dikkat Edilecekler</h4>
+                            <ul>
+                                <li>Query costs'ları kontrol edin</li>
+                                <li>Data retention policies ayarlayın</li>
+                                <li>Access controls'ları sıkı tutun</li>
+                                <li>Regular data quality checks yapın</li>
+                                <li>Backup stratejisi oluşturun</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 5 -->
+                    <div id="lesson5" class="lesson-content">
+                        <h2>Ders 5: Cloud Functions</h2>
+                        
+                        <h3>Cloud Functions Nedir?</h3>
+                        <p>Cloud Functions, Google Cloud'un serverless compute servisidir. Event-driven fonksiyonlar çalıştırmanızı sağlar.</p>
+
+                        <h3>Cloud Functions Avantajları</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Avantaj</th>
+                                    <th>Açıklama</th>
+                                    <th>Fayda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Serverless</td>
+                                    <td>Sunucu yönetimi gerekmez</td>
+                                    <td>Operasyonel maliyet tasarrufu</td>
+                                </tr>
+                                <tr>
+                                    <td>Event-driven</td>
+                                    <td>Olaylar tarafından tetiklenir</td>
+                                    <td>Otomatik çalışma</td>
+                                </tr>
+                                <tr>
+                                    <td>Auto-scaling</td>
+                                    <td>Otomatik ölçekleme</td>
+                                    <td>Performans garantisi</td>
+                                </tr>
+                                <tr>
+                                    <td>Pay-per-use</td>
+                                    <td>Sadece kullandığınız kadar ödeme</td>
+                                    <td>Maliyet optimizasyonu</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Desteklenen Diller</h3>
+                        <p>Cloud Functions şu programlama dillerini destekler:</p>
+
+                        <ul>
+                            <li><strong>Node.js:</strong> JavaScript/TypeScript</li>
+                            <li><strong>Python:</strong> Python 3.x</li>
+                            <li><strong>Go:</strong> Go 1.x</li>
+                            <li><strong>Java:</strong> Java 11/17</li>
+                            <li><strong>.NET:</strong> .NET 6</li>
+                            <li><strong>Ruby:</strong> Ruby 3.x</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>⚡ Cloud Function Oluşturma</h4>
+                            <ol>
+                                <li>Google Cloud Console'da "Cloud Functions" servisine gidin</li>
+                                <li>"Create Function" butonuna tıklayın</li>
+                                <li>Function adını girin</li>
+                                <li>Region seçin</li>
+                                <li>Trigger type seçin (HTTP, Cloud Storage, Pub/Sub)</li>
+                                <li>Runtime seçin</li>
+                                <li>Source code'u yazın</li>
+                                <li>Function'ı deploy edin</li>
+                            </ol>
+                        </div>
+
+                        <h3>HTTP Function Örneği</h3>
+                        <div class="code-block">
+# Python HTTP Function
+import functions_framework
+from flask import Request
+
+@functions_framework.http
+def hello_world(request: Request):
+    """HTTP Cloud Function"""
+    request_json = request.get_json(silent=True)
+    request_args = request.args
+
+    if request_json and 'name' in request_json:
+        name = request_json['name']
+    elif request_args and 'name' in request_args:
+        name = request_args['name']
+    else:
+        name = 'World'
+    
+    return f'Hello {name}!'
+
+# Node.js HTTP Function
+const functions = require('@google-cloud/functions-framework');
+
+functions.http('helloWorld', (req, res) => {
+  const name = req.query.name || req.body.name || 'World';
+  res.send(`Hello ${name}!`);
+});
+                        </div>
+
+                        <h3>Cloud Storage Trigger</h3>
+                        <div class="code-block">
+# Cloud Storage Trigger Function
+import functions_framework
+from google.cloud import storage
+
+@functions_framework.cloud_event
+def process_image(cloud_event):
+    """Cloud Storage trigger function"""
+    data = cloud_event.data
+    
+    bucket_name = data['bucket']
+    file_name = data['name']
+    
+    print(f'Processing file: {file_name} from bucket: {bucket_name}')
+    
+    # Process the file here
+    # Image processing, data transformation, etc.
+    
+    return f'Processed {file_name} successfully'
+                        </div>
+
+                        <h3>Pub/Sub Trigger</h3>
+                        <div class="code-block">
+# Pub/Sub Trigger Function
+import functions_framework
+import base64
+import json
+
+@functions_framework.cloud_event
+def process_message(cloud_event):
+    """Pub/Sub trigger function"""
+    # Decode the message
+    message_data = base64.b64decode(cloud_event.data['message']['data']).decode('utf-8')
+    message_json = json.loads(message_data)
+    
+    print(f'Received message: {message_json}')
+    
+    # Process the message here
+    # Database operations, API calls, etc.
+    
+    return 'Message processed successfully'
+                        </div>
+
+                        <h3>Function Configuration</h3>
+                        <p>Cloud Functions için önemli konfigürasyonlar:</p>
+
+                        <ul>
+                            <li><strong>Memory:</strong> 128MB - 8GB</li>
+                            <li><strong>Timeout:</strong> 1 saniye - 60 dakika</li>
+                            <li><strong>Concurrency:</strong> Eşzamanlı çalışma</li>
+                            <li><strong>Environment Variables:</strong> Ortam değişkenleri</li>
+                            <li><strong>VPC Connector:</strong> VPC erişimi</li>
+                        </ul>
+
+                        <div class="code-block">
+# gcloud CLI ile function deploy
+gcloud functions deploy hello-world \
+    --runtime python39 \
+    --trigger-http \
+    --allow-unauthenticated \
+    --source . \
+    --entry-point hello_world \
+    --memory 256MB \
+    --timeout 60s
+                        </div>
+
+                        <h3>Cloud Functions Gen2</h3>
+                        <p>Cloud Functions Gen2'nin yeni özellikleri:</p>
+
+                        <ul>
+                            <li><strong>Longer execution time:</strong> 60 dakikaya kadar</li>
+                            <li><strong>More memory:</strong> 32GB'a kadar</li>
+                            <li><strong>Better performance:</strong> Daha hızlı cold start</li>
+                            <li><strong>More triggers:</strong> Daha fazla trigger türü</li>
+                            <li><strong>Better integration:</strong> Cloud Run ile entegrasyon</li>
+                        </ul>
+
+                        <h3>Error Handling ve Logging</h3>
+                        <p>Cloud Functions'da hata yönetimi:</p>
+
+                        <ul>
+                            <li><strong>Structured Logging:</strong> JSON formatında loglar</li>
+                            <li><strong>Error Reporting:</strong> Hata raporlama</li>
+                            <li><strong>Retry Logic:</strong> Otomatik yeniden deneme</li>
+                            <li><strong>Dead Letter Queues:</strong> Başarısız mesajlar için</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>🚀 Cloud Functions En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Stateless functions yazın</li>
+                                <li>Cold start'i minimize edin</li>
+                                <li>Error handling uygulayın</li>
+                                <li>Logging ve monitoring ekleyin</li>
+                                <li>Security best practices uygulayın</li>
+                                <li>Environment variables kullanın</li>
+                                <li>Function versioning yapın</li>
+                            </ul>
+                        </div>
+
+                        <h3>Cost Optimization</h3>
+                        <p>Cloud Functions maliyet optimizasyonu:</p>
+
+                        <ul>
+                            <li><strong>Right-sizing:</strong> Doğru memory allocation</li>
+                            <li><strong>Connection pooling:</strong> Bağlantı havuzlama</li>
+                            <li><strong>Caching:</strong> Önbellekleme</li>
+                            <li><strong>Batch processing:</strong> Toplu işleme</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Cloud Functions Dikkat Edilecekler</h4>
+                            <ul>
+                                <li>Cold start latency'sini göz önünde bulundurun</li>
+                                <li>Memory ve timeout limitlerini kontrol edin</li>
+                                <li>Function dependencies'leri minimize edin</li>
+                                <li>Regular monitoring yapın</li>
+                                <li>Cost tracking ayarlayın</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 6 -->
+                    <div id="lesson6" class="lesson-content">
+                        <h2>Ders 6: AI/ML Servisleri</h2>
+                        
+                        <h3>Google Cloud AI/ML Servisleri</h3>
+                        <p>Google Cloud, yapay zeka ve makine öğrenmesi için kapsamlı servisler sunar. Bu servisler ile AI-powered uygulamalar geliştirebilirsiniz.</p>
+
+                        <h3>AI/ML Servis Kategorileri</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Servisler</th>
+                                    <th>Açıklama</th>
+                                    <th>Kullanım Alanı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Vision AI</td>
+                                    <td>Vision API, AutoML Vision</td>
+                                    <td>Görüntü analizi ve tanıma</td>
+                                    <td>Computer vision, OCR</td>
+                                </tr>
+                                <tr>
+                                    <td>Natural Language</td>
+                                    <td>Natural Language API, AutoML NL</td>
+                                    <td>Metin analizi ve işleme</td>
+                                    <td>NLP, sentiment analysis</td>
+                                </tr>
+                                <tr>
+                                    <td>Speech</td>
+                                    <td>Speech-to-Text, Text-to-Speech</td>
+                                    <td>Ses işleme ve sentezleme</td>
+                                    <td>Voice recognition, TTS</td>
+                                </tr>
+                                <tr>
+                                    <td>Translation</td>
+                                    <td>Translation API</td>
+                                    <td>Çeviri servisleri</td>
+                                    <td>Multi-language support</td>
+                                </tr>
+                                <tr>
+                                    <td>Recommendations</td>
+                                    <td>Recommendations AI</td>
+                                    <td>Öneri sistemleri</td>
+                                    <td>E-commerce, content</td>
+                                </tr>
+                                <tr>
+                                    <td>Vertex AI</td>
+                                    <td>Unified ML Platform</td>
+                                    <td>Kapsamlı ML platformu</td>
+                                    <td>End-to-end ML</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Vision API</h3>
+                        <p>Vision API ile görüntüleri analiz edebilirsiniz:</p>
+
+                        <ul>
+                            <li><strong>Label Detection:</strong> Nesne tanıma</li>
+                            <li><strong>Text Detection:</strong> Metin çıkarma (OCR)</li>
+                            <li><strong>Face Detection:</strong> Yüz tanıma</li>
+                            <li><strong>Landmark Detection:</strong> Yer işareti tanıma</li>
+                            <li><strong>Safe Search:</strong> Güvenli içerik kontrolü</li>
+                            <li><strong>Web Detection:</strong> Web'de benzer görüntüler</li>
+                        </ul>
+
+                        <div class="code-block">
+# Vision API kullanımı
+from google.cloud import vision
+
+def detect_labels(image_path):
+    """Detect labels in an image"""
+    client = vision.ImageAnnotatorClient()
+    
+    with open(image_path, 'rb') as image_file:
+        content = image_file.read()
+    
+    image = vision.Image(content=content)
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
+    
+    for label in labels:
+        print(f'Label: {label.description}, Score: {label.score}')
+
+def extract_text(image_path):
+    """Extract text from image using OCR"""
+    client = vision.ImageAnnotatorClient()
+    
+    with open(image_path, 'rb') as image_file:
+        content = image_file.read()
+    
+    image = vision.Image(content=content)
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
+    
+    for text in texts:
+        print(f'Text: {text.description}')
+                        </div>
+
+                        <h3>Natural Language API</h3>
+                        <p>Natural Language API ile metinleri analiz edebilirsiniz:</p>
+
+                        <ul>
+                            <li><strong>Sentiment Analysis:</strong> Duygu analizi</li>
+                            <li><strong>Entity Recognition:</strong> Varlık tanıma</li>
+                            <li><strong>Syntax Analysis:</strong> Sözdizimi analizi</li>
+                            <li><strong>Classification:</strong> Metin sınıflandırma</li>
+                            <li><strong>Content Classification:</strong> İçerik kategorilendirme</li>
+                        </ul>
+
+                        <div class="code-block">
+# Natural Language API kullanımı
+from google.cloud import language_v1
+
+def analyze_sentiment(text):
+    """Analyze sentiment of text"""
+    client = language_v1.LanguageServiceClient()
+    
+    document = language_v1.Document(
+        content=text,
+        type_=language_v1.Document.Type.PLAIN_TEXT
+    )
+    
+    response = client.analyze_sentiment(
+        request={'document': document}
+    )
+    
+    sentiment = response.document_sentiment
+    print(f'Sentiment: {sentiment.score}, Magnitude: {sentiment.magnitude}')
+
+def extract_entities(text):
+    """Extract entities from text"""
+    client = language_v1.LanguageServiceClient()
+    
+    document = language_v1.Document(
+        content=text,
+        type_=language_v1.Document.Type.PLAIN_TEXT
+    )
+    
+    response = client.analyze_entities(
+        request={'document': document}
+    )
+    
+    for entity in response.entities:
+        print(f'Entity: {entity.name}, Type: {entity.type_}')
+                        </div>
+
+                        <h3>AutoML</h3>
+                        <p>AutoML, kod yazmadan makine öğrenmesi modelleri oluşturmanızı sağlar:</p>
+
+                        <ul>
+                            <li><strong>AutoML Vision:</strong> Görüntü sınıflandırma</li>
+                            <li><strong>AutoML Natural Language:</strong> Metin sınıflandırma</li>
+                            <li><strong>AutoML Tables:</strong> Tablo verisi analizi</li>
+                            <li><strong>AutoML Translation:</strong> Çeviri modelleri</li>
+                            <li><strong>AutoML Video:</strong> Video analizi</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>🤖 AutoML Vision Model Oluşturma</h4>
+                            <ol>
+                                <li>Google Cloud Console'da "AutoML Vision" servisine gidin</li>
+                                <li>"Create Dataset" butonuna tıklayın</li>
+                                <li>Dataset adını girin</li>
+                                <li>Training images'ları yükleyin</li>
+                                <li>Labels'ları tanımlayın</li>
+                                <li>Model'i train edin</li>
+                                <li>Model'i evaluate edin</li>
+                                <li>Model'i deploy edin</li>
+                            </ol>
+                        </div>
+
+                        <h3>Vertex AI</h3>
+                        <p>Vertex AI, Google Cloud'un unified AI platform'udur:</p>
+
+                        <ul>
+                            <li><strong>Model Training:</strong> Model eğitimi</li>
+                            <li><strong>Model Deployment:</strong> Model dağıtımı</li>
+                            <li><strong>Model Monitoring:</strong> Model izleme</li>
+                            <li><strong>MLOps:</strong> ML operasyonları</li>
+                            <li><strong>Feature Store:</strong> Özellik deposu</li>
+                            <li><strong>Pipelines:</strong> ML pipeline'ları</li>
+                        </ul>
+
+                        <div class="code-block">
+# Vertex AI kullanımı
+from google.cloud import aiplatform
+
+# Initialize Vertex AI
+aiplatform.init(project="my-project", location="us-central1")
+
+# Create and train a model
+model = aiplatform.Model.upload(
+    display_name="my-model",
+    artifact_uri="gs://my-bucket/model-artifacts"
+)
+
+# Deploy model
+endpoint = model.deploy(
+    machine_type="n1-standard-4",
+    min_replica_count=1,
+    max_replica_count=3
+)
+                        </div>
+
+                        <h3>TensorFlow ve PyTorch</h3>
+                        <p>Google Cloud, popüler ML framework'lerini destekler:</p>
+
+                        <ul>
+                            <li><strong>TensorFlow:</strong> Google'ın ML framework'ü</li>
+                            <li><strong>PyTorch:</strong> Facebook'un ML framework'ü</li>
+                            <li><strong>Scikit-learn:</strong> Python ML kütüphanesi</li>
+                            <li><strong>XGBoost:</strong> Gradient boosting</li>
+                        </ul>
+
+                        <h3>AI/ML Pricing</h3>
+                        <p>Google Cloud AI/ML servislerinin fiyatlandırması:</p>
+
+                        <ul>
+                            <li><strong>API Calls:</strong> İstek başına ödeme</li>
+                            <li><strong>Training Hours:</strong> Eğitim saati başına ödeme</li>
+                            <li><strong>Prediction Requests:</strong> Tahmin isteği başına ödeme</li>
+                            <li><strong>Storage:</strong> Model depolama ücreti</li>
+                            <li><strong>Compute:</strong> İşlem gücü ücreti</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <h4>🎯 AI/ML En İyi Uygulamalar</h4>
+                            <ul>
+                                <li>Data quality'yi öncelikli tutun</li>
+                                <li>Model validation yapın</li>
+                                <li>Bias detection uygulayın</li>
+                                <li>Model monitoring ayarlayın</li>
+                                <li>Explainable AI kullanın</li>
+                                <li>Regular model retraining yapın</li>
+                                <li>Cost optimization uygulayın</li>
+                            </ul>
+                        </div>
+
+                        <h3>MLOps Best Practices</h3>
+                        <p>MLOps (Machine Learning Operations) en iyi uygulamaları:</p>
+
+                        <ul>
+                            <li><strong>Version Control:</strong> Model ve kod versiyonlama</li>
+                            <li><strong>CI/CD:</strong> Sürekli entegrasyon ve dağıtım</li>
+                            <li><strong>Monitoring:</strong> Model performans izleme</li>
+                            <li><strong>Testing:</strong> Model test stratejileri</li>
+                            <li><strong>Deployment:</strong> A/B testing ve canary deployment</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h4>💰 Maliyet Optimizasyonu</h4>
+                            <ul>
+                                <li>Free tier limitlerini kullanın</li>
+                                <li>Preemptible instances kullanın</li>
+                                <li>Model compression uygulayın</li>
+                                <li>Cost monitoring ayarlayın</li>
+                                <li>Unused models'leri temizleyin</li>
+                                <li>Batch prediction kullanın</li>
+                                <li>Regional pricing'i değerlendirin</li>
+                            </ul>
+                        </div>
+
+                        <h3>AI/ML Use Cases</h3>
+                        <p>Google Cloud AI/ML servislerinin kullanım alanları:</p>
+
+                        <ul>
+                            <li><strong>E-commerce:</strong> Öneri sistemleri, görsel arama</li>
+                            <li><strong>Healthcare:</strong> Tıbbi görüntü analizi, teşhis</li>
+                            <li><strong>Finance:</strong> Fraud detection, risk analizi</li>
+                            <li><strong>Manufacturing:</strong> Kalite kontrol, predictive maintenance</li>
+                            <li><strong>Media:</strong> İçerik moderasyonu, video analizi</li>
+                            <li><strong>Education:</strong> Kişiselleştirilmiş öğrenme</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>SEBS Global</h4>
+                    <p>Teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitim platformu</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Eğitim Alanları</h4>
+                    <ul>
+                        <li><a href="../modules.html?category=cybersecurity">Siber Güvenlik</a></li>
+                        <li><a href="../modules.html?category=cloud">Bulut Bilişim</a></li>
+                        <li><a href="../modules.html?category=data-science">Veri Bilimleri</a></li>
+                        <li><a href="../modules.html?category=technology">Teknoloji</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kurumsal</h4>
+                    <ul>
+                        <li><a href="../about.html">Hakkımızda</a></li>
+                        <li><a href="../contact.html">İletişim</a></li>
+                        <li><a href="#">Kariyer</a></li>
+                        <li><a href="#">Basın</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>İletişim</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@sebs-global.com</li>
+                        <li><i class="fas fa-phone"></i> +90 (212) 555 0123</li>
+                        <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SEBS Global. Tüm hakları saklıdır.</p>
+                <div class="footer-links">
+                    <a href="#">KVKK</a>
+                    <a href="#">Çerez Politikası</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Loading Animation
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1500); // 1.5 saniye loading göster
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+
+        // Lesson navigation
+        document.querySelectorAll('.nav-link[data-lesson]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and lessons
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.lesson-content').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show corresponding lesson
+                const lessonId = this.getAttribute('data-lesson');
+                document.getElementById(lessonId).classList.add('active');
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+    <!-- Navigation Script -->
+    <script src="../js/navigation.js"></script>
+    <!-- Access Control -->
+    <script src="../utils/access-control.js"></script>
+    <script src="module-access-check.js"></script>
+</body>
+    <!-- Configuration & API Integration -->
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEBS Global - Eğitim Platformu Sunumu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            background: white;
+            page-break-after: always;
+            position: relative;
+        }
+        .slide h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .slide h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .slide h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 1.5rem;
+        }
+        .content {
+            max-width: 1200px;
+            width: 100%;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 20px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card h4 {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 3rem 0;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #667eea;
+            display: block;
+        }
+        .stat-label {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        .logo {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .footer {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .tech-badge {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Kapak -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h1>SEBS Global</h1>
+        <h2>Eğitim Platformu</h2>
+        <div style="text-align: center; margin-top: 3rem; font-size: 1.5rem; color: #64748b;">
+            Modern Siber Güvenlik Eğitimi<br>
+            <span style="font-size: 1.2rem; margin-top: 1rem; display: block;">2025</span>
+        </div>
+        <div class="footer">sebsglobal.com</div>
+    </div>
+
+    <!-- Slide 2: Kurucular -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Kurucular</h2>
+        <div class="content">
+            <div class="grid">
+                <div class="card">
+                    <h4><i class="fas fa-user"></i> Abidin Samet Çay</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        Cloud Computing ve Cybersecurity alanında uzman.<br>
+                        Vizyoner lider.<br>
+                        SİBER VATAN katılımcısı.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-code"></i> İbrahim Ethem Arı</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        Yazılım geliştirme ve proje yönetimi konularında uzman.<br>
+                        Teknik altyapısını yönetiyor.
+                    </p>
+                </div>
+            </div>
+            <div class="grid" style="margin-top: 2rem;">
+                <div class="card" style="grid-column: 1/-1;">
+                    <h4><i class="fas fa-palette"></i> Emir Berat Kayalı</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        UI/UX tasarım ve kullanıcı deneyimleri konularında uzman.<br>
+                        Görsel kimliğini yönetiyor.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">SEBS 2025</div>
+    </div>
+
+    <!-- Slide 3: Platform Özellikleri -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Platform Özellikleri</h2>
+        <div class="content">
+            <div class="grid">
+                <div class="card">
+                    <h4><i class="fas fa-book"></i> Kapsamlı Eğitim</h4>
+                    <ul>
+                        <li>14 Eğitim Modülü</li>
+                        <li>10 İnteraktif Simülasyon</li>
+                        <li>Quiz ve Lab Çalışmaları</li>
+                        <li>Real-time İlerleme Takibi</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-certificate"></i> Sertifika Sistemi</h4>
+                    <ul>
+                        <li>Otomatik Sertifika Oluşturma</li>
+                        <li>Kategori Bazlı Sertifikalar</li>
+                        <li>PDF İndirme</li>
+                        <li>Kalıcı Kayıt</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-robot"></i> AI Raporlama</h4>
+                    <ul>
+                        <li>Performans Analizi</li>
+                        <li>Öğrenme Patern Tespiti</li>
+                        <li>Kişiselleştirilmiş Öneriler</li>
+                        <li>Detaylı Raporlar</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-gamepad"></i> Simülasyonlar</h4>
+                    <ul>
+                        <li>CTF Tarzı Senaryolar</li>
+                        <li>Linux Terminal Simülasyonu</li>
+                        <li>Network Analiz Araçları</li>
+                        <li>Gerçekçi Saldırı Senaryoları</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer">Özellikler</div>
+    </div>
+
+    <!-- Slide 4: İstatistikler -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Platform İstatistikleri</h2>
+        <div class="content">
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">14</span>
+                    <span class="stat-label">Eğitim Modülü</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10</span>
+                    <span class="stat-label">Simülasyon</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">20+</span>
+                    <span class="stat-label">API Endpoint</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Test Başarı</span>
+                </div>
+            </div>
+            <div class="grid" style="margin-top: 3rem;">
+                <div class="card">
+                    <h4>Kategoriler</h4>
+                    <ul>
+                        <li>Siber Güvenlik</li>
+                        <li>Bulut Bilişim</li>
+                        <li>Veri Bilimi</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Sistem Durumu</h4>
+                    <ul>
+                        <li>Production Ready</li>
+                        <li>PostgreSQL Database</li>
+                        <li>JWT Authentication</li>
+                        <li>Secure API</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer">İstatistikler</div>
+    </div>
+
+    <!-- Slide 5: Teknoloji Stack -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Teknoloji Altyapısı</h2>
+        <div class="content">
+            <div class="grid">
+                <div class="card">
+                    <h4><i class="fas fa-desktop"></i> Frontend</h4>
+                    <div class="tech-stack">
+                        <span class="tech-badge">HTML5</span>
+                        <span class="tech-badge">CSS3</span>
+                        <span class="tech-badge">JavaScript ES6+</span>
+                        <span class="tech-badge">Responsive Design</span>
+                    </div>
+                    <ul style="margin-top: 1.5rem;">
+                        <li>Modern UI/UX</li>
+                        <li>Animasyonlu Arayüzler</li>
+                        <li>Interactive Charts</li>
+                        <li>Real-time Updates</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-server"></i> Backend</h4>
+                    <div class="tech-stack">
+                        <span class="tech-badge">Node.js</span>
+                        <span class="tech-badge">Express</span>
+                        <span class="tech-badge">PostgreSQL</span>
+                        <span class="tech-badge">Prisma ORM</span>
+                    </div>
+                    <ul style="margin-top: 1.5rem;">
+                        <li>RESTful API</li>
+                        <li>JWT Authentication</li>
+                        <li>Argon2 Password Hashing</li>
+                        <li>Rate Limiting</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 2rem;">
+                <h4><i class="fas fa-shield-alt"></i> Güvenlik</h4>
+                <div class="tech-stack">
+                    <span class="tech-badge">JWT Tokens</span>
+                    <span class="tech-badge">Email Verification</span>
+                    <span class="tech-badge">CORS Protection</span>
+                    <span class="tech-badge">Helmet Security</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer">Teknoloji</div>
+    </div>
+
+    <!-- Slide 6: Öne Çıkan Özellikler -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Öne Çıkan Özellikler</h2>
+        <div class="content">
+            <div class="grid">
+                <div class="card">
+                    <h4><i class="fas fa-chart-line"></i> İlerleme Takibi</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        Gerçek zamanlı ilerleme görselleştirmesi, circle charts, 
+                        progress bars ve detaylı istatistikler.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-terminal"></i> Gerçekçi Simülasyonlar</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        CTF tarzı interaktif senaryolar, gerçek Linux komutları, 
+                        network analiz araçları ve Windows 7 simülasyonu.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-user-graduate"></i> Kişiselleştirilmiş Dashboard</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        Animasyonlu istatistikler, sertifika görüntüleme, 
+                        AI raporları ve kullanıcı özel içerik.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-cloud"></i> Cloud Ready</h4>
+                    <p style="color: #64748b; margin-top: 1rem;">
+                        Production-ready kod, ölçeklenebilir mimari, 
+                        veritabanı yedekleme ve monitoring hazır.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">Özellikler</div>
+    </div>
+
+    <!-- Slide 7: Sistem Mimarisi -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Sistem Mimarisi</h2>
+        <div class="content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h4><i class="fas fa-sitemap"></i> Genel Yapı</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="background: #667eea; color: white; padding: 1rem; border-radius: 10px;">
+                            <i class="fas fa-desktop" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div><strong>Frontend</strong></div>
+                            <div style="font-size: 0.9rem; margin-top: 0.5rem;">HTML/CSS/JS</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="background: #764ba2; color: white; padding: 1rem; border-radius: 10px;">
+                            <i class="fas fa-server" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div><strong>Backend API</strong></div>
+                            <div style="font-size: 0.9rem; margin-top: 0.5rem;">Node.js/Express</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="background: #22c55e; color: white; padding: 1rem; border-radius: 10px;">
+                            <i class="fas fa-database" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div><strong>Database</strong></div>
+                            <div style="font-size: 0.9rem; margin-top: 0.5rem;">PostgreSQL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h4>API Endpoints</h4>
+                    <ul>
+                        <li>/api/auth - Authentication</li>
+                        <li>/api/courses - Kurslar</li>
+                        <li>/api/progress - İlerleme</li>
+                        <li>/api/certificates - Sertifikalar</li>
+                        <li>/api/simulations - Simülasyonlar</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Database Models</h4>
+                    <ul>
+                        <li>User - Kullanıcılar</li>
+                        <li>Course - Kurslar</li>
+                        <li>Module - Modüller</li>
+                        <li>ModuleProgress - İlerleme</li>
+                        <li>Certificate - Sertifikalar</li>
+                        <li>SimulationRun - Simülasyonlar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer">Mimari</div>
+    </div>
+
+    <!-- Slide 8: Başarılar ve Gelecek -->
+    <div class="slide">
+        <div class="logo">SEBS GLOBAL</div>
+        <h2>Başarılar & Gelecek</h2>
+        <div class="content">
+            <div class="grid">
+                <div class="card">
+                    <h4><i class="fas fa-trophy"></i> Başarılar</h4>
+                    <ul>
+                        <li>%100 Test Başarı Oranı</li>
+                        <li>0 Kritik Güvenlik Açığı</li>
+                        <li>Production Ready</li>
+                        <li>Kapsamlı İçerik</li>
+                        <li>Modern Teknoloji Stack</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-rocket"></i> Gelecek Planları</h4>
+                    <ul>
+                        <li>Video Ders Entegrasyonu</li>
+                        <li>Canlı Chat Desteği</li>
+                        <li>Forum Sistemi</li>
+                        <li>Mobil Uygulama</li>
+                        <li>Çoklu Dil Desteği</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 2rem; text-align: center;">
+                <h3 style="color: #667eea; margin-bottom: 1rem;">SEBS Global - Geleceğin Eğitim Platformu</h3>
+                <p style="font-size: 1.3rem; color: #64748b;">
+                    Modern teknoloji ile siber güvenlik eğitimi<br>
+                    sebsglobal.com
+                </p>
+            </div>
+        </div>
+        <div class="footer">SEBS 2025</div>
+    </div>
+
+    <script>
+        // Print dialog aç
+        window.addEventListener('load', () => {
+            console.log('Sunum hazır. Print için Ctrl+P veya Cmd+P kullanın.');
+        });
+    </script>
+</body>
+</html>
+

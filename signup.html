@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üye Ol - SEBS Global</title>
+    <meta name='description' content="SEBS Global eğitim platformuna üye olun. Siber güvenlik, bulut bilişim ve veri bilimi alanlarında profesyonel eğitimler.">
+    <meta name="keywords" content="SEBS Global üye ol, kayıt ol, eğitim platformu, siber güvenlik eğitimi">
+    <meta name="author" content="SEBS Global">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sebs-global.com/signup.html">
+    <meta property="og:title" content="Üye Ol - SEBS Global">
+    <meta property="og:description" content="SEBS Global eğitim platformuna üye olun. Siber güvenlik, bulut bilişim ve veri bilimi alanlarında profesyonel eğitimler.">
+    <meta property="og:image" content="https://sebs-global.com/og-signup.jpg">
+    <meta property="og:site_name" content="SEBS Global">
+    <meta property="og:locale" content="tr_TR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Üye Ol - SEBS Global">
+    <meta name="twitter:description" content="SEBS Global eğitim platformuna üye olun. Siber güvenlik, bulut bilişim ve veri bilimi alanlarında profesyonel eğitimler.">
+    <meta name="twitter:image" content="https://sebs-global.com/og-signup.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sebs-global.com/signup.html">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="SEBS.png">
+    <link rel="apple-touch-icon" href="SEBS.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --card-bg: #ffffff;
+            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-light: #94a3b8;
+            --text-color: #2d3748;
+            --primary-color: #667eea;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Modern Dark Theme - Professional Design */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e0;
+            --text-tertiary: #94a3b8;
+            --text-light: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --navbar-bg: rgba(15, 23, 42, 0.95);
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-purple);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        [data-theme="dark"] .loading-overlay {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .loading-subtext {
+            font-size: 1rem;
+            opacity: 0.8;
+            animation: fadeInOut 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Signup Container */
+        .signup-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-secondary);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-logo .sebs {
+            color: #2d3748;
+        }
+
+        .signup-logo .global {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .signup-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Form Styles */
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #e53e3e;
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+        }
+
+        .form-error {
+            color: #e53e3e;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Button Styles */
+        .btn-signup {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-signup:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-signup.loading {
+            color: transparent;
+        }
+
+        .btn-signup.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Links */
+        .signup-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .signup-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .signup-links a:hover {
+            color: #2b6cb0;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #22543d;
+            text-align: center;
+        }
+
+        .success-message i {
+            color: #38a169;
+            margin-right: 0.5rem;
+        }
+
+        /* Verification Code Input */
+        .verification-container {
+            display: none;
+            text-align: center;
+        }
+
+        .verification-container.active {
+            display: block;
+        }
+
+        .verification-code-input {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .verification-digit {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .verification-digit:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .signup-container {
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .verification-digit {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+                width: 60px;
+                height: 60px;
+            top: 40%;
+            left: 80%;
+            animation-delay: 4s;
+            }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="loading-logo">
+                <img src="SEBS.png" alt="SEBS Logo" style="width: 60px; height: 60px; object-fit: contain;"/>
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">SEBS Global</div>
+            <div class="loading-subtext">Üyelik sayfası yükleniyor...</div>
+        </div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <!-- Signup Container -->
+    <div class="signup-container">
+            <div class="signup-header">
+                <div class="signup-logo">
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+                </div>
+            <h1 class="signup-title">Hesap Oluştur</h1>
+            <p class="signup-subtitle">Eğitim yolculuğunuza başlayın</p>
+            </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText">Kayıt başarılı! E-posta doğrulama kodu gönderildi.</span>
+            </div>
+
+        <!-- Signup Form -->
+        <form class="signup-form" id="signupForm">
+                <div class="form-group">
+                <label class="form-label" for="firstName">Ad</label>
+                <input type="text" id="firstName" name="firstName" class="form-input" required>
+                <div class="form-error" id="firstNameError"></div>
+                </div>
+
+                <div class="form-group">
+                <label class="form-label" for="lastName">Soyad</label>
+                <input type="text" id="lastName" name="lastName" class="form-input" required>
+                <div class="form-error" id="lastNameError"></div>
+                </div>
+
+                <div class="form-group">
+                <label class="form-label" for="email">E-posta Adresi</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+                <div class="form-error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                <label class="form-label" for="password">Şifre</label>
+                <input type="password" id="password" name="password" class="form-input" required minlength="8" placeholder="En az 8 karakter, büyük harf içermeli">
+                <div class="form-error" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                <label class="form-label" for="confirmPassword">Şifre Tekrar</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
+                <div class="form-error" id="confirmPasswordError"></div>
+                </div>
+
+            <button type="submit" class="btn-signup" id="signupBtn">
+                <span id="signupBtnText">Hesap Oluştur</span>
+            </button>
+        </form>
+
+        <!-- Verification Code Input -->
+        <div class="verification-container" id="verificationContainer">
+            <h3 style="margin-bottom: 1rem; color: var(--text-primary);">E-posta Doğrulama</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                E-posta adresinize gönderilen 6 haneli kodu girin:
+            </p>
+            
+            <div class="verification-code-input">
+                <input type="text" class="verification-digit" maxlength="1" data-index="0">
+                <input type="text" class="verification-digit" maxlength="1" data-index="1">
+                <input type="text" class="verification-digit" maxlength="1" data-index="2">
+                <input type="text" class="verification-digit" maxlength="1" data-index="3">
+                <input type="text" class="verification-digit" maxlength="1" data-index="4">
+                <input type="text" class="verification-digit" maxlength="1" data-index="5">
+                </div>
+
+            <div class="form-error" id="verificationError"></div>
+
+            <button type="button" class="btn-signup" id="verifyBtn" style="margin-top: 1rem;">
+                <span id="verifyBtnText">Doğrula</span>
+                </button>
+
+            <button type="button" id="resendBtn" style="background: none; border: none; color: var(--primary-color); margin-top: 1rem; cursor: pointer;">
+                Kodu tekrar gönder
+            </button>
+    </div>
+
+        <!-- Links -->
+        <div class="signup-links">
+            <p>Zaten hesabınız var mı? <a href="login.html">Giriş Yapın</a></p>
+            <p style="margin-top: 1rem;"><a href="index.html">← Ana Sayfaya Dön</a></p>
+        </div>
+    </div>
+
+    <!-- API Integration Script -->
+    <script src="js/api-integration.js"></script>
+    
+    <!-- Signup Script -->
+    <script>
+        // Loading Animation
+        window.addEventListener('load', function() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Form Elements
+        const signupForm = document.getElementById('signupForm');
+        const verificationContainer = document.getElementById('verificationContainer');
+        const successMessage = document.getElementById('successMessage');
+        const signupBtn = document.getElementById('signupBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const resendBtn = document.getElementById('resendBtn');
+
+        // Current user data
+        let currentUser = null;
+        let currentVerificationCode = null;
+
+        // Form Validation
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            let isValid = true;
+
+            // Clear previous errors
+            clearErrors();
+
+            // First name validation
+            if (!firstName) {
+                showError('firstNameError', 'Ad gereklidir');
+                isValid = false;
+            }
+
+            // Last name validation
+            if (!lastName) {
+                showError('lastNameError', 'Soyad gereklidir');
+                isValid = false;
+        }
+
+        // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                showError('emailError', 'E-posta adresi gereklidir');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showError('emailError', 'Geçerli bir e-posta adresi girin');
+                isValid = false;
+            }
+
+            // Password validation
+            if (!password) {
+                showError('passwordError', 'Şifre gereklidir');
+                isValid = false;
+            } else if (password.length < 8) {
+                showError('passwordError', 'Şifre en az 8 karakter olmalıdır');
+                isValid = false;
+            } else if (!/[A-Z]/.test(password)) {
+                showError('passwordError', 'Şifre en az 1 büyük harf içermelidir');
+                isValid = false;
+            }
+
+            // Confirm password validation
+            if (!confirmPassword) {
+                showError('confirmPasswordError', 'Şifre tekrarı gereklidir');
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                showError('confirmPasswordError', 'Şifreler eşleşmiyor');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            
+            // Add error class to input
+            const inputElement = errorElement.previousElementSibling;
+            if (inputElement && inputElement.classList.contains('form-input')) {
+                inputElement.classList.add('error');
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.form-error');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+
+            const inputElements = document.querySelectorAll('.form-input');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+
+        // Signup Form Submission
+        signupForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const formData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            // Show loading state
+            signupBtn.classList.add('loading');
+            signupBtn.disabled = true;
+
+            try {
+                const response = await window.educationAPI.register(formData);
+                
+                if (response.success) {
+                    currentUser = response.data.user;
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    document.getElementById('successText').textContent = response.message;
+                    
+                    // Show verification container
+                    verificationContainer.classList.add('active');
+                    signupForm.style.display = 'none';
+                    
+                    // Focus first verification digit
+                    document.querySelector('.verification-digit[data-index="0"]').focus();
+                    
+                } else {
+                    showError('emailError', response.message);
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                const errorMessage = error.message || 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+                console.log('Error details:', errorMessage);
+                showError('emailError', errorMessage);
+            } finally {
+                signupBtn.classList.remove('loading');
+                signupBtn.disabled = false;
+            }
+        });
+
+        // Verification Code Input
+        const verificationDigits = document.querySelectorAll('.verification-digit');
+        
+        verificationDigits.forEach((digit, index) => {
+            digit.addEventListener('input', function(e) {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (!/^\d$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Move to next input
+                if (value && index < verificationDigits.length - 1) {
+                    verificationDigits[index + 1].focus();
+                }
+            });
+            
+            digit.addEventListener('keydown', function(e) {
+                // Move to previous input on backspace
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    verificationDigits[index - 1].focus();
+                }
+            });
+        });
+
+        // Verify Button
+        verifyBtn.addEventListener('click', async function() {
+            const verificationCode = Array.from(verificationDigits)
+                .map(digit => digit.value)
+                .join('');
+            
+            if (verificationCode.length !== 6) {
+                document.getElementById('verificationError').textContent = 'Lütfen 6 haneli kodu girin';
+                return;
+            }
+
+            verifyBtn.classList.add('loading');
+            verifyBtn.disabled = true;
+
+            try {
+                const response = await window.educationAPI.verifyEmail(currentUser.email, verificationCode);
+                
+                if (response.success) {
+                    // Store user data and token
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('isVerified', 'true');
+                    localStorage.setItem('userData', JSON.stringify(response.data.user));
+                    localStorage.setItem('authToken', response.data.token);
+                    
+                    // Show success message
+                    document.getElementById('verificationError').textContent = '';
+                    document.getElementById('verificationError').style.color = '#10b981';
+                    document.getElementById('verificationError').textContent = '✅ E-posta başarıyla doğrulandı! Dashboard\'a yönlendiriliyorsunuz...';
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    document.getElementById('verificationError').textContent = response.message;
+                    document.getElementById('verificationError').style.color = '#e53e3e';
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                document.getElementById('verificationError').textContent = 'Doğrulama sırasında bir hata oluştu.';
+                document.getElementById('verificationError').style.color = '#e53e3e';
+            } finally {
+                verifyBtn.classList.remove('loading');
+                verifyBtn.disabled = false;
+            }
+        });
+
+        // Resend Button
+        resendBtn.addEventListener('click', async function() {
+            resendBtn.textContent = 'Gönderiliyor...';
+            resendBtn.disabled = true;
+
+            try {
+                // Generate new verification code for existing user
+                const response = await fetch('http://localhost:8006/api/auth/resend-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('verificationError').textContent = '✅ Yeni güvenlik kodu gönderildi!';
+                    document.getElementById('verificationError').style.color = '#10b981';
+                    
+                    // Clear verification inputs
+                    verificationDigits.forEach(digit => digit.value = '');
+                    verificationDigits[0].focus();
+                } else {
+                    document.getElementById('verificationError').textContent = result.message;
+                    document.getElementById('verificationError').style.color = '#e53e3e';
+                }
+            } catch (error) {
+                console.error('Resend error:', error);
+                document.getElementById('verificationError').textContent = 'Kod gönderilirken hata oluştu.';
+                document.getElementById('verificationError').style.color = '#e53e3e';
+            } finally {
+                resendBtn.textContent = 'Kodu tekrar gönder';
+                resendBtn.disabled = false;
+            }
+        });
+
+        // Auto-fill verification code if available (for testing)
+        if (currentVerificationCode) {
+            setTimeout(() => {
+                const digits = currentVerificationCode.split('');
+                verificationDigits.forEach((digit, index) => {
+                    if (digits[index]) {
+                        digit.value = digits[index];
+                    }
+                });
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security Lab - Packet Tracer Simulation - SEBS Global</title>
+    <meta name="description" content="Packet Tracer tarzında interaktif network güvenliği simülasyonu. LAN/WAN kurulumu ve firewall yapılandırması.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .simulation-header {
+            background: var(--primary-gradient);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .simulation-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+            background: #1e293b;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            width: 280px;
+            background: #1e293b;
+            border-right: 2px solid #334155;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .toolbar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .toolbar-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--info-color);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .device-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .device-item {
+            background: #334155;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #fff;
+        }
+
+        .device-item:hover {
+            background: #475569;
+            border-color: var(--info-color);
+            transform: translateX(4px);
+        }
+
+        .device-item:active {
+            cursor: grabbing;
+        }
+
+        .device-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 6px;
+            color: var(--info-color);
+            font-size: 1.2rem;
+        }
+
+        .device-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .device-category {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        /* Canvas Area */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            overflow: hidden;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        #networkCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        /* Device Styles */
+        .network-device {
+            position: absolute;
+            background: #334155;
+            border: 2px solid var(--info-color);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .network-device:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            border-color: var(--success-color);
+        }
+
+        .network-device.selected {
+            border-color: var(--success-color);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .device-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--info-color);
+        }
+
+        .device-info {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .device-ports {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #475569;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .port-item {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .port-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .port-status.connected {
+            background: var(--success-color);
+        }
+
+        /* Connection Line */
+        .connection-line {
+            position: absolute;
+            pointer-events: none;
+            stroke: #3b82f6;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .connection-line.connected {
+            stroke: var(--success-color);
+        }
+
+        /* Right Panel */
+        .config-panel {
+            width: 350px;
+            background: #1e293b;
+            border-left: 2px solid #334155;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .panel-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: #334155;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .panel-tab.active {
+            background: var(--info-color);
+        }
+
+        .config-content {
+            display: none;
+        }
+
+        .config-content.active {
+            display: block;
+        }
+
+        .config-section {
+            background: #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .config-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--info-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .config-input {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .config-input:focus {
+            outline: none;
+            border-color: var(--info-color);
+        }
+
+        .config-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .config-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--info-color);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* Scenario Panel */
+        .scenario-info {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--danger-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-description {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #334155;
+            border-radius: 8px;
+            border-left: 3px solid #475569;
+        }
+
+        .task-item.completed {
+            border-left-color: var(--success-color);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .task-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #475569;
+            color: #fff;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .task-item.completed .task-icon {
+            background: var(--success-color);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-description {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Utility Classes */
+        .connection-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .connection-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #334155;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .modal-input {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="simulation-header">
+        <div class="header-left">
+            <i class="fas fa-network-wired"></i>
+            <h1 class="simulation-title">Network Security Lab - LAN/WAN Configuration</h1>
+        </div>
+        <div class="header-controls">
+            <button class="control-btn" id="connectionBtn">
+                <i class="fas fa-link"></i> Bağlan
+            </button>
+            <button class="control-btn" onclick="clearCanvas()">
+                <i class="fas fa-trash"></i> Temizle
+            </button>
+            <button class="control-btn" onclick="saveConfiguration()">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <button class="control-btn" onclick="testNetwork()">
+                <i class="fas fa-play"></i> Test Et
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Toolbar -->
+        <aside class="toolbar">
+            <div class="scenario-info">
+                <div class="scenario-title">
+                    <i class="fas fa-network-wired"></i>
+                    SENARYO: Şirket Network'ü Kurulumu
+                </div>
+                <div class="scenario-description">
+                    <strong>Göreviniz:</strong> Bir şirket network'ünü sıfırdan kurun. Modem, router, switch, firewall ve bilgisayarları yerleştirip yapılandırın.<br><br>
+                    <strong>Network Yapısı:</strong> LAN (Local Area Network) ve WAN (Wide Area Network) bağlantıları oluşturun, güvenlik cihazlarını yerleştirin.
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <div class="toolbar-title">
+                    <i class="fas fa-router"></i> Network Cihazları
+                </div>
+                <div class="device-list" id="deviceList">
+                    <div class="device-item" draggable="true" data-device="modem">
+                        <div class="device-icon"><i class="fas fa-wifi"></i></div>
+                        <div>
+                            <div class="device-name">Modem</div>
+                            <div class="device-category">Internet Gateway</div>
+                        </div>
+                    </div>
+                    <div class="device-item" draggable="true" data-device="router">
+                        <div class="device-icon"><i class="fas fa-network-wired"></i></div>
+                        <div>
+                            <div class="device-name">Router</div>
+                            <div class="device-category">Routing</div>
+                        </div>
+                    </div>
+                    <div class="device-item" draggable="true" data-device="switch">
+                        <div class="device-icon"><i class="fas fa-sitemap"></i></div>
+                        <div>
+                            <div class="device-name">Switch</div>
+                            <div class="device-category">Layer 2</div>
+                        </div>
+                    </div>
+                    <div class="device-item" draggable="true" data-device="firewall">
+                        <div class="device-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <div class="device-name">Firewall</div>
+                            <div class="device-category">Security</div>
+                        </div>
+                    </div>
+                    <div class="device-item" draggable="true" data-device="ids">
+                        <div class="device-icon"><i class="fas fa-shield-virus"></i></div>
+                        <div>
+                            <div class="device-name">IDS/IPS</div>
+                            <div class="device-category">Intrusion Detection</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <div class="toolbar-title">
+                    <i class="fas fa-desktop"></i> Endpoint Cihazlar
+                </div>
+                <div class="device-list">
+                    <div class="device-item" draggable="true" data-device="pc">
+                        <div class="device-icon"><i class="fas fa-laptop"></i></div>
+                        <div>
+                            <div class="device-name">PC</div>
+                            <div class="device-category">Workstation</div>
+                        </div>
+                    </div>
+                    <div class="device-item" draggable="true" data-device="server">
+                        <div class="device-icon"><i class="fas fa-server"></i></div>
+                        <div>
+                            <div class="device-name">Server</div>
+                            <div class="device-category">Data Center</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <div class="toolbar-title">
+                    <i class="fas fa-tasks"></i> Görevler
+                </div>
+                <ul class="task-list" id="taskList">
+                    <li class="task-item" data-task="1">
+                        <div class="task-icon">1</div>
+                        <div class="task-content">
+                            <div class="task-title">Modem Kurulumu</div>
+                            <div class="task-description">Internet bağlantısı için modem ekleyin</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="2">
+                        <div class="task-icon">2</div>
+                        <div class="task-content">
+                            <div class="task-title">Router Yapılandırması</div>
+                            <div class="task-description">Network segmentasyonu için router ekleyin</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="3">
+                        <div class="task-icon">3</div>
+                        <div class="task-content">
+                            <div class="task-title">Firewall Kurulumu</div>
+                            <div class="task-description">Güvenlik için firewall ekleyin</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="4">
+                        <div class="task-icon">4</div>
+                        <div class="task-content">
+                            <div class="task-title">Switch Yapılandırması</div>
+                            <div class="task-description">LAN segment'i için switch ekleyin</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="5">
+                        <div class="task-icon">5</div>
+                        <div class="task-content">
+                            <div class="task-title">Endpoint Bağlantısı</div>
+                            <div class="task-description">PC ve Server'ları bağlayın</div>
+                        </div>
+                    </li>
+                    <li class="task-item" data-task="6">
+                        <div class="task-icon">6</div>
+                        <div class="task-content">
+                            <div class="task-title">Network Test</div>
+                            <div class="task-description">Tüm bağlantıları test edin</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Canvas -->
+        <div class="canvas-container">
+            <div class="grid-overlay"></div>
+            <canvas id="networkCanvas"></canvas>
+            
+            <!-- Connection Modal -->
+            <div class="connection-modal" id="connectionModal">
+                <div class="modal-content">
+                    <h3 class="modal-title">Cihaz Bağlantısı</h3>
+                    <label class="config-label">Kaynak Port:</label>
+                    <select class="config-input" id="sourcePort">
+                        <option>Port 1</option>
+                        <option>Port 2</option>
+                        <option>Port 3</option>
+                        <option>Port 4</option>
+                    </select>
+                    <label class="config-label">Hedef Port:</label>
+                    <select class="config-input" id="destPort">
+                        <option>Port 1</option>
+                        <option>Port 2</option>
+                        <option>Port 3</option>
+                        <option>Port 4</option>
+                    </select>
+                    <button class="config-button" onclick="confirmConnection()">Bağla</button>
+                    <button class="config-button" style="margin-top: 0.5rem; background: #475569;" onclick="cancelConnection()">İptal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <aside class="config-panel">
+            <div class="config-section">
+                <div class="config-section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Network Bilgisi
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.6;">
+                    Sol panelden cihazları sürükleyerek canvas üzerine yerleştirin. Cihazlar otomatik olarak yapılandırılır ve network'ünüz hazırlanır.
+                </p>
+            </div>
+
+            <div class="config-section" id="deviceListPanel">
+                <div class="config-section-title">
+                    <i class="fas fa-list"></i>
+                    Eklenen Cihazlar
+                </div>
+                <ul id="deviceInfoList" style="list-style: none; color: #94a3b8; font-size: 0.85rem;">
+                    <li>Henüz cihaz eklenmedi</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Canvas
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // State
+        let devices = [];
+        let selectedDevice = null;
+        let draggedDevice = null;
+        let connectionMode = false;
+        let sourceDevice = null;
+        let connections = [];
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        
+        // Initialize Canvas
+        function initCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawCanvas();
+        }
+        
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        
+        // Draw Grid and Devices
+        function drawCanvas() {
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw connections
+            connections.forEach(conn => {
+                const device1 = devices.find(d => d.id === conn.device1);
+                const device2 = devices.find(d => d.id === conn.device2);
+                if (device1 && device2) {
+                    const startX = device1.x + device1.width / 2;
+                    const startY = device1.y + device1.height / 2;
+                    const endX = device2.x + device2.width / 2;
+                    const endY = device2.y + device2.height / 2;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.strokeStyle = conn.connected ? '#22c55e' : '#3b82f6';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    
+                    // Draw cable indicators
+                    ctx.fillStyle = conn.connected ? '#22c55e' : '#3b82f6';
+                    ctx.beginPath();
+                    ctx.arc(startX, startY, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(endX, endY, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Draw connection line while dragging
+            if (connectionMode && sourceDevice) {
+                const mouseX = lastMouseX || 0;
+                const mouseY = lastMouseY || 0;
+                const startX = sourceDevice.x + sourceDevice.width / 2;
+                const startY = sourceDevice.y + sourceDevice.height / 2;
+                
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(mouseX, mouseY);
+                ctx.strokeStyle = '#facc15';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // Draw devices
+            devices.forEach(device => {
+                drawDevice(device);
+            });
+        }
+        
+        // Draw Single Device
+        function drawDevice(device) {
+            const deviceSize = getDeviceSize(device.type);
+            const width = deviceSize.width;
+            const height = deviceSize.height;
+            
+            ctx.fillStyle = device.selected ? '#22c55e' : '#334155';
+            ctx.strokeStyle = device.selected ? '#22c55e' : '#3b82f6';
+            ctx.lineWidth = 2;
+            
+            // Draw device rectangle
+            ctx.fillRect(device.x, device.y, width, height);
+            ctx.strokeRect(device.x, device.y, width, height);
+            
+            // Draw device icon
+            drawDeviceIcon(device, device.x + width/2, device.y + height/2, width > height);
+            
+            // Draw device info
+            if (width > 100) {
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(device.type.toUpperCase(), device.x + width/2, device.y + height - 35);
+                
+                ctx.fillStyle = '#22c55e';
+                ctx.font = '10px Inter';
+                ctx.fillText(device.ip, device.x + width/2, device.y + height - 20);
+                ctx.textAlign = 'left';
+            }
+            
+            // Draw ports
+            if (device.type !== 'pc' && device.type !== 'server') {
+                drawPorts(device, width, height);
+            }
+        }
+        
+        function getDeviceSize(type) {
+            const sizes = {
+                pc: { width: 60, height: 60 },
+                server: { width: 60, height: 60 },
+                modem: { width: 80, height: 100 },
+                router: { width: 80, height: 100 },
+                switch: { width: 80, height: 100 },
+                firewall: { width: 80, height: 100 },
+                ids: { width: 80, height: 100 }
+            };
+            return sizes[type] || { width: 80, height: 100 };
+        }
+        
+        function drawDeviceIcon(device, cx, cy, isWide) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            
+            switch(device.type) {
+                case 'pc':
+                    drawPC(ctx);
+                    break;
+                case 'server':
+                    drawServer(ctx);
+                    break;
+                case 'modem':
+                    drawModem(ctx);
+                    break;
+                case 'router':
+                    drawRouter(ctx);
+                    break;
+                case 'switch':
+                    drawSwitch(ctx);
+                    break;
+                case 'firewall':
+                    drawFirewall(ctx);
+                    break;
+                case 'ids':
+                    drawIDS(ctx);
+                    break;
+                default:
+                    drawGeneric(ctx);
+            }
+            
+            ctx.restore();
+        }
+        
+        function drawPC(ctx) {
+            const w = 40, h = 50;
+            
+            // Monitor
+            ctx.fillStyle = '#2d3748';
+            ctx.fillRect(-w/2, -h/2, w, h * 0.7);
+            
+            // Screen
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-w/2 + 4, -h/2 + 4, w - 8, h * 0.5);
+            
+            // Screen glow
+            ctx.fillStyle = '#3b82f6';
+            ctx.globalAlpha = 0.3;
+            ctx.fillRect(-w/2 + 4, -h/2 + 4, w - 8, h * 0.2);
+            ctx.globalAlpha = 1.0;
+            
+            // Stand
+            ctx.fillStyle = '#2d3748';
+            ctx.fillRect(-w/3, h/2, w * 0.66, h * 0.15);
+            
+            // Base
+            ctx.fillRect(-w/2, h/2 + h * 0.15, w, h * 0.05);
+        }
+        
+        function drawServer(ctx) {
+            const w = 40, h = 50;
+            
+            // Server rack
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-w/2, -h/2, w, h);
+            
+            // LEDs
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(-w/2 + 5, -h/2 + 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(-w/2 + 5, 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Server slots
+            for (let i = 0; i < 3; i++) {
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(-w/2 + 8, -h/2 + 12 + i*8, w - 16, 4);
+            }
+        }
+        
+        function drawModem(ctx) {
+            const r = 20;
+            
+            // Main body
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // WiFi signals
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            
+            for (let i = 0; i < 4; i++) {
+                const arcLength = Math.PI / 3;
+                const startAngle = -Math.PI/2 + Math.PI/12 * i;
+                
+                ctx.beginPath();
+                ctx.arc(0, 0, r + 5 + i*4, startAngle, startAngle + arcLength);
+                ctx.stroke();
+            }
+            
+            // Light indicator
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(0, 0, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function drawRouter(ctx) {
+            const w = 35, h = 50;
+            
+            // Router body
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-w/2, -h/2, w, h);
+            
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(-w/2, -h/2, w, h);
+            
+            // Antennas
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            
+            // Left antenna
+            ctx.beginPath();
+            ctx.moveTo(-w/2 + 8, -h/2);
+            ctx.lineTo(-w/2 + 2, -h/2 - 8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(-w/2 + 2, -h/2 - 10, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Right antenna
+            ctx.beginPath();
+            ctx.moveTo(w/2 - 8, -h/2);
+            ctx.lineTo(w/2 - 2, -h/2 - 8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(w/2 - 2, -h/2 - 10, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Status LEDs
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(0, -h/2 + 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Ports
+            ctx.fillStyle = '#475569';
+            for (let i = 0; i < 4; i++) {
+                ctx.fillRect(-w/2 + 4, h/2 - 8 - i*8, w - 8, 3);
+            }
+        }
+        
+        function drawSwitch(ctx) {
+            const w = 35, h = 55;
+            
+            // Switch body
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-w/2, -h/2, w, h);
+            
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(-w/2, -h/2, w, h);
+            
+            // Status LED
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(0, -h/2 + 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Ports on front (vertical lines)
+            ctx.fillStyle = '#3b82f6';
+            const portCount = 8;
+            for (let i = 0; i < portCount; i++) {
+                const y = -h/2 + 10 + i * (h - 20) / portCount;
+                ctx.fillRect(-w/3, y, w * 0.66, 2);
+                
+                // Port indicators
+                if (i % 2 === 0) {
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fillRect(-w/4, y, 3, 2);
+                    ctx.fillStyle = '#3b82f6';
+                }
+            }
+        }
+        
+        function drawFirewall(ctx) {
+            const r = 18;
+            
+            // Shield shape
+            ctx.fillStyle = '#ef4444';
+            ctx.strokeStyle = '#f87171';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(0, -r);
+            ctx.quadraticCurveTo(-r * 0.7, -r * 0.3, -r, r * 0.3);
+            ctx.quadraticCurveTo(-r * 0.5, r, 0, r);
+            ctx.quadraticCurveTo(r * 0.5, r, r, r * 0.3);
+            ctx.quadraticCurveTo(r * 0.7, -r * 0.3, 0, -r);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // X mark
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-r * 0.4, -r * 0.4);
+            ctx.lineTo(r * 0.4, r * 0.4);
+            ctx.moveTo(r * 0.4, -r * 0.4);
+            ctx.lineTo(-r * 0.4, r * 0.4);
+            ctx.stroke();
+        }
+        
+        function drawIDS(ctx) {
+            const w = 30, h = 40;
+            
+            // IDS box
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-w/2, -h/2, w, h);
+            
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-w/2, -h/2, w, h);
+            
+            // Warning icon
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath();
+            ctx.moveTo(0, -h/2 + 8);
+            ctx.lineTo(-w/4, h/2 - 8);
+            ctx.lineTo(w/4, h/2 - 8);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-3, 3, 6, 6);
+            
+            // Detection waves
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(w/2 + 3, 0, 3 + i*4, 0, Math.PI);
+                ctx.stroke();
+            }
+        }
+        
+        function drawGeneric(ctx) {
+            const w = 30, h = 40;
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(-w/2, -h/2, w, h);
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-w/2, -h/2, w, h);
+        }
+        
+        function drawPorts(device, width, height) {
+            for (let i = 0; i < 4; i++) {
+                const portX = device.x + width - 25 + (i % 2) * 15;
+                const portY = device.y + (Math.floor(i / 2)) * 15 + 10;
+                
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(portX, portY, 8, 8);
+            }
+        }
+        
+        // Handle Device Drag
+        document.querySelectorAll('.device-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedDevice = item.dataset.device;
+            });
+        });
+        
+        canvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        
+        canvas.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left - 70;
+            const y = e.clientY - rect.top - 40;
+            
+            const deviceSize = getDeviceSize(draggedDevice);
+            
+            const device = {
+                id: Date.now(),
+                type: draggedDevice,
+                x: x - deviceSize.width/2,
+                y: y - deviceSize.height/2,
+                width: deviceSize.width,
+                height: deviceSize.height,
+                ip: generateIP(draggedDevice),
+                config: {
+                    subnet: '255.255.255.0',
+                    gateway: '192.168.1.1'
+                }
+            };
+            
+            devices.push(device);
+            updateDeviceList();
+            drawCanvas();
+            checkTaskCompletion();
+            draggedDevice = null;
+        });
+        
+        // Generate IP Address
+        function generateIP(deviceType) {
+            const ipRanges = {
+                modem: '192.168.1.1',
+                router: '192.168.1.2',
+                firewall: '192.168.1.10',
+                ids: '192.168.1.11',
+                switch: '192.168.1.20',
+                pc: '192.168.1.100',
+                server: '192.168.1.50'
+            };
+            
+            return ipRanges[deviceType] || '192.168.1.0';
+        }
+        
+        // Select Device & Connection Mode
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const clickedDevice = devices.find(d => 
+                x >= d.x && x <= d.x + d.width &&
+                y >= d.y && y <= d.y + d.height
+            );
+            
+            if (clickedDevice) {
+                if (connectionMode && sourceDevice) {
+                    if (sourceDevice.id !== clickedDevice.id) {
+                        // Create connection
+                        const exists = connections.find(c => 
+                            (c.device1 === sourceDevice.id && c.device2 === clickedDevice.id) ||
+                            (c.device1 === clickedDevice.id && c.device2 === sourceDevice.id)
+                        );
+                        
+                        if (!exists) {
+                            connections.push({
+                                device1: sourceDevice.id,
+                                device2: clickedDevice.id,
+                                connected: true
+                            });
+                            alert(`✅ Bağlantı oluşturuldu: ${sourceDevice.type} ↔ ${clickedDevice.type}`);
+                        } else {
+                            alert('⚠️ Bu bağlantı zaten mevcut!');
+                        }
+                    }
+                    connectionMode = false;
+                    sourceDevice = null;
+                    document.getElementById('connectionBtn').style.background = '';
+                    document.getElementById('connectionBtn').innerHTML = '<i class="fas fa-link"></i> Bağlan';
+                    devices.forEach(d => d.selected = false);
+                    drawCanvas();
+                } else {
+                    // Select device
+                    if (connectionMode) {
+                        sourceDevice = clickedDevice;
+                        sourceDevice.selected = true;
+                        alert(`📡 İlk cihaz seçildi: ${clickedDevice.type}. Şimdi hedef cihaza tıklayın.`);
+                    } else {
+                        updateDeviceList();
+                        devices.forEach(d => d.selected = false);
+                        clickedDevice.selected = true;
+                        selectedDevice = clickedDevice;
+                    }
+                    drawCanvas();
+                }
+            } else {
+                devices.forEach(d => d.selected = false);
+                selectedDevice = null;
+                drawCanvas();
+            }
+        });
+        
+        // Mouse Move for Connection Line
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            lastMouseX = e.clientX - rect.left;
+            lastMouseY = e.clientY - rect.top;
+            
+            if (connectionMode && sourceDevice) {
+                drawCanvas();
+            }
+        });
+        
+        // Connection Mode Toggle
+        document.getElementById('connectionBtn').addEventListener('click', () => {
+            connectionMode = !connectionMode;
+            const btn = document.getElementById('connectionBtn');
+            if (connectionMode) {
+                btn.style.background = '#22c55e';
+                btn.innerHTML = '<i class="fas fa-link"></i> Bağlantı Modu: Aktif (Cihaza Tıklayın)';
+            } else {
+                btn.style.background = '';
+                btn.innerHTML = '<i class="fas fa-link"></i> Bağlan';
+                sourceDevice = null;
+            }
+            drawCanvas();
+        });
+        
+        // Update Device List in Info Panel
+        function updateDeviceList() {
+            const deviceList = document.getElementById('deviceInfoList');
+            if (devices.length === 0) {
+                deviceList.innerHTML = '<li>Henüz cihaz eklenmedi</li>';
+                return;
+            }
+            
+            deviceList.innerHTML = devices.map((device, index) => {
+                const deviceTypes = {
+                    modem: 'Modem',
+                    router: 'Router',
+                    switch: 'Switch',
+                    firewall: 'Firewall',
+                    ids: 'IDS/IPS',
+                    pc: 'PC',
+                    server: 'Server'
+                };
+                
+                return `<li style="padding: 0.5rem 0; border-bottom: 1px solid #475569;">
+                    ${deviceTypes[device.type] || device.type} - ${device.type.toUpperCase()} #${index + 1}
+                </li>`;
+            }).join('');
+        }
+        
+        // Complete Task Check
+        function checkTaskCompletion() {
+            const modemCount = devices.filter(d => d.type === 'modem').length;
+            const routerCount = devices.filter(d => d.type === 'router').length;
+            const firewallCount = devices.filter(d => d.type === 'firewall').length;
+            const switchCount = devices.filter(d => d.type === 'switch').length;
+            const endpointCount = devices.filter(d => d.type === 'pc' || d.type === 'server').length;
+            const configuredCount = devices.filter(d => d.ip).length;
+            
+            // Task 1: Modem
+            if (modemCount > 0) markTaskComplete(1);
+            
+            // Task 2: Router
+            if (routerCount > 0) markTaskComplete(2);
+            
+            // Task 3: Firewall
+            if (firewallCount > 0) markTaskComplete(3);
+            
+            // Task 4: Switch
+            if (switchCount > 0) markTaskComplete(4);
+            
+            // Task 5: Endpoints
+            if (endpointCount > 0) markTaskComplete(5);
+            
+            // Task 6: All configured
+            if (configuredCount === devices.length && devices.length > 0) markTaskComplete(6);
+        }
+        
+        function markTaskComplete(taskNum) {
+            const task = document.querySelector(`[data-task="${taskNum}"]`);
+            if (task && !task.classList.contains('completed')) {
+                task.classList.add('completed');
+                const icon = task.querySelector('.task-icon');
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+            }
+        }
+        
+        
+        // Control Buttons
+        function clearCanvas() {
+            devices = [];
+            connections = [];
+            selectedDevice = null;
+            drawCanvas();
+            
+            document.querySelectorAll('.task-item').forEach(task => {
+                task.classList.remove('completed');
+                task.querySelector('.task-icon').innerHTML = task.dataset.task;
+            });
+        }
+        
+        function saveConfiguration() {
+            localStorage.setItem('networkConfig', JSON.stringify({ devices, connections }));
+            alert('Network yapılandırması kaydedildi!');
+        }
+        
+        let animationActive = false;
+        let animationPackets = [];
+        
+        function testNetwork() {
+            if (devices.length === 0) {
+                alert('Önce en az bir cihaz ekleyin!');
+                return;
+            }
+            
+            if (connections.length === 0) {
+                alert('Cihazları birbirine bağlamak için "Bağlan" butonunu kullanın!');
+                return;
+            }
+            
+            // Validate network configuration
+            const validation = validateNetwork();
+            
+            if (validation.success) {
+                showSuccessScreen();
+            } else {
+                showErrorScreen(validation.errors);
+            }
+        }
+        
+        function validateNetwork() {
+            const errors = [];
+            const requiredDevices = ['modem', 'router'];
+            const deviceTypes = devices.map(d => d.type);
+            
+            // Check for required devices
+            if (!deviceTypes.includes('modem')) {
+                errors.push('❌ Modem eksik! Modem internet bağlantısı için gereklidir.');
+            }
+            if (!deviceTypes.includes('router')) {
+                errors.push('❌ Router eksik! Router network segmentasyonu için gereklidir.');
+            }
+            if (!deviceTypes.includes('switch')) {
+                errors.push('❌ Switch eksik! Switch LAN bağlantıları için gereklidir.');
+            }
+            if (!deviceTypes.includes('pc')) {
+                errors.push('❌ PC eksik! En az bir PC (iş istasyonu) ekleyin.');
+            }
+            
+            // Check minimum device count
+            if (deviceTypes.filter(t => t === 'pc').length === 0) {
+                errors.push('❌ Hiç PC yok! En az bir bilgisayar ekleyin.');
+            }
+            
+            // Check if devices are connected
+            const modem = devices.find(d => d.type === 'modem');
+            const router = devices.find(d => d.type === 'router');
+            
+            if (modem && router) {
+                const modemConnections = connections.filter(c => 
+                    c.device1 === modem.id || c.device2 === modem.id
+                );
+                if (modemConnections.length === 0) {
+                    errors.push('❌ Modem bağlı değil! Modemi router\'a bağlayın.');
+                }
+            }
+            
+            const hasValidConnections = connections.length >= 2;
+            if (!hasValidConnections) {
+                errors.push('❌ Yetersiz bağlantı! En az 2 bağlantı oluşturun.');
+            }
+            
+            // Check if all devices are connected
+            const isolatedDevices = devices.filter(device => {
+                const deviceConnections = connections.filter(c => 
+                    c.device1 === device.id || c.device2 === device.id
+                );
+                return deviceConnections.length === 0;
+            });
+            
+            if (isolatedDevices.length > 1) {
+                errors.push(`❌ ${isolatedDevices.length} cihaz bağlı değil! Tüm cihazları network'e bağlayın.`);
+            }
+            
+            return {
+                success: errors.length === 0,
+                errors: errors
+            };
+        }
+        
+        function showSuccessScreen() {
+            // Start packet animation automatically
+            startPacketAnimation();
+            
+            // Create success modal after 3 seconds of animation
+            setTimeout(() => {
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center;';
+                modal.innerHTML = `
+                    <div style="background: #334155; border-radius: 16px; padding: 3rem; max-width: 600px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                        <div style="width: 80px; height: 80px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 3rem;">
+                            ✅
+                        </div>
+                        <h2 style="color: #fff; font-size: 2rem; margin-bottom: 1rem;">🎉 Başarılı!</h2>
+                        <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+                            Network yapılandırması doğru! Tüm cihazlar bağlı ve network aktif durumda.<br><br>
+                            <strong style="color: #22c55e;">Bağlantılar:</strong> ${connections.length}<br>
+                            <strong style="color: #22c55e;">Cihazlar:</strong> ${devices.length}<br>
+                            <strong style="color: #22c55e;">Durum:</strong> Çalışıyor ✅
+                        </p>
+                        <button onclick="stopAnimation(); location.reload();" style="padding: 1rem 2rem; background: #3b82f6; border: none; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; margin-right: 1rem;">
+                            🔄 Yeniden Başla
+                        </button>
+                        <button onclick="this.parentElement.parentElement.remove(); stopAnimation();" style="padding: 1rem 2rem; background: #334155; border: 2px solid #475569; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer;">
+                            ❌ Kapat
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }, 3000);
+        }
+        
+        function showErrorScreen(errors) {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center;';
+            modal.innerHTML = `
+                <div style="background: #334155; border-radius: 16px; padding: 3rem; max-width: 600px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                    <div style="width: 80px; height: 80px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 3rem;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 style="color: #fff; font-size: 2rem; margin-bottom: 1rem;">⚠️ Hata Bulundu</h2>
+                    <p style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem;">
+                        Network yapılandırmasında eksiklikler var:
+                    </p>
+                    <div style="text-align: left; background: #1e293b; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; max-height: 300px; overflow-y: auto;">
+                        ${errors.map(err => `<div style="color: #ef4444; padding: 0.5rem 0; border-bottom: 1px solid #334155;">${err}</div>`).join('')}
+                    </div>
+                    <button onclick="location.reload()" style="padding: 1rem 2rem; background: #ef4444; border: none; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; margin-right: 1rem;">
+                        <i class="fas fa-redo"></i> Yeniden Dene
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="padding: 1rem 2rem; background: #334155; border: 2px solid #475569; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-times"></i> Kapat
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function startPacketAnimation() {
+            animationActive = true;
+            document.getElementById('connectionBtn').innerHTML = '<i class="fas fa-stop"></i> Durdur';
+            
+            // Create packets for each connection
+            connections.forEach((conn, index) => {
+                const device1 = devices.find(d => d.id === conn.device1);
+                const device2 = devices.find(d => d.id === conn.device2);
+                
+                if (device1 && device2) {
+                    animationPackets.push({
+                        from: device1,
+                        to: device2,
+                        progress: 0,
+                        color: `hsl(${(index * 60) % 360}, 70%, 60%)`
+                    });
+                }
+            });
+            
+            animatePackets();
+        }
+        
+        function animatePackets() {
+            if (!animationActive) return;
+            
+            drawCanvas();
+            
+            animationPackets.forEach(packet => {
+                const startX = packet.from.x + packet.from.width / 2;
+                const startY = packet.from.y + packet.from.height / 2;
+                const endX = packet.to.x + packet.to.width / 2;
+                const endY = packet.to.y + packet.to.height / 2;
+                
+                const currentX = startX + (endX - startX) * packet.progress;
+                const currentY = startY + (endY - startY) * packet.progress;
+                
+                // Draw packet as emoji
+                ctx.fillStyle = '#fff';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('📦', currentX, currentY);
+                ctx.textAlign = 'left';
+                
+                packet.progress += 0.02;
+                
+                if (packet.progress >= 1) {
+                    packet.progress = 0;
+                }
+            });
+            
+            requestAnimationFrame(animatePackets);
+        }
+        
+        function stopAnimation() {
+            animationActive = false;
+            document.getElementById('connectionBtn').innerHTML = '<i class="fas fa-play"></i> Test Et';
+            animationPackets = [];
+            drawCanvas();
+        }
+    </script>
+</body>
+    <!-- Configuration & API Integration -->
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+</html>

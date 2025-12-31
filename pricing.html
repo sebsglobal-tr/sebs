@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paketler ve Fiyatlar - SEBS Global</title>
+    <meta name="description" content="SEBS Global eğitim paketleri. Siber güvenlik, bulut bilişim ve daha fazlası için uygun fiyatlı paketler.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="SEBS.png">
+    <link rel="apple-touch-icon" href="SEBS.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --card-bg: #ffffff;
+            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
+            --gradient-green: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e0;
+            --text-tertiary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --navbar-bg: rgba(15, 23, 42, 0.95);
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Hero Section */
+        .pricing-hero {
+            background: var(--gradient-purple);
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .pricing-hero {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 30%, #475569 100%);
+        }
+
+        .pricing-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .pricing-hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-hero p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .category-tab:hover {
+            border-color: var(--gradient-purple);
+            transform: translateY(-2px);
+        }
+
+        .category-tab.active {
+            background: var(--gradient-purple);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Pricing Cards */
+        .pricing-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--gradient-purple);
+        }
+
+        [data-theme="dark"] .pricing-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card.featured {
+            border: 3px solid;
+            border-image: var(--gradient-purple) 1;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            opacity: 1;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-level {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .pricing-price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-period {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .pricing-features li i {
+            color: #22c55e;
+            font-size: 1.125rem;
+        }
+
+        .pricing-features li.disabled {
+            opacity: 0.5;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features li.disabled i {
+            color: var(--text-secondary);
+        }
+
+        .btn-purchase {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--gradient-purple);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+        .btn-purchase:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-purchase:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Access Level Info */
+        .access-info {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .access-info p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-purple);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        [data-theme="dark"] .loading-overlay {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .loading-subtext {
+            font-size: 1rem;
+            opacity: 0.8;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-hero h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="loading-logo">
+                <img src="SEBS.png" alt="SEBS Global">
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Yükleniyor...</div>
+            <div class="loading-subtext">Lütfen bekleyin</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="navigation-container"></div>
+
+    <!-- Hero Section -->
+    <section class="pricing-hero">
+        <div class="container">
+            <h1>Eğitim Paketleri</h1>
+            <p>Her seviyeye uygun, kapsamlı eğitim paketleri ile kariyerinizi bir üst seviyeye taşıyın</p>
+        </div>
+    </section>
+
+    <!-- Category Tabs -->
+    <div class="container">
+        <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab active" data-category="cybersecurity">Siber Güvenlik</button>
+            <button class="category-tab" data-category="cloud">Bulut Bilişim</button>
+            <button class="category-tab" data-category="data-science">Veri Bilimleri</button>
+        </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="pricing-container">
+        <div class="pricing-grid" id="pricingGrid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Access Level Info -->
+    <div class="container">
+        <div class="access-info">
+            <p><i class="fas fa-info-circle"></i> <strong>Not:</strong> Her paket sadece kendi seviyesine erişim sağlar. Temel Paket sadece başlangıç seviyesi, Orta Paket sadece orta seviye, Final Paketi sadece ileri seviye modül ve simülasyonlara erişim sağlar.</p>
+        </div>
+    </div>
+
+    <!-- Navigation Script -->
+    <script src="js/navigation.js"></script>
+    
+    <script>
+        // Pricing data
+        const pricingData = {
+            cybersecurity: {
+                title: 'Siber Güvenlik',
+                packages: [
+                    {
+                        level: 'beginner',
+                        title: 'Temel Paket',
+                        price: 149,
+                        features: [
+                            'Başlangıç seviyesi modüllere erişim',
+                            'Temel simülasyonlara erişim',
+                            '5 başlangıç seviyesi modül',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'intermediate',
+                        title: 'Orta Paket',
+                        price: 349,
+                        features: [
+                            'Orta seviye modüllere erişim',
+                            'Orta seviye simülasyonlara erişim',
+                            '6 orta seviye modül',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'advanced',
+                        title: 'Final Paketi',
+                        price: 599,
+                        features: [
+                            'İleri seviye modüllere erişim',
+                            'İleri seviye simülasyonlara erişim',
+                            '6 ileri seviye modül',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek',
+                            '1-on-1 mentor desteği'
+                        ],
+                        disabled: []
+                    }
+                ]
+            },
+            cloud: {
+                title: 'Bulut Bilişim',
+                packages: [
+                    {
+                        level: 'beginner',
+                        title: 'Temel Paket',
+                        price: 149,
+                        features: [
+                            'Başlangıç seviyesi modüllere erişim',
+                            'Temel simülasyonlara erişim',
+                            'AWS, Azure, GCP temelleri',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'intermediate',
+                        title: 'Orta Paket',
+                        price: 349,
+                        features: [
+                            'Orta seviye modüllere erişim',
+                            'Orta seviye simülasyonlara erişim',
+                            'İleri bulut mimarileri',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'advanced',
+                        title: 'Final Paketi',
+                        price: 599,
+                        features: [
+                            'İleri seviye modüllere erişim',
+                            'İleri seviye simülasyonlara erişim',
+                            'Multi-cloud stratejileri',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek',
+                            '1-on-1 mentor desteği'
+                        ],
+                        disabled: []
+                    }
+                ]
+            },
+            'data-science': {
+                title: 'Veri Bilimleri',
+                packages: [
+                    {
+                        level: 'beginner',
+                        title: 'Temel Paket',
+                        price: 149,
+                        features: [
+                            'Başlangıç seviyesi modüllere erişim',
+                            'Temel simülasyonlara erişim',
+                            'Python ve veri analizi temelleri',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'intermediate',
+                        title: 'Orta Paket',
+                        price: 349,
+                        features: [
+                            'Orta seviye modüllere erişim',
+                            'Orta seviye simülasyonlara erişim',
+                            'Machine Learning temelleri',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek'
+                        ],
+                        disabled: []
+                    },
+                    {
+                        level: 'advanced',
+                        title: 'Final Paketi',
+                        price: 599,
+                        features: [
+                            'İleri seviye modüllere erişim',
+                            'İleri seviye simülasyonlara erişim',
+                            'Deep Learning ve AI',
+                            'Sertifika alma hakkı',
+                            '7/24 destek',
+                            'Lifetime erişim',
+                            'Öncelikli destek',
+                            '1-on-1 mentor desteği'
+                        ],
+                        disabled: []
+                    }
+                ]
+            }
+        };
+
+        // Current category
+        let currentCategory = 'cybersecurity';
+
+        // Check login status
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        // Get user access level
+        function getUserAccessLevel() {
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    return user.accessLevel || 'beginner';
+                } catch (e) {
+                    return 'beginner';
+                }
+            }
+            return 'beginner';
+        }
+
+        // Render pricing cards
+        function renderPricingCards(category) {
+            const grid = document.getElementById('pricingGrid');
+            const data = pricingData[category];
+            const userAccessLevel = getUserAccessLevel();
+
+            grid.innerHTML = data.packages.map((pkg, index) => {
+                // Her paket sadece kendi seviyesine erişim sağlar
+                // Kullanıcı pakete sahipse sadece o seviyeye erişebilir
+                const isOwned = userAccessLevel === pkg.level;
+                const isFeatured = index === 1; // Middle package is featured
+
+                return `
+                    <div class="pricing-card ${isFeatured ? 'featured' : ''}">
+                        <div class="pricing-header">
+                            <div class="pricing-level">${pkg.level === 'beginner' ? 'Başlangıç' : pkg.level === 'intermediate' ? 'Orta' : 'İleri'} Seviye</div>
+                            <h3 class="pricing-title">${pkg.title}</h3>
+                            <div class="pricing-price">₺${pkg.price}</div>
+                            <div class="pricing-period">Tek seferlik ödeme</div>
+                        </div>
+                        <ul class="pricing-features">
+                            ${pkg.features.map(feature => `
+                                <li ${pkg.disabled.includes(feature) ? 'class="disabled"' : ''}>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>${feature}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <button 
+                            class="btn-purchase" 
+                            data-category="${category}" 
+                            data-level="${pkg.level}"
+                            data-price="${pkg.price}"
+                            ${isOwned ? 'disabled' : ''}
+                            ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
+                        >
+                            ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-shopping-cart"></i> Satın Al'}
+                        </button>
+                        ${isOwned ? '<div class="access-info" style="margin-top: 1rem; padding: 0.75rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; color: #22c55e; font-size: 0.875rem;"><i class="fas fa-check-circle"></i> Bu pakete sahipsiniz</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Handle category tab click
+        document.getElementById('categoryTabs').addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-tab')) {
+                document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                renderPricingCards(currentCategory);
+            }
+        });
+
+        // Handle purchase click (not logged in)
+        function handlePurchaseClick(event) {
+            event.preventDefault();
+            if (!isLoggedIn()) {
+                if (confirm('Satın alma işlemi için giriş yapmanız gerekiyor. Giriş sayfasına yönlendirileceksiniz.')) {
+                    window.location.href = 'login.html?redirect=pricing.html';
+                }
+            }
+        }
+
+        // Handle purchase
+        async function handlePurchase(event) {
+            if (!isLoggedIn()) {
+                if (confirm('Satın alma işlemi için giriş yapmanız gerekiyor. Giriş sayfasına yönlendirileceksiniz.')) {
+                    window.location.href = 'login.html?redirect=pricing.html';
+                }
+                return;
+            }
+
+            const button = event.target.closest('.btn-purchase');
+            const category = button.dataset.category;
+            const level = button.dataset.level;
+            const price = button.dataset.price;
+
+            if (button.disabled) {
+                return;
+            }
+
+            // Confirm purchase
+            const confirmMessage = `${category === 'cybersecurity' ? 'Siber Güvenlik' : category === 'cloud' ? 'Bulut Bilişim' : 'Veri Bilimleri'} alanından ${level === 'beginner' ? 'Temel' : level === 'intermediate' ? 'Orta' : 'Final'} Paketi (₺${price}) satın almak istediğinize emin misiniz?`;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('active');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:8006/api/purchase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category,
+                        level,
+                        price: parseFloat(price)
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Purchase saved to database - no need to store in localStorage
+                    // All data will be fetched from database when needed
+                    console.log('✅ Purchase successful - saved to database');
+                    
+                    // Redirect to modules page to view purchased content
+                    alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi. Modüller sayfasına yönlendiriliyorsunuz...');
+                    window.location.href = 'modules.html';
+                } else {
+                    alert('❌ Satın alma işlemi başarısız: ' + (result.message || 'Bilinmeyen hata'));
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
+                }
+            } catch (error) {
+                console.error('Purchase error:', error);
+                alert('❌ Satın alma işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
+            } finally {
+                document.getElementById('loadingOverlay').classList.remove('active');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check URL parameters for category and level
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCategory = urlParams.get('category');
+            const urlLevel = urlParams.get('level');
+            
+            if (urlCategory && pricingData[urlCategory]) {
+                currentCategory = urlCategory;
+                // Update active tab
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.category === urlCategory) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
+            
+            renderPricingCards(currentCategory);
+            
+            // Scroll to pricing cards if level is specified
+            if (urlLevel) {
+                setTimeout(() => {
+                    const targetCard = document.querySelector(`[data-level="${urlLevel}"]`);
+                    if (targetCard) {
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Highlight the card
+                        targetCard.closest('.pricing-card').style.border = '3px solid #667eea';
+                        targetCard.closest('.pricing-card').style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
+                    }
+                }, 500);
+            }
+            
+            // Hide loading overlay after page load
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+

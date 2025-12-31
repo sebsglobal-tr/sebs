@@ -1,0 +1,66 @@
+<!-- Standard Navigation Component -->
+<!-- Usage: Include this file in all pages for consistent navigation -->
+<nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo" id="navLogo">
+            <img src="SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <span class="sebs">SEBS</span>
+            <span class="global">Global</span>
+        </a>
+        <ul class="nav-menu" id="navMenu" role="menubar">
+            <li class="nav-item" role="none">
+                <a href="index.html" class="nav-link" data-page="index" role="menuitem">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <i class="fas fa-book"></i> Eğitim Modülleri
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <i class="fas fa-flask"></i> Simülasyonlar
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="pricing.html" class="nav-link" data-page="pricing" role="menuitem">
+                    <i class="fas fa-tags"></i> Paketler
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="about.html" class="nav-link" data-page="about" role="menuitem">
+                    <i class="fas fa-info-circle"></i> Hakkımızda
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <i class="fas fa-envelope"></i> İletişim
+                </a>
+            </li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                <i class="fas fa-moon" id="darkModeIcon"></i>
+            </button>
+            <div id="userProfile" class="user-profile" style="display: none;">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">Kullanıcı</span>
+            </div>
+            <a href="login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+            <a href="signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+            <a href="dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
+                <i class="fas fa-tachometer-alt"></i> Panel
+            </a>
+            <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+            </a>
+        </div>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
