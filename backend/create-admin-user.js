@@ -69,19 +69,22 @@ async function createAdminUser() {
     console.log(`   PublicID: ${adminUser.publicId}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
-    // Also check for abidinsamet0cay@gmail.com and make it admin if it exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: 'abidinsamet0cay@gmail.com' }
-    });
-    
-    if (existingUser) {
-      console.log('ℹ️ Found abidinsamet0cay@gmail.com, updating to admin...');
-      await prisma.user.update({
-        where: { email: 'abidinsamet0cay@gmail.com' },
-        data: { role: 'admin' }
+    // Also check for admin email from environment and make it admin if it exists
+    const adminEmailFromEnv = process.env.ADMIN_EMAIL;
+    if (adminEmailFromEnv) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: adminEmailFromEnv }
       });
-      console.log('✅ abidinsamet0cay@gmail.com is now admin');
-      console.log('   (You need to know the password for this account)');
+      
+      if (existingUser) {
+        console.log(`ℹ️ Found ${adminEmailFromEnv}, updating to admin...`);
+        await prisma.user.update({
+          where: { email: adminEmailFromEnv },
+          data: { role: 'admin' }
+        });
+        console.log(`✅ ${adminEmailFromEnv} is now admin`);
+        console.log('   (You need to know the password for this account)');
+      }
     }
     
   } catch (error) {

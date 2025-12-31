@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # GitHub Repository Kurulum Script'i
-# Kullanıcı: abidinsamet0cay@gmail.com
 
 echo "🚀 GitHub Repository Kurulum Başlatılıyor..."
 echo ""
 
-# GitHub kullanıcı adı (e-posta'dan türetilmiş)
-GITHUB_USER="abidinsamet0cay"
-REPO_NAME="sebs-global"
+# GitHub kullanıcı adı ve repository adı
+GITHUB_USER="abidin0samet"  # GitHub username
+REPO_NAME="sebs-global-private"
 
 echo "📋 Repository Bilgileri:"
 echo "   Kullanıcı: $GITHUB_USER"
