@@ -199,8 +199,8 @@
                 <h2 class="section-title">Eğitim İlerlemesi</h2>
             </div>
             <!-- Tüm modüller için yatay kaydırmalı kart listesi -->
-            <div class="progress-list" id="progressList" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.75rem; scroll-snap-type: x mandatory;">
-                <div class="no-data" style="min-width: 260px;">
+            <div class="progress-list progress-list--modules-row" id="progressList">
+                <div class="no-data">
                     <i class="fas fa-book-reader"></i>
                     <h3>Henüz modül başlatmadınız</h3>
                     <p>Eğitim modüllerine göz atarak başlayın!</p>
@@ -291,14 +291,23 @@
             return (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
         }
         async function getAuthToken() {
-            var t = localStorage.getItem('authToken');
-            if (!t && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-                try {
-                    var s = (await window.supabaseAuthSystem.supabase.auth.getSession()).data.session;
-                    if (s) t = s.access_token;
-                } catch (e) {}
-            }
-            return t;
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var gr = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (gr && gr.data && gr.data.session && gr.data.session.access_token) {
+                        var at = gr.data.session.access_token;
+                        try {
+                            localStorage.setItem('authToken', at);
+                        } catch (e) {}
+                        return at;
+                    }
+                }
+            } catch (e) {}
+            var legacy = localStorage.getItem('authToken');
+            if (legacy) return legacy;
+            return typeof getSupabaseAccessTokenFromStorage === 'function'
+                ? getSupabaseAccessTokenFromStorage()
+                : null;
         }
 
         // SEBS - Abidin Samet Çay
@@ -396,26 +405,24 @@
                     return null;
                 }
                 
-                // Supabase'den profile bilgilerini al
-                const { data: profile, error: profileError } = await window.supabaseAuthSystem.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
-                    .single();
-                
-                if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = not found
-                    console.warn('Profile fetch error:', profileError);
-                }
-                
+                // public.profiles tablosu bu projede yok (kullanıcılar public.users + backend API)
+                const md = session.user.user_metadata || {};
+                const metaFull =
+                    md.full_name ||
+                    md.name ||
+                    (md.first_name || md.last_name
+                        ? [md.first_name, md.last_name].filter(Boolean).join(' ')
+                        : '') ||
+                    '';
                 // Kullanıcı bilgilerini birleştir
                 const userData = {
                     id: session.user.id,
                     email: session.user.email,
-                    firstName: profile?.full_name?.split(' ')[0] || session.user.user_metadata?.full_name?.split(' ')[0] || 'Kullanıcı',
-                    lastName: profile?.full_name?.split(' ').slice(1).join(' ') || session.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-                    fullName: profile?.full_name || session.user.user_metadata?.full_name || session.user.email,
-                    role: profile?.role || 'user',
-                    accessLevel: profile?.access_level || 'beginner',
+                    firstName: metaFull ? metaFull.split(' ')[0] : session.user.email.split('@')[0] || 'Kullanıcı',
+                    lastName: metaFull ? metaFull.split(' ').slice(1).join(' ') : '',
+                    fullName: metaFull || session.user.email,
+                    role: 'user',
+                    accessLevel: 'beginner',
                     isVerified: !!session.user.email_confirmed_at,
                     purchases: [] // Purchases ayrı yüklenecek
                 };
@@ -433,9 +440,21 @@
                         
                         if (purchasesResponse.ok) {
                             const purchasesData = await purchasesResponse.json();
-                            if (purchasesData.success && purchasesData.data && purchasesData.data.purchases) {
-                                userData.purchases = purchasesData.data.purchases;
+                            if (purchasesData.success && purchasesData.data) {
+                                const d = purchasesData.data;
+                                if (d.purchases) userData.purchases = d.purchases;
+                                if (d.role) userData.role = d.role;
+                                if (d.accessLevel != null) userData.accessLevel = d.accessLevel;
+                                if (d.firstName || d.lastName) {
+                                    userData.firstName = d.firstName || userData.firstName;
+                                    userData.lastName = d.lastName || userData.lastName;
+                                    userData.fullName = [d.firstName, d.lastName].filter(Boolean).join(' ') || userData.fullName;
+                                }
                             }
+                        } else if (purchasesResponse.status === 401) {
+                            console.warn(
+                                'Backend /api/users/me 401 — backend .env içinde SUPABASE_JWT_SECRET (Supabase Dashboard → Settings → API → JWT Secret) tanımlı ve doğru olmalı.'
+                            );
                         }
                     }
                 } catch (apiError) {
@@ -499,8 +518,12 @@
                     return;
                 }
                 
-                // Email doğrulama kontrolü
-                if (!session.user.email_confirmed_at) {
+                // Email doğrulama (OAuth / eski oturumlarda alan farklı olabilir)
+                var emailVerified =
+                    session.user.email_confirmed_at ||
+                    session.user.confirmed_at ||
+                    (session.user.user_metadata && session.user.user_metadata.email_verified);
+                if (!emailVerified) {
                     console.log('⚠️ Email doğrulanmamış');
                     window.location.href = 'login.html?message=' + encodeURIComponent('E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.');
                     return;
@@ -508,7 +531,10 @@
                 
                 console.log('✅ Kullanıcı giriş yapmış, dashboard yükleniyor...');
                 console.log('   User:', session.user.email);
-                
+                try {
+                    sessionStorage.removeItem('sebs_dash_401_reload_once');
+                } catch (e) {}
+
                 // Loading overlay'i gizle
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
@@ -523,6 +549,11 @@
                 
                 // Load progress
                 await loadProgress();
+
+                document.addEventListener('visibilitychange', function onVis() {
+                    if (document.visibilityState !== 'visible') return;
+                    loadProgress().catch(function (e) { console.warn('loadProgress on visibility:', e); });
+                });
                 
             } catch (error) {
                 console.error('❌ Dashboard init error:', error);
@@ -724,129 +755,240 @@
             } catch (e) { console.warn('syncLocalProgressToApi:', e); }
         }
 
+        function normModuleTitle(s) {
+            return String(s || '').trim().toLowerCase();
+        }
+
+        /** API'de satır yoksa bile localStorage'daki modül ilerlemesini kartlara ekle (örn. Temel Network) */
+        function mergeDashboardLocalModuleProgress(modules) {
+            var out = Array.isArray(modules) ? modules.slice() : [];
+            var seen = {};
+            out.forEach(function (m) {
+                var t = m.moduleTitle || m.title;
+                if (t) seen[normModuleTitle(t)] = true;
+            });
+            var extras = [
+                { key: 'module_progress_temel_network', title: 'Temel Network Eğitimi' },
+                { key: 'module_progress_siber_guvenlik_giris', title: 'Siber Güvenliğe Giriş' }
+            ];
+            extras.forEach(function (x) {
+                if (seen[normModuleTitle(x.title)]) return;
+                var raw = localStorage.getItem(x.key);
+                if (!raw) return;
+                var local;
+                try {
+                    local = JSON.parse(raw);
+                } catch (e) {
+                    return;
+                }
+                var completed = local.completedLessons || [];
+                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
+                if (completed.length === 0) return;
+                var pct = Math.min(100, Math.round((completed.length / total) * 100));
+                out.push({
+                    title: x.title,
+                    moduleTitle: x.title,
+                    percentComplete: pct,
+                    isCompleted: pct >= 100,
+                    timeSpentMinutes: 0,
+                    lastStep: null
+                });
+                seen[normModuleTitle(x.title)] = true;
+            });
+            return out;
+        }
+
+        /** localStorage → POST /api/progress (modül listesinden id bulunur) */
+        async function syncLocalModuleProgressToApi(token, storageKey, moduleTitle) {
+            try {
+                var local = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                var completed = local.completedLessons || [];
+                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
+                if (completed.length === 0 || !token) return;
+                var pct = Math.min(100, Math.round((completed.length / total) * 100));
+                var modRes = await fetch(getApiBaseUrl() + '/api/modules', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (!modRes.ok) return;
+                var modData = await modRes.json();
+                if (!modData.success || !Array.isArray(modData.data)) return;
+                var moduleId = null;
+                for (var i = 0; i < modData.data.length; i++) {
+                    var m = modData.data[i];
+                    var t = m.title || '';
+                    if (t === moduleTitle || t.indexOf(moduleTitle) !== -1 || moduleTitle.indexOf(t) !== -1) {
+                        moduleId = m.id;
+                        break;
+                    }
+                }
+                if (!moduleId) return;
+                await fetch(getApiBaseUrl() + '/api/progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify({
+                        moduleId: moduleId,
+                        percentComplete: pct,
+                        lastStep: JSON.stringify({
+                            completedLessons: completed,
+                            totalLessons: total
+                        }),
+                        isCompleted: pct >= 100
+                    })
+                });
+            } catch (e) {
+                console.warn('syncLocalModuleProgressToApi:', e);
+            }
+        }
+
+        /** Simülasyon sayfalarıyla aynı: Supabase session, authToken veya sb-*-auth-token */
+        function getSupabaseAccessTokenFromStorage() {
+            try {
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    if (!key || !/^sb-.*-auth-token$/.test(key)) continue;
+                    var raw = localStorage.getItem(key);
+                    if (!raw) continue;
+                    var data = JSON.parse(raw);
+                    var at = (data && (data.access_token || (data.session && data.session.access_token) || (data.currentSession && data.currentSession.access_token))) || null;
+                    if (at && typeof at === 'string' && at.length > 40) return at;
+                }
+            } catch (e) { /* ignore */ }
+            return null;
+        }
+
+        async function getApiAuthToken() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var sess = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (sess && sess.data && sess.data.session && sess.data.session.access_token) {
+                        return sess.data.session.access_token;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            var legacy = localStorage.getItem('authToken');
+            if (legacy) return legacy;
+            return getSupabaseAccessTokenFromStorage();
+        }
+
         // SEBS - Abidin Samet Çay
         async function loadProgress() {
             try {
-                // Supabase session token al
-                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
-                    console.warn('Supabase not available, cannot load progress');
-                    return;
-                }
-                
-                const { data: { session }, error: sessionError } = await window.supabaseAuthSystem.supabase.auth.getSession();
-                
-                if (sessionError || !session) {
-                    console.warn('No session available, cannot load progress');
-                    return;
-                }
-                
-                const token = session.access_token;
-                
-                try {
-                    // SEBS - Abidin Samet Çay
-                    const progressResponse = await fetch(getApiBaseUrl() + '/api/progress/overview', {
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    });
-                    
-                    if (handle401Response(progressResponse)) return;
-                    if (progressResponse.ok) {
-                        const progressData = await progressResponse.json();
-                        
-                        if (progressData.success && progressData.data) {
-                            let modules = progressData.data.modules || [];
-                            // API boşsa localStorage'dan Siber Güvenliğe Giriş ilerlemesini al ve göster
-                            if (modules.length === 0) {
-                                const localKey = 'module_progress_siber_guvenlik_giris';
-                                const local = JSON.parse(localStorage.getItem(localKey) || '{}');
-                                const completed = local.completedLessons || [];
-                                const total = local.totalLessons || 60;
-                                if (completed.length > 0) {
-                                    const pct = total ? Math.round((completed.length / total) * 100) : 0;
-                                    modules = [{
-                                        title: 'Siber Güvenliğe Giriş',
-                                        courseTitle: 'Siber Güvenliğe Giriş',
-                                        percentComplete: pct,
-                                        isCompleted: pct >= 100,
-                                        timeSpentMinutes: 0
-                                    }];
-                                    // Arka planda API'ye senkronize et
-                                    syncLocalProgressToApi(token).catch(function(){});
-                                }
-                            }
-                            const completedModules = progressData.data.completedModules || modules.filter(m => m.isCompleted).length;
-                            const totalStudyTime = progressData.data.totalStudyTime || modules.reduce((total, m) => {
-                                if (m.lastStep && m.lastStep.timeSpentMinutes) {
-                                    return total + m.lastStep.timeSpentMinutes;
-                                }
-                                return total;
-                            }, 0);
-                            
-                            // SEBS - Abidin Samet Çay
-                            const completedEl = document.getElementById('completedModules');
-                            const hoursEl = document.getElementById('studyHours');
-                            
-                            if (completedEl) {
-                                animateCounter(completedEl, 0, completedModules, 1500);
-                                completedEl.classList.add('gradient');
-                            }
-                            
-                            if (hoursEl) {
-                                animateCounter(hoursEl, 0, Math.round(totalStudyTime / 60), 1500);
-                                hoursEl.classList.add('gradient');
-                            }
-                            
-                            // SEBS - Abidin Samet Çay
-                            displayModulesFromBackend(modules);
-                            displaySimulationRuns(progressData.data.simulationRuns || []);
-                            var ob = document.getElementById('onboardingCard');
-                            if (ob) ob.style.display = (completedModules === 0) ? 'block' : 'none';
+                var token = await getApiAuthToken();
+                var progressData = null;
+                var overviewOk = false;
 
-                            // SEBS - Abidin Samet Çay
-                            await loadCertificates();
-                            return;
+                if (token) {
+                    try {
+                        var progressResponse = await fetch(getApiBaseUrl() + '/api/progress/overview', {
+                            headers: { Authorization: 'Bearer ' + token }
+                        });
+                        if (progressResponse.ok) {
+                            progressData = await progressResponse.json();
+                            overviewOk = !!(progressData && progressData.success && progressData.data);
+                        } else if (progressResponse.status === 401) {
+                            console.warn(
+                                'progress/overview 401 — kartlar yerel depolama ile gösterilecek (JWT/backend kontrol edin).'
+                            );
+                            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                                window.supabaseAuthSystem.supabase.auth
+                                    .refreshSession()
+                                    .then(function (ref) {
+                                        if (ref && ref.data && ref.data.session && ref.data.session.access_token) {
+                                            try {
+                                                localStorage.setItem('authToken', ref.data.session.access_token);
+                                            } catch (e) {}
+                                        }
+                                    })
+                                    .catch(function () {});
+                            }
+                        } else {
+                            var errorData = await progressResponse.json().catch(function () {
+                                return {};
+                            });
+                            var msg = errorData.message
+                                ? errorData.message
+                                : 'İlerleme verisi alınamadı (' + progressResponse.status + ')';
+                            showToast(msg, 'error');
                         }
-                    } else {
-                        const errorData = await progressResponse.json().catch(() => ({}));
-                        const msg = (errorData && errorData.message) ? errorData.message : ('İlerleme verisi alınamadı (' + progressResponse.status + ')');
-                        showToast(msg, 'error');
+                    } catch (fetchErr) {
+                        console.warn('progress/overview fetch:', fetchErr);
                     }
-                } catch (error) {
-                    showToast(error.message || 'İlerleme yüklenirken bir hata oluştu.', 'error');
+                } else {
+                    console.warn('API token yok — yalnızca yerel ilerleme gösterilecek');
+                }
+
+                var modules = [];
+                var simulationRuns = [];
+                var completedModules = 0;
+                var totalStudyTime = 0;
+
+                if (overviewOk && progressData && progressData.data) {
+                    modules = progressData.data.modules || [];
+                    simulationRuns = progressData.data.simulationRuns || [];
+                    completedModules =
+                        progressData.data.completedModules != null
+                            ? progressData.data.completedModules
+                            : modules.filter(function (m) {
+                                  return m.isCompleted;
+                              }).length;
+                    totalStudyTime =
+                        progressData.data.totalStudyTime != null
+                            ? progressData.data.totalStudyTime
+                            : modules.reduce(function (total, m) {
+                                  if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                                      return total + m.lastStep.timeSpentMinutes;
+                                  }
+                                  return total;
+                              }, 0);
+                }
+
+                modules = mergeDashboardLocalModuleProgress(modules);
+
+                if (token && overviewOk) {
+                    syncLocalModuleProgressToApi(
+                        token,
+                        'module_progress_temel_network',
+                        'Temel Network Eğitimi'
+                    ).catch(function () {});
+                    syncLocalProgressToApi(token).catch(function () {});
+                }
+
+                if (!overviewOk && modules.length > 0) {
+                    completedModules = modules.filter(function (m) {
+                        return m.isCompleted;
+                    }).length;
+                    totalStudyTime = modules.reduce(function (total, m) {
+                        if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                            return total + m.lastStep.timeSpentMinutes;
+                        }
+                        return total;
+                    }, 0);
+                }
+
+                if (modules.length > 0) {
+                    var completedEl = document.getElementById('completedModules');
+                    var hoursEl = document.getElementById('studyHours');
+                    if (completedEl) {
+                        animateCounter(completedEl, 0, completedModules, 1500);
+                        completedEl.classList.add('gradient');
+                    }
+                    if (hoursEl) {
+                        animateCounter(hoursEl, 0, Math.round(totalStudyTime / 60), 1500);
+                        hoursEl.classList.add('gradient');
+                    }
+                    displayModulesFromBackend(modules);
+                    displaySimulationRuns(simulationRuns);
+                    var ob = document.getElementById('onboardingCard');
+                    if (ob) ob.style.display = completedModules === 0 ? 'block' : 'none';
+                    await loadCertificates();
+                    return;
                 }
             } catch (error) {
                 console.error('Error getting session for progress:', error);
             }
-            
-            // API hata verdi veya boş - localStorage fallback (module_progress_siber_guvenlik_giris)
-            const localKey = 'module_progress_siber_guvenlik_giris';
-            const localProgress = JSON.parse(localStorage.getItem(localKey) || '{}');
-            const localCompleted = localProgress.completedLessons || [];
-            const localTotal = localProgress.totalLessons || 60;
-            if (localCompleted.length > 0) {
-                const pct = localTotal ? Math.round((localCompleted.length / localTotal) * 100) : 0;
-                const modules = [{
-                    title: 'Siber Güvenliğe Giriş',
-                    courseTitle: 'Siber Güvenliğe Giriş',
-                    percentComplete: pct,
-                    isCompleted: pct >= 100,
-                    timeSpentMinutes: 0
-                }];
-                displayModulesFromBackend(modules);
-                displaySimulationRuns([]);
-                const completedEl = document.getElementById('completedModules');
-                const hoursEl = document.getElementById('studyHours');
-                if (completedEl) { animateCounter(completedEl, 0, pct >= 100 ? 1 : 0, 1500); completedEl.classList.add('gradient'); }
-                if (hoursEl) { animateCounter(hoursEl, 0, 0, 1500); hoursEl.classList.add('gradient'); }
-                var obEl = document.getElementById('onboardingCard');
-                if (obEl) obEl.style.display = 'none';
-                await loadCertificates();
-                return;
-            }
-            
-            // Fallback to localStorage (eski format)
-            // Get userData from localStorage or API
+
+            // API + yerel birleşim boş — eski userProgress_ formatına düş (ayrı blok: üstteki var modules ile const çakışmasın)
+            {
             let userData = JSON.parse(localStorage.getItem('userData') || '{}');
             
             // If userData is empty, try to get from API
@@ -897,12 +1039,12 @@
 
             // Display modules
             displayModules(modules);
-            displaySimulationRuns([]);
             var ob = document.getElementById('onboardingCard');
             if (ob) ob.style.display = (completedModules === 0) ? 'block' : 'none';
 
             // Load certificates
             await loadCertificates();
+            }
         }
 
         function formatSimulationDate(iso) {
@@ -974,15 +1116,19 @@
             progressList.innerHTML = modules.map((module, index) => {
                 const percent = module.percentComplete || 0;
                 const moduleId = `module-${index}-${timestamp}`;
+                const displayTitle =
+                    (module.courseTitle === 'Siber Güvenliğe Giriş' && module.title === 'Giriş')
+                        ? 'Siber Güvenliğe Giriş'
+                        : module.moduleTitle || module.title || module.module?.title || 'Modül';
                 
                 return `
-                <div class="progress-item" style="min-width: 260px; max-width: 320px; flex: 0 0 auto; scroll-snap-align: start; animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
+                <div class="progress-item" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
                     <div class="progress-item-header">
                         <div class="progress-icon">
                             <i class="fas fa-book"></i>
                         </div>
                         <div class="progress-info" style="flex: 1;">
-                            <div class="progress-name">${(module.courseTitle === 'Siber Güvenliğe Giriş' && module.title === 'Giriş') ? 'Siber Güvenliğe Giriş' : (module.title || module.module?.title || 'Modül')}</div>
+                            <div class="progress-name">${displayTitle}</div>
                             <div class="progress-detail">
                                 ${module.isCompleted ? 'Tamamlandı' : ((module.percentComplete || 0) > 0 ? module.percentComplete + '% tamamlandı • Devam Ediyor' : (module.timeSpentMinutes || 0) + ' dakika • Devam Ediyor')}
                             </div>
@@ -1004,7 +1150,7 @@
                         </div>
                     ` : `
                         <div style="margin-top: 1rem; text-align: center;">
-                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(module.title)}'">
+                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(displayTitle)}'">
                                 <i class="fas fa-play"></i> Devam Et
                             </button>
                         </div>
@@ -1178,22 +1324,52 @@
             if (!text) return '';
             return String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
+        var dashboard401RedirectScheduled = false;
+
         function handle401Response(response) {
-            if (response && response.status === 401) {
-                showToast('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.', 'error');
-                setTimeout(function () {
-                    window.location.href = 'login.html?redirect=dashboard.html&message=' + encodeURIComponent('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
-                }, 1500);
-                return true;
-            }
-            return false;
+            if (!response || response.status !== 401) return false;
+            (function tryRefreshThenMaybeLogin() {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    window.supabaseAuthSystem.supabase.auth
+                        .refreshSession()
+                        .then(function (ref) {
+                            if (ref && ref.data && ref.data.session && ref.data.session.access_token) {
+                                try {
+                                    localStorage.setItem('authToken', ref.data.session.access_token);
+                                } catch (e) {}
+                                if (!sessionStorage.getItem('sebs_dash_401_reload_once')) {
+                                    sessionStorage.setItem('sebs_dash_401_reload_once', '1');
+                                    showToast('Oturum yenilendi, sayfa yenileniyor…', 'success');
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 600);
+                                    return;
+                                }
+                            }
+                            scheduleLoginRedirect();
+                        })
+                        .catch(function () {
+                            scheduleLoginRedirect();
+                        });
+                } else {
+                    scheduleLoginRedirect();
+                }
+            })();
+            return true;
+        }
+
+        function scheduleLoginRedirect() {
+            if (dashboard401RedirectScheduled) return;
+            dashboard401RedirectScheduled = true;
+            showToast('Oturum doğrulanamadı. Giriş sayfasına yönlendiriliyorsunuz.', 'error');
+            setTimeout(function () {
+                window.location.href =
+                    'login.html?redirect=dashboard.html&message=' +
+                    encodeURIComponent('Lütfen tekrar giriş yapın.');
+            }, 1800);
         }
 
         function showToast(message, type) {
-            if (typeof window.showToast === 'function') {
-                window.showToast(message, type);
-                return;
-            }
             try {
                 var existing = document.getElementById('toast-message');
                 if (existing) existing.remove();
@@ -1538,7 +1714,7 @@
 
                 const item = document.createElement('div');
                 item.className = 'progress-item';
-                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0;`;
+                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0; min-width: 0;`;
                 
                 let iconClass = moduleIcons[moduleName] || 'fas fa-book';
                 let statusColor = '#1e40af';

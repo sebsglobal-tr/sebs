@@ -4627,7 +4627,7 @@
                 const moduleId = await window.getModuleIdFromName(MODULE_NAME);
                 if (!moduleId) return local.completedLessons || [];
                 const apiBase = (window.location?.origin || '') + '/api';
-                const r = await fetch(apiBase + '/progress/' + moduleId, {
+                const r = await fetch(apiBase + '/progress/module/' + moduleId, {
                     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
                 });
                 if (r.ok) {

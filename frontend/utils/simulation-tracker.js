@@ -8,6 +8,47 @@
         return RUN_PREFIX + simulationId;
     }
 
+    /** Simülasyon sayfalarında supabase-auth.js yok; Supabase session sb-*-auth-token içinde */
+    function getSupabaseAccessTokenFromStorage() {
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!key || !/^sb-.*-auth-token$/.test(key)) continue;
+                const raw = localStorage.getItem(key);
+                if (!raw) continue;
+                const data = JSON.parse(raw);
+                const at =
+                    data?.access_token ||
+                    data?.session?.access_token ||
+                    data?.currentSession?.access_token;
+                if (at && typeof at === 'string' && at.length > 40) {
+                    return at;
+                }
+            }
+        } catch (e) {
+            /* ignore */
+        }
+        return null;
+    }
+
+    async function getAuthBearer() {
+        try {
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                const {
+                    data: { session }
+                } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                if (session && session.access_token) {
+                    return session.access_token;
+                }
+            }
+        } catch (e) {
+            /* ignore */
+        }
+        const legacy = localStorage.getItem('authToken');
+        if (legacy) return legacy;
+        return getSupabaseAccessTokenFromStorage();
+    }
+
     async function resolveModuleId(moduleName) {
         if (!moduleName) return null;
         if (window.getModuleIdFromName) {
@@ -25,7 +66,7 @@
          * Simülasyon başladığında sunucuya kaydet; dönen runId oturumda saklanır.
          */
         async recordStart(simulationId, simulationName, data = {}) {
-            const token = localStorage.getItem('authToken');
+            const token = await getAuthBearer();
             if (!token || !simulationId) {
                 return null;
             }
@@ -66,10 +107,10 @@
         },
 
         async saveCompletion(simulationId, simulationName, data = {}) {
-            const token = localStorage.getItem('authToken');
+            const token = await getAuthBearer();
 
             if (!token) {
-                console.log('No auth token for simulation tracking');
+                console.log('No auth token for simulation tracking (giriş yapın veya Supabase oturumu gerekli)');
                 return;
             }
 
@@ -109,31 +150,39 @@
 
             try {
                 let result;
-
-                if (window.APIClient && moduleId) {
-                    result = await window.APIClient.saveSimulationCompletion(
-                        moduleId,
-                        simulationId,
-                        score,
-                        data.flagsFound || [],
-                        timeSpent,
-                        attempts,
-                        { correctCount, wrongCount, passed, runId }
-                    );
-                } else {
-                    const apiBase =
-                        typeof window !== 'undefined' && window.location && window.location.origin
-                            ? window.location.origin + '/api'
-                            : 'http://localhost:8006/api';
-                    const response = await fetch(apiBase + '/simulations/complete', {
+                const apiBase =
+                    typeof window !== 'undefined' && window.location && window.location.origin
+                        ? window.location.origin + '/api'
+                        : 'http://localhost:8006/api';
+                let response = await fetch(apiBase + '/simulations/complete', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                result = await response.json().catch(() => ({}));
+                if (!response.ok && response.status === 404 && payload.runId) {
+                    sessionStorage.removeItem(getRunStorageKey(simulationId));
+                    const retryPayload = Object.assign({}, payload);
+                    delete retryPayload.runId;
+                    response = await fetch(apiBase + '/simulations/complete', {
                         method: 'POST',
                         headers: {
                             Authorization: 'Bearer ' + token,
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify(retryPayload)
                     });
-                    result = await response.json();
+                    result = await response.json().catch(() => ({}));
+                }
+                if (!result.success || !response.ok) {
+                    console.warn(
+                        'Simülasyon kaydı:',
+                        response.status,
+                        result.message || result.error || JSON.stringify(result).slice(0, 200)
+                    );
                 }
 
                 if (result && result.success) {
@@ -156,6 +205,10 @@
                                 }
                             }, 1000);
                         }
+                    }
+
+                    if (data.redirectToDashboard !== false) {
+                        window.location.replace('/dashboard.html');
                     }
                 }
 

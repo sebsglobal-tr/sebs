@@ -21,7 +21,7 @@ const pool = new Pool({
 async function run() {
   const client = await pool.connect();
   try {
-    const sqlPath = path.join(__dirname, 'backend/migrations/013_quiz_login_module_session.sql');
+    const sqlPath = path.join(__dirname, 'database/migrations/013_quiz_login_module_session.sql');
     const sql = fs.readFileSync(sqlPath, 'utf8');
     await client.query(sql);
     console.log('✅ Migration 013 başarıyla çalıştırıldı: quiz_attempts, user_login_logs, user_module_sessions');

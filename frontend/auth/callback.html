@@ -130,21 +130,6 @@
                     }
                     
                     if (data && data.user) {
-                        // Profile oluşturulduğundan emin ol (trigger olmalı ama kontrol edelim)
-                        try {
-                            const { data: profile } = await supabase
-                                .from('profiles')
-                                .select('id')
-                                .eq('id', data.user.id)
-                                .single();
-                            
-                            if (!profile) {
-                                console.log('Profile not found, will be created by trigger');
-                            }
-                        } catch (profileError) {
-                            console.log('Profile check error (will be created automatically):', profileError);
-                        }
-                        
                         document.querySelector('.container').innerHTML = `
                             <div class="success">✅</div>
                             <h1>E-posta Başarıyla Doğrulandı!</h1>

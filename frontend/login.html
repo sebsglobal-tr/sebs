@@ -433,28 +433,21 @@
                     console.log('   User:', result.user.email);
                     console.log('   Session:', result.session ? 'Active' : 'Missing');
                     
-                    // Get user profile from Supabase (optional - if fails, continue with default)
-                    let userProfile = null;
+                    let userRole = 'user';
                     try {
-                        const { data: profile, error: profileError } = await window.supabaseAuthSystem.supabase
-                            .from('profiles')
-                            .select('role, access_level')
-                            .eq('id', result.user.id)
-                            .single();
-                        
-                        if (!profileError && profile) {
-                            userProfile = profile;
-                            console.log('✅ User profile loaded:', userProfile);
-                        } else if (profileError) {
-                            // Profile yoksa oluştur (trigger olmalı ama yoksa manuel oluştur)
-                            console.warn('Profile not found, will be created automatically by trigger');
+                        const apiBase = (window.location && window.location.origin) ? window.location.origin : '';
+                        const meRes = await fetch(apiBase + '/api/users/me', {
+                            headers: { Authorization: 'Bearer ' + result.session.access_token }
+                        });
+                        if (meRes.ok) {
+                            const meJson = await meRes.json();
+                            if (meJson.success && meJson.data && meJson.data.role) {
+                                userRole = meJson.data.role;
+                            }
                         }
-                    } catch (err) {
-                        console.warn('Could not fetch user profile:', err);
-                        // Profile yoksa sorun değil, trigger otomatik oluşturacak
+                    } catch (e) {
+                        console.warn('Rol bilgisi alınamadı (backend /api/users/me):', e);
                     }
-                    
-                    const userRole = userProfile?.role || 'user';
                     const isAdmin = userRole === 'admin';
                     
                     // Check for redirect parameter in URL

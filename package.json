@@ -1,47 +1,22 @@
 {
-  "name": "sebs-global-backend",
+  "name": "sebs-global",
+  "private": true,
   "version": "1.0.0",
-  "description": "SEBS Global Backend API - User Progress Tracking",
-  "main": "server.js",
+  "description": "SEBS Global — monorepo: frontend (statik), backend (Express API), database (SQL)",
   "scripts": {
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "start:alt": "PORT=8010 npm --prefix backend start",
+    "restart": "./scripts/restart-local.sh",
+    "start:cluster": "npm --prefix backend run start:cluster",
     "build": "node scripts/verify-build.js",
-    "audit": "npm audit --audit-level=high",
-    "start": "node server.js",
-    "start:cluster": "node cluster-server.js",
-    "start:pm2": "pm2 start ecosystem.config.js --env production",
-    "start:pm2:dev": "pm2 start ecosystem.config.js --env development",
-    "stop:pm2": "pm2 stop sebs-global",
-    "restart:pm2": "pm2 restart sebs-global",
-    "logs:pm2": "pm2 logs sebs-global",
-    "status:pm2": "pm2 status",
-    "dev": "nodemon server.js",
-    "dev:cluster": "nodemon cluster-server.js",
-    "setup-db": "node setup-database-tables.js",
-    "db:setup": "node scripts/db-setup.js",
-    "test:redis": "node test-redis.js",
-    "test:cluster": "node test-cluster.js"
-  },
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2",
-    "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.10",
-    "pg": "^8.16.3",
-    "redis": "^5.10.0",
-    "winston": "^3.19.0"
-  },
-  "devDependencies": {
-    "@vercel/node": "^3.2.0",
-    "nodemon": "^3.1.14",
-    "pm2": "^6.0.14",
-    "supabase": "^2.76.12"
+    "setup-db": "node setup-database-tables.js"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "pg": "^8.16.3"
   }
 }

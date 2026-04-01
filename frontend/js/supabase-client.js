@@ -16,7 +16,7 @@ async function getSupabaseConfig() {
   try {
     const base = window.location.origin;
     if (!base || base === 'null' || base === 'file://') {
-      console.error('Sayfayı file:// ile açmayın. Sunucuyu çalıştırın: npm start veya node server.js; adres: http://localhost:8006');
+      console.error('Sayfayı file:// ile açmayın. API: cd backend && npm start — http://localhost:8006');
       return { url: null, anonKey: null };
     }
     const r = await fetch(base + '/api/supabase-config', { credentials: 'same-origin' });

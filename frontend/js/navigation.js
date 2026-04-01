@@ -59,35 +59,17 @@
                 const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
                 
                 if (session && session.user) {
-                    // Profile bilgilerini al
-                    try {
-                        const { data: profile } = await window.supabaseAuthSystem.supabase
-                            .from('profiles')
-                            .select('full_name, role, access_level')
-                            .eq('id', session.user.id)
-                            .single();
-                        
-                        if (profile) {
-                            return {
-                                email: session.user.email,
-                                firstName: profile.full_name?.split(' ')[0] || null,
-                                lastName: profile.full_name?.split(' ').slice(1).join(' ') || '',
-                                fullName: profile.full_name || null,
-                                role: profile.role || 'user',
-                                accessLevel: profile.access_level || 'beginner',
-                                isVerified: !!session.user.email_confirmed_at
-                            };
-                        }
-                    } catch (profileError) {
-                        console.warn('Profile fetch error:', profileError);
-                    }
-                    
-                    // Profile yoksa session metadata'dan ad (e-posta gösterme)
+                    const md = session.user.user_metadata || {};
+                    const fullName =
+                        md.full_name ||
+                        md.name ||
+                        [md.first_name, md.last_name].filter(Boolean).join(' ') ||
+                        null;
                     return {
                         email: session.user.email,
-                        firstName: session.user.user_metadata?.full_name?.split(' ')[0] || null,
-                        lastName: session.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-                        fullName: session.user.user_metadata?.full_name || null,
+                        firstName: fullName ? fullName.split(' ')[0] : null,
+                        lastName: fullName ? fullName.split(' ').slice(1).join(' ') : '',
+                        fullName: fullName,
                         role: 'user',
                         accessLevel: 'beginner',
                         isVerified: !!session.user.email_confirmed_at

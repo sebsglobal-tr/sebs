@@ -5,7 +5,7 @@
 process.env.SKIP_ENV_VALIDATION = '1';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-const { app } = require('../server.js');
+const { app } = require('../backend/server.js');
 
 if (!app || typeof app.use !== 'function') {
     console.error('verify-build: Express app yüklenemedi');

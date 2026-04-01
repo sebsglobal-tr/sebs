@@ -10,6 +10,30 @@ document.head.appendChild(script);
 let moduleNameCache = null;
 let moduleCacheExpiry = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+/** Aynı modül adı için eşzamanlı tek ağ isteği (429 önleme) */
+const moduleIdInflight = new Map();
+
+function getSupabaseAccessTokenFromStorage() {
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || !/^sb-.*-auth-token$/.test(key)) continue;
+            const raw = localStorage.getItem(key);
+            if (!raw) continue;
+            const data = JSON.parse(raw);
+            const at =
+                data?.access_token ||
+                data?.session?.access_token ||
+                data?.currentSession?.access_token;
+            if (at && typeof at === 'string' && at.length > 40) {
+                return at;
+            }
+        }
+    } catch (e) {
+        /* ignore */
+    }
+    return null;
+}
 
 // Helper: get Supabase access token if available (Supabase Auth)
 async function getSupabaseAccessToken() {
@@ -23,98 +47,142 @@ async function getSupabaseAccessToken() {
     } catch (e) {
         console.warn('Supabase access token alınamadı:', e);
     }
-    return null;
+    const legacy = localStorage.getItem('authToken');
+    if (legacy) return legacy;
+    return getSupabaseAccessTokenFromStorage();
 }
 
 // Get module ID from module name (exposed globally for other trackers)
-window.getModuleIdFromName = async function(moduleName) {
+window.getModuleIdFromName = async function (rawName) {
+    const moduleName = String(rawName || '')
+        .trim()
+        .replace(/[\s,;]+$/g, '');
+
     // Check cache first
     if (moduleNameCache && Date.now() < moduleCacheExpiry) {
         if (moduleNameCache[moduleName]) {
             return moduleNameCache[moduleName];
         }
     }
-    
+
     // Load from localStorage cache
     const cache = JSON.parse(localStorage.getItem('moduleNameCache') || '{}');
     const cacheTime = parseInt(localStorage.getItem('moduleNameCacheTime') || '0');
-    
     if (Date.now() - cacheTime < CACHE_DURATION && cache[moduleName]) {
         return cache[moduleName];
     }
-    
-    // Fetch from backend (prefer Supabase token if available)
-    try {
-        // Get all courses (canlıda aynı origin)
-        const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
-        
-        let authHeader = null;
-        const supabaseToken = await getSupabaseAccessToken();
-        if (supabaseToken) {
-            authHeader = `Bearer ${supabaseToken}`;
-        } else if (localStorage.getItem('authToken')) {
-            authHeader = `Bearer ${localStorage.getItem('authToken')}`;
-        }
-        if (!authHeader) {
-            console.warn('⚠️ No auth token for fetching module ID');
-            return null;
-        }
 
-        const coursesResponse = await fetch(apiBase + '/courses', {
-            headers: {
-                'Authorization': authHeader
+    if (moduleIdInflight.has(moduleName)) {
+        return moduleIdInflight.get(moduleName);
+    }
+
+    let settle;
+    const done = new Promise((resolve) => {
+        settle = resolve;
+    });
+    moduleIdInflight.set(moduleName, done);
+
+    (async () => {
+        try {
+            const apiBase =
+                typeof window !== 'undefined' && window.location && window.location.origin
+                    ? window.location.origin + '/api'
+                    : 'http://localhost:8006/api';
+
+            let authHeader = null;
+            const supabaseToken = await getSupabaseAccessToken();
+            if (supabaseToken) {
+                authHeader = `Bearer ${supabaseToken}`;
+            } else if (localStorage.getItem('authToken')) {
+                authHeader = `Bearer ${localStorage.getItem('authToken')}`;
             }
-        });
-        
-        if (coursesResponse.ok) {
-            const coursesData = await coursesResponse.json();
-            if (coursesData.success && coursesData.data) {
-                const cacheMap = {};
-                
-                // Build module name -> ID mapping
-                // Önce kurs adı eşleşmesi (örn. "Siber Güvenliğe Giriş" kursu -> ilk modül)
+            if (!authHeader) {
+                console.warn('⚠️ No auth token for fetching module ID');
+                settle(null);
+                return;
+            }
+
+            function matchModuleTitle(a, b) {
+                if (!a || !b) return false;
+                if (a === b) return true;
+                return a.includes(b) || b.includes(a);
+            }
+
+            function pickIdFromCoursesPayload(coursesData) {
+                if (!coursesData.success || !coursesData.data) return null;
                 for (const course of coursesData.data) {
-                    if (course.title === moduleName || course.title.includes(moduleName) || moduleName.includes(course.title)) {
+                    if (
+                        course.title &&
+                        (course.title === moduleName ||
+                            course.title.includes(moduleName) ||
+                            moduleName.includes(course.title))
+                    ) {
                         if (course.modules && course.modules.length > 0) {
-                            cacheMap[moduleName] = course.modules[0].id;
-                            break;
+                            return course.modules[0].id;
                         }
                     }
                 }
-                // Yoksa modül adı eşleşmesi
-                if (!cacheMap[moduleName]) {
-                    coursesData.data.forEach(course => {
-                        if (course.modules) {
-                            course.modules.forEach(module => {
-                                if (module.title === moduleName || 
-                                    module.title.includes(moduleName) ||
-                                    moduleName.includes(module.title)) {
-                                    cacheMap[moduleName] = module.id;
-                                }
-                            });
+                for (const course of coursesData.data) {
+                    if (!course.modules) continue;
+                    for (const mod of course.modules) {
+                        if (mod.title && matchModuleTitle(mod.title, moduleName)) {
+                            return mod.id;
                         }
-                    });
+                    }
                 }
-                
-                // Update cache
-                moduleNameCache = cacheMap;
+                return null;
+            }
+
+            async function fetchModulesList() {
+                const modulesResponse = await fetch(apiBase + '/modules', {
+                    headers: { Authorization: authHeader }
+                });
+                if (!modulesResponse.ok) return null;
+                const modulesData = await modulesResponse.json();
+                if (!modulesData.success || !Array.isArray(modulesData.data)) return null;
+                for (const m of modulesData.data) {
+                    const t = m.title || m.name;
+                    if (t && matchModuleTitle(t, moduleName)) {
+                        return m.id;
+                    }
+                }
+                return null;
+            }
+
+            let resolvedId = await fetchModulesList();
+
+            if (!resolvedId) {
+                const coursesResponse = await fetch(apiBase + '/courses', {
+                    headers: { Authorization: authHeader }
+                });
+                if (coursesResponse.ok) {
+                    const coursesData = await coursesResponse.json();
+                    resolvedId = pickIdFromCoursesPayload(coursesData);
+                }
+            }
+
+            if (resolvedId) {
+                const cacheMap = { [moduleName]: resolvedId };
+                moduleNameCache = Object.assign({}, moduleNameCache, cacheMap);
                 moduleCacheExpiry = Date.now() + CACHE_DURATION;
-                
-                // Save to localStorage
                 const existingCache = JSON.parse(localStorage.getItem('moduleNameCache') || '{}');
                 Object.assign(existingCache, cacheMap);
                 localStorage.setItem('moduleNameCache', JSON.stringify(existingCache));
                 localStorage.setItem('moduleNameCacheTime', Date.now().toString());
-                
-                return cacheMap[moduleName] || null;
+                settle(resolvedId);
+            } else {
+                settle(null);
             }
+        } catch (error) {
+            console.error('Failed to fetch module ID:', error);
+            settle(null);
+        } finally {
+            moduleIdInflight.delete(moduleName);
         }
-    } catch (error) {
-        console.error('Failed to fetch module ID:', error);
-    }
-    
-    return null;
-}
+    })();
+
+    return done;
+};
 
 window.ModuleProgressTracker = {
     // Save lesson completion - DIRECTLY TO DATABASE ONLY
@@ -142,7 +210,7 @@ window.ModuleProgressTracker = {
             let currentProgress = null;
             try {
                 const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
-                const progressResponse = await fetch(`${apiBase}/progress/${moduleId}`, {
+                const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -231,7 +299,7 @@ window.ModuleProgressTracker = {
             let currentProgress = null;
             try {
                 const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
-                const progressResponse = await fetch(`${apiBase}/progress/${moduleId}`, {
+                const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -305,7 +373,7 @@ window.ModuleProgressTracker = {
             // Check if progress exists, if not create it
             try {
                 const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
-                const progressResponse = await fetch(`${apiBase}/progress/${moduleId}`, {
+                const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

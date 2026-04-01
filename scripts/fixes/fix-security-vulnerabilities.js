@@ -9,7 +9,7 @@ const path = require('path');
 console.log('🔒 Güvenlik açıkları düzeltiliyor...\n');
 
 // Read server.js
-const serverPath = path.join(__dirname, 'server.js');
+const serverPath = path.join(__dirname, '..', '..', 'backend', 'server.js');
 let serverContent = fs.readFileSync(serverPath, 'utf8');
 
 let fixes = [];

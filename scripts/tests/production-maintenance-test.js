@@ -89,10 +89,10 @@ function testFileStructure() {
     
     const criticalFiles = [
         { path: 'index.html', desc: 'Main page' },
-        { path: 'server.js', desc: 'Server file' },
+        { path: 'backend/server.js', desc: 'Server file' },
         { path: 'package.json', desc: 'Package config' },
-        { path: 'utils/api-client.js', desc: 'API client' },
-        { path: 'utils/module-progress.js', desc: 'Progress tracker' }
+        { path: 'frontend/utils/api-client.js', desc: 'API client' },
+        { path: 'frontend/utils/module-progress.js', desc: 'Progress tracker' }
     ];
     
     criticalFiles.forEach(file => {
@@ -120,9 +120,9 @@ function testSecurity() {
     
     // Check for console.log in production files
     const filesToCheck = [
-        'utils/api-client.js',
-        'utils/module-progress.js',
-        'server.js'
+        'frontend/utils/api-client.js',
+        'frontend/utils/module-progress.js',
+        'backend/server.js'
     ];
     
     let totalLogs = 0;

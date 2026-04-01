@@ -119,22 +119,7 @@ class SupabaseAuthSystem {
           expiresAt: session.expires_at
         });
         
-        // Profile bilgisini de yükle (opsiyonel)
-        try {
-          const { data: profile } = await this.supabase
-            .from('profiles')
-            .select('role, access_level')
-            .eq('id', session.user.id)
-            .single();
-          
-          if (profile) {
-            this.user.role = profile.role;
-            this.user.access_level = profile.access_level;
-          }
-        } catch (profileError) {
-          // Profile yoksa sorun değil, trigger otomatik oluşturacak
-          console.log('Profile not found, will be created automatically');
-        }
+        // public.profiles bu şemada yok; rol backend /api/users/me + public.users
       } else {
         // Session yok
         this.isLoggedIn = false;
@@ -286,29 +271,16 @@ class SupabaseAuthSystem {
       if (dashboardBtn) dashboardBtn.style.display = 'block';
       if (userProfile) userProfile.style.display = 'flex';
       
-      // Önce profile'dan adı al (e-posta gösterme)
       try {
-        if (this.supabase) {
-          const { data: profile } = await this.supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('id', this.user.id)
-            .single();
-          
-          if (profile && profile.full_name) {
-            const displayName = profile.full_name;
-            const firstLetter = displayName.trim().charAt(0).toUpperCase();
-            if (userName) userName.textContent = displayName;
-            if (userAvatar) userAvatar.textContent = firstLetter;
-          } else {
-            if (userName) userName.textContent = 'Kullanıcı';
-            if (userAvatar) userAvatar.textContent = 'K';
-          }
-        } else {
-          if (userName) userName.textContent = 'Kullanıcı';
-          if (userAvatar) userAvatar.textContent = 'K';
-        }
-      } catch (profileError) {
+        const md = this.user.user_metadata || {};
+        const displayName =
+          (md.full_name || md.name || [md.first_name, md.last_name].filter(Boolean).join(' ') || '').trim() ||
+          (this.user.email ? this.user.email.split('@')[0] : '') ||
+          'Kullanıcı';
+        const firstLetter = displayName.trim().charAt(0).toUpperCase() || 'K';
+        if (userName) userName.textContent = displayName;
+        if (userAvatar) userAvatar.textContent = firstLetter;
+      } catch (e) {
         if (userName) userName.textContent = 'Kullanıcı';
         if (userAvatar) userAvatar.textContent = 'K';
       }

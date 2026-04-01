@@ -1615,11 +1615,11 @@
                         // Update user info - sadece kullanıcı adı (e-posta değil)
                         const userNameEl = document.getElementById('userName');
                         const userAvatarEl = document.getElementById('userAvatar');
-                        let displayName = 'Kullanıcı';
-                        try {
-                            const { data: profile } = await window.supabaseAuthSystem.supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
-                            if (profile && profile.full_name) displayName = profile.full_name;
-                        } catch (_) {}
+                        const mdNav = session.user.user_metadata || {};
+                        let displayName =
+                            (mdNav.full_name || mdNav.name || [mdNav.first_name, mdNav.last_name].filter(Boolean).join(' ') || '').trim() ||
+                            (session.user.email ? session.user.email.split('@')[0] : '') ||
+                            'Kullanıcı';
                         if (userNameEl) userNameEl.textContent = displayName;
                         if (userAvatarEl) userAvatarEl.textContent = (displayName.trim() || 'K').charAt(0).toUpperCase();
                         

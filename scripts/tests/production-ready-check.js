@@ -55,9 +55,9 @@ function checkCriticalFiles() {
         { path: 'signup.html', desc: 'Kayıt sayfası' },
         { path: 'modules.html', desc: 'Modüller sayfası' },
         { path: 'simulations.html', desc: 'Simülasyonlar sayfası' },
-        { path: 'backend/src/server.js', desc: 'Backend server' },
-        { path: 'utils/api-client.js', desc: 'API client' },
-        { path: 'utils/module-progress.js', desc: 'İlerleme takibi' },
+        { path: 'backend-prisma/src/server.js', desc: 'Prisma backend (alternatif)' },
+        { path: 'frontend/utils/api-client.js', desc: 'API client' },
+        { path: 'frontend/utils/module-progress.js', desc: 'İlerleme takibi' },
     ];
 
     criticalFiles.forEach(file => {
@@ -82,9 +82,9 @@ console.log('\n📋 3. GÜVENLİK KONTROLÜ (Console.log)\n');
 function checkConsoleLogs() {
     const filesToCheck = [
         'dashboard.html',
-        'utils/api-client.js',
-        'utils/module-progress.js',
-        'backend/src/server.js',
+        'frontend/utils/api-client.js',
+        'frontend/utils/module-progress.js',
+        'backend-prisma/src/server.js',
         'modules/temel-siber-guvenlik.html',
         'modules/network-guvenligi.html'
     ];

@@ -1,46 +1,48 @@
 {
   "name": "sebs-global-backend",
   "version": "1.0.0",
-  "description": "SEBS Global Education Platform Backend",
-  "main": "src/server.js",
-  "type": "module",
+  "description": "SEBS Global Backend API - User Progress Tracking",
+  "main": "server.js",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "prod": "node src/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
-    "prisma:seed": "node prisma/seed.js",
-    "prisma:studio": "prisma studio",
-    "test": "echo \"No tests yet\"",
-    "test:db": "node run-database-performance-security-test.js"
+    "build": "node ../scripts/verify-build.js",
+    "audit": "npm audit --audit-level=high",
+    "start": "node server.js",
+    "start:alt": "PORT=8010 node server.js",
+    "start:cluster": "node cluster-server.js",
+    "start:pm2": "pm2 start ecosystem.config.js --env production",
+    "start:pm2:dev": "pm2 start ecosystem.config.js --env development",
+    "stop:pm2": "pm2 stop sebs-global",
+    "restart:pm2": "pm2 restart sebs-global",
+    "logs:pm2": "pm2 logs sebs-global",
+    "status:pm2": "pm2 status",
+    "dev": "nodemon server.js",
+    "dev:cluster": "nodemon cluster-server.js",
+    "setup-db": "node ../setup-database-tables.js",
+    "db:setup": "node ../scripts/db-setup.js",
+    "test:redis": "node test-redis.js",
+    "test:cluster": "node test-cluster.js"
   },
-  "keywords": [
-    "education",
-    "api",
-    "backend"
-  ],
-  "author": "SEBS Global",
-  "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
-    "@supabase/supabase-js": "^2.39.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "helmet": "^7.1.0",
-    "morgan": "^1.10.0",
-    "openai": "^4.28.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.10",
     "pg": "^8.16.3",
-    "zod": "^3.22.4"
+    "redis": "^5.10.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2",
-    "prisma": "^5.22.0"
+    "@vercel/node": "^3.2.0",
+    "nodemon": "^3.1.14",
+    "pm2": "^6.0.14",
+    "supabase": "^2.76.12"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.0.0"
   }
 }

@@ -4842,6 +4842,35 @@ li:has(.nav-link[data-page="dashboard"]) {
     gap: 1.5rem;
 }
 
+/* Dashboard: eğitim modül kartları yan yana (dar ekranda alt satıra geçer) */
+.progress-list.progress-list--modules-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 1.25rem;
+    overflow-x: visible;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: none;
+}
+
+.progress-list.progress-list--modules-row > .progress-item {
+    flex: 1 1 min(100%, 300px);
+    max-width: 420px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.progress-list.progress-list--modules-row > .progress-item:hover {
+    transform: translateY(-4px);
+}
+
+.progress-list.progress-list--modules-row > .no-data {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
+
 .progress-item {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
     backdrop-filter: blur(20px);

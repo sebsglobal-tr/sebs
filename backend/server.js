@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -8,16 +9,16 @@ const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
 const logger = require('./utils/logger');
-require('dotenv').config();
-// Kök .env'de SUPABASE_* yoksa backend/.env ile tamamla (aynı repoda tek proje önerilir)
-require('dotenv').config({ path: path.join(__dirname, 'backend', '.env'), override: false });
+/** Statik site (ayrı deploy edilirse API sunucusunda klasör olmayabilir) */
+const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: false });
 // Boş SUPABASE_ANON_KEY= satırı dotenv'de "set" sayılır ve backend'den gelen anahtarı ezmez; temizleyip tekrar yükle
 ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'].forEach((k) => {
     if (process.env[k] !== undefined && String(process.env[k]).trim() === '') {
         delete process.env[k];
     }
 });
-require('dotenv').config({ path: path.join(__dirname, 'backend', '.env'), override: false });
 
 if (process.env.NODE_ENV !== 'production' && !(process.env.SUPABASE_ANON_KEY || '').trim()) {
     logger.warn(
@@ -122,25 +123,16 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
 // MIDDLEWARE (ARA KATMAN YAPILANDIRMALARI)
 // ============================================
 
-// Hız sınırlama (Rate Limiting) - DDoS saldırılarını önlemek için
-// Her IP adresinden gelen istek sayısını sınırlar
-const limiter = rateLimit({
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // Zaman penceresi: 15 dakika (milisaniye cinsinden)
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // Her IP adresi için zaman penceresi içinde maksimum 100 istek
+// Hız sınırlama — sadece /api/auth/* (giriş/kayıt brute-force). Tüm /api/ üzerinde limit,
+// modül listesi ve ilerleme uçlarında 429 üretiyordu (express-rate-limit + mount path uyumu).
+const authLimiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_AUTH_MAX, 10) || 80,
     message: 'Too many requests from this IP, please try again later.',
-    standardHeaders: true, // Rate limit bilgisini `RateLimit-*` başlıklarında döndür
-    legacyHeaders: false, // Eski `X-RateLimit-*` başlıklarını devre dışı bırak
-    skip: (req) => {
-        // app.use('/api/', limiter) ile mount edildiğinde req.path '/api/...' değil '/...' olur
-        const p = req.path || '';
-        const orig = req.originalUrl || '';
-        return p === '/health' || p === '/supabase-config' ||
-            orig.startsWith('/api/health') || orig.startsWith('/api/supabase-config');
-    }
+    standardHeaders: true,
+    legacyHeaders: false
 });
-
-// Tüm API route'larına hız sınırlamasını uygula
-app.use('/api/', limiter);
+app.use('/api/auth', authLimiter);
 // CORS — canlıda CORS_ORIGIN (virgülle çoklu origin)
 const corsOrigins = parseCorsOrigins();
 app.use(cors({
@@ -220,24 +212,19 @@ app.use(express.json({ limit: '10mb' }));
 // URL-encoded formatındaki request body'lerini parse et (maksimum 10MB)
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Statik dosyaları servis et (HTML, CSS, JS, görseller vb.)
-// Kök dizindeki HTML dosyaları için
-app.use(express.static(__dirname, {
-    extensions: ['html', 'htm'],
-    index: ['index.html', 'index.htm']
-}));
-
-// Public klasöründeki dosyalar için (CSS, favicons, images)
-app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
-app.use('/favicons', express.static(path.join(__dirname, 'public', 'favicons')));
-app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// JS dosyaları için (kök dizindeki js klasörü)
-app.use('/js', express.static(path.join(__dirname, 'js')));
-
-// Assets klasörü için (vendor kütüphaneleri - Supabase vb.)
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+// Statik dosyalar (frontend/); yalnızca klasör varsa — üretimde site ayrı origin'de olabilir
+if (fs.existsSync(FRONTEND_DIR)) {
+    app.use(express.static(FRONTEND_DIR, {
+        extensions: ['html', 'htm'],
+        index: ['index.html', 'index.htm']
+    }));
+    app.use('/css', express.static(path.join(FRONTEND_DIR, 'public', 'css')));
+    app.use('/favicons', express.static(path.join(FRONTEND_DIR, 'public', 'favicons')));
+    app.use('/images', express.static(path.join(FRONTEND_DIR, 'public', 'images')));
+    app.use('/public', express.static(path.join(FRONTEND_DIR, 'public')));
+    app.use('/js', express.static(path.join(FRONTEND_DIR, 'js')));
+    app.use('/assets', express.static(path.join(FRONTEND_DIR, 'assets')));
+}
 
 // ============================================
 // VERİTABANI BAĞLANTI POOL YAPILANDIRMASI
@@ -540,7 +527,11 @@ const authenticateToken = (req, res, next) => {
             return next();
         }
         // 2) Supabase JWT ile dene (SUPABASE_JWT_SECRET varsa)
-        if (!process.env.SUPABASE_JWT_SECRET) {
+        if (!process.env.SUPABASE_JWT_SECRET || !String(process.env.SUPABASE_JWT_SECRET).trim()) {
+            logger.warn(
+                'authenticateToken: SUPABASE_JWT_SECRET .env içinde yok — tarayıcı Supabase access_token gönderiyorsa tüm korumalı API 401 döner. ' +
+                    'Supabase Dashboard → Project Settings → API → JWT Secret değerini backend/.env dosyasına ekleyin.'
+            );
             return res.status(401).json({ success: false, message: 'Invalid or expired token' });
         }
         jwt.verify(token, process.env.SUPABASE_JWT_SECRET, async (supaErr, supabaseDecoded) => {
@@ -1231,6 +1222,51 @@ app.post('/api/auth/login', async (req, res) => {
 // MODÜL ENDPOINT'LERİ
 // ============================================
 
+// Kurslar: modüller kategoriye göre gruplanmış (module-progress.js getModuleIdFromName, dashboard senkron)
+app.get('/api/courses', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, title, description, category, level, sort_order
+             FROM modules
+             WHERE is_active = true
+             ORDER BY category NULLS LAST, sort_order NULLS LAST, title`
+        );
+        const categoryCourseTitles = {
+            cybersecurity: 'Siber Güvenlik',
+            cloud: 'Bulut Bilişim',
+            'data-science': 'Veri Bilimleri'
+        };
+        const byCat = new Map();
+        for (const row of result.rows) {
+            const cat = row.category || 'cybersecurity';
+            if (!byCat.has(cat)) {
+                byCat.set(cat, []);
+            }
+            byCat.get(cat).push({
+                id: row.id,
+                title: row.title,
+                description: row.description,
+                level: row.level
+            });
+        }
+        const data = [];
+        for (const [cat, modules] of byCat) {
+            data.push({
+                title: categoryCourseTitles[cat] || cat,
+                category: cat,
+                modules
+            });
+        }
+        res.json({ success: true, data });
+    } catch (error) {
+        logger.error('Get courses error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
 // Tüm modülleri getir (kullanıcı kimlik doğrulaması yapıldıysa erişim kontrolü ile)
 // Kullanıcı giriş yapmışsa satın aldığı paketlere göre erişim bilgisi döndürür
 app.get('/api/modules', async (req, res) => {
@@ -1344,6 +1380,67 @@ app.get('/api/modules/:id', async (req, res) => {
             success: false,
             message: 'Internal server error'
         });
+    }
+});
+
+// Genel modül ilerlemesi (HTML modülleri — frontend/utils/module-progress.js → POST /api/progress)
+app.post('/api/progress', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { moduleId, percentComplete, lastStep, isCompleted } = req.body || {};
+        if (!moduleId) {
+            return res.status(400).json({ success: false, message: 'moduleId gerekli.' });
+        }
+        const pct = Math.max(0, Math.min(100, Number(percentComplete) || 0));
+        let lastStepObj = {};
+        if (typeof lastStep === 'string') {
+            try {
+                lastStepObj = JSON.parse(lastStep || '{}');
+            } catch (e) {
+                lastStepObj = {};
+            }
+        } else if (lastStep && typeof lastStep === 'object') {
+            lastStepObj = lastStep;
+        }
+        const lessonsArr = Array.isArray(lastStepObj.completedLessons) ? lastStepObj.completedLessons : [];
+        const completedCount = lessonsArr.length;
+        const totalLessons = Math.max(
+            0,
+            Number(lastStepObj.totalLessons) || (completedCount > 0 ? completedCount : 0) || 1
+        );
+        const done = Boolean(isCompleted) || pct >= 100;
+        const status = done ? 'completed' : 'in_progress';
+
+        await pool.query(
+            `INSERT INTO user_module_progress (user_id, module_id, completed_lessons, total_lessons, progress_percentage, status)
+             VALUES ($1, $2, $3, $4, $5, $6)
+             ON CONFLICT (user_id, module_id)
+             DO UPDATE SET
+                 completed_lessons = EXCLUDED.completed_lessons,
+                 total_lessons = EXCLUDED.total_lessons,
+                 progress_percentage = EXCLUDED.progress_percentage,
+                 status = EXCLUDED.status,
+                 updated_at = CURRENT_TIMESTAMP`,
+            [userId, moduleId, completedCount, totalLessons, pct, status]
+        );
+
+        await pool.query(
+            `INSERT INTO module_progress (user_id, module_id, percent_complete, is_completed, last_step, last_accessed_at)
+             VALUES ($1, $2, $3, $4, $5::jsonb, NOW())
+             ON CONFLICT (user_id, module_id)
+             DO UPDATE SET
+                 percent_complete = EXCLUDED.percent_complete,
+                 is_completed = EXCLUDED.is_completed,
+                 last_step = EXCLUDED.last_step,
+                 last_accessed_at = NOW(),
+                 updated_at = NOW()`,
+            [userId, moduleId, pct, done, JSON.stringify(lastStepObj)]
+        );
+
+        res.json({ success: true, message: 'İlerleme kaydedildi.', data: { moduleId, percentComplete: pct } });
+    } catch (err) {
+        logger.error('POST /api/progress error:', err);
+        res.status(500).json({ success: false, message: 'İlerleme kaydedilemedi.' });
     }
 });
 
@@ -1555,7 +1652,7 @@ app.post('/api/simulations/start', authenticateToken, async (req, res) => {
         if (err.message && /column.*started_at|does not exist/i.test(String(err.message))) {
             return res.status(501).json({
                 success: false,
-                message: 'Veritabanı güncellemesi gerekli: backend/migrations/014_simulation_runs_extended.sql'
+                message: 'Veritabanı güncellemesi gerekli: database/migrations/014_simulation_runs_extended.sql'
             });
         }
         res.status(500).json({ success: false, message: 'Simülasyon başlatma kaydı sırasında bir hata oluştu.' });
@@ -1599,7 +1696,19 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
                 [score, timeSpent, attempts, correctCount, wrongCount, passed, runId, userId]
             );
             if (u.rowCount === 0) {
-                return res.status(404).json({ success: false, message: 'Simülasyon oturumu bulunamadı.' });
+                logger.warn('simulations/complete: runId güncellenemedi, yeni satır ekleniyor', { runId });
+                let saParam = null;
+                if (startedAtIso) {
+                    const d = new Date(startedAtIso);
+                    if (!Number.isNaN(d.getTime())) saParam = d.toISOString();
+                }
+                await pool.query(
+                    `INSERT INTO simulation_runs
+                     (user_id, module_id, simulation_id, score, time_spent, attempts, completed_at,
+                      started_at, correct_count, wrong_count, passed)
+                     VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10)`,
+                    [userId, moduleId, simulationId.trim(), score, timeSpent, attempts, saParam, correctCount, wrongCount, passed]
+                );
             }
         } else {
             let saParam = null;
@@ -1633,14 +1742,14 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
         if (err.message && /column.*correct_count|column.*started_at|does not exist/i.test(String(err.message))) {
             return res.status(501).json({
                 success: false,
-                message: 'Veritabanı güncellemesi gerekli: backend/migrations/014_simulation_runs_extended.sql'
+                message: 'Veritabanı güncellemesi gerekli: database/migrations/014_simulation_runs_extended.sql'
             });
         }
         res.status(500).json({ success: false, message: 'Simülasyon kaydı sırasında bir hata oluştu.' });
     }
 });
 
-// Modül ilerlemesini getir
+// Modül ilerlemesini getir (module-progress.js: GET /api/progress/:moduleId ile uyumlu)
 // Kullanıcının belirli bir modül üzerindeki ilerleme bilgilerini döndürür
 app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) => {
     try {
@@ -1648,23 +1757,73 @@ app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) =>
         const userId = req.user.userId;
 
         const result = await pool.query(
-            `SELECT ump.*, m.title as module_title
+            `SELECT ump.*, m.title as module_title,
+                    mp.last_step AS mp_last_step,
+                    mp.percent_complete AS mp_percent_complete,
+                    mp.is_completed AS mp_is_completed
              FROM user_module_progress ump
              JOIN modules m ON ump.module_id = m.id
+             LEFT JOIN module_progress mp ON mp.user_id = ump.user_id AND mp.module_id = ump.module_id
              WHERE ump.user_id = $1 AND ump.module_id = $2`,
             [userId, moduleId]
         );
 
         if (result.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Module progress not found'
+            const mpOnly = await pool.query(
+                `SELECT mp.*, m.title as module_title
+                 FROM module_progress mp
+                 LEFT JOIN modules m ON mp.module_id = m.id
+                 WHERE mp.user_id = $1 AND mp.module_id = $2`,
+                [userId, moduleId]
+            );
+            if (mpOnly.rows.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Module progress not found'
+                });
+            }
+            const row = mpOnly.rows[0];
+            let ls = row.last_step;
+            if (typeof ls === 'string') {
+                try {
+                    ls = JSON.parse(ls || '{}');
+                } catch (e) {
+                    ls = {};
+                }
+            }
+            return res.json({
+                success: true,
+                data: {
+                    ...row,
+                    percentComplete: row.percent_complete,
+                    lastStep: ls || {},
+                    progress_percentage: row.percent_complete
+                }
             });
+        }
+
+        const row = result.rows[0];
+        let lastStepMerged = row.mp_last_step;
+        if (typeof lastStepMerged === 'string') {
+            try {
+                lastStepMerged = JSON.parse(lastStepMerged || '{}');
+            } catch (e) {
+                lastStepMerged = {};
+            }
+        }
+        if (!lastStepMerged || typeof lastStepMerged !== 'object') {
+            lastStepMerged = {};
         }
 
         res.json({
             success: true,
-            data: result.rows[0]
+            data: {
+                ...row,
+                percentComplete: row.progress_percentage,
+                progress_percentage: row.progress_percentage,
+                lastStep: lastStepMerged,
+                isCompleted: row.status === 'completed' || row.mp_is_completed === true
+            }
         });
     } catch (error) {
         console.error('Get module progress error:', error);
@@ -2028,9 +2187,10 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             if (err.code === '42P01') { // Tablo mevcut değil hatası
                 console.log('Purchases table not found, attempting to create...');
                 try {
-                    const fs = require('fs');
-                    // Migration SQL dosyasını oku ve tabloyu oluştur
-                    const migrationSQL = fs.readFileSync(__dirname + '/backend/migrations/create_purchases_table.sql', 'utf8');
+                    const migrationSQL = fs.readFileSync(
+                        path.join(__dirname, '..', 'database', 'migrations', 'create_purchases_table.sql'),
+                        'utf8'
+                    );
                     await pool.query(migrationSQL);
                     // Tablo oluşturulduktan sonra tekrar ekleme işlemini dene
                     const purchaseResult = await pool.query(
@@ -2500,31 +2660,35 @@ app.get('/api/certificates/:certificateId/report', authenticateToken, async (req
     }
 });
 
-// E-posta doğrulama (public klasöründe; kök URL ile erişim)
+// E-posta doğrulama (frontend/public)
 app.get('/verify-email.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'verify-email.html'));
+    if (!fs.existsSync(FRONTEND_DIR)) {
+        return res.status(404).send('Frontend klasörü yok (ayrı deploy).');
+    }
+    res.sendFile(path.join(FRONTEND_DIR, 'public', 'verify-email.html'));
 });
 
-// Ana route için index.html dosyasını servis et (API route'larından sonra olmalı)
+// Ana route — statik site (frontend mevcutsa)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    if (!fs.existsSync(FRONTEND_DIR)) {
+        return res.status(404).json({ message: 'API only — frontend ayrı origin.' });
+    }
+    res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
-// Tüm HTML dosyaları için catch-all route (SPA - Single Page Application desteği)
-// React Router gibi client-side routing için gerekli
+// HTML catch-all (frontend mevcutsa)
 app.get('*', (req, res, next) => {
-    // API route ise atla (404 dönsün)
     if (req.path.startsWith('/api/')) {
         return next();
     }
-    // HTML dosyasını servis etmeyi dene
-    const filePath = __dirname + req.path;
-    const fs = require('fs');
+    if (!fs.existsSync(FRONTEND_DIR)) {
+        return next();
+    }
+    const filePath = path.join(FRONTEND_DIR, req.path.replace(/^\//, ''));
     if (fs.existsSync(filePath) && filePath.endsWith('.html')) {
         return res.sendFile(filePath);
     }
-    // Dosya bulunamazsa index.html'i servis et (SPA için)
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
 // Pool'u diğer modüller için export et
@@ -2664,7 +2828,7 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
 module.exports = { app, pool, getPool };
 
 if (require.main === module) {
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
         const publicBase = (process.env.PUBLIC_SITE_URL || process.env.CORS_ORIGIN || '').split(',')[0]?.trim() || `http://localhost:${PORT}`;
         logger.info(`Server running on port ${PORT}`);
         logger.info(`Website: ${publicBase}`);
@@ -2679,5 +2843,15 @@ if (require.main === module) {
             console.log(`   - Contact: http://localhost:${PORT}/contact.html`);
             console.log(`   - Dashboard: http://localhost:${PORT}/dashboard.html`);
         }
+    });
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            logger.error(
+                `Port ${PORT} kullanımda. Çözüm: PORT=8010 npm start  veya  lsof -i :${PORT}  ile süreci bulup kapatın.`
+            );
+        } else {
+            logger.error('Sunucu dinleyicisi hatası:', err.message);
+        }
+        process.exit(1);
     });
 }

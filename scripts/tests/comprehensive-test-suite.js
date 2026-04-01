@@ -155,10 +155,10 @@ function testFileStructure() {
     
     const criticalFiles = [
         { path: 'index.html', desc: 'Main page' },
-        { path: 'server.js', desc: 'Server file' },
+        { path: 'backend/server.js', desc: 'Server file' },
         { path: 'package.json', desc: 'Package config' },
-        { path: 'utils/api-client.js', desc: 'API client' },
-        { path: 'utils/module-progress.js', desc: 'Progress tracker' },
+        { path: 'frontend/utils/api-client.js', desc: 'API client' },
+        { path: 'frontend/utils/module-progress.js', desc: 'Progress tracker' },
         { path: 'dashboard.html', desc: 'Dashboard' },
         { path: 'login.html', desc: 'Login page' },
         { path: 'signup.html', desc: 'Signup page' },
@@ -365,7 +365,7 @@ function testSecurity() {
     logSection('6. SECURITY TESTS');
     
     // Check for hardcoded secrets
-    const filesToCheck = ['server.js', 'utils/api-client.js'];
+    const filesToCheck = ['backend/server.js', 'frontend/utils/api-client.js'];
     let foundSecrets = false;
     
     filesToCheck.forEach(file => {

@@ -3,8 +3,20 @@
 // Canlı ortam: aynı origin kullanılır (dashboard, modül sayfaları vb.)
 const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
 
-// Get auth token from localStorage
-function getAuthToken() {
+// Supabase oturumu veya eski authToken
+async function getAuthToken() {
+    try {
+        if (typeof window !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+            const {
+                data: { session }
+            } = await window.supabaseAuthSystem.supabase.auth.getSession();
+            if (session && session.access_token) {
+                return session.access_token;
+            }
+        }
+    } catch (e) {
+        /* ignore */
+    }
     const token = localStorage.getItem('authToken');
     if (!token) {
         console.warn('⚠️ No auth token found. Some API calls may fail.');
@@ -13,14 +25,14 @@ function getAuthToken() {
 }
 
 // Get auth headers
-function getAuthHeaders(includeContentType = true) {
+async function getAuthHeaders(includeContentType = true) {
     const headers = {};
     
     if (includeContentType) {
         headers['Content-Type'] = 'application/json';
     }
     
-    const token = getAuthToken();
+    const token = await getAuthToken();
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
@@ -30,7 +42,7 @@ function getAuthHeaders(includeContentType = true) {
 
 // Generic API call helper
 async function apiCall(endpoint, options = {}) {
-    const token = getAuthToken();
+    const token = await getAuthToken();
     
     if (!token && options.requireAuth !== false) {
         console.error('❌ API call requires authentication but no token found');
@@ -45,7 +57,7 @@ async function apiCall(endpoint, options = {}) {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             ...options,
             headers: {
-                ...getAuthHeaders(options.method !== 'GET'),
+                ...(await getAuthHeaders(options.method !== 'GET')),
                 ...options.headers
             }
         });
@@ -140,7 +152,7 @@ window.APIClient = {
      * @param {string} moduleId - Module ID
      */
     getModuleProgress: async function(moduleId) {
-        return await apiCall(`/progress/${moduleId}`, {
+        return await apiCall(`/progress/module/${moduleId}`, {
             method: 'GET',
             requireAuth: true
         });

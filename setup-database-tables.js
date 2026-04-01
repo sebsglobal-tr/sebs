@@ -40,13 +40,13 @@ async function setupDatabaseTables() {
         console.log('\n🔄 Veritabanı tabloları kontrol ediliyor ve oluşturuluyor...\n');
         
         // 1) Ana migration: Eksiksiz şema (010) - tablolar, indexler, güvenlik
-        const mainMigrationPath = path.join(__dirname, 'backend/migrations/010_complete_schema_secure.sql');
+        const mainMigrationPath = path.join(__dirname, 'database/migrations/010_complete_schema_secure.sql');
         if (fs.existsSync(mainMigrationPath)) {
             const mainSQL = fs.readFileSync(mainMigrationPath, 'utf8');
             await client.query(mainSQL);
             console.log('✅ 010_complete_schema_secure.sql çalıştırıldı');
         } else {
-            const fallbackPath = path.join(__dirname, 'backend/migrations/007_server_required_tables_all.sql');
+            const fallbackPath = path.join(__dirname, 'database/migrations/007_server_required_tables_all.sql');
             if (fs.existsSync(fallbackPath)) {
                 await client.query(fs.readFileSync(fallbackPath, 'utf8'));
                 console.log('✅ 007_server_required_tables_all.sql (fallback) çalıştırıldı');
@@ -54,14 +54,14 @@ async function setupDatabaseTables() {
         }
 
         // 2) Eksik kolonlar (009 - last_step vb.)
-        const lastStepPath = path.join(__dirname, 'backend/migrations/009_module_progress_last_step.sql');
+        const lastStepPath = path.join(__dirname, 'database/migrations/009_module_progress_last_step.sql');
         if (fs.existsSync(lastStepPath)) {
             await client.query(fs.readFileSync(lastStepPath, 'utf8'));
             console.log('✅ 009_module_progress_last_step.sql çalıştırıldı');
         }
 
         // 3) RLS (Row Level Security) - Supabase güvenlik
-        const rlsPath = path.join(__dirname, 'backend/migrations/011_enable_rls_all_tables.sql');
+        const rlsPath = path.join(__dirname, 'database/migrations/011_enable_rls_all_tables.sql');
         if (fs.existsSync(rlsPath)) {
             await client.query(fs.readFileSync(rlsPath, 'utf8'));
             console.log('✅ 011_enable_rls_all_tables.sql çalıştırıldı');
