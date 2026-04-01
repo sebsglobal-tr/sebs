@@ -39,7 +39,8 @@ window.QuizTracker = {
                 );
             } else {
                 // Fallback: Direct API call
-                const response = await fetch('http://localhost:8006/api/progress/quiz', {
+                const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+                const response = await fetch(apiBase + '/progress/quiz', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

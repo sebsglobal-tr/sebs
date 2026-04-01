@@ -1,7 +1,7 @@
 // Simulation Routes
 import express from 'express';
 import { saveSimulationCompletion, getUserSimulations } from '../controllers/simulation.controller.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 
 const router = express.Router();
 

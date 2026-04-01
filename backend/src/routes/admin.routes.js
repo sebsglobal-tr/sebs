@@ -1,7 +1,6 @@
 // Admin Routes
 import express from 'express';
-import { authenticate } from '../middleware/auth.middleware.js';
-import { requireRole } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate, requireRole } from '../middleware/supabase-auth.middleware.js';
 import {
   getDashboardStats,
   getUsers,

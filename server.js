@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -6,10 +7,116 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
+const logger = require('./utils/logger');
 require('dotenv').config();
+// Kök .env'de SUPABASE_* yoksa backend/.env ile tamamla (aynı repoda tek proje önerilir)
+require('dotenv').config({ path: path.join(__dirname, 'backend', '.env'), override: false });
+// Boş SUPABASE_ANON_KEY= satırı dotenv'de "set" sayılır ve backend'den gelen anahtarı ezmez; temizleyip tekrar yükle
+['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'].forEach((k) => {
+    if (process.env[k] !== undefined && String(process.env[k]).trim() === '') {
+        delete process.env[k];
+    }
+});
+require('dotenv').config({ path: path.join(__dirname, 'backend', '.env'), override: false });
+
+if (process.env.NODE_ENV !== 'production' && !(process.env.SUPABASE_ANON_KEY || '').trim()) {
+    logger.warn(
+        'SUPABASE_ANON_KEY tanımlı değil — giriş/kayıt çalışmaz. Kök .env içine ' +
+            'Supabase Dashboard → Project Settings → API → anon public anahtarını ekleyin ve sunucuyu yeniden başlatın.'
+    );
+}
+
+function supabaseRefFromDatabaseUrl(databaseUrl) {
+    if (!databaseUrl || typeof databaseUrl !== 'string') return null;
+    // Pooler: postgresql://postgres.PROJECT_REF:password@host
+    const pooler = databaseUrl.match(/postgres\.([a-z0-9]+)[:@]/i);
+    if (pooler) return pooler[1];
+    const direct = databaseUrl.match(/@db\.([a-z0-9]+)\.supabase\.co/i);
+    return direct ? direct[1] : null;
+}
+
+function supabaseRefFromSupabaseUrl(supabaseUrl) {
+    if (!supabaseUrl || typeof supabaseUrl !== 'string') return null;
+    const m = supabaseUrl.trim().match(/^https?:\/\/([^.]+)\.supabase\.co/i);
+    return m ? m[1] : null;
+}
+
+const _dbRef = supabaseRefFromDatabaseUrl(process.env.DATABASE_URL);
+const _suRef = supabaseRefFromSupabaseUrl(process.env.SUPABASE_URL);
+const _supabaseProjectMismatchMsg =
+    `SUPABASE_URL projesi (${_suRef}) ile DATABASE_URL projesi (${_dbRef}) farklı. ` +
+    'Giriş/kayıt bir projede, veritabanı başka projede olur; profil ve API tutmaz. ' +
+    'Supabase Dashboard → Settings → API: aynı projeden SUPABASE_URL ve anon key kullanın veya DATABASE_URL\'i auth ile aynı projeye taşıyın.';
+if (_dbRef && _suRef && _dbRef !== _suRef) {
+    const fatalProd =
+        process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1';
+    if (fatalProd) {
+        logger.error(`CRITICAL: ${_supabaseProjectMismatchMsg}`);
+        process.exit(1);
+    }
+    logger.warn(_supabaseProjectMismatchMsg);
+}
+
+// Supabase self-signed sertifika uyumluluğu
+if (process.env.DATABASE_URL?.includes('supabase') || process.env.DB_PASSWORD) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 const app = express();
 const PORT = process.env.PORT || 8006;
+
+// Reverse proxy (Render, nginx) arkasında doğru istemci IP’si ve rate limit için
+if (process.env.TRUST_PROXY !== '0') {
+    app.set('trust proxy', 1);
+}
+
+// Tam erişim (super admin) e-posta — canlıda SUPER_ADMIN_EMAIL ile tanımlayın
+const FULL_ACCESS_EMAIL = (process.env.SUPER_ADMIN_EMAIL ||
+    (process.env.NODE_ENV === 'production' ? '' : 'asasferfer4566@gmail.com')).toLowerCase().trim();
+
+function parseCorsOrigins() {
+    const raw = (process.env.CORS_ORIGIN || '').trim();
+    if (!raw) return null;
+    return raw.split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+// Validate critical environment variables in production (npm run build / verify-build için SKIP_ENV_VALIDATION=1)
+if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your_super_secret_jwt_key_here') {
+        logger.error('CRITICAL: JWT_SECRET must be set in production!');
+        logger.error('Please generate a strong secret and set it in .env file');
+        process.exit(1);
+    }
+    
+    if (!process.env.DATABASE_URL && !process.env.DB_PASSWORD) {
+        logger.error('CRITICAL: DATABASE_URL veya DB_PASSWORD .env içinde olmalı!');
+        process.exit(1);
+    }
+
+    if (!parseCorsOrigins()?.length) {
+        logger.error('CRITICAL: CORS_ORIGIN canlıda zorunludur (örn. https://sebs-global.com veya birden fazla origin virgülle)');
+        process.exit(1);
+    }
+
+    if (!process.env.SUPABASE_JWT_SECRET) {
+        logger.error('CRITICAL: SUPABASE_JWT_SECRET canlıda zorunludur (Supabase Auth ile uyum için).');
+        process.exit(1);
+    }
+
+    const supaUrl = (process.env.SUPABASE_URL || '').trim();
+    const supaAnon = (process.env.SUPABASE_ANON_KEY || '').trim();
+    if (!supaUrl || !supaUrl.startsWith('https://') || !supaUrl.includes('.supabase.co')) {
+        logger.error('CRITICAL: SUPABASE_URL canlıda zorunludur (https://<ref>.supabase.co).');
+        process.exit(1);
+    }
+    if (!supaAnon || supaAnon.length < 80 || !supaAnon.startsWith('eyJ')) {
+        logger.error('CRITICAL: SUPABASE_ANON_KEY canlıda zorunludur (Supabase Dashboard → API → anon public).');
+        process.exit(1);
+    }
+
+    logger.info('Production mode initialized');
+    logger.info('Environment validation passed');
+}
 
 // ============================================
 // MIDDLEWARE (ARA KATMAN YAPILANDIRMALARI)
@@ -24,31 +131,80 @@ const limiter = rateLimit({
     standardHeaders: true, // Rate limit bilgisini `RateLimit-*` başlıklarında döndür
     legacyHeaders: false, // Eski `X-RateLimit-*` başlıklarını devre dışı bırak
     skip: (req) => {
-        // Sağlık kontrolü endpoint'i için hız sınırlamasını atla
-        return req.path === '/api/health';
+        // app.use('/api/', limiter) ile mount edildiğinde req.path '/api/...' değil '/...' olur
+        const p = req.path || '';
+        const orig = req.originalUrl || '';
+        return p === '/health' || p === '/supabase-config' ||
+            orig.startsWith('/api/health') || orig.startsWith('/api/supabase-config');
     }
 });
 
 // Tüm API route'larına hız sınırlamasını uygula
 app.use('/api/', limiter);
-// CORS (Cross-Origin Resource Sharing) yapılandırması
-// Farklı domain'lerden gelen isteklere izin verir
+// CORS — canlıda CORS_ORIGIN (virgülle çoklu origin)
+const corsOrigins = parseCorsOrigins();
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:8000', // İzin verilen origin (kaynak)
-    credentials: true, // Çerezler ve kimlik bilgilerinin gönderilmesine izin ver
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // İzin verilen HTTP metodları
-    allowedHeaders: ['Content-Type', 'Authorization'], // İzin verilen HTTP başlıkları
-    maxAge: 86400 // Preflight isteklerinin önbellekte tutulma süresi: 24 saat (saniye cinsinden)
+    origin: corsOrigins && corsOrigins.length
+        ? (corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins)
+        : 'http://localhost:8000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    maxAge: 86400
 }));
 
 // Helmet güvenlik başlıkları - XSS, clickjacking ve diğer saldırıları önlemek için
 app.use(helmet({
     contentSecurityPolicy: {
+        useDefaults: false, // Varsayılan ayarları kullanma, tam kontrol için
         directives: {
             defaultSrc: ["'self'"], // Varsayılan kaynaklar: sadece kendi domain'imiz
-            styleSrc: ["'self'", "'unsafe-inline'"], // CSS dosyaları: kendi domain ve inline stiller
-            scriptSrc: ["'self'"], // JavaScript dosyaları: sadece kendi domain'imiz
-            imgSrc: ["'self'", "data:", "https:"], // Görseller: kendi domain, data URI'lar ve HTTPS bağlantıları
+            styleSrc: [
+                "'self'", 
+                "'unsafe-inline'", // Inline stiller için
+                "https://fonts.googleapis.com", // Google Fonts
+                "https://cdnjs.cloudflare.com" // Font Awesome CDN
+            ],
+            styleSrcElem: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+                "https://cdnjs.cloudflare.com"
+            ],
+            scriptSrc: [
+                "'self'", 
+                "'unsafe-inline'", // Inline script'ler için
+                "'unsafe-eval'", // Eval kullanımı için (bazı kütüphaneler için gerekli)
+                "https://cdn.jsdelivr.net", // Supabase CDN
+                "https://unpkg.com", // Alternatif Supabase CDN
+                "https://cdnjs.cloudflare.com" // Font Awesome ve diğer CDN'ler
+            ],
+            scriptSrcAttr: [
+                "'none'" // Inline event handler'lar kullanılmıyor (CSP uyumlu)
+            ],
+            scriptSrcElem: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://cdn.jsdelivr.net", // Supabase CDN - script-src-elem için
+                "https://unpkg.com", // Alternatif Supabase CDN
+                "https://cdnjs.cloudflare.com" // Font Awesome ve diğer CDN'ler
+            ],
+            fontSrc: [
+                "'self'",
+                "https://fonts.gstatic.com", // Google Fonts
+                "https://cdnjs.cloudflare.com" // Font Awesome
+            ],
+            imgSrc: [
+                "'self'", 
+                "data:", 
+                "https:" // Tüm HTTPS görseller
+            ],
+            connectSrc: [
+                "'self'",
+                "https://api.openai.com",
+                "https://*.supabase.co",
+                "wss://*.supabase.co"
+            ]
         },
     },
     hsts: {
@@ -65,59 +221,90 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Statik dosyaları servis et (HTML, CSS, JS, görseller vb.)
+// Kök dizindeki HTML dosyaları için
 app.use(express.static(__dirname, {
     extensions: ['html', 'htm'],
     index: ['index.html', 'index.htm']
 }));
 
+// Public klasöründeki dosyalar için (CSS, favicons, images)
+app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
+app.use('/favicons', express.static(path.join(__dirname, 'public', 'favicons')));
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// JS dosyaları için (kök dizindeki js klasörü)
+app.use('/js', express.static(path.join(__dirname, 'js')));
+
+// Assets klasörü için (vendor kütüphaneleri - Supabase vb.)
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 // ============================================
 // VERİTABANI BAĞLANTI POOL YAPILANDIRMASI
 // ============================================
-// Optimize edilmiş pool ayarları ile veritabanı bağlantısı
-// Hem DATABASE_URL (Supabase) hem de ayrı bağlantı parametrelerini destekler
+// Supabase: DB_PASSWORD ile otomatik URL oluşturma desteklenir
+const SUPABASE_POOLER = process.env.SUPABASE_POOLER || 'aws-1-eu-central-1.pooler.supabase.com';
+
+function getDatabaseUrl() {
+    let url = (process.env.DATABASE_URL || '').trim();
+    const dbPass = process.env.DB_PASSWORD;
+    const projectRef = (process.env.SUPABASE_PROJECT_REF || '').trim();
+
+    // DB_PASSWORD varsa şifreyi URL'de güncelle veya sıfırdan oluştur
+    if (dbPass && projectRef) {
+        const enc = encodeURIComponent(String(dbPass));
+        if (!url || url.includes('[YOUR-PASSWORD]') || url.includes('YOUR-PASSWORD')) {
+            url = `postgresql://postgres.${projectRef}:${enc}@${SUPABASE_POOLER}:6543/postgres?pgbouncer=true`;
+        } else if (url.includes('supabase') || url.includes('pooler')) {
+            url = url.replace(/postgres(ql)?:\/\/([^:]+):[^@]+@/, (m, p, user) => `postgresql://${user}:${enc}@`);
+        }
+    }
+
+    if (!url || url.includes('YOUR-PASSWORD')) return null;
+    return url;
+}
+
 const createPool = () => {
-    // Supabase kullanılıp kullanılmadığını kontrol et
-    const isSupabase = process.env.DATABASE_URL && (
-        process.env.DATABASE_URL.includes('supabase') || 
-        process.env.DATABASE_URL.includes('pooler')
-    );
-    
-    // Temel bağlantı pool yapılandırması
-    // Yüksek ölçekli sistemler için optimize edilmiştir (3K-40K kullanıcı)
+    const dbUrl = getDatabaseUrl();
+
+    // Supabase pooler limiti: max düşük tut (exhaustion önleme)
     const baseConfig = {
-        max: parseInt(process.env.DB_POOL_MAX) || 200, // Pool'daki maksimum client sayısı (Supabase Pro: 200)
-        min: parseInt(process.env.DB_POOL_MIN) || 10, // Pool'daki minimum client sayısı
-        idleTimeoutMillis: 60000, // Boşta kalan client'ları 60 saniye sonra kapat
-        connectionTimeoutMillis: 10000, // Bağlantı kurulamazsa 10 saniye sonra hata döndür
-        // Bağlantıları canlı tut
+        max: parseInt(process.env.DB_POOL_MAX) || 5,
+        min: parseInt(process.env.DB_POOL_MIN) || 1,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000,
         keepAlive: true,
-        keepAliveInitialDelayMillis: 10000, // İlk keep-alive kontrolü için gecikme: 10 saniye
-        // SSL yapılandırması - Güvenli bağlantı için
-        ssl: (process.env.DATABASE_URL && (
-            process.env.DATABASE_URL.includes('sslmode=require') || 
-            process.env.DATABASE_URL.includes('supabase')
-        )) || (process.env.DB_HOST && process.env.DB_HOST.includes('supabase'))
-            ? { 
-                rejectUnauthorized: false, // Sertifika doğrulamasını atla (Supabase için gerekli)
-                require: true // SSL bağlantısı zorunlu
-            } 
+        keepAliveInitialDelayMillis: 5000,
+        ssl: (dbUrl && (dbUrl.includes('supabase') || dbUrl.includes('pooler')))
+            ? { rejectUnauthorized: false }
             : false
     };
-    
-    // DATABASE_URL varsa (Supabase veya diğer managed servisler), connection string kullan
-    if (process.env.DATABASE_URL) {
+
+    if (dbUrl) {
+        try {
+            const match = dbUrl.match(/postgres(ql)?:\/\/([^:]+):[^@]+@([^:\/]+)/);
+            if (match) {
+                logger.info(`DB: Using DATABASE_URL (host: ${match[3]}, user: ${match[2]})`);
+            }
+        } catch (e) {}
+
+        const cleanUrl = dbUrl.replace(/\?.*$/, '');
         return new Pool({
-            connectionString: process.env.DATABASE_URL, // Tam bağlantı string'i
-            ...baseConfig
+            connectionString: cleanUrl,
+            ...baseConfig,
+            ssl: (baseConfig.ssl && typeof baseConfig.ssl === 'object')
+                ? { ...baseConfig.ssl }
+                : baseConfig.ssl
         });
     } else {
-        // Aksi halde, ayrı bağlantı parametreleri kullan
+        const dbUser = process.env.DB_USER || 'postgres';
+        logger.info(`DB: Using DB_* (host: ${process.env.DB_HOST || 'localhost'}, user: ${dbUser})`);
         return new Pool({
-            host: process.env.DB_HOST || 'localhost', // Veritabanı sunucusu adresi
-            port: process.env.DB_PORT || 5432, // Veritabanı portu (PostgreSQL varsayılan: 5432)
-            database: process.env.DB_NAME || 'sebs_education', // Veritabanı adı
-            user: process.env.DB_USER || 'apple', // Veritabanı kullanıcı adı
-            password: process.env.DB_PASSWORD || '', // Veritabanı şifresi
+            host: process.env.DB_HOST || 'localhost',
+            port: parseInt(process.env.DB_PORT, 10) || 5432,
+            database: process.env.DB_NAME || 'sebs_education',
+            user: dbUser,
+            password: process.env.DB_PASSWORD || '',
             ...baseConfig
         });
     }
@@ -129,25 +316,9 @@ const pool = createPool();
 // ============================================
 // VERİTABANI POOL OLAY İZLEYİCİLERİ (İZLEME İÇİN)
 // ============================================
-// Yeni bir veritabanı client'ı bağlandığında
-pool.on('connect', (client) => {
-    console.log('🔌 New database client connected');
-});
-
-// Boşta kalan client'ta beklenmeyen bir hata oluştuğunda
-pool.on('error', (err, client) => {
-    console.error('❌ Unexpected error on idle database client:', err);
-    // Process'i sonlandırma, pool'un yeniden bağlanmayı yönetmesine izin ver
-});
-
-// Pool'dan bir client alındığında (log için)
-pool.on('acquire', (client) => {
-    // Pool'dan client alındı
-});
-
-// Pool'dan bir client kaldırıldığında
-pool.on('remove', (client) => {
-    console.log('🔌 Database client removed from pool');
+// Boşta kalan client'ta hata (Supabase shutdown vb.) - sessizce logla
+pool.on('error', (err) => {
+    logger.warn('DB pool error (reconnecting):', err.message);
 });
 
 // ============================================
@@ -166,14 +337,15 @@ const testConnection = async (retries = 3, delay = 2000) => {
             console.log(`📅 Server time: ${result.rows[0].now}`);
             return true;
         } catch (err) {
-            console.error(`❌ Database connection attempt ${i + 1}/${retries} failed:`, err.message);
+            logger.error(`Database connection attempt ${i + 1}/${retries} failed: ${err.message}`);
             if (i < retries - 1) {
-                // Son deneme değilse, belirtilen süre kadar bekle ve tekrar dene
-                console.log(`⏳ Retrying in ${delay}ms...`);
+                logger.info(`Retrying in ${delay}ms...`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             } else {
-                // Tüm denemeler başarısız oldu
-                console.error('❌ All database connection attempts failed');
+                logger.error('All database connection attempts failed.');
+                if (err.message && err.message.includes('password authentication failed')) {
+                    logger.error('Kontrol edin: .env içinde DATABASE_URL (Supabase: Dashboard -> Project Settings -> Database -> Connection string, şifre = Database password) veya DB_USER / DB_PASSWORD doğru mu?');
+                }
                 return false;
             }
         }
@@ -324,45 +496,77 @@ const handleError = (res, error, customMessage = 'Internal server error') => {
 // ============================================
 // JWT KİMLİK DOĞRULAMA MIDDLEWARE'İ
 // ============================================
-// JWT token'ı doğrular ve kullanıcı bilgilerini request nesnesine ekler
-// Korumalı route'lar için kullanılır
-// req: Express request nesnesi
-// res: Express response nesnesi
-// next: Bir sonraki middleware'e geçmek için callback fonksiyonu
+// Supabase ile giriş yapan kullanıcıyı server.users tablosunda yoksa ekler / günceller
+// Tek kimlik: Supabase auth.users.id (UUID) = users.id
+const SUPABASE_PASSWORD_PLACEHOLDER = '[SUPABASE]';
+
+async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) {
+    const fullName = userMetadata.full_name || userMetadata.name || '';
+    const firstName = (typeof fullName === 'string' ? fullName.split(' ')[0] : '') || null;
+    const lastName = (typeof fullName === 'string' ? fullName.split(' ').slice(1).join(' ') : '') || null;
+    const now = new Date();
+    await pool.query(
+        `INSERT INTO users (id, email, first_name, last_name, password_hash, is_verified, role, is_active, access_level, last_login, created_at, updated_at)
+         VALUES ($1::uuid, $2, $3, $4, $5, true, 'user', true, 'beginner', $6, $6, $6)
+         ON CONFLICT (id) DO UPDATE SET
+           email = COALESCE(EXCLUDED.email, users.email),
+           first_name = COALESCE(NULLIF(EXCLUDED.first_name, ''), users.first_name),
+           last_name = COALESCE(NULLIF(EXCLUDED.last_name, ''), users.last_name),
+           last_login = EXCLUDED.last_login,
+           updated_at = EXCLUDED.updated_at`,
+        [supabaseUserId, email || '', firstName, lastName, SUPABASE_PASSWORD_PLACEHOLDER, now]
+    );
+}
+
+// JWT veya Supabase access token kabul eder; req.user = { userId, email, role? }
+// Önce kendi JWT'miz, olmazsa Supabase JWT ile doğrula ve users tablosunu senkronize et
 const authenticateToken = (req, res, next) => {
-    // Authorization başlığından token'ı al (format: "Bearer <token>")
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // "Bearer" kelimesinden sonraki token'ı al
+    const token = authHeader && authHeader.split(' ')[1];
 
-    // Token yoksa 401 Unauthorized hatası döndür
     if (!token) {
-        return res.status(401).json({ 
-            success: false,
-            message: 'Access token required' 
-        });
+        return res.status(401).json({ success: false, message: 'Access token required' });
     }
 
-    // JWT secret anahtarı yapılandırılmamışsa hata döndür
     if (!process.env.JWT_SECRET) {
-        console.error('❌ JWT_SECRET environment variable is not set!');
-        return res.status(500).json({
-            success: false,
-            message: 'Server configuration error'
-        });
+        logger.error('JWT_SECRET environment variable is not set!');
+        return res.status(500).json({ success: false, message: 'Server configuration error' });
     }
-    
-    // Token'ı doğrula
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) {
-            // Token geçersiz veya süresi dolmuşsa 401 hatası döndür
-            return res.status(401).json({ 
-                success: false,
-                message: 'Invalid or expired token' 
-            });
+
+    // 1) Kendi JWT'imiz ile dene
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (!err && decoded && decoded.userId) {
+            req.user = decoded;
+            return next();
         }
-        // Token geçerliyse, kullanıcı bilgilerini request nesnesine ekle
-        req.user = user;
-        next(); // Bir sonraki middleware'e geç
+        // 2) Supabase JWT ile dene (SUPABASE_JWT_SECRET varsa)
+        if (!process.env.SUPABASE_JWT_SECRET) {
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        }
+        jwt.verify(token, process.env.SUPABASE_JWT_SECRET, async (supaErr, supabaseDecoded) => {
+            if (supaErr || !supabaseDecoded || !supabaseDecoded.sub) {
+                return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+            }
+            try {
+                await ensureUserFromSupabase(
+                    supabaseDecoded.sub,
+                    supabaseDecoded.email || '',
+                    supabaseDecoded.user_metadata || {}
+                );
+                req.user = {
+                    userId: supabaseDecoded.sub,
+                    email: supabaseDecoded.email,
+                    role: supabaseDecoded.role || 'user'
+                };
+                if (FULL_ACCESS_EMAIL && req.user.email && req.user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL) {
+                    req.user.role = 'admin';
+                }
+                next();
+            } catch (syncErr) {
+                logger.error('Supabase user sync error:', syncErr);
+                res.status(500).json({ success: false, message: 'Kimlik doğrulama sırasında bir hata oluştu.' });
+            }
+        });
     });
 };
 
@@ -389,6 +593,13 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
         }
 
         const user = result.rows[0];
+
+        // Super admin: bu e-posta her zaman admin + tam erişim
+        const isFullAccessEmail = !!(FULL_ACCESS_EMAIL && user.email && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL);
+        if (isFullAccessEmail) {
+            user.role = 'admin';
+            user.access_level = 'advanced';
+        }
         
         // Kullanıcının aktif satın alımlarını veritabanından getir (her iki tabloyu da kontrol et)
         // Hem 'purchases' hem de 'user_package_purchases' tablolarından veri çekilir
@@ -443,6 +654,16 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
         } catch (err) {
             console.log('Could not fetch from user_package_purchases table:', err.message);
         }
+
+        // Super admin için tüm kategorilerde erişim sağla
+        if (isFullAccessEmail) {
+            const allCategories = ['cybersecurity', 'cloud', 'data-science'];
+            for (const cat of allCategories) {
+                if (!purchases.some(p => p.category === cat && p.level === 'advanced')) {
+                    purchases.push({ id: 'super', category: cat, level: 'advanced', price: 0, purchasedAt: null, expiresAt: null });
+                }
+            }
+        }
         
         res.json({
             success: true,
@@ -453,7 +674,7 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
                 lastName: user.last_name,
                 role: user.role,
                 accessLevel: user.access_level,
-                isVerified: user.is_verified,
+                isVerified: isFullAccessEmail ? true : user.is_verified,
                 createdAt: user.created_at,
                 lastLogin: user.last_login,
                 purchases: purchases
@@ -467,6 +688,39 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
         });
     }
 });
+
+// ============================================
+// SUPABASE FRONTEND YAPILANDIRMASI
+// ============================================
+// .env'deki SUPABASE_URL ve SUPABASE_ANON_KEY ile tek proje kullanımı
+// Frontend bu endpoint ile doğru projeye bağlanır (rate limit dışı)
+app.get('/api/supabase-config', (req, res) => {
+    const url = (process.env.SUPABASE_URL || '').trim();
+    const anonKey = (process.env.SUPABASE_ANON_KEY || '').trim();
+    if (url && anonKey) {
+        return res.json({ url, anonKey, configured: true });
+    }
+    res.json({
+        url: null,
+        anonKey: null,
+        configured: false,
+        hint: 'Sunucu .env içinde SUPABASE_URL ve SUPABASE_ANON_KEY tanımlı olmalı (Supabase Dashboard → Project Settings → API).'
+    });
+});
+
+// ============================================
+// CSP TEST ENDPOINT'İ (Sadece development için)
+// ============================================
+// CSP header'ını test etmek için
+if (process.env.NODE_ENV === 'development') {
+    app.get('/api/test-csp', (req, res) => {
+        res.json({
+            message: 'CSP test endpoint',
+            cspHeader: req.headers['content-security-policy'] || 'Not set in request',
+            note: 'Check response headers for Content-Security-Policy'
+        });
+    });
+}
 
 // ============================================
 // SAĞLIK KONTROLÜ ENDPOINT'İ
@@ -578,10 +832,15 @@ app.post('/api/auth/register', async (req, res) => {
         const verificationExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika
 
         // Kullanıcıyı veritabanına ekle
+        // UUID generate et (crypto.randomUUID kullan)
+        const { randomUUID } = require('crypto');
+        const userId = randomUUID();
+        const publicId = randomUUID();
+        const now = new Date();
         const result = await pool.query(
-            `INSERT INTO users (email, password_hash, first_name, last_name, verification_code, verification_expires)
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email, first_name, last_name, is_verified`,
-            [email, passwordHash, firstName, lastName, verificationCode, verificationExpires]
+            `INSERT INTO users (id, "publicId", email, password_hash, first_name, last_name, verification_code, verification_code_expires, created_at, updated_at)
+             VALUES ($1::uuid, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, email, first_name, last_name, is_verified`,
+            [userId, publicId, email, passwordHash, firstName, lastName, verificationCode, verificationExpires, now, now]
         );
 
         const user = result.rows[0];
@@ -647,7 +906,7 @@ app.post('/api/auth/verify', async (req, res) => {
 
         // Kullanıcıyı ve doğrulama kodunu kontrol et
         const userResult = await pool.query(
-            'SELECT id, verification_code, verification_expires FROM users WHERE email = $1',
+            'SELECT id, verification_code, verification_code_expires FROM users WHERE email = $1',
             [email]
         );
 
@@ -667,7 +926,7 @@ app.post('/api/auth/verify', async (req, res) => {
             });
         }
 
-        if (new Date() > new Date(user.verification_expires)) {
+        if (new Date() > new Date(user.verification_code_expires)) {
             return res.status(400).json({
                 success: false,
                 message: 'Verification code expired'
@@ -676,7 +935,7 @@ app.post('/api/auth/verify', async (req, res) => {
 
         // Update user as verified
         await pool.query(
-            'UPDATE users SET is_verified = true, verification_code = NULL, verification_expires = NULL WHERE id = $1',
+            'UPDATE users SET is_verified = true, verification_code = NULL, verification_code_expires = NULL WHERE id = $1',
             [user.id]
         );
 
@@ -762,7 +1021,7 @@ app.post('/api/auth/resend-code', async (req, res) => {
 
         // Veritabanındaki doğrulama kodunu güncelle
         await pool.query(
-            'UPDATE users SET verification_code = $1, verification_expires = $2 WHERE id = $3',
+            'UPDATE users SET verification_code = $1, verification_code_expires = $2 WHERE id = $3',
             [verificationCode, verificationExpires, user.id]
         );
 
@@ -820,6 +1079,14 @@ app.post('/api/auth/login', async (req, res) => {
 
         const user = userResult.rows[0];
 
+        // Supabase ile kayıtlı kullanıcılar şifre ile giriş yapamaz
+        if (user.password_hash === SUPABASE_PASSWORD_PLACEHOLDER) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bu hesap Supabase ile giriş kullanıyor. Lütfen "Giriş Yap" sayfasından e-posta ve şifre ile giriş yapın.'
+            });
+        }
+
         // Şifreyi kontrol et (bcrypt ile hash'lenmiş şifreyi karşılaştır)
         const isValidPassword = await bcrypt.compare(password, user.password_hash);
         if (!isValidPassword) {
@@ -837,12 +1104,19 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Kullanıcının e-posta adresini doğrulayıp doğrulamadığını kontrol et
-        if (!user.is_verified) {
+        // Kullanıcının e-posta adresini doğrulayıp doğrulamadığını kontrol et (super admin hariç)
+        if (!user.is_verified && (!FULL_ACCESS_EMAIL || user.email.toLowerCase().trim() !== FULL_ACCESS_EMAIL)) {
             return res.status(400).json({
                 success: false,
                 message: 'E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.'
             });
+        }
+
+        // Super admin: bu e-posta her zaman admin + tam erişim alır
+        const isFullAccessEmail = !!(FULL_ACCESS_EMAIL && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL);
+        if (isFullAccessEmail) {
+            user.role = 'admin';
+            user.access_level = 'advanced';
         }
 
         // JWT token oluştur - kullanıcı rolünü de dahil et
@@ -910,6 +1184,22 @@ app.post('/api/auth/login', async (req, res) => {
             console.log('Could not fetch user_package_purchases during login:', err.message);
         }
 
+        // Super admin için tüm kategorilerde advanced satın alım doldur (tam erişim)
+        if (isFullAccessEmail && (!purchases || purchases.length === 0)) {
+            purchases = [
+                { id: 'super', category: 'cybersecurity', level: 'advanced', price: 0, purchasedAt: null, expiresAt: null },
+                { id: 'super', category: 'cloud', level: 'advanced', price: 0, purchasedAt: null, expiresAt: null },
+                { id: 'super', category: 'data-science', level: 'advanced', price: 0, purchasedAt: null, expiresAt: null }
+            ];
+        } else if (isFullAccessEmail) {
+            const categories = ['cybersecurity', 'cloud', 'data-science'];
+            for (const cat of categories) {
+                if (!purchases.some(p => p.category === cat && p.level === 'advanced')) {
+                    purchases.push({ id: 'super', category: cat, level: 'advanced', price: 0, purchasedAt: null, expiresAt: null });
+                }
+            }
+        }
+
         res.json({
             success: true,
             message: 'Login successful',
@@ -919,7 +1209,7 @@ app.post('/api/auth/login', async (req, res) => {
                     email: user.email,
                     firstName: user.first_name,
                     lastName: user.last_name,
-                    isVerified: user.is_verified,
+                    isVerified: isFullAccessEmail ? true : user.is_verified,
                     role: user.role || 'user',
                     accessLevel: user.access_level || 'beginner',
                     purchases: purchases
@@ -1062,7 +1352,8 @@ app.get('/api/modules/:id', async (req, res) => {
 app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, progressPercentage: progressPct, lastPositionSeconds } = req.body;
+        const { status, progressPercentage, lastPositionSeconds } = req.body;
+        const progressPct = progressPercentage;
         const userId = req.user.userId;
 
         // Dersin var olup olmadığını kontrol et
@@ -1091,7 +1382,7 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
                  progress_percentage = EXCLUDED.progress_percentage,
                  last_position_seconds = EXCLUDED.last_position_seconds,
                  updated_at = CURRENT_TIMESTAMP`,
-            [userId, id, status, progressPercentage || 0, lastPositionSeconds || 0]
+            [userId, id, status, (progressPct != null ? progressPct : 0), lastPositionSeconds || 0]
         );
 
         // Modül ilerlemesini güncelle (tamamlanan ders sayısına göre)
@@ -1136,6 +1427,219 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
     }
 });
 
+// Giriş kaydı (günlük giriş takibi)
+app.post('/api/progress/activity/login', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        await pool.query(
+            `INSERT INTO user_login_logs (user_id, logged_at) VALUES ($1, NOW())`,
+            [userId]
+        ).catch(() => {});
+        res.json({ success: true, message: 'Giriş kaydedildi.' });
+    } catch (err) {
+        res.json({ success: true, message: 'Giriş kaydedildi.' });
+    }
+});
+
+// Modül süresi güncelle (time-tracker, dashboard süre toplamı)
+app.post('/api/progress/time', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { moduleId, minutes, timeSpentMinutes } = req.body || {};
+        if (!moduleId) {
+            return res.status(400).json({ success: false, message: 'moduleId gerekli.' });
+        }
+        const mins = Math.max(0, Math.min(Number(timeSpentMinutes ?? minutes) || 0, 24 * 60)); // 0..1440 dakika (max 24 saat tek istek)
+        await pool.query(
+            `INSERT INTO module_progress (user_id, module_id, time_spent_minutes, last_accessed_at)
+             VALUES ($1, $2, $3, NOW())
+             ON CONFLICT (user_id, module_id)
+             DO UPDATE SET
+                 time_spent_minutes = COALESCE(module_progress.time_spent_minutes, 0) + EXCLUDED.time_spent_minutes,
+                 last_accessed_at = NOW(),
+                 updated_at = NOW()`,
+            [userId, moduleId, mins]
+        );
+        // Günlük modül süresi (user_module_sessions)
+        const today = new Date().toISOString().slice(0, 10);
+        await pool.query(
+            `INSERT INTO user_module_sessions (user_id, module_id, session_date, minutes_spent, last_updated_at)
+             VALUES ($1, $2, $3::date, $4, NOW())
+             ON CONFLICT (user_id, module_id, session_date)
+             DO UPDATE SET minutes_spent = user_module_sessions.minutes_spent + EXCLUDED.minutes_spent, last_updated_at = NOW()`,
+            [userId, moduleId, today, mins]
+        ).catch(() => {});
+        res.json({ success: true, message: 'Süre kaydedildi.', data: { moduleId, minutes: mins } });
+    } catch (err) {
+        logger.error('Progress time error:', err);
+        res.status(500).json({ success: false, message: 'Süre kaydedilirken bir hata oluştu.' });
+    }
+});
+
+// Quiz sonucu kaydet (module_progress.last_step içinde quizResults)
+app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { moduleId, quizId, score, correctAnswers, wrongAnswers, answers, timeSpent } = req.body || {};
+        if (!moduleId || quizId == null) {
+            return res.status(400).json({ success: false, message: 'moduleId ve quizId gerekli.' });
+        }
+        const entry = {
+            quizId: String(quizId),
+            score: Math.max(0, Math.min(100, Number(score) || 0)),
+            correctAnswers: Math.max(0, Number(correctAnswers) || 0),
+            wrongAnswers: Math.max(0, Number(wrongAnswers) || 0),
+            timeSpent: Math.max(0, Number(timeSpent) || 0),
+            answers: Array.isArray(answers) ? answers : []
+        };
+        const existing = await pool.query(
+            `SELECT id, last_step FROM module_progress WHERE user_id = $1 AND module_id = $2`,
+            [userId, moduleId]
+        );
+        let newLastStep = { quizResults: [entry] };
+        if (existing.rows.length > 0 && existing.rows[0].last_step) {
+            try {
+                const prev = typeof existing.rows[0].last_step === 'string'
+                    ? JSON.parse(existing.rows[0].last_step) : existing.rows[0].last_step;
+                const list = Array.isArray(prev.quizResults) ? prev.quizResults : [];
+                const without = list.filter(q => String(q.quizId) !== String(quizId));
+                newLastStep = { ...prev, quizResults: [...without, entry] };
+            } catch (e) { /* keep new */ }
+        }
+        await pool.query(
+            `INSERT INTO module_progress (user_id, module_id, time_spent_minutes, last_step, last_accessed_at)
+             VALUES ($1, $2, 0, $3::jsonb, NOW())
+             ON CONFLICT (user_id, module_id)
+             DO UPDATE SET last_step = $3::jsonb, last_accessed_at = NOW(), updated_at = NOW()`,
+            [userId, moduleId, JSON.stringify(newLastStep)]
+        );
+        // quiz_attempts tablosuna kaydet (kaç doğru, kaç yanlış)
+        const total = Math.max(0, (entry.correctAnswers || 0) + (entry.wrongAnswers || 0)) || 1;
+        await pool.query(
+            `INSERT INTO quiz_attempts (user_id, module_id, quiz_section_id, total_questions, correct_count, wrong_count, score_percent)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [userId, moduleId, String(quizId), total, entry.correctAnswers || 0, entry.wrongAnswers || 0, entry.score || 0]
+        ).catch(() => {});
+        res.json({ success: true, message: 'Quiz sonucu kaydedildi.', data: { moduleId, quizId, score: entry.score } });
+    } catch (err) {
+        logger.error('Progress quiz error:', err);
+        if (err.message && /column.*last_step|does not exist/i.test(err.message)) {
+            return res.status(501).json({ success: false, message: 'Quiz kaydı için veritabanı güncellemesi (migration 009) gerekli.' });
+        }
+        res.status(500).json({ success: false, message: 'Quiz sonucu kaydedilirken bir hata oluştu.' });
+    }
+});
+
+// Simülasyon başlatma (started_at; tamamlanınca POST /complete ile güncellenir)
+app.post('/api/simulations/start', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const body = req.body || {};
+        const moduleId = body.moduleId || body.module_id || null;
+        const simulationId = String(body.simulationId || body.simulation_id || '');
+        if (!simulationId.trim()) {
+            return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
+        }
+        const r = await pool.query(
+            `INSERT INTO simulation_runs (user_id, module_id, simulation_id, started_at)
+             VALUES ($1, $2, $3, NOW()) RETURNING id`,
+            [userId, moduleId, simulationId.trim()]
+        );
+        res.json({
+            success: true,
+            message: 'Simülasyon başlangıcı kaydedildi.',
+            data: { runId: r.rows[0].id }
+        });
+    } catch (err) {
+        logger.error('Simulations start error:', err);
+        if (err.message && /column.*started_at|does not exist/i.test(String(err.message))) {
+            return res.status(501).json({
+                success: false,
+                message: 'Veritabanı güncellemesi gerekli: backend/migrations/014_simulation_runs_extended.sql'
+            });
+        }
+        res.status(500).json({ success: false, message: 'Simülasyon başlatma kaydı sırasında bir hata oluştu.' });
+    }
+});
+
+// Simülasyon tamamlama kaydı (simulation_runs)
+app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const body = req.body || {};
+        const moduleId = body.moduleId || body.module_id || null;
+        const simulationId = String(body.simulationId || body.simulation_id || '');
+        const runId = body.runId || body.run_id || null;
+        const score = Math.max(0, Math.min(100, Number(body.score) || 0));
+        const timeSpent = Math.max(0, Number(body.timeSpent) || 0);
+        const attempts = Math.max(1, Number(body.attempts) || 1);
+        const correctRaw = body.correctCount != null ? body.correctCount : body.correct_count;
+        const wrongRaw = body.wrongCount != null ? body.wrongCount : body.wrong_count;
+        const correctCount = Math.max(0, Math.min(100000, parseInt(String(correctRaw), 10) || 0));
+        const wrongCount = Math.max(0, Math.min(100000, parseInt(String(wrongRaw), 10) || 0));
+        let passed = body.passed;
+        if (typeof passed === 'string') {
+            passed = passed === 'true' || passed === '1';
+        }
+        if (typeof passed !== 'boolean') {
+            passed = score >= 70;
+        }
+        const startedAtIso = body.startedAt || body.started_at;
+        if (!simulationId.trim()) {
+            return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
+        }
+        if (runId) {
+            const u = await pool.query(
+                `UPDATE simulation_runs
+                 SET score = $1, time_spent = $2, attempts = $3,
+                     correct_count = $4, wrong_count = $5, passed = $6,
+                     completed_at = NOW()
+                 WHERE id = $7::uuid AND user_id = $8::uuid
+                 RETURNING id`,
+                [score, timeSpent, attempts, correctCount, wrongCount, passed, runId, userId]
+            );
+            if (u.rowCount === 0) {
+                return res.status(404).json({ success: false, message: 'Simülasyon oturumu bulunamadı.' });
+            }
+        } else {
+            let saParam = null;
+            if (startedAtIso) {
+                const d = new Date(startedAtIso);
+                if (!Number.isNaN(d.getTime())) saParam = d.toISOString();
+            }
+            await pool.query(
+                `INSERT INTO simulation_runs
+                 (user_id, module_id, simulation_id, score, time_spent, attempts, completed_at,
+                  started_at, correct_count, wrong_count, passed)
+                 VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10)`,
+                [userId, moduleId, simulationId.trim(), score, timeSpent, attempts, saParam, correctCount, wrongCount, passed]
+            );
+        }
+        res.json({
+            success: true,
+            message: 'Simülasyon tamamlama kaydedildi.',
+            data: {
+                simulationId: simulationId.trim(),
+                score,
+                timeSpent,
+                attempts,
+                correctCount,
+                wrongCount,
+                passed
+            }
+        });
+    } catch (err) {
+        logger.error('Simulations complete error:', err);
+        if (err.message && /column.*correct_count|column.*started_at|does not exist/i.test(String(err.message))) {
+            return res.status(501).json({
+                success: false,
+                message: 'Veritabanı güncellemesi gerekli: backend/migrations/014_simulation_runs_extended.sql'
+            });
+        }
+        res.status(500).json({ success: false, message: 'Simülasyon kaydı sırasında bir hata oluştu.' });
+    }
+});
+
 // Modül ilerlemesini getir
 // Kullanıcının belirli bir modül üzerindeki ilerleme bilgilerini döndürür
 app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) => {
@@ -1172,31 +1676,148 @@ app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) =>
 });
 
 // Dashboard özet bilgilerini getir
-// Kullanıcının genel ilerleme istatistiklerini döndürür
+// user_module_progress (ders ilerlemesi) + module_progress (süre/last_step) birlikte kullanılır
 app.get('/api/progress/overview', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        const result = await pool.query(
+        // Önce user_module_progress (POST /progress/lesson ile doldurulur), varsa module_progress ile süre bilgisi
+        const progressResult = await pool.query(
             `SELECT 
-                 COUNT(*) as total_modules,
-                 COUNT(CASE WHEN ump.status = 'completed' THEN 1 END) as completed_modules,
-                 SUM(ump.completed_lessons) as total_completed_lessons,
-                 SUM(ump.total_lessons) as total_lessons
+                 ump.module_id,
+                 ump.progress_percentage AS percent_complete,
+                 (ump.status = 'completed') AS is_completed,
+                 mp.time_spent_minutes,
+                 COALESCE(mp.updated_at, ump.updated_at) AS updated_at,
+                 m.title AS module_title,
+                 m.description AS module_description
              FROM user_module_progress ump
-             WHERE ump.user_id = $1`,
+             LEFT JOIN modules m ON ump.module_id = m.id
+             LEFT JOIN module_progress mp ON mp.user_id = ump.user_id AND mp.module_id = ump.module_id
+             WHERE ump.user_id = $1
+             ORDER BY COALESCE(mp.updated_at, ump.updated_at) DESC`,
             [userId]
         );
 
+        // module_progress'ta olup user_module_progress'ta olmayan kayıtlar (eski veri)
+        const onlyMpResult = await pool.query(
+            `SELECT mp.module_id, mp.percent_complete, mp.is_completed, mp.time_spent_minutes, mp.updated_at,
+                    m.title AS module_title, m.description AS module_description
+             FROM module_progress mp
+             LEFT JOIN modules m ON mp.module_id = m.id
+             WHERE mp.user_id = $1 AND NOT EXISTS (
+                 SELECT 1 FROM user_module_progress ump WHERE ump.user_id = mp.user_id AND ump.module_id = mp.module_id
+             )
+             ORDER BY mp.updated_at DESC`,
+            [userId]
+        );
+
+        const mapRow = (row) => ({
+            moduleId: row.module_id,
+            moduleTitle: row.module_title || 'Unknown Module',
+            moduleDescription: row.module_description || '',
+            percentComplete: parseFloat(row.percent_complete) || 0,
+            isCompleted: row.is_completed || false,
+            lastStep: row.time_spent_minutes != null ? { timeSpentMinutes: row.time_spent_minutes } : null,
+            updatedAt: row.updated_at
+        });
+
+        let modules = progressResult.rows.map(mapRow);
+        const existingIds = new Set(modules.map(m => m.moduleId));
+        onlyMpResult.rows.forEach(row => {
+            if (!existingIds.has(row.module_id)) {
+                modules.push(mapRow(row));
+                existingIds.add(row.module_id);
+            }
+        });
+        modules.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+
+        const totalModules = modules.length;
+        const completedModules = modules.filter(m => m.isCompleted).length;
+        let totalStudyTime = 0;
+        modules.forEach(module => {
+            if (module.lastStep && module.lastStep.timeSpentMinutes) {
+                totalStudyTime += module.lastStep.timeSpentMinutes;
+            }
+        });
+
+        let simulationRuns = [];
+        try {
+            const simRes = await pool.query(
+                `SELECT id, simulation_id, module_id, started_at, completed_at, score, time_spent, attempts,
+                        COALESCE(correct_count, 0) AS correct_count,
+                        COALESCE(wrong_count, 0) AS wrong_count,
+                        passed
+                 FROM simulation_runs
+                 WHERE user_id = $1
+                 ORDER BY COALESCE(completed_at, started_at, created_at) DESC NULLS LAST
+                 LIMIT 50`,
+                [userId]
+            );
+            simulationRuns = simRes.rows.map((r) => {
+                const done = r.completed_at != null;
+                let status = 'started';
+                if (done) {
+                    if (r.passed === true) status = 'success';
+                    else if (r.passed === false) status = 'failure';
+                    else status = Number(r.score) >= 70 ? 'success' : 'failure';
+                }
+                return {
+                    id: r.id,
+                    simulationId: r.simulation_id,
+                    moduleId: r.module_id,
+                    startedAt: r.started_at,
+                    completedAt: r.completed_at,
+                    score: r.score,
+                    timeSpent: r.time_spent,
+                    attempts: r.attempts,
+                    correctCount: r.correct_count,
+                    wrongCount: r.wrong_count,
+                    passed: r.passed,
+                    statusLabel: done ? (status === 'success' ? 'Başarılı' : 'Başarısız') : 'Başlatıldı',
+                    status
+                };
+            });
+        } catch (simErr) {
+            logger.warn('Get overview simulation_runs:', simErr.message);
+            try {
+                const legacy = await pool.query(
+                    `SELECT simulation_id, score, time_spent, completed_at
+                     FROM simulation_runs WHERE user_id = $1 ORDER BY completed_at DESC NULLS LAST LIMIT 50`,
+                    [userId]
+                );
+                simulationRuns = legacy.rows.map((r) => ({
+                    simulationId: r.simulation_id,
+                    score: r.score,
+                    timeSpent: r.time_spent,
+                    completedAt: r.completed_at,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    passed: null,
+                    statusLabel: Number(r.score) >= 70 ? 'Başarılı' : 'Başarısız',
+                    status: Number(r.score) >= 70 ? 'success' : 'failure'
+                }));
+            } catch (e2) {
+                simulationRuns = [];
+            }
+        }
+
         res.json({
             success: true,
-            data: result.rows[0]
+            data: {
+                totalModules,
+                completedModules,
+                totalStudyTime,
+                modules,
+                simulationRuns
+            }
         });
     } catch (error) {
-        console.error('Get overview error:', error);
+        logger.error('Get overview error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'İlerleme verisi yüklenirken bir hata oluştu.',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
@@ -1297,10 +1918,17 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
         const { category, level, price } = req.body;
 
         // Girdi doğrulaması - Tüm gerekli alanların doldurulup doldurulmadığını kontrol et
-        if (!category || !level || !price) {
+        if (!category || !level || price == null || price === '') {
             return res.status(400).json({
                 success: false,
-                message: 'Category, level, and price are required'
+                message: 'Category, level ve price gerekli.'
+            });
+        }
+        const priceNum = Number(price);
+        if (Number.isNaN(priceNum) || priceNum < 0 || priceNum > 999999.99) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz fiyat. 0 ile 999999.99 arasında olmalıdır.'
             });
         }
 
@@ -1309,7 +1937,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
         if (!validLevels.includes(level)) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid level. Must be beginner, intermediate, or advanced'
+                message: 'Geçersiz level. beginner, intermediate veya advanced olmalıdır.'
             });
         }
 
@@ -1368,7 +1996,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                      purchased_at = CURRENT_TIMESTAMP,
                      updated_at = CURRENT_TIMESTAMP
                  RETURNING id`,
-                [userId, category, level, price]
+                [userId, category, level, priceNum]
             );
             purchaseId = userPackagePurchaseResult.rows[0]?.id;
             console.log('✅ Purchase recorded in user_package_purchases table');
@@ -1380,7 +2008,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
         try {
             const purchaseResult = await pool.query(
                 `INSERT INTO purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
-                 VALUES ($1, $2, $3, $4, 'completed', CURRENT_TIMESTAMP, TRUE)
+                 VALUES ($1, $2, $3, $4::decimal, 'completed', CURRENT_TIMESTAMP, TRUE)
                  ON CONFLICT (user_id, category, level) 
                  DO UPDATE SET 
                      price = EXCLUDED.price,
@@ -1389,7 +2017,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                      purchased_at = CURRENT_TIMESTAMP,
                      updated_at = CURRENT_TIMESTAMP
                  RETURNING id`,
-                [userId, category, level, price]
+                [userId, category, level, priceNum]
             );
             if (!purchaseId) {
                 purchaseId = purchaseResult.rows[0]?.id;
@@ -1416,7 +2044,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                              purchased_at = CURRENT_TIMESTAMP,
                              updated_at = CURRENT_TIMESTAMP
                          RETURNING id`,
-                        [userId, category, level, price]
+                        [userId, category, level, priceNum]
                     );
                     if (!purchaseId) {
                         purchaseId = purchaseResult.rows[0]?.id;
@@ -1556,6 +2184,327 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
     }
 });
 
+// ============================================
+// DEĞERLENDİRME RAPORU (AI için gerekli veriler - kanıta dayalı)
+// ============================================
+// Quiz, simülasyon ve süre verilerinden skor hesaplar; yorumlama metni döndürür
+app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        // 1. Kullanıcı bilgisi
+        const userResult = await pool.query(
+            'SELECT id, email, first_name, last_name FROM users WHERE id = $1',
+            [userId]
+        );
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı' });
+        }
+        const user = userResult.rows[0];
+
+        // 2. Modül ilerlemesi (süre: time_spent_minutes; last_step varsa quiz sonuçları)
+        let progressResult;
+        try {
+            progressResult = await pool.query(
+                `SELECT module_id, percent_complete, time_spent_minutes, updated_at
+                 FROM module_progress WHERE user_id = $1`,
+                [userId]
+            );
+        } catch (e) {
+            progressResult = { rows: [] };
+        }
+
+        const quizResults = [];
+        let totalTimeMinutes = 0;
+        for (const row of progressResult.rows) {
+            const mins = row.time_spent_minutes || 0;
+            totalTimeMinutes += mins;
+        }
+        // last_step kolonu varsa quiz verisi al (opsiyonel)
+        try {
+            const stepResult = await pool.query(
+                `SELECT module_id, last_step FROM module_progress WHERE user_id = $1`,
+                [userId]
+            );
+            for (const row of stepResult.rows) {
+                if (row.last_step) {
+                    try {
+                        const meta = typeof row.last_step === 'string' ? JSON.parse(row.last_step) : row.last_step;
+                        if (meta.quizResults && Array.isArray(meta.quizResults)) {
+                            for (const q of meta.quizResults) {
+                                quizResults.push({
+                                    score: q.score != null ? q.score : 0,
+                                    moduleId: row.module_id,
+                                    quizId: q.quizId || q.id
+                                });
+                            }
+                        }
+                    } catch (e) { /* skip */ }
+                }
+            }
+        } catch (e) { /* last_step kolonu yoksa görmezden gel */ }
+
+        // 3. Simülasyon sonuçları (yalnızca tamamlananlar — ortalamaya dahil)
+        const simResult = await pool.query(
+            `SELECT simulation_id, score, time_spent, completed_at
+             FROM simulation_runs
+             WHERE user_id = $1 AND completed_at IS NOT NULL
+             ORDER BY completed_at DESC`,
+            [userId]
+        );
+        const simulationResults = simResult.rows.map(r => ({
+            simulationId: r.simulation_id,
+            score: r.score != null ? r.score : 0,
+            timeSpent: r.time_spent || 0
+        }));
+
+        // 4. Skor hesaplama (deterministik - ağırlıklı ortalama)
+        const quizScores = quizResults.map(q => q.score).filter(s => typeof s === 'number');
+        const simScores = simulationResults.map(s => s.score).filter(s => typeof s === 'number');
+        const allScores = [...quizScores, ...simScores];
+
+        let overallScore = 0;
+        if (allScores.length > 0) {
+            const sum = allScores.reduce((a, b) => a + b, 0);
+            overallScore = Math.round((sum / allScores.length) * 100) / 100;
+        }
+
+        const quizAvg = quizScores.length ? quizScores.reduce((a, b) => a + b, 0) / quizScores.length : 0;
+        const simAvg = simScores.length ? simScores.reduce((a, b) => a + b, 0) / simScores.length : 0;
+
+        // 5. Yorumlama metni (skor aralığına göre - AI yoksa fallback)
+        let overallText = '';
+        if (overallScore >= 90) {
+            overallText = `Mükemmel bir performans (${overallScore}%). Tüm konularda güçlü bir temel oluşturmuşsunuz.`;
+        } else if (overallScore >= 80) {
+            overallText = `İyi bir performans (${overallScore}%). Çoğu konuda başarılısınız; birkaç alanda daha gelişim fırsatı var.`;
+        } else if (overallScore >= 70) {
+            overallText = `Orta-iyi seviye (${overallScore}%). Temel bilgilere sahipsiniz; düzenli pratikle ilerleyebilirsiniz.`;
+        } else if (overallScore >= 60) {
+            overallText = `Geliştirilebilir (${overallScore}%). Bazı temel konularda tekrar ve pratik önerilir.`;
+        } else if (allScores.length > 0) {
+            overallText = `Genel skor ${overallScore}%. Temel konuları tekrar gözden geçirmeniz faydalı olacaktır.`;
+        } else {
+            overallText = 'Henüz yeterli quiz veya simülasyon verisi yok. Modülleri tamamlayıp quiz/simülasyon yaptıkça raporunuz dolacaktır.';
+        }
+
+        const report = {
+            scores: {
+                overall: overallScore,
+                quizAverage: Math.round(quizAvg * 100) / 100,
+                simulationAverage: Math.round(simAvg * 100) / 100,
+                quizCount: quizResults.length,
+                simulationCount: simulationResults.length,
+                totalTimeMinutes
+            },
+            interpretation: {
+                overall: overallText,
+                strengths: overallScore >= 75 ? ['Performansınız hedef seviyede veya üzerinde.'] : [],
+                weaknesses: overallScore < 70 && allScores.length > 0 ? ['Zayıf konularda ek çalışma ve simülasyon tekrarları önerilir.'] : [],
+                recommendations: overallScore < 80 && allScores.length > 0
+                    ? ['Quiz ve simülasyonları tekrar çözün.', 'Zayıf gördüğünüz modülleri yeniden gözden geçirin.']
+                    : []
+            },
+            evidence: {
+                quizCount: quizResults.length,
+                simulationCount: simulationResults.length,
+                totalTimeSpent: totalTimeMinutes
+            },
+            generatedAt: new Date().toISOString()
+        };
+
+        res.json({ success: true, data: report });
+    } catch (error) {
+        logger.error('Evaluation report error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Değerlendirme raporu oluşturulurken bir hata oluştu.',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
+// ============================================
+// SERTİFİKALAR API (Dashboard uyumlu)
+// ============================================
+function isDbUnavailableError(err) {
+    return err && (err.code === '42P01' || err.code === '42P07' || /does not exist|relation.*does not exist/i.test(String(err.message)));
+}
+
+app.get('/api/certificates', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const certResult = await pool.query(
+            `SELECT id, user_id, category, title, description, completion_time, earned_at, certificate_url, metadata
+             FROM certificates WHERE user_id = $1 ORDER BY earned_at DESC`,
+            [userId]
+        );
+        const certificates = certResult.rows.map(c => ({
+            id: c.id,
+            userId: c.user_id,
+            category: c.category,
+            title: c.title,
+            description: c.description,
+            completionTime: c.completion_time,
+            earnedAt: c.earned_at,
+            certificateUrl: c.certificate_url,
+            metadata: c.metadata
+        }));
+        res.json({ success: true, data: { certificates } });
+    } catch (err) {
+        logger.error('Certificates list error:', err);
+        const msg = isDbUnavailableError(err) ? 'Veritabanı geçici olarak kullanılamıyor. Lütfen daha sonra deneyin.' : 'Sertifikalar yüklenirken bir hata oluştu.';
+        res.status(500).json({ success: false, message: msg });
+    }
+});
+
+// İzin verilen sertifika kategorileri (normalize edilmiş: backend’te kullanılan değerler)
+const CERTIFICATE_CATEGORIES = new Set(['cybersecurity', 'cloud', 'data_science']);
+
+// Sertifika kazanma kontrolü (daha spesifik route önce tanımlanmalı)
+app.get('/api/certificates/check/:category', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const raw = (req.params.category || '').trim().toLowerCase().replace(/-/g, '_') || 'cybersecurity';
+        const categoryNorm = raw === 'siber_guvenlik' ? 'cybersecurity' : raw;
+        if (!CERTIFICATE_CATEGORIES.has(categoryNorm)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz kategori. İzin verilen: cybersecurity, siber-guvenlik, cloud, data-science.'
+            });
+        }
+
+        const completed = await pool.query(
+            `SELECT ump.module_id, m.title, m.category
+             FROM user_module_progress ump
+             JOIN modules m ON m.id = ump.module_id
+             WHERE ump.user_id = $1 AND ump.status = 'completed'
+             AND (LOWER(COALESCE(m.category, 'cybersecurity')) = $2 OR LOWER(REPLACE(COALESCE(m.category, ''), '-', '_')) = $2)`,
+            [userId, categoryNorm]
+        );
+        const existing = await pool.query(
+            `SELECT id, category, title, description, completion_time, earned_at, certificate_url
+             FROM certificates WHERE user_id = $1 AND (LOWER(REPLACE(COALESCE(category, ''), '-', '_')) = $2) LIMIT 1`,
+            [userId, categoryNorm]
+        );
+
+        if (existing.rows.length > 0) {
+            const c = existing.rows[0];
+            return res.json({
+                success: true,
+                alreadyHad: true,
+                certificate: {
+                    id: c.id,
+                    category: c.category,
+                    title: c.title,
+                    description: c.description,
+                    completionTime: c.completion_time,
+                    earnedAt: c.earned_at,
+                    certificateUrl: c.certificate_url
+                }
+            });
+        }
+
+        if (completed.rows.length === 0) {
+            return res.json({
+                success: true,
+                earned: false,
+                message: 'Bu kategoride sertifika kazanmak için en az bir modülü tamamlamanız gerekiyor (tüm dersler + quiz).'
+            });
+        }
+
+        const totalMinutes = await pool.query(
+            `SELECT COALESCE(SUM(mp.time_spent_minutes), 0) AS total
+             FROM module_progress mp
+             JOIN modules m ON m.id = mp.module_id
+             WHERE mp.user_id = $1 AND LOWER(COALESCE(m.category, 'cybersecurity')) = $2`,
+            [userId, categoryNorm]
+        );
+        const completionMinutes = Number(totalMinutes.rows[0]?.total) || 60;
+        const categoryTitles = { cybersecurity: 'Siber Güvenlik', cloud: 'Bulut', 'data_science': 'Veri Bilimleri' };
+        const title = (categoryTitles[categoryNorm] || categoryNorm) + ' Temel Sertifikası';
+        const description = `Bu kategoride ${completed.rows.length} modül tamamlandı. Toplam ${Math.round(completionMinutes / 60)} saat çalışma.`;
+
+        const insertResult = await pool.query(
+            `INSERT INTO certificates (user_id, category, title, description, completion_time, earned_at, metadata)
+             VALUES ($1, $2, $3, $4, $5, NOW(), $6::jsonb)
+             RETURNING id, user_id, category, title, description, completion_time, earned_at, certificate_url`,
+            [userId, categoryNorm, title, description, completionMinutes, JSON.stringify({ moduleCount: completed.rows.length })]
+        );
+        const cert = insertResult.rows[0];
+        res.json({
+            success: true,
+            earned: true,
+            certificate: {
+                id: cert.id,
+                userId: cert.user_id,
+                category: cert.category,
+                title: cert.title,
+                description: cert.description,
+                completionTime: cert.completion_time,
+                earnedAt: cert.earned_at,
+                certificateUrl: cert.certificate_url
+            }
+        });
+    } catch (err) {
+        logger.error('Certificates check error:', err);
+        const msg = isDbUnavailableError(err) ? 'Veritabanı geçici olarak kullanılamıyor. Lütfen daha sonra deneyin.' : 'Sertifika kontrolü sırasında bir hata oluştu.';
+        res.status(500).json({ success: false, message: msg });
+    }
+});
+
+app.get('/api/certificates/:certificateId/report', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { certificateId } = req.params;
+        const certResult = await pool.query(
+            `SELECT id, category, title, description, completion_time, earned_at, metadata
+             FROM certificates WHERE id = $1 AND user_id = $2`,
+            [certificateId, userId]
+        );
+        if (certResult.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Sertifika bulunamadı.' });
+        }
+        const c = certResult.rows[0];
+        const meta = c.metadata && (typeof c.metadata === 'string' ? JSON.parse(c.metadata) : c.metadata) || {};
+        const hours = Math.round((c.completion_time || 0) / 60);
+        const summary = c.description || `${c.title} sertifikasını ${hours} saatte tamamladınız.`;
+        const report = {
+            generatedBy: 'summary',
+            summary,
+            performanceAnalysis: {
+                overall: {
+                    level: hours >= 20 ? 'İleri' : hours >= 10 ? 'Orta' : 'Başlangıç',
+                    description: `Toplam ${hours} saat çalışma ile bu kategoride sertifika kazandınız.`
+                }
+            },
+            learningPattern: {
+                pace: 'Orta',
+                paceDescription: 'Düzenli ilerleme kaydedildi.',
+                focus: c.category || 'Genel',
+                focusDescription: 'Kategori odaklı tamamlama.',
+                learningStyle: 'Karma',
+                learningStyleDescription: 'Modül ve pratik birleşimi.'
+            },
+            strengths: ['Sertifika tamamlandı.', 'Hedef kategoride ilerleme gösterildi.'],
+            areasForImprovement: [],
+            detailedRecommendations: [],
+            nextSteps: [{ step: 1, title: 'Pratik', description: 'İlgili simülasyonları tekrarlayın.', estimatedTime: '2-4 saat' }],
+            resources: []
+        };
+        res.json({ success: true, data: { report } });
+    } catch (err) {
+        logger.error('Certificate report error:', err);
+        const msg = isDbUnavailableError(err) ? 'Veritabanı geçici olarak kullanılamıyor. Lütfen daha sonra deneyin.' : 'Sertifika raporu oluşturulurken bir hata oluştu.';
+        res.status(500).json({ success: false, message: msg });
+    }
+});
+
+// E-posta doğrulama (public klasöründe; kök URL ile erişim)
+app.get('/verify-email.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'verify-email.html'));
+});
+
 // Ana route için index.html dosyasını servis et (API route'larından sonra olmalı)
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -1580,21 +2529,6 @@ app.get('*', (req, res, next) => {
 
 // Pool'u diğer modüller için export et
 const getPool = () => pool;
-
-// Sunucuyu başlat
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`🌐 Website: http://localhost:${PORT}`);
-    console.log(`📊 API endpoints available at http://localhost:${PORT}/api`);
-    console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`\n📄 Available pages:`);
-    console.log(`   - Home: http://localhost:${PORT}/`);
-    console.log(`   - Modules: http://localhost:${PORT}/modules.html`);
-    console.log(`   - Simulations: http://localhost:${PORT}/simulations.html`);
-    console.log(`   - About: http://localhost:${PORT}/about.html`);
-    console.log(`   - Contact: http://localhost:${PORT}/contact.html`);
-    console.log(`   - Dashboard: http://localhost:${PORT}/dashboard.html`);
-});
 
 // ============================================
 // KULLANICI İLERLEME SIFIRLAMA ENDPOINT'İ
@@ -1728,3 +2662,22 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
 
 // Diğer modüller için export et
 module.exports = { app, pool, getPool };
+
+if (require.main === module) {
+    app.listen(PORT, '0.0.0.0', () => {
+        const publicBase = (process.env.PUBLIC_SITE_URL || process.env.CORS_ORIGIN || '').split(',')[0]?.trim() || `http://localhost:${PORT}`;
+        logger.info(`Server running on port ${PORT}`);
+        logger.info(`Website: ${publicBase}`);
+        logger.info(`API: ${publicBase.replace(/\/$/, '')}/api`);
+        logger.info(`Health: ${publicBase.replace(/\/$/, '')}/api/health`);
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`\n📄 Available pages:`);
+            console.log(`   - Home: http://localhost:${PORT}/`);
+            console.log(`   - Modules: http://localhost:${PORT}/modules.html`);
+            console.log(`   - Simulations: http://localhost:${PORT}/simulations.html`);
+            console.log(`   - About: http://localhost:${PORT}/about.html`);
+            console.log(`   - Contact: http://localhost:${PORT}/contact.html`);
+            console.log(`   - Dashboard: http://localhost:${PORT}/dashboard.html`);
+        }
+    });
+}

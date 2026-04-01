@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Güvenliğe Giriş — Simülasyonlar - SEBS Global</title>
+    <meta name="description" content="Siber Güvenliğe Giriş modülü simülasyonları: Kayıt Haftası Krizi, 6 Bilgi Semptom-Etki Zinciri ve Linux Sunucu Forensik Lab.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/modules.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
+    <style>
+        /* Siber Güvenliğe Giriş — Site tasarım dili ile uyumlu */
+        .sim-intro-hero {
+            background: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1920&q=80') center/cover no-repeat;
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 32vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sim-intro-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(5, 5, 12, 0.9) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(5, 5, 12, 0.96) 100%);
+            z-index: 0;
+        }
+        .sim-intro-hero .container { position: relative; z-index: 1; }
+        .sim-intro-hero h1 {
+            font-family: 'Cormorant Garamond', 'Space Grotesk', serif;
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        .sim-intro-hero p {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.65;
+        }
+        .sim-cards-section {
+            padding: 3rem 2rem 4rem;
+            position: relative;
+            z-index: 3;
+        }
+        .sim-cards-section .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 1.85rem);
+            font-weight: 700;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .sim-cards-section .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+        .sim-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .sim-select-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+        .sim-select-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition-base);
+            z-index: 1;
+        }
+        .sim-select-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg), var(--glow-primary);
+            border-color: rgba(30, 64, 175, 0.4);
+        }
+        .sim-select-card:hover::before {
+            transform: scaleX(1);
+        }
+        .sim-select-card .card-image {
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+        }
+        .sim-select-card .card-body {
+            padding: 1.75rem;
+        }
+        .sim-select-card .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .sim-select-card:nth-child(1) .card-icon {
+            background: var(--gradient-primary);
+        }
+        .sim-select-card:nth-child(2) .card-icon {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .sim-select-card:nth-child(3) .card-icon {
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+        }
+        .sim-select-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        .sim-select-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+        }
+        .sim-select-card .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.35rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-base);
+        }
+        .sim-select-card:last-child .btn {
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+        }
+        .sim-select-card .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .back-link-wrap {
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color var(--transition-fast);
+        }
+        .back-link:hover { color: var(--text-light); }
+        @media (max-width: 480px) {
+            .sim-cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="modules-page">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="nav-logo">
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation"
+                     onerror="if(this.nextElementSibling){this.style.display='none';this.nextElementSibling.style.display='inline-flex'}"/>
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#lg)"/>
+                    <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1e40af"/><stop offset="100%" stop-color="#3b82f6"/>
+                    </linearGradient></defs>
+                    <text x="20" y="28" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item"><a href="/index.html" class="nav-link"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                <li class="nav-item"><a href="/modules.html" class="nav-link"><i class="fas fa-book"></i> Eğitim Modülleri</a></li>
+                <li class="nav-item"><a href="/simulations.html" class="nav-link active"><i class="fas fa-flask"></i> Simülasyonlar</a></li>
+                <li class="nav-item"><a href="/about.html" class="nav-link"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                <li class="nav-item"><a href="/contact.html" class="nav-link"><i class="fas fa-envelope"></i> İletişim</a></li>
+                <li class="nav-item"><a href="/dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Panelim</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="/login.html" class="btn-login">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup">Üye Ol</a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menü">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="sim-intro-hero">
+            <div class="container">
+                <h1>Siber Güvenliğe Giriş</h1>
+                <p>Modül 1 — Ortak dil ve doğru problem tanımı kazanımına yönelik simülasyonlar</p>
+            </div>
+        </section>
+
+        <section class="sim-cards-section">
+            <div class="container">
+                <h2 class="section-title">Simülasyon Seçin</h2>
+                <p class="section-subtitle">Senaryoyu başlatarak gerçek dünya deneyimi kazanın</p>
+
+                <div class="sim-cards-grid">
+                    <div class="sim-select-card">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=75')"></div>
+                        <div class="card-body">
+                            <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+                            <h3>Kayıt Haftası Krizi</h3>
+                            <p>Olay analizi simülasyonu. 6 olay, varlık tespiti, CIA eşleştirme, tehdit–zafiyet ayrımı, Exploit vs Payload, attack chain, final rapor.</p>
+                            <a href="kayit-haftasi-krizi.html" class="btn"><i class="fas fa-play"></i> Senaryoyu Başlat</a>
+                        </div>
+                    </div>
+                    <div class="sim-select-card">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=75')"></div>
+                        <div class="card-body">
+                            <div class="card-icon"><i class="fas fa-puzzle-piece"></i></div>
+                            <h3>6 Bilgi — Semptom-Etki Zinciri</h3>
+                            <p>Gürültüden sinyal çıkarma. 6 bilgi eş zamanlı gelir — erken kesin yargıya düşmeden doğru varlığı belirle. 4 aşama.</p>
+                            <a href="semptom-etki-zinciri.html" class="btn"><i class="fas fa-play"></i> Senaryoyu Başlat</a>
+                        </div>
+                    </div>
+                    <div class="sim-select-card">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=75')"></div>
+                        <div class="card-body">
+                            <div class="card-icon"><i class="fas fa-terminal"></i></div>
+                            <h3>Linux Sunucu Forensik Lab</h3>
+                            <p>Şüpheli sunucu incelemesi. MerkezBank senaryosu ile Linux komutlarını ipuçlarıyla keşfedin. 7 adımlık forensik analiz.</p>
+                            <a href="linux-forensik-lab.html" class="btn"><i class="fas fa-play"></i> Senaryoyu Başlat</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-link-wrap">
+                    <a href="/simulations.html" class="back-link"><i class="fas fa-arrow-left"></i> Simülasyonlara Dön</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
+    <script src="../js/navigation.js"></script>
+</body>
+</html>

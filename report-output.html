@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapor ve Çıktı - SEBS Global</title>
+    <meta name="description" content="Örnek değerlendirme raporu ve sertifika çıktı sayfası.">
+    <meta name="keywords" content="SEBS, rapor, sertifika, çıktı, siber güvenlik">
+
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
+    <link rel="stylesheet" href="/css/report-output.css">
+</head>
+<body class="page-report-output">
+    <!-- Navigation (component-like inline) -->
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+        <div class="nav-container">
+            <a href="/index.html" class="nav-logo" id="navLogo">
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation"/>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-main">
+        <section class="dashboard-hero report-hero">
+            <div class="hero-content">
+                <div class="welcome-title">Rapor ve Çıktı</div>
+                <div class="welcome-subtitle">
+                    Modern, premium görünümlü örnek değerlendirme raporu ve Abidin Samet Ay adına sertifika.
+                </div>
+            </div>
+        </section>
+
+        <div class="print-controls">
+            <button type="button" class="btn-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> Yazdır / PDF Al
+            </button>
+        </div>
+
+        <div class="report-output-grid">
+            <!-- Report -->
+            <div class="report-card">
+                <div class="report-title">
+                    <i class="fas fa-chart-line"></i> Değerlendirme Raporu
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">📊 Özet</h3>
+                    <div class="report-item">
+                        <strong>Abidin Samet Ay</strong> eğitim modülleri ve simülasyonlarda genel olarak güçlü bir performans sergilemiştir.
+                        Tehdit farkındalığı, temel ağ güvenliği ve olay müdahale adımlarında tutarlı ilerleme görülmüştür.
+                    </div>
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">🎯 Performans Analizi</h3>
+                    <div class="report-item">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div>
+                                <div style="font-size:0.8rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Genel Başarı</div>
+                                <div style="font-size:1.15rem; font-weight:800; color: var(--primary);">86/100</div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.8rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Doğruluk</div>
+                                <div style="font-size:1.15rem; font-weight:800; color: var(--primary);">92%</div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.8rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Risk Azaltma</div>
+                                <div style="font-size:1.15rem; font-weight:800; color: var(--primary);">81%</div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.8rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Tamamlama Süresi</div>
+                                <div style="font-size:1.15rem; font-weight:800; color: var(--primary);">8.5 Saat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">🧠 Öğrenme Paterni</h3>
+                    <div class="report-item improvement">
+                        İlk aşamada hızlı öğrenme, orta modüllerde tekrar/pekiştirme ihtiyacı ve simülasyonlarda uygulamalı öğrenme ile ivmelenme gözlenmiştir.
+                    </div>
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">✅ Güçlü Yönler</h3>
+                    <div class="report-item strength">1) Ağ trafiği okuma ve temel yorumlama (loglar / paket özetleri)</div>
+                    <div class="report-item strength">2) Olay müdahale senaryolarında adım sıralaması ve önceliklendirme</div>
+                    <div class="report-item strength">3) Sosyal mühendislik senaryolarında risk farkındalığı</div>
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">📈 Geliştirilmesi Gereken Alanlar</h3>
+                    <div class="report-item improvement">1) Log analizi derinliği: korelasyon ve anomali örüntüleri</div>
+                    <div class="report-item improvement">2) Güvenlik kontrollerinin daha sistematik eşleştirilmesi</div>
+                    <div class="report-item improvement">3) Gelişmiş tehdit avcılığı için vaka kurgusu üzerinden pratik</div>
+                </div>
+
+                <div class="ai-report-section">
+                    <h3 class="report-section-title">🧾 Önerilen Sonraki Adımlar</h3>
+                    <div class="report-item">
+                        Haftalık tekrar rutini oluşturun, her simülasyondan sonra kısa bir “öğrendim/eksik kaldı” notu alın.
+                        Sonrasında, ilerledikçe zor seviye vakalara geçerek güvenlik kontrol eşleştirmelerini güçlendirin.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate -->
+            <div class="certificate-preview-wrap">
+                <div class="certificate-preview" aria-label="Sertifika çıktısı örneği">
+                    <div class="certificate-top">
+                        <div class="certificate-top-inner">
+                            <div>
+                                <h1>🎓 SERTİFİKA</h1>
+                                <p>SEBS Global Eğitim Platformu</p>
+                            </div>
+                            <div class="cert-seal" title="SEBS Global">
+                                <span>SEBS</span>
+                            </div>
+                        </div>
+                        <div class="cert-bottom-hr" style="margin-top: 0.9rem;"></div>
+                    </div>
+
+                    <div class="certificate-body">
+                        <div class="certificate-subtitle">Eğitim Başarı Sertifikası</div>
+                        <div class="certificate-recipient">Abidin Samet Ay</div>
+                        <div class="certificate-desc">
+                            Bu sertifika, ilgili modül ve simülasyon çalışmalarını başarıyla tamamlayarak temel seviyede
+                            siber güvenlik yeterliliği kazandığını kanıtlar.
+                        </div>
+
+                        <div class="certificate-details">
+                            <div class="cert-detail">
+                                <div class="label">Kategori</div>
+                                <div class="value">Siber Güvenlik (Temel)</div>
+                            </div>
+                            <div class="cert-detail">
+                                <div class="label">Süre</div>
+                                <div class="value">8.5 Saat</div>
+                            </div>
+                            <div class="cert-detail">
+                                <div class="label">Tarih</div>
+                                <div class="value">30 Mart 2026</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="certificate-footer">
+                        <div class="cert-signature">
+                            <div class="signature-line"></div>
+                            <div class="name">SEBS Global</div>
+                        </div>
+                        <div class="certificate-id">
+                            Sertifika ID: <span>SEBS-2026-000123</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="print-hint">
+                    Not: Yazdırma modunda arka planlar otomatik temizlenir, sadece rapor ve sertifika görünür.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
+            onerror="console.error('Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <script src="js/navigation.js?v=2.0" defer></script>
+</body>
+</html>
+

@@ -968,6 +968,11 @@
 
         // Timer
         function startTimer() {
+            if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+                window.SimulationTracker.recordStart('temel-siber-guvenlik-lab', 'Temel Siber Güvenlik Lab', {
+                    moduleName: 'Temel Siber Güvenlik'
+                });
+            }
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimer();
@@ -1555,7 +1560,10 @@
                         score: score,
                         flagsFound: foundFlags,
                         timeSpent: timeSpent * 60, // seconds
-                        moduleName: 'Temel Siber Güvenlik'
+                        moduleName: 'Temel Siber Güvenlik',
+                        correctCount: foundFlags.length,
+                        wrongCount: Math.max(0, 5 - foundFlags.length),
+                        passed: foundFlags.length >= 5
                     }
                 );
             }

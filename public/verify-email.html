@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-posta Doğrulama - SEBS Global</title>
+    <meta name='description' content="SEBS Global e-posta doğrulama sayfası. E-posta adresinizi doğrulayın ve hesabınızı aktifleştirin.">
+    <meta name="keywords" content="e-posta doğrulama, email verification, SEBS Global">
+    <meta name="author" content="SEBS Global">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        .verify-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            padding: 20px;
+        }
+
+        .verify-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .verify-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .verify-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .verify-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .verify-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.5em;
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-verify {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-verify:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .resend-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .resend-text {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .btn-resend {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-resend:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-resend:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .timer {
+            color: var(--warning-color);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.1);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .demo-code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .demo-code-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .demo-code-value {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <div class="verify-card">
+            <div class="verify-icon">
+                <i class="fas fa-envelope-open"></i>
+            </div>
+            
+            <h1 class="verify-title">E-posta Doğrulama</h1>
+            <p class="verify-subtitle">
+                E-posta adresinize gönderilen 6 haneli doğrulama kodunu girin
+            </p>
+
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+            <form class="verify-form" id="verifyForm">
+                <div class="form-group">
+                    <label for="verificationCode">Doğrulama Kodu</label>
+                    <input 
+                        type="text" 
+                        id="verificationCode" 
+                        name="verificationCode" 
+                        placeholder="000000" 
+                        maxlength="6" 
+                        required
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button type="submit" class="btn-verify" id="verifyBtn">
+                    <i class="fas fa-check"></i> Doğrula
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Doğrulanıyor...</p>
+            </div>
+
+            <div class="resend-section">
+                <p class="resend-text">Kod gelmedi mi?</p>
+                <button class="btn-resend" id="resendBtn" onclick="resendCode()">
+                    <i class="fas fa-redo"></i> Tekrar Gönder
+                </button>
+                <div class="timer" id="timer" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let resendTimer = 0;
+        let resendInterval;
+
+        // Initialize page
+        const API = (window.location.origin || '') + '/api';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const pendingEmail = localStorage.getItem('pendingEmail');
+            
+            if (!userData.email && !pendingEmail) {
+                window.location.href = '/signup.html';
+                return;
+            }
+
+            // Auto-focus on input
+            document.getElementById('verificationCode').focus();
+            
+            // Start resend timer
+            startResendTimer();
+        });
+
+        // Handle form submission
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('verificationCode').value.trim();
+            
+            if (code.length !== 6) {
+                showStatus('Lütfen 6 haneli doğrulama kodunu girin.', 'error');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const email = localStorage.getItem('pendingEmail') || JSON.parse(localStorage.getItem('userData') || '{}').email;
+                const response = await fetch(API + '/auth/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        verificationCode: code
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('isVerified', 'true');
+                    if (result.data && result.data.token) {
+                        localStorage.setItem('authToken', result.data.token);
+                    }
+                    const u = result.data && result.data.user;
+                    if (u) {
+                        localStorage.setItem('userData', JSON.stringify({
+                            email: u.email,
+                            firstName: u.firstName,
+                            lastName: u.lastName,
+                            verifiedAt: new Date().toISOString()
+                        }));
+                    } else {
+                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                        userData.verifiedAt = new Date().toISOString();
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                    }
+
+                    showStatus(`
+                        <h4><i class="fas fa-check-circle"></i> Doğrulama Başarılı!</h4>
+                        <p>E-posta adresiniz başarıyla doğrulandı. Kişisel panelinize yönlendiriliyorsunuz...</p>
+                        <button onclick="window.location.href='/dashboard.html'" class="btn-verify" style="margin-top: 15px;">
+                            Panele Git
+                        </button>
+                    `, 'success');
+
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 2000);
+
+                } else {
+                    showStatus(result.message || 'Doğrulama kodu hatalı veya süresi dolmuş.', 'error');
+                }
+            } catch (error) {
+                showStatus('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // Resend code function
+        async function resendCode() {
+            if (resendTimer > 0) return;
+
+            showLoading(true);
+
+            try {
+                const email = localStorage.getItem('pendingEmail') || JSON.parse(localStorage.getItem('userData') || '{}').email;
+                const response = await fetch(API + '/auth/resend-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showStatus(result.message || 'Yeni doğrulama kodu gönderildi.', 'success');
+                    startResendTimer();
+                } else {
+                    showStatus(result.message || 'Kod gönderilemedi.', 'error');
+                }
+            } catch (error) {
+                showStatus('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Start resend timer
+        function startResendTimer() {
+            resendTimer = 60;
+            document.getElementById('resendBtn').disabled = true;
+            document.getElementById('timer').style.display = 'block';
+            
+            resendInterval = setInterval(() => {
+                resendTimer--;
+                document.getElementById('timer').textContent = `${resendTimer} saniye sonra tekrar gönderebilirsiniz`;
+                
+                if (resendTimer <= 0) {
+                    clearInterval(resendInterval);
+                    document.getElementById('resendBtn').disabled = false;
+                    document.getElementById('timer').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = message;
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('verifyBtn').disabled = show;
+        }
+
+        // Auto-format input
+        document.getElementById('verificationCode').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+            e.target.value = value;
+        });
+
+        // Auto-submit when 6 digits entered
+        document.getElementById('verificationCode').addEventListener('input', function(e) {
+            if (e.target.value.length === 6) {
+                setTimeout(() => {
+                    document.getElementById('verifyForm').dispatchEvent(new Event('submit'));
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Course Routes
 import express from 'express';
 import { prisma } from '../server.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase } from '../middleware/supabase-auth.middleware.js';
 import { filterCoursesByEntitlement, hasAccess } from '../utils/entitlement.js';
 
 const router = express.Router();
@@ -16,49 +16,15 @@ const optionalAuth = async (req, res, next) => {
       return next();
     }
 
-    const token = authHeader.substring(7);
-    const { verifyAccessToken } = await import('../utils/jwt.js');
-    const decoded = verifyAccessToken(token);
-    
-    const user = await prisma.user.findUnique({
-      where: { publicId: decoded.publicId },
-      select: { 
-        id: true, 
-        publicId: true, 
-        email: true, 
-        role: true, 
-        isActive: true,
-        accessLevel: true
-      }
-    });
-
-    // Fetch entitlements separately
-    let entitlements = [];
-    if (user && user.isActive) {
-      entitlements = await prisma.entitlement.findMany({
-        where: {
-          userId: user.id,
-          isActive: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gt: new Date() } }
-          ]
-        },
-        select: {
-          category: true,
-          level: true
-        }
+    // Try to authenticate with Supabase, but don't fail if invalid
+    try {
+      await authenticateSupabase(req, res, () => {
+        next();
       });
-      user.entitlements = entitlements;
-    }
-
-    if (user && user.isActive) {
-      req.user = user;
-    } else {
+    } catch (error) {
       req.user = null;
+      next();
     }
-    
-    next();
   } catch (error) {
     req.user = null;
     next();

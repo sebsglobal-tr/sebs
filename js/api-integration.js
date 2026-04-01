@@ -1,8 +1,8 @@
 // ============================================
 // API YAPILANDIRMASI
 // ============================================
-// Backend API'nin base URL'i
-const API_BASE_URL = 'http://localhost:8006/api';
+// Backend API'nin base URL'i (canlıda aynı origin)
+const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
 
 // ============================================
 // EĞİTİM PLATFORMU API YARDIMCI SINIFI

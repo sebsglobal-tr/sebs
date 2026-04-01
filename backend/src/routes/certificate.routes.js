@@ -1,7 +1,7 @@
 // Certificate Routes
 import express from 'express';
 import { getUserCertificates, generateCategoryCertificate, getCertificateReport, checkCategoryCompletion } from '../controllers/certificate.controller.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 
 const router = express.Router();
 

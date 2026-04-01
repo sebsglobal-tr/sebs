@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Haftası Krizi — Olay Analizi - SEBS Global</title>
+    <meta name="description" content="SEBS platformunda kayıt haftasında güvenlik analisti olarak olayları doğru sınıflandırma simülasyonu.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../utils/simulation-tracker.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #2563eb 100%);
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+            --timeline-bg: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-teal: #0d9488;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0c0f14;
+            background-image:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, transparent 30%),
+                radial-gradient(ellipse 100% 80% at 50% 0%, rgba(30, 41, 59, 0.4) 0%, transparent 50%),
+                url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=40') center/cover no-repeat;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════
+           GİRİŞ EKRANI — Premium SOC Simulation
+        ═══════════════════════════════════════════════ */
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(15, 23, 42, 0.97) 100%),
+                url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1920&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .intro-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .intro-overlay.hidden { display: none; }
+        @keyframes introFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .intro-card { animation: introFadeIn 0.5s ease-out; }
+        .intro-card {
+            position: relative;
+            max-width: 640px;
+            width: 100%;
+            background: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .intro-card h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .intro-card h1 i {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .intro-brief {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 1.25rem;
+        }
+        .intro-brief p { margin-bottom: 0.75rem; }
+        .intro-goals {
+            background: rgba(30, 64, 175, 0.15);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3b82f6;
+        }
+        .intro-goals h3 {
+            font-size: 0.9rem;
+            color: #93c5fd;
+            margin-bottom: 0.6rem;
+        }
+        .intro-goals ul {
+            list-style: none;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .intro-goals li::before { content: "→ "; color: #3b82f6; }
+        .intro-aim {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+        }
+        .btn-start {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+        }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(59, 130, 246, 0.45); }
+
+        /* ═══════════════════════════════════════════════
+           HEADER & ANA PANEL
+        ═══════════════════════════════════════════════ */
+        .simulation-header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+            padding: 0.75rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(12px);
+        }
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .simulation-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .simulation-title i { opacity: 0.95; }
+        .simulation-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            color: white;
+        }
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.25);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .live-badge .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: livePulse 1.2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            50% { opacity: 0.8; }
+        }
+        .progress-bar { width: 180px; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%); width: 0%; transition: width 0.4s ease; border-radius: 4px; }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 52px);
+            padding-top: 52px;
+            position: relative;
+            gap: 0;
+            perspective: 1200px;
+        }
+        .main-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+           PENCERE ÇERÇEVESİ — Gerçek uygulama havası
+        ═══════════════════════════════════════════════ */
+        .window-frame {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 12px 8px 12px 8px;
+            background: linear-gradient(180deg, rgba(20, 25, 35, 0.98) 0%, rgba(12, 16, 24, 0.99) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            box-shadow:
+                0 0 0 1px rgba(0, 0, 0, 0.3),
+                0 4px 6px -1px rgba(0, 0, 0, 0.4),
+                0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+            transform: translateZ(0);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .window-frame:hover {
+            box-shadow:
+                0 0 0 1px rgba(59, 130, 246, 0.2),
+                0 8px 20px -5px rgba(0, 0, 0, 0.4),
+                0 25px 50px -15px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .window-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px 8px 14px;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.4);
+            flex-shrink: 0;
+        }
+        .window-titlebar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .window-traffic-lights {
+            display: flex;
+            gap: 6px;
+        }
+        .window-traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .window-traffic-light.close { background: #ff5f57; }
+        .window-traffic-light.minimize { background: #febc2e; }
+        .window-traffic-light.maximize { background: #28c840; }
+        .window-title-text {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .window-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+        .rec-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #ef4444;
+        }
+        .rec-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: recPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes recPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+        .window-time {
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sol Panel — Olay Akışı (Timeline) */
+        .window-frame.timeline-frame { width: 310px; min-width: 310px; }
+        .panel-timeline {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(12, 16, 24, 0.8) 100%);
+            padding: 1.25rem;
+            overflow-y: auto;
+        }
+        .panel-timeline h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+        }
+        .panel-timeline h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #3b82f6, #6366f1);
+            border-radius: 2px;
+        }
+        .timeline-item .timeline-icon i { font-size: 0.85rem; color: #93c5fd; }
+        .timeline-item.completed .timeline-icon { background: rgba(34, 197, 94, 0.2) !important; }
+        .timeline-item.completed .timeline-icon i { color: #4ade80; }
+        .timeline-list { list-style: none; }
+        .timeline-item {
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.6rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border-left: 4px solid transparent;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid transparent;
+        }
+        .timeline-item:hover {
+            background: rgba(59, 130, 246, 0.12);
+            transform: translateX(4px);
+        }
+        .timeline-item.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-left-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+        }
+        .timeline-item.completed {
+            background: rgba(34, 197, 94, 0.08);
+            border-left-color: var(--success-color);
+        }
+        .timeline-item .time { font-size: 0.7rem; color: #64748b; margin-bottom: 0.25rem; letter-spacing: 0.5px; }
+        .timeline-item .title { font-size: 0.88rem; font-weight: 600; color: #e2e8f0; line-height: 1.35; }
+
+        /* Orta Panel — Olay Detayı (SOC Dashboard) */
+        .window-frame.event-frame { flex: 1; min-width: 360px; }
+        .panel-event {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.75) 100%);
+            padding: 1.75rem;
+            overflow-y: auto;
+            position: relative;
+        }
+        .panel-event::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: radial-gradient(ellipse 100% 100% at 50% 0%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .event-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .event-header .event-badge { display: inline-block; margin-bottom: 0.25rem; }
+        .event-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(99, 102, 241, 0.2) 100%);
+            color: #93c5fd;
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .event-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            letter-spacing: -0.02em;
+        }
+        .event-content {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .event-content h4 {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            padding-left: 0.75rem;
+            border-left: 3px solid rgba(100, 116, 139, 0.6);
+            letter-spacing: 0.5px;
+        }
+        .message-item {
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 0.75rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            transition: transform 0.2s;
+        }
+        .message-item:hover { transform: translateX(3px); }
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+            font-size: 0.7rem;
+        }
+        .msg-timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+        .msg-source {
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .msg-body { font-size: 0.9rem; line-height: 1.6; }
+        .message-user {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-left: 4px solid #3b82f6;
+            color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .message-ops {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-left: 4px solid #f59e0b;
+            color: #fcd34d;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .message-log {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            background: #0a0e14;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-left: 4px solid #64748b;
+            padding: 0.9rem 1rem;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+        .message-log .log-line { display: block; }
+        .message-log .log-key { color: #64748b; }
+        .message-log .log-val { color: #22c55e; }
+        .message-log .log-warn { color: #facc15; }
+        .message-log .log-err { color: #ef4444; }
+        .msg-ticket-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #64748b;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+        .msg-channel { color: #3b82f6; font-weight: 600; }
+        .ticket-id-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        .severity-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .severity-p1 { background: rgba(239, 68, 68, 0.3); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
+        .severity-p2 { background: rgba(245, 158, 11, 0.25); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.5); }
+        .severity-p3 { background: rgba(59, 130, 246, 0.25); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.5); }
+        .metrics-strip {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+        }
+        .metrics-strip span { display: flex; align-items: center; gap: 0.4rem; }
+        .metrics-strip .metric-val { color: #22c55e; font-weight: 600; }
+        .metrics-strip .metric-val.warn { color: #facc15; }
+        .metrics-strip .metric-val.err { color: #ef4444; }
+
+        /* Sağ Panel — Karar Soruları (Decision Console) */
+        .window-frame.decision-frame { width: 400px; min-width: 360px; }
+        .panel-decision {
+            flex: 1;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+            padding: 1.75rem;
+            overflow-y: auto;
+        }
+        .panel-decision h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+        }
+        .question-block {
+            margin-bottom: 1.25rem;
+        }
+        .question-label {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+        .option-btn, .option-multi {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.8rem 1.1rem;
+            margin-bottom: 0.6rem;
+            border: 1px solid rgba(71, 85, 105, 0.6);
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.5);
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .option-btn:hover, .option-multi:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.12);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        .option-btn.selected, .option-multi.selected {
+            border-color: #3b82f6;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.1) 100%);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
+        }
+        .option-multi { display: flex; align-items: center; gap: 0.5rem; }
+        .option-multi input[type="checkbox"] { flex-shrink: 0; }
+        .feedback-msg {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .feedback-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; border-left: 3px solid var(--success-color); }
+        .feedback-partial { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border-left: 3px solid var(--warning-color); }
+        .feedback-error { background: rgba(239, 68, 68, 0.15); color: #f87171; border-left: 3px solid var(--danger-color); }
+
+        .btn-next {
+            width: 100%;
+            padding: 0.85rem 1.1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 1.25rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .free-answer-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(71, 85, 105, 0.8);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.5);
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .free-answer-input:focus { outline: none; border-color: #3b82f6; }
+
+        /* ═══════════════════════════════════════════════
+           EXPLOIT vs PAYLOAD / ATTACK CHAIN / RAPOR
+        ═══════════════════════════════════════════════ */
+        .screen-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: linear-gradient(135deg, rgba(10, 14, 26, 0.97) 0%, rgba(15, 23, 42, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=60') center/cover no-repeat;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .screen-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .screen-overlay.show { display: flex; }
+        .screen-card {
+            position: relative;
+            max-width: 740px;
+            width: 100%;
+            background: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border-radius: 16px;
+            padding: 2.25rem;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            box-shadow:
+                0 0 0 1px rgba(0, 0, 0, 0.3),
+                0 25px 80px -12px rgba(0, 0, 0, 0.6),
+                0 40px 100px -20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+        }
+        .screen-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .screen-card h2 i {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .match-column h4 { font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.75rem; }
+        .match-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid rgba(71, 85, 105, 0.5);
+            cursor: grab;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+        .match-item:hover { border-color: #3b82f6; }
+        .match-item.dragging { opacity: 0.6; }
+
+        .attack-chain-drop {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        .chain-slot {
+            min-height: 56px;
+            padding: 0.85rem 1.2rem;
+            border: 2px dashed rgba(71, 85, 105, 0.6);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.4);
+            font-size: 0.9rem;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        .chain-slot:hover { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.05); }
+        .chain-slot.filled { border-style: solid; border-color: #3b82f6; color: #e2e8f0; background: rgba(59, 130, 246, 0.1); }
+        .chain-draggables {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .chain-chip {
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(99, 102, 241, 0.2) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .chain-chip:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
+
+        .report-form textarea {
+            width: 100%;
+            min-height: 85px;
+            padding: 0.9rem 1.1rem;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .report-form textarea:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Sonuç Analizi */
+        .result-screen {
+            max-width: 560px;
+        }
+        .result-score {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin: 1.25rem 0;
+            letter-spacing: -0.02em;
+        }
+        .result-feedback {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: #cbd5e1;
+            margin-bottom: 1.25rem;
+            padding: 1.25rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 14px;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+        }
+
+        @media (max-width: 1200px) {
+            .main-container { flex-wrap: wrap; }
+            .panel-timeline { width: 100%; max-height: 180px; }
+            .panel-event { min-width: 100%; }
+            .panel-decision { width: 100%; min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════
+         GİRİŞ EKRANI
+    ═══════════════════════════════════════════════ -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-card" style="max-width: 680px;">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+                <span style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:0.7rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:6px;letter-spacing:0.5px;">● CANLI SİMÜLASYON</span>
+            </div>
+            <h1><i class="fas fa-exclamation-triangle"></i> Kayıt Haftası — Olay Analizi</h1>
+            <div class="intro-brief">
+                <p><strong>Arka plan:</strong> SEBS Global eğitim platformu, yıllık kayıt haftasının ilk gününe uyanıyor. Binlerce aday başvuru formunu doldurmak, eğitmenler ders programlarını güncellemek, öğrenciler modüllerine erişmek için platforma akın ediyor. Sabah 09:00'dan itibaren farklı ekiplerden — müşteri destek, geliştirme, eğitim koordinasyonu — bildirimler gelmeye başlıyor. Her biri kendi penceresinden bir sorun görüyor: "Form açılmıyor", "Raporlar karışık", "Bir şeyler ters gidiyor."</p>
+                <p>Sen bu ortamın güvenlik analistisin. Elinde kesin bir alarm yok; sadece dağınık ipuçları, kullanıcı şikayetleri ve operasyon notları var. Görevin: <strong>teknik saldırı yapmadan</strong>, olayları doğru okuyup sınıflandırmak. Önce etkiyi tespit et, sonra tehdit/zafiyet ayrımı yap, en sonda attack chain’i konumlandır. Panik değil, prosedür.</p>
+            </div>
+            <div class="intro-goals">
+                <h3>Her olay için hedefin:</h3>
+                <ul>
+                    <li>Varlığı belirle</li>
+                    <li>CIA etkisini seç</li>
+                    <li>Tehdit – zafiyet – risk ayrımı yap</li>
+                    <li>Attack chain aşamasını konumlandır</li>
+                </ul>
+            </div>
+            <p class="intro-aim">🎯 Amaç: Doğru düşünme refleksi — Etkiyi okuyan, saldırı aramayan analist yaklaşımı.</p>
+            <button type="button" class="btn-start" id="btnStartSimulation">
+                <i class="fas fa-play"></i> Simülasyonu Başlat
+            </button>
+        </div>
+    </div>
+
+    <header class="simulation-header">
+        <div class="header-content">
+            <div class="simulation-title">
+                <i class="fas fa-clipboard-list"></i> Kayıt Haftası Krizi — Olay Analizi
+            </div>
+            <div class="simulation-info">
+                <span class="live-badge"><span class="pulse-dot"></span> CANLI SİMÜLASYON</span>
+                <span>Olay: <span id="stageIndicator">1/6</span></span>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container" id="mainContainer">
+        <!-- Sol Pencere: Olay Akışı -->
+        <div class="window-frame timeline-frame">
+            <div class="window-titlebar">
+                <div class="window-titlebar-left">
+                    <div class="window-traffic-lights">
+                        <span class="window-traffic-light close"></span>
+                        <span class="window-traffic-light minimize"></span>
+                        <span class="window-traffic-light maximize"></span>
+                    </div>
+                    <span class="window-title-text"><i class="fas fa-stream"></i> Event Feed — SOC Console</span>
+                </div>
+                <div class="window-status">
+                    <span class="rec-indicator"><span class="rec-dot"></span> CANLI</span>
+                    <span class="window-time" id="liveTime">09:15:32</span>
+                </div>
+            </div>
+            <aside class="panel-timeline">
+                <h3>Olay Akışı</h3>
+                <ul class="timeline-list" id="timelineList"></ul>
+            </aside>
+        </div>
+
+        <!-- Orta Pencere: Olay Detayı -->
+        <div class="window-frame event-frame">
+            <div class="window-titlebar">
+                <div class="window-titlebar-left">
+                    <div class="window-traffic-lights">
+                        <span class="window-traffic-light close"></span>
+                        <span class="window-traffic-light minimize"></span>
+                        <span class="window-traffic-light maximize"></span>
+                    </div>
+                    <span class="window-title-text"><i class="fas fa-file-alt"></i> <span id="incidentTicketId">INC-2024-0215-0042</span> — Detay</span>
+                </div>
+                <div class="window-status">
+                    <span class="rec-indicator"><span class="rec-dot"></span> AKTİF</span>
+                    <span class="window-time">Kayıt Haftası</span>
+                </div>
+            </div>
+            <section class="panel-event">
+                <div id="eventContent"></div>
+            </section>
+        </div>
+
+        <!-- Sağ Pencere: Karar Panel -->
+        <div class="window-frame decision-frame">
+            <div class="window-titlebar">
+                <div class="window-titlebar-left">
+                    <div class="window-traffic-lights">
+                        <span class="window-traffic-light close"></span>
+                        <span class="window-traffic-light minimize"></span>
+                        <span class="window-traffic-light maximize"></span>
+                    </div>
+                    <span class="window-title-text"><i class="fas fa-tasks"></i> Karar Konsolu — Analist</span>
+                </div>
+                <div class="window-status">
+                    <span class="window-time">Karar Bekleniyor</span>
+                </div>
+            </div>
+            <aside class="panel-decision">
+                <h3>Karar Panel</h3>
+                <div id="decisionContent"></div>
+                <button type="button" class="btn-next" id="btnNext" disabled>İleri</button>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Exploit vs Payload Ekranı -->
+    <div class="screen-overlay" id="screenExploitPayload">
+        <div class="screen-card">
+            <h2><i class="fas fa-puzzle-piece"></i> Exploit vs Payload — Kart Eşleştirme</h2>
+            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Kapıyı açan yöntem → EXPLOIT | İçeride yapılan eylem → PAYLOAD</p>
+            <div class="match-column">
+                <h4>Her kavramı EXPLOIT veya PAYLOAD olarak sınıflandır</h4>
+                <div id="exploitPayloadConcepts"></div>
+            </div>
+            <button type="button" class="btn-next" id="btnExploitPayloadNext">Devam</button>
+        </div>
+    </div>
+
+    <!-- Attack Chain Ekranı -->
+    <div class="screen-overlay" id="screenAttackChain">
+        <div class="screen-card">
+            <h2><i class="fas fa-link"></i> Attack Chain — Sıralama</h2>
+            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Olayları doğru aşamaya sürükle-bırak: Hazırlık | Yerleşme | Eylem</p>
+            <div class="attack-chain-drop" id="attackChainSlots"></div>
+            <div class="chain-draggables" id="attackChainChips"></div>
+            <button type="button" class="btn-next" id="btnAttackChainNext">Devam</button>
+        </div>
+    </div>
+
+    <!-- Final Rapor Ekranı -->
+    <div class="screen-overlay" id="screenReport">
+        <div class="screen-card">
+            <h2><i class="fas fa-file-alt"></i> Final Rapor</h2>
+            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Aşağıdaki taslağı gözden geçirip düzenleyin.</p>
+            <form class="report-form" id="reportForm">
+                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Bulgu Özeti</label>
+                <textarea id="reportBulgu" placeholder="Ana bulguları özetleyin..."></textarea>
+                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Etkilenen Varlıklar</label>
+                <textarea id="reportVarlik" placeholder="Hizmet, veri, sistem..."></textarea>
+                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">CIA Etkisi</label>
+                <textarea id="reportCIA" placeholder="Gizlilik, bütünlük, erişilebilirlik..."></textarea>
+                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Olası Tehdit / Zafiyet</label>
+                <textarea id="reportTehdit" placeholder="Tehdit ve zafiyet değerlendirmesi..."></textarea>
+                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Belirsizlikler</label>
+                <textarea id="reportBelirsiz" placeholder="Doğrulanmamış iddialar, eksik kanıtlar..."></textarea>
+            </form>
+            <button type="button" class="btn-next" id="btnReportSubmit">Raporu Gönder</button>
+        </div>
+    </div>
+
+    <!-- Sonuç Analizi -->
+    <div class="screen-overlay" id="screenResult">
+        <div class="screen-card result-screen">
+            <h2><i class="fas fa-chart-line"></i> Simülasyon Sonuç Analizi</h2>
+            <div class="result-score" id="resultScore">0/100</div>
+            <div class="result-feedback" id="resultFeedback"></div>
+            <div style="margin-top:1rem;">
+                <p style="font-size:0.85rem;color:#64748b;margin-bottom:0.5rem;">Puan Dağılımı:</p>
+                <ul style="font-size:0.85rem;color:#94a3b8;line-height:1.8;margin-left:1rem;">
+                    <li>Varlık tespiti: 20 puan</li>
+                    <li>CIA eşleştirme: 20 puan</li>
+                    <li>Tehdit/zafiyet ayrımı: 20 puan</li>
+                    <li>Risk yorumlama: 15 puan</li>
+                    <li>Attack chain: 15 puan</li>
+                    <li>Rapor dili: 10 puan</li>
+                </ul>
+            </div>
+            <button type="button" class="btn-next" id="btnResultClose">Kapat</button>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // STATE MACHINE & DATA MODEL
+        // ═══════════════════════════════════════════════
+        const STATE = {
+            INTRO: 'intro',
+            EVENT: 'event',
+            EXPLOIT_PAYLOAD: 'exploit_payload',
+            ATTACK_CHAIN: 'attack_chain',
+            REPORT: 'report',
+            RESULT: 'result'
+        };
+
+        let currentState = STATE.INTRO;
+        let currentEventId = 1;
+        let decisions = []; // { event_id, question_id, selected_option }
+        let scores = { varlik: 0, cia: 0, tehdit: 0, risk: 0, attackChain: 0, rapor: 0 };
+        let startTime = Date.now();
+
+        const TOTAL_EVENTS = 6;
+
+        const EVENTS = [
+            {
+                id: 1,
+                ticketId: 'INC-2024-0215-0042',
+                severity: 'P2',
+                time: "09:15",
+                title: "Başvuru formu açılmıyor",
+                context: "Kayıt haftasının ilk sabahı. Başvuru penceresi 08:00'de açıldı. 09:15'te destek kanalları patlamaya başladı.",
+                metrics: { reqMin: 1247, errRate: '12.4%', latency: '3.2s', limit: '1000/dk' },
+                content: {
+                    messages: [
+                        { type: 'user', ticketId: 'TKT-8812', channel: '#destek-canli', source: 'Zeynep K. (Destek)', text: 'Form yüklenmiyor diyen 50+ kullanıcı var. Hepsi aynı anda bağlanmaya çalışıyor.' },
+                        { type: 'user', ticketId: 'TKT-8815', channel: '#destek-canli', source: 'Başvuru sahibi', text: 'Timeout hatası alıyorum, sayfa yarım kalıyor. Son 20 dakikadır deniyorum.' },
+                        { type: 'user', ticketId: 'TKT-8818', channel: '#destek-canli', source: 'Başvuru sahibi', text: 'Sayfa donuyor, kayıt yapamıyorum. CV yüklerken kesildi.' },
+                        { type: 'ops', ticketId: 'OPS-NOTE-092', source: 'Monitoring', text: 'Anormal trafik artışı tespit edildi. Son 2 saatte 3x yükseliş. Endpoint: /api/v1/application/form — yük altında. DDOS olabilir, performans sorunu da olabilir. Henüz net değil.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q1_1', type: 'single', label: '1️⃣ Hedef varlık nedir?', options: ['Veri', 'Sistem', 'Hizmet'], correct: 'Hizmet' },
+                    { id: 'q1_2', type: 'single', label: '2️⃣ CIA etkisi?', options: ['Gizlilik', 'Bütünlük', 'Erişilebilirlik'], correct: 'Erişilebilirlik' },
+                    { id: 'q1_3', type: 'single', label: '3️⃣ Bu aşamada en doğru ifade:', options: ['Kesin saldırı var', 'Performans sorunu olabilir', 'Tehdit ihtimali var, kanıt yok'], correct: 'Tehdit ihtimali var, kanıt yok' }
+                ],
+                feedbackCorrect: 'Doğru yaklaşım: Önce hizmet etkisini tespit ettin. Bu bir saldırı olabilir ama kanıt yok.'
+            },
+            {
+                id: 2,
+                ticketId: 'INC-2024-0215-0047',
+                severity: 'P1',
+                time: "10:42",
+                title: "Raporlar karıştı",
+                context: "Eğitim koordinasyonu ekibi toplantıdayken e-posta bombardımanı başladı. Öğrenciler ve eğitmenler raporlarla ilgili tutarsızlıklar bildiriyor.",
+                metrics: { reqMin: 312, errRate: '0.2%', latency: '420ms', limit: '—' },
+                content: {
+                    messages: [
+                        { type: 'user', ticketId: 'TKT-8842', channel: 'support@sebs.edu.tr', source: 'Öğrenci', text: 'Raporumda başkasının adı var. Benim modül puanlarım değil, başka birinin verileri görünüyor.' },
+                        { type: 'user', ticketId: 'TKT-8843', channel: 'support@sebs.edu.tr', source: 'Öğrenci', text: 'Puanım değişmiş, dün 85 idi şimdi 72 görünüyor.' },
+                        { type: 'user', ticketId: 'TKT-8845', channel: '#egitim-koord', source: 'Ayşe Y. (Eğitmen)', text: 'Modül tamamlandı yazıyor ama sertifika oluşturulmamış. Birkaç öğrenciden aynı şikayet geldi.' },
+                        { type: 'ops', ticketId: 'OPS-NOTE-094', source: 'Eğitim Ekibi', text: 'Dün gece rapor şablonu güncellendi. Veritabanı yedekleme 02:00-03:00 arası yapıldı. Cache sorunu mu, veri karışıklığı mı — inceleniyor.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q2_1', type: 'multi', label: 'CIA eşleştirme (çoklu seçim):', options: ['Gizlilik', 'Bütünlük', 'Erişilebilirlik'], correct: ['Gizlilik', 'Bütünlük'] },
+                    { id: 'q2_2', type: 'single', label: 'Varlık:', options: ['Veri', 'Sistem', 'Hizmet'], correct: 'Veri' },
+                    { id: 'q2_3', type: 'single', label: 'Olası kök neden yaklaşımı:', options: ['Saldırı kesin', 'Hata veya zafiyet olabilir', 'Önemsiz bug'], correct: 'Hata veya zafiyet olabilir' }
+                ],
+                feedbackCorrect: 'Harika. Etkiyi saldırıdan önce doğru tanımladın. Bu analist refleksidir.'
+            },
+            {
+                id: 3,
+                ticketId: 'INC-2024-0215-0028',
+                severity: 'P1',
+                time: "03:12",
+                title: "Admin panelinde gece oturumu",
+                context: "Gece vardiyasındaki SOC analisti log taramasında dikkat çeken bir kayıt buldu. Admin panel erişimi — iş saatleri dışında.",
+                metrics: { reqMin: 1, errRate: '0%', latency: '—', limit: '—' },
+                content: {
+                    messages: [
+                        { type: 'log', source: 'SIEM / auth.admin-panel', logLines: [
+                            { k: 'timestamp', v: '2024-02-15T03:12:41.892Z', cls: '' },
+                            { k: 'event_type', v: 'LOGIN', cls: 'warn' },
+                            { k: 'source_ip', v: 'N/A (proxy/VPN)', cls: 'err' },
+                            { k: 'user_agent', v: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', cls: '' },
+                            { k: 'session_duration', v: '2m 14s', cls: '' },
+                            { k: 'changes_detected', v: 'none', cls: '' },
+                            { k: 'alert', v: 'Gece vardiyasında beklenmeyen admin erişimi', cls: 'err' }
+                        ]},
+                        { type: 'ops', ticketId: 'SOC-ALERT-003', source: 'SOC Analist', text: 'Bu giriş meşru değilse ciddi. Meşruysa (uzaktan çalışan vs.) prosedür ihlali. Güvenlik olayı olarak işaretlendi.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q3_1', type: 'single', label: 'Bu bir:', options: ['Tehdit', 'Güvenlik olayı', 'Saldırı kanıtı'], correct: 'Güvenlik olayı' },
+                    { id: 'q3_2', type: 'multi', label: 'Olası zafiyet türü (çoklu):', options: ['Zayıf kimlik doğrulama', 'Paylaşılan hesap kullanımı', 'Exploit kodu', 'Süreç zafiyeti'], correct: ['Zayıf kimlik doğrulama', 'Paylaşılan hesap kullanımı', 'Süreç zafiyeti'] },
+                    { id: 'q3_3', type: 'free', label: 'Risk seviyesi neden yüksek? (kısa cevap)', correctKeywords: ['admin', 'erişim', 'etki', 'yüksek'] }
+                ],
+                feedbackCorrect: 'Doğru: Güvenlik olayı olarak sınıflandırdın. Admin erişimi = yüksek etki potansiyeli.'
+            },
+            {
+                id: 4,
+                ticketId: 'INC-2024-0215-0053',
+                severity: 'P2',
+                time: "14:20",
+                title: "Zero-day söylentisi",
+                context: "Öğle sonu geliştirme ekibinden bir mesaj: Kullanılan açık kaynak kütüphanede yeni bir zafiyet konuşuluyor. Henüz resmi CVE yok.",
+                metrics: { reqMin: '—', errRate: '—', latency: '—', limit: '—' },
+                content: {
+                    messages: [
+                        { type: 'user', ticketId: 'MSG-SLK-4421', channel: '#dev-güvenlik', source: 'Mehmet A. (Backend)', text: 'Kullandığımız auth bileşeninde (auth-lib v2.1.3) yeni açık konuşuluyor. Twitter\'da güvenlik araştırmacıları paylaştı. Yaması yok, exploit PoC dolaşıyor.' },
+                        { type: 'user', ticketId: 'MSG-SLK-4423', channel: '#dev-güvenlik', source: 'Elif K. (DevOps)', text: 'Bunu hemen raporlayalım mı? Platform şu an bu kütüphaneyi kullanıyor.' },
+                        { type: 'ops', ticketId: 'OPS-NOTE-101', source: 'Geliştirme Ekibi', text: 'CVE araştırması devam ediyor. Henüz resmi NVD/CVE kaydı yok. Doğrulanmamış iddia — ciddiye alınmalı.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q4_1', type: 'single', label: 'Bu durum:', options: ['Zafiyet', 'Zero-day riski', 'Exploit'], correct: 'Zero-day riski' },
+                    { id: 'q4_2', type: 'single', label: 'Analist raporunda nasıl yazılır?', options: ['Sistem kırıldı', 'Kritik açık var', 'Doğrulanmamış zafiyet iddiası mevcut'], correct: 'Doğrulanmamış zafiyet iddiası mevcut' }
+                ],
+                feedbackCorrect: 'Doğru: Doğrulanmamış iddiayı "kesin" diye raporlamadın. Analist dili önemli.'
+            },
+            {
+                id: 5,
+                ticketId: 'INC-2024-0215-0049',
+                severity: 'P1',
+                time: "11:30",
+                title: "E-posta trafiği ani artış",
+                context: "Kayıt haftasında tüm adaylara bilgilendirme e-postaları gidiyor. Ancak posta sunucusu anormal bir yük bildiriyor.",
+                metrics: { reqMin: 2840, errRate: '—', latency: '—', limit: '500/dk' },
+                content: {
+                    messages: [
+                        { type: 'user', ticketId: 'TKT-8867', channel: 'it@sebs.edu.tr', source: 'Personel IT', text: 'Çok fazla e-posta geldi, çoğu spam gibi. SEBS kayıt onayı diye gelen mailler var ama linkler şüpheli.' },
+                        { type: 'ops', ticketId: 'OPS-MAIL-022', source: 'Mail Gateway', text: 'Son 45 dk: gelen e-posta 10x arttı. Phishing tespiti aktif — 3 şüpheli karantinaya alındı. Kimlik avı kampanyası ihtimali yüksek.' },
+                        { type: 'user', ticketId: 'TKT-8869', channel: 'it@sebs.edu.tr', source: 'Çalışan (acil)', text: 'Bir linke tıkladım, sayfa hata verdi. Şimdi ne olacak? Şifremi de girmiş olabilirim.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q5_1', type: 'single', label: 'Hedef varlık:', options: ['Veri', 'Sistem', 'Hizmet'], correct: 'Veri' },
+                    { id: 'q5_2', type: 'single', label: 'Öncelikli CIA etkisi:', options: ['Gizlilik', 'Bütünlük', 'Erişilebilirlik'], correct: 'Gizlilik' },
+                    { id: 'q5_3', type: 'single', label: 'Bu noktada en uygun yaklaşım:', options: ['Hemen saldırı ilan et', 'Olay kaydı aç, kanıt topla, kullanıcıyı bilgilendir', 'Spam filtreyi güçlendir, diğerlerini görmezden gel'], correct: 'Olay kaydı aç, kanıt topla, kullanıcıyı bilgilendir' }
+                ],
+                feedbackCorrect: 'Doğru: Panik yerine prosedüre uygun hareket. Önce olay kaydı, sonra kanıt.'
+            },
+            {
+                id: 6,
+                ticketId: 'INC-2024-0215-0056',
+                severity: 'P1',
+                time: "13:45",
+                title: "API rate limit aşımları",
+                context: "Öğleden sonra API Gateway uyarı verdi: Login endpoint\'ine olağan dışı yüksek istek hacmi. Tek bir IP, saniyeler içinde yüzlerce deneme.",
+                metrics: { reqMin: 1200, errRate: '429', latency: '—', limit: '100/dk' },
+                content: {
+                    messages: [
+                        { type: 'log', source: 'API Gateway / WAF', logLines: [
+                            { k: 'endpoint', v: 'POST /api/auth/login', cls: 'warn' },
+                            { k: 'status', v: '429 Too Many Requests', cls: 'err' },
+                            { k: 'source_ip', v: '185.xxx.xxx.xxx [GEO: non-TR]', cls: 'err' },
+                            { k: 'requests', v: '1200/min (limit: 100/min)', cls: 'err' },
+                            { k: 'pattern', v: 'Farklı e-posta adresleri, aynı şifre varyasyonları', cls: 'warn' },
+                            { k: 'action', v: 'IP bloklandı, WAF rule #442 uygulandı', cls: '' }
+                        ]},
+                        { type: 'ops', ticketId: 'OPS-DEV-015', source: 'Geliştirme', text: 'Login endpoint credential stuffing / brute force hedefinde. Etkilenen hesap kontrolü devam ediyor.' }
+                    ]
+                },
+                questions: [
+                    { id: 'q6_1', type: 'single', label: 'Bu davranış neye işaret edebilir?', options: ['Normal kullanım', 'Brute force / credential stuffing denemesi', 'DDoS saldırısı'], correct: 'Brute force / credential stuffing denemesi' },
+                    { id: 'q6_2', type: 'multi', label: 'Etkilenen CIA (çoklu):', options: ['Gizlilik', 'Bütünlük', 'Erişilebilirlik'], correct: ['Gizlilik', 'Erişilebilirlik'] },
+                    { id: 'q6_3', type: 'single', label: 'Varlık tespiti:', options: ['Veri (kimlik bilgileri)', 'Sistem (auth servisi)', 'Hizmet (login API)'], correct: 'Hizmet (login API)' }
+                ],
+                feedbackCorrect: 'İyi analiz. Auth endpoint + yüksek istek = credential attack ihtimali. CIA: Gizlilik (şifre denemesi) ve Erişilebilirlik (servis etkisi).'
+            }
+        ];
+
+        const EXPLOIT_PAYLOAD_ITEMS = [
+            { text: 'SQL Injection ile veritabanına erişim', type: 'exploit' },
+            { text: 'Exfiltrate edilen kullanıcı verileri', type: 'payload' },
+            { text: 'RCE zafiyetini tetikleyen istek', type: 'exploit' },
+            { text: 'C2 sunucusuna bağlanan backdoor', type: 'payload' }
+        ];
+        let exploitPayloadAnswers = {};
+
+        const ATTACK_CHAIN_SLOTS = [
+            { stage: 'Hazırlık', correct: 'Bileşen araştırması' },
+            { stage: 'Yerleşme', correct: 'Admin oturumu' },
+            { stage: 'Eylem', correct: 'Trafik artışı' }
+        ];
+        const ATTACK_CHAIN_CHIPS = ['Bileşen araştırması', 'Trafik artışı', 'Admin oturumu'];
+
+        const EVENT_ICONS = {
+            1: 'fa-file-alt',
+            2: 'fa-chart-bar',
+            3: 'fa-user-shield',
+            4: 'fa-bug',
+            5: 'fa-envelope',
+            6: 'fa-server'
+        };
+
+        // ═══════════════════════════════════════════════
+        // RENDER
+        // ═══════════════════════════════════════════════
+        function renderTimeline() {
+            const ul = document.getElementById('timelineList');
+            ul.innerHTML = EVENTS.map(e => {
+                const sev = e.severity || 'P3';
+                const tid = e.ticketId || `INC-${e.id}`;
+                return `
+                <li class="timeline-item ${e.id === currentEventId ? 'active' : (e.id < currentEventId ? 'completed' : '')}" data-id="${e.id}">
+                    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                        <div class="timeline-icon" style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas ${EVENT_ICONS[e.id] || 'fa-circle'}"></i></div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="time" style="display:flex;align-items:center;gap:0.5rem;">
+                                <span>${e.time}</span>
+                                <span class="severity-badge ${sev === 'P1' ? 'severity-p1' : sev === 'P2' ? 'severity-p2' : 'severity-p3'}" style="font-size:0.6rem;padding:2px 5px;">${sev}</span>
+                            </div>
+                            <div class="title">${e.title}</div>
+                        </div>
+                    </div>
+                </li>`;
+            }).join('');
+            ul.querySelectorAll('.timeline-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = parseInt(el.dataset.id, 10);
+                    if (id <= currentEventId) goToEvent(id);
+                });
+            });
+        }
+
+        function renderEvent() {
+            const ev = EVENTS.find(e => e.id === currentEventId);
+            if (!ev) return;
+
+            const incidentEl = document.getElementById('incidentTicketId');
+            if (incidentEl) incidentEl.textContent = ev.ticketId || `INC-2024-0215-${String(ev.id).padStart(4, '0')}`;
+
+            const ticketId = ev.ticketId || `INC-2024-0215-${String(ev.id).padStart(4, '0')}`;
+            const severity = ev.severity || 'P3';
+            const sevClass = severity === 'P1' ? 'severity-p1' : severity === 'P2' ? 'severity-p2' : 'severity-p3';
+            const metrics = ev.metrics;
+            const metricsHtml = metrics ? `
+                <div class="metrics-strip">
+                    <span>req/min <span class="metric-val ${(metrics.reqMin === '—' || !metrics.reqMin) ? '' : (metrics.reqMin > 1000 ? 'err' : 'warn')}">${metrics.reqMin || '—'}</span></span>
+                    <span>err <span class="metric-val ${(metrics.errRate === '429' || (typeof metrics.errRate === 'string' && parseFloat(metrics.errRate) > 5) ? 'err' : '')}">${metrics.errRate || '—'}</span></span>
+                    <span>latency <span class="metric-val">${metrics.latency || '—'}</span></span>
+                    <span>limit ${metrics.limit || '—'}</span>
+                </div>
+            ` : '';
+
+            const content = document.getElementById('eventContent');
+            const contextHtml = ev.context ? `<div class="event-context" style="margin-bottom:1.25rem;padding:0.9rem 1.2rem;background:linear-gradient(90deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.03) 100%);border-radius:12px;border-left:4px solid #3b82f6;font-size:0.9rem;color:#94a3b8;line-height:1.65;">${ev.context}</div>` : '';
+            const eventIcon = EVENT_ICONS[ev.id] || 'fa-circle';
+
+            const renderMsg = (m, i) => {
+                const ts = ev.time ? ev.time + ':' + String(10 + i * 7).padStart(2, '0') : '--:--';
+                if (m.type === 'log' && m.logLines) {
+                    const logBody = m.logLines.map(l => `<span class="log-line"><span class="log-key">${l.k}:</span> <span class="log-val ${l.cls ? 'log-' + l.cls : ''}">${l.v}</span></span>`).join('');
+                    return `<div class="message-item message-log"><div class="message-meta"><span class="msg-timestamp">${ts}</span><span class="msg-source">${m.source || 'Log'}</span></div><div>${logBody}</div></div>`;
+                }
+                const tid = m.ticketId ? `<span class="msg-ticket-id">${m.ticketId}</span>` : '';
+                const ch = m.channel ? `<span class="msg-channel">${m.channel}</span>` : '';
+                const src = m.source || (m.type === 'user' ? 'Kullanıcı' : m.type === 'ops' ? 'Ops' : 'Log');
+                return `
+                <div class="message-item message-${m.type}">
+                    <div class="message-meta">
+                        <span class="msg-timestamp">${ts}</span>
+                        <span>${tid}${ch}<strong>${src}</strong></span>
+                    </div>
+                    <div class="msg-body">${(m.text || '').replace(/\n/g, '<br>')}</div>
+                </div>`;
+            };
+
+            content.innerHTML = `
+                <div class="event-header">
+                    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.3) 0%,rgba(99,102,241,0.2) 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fas ${eventIcon}" style="font-size:1.2rem;color:#93c5fd;"></i></div>
+                    <div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;flex-wrap:wrap;">
+                            <span class="ticket-id-badge">${ticketId}</span>
+                            <span class="severity-badge ${sevClass}">${severity}</span>
+                        </div>
+                        <h2 class="event-title">${ev.title}</h2>
+                    </div>
+                </div>
+                ${metricsHtml}
+                ${contextHtml}
+                <div class="event-content">
+                    <h4><i class="fas fa-inbox"></i> Gelen veriler</h4>
+                    ${ev.content.messages.map(renderMsg).join('')}
+                </div>
+            `;
+        }
+
+        function renderQuestions() {
+            const ev = EVENTS.find(e => e.id === currentEventId);
+            if (!ev) return;
+
+            const container = document.getElementById('decisionContent');
+            container.innerHTML = ev.questions.map(q => {
+                if (q.type === 'single') {
+                    return `
+                        <div class="question-block" data-qid="${q.id}">
+                            <div class="question-label">${q.label}</div>
+                            ${q.options.map((opt, i) => `
+                                <button type="button" class="option-btn" data-qid="${q.id}" data-val="${opt}">${opt}</button>
+                            `).join('')}
+                            <div class="feedback-msg" id="fb_${q.id}" style="display:none;"></div>
+                        </div>
+                    `;
+                }
+                if (q.type === 'multi') {
+                    return `
+                        <div class="question-block" data-qid="${q.id}">
+                            <div class="question-label">${q.label}</div>
+                            ${q.options.map(opt => `
+                                <label class="option-multi"><input type="checkbox" data-qid="${q.id}" data-val="${opt}"> ${opt}</label>
+                            `).join('')}
+                            <div class="feedback-msg" id="fb_${q.id}" style="display:none;"></div>
+                        </div>
+                    `;
+                }
+                if (q.type === 'free') {
+                    return `
+                        <div class="question-block" data-qid="${q.id}">
+                            <div class="question-label">${q.label}</div>
+                            <input type="text" class="free-answer-input" data-qid="${q.id}" placeholder="Örn: Admin erişimi = etki yüksek">
+                            <div class="feedback-msg" id="fb_${q.id}" style="display:none;"></div>
+                        </div>
+                    `;
+                }
+                return '';
+            }).join('');
+
+            // Event listeners
+            container.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    container.querySelectorAll(`.option-btn[data-qid="${btn.dataset.qid}"]`).forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    decisions = decisions.filter(d => !(d.question_id === btn.dataset.qid && d.event_id === currentEventId));
+                    decisions.push({ event_id: currentEventId, question_id: btn.dataset.qid, selected_option: btn.dataset.val });
+                    checkCanProceed();
+                });
+            });
+            container.querySelectorAll('.option-multi input').forEach(chk => {
+                chk.addEventListener('change', () => {
+                    const checked = [...container.querySelectorAll(`input[data-qid="${chk.dataset.qid}"]:checked`)].map(c => c.dataset.val);
+                    decisions = decisions.filter(d => !(d.question_id === chk.dataset.qid && d.event_id === currentEventId));
+                    if (checked.length) decisions.push({ event_id: currentEventId, question_id: chk.dataset.qid, selected_option: JSON.stringify(checked) });
+                    checkCanProceed();
+                });
+            });
+            container.querySelectorAll('.free-answer-input').forEach(inp => {
+                inp.addEventListener('input', () => {
+                    decisions = decisions.filter(d => d.question_id !== inp.dataset.qid);
+                    if (inp.value.trim()) decisions.push({ event_id: currentEventId, question_id: inp.dataset.qid, selected_option: inp.value.trim() });
+                    checkCanProceed();
+                });
+            });
+        }
+
+        function checkCanProceed() {
+            const ev = EVENTS.find(e => e.id === currentEventId);
+            const answered = ev.questions.every(q => decisions.some(d => d.question_id === q.id && d.event_id === currentEventId));
+            document.getElementById('btnNext').disabled = !answered;
+        }
+
+        function goToEvent(id) {
+            currentEventId = id;
+            renderTimeline();
+            renderEvent();
+            renderQuestions();
+            document.getElementById('btnNext').disabled = true;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const pct = (currentEventId / (TOTAL_EVENTS + 3)) * 100; // +3 for exploit, chain, report
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('stageIndicator').textContent = currentEventId + '/' + TOTAL_EVENTS;
+        }
+
+        function gradeEvent() {
+            const ev = EVENTS.find(e => e.id === currentEventId);
+            let eventScore = 0;
+            ev.questions.forEach(q => {
+                const d = decisions.find(x => x.question_id === q.id && x.event_id === currentEventId);
+                const ans = d ? (d.selected_option.startsWith('[') ? JSON.parse(d.selected_option) : d.selected_option) : null;
+
+                if (q.type === 'single' && ans === q.correct) {
+                    eventScore += 5;
+                    showFeedback(q.id, ev.feedbackCorrect || 'Doğru!', 'success');
+                } else if (q.type === 'multi') {
+                    const correctSet = new Set(q.correct);
+                    const ansSet = new Set(Array.isArray(ans) ? ans : []);
+                    const match = correctSet.size === ansSet.size && [...correctSet].every(x => ansSet.has(x));
+                    if (match) {
+                        eventScore += 5;
+                        showFeedback(q.id, ev.feedbackCorrect || 'Doğru!', 'success');
+                    } else {
+                        showFeedback(q.id, 'Eksik veya yanlış seçim.', 'error');
+                    }
+                } else if (q.type === 'free') {
+                    const lower = (ans || '').toLowerCase();
+                    const hasKeyword = q.correctKeywords.some(k => lower.includes(k.toLowerCase()));
+                    if (hasKeyword) {
+                        eventScore += 5;
+                        scores.risk += 5;
+                        showFeedback(q.id, ev.feedbackCorrect || 'Kabul edilebilir cevap.', 'success');
+                    } else {
+                        scores.risk += 2;
+                        showFeedback(q.id, 'Admin erişimi = yüksek etki gibi bir ifade bekleniyordu.', 'partial');
+                    }
+                } else if (q.type === 'single') {
+                    showFeedback(q.id, 'Yanlış seçim. Doğrusu: ' + q.correct, 'error');
+                }
+            });
+            scores.varlik += eventScore * 0.25;
+            scores.cia += eventScore * 0.35;
+            scores.tehdit += eventScore * 0.25;
+            scores.risk += eventScore * 0.15;
+        }
+
+        function showFeedback(qid, msg, type) {
+            const fb = document.getElementById('fb_' + qid);
+            if (!fb) return;
+            fb.textContent = msg;
+            fb.className = 'feedback-msg feedback-' + type;
+            fb.style.display = 'block';
+        }
+
+        // Exploit vs Payload — her kavramı EXPLOIT veya PAYLOAD olarak sınıflandır
+        function showExploitPayload() {
+            document.getElementById('screenExploitPayload').classList.add('show');
+            exploitPayloadAnswers = {};
+            const concepts = document.getElementById('exploitPayloadConcepts');
+            concepts.innerHTML = EXPLOIT_PAYLOAD_ITEMS.map((item, i) => `
+                <div class="exploit-payload-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding:0.5rem;background:rgba(15,23,42,0.5);border-radius:8px;">
+                    <span style="flex:1;font-size:0.9rem;">${item.text}</span>
+                    <button type="button" class="option-btn" style="padding:0.4rem 0.75rem;font-size:0.8rem;" data-idx="${i}" data-choice="exploit">EXPLOIT</button>
+                    <button type="button" class="option-btn" style="padding:0.4rem 0.75rem;font-size:0.8rem;" data-idx="${i}" data-choice="payload">PAYLOAD</button>
+                </div>
+            `).join('');
+            concepts.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx, 10);
+                    const choice = btn.dataset.choice;
+                    exploitPayloadAnswers[idx] = choice;
+                    btn.closest('.exploit-payload-row').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    checkExploitPayloadComplete();
+                });
+            });
+            document.getElementById('btnExploitPayloadNext').disabled = true;
+        }
+
+        function checkExploitPayloadComplete() {
+            const complete = EXPLOIT_PAYLOAD_ITEMS.every((_, i) => exploitPayloadAnswers[i]);
+            document.getElementById('btnExploitPayloadNext').disabled = !complete;
+        }
+
+        function gradeExploitPayload() {
+            let correct = 0;
+            EXPLOIT_PAYLOAD_ITEMS.forEach((item, i) => {
+                if (exploitPayloadAnswers[i] === item.type) correct++;
+            });
+            scores.attackChain += Math.round((correct / EXPLOIT_PAYLOAD_ITEMS.length) * 5);
+        }
+
+        let attackChainAnswers = {}; // slotIndex -> chipText
+
+        function showAttackChain() {
+            document.getElementById('screenAttackChain').classList.add('show');
+            attackChainAnswers = {};
+            const slotsEl = document.getElementById('attackChainSlots');
+            const chipsEl = document.getElementById('attackChainChips');
+            slotsEl.innerHTML = ATTACK_CHAIN_SLOTS.map((s, i) =>
+                `<div class="chain-slot" data-slot="${i}" data-stage="${s.stage}" data-correct="${s.correct}">${s.stage}</div>`
+            ).join('');
+            chipsEl.innerHTML = ATTACK_CHAIN_CHIPS.map(c =>
+                `<span class="chain-chip" data-chip="${c}">${c}</span>`
+            ).join('');
+
+            // Tıklama ile eşleştirme (chip'e tıkla, sonra slot'a tıkla)
+            let selectedChip = null;
+            chipsEl.querySelectorAll('.chain-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    selectedChip = chip;
+                    chipsEl.querySelectorAll('.chain-chip').forEach(c => c.style.borderColor = '');
+                    chip.style.borderColor = '#3b82f6';
+                });
+            });
+            slotsEl.querySelectorAll('.chain-slot').forEach(slot => {
+                slot.addEventListener('click', () => {
+                    if (!selectedChip) return;
+                    const slotIdx = parseInt(slot.dataset.slot, 10);
+                    const chipText = selectedChip.dataset.chip;
+                    attackChainAnswers[slotIdx] = chipText;
+                    slot.textContent = (slot.dataset.stage || '') + ' → ' + chipText;
+                    slot.classList.add('filled');
+                    slot.dataset.filled = chipText;
+                    selectedChip.remove();
+                    selectedChip = null;
+                    chipsEl.querySelectorAll('.chain-chip').forEach(c => c.style.borderColor = '');
+                });
+            });
+        }
+
+        function gradeAttackChain() {
+            let correct = 0;
+            ATTACK_CHAIN_SLOTS.forEach((s, i) => {
+                if (attackChainAnswers[i] === s.correct) correct++;
+            });
+            scores.attackChain += Math.round((correct / ATTACK_CHAIN_SLOTS.length) * 10);
+        }
+
+        // Report & Result
+        function showReport() {
+            document.getElementById('screenReport').classList.add('show');
+            document.getElementById('reportBulgu').value = 'Kayıt haftasında çoklu olay: form timeout, rapor karışıklığı, gece admin oturumu, zero-day iddiası, e-posta trafiği artışı, API rate limit aşımları.';
+            document.getElementById('reportVarlik').value = 'Hizmet (başvuru formu, login API), Veri (raporlar, kimlik bilgileri), Sistem (admin panel)';
+            document.getElementById('reportCIA').value = 'Erişilebilirlik, Gizlilik, Bütünlük';
+            document.getElementById('reportTehdit').value = 'DDOS ihtimali, veri bütünlüğü şüphesi, zayıf kimlik doğrulama, doğrulanmamış zafiyet, phishing, brute force / credential stuffing.';
+            document.getElementById('reportBelirsiz').value = 'Zero-day iddiası doğrulanmadı. Admin girişinin meşruiyeti bilinmiyor. Phishing link tıklaması sonrası veri sızıntısı doğrulanmadı.';
+            scores.rapor = 10; // Rapor düzenlendi kabul
+        }
+
+        function showResult() {
+            const raw = scores.varlik + scores.cia + scores.tehdit + scores.risk + scores.attackChain + scores.rapor;
+            const total = Math.min(100, Math.round(raw));
+            document.getElementById('resultScore').textContent = total + '/100';
+
+            let feedback = '';
+            if (total >= 75) {
+                feedback = 'Sen saldırı arayan değil, etkiyi okuyan bir analist gibi düşündün. Doğru refleks: Önce varlık ve CIA etkisini tespit etmek, sonra tehdit/zafiyet ayrımı yapmak.';
+            } else if (total >= 50) {
+                feedback = 'Bazı noktalarda doğru yaklaşım sergiledin. Etki analizini atlamadan, kanıt seviyesine göre raporlama yapmayı güçlendir.';
+            } else {
+                feedback = 'Teknik sonuca atladın, etki analizini atladın. Analist olarak önce "neye etki etti?" sorusunu sormalısın.';
+            }
+            document.getElementById('resultFeedback').textContent = feedback;
+
+            document.getElementById('screenResult').classList.add('show');
+        }
+
+        // Flow
+        function updateLiveTime() {
+            const el = document.getElementById('liveTime');
+            if (!el) return;
+            const ev = EVENTS.find(e => e.id === currentEventId);
+            if (ev) {
+                const [h, m] = ev.time.split(':');
+                const sec = Math.floor(Date.now() / 1000) % 60;
+                el.textContent = h + ':' + m + ':' + String(sec).padStart(2, '0');
+            }
+        }
+
+        document.getElementById('btnStartSimulation').addEventListener('click', async () => {
+            document.getElementById('introOverlay').classList.add('hidden');
+            currentState = STATE.EVENT;
+            goToEvent(1);
+            setInterval(updateLiveTime, 1000);
+            if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+                await window.SimulationTracker.recordStart('kayit-haftasi-krizi', 'Kayıt Haftası Krizi', {
+                    moduleName: 'Siber Güvenliğe Giriş'
+                });
+            }
+        });
+
+        document.getElementById('btnNext').addEventListener('click', () => {
+            gradeEvent();
+
+            if (currentEventId < TOTAL_EVENTS) {
+                goToEvent(currentEventId + 1);
+            } else {
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('screenExploitPayload').classList.add('show');
+            }
+        });
+
+        document.getElementById('btnExploitPayloadNext').addEventListener('click', () => {
+            gradeExploitPayload();
+            document.getElementById('screenExploitPayload').classList.remove('show');
+            document.getElementById('screenAttackChain').classList.add('show');
+            showAttackChain();
+        });
+
+        document.getElementById('btnAttackChainNext').addEventListener('click', () => {
+            const slotsFilled = Object.keys(attackChainAnswers).length === ATTACK_CHAIN_SLOTS.length;
+            if (!slotsFilled) {
+                alert('Lütfen tüm aşamalara bir olay atayın. (Chip\'e tıklayın, sonra slot\'a tıklayın)');
+                return;
+            }
+            gradeAttackChain();
+            document.getElementById('screenAttackChain').classList.remove('show');
+            showReport();
+            document.getElementById('screenReport').classList.add('show');
+        });
+
+        document.getElementById('btnReportSubmit').addEventListener('click', () => {
+            document.getElementById('screenReport').classList.remove('show');
+            showResult();
+        });
+
+        document.getElementById('btnResultClose').addEventListener('click', () => {
+            document.getElementById('screenResult').classList.remove('show');
+            saveCompletion();
+        });
+
+        async function saveCompletion() {
+            const total = Math.min(100, Math.round(scores.varlik + scores.cia + scores.tehdit + scores.risk + scores.attackChain + scores.rapor));
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            const bucket = Math.min(10, Math.max(0, Math.round(total / 10)));
+            if (window.SimulationTracker) {
+                await window.SimulationTracker.saveCompletion(
+                    'kayit-haftasi-krizi',
+                    'Kayıt Haftası Krizi — Olay Analizi',
+                    {
+                        score: total,
+                        flagsFound: [],
+                        timeSpent: timeSpent,
+                        moduleName: 'Siber Güvenliğe Giriş',
+                        correctCount: bucket,
+                        wrongCount: 10 - bucket,
+                        passed: total >= 70
+                    }
+                );
+            }
+        }
+
+        // Timeline click fix
+        document.addEventListener('click', (e) => {
+            const item = e.target.closest('.timeline-item');
+            if (item) {
+                const id = parseInt(item.dataset.id);
+                if (id <= currentEventId) goToEvent(id);
+            }
+        });
+    </script>
+</body>
+<script src="../config.js?v=1.0.2"></script>
+<script src="../js/api-integration.js?v=1.0.2"></script>
+</html>

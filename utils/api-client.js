@@ -1,7 +1,7 @@
 // API Client for SEBS Global Backend
 // Handles all backend API calls with proper authentication
-
-const API_BASE_URL = 'http://localhost:8006/api';
+// Canlı ortam: aynı origin kullanılır (dashboard, modül sayfaları vb.)
+const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
 
 // Get auth token from localStorage
 function getAuthToken() {
@@ -156,6 +156,7 @@ window.APIClient = {
             method: 'POST',
             body: JSON.stringify({
                 moduleId,
+                timeSpentMinutes: minutes,
                 minutes
             })
         });
@@ -164,7 +165,7 @@ window.APIClient = {
     /**
      * Save quiz result
      * @param {string} moduleId - Module ID
-     * @param {string} quizId - Quiz ID
+     * @param {string} quizId - Quiz section ID (e.g. "değerlendirme-testi-10-soru")
      * @param {number} score - Score percentage (0-100)
      * @param {number} correctAnswers - Number of correct answers
      * @param {number} wrongAnswers - Number of wrong answers
@@ -183,6 +184,16 @@ window.APIClient = {
                 answers,
                 timeSpent
             })
+        });
+    },
+
+    /**
+     * Log user login (günlük giriş takibi)
+     */
+    logLogin: async function() {
+        return await apiCall('/progress/activity/login', {
+            method: 'POST',
+            body: JSON.stringify({})
         });
     },
     
@@ -235,17 +246,32 @@ window.APIClient = {
      * @param {number} timeSpent - Time spent in seconds
      * @param {number} attempts - Number of attempts
      */
-    saveSimulationCompletion: async function(moduleId, simulationId, score, flagsFound = [], timeSpent = 0, attempts = 1) {
+    saveSimulationCompletion: async function(
+        moduleId,
+        simulationId,
+        score,
+        flagsFound = [],
+        timeSpent = 0,
+        attempts = 1,
+        extra = {}
+    ) {
+        const body = {
+            moduleId,
+            simulationId,
+            score,
+            flagsFound,
+            timeSpent,
+            attempts
+        };
+        if (extra && typeof extra === 'object') {
+            if (extra.correctCount != null) body.correctCount = extra.correctCount;
+            if (extra.wrongCount != null) body.wrongCount = extra.wrongCount;
+            if (typeof extra.passed === 'boolean') body.passed = extra.passed;
+            if (extra.runId) body.runId = extra.runId;
+        }
         return await apiCall('/simulations/complete', {
             method: 'POST',
-            body: JSON.stringify({
-                moduleId,
-                simulationId,
-                score,
-                flagsFound,
-                timeSpent,
-                attempts
-            })
+            body: JSON.stringify(body)
         });
     },
     

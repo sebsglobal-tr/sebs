@@ -10,6 +10,9 @@ if (typeof window.AccessControlLoaded === 'undefined') {
 // Cache for user purchases
 let userPurchasesCache = null;
 let purchasesCacheTime = 0;
+let userMeCache = null;
+let userMeCacheTime = 0;
+let userMePromise = null;
 const PURCHASES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
@@ -23,24 +26,9 @@ async function fetchUserPurchases() {
     }
 
     try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            return [];
-        }
-
-        const response = await fetch('http://localhost:8006/api/users/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            return [];
-        }
-
-        const result = await response.json();
-        if (result.success && result.data.purchases) {
-            userPurchasesCache = result.data.purchases;
+        const user = await fetchUserMe();
+        if (user && Array.isArray(user.purchases)) {
+            userPurchasesCache = user.purchases;
             purchasesCacheTime = now;
             return userPurchasesCache;
         }
@@ -53,27 +41,63 @@ async function fetchUserPurchases() {
 }
 
 /**
+ * Get user data from API (with caching)
+ * @returns {Promise<object|null>} User data
+ */
+async function fetchUserMe() {
+    const now = Date.now();
+    if (userMeCache && (now - userMeCacheTime) < PURCHASES_CACHE_DURATION) {
+        return userMeCache;
+    }
+    if (userMePromise) {
+        return userMePromise;
+    }
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        return null;
+    }
+
+    const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+    userMePromise = fetch(apiBase + '/users/me', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                return null;
+            }
+            return response.json();
+        })
+        .then(result => {
+            if (result && result.success && result.data) {
+                userMeCache = result.data;
+                userMeCacheTime = now;
+                return userMeCache;
+            }
+            return null;
+        })
+        .catch(error => {
+            console.error('Error fetching user data:', error);
+            return null;
+        })
+        .finally(() => {
+            userMePromise = null;
+        });
+
+    return userMePromise;
+}
+
+/**
  * Get user access level from database (NO localStorage fallback)
  * @returns {Promise<string>} Access level: 'beginner', 'intermediate', or 'advanced'
  */
 async function getUserAccessLevel() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        return 'beginner';
-    }
-
     try {
-        const response = await fetch('http://localhost:8006/api/users/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            if (result.success && result.data) {
-                return result.data.accessLevel || 'beginner';
-            }
+        const user = await fetchUserMe();
+        if (user) {
+            return user.accessLevel || 'beginner';
         }
     } catch (error) {
         console.error('Error fetching access level:', error);
@@ -88,11 +112,19 @@ async function getUserAccessLevel() {
  * @param {string} category - Category: 'cybersecurity', 'cloud', 'data-science' (optional)
  * @returns {Promise<boolean>} True if user has access
  */
+// Tam erişim e-postası: bu hesap her zaman tüm modül/simülasyona erişir
+const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
+
 async function hasAccess(requiredLevel, category = null) {
     // If not logged in, no access
     const token = localStorage.getItem('authToken');
     if (!token) {
         return false;
+    }
+
+    const user = await fetchUserMe();
+    if (user && (user.role === 'admin' || (user.email && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL))) {
+        return true;
     }
 
     // Get purchases from database
@@ -134,7 +166,9 @@ function getModuleLevel(moduleName) {
     // Map module names to levels (cybersecurity modules)
     const moduleLevels = {
         // Beginner
+        'guncel-siber-guvenlige-giris': 'beginner',
         'temel-siber-guvenlik': 'beginner',
+        'temel-network-egitimi': 'beginner',
         'temel-network': 'beginner',
         'isletim-sistemi-guvenligi-temel': 'beginner',
         'temel-kriptografi': 'beginner',

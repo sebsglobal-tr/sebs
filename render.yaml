@@ -1,0 +1,36 @@
+# Render Blueprint — repo kökünden Web Service
+# Dashboard: New → Blueprint → Bu dosyayı bağlayın
+# Gizli değişkenleri (DATABASE_URL, JWT_SECRET, …) panelden ekleyin (sync: false)
+
+services:
+  - type: web
+    name: sebs-staging
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_TLS_REJECT_UNAUTHORIZED
+        value: "0"
+      # Aşağıdakileri Render panelinde Secret olarak girin:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      # Reverse proxy arkasında doğru IP / rate limit için (çoğu barındırıcıda önerilir)
+      - key: TRUST_PROXY
+        value: "1"

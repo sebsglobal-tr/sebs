@@ -49,9 +49,9 @@
         },
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+90-212-555-0123",
+            "telephone": "+90-533-266-9087",
             "contactType": "customer service",
-            "email": "info@sebs-global.com"
+            "email": "info@sebsglobal.com"
         },
         "offers": {
             "@type": "Offer",
@@ -67,1371 +67,100 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png">
-    <link rel="apple-touch-icon" href="SEBS.png">
+    <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/favicons/site.webmanifest">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
+    
+    <!-- Yükleme Ekranı Yönetimi - Sayfa başlangıcında gizli -->
+    <!-- Yükleme ekranı varsayılan olarak gizli başlar, isterseniz gösterilebilir -->
+    <script>
+        // Yükleme ekranını kontrol et ve yönet
+        // Sayfa yüklenmeden önce çalışır - garanti çözüm
+        (function() {
+            // Yükleme ekranını kesinlikle gizleme fonksiyonu
+            function hideLoadingNow() {
+                var overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    overlay.style.opacity = '0';
+                    overlay.style.visibility = 'hidden';
+                    overlay.classList.add('hidden');
+                    console.log('✅ Yükleme ekranı gizlendi');
+                }
+            }
+            
+            // DOM hazır olduğunda
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    // 1 saniye sonra gizle (kullanıcı deneyimi için kısa bir süre göster)
+                    setTimeout(hideLoadingNow, 1000);
+                });
+            } else {
+                // DOM zaten hazırsa hemen gizle
+                setTimeout(hideLoadingNow, 500);
+            }
+            
+            // Window load event'inde de gizle
+            window.addEventListener('load', function() {
+                setTimeout(hideLoadingNow, 300);
+            });
+            
+            // Güvenlik timeout - 2 saniye sonra kesinlikle gizle
+            setTimeout(function() {
+                hideLoadingNow();
+            }, 2000);
+            
+            // Global fonksiyon olarak erişilebilir yap
+            window.hideLoadingScreen = hideLoadingNow;
+        })();
+    </script>
     
     <style>
-        /* Dark Mode Variables */
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-        }
-
-        [data-theme="dark"] {
-            /* Modern Dark Theme - Professional Design */
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Dark Mode Toggle Button */
-        .dark-mode-toggle {
-            background: none;
-            border: 2px solid var(--text-secondary);
-            border-radius: 12px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-            margin-left: 1rem;
-        }
-
-        .dark-mode-toggle:hover {
-            background: var(--bg-secondary);
-            border-color: var(--text-primary);
-        }
-
-        [data-theme="dark"] .dark-mode-toggle {
-            border-color: rgba(139, 92, 246, 0.3);
-            color: #a78bfa;
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        [data-theme="dark"] .dark-mode-toggle:hover {
-            background: rgba(99, 102, 241, 0.2);
-            border-color: rgba(139, 92, 246, 0.5);
-            color: #c4b5fd;
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(20px);
-            padding: 1rem 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        [data-theme="dark"] .navbar {
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem !important;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-logo-img {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            object-fit: cover;
-        }
-
-        .nav-logo .sebs {
-            color: var(--text-primary);
-        }
-
-        .nav-logo .global {
-            background: var(--gradient-purple);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        [data-theme="dark"] .nav-logo .global {
-            background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c4b5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
         
-        [data-theme="dark"] .nav-logo .sebs {
-            color: #f1f5f9;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-menu li {
-            margin: 0;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.813rem !important;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-link:hover {
-            color: #3182ce;
-        }
-
-        [data-theme="dark"] .nav-link:hover {
-            color: #60a5fa;
-        }
-
-        .nav-link.active {
-            color: #3182ce;
-            font-weight: 600;
-        }
-
-        [data-theme="dark"] .nav-link {
-            color: var(--text-secondary);
-        }
-        
-        [data-theme="dark"] .nav-link.active {
-            color: #818cf8;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .btn-login {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: var(--card-bg);
-            color: #3182ce;
-            border: 2px solid #3182ce;
-        }
-
-        [data-theme="dark"] .btn-login {
-            background: var(--card-bg);
-            color: #818cf8;
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-        
-        [data-theme="dark"] .btn-login:hover {
-            background: var(--card-hover);
-            border-color: rgba(139, 92, 246, 0.5);
-            color: #a78bfa;
-        }
-
-        .btn-login:hover {
-            background: #3182ce;
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .btn-signup {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: var(--gradient-purple);
-            color: white;
-            border: none;
-        }
-
-        [data-theme="dark"] .btn-signup {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-        
-        [data-theme="dark"] .btn-signup:hover {
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: rgba(102, 126, 234, 0.15);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .btn-logout {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: var(--card-bg);
-            color: #e53e3e;
-            border: 2px solid #e53e3e;
-        }
-
-        [data-theme="dark"] .btn-logout {
-            background: var(--card-bg);
-            color: #f87171;
-            border-color: rgba(248, 113, 113, 0.3);
-        }
-        
-        [data-theme="dark"] .btn-logout:hover {
-            background: rgba(248, 113, 113, 0.1);
-            border-color: rgba(248, 113, 113, 0.5);
-            color: #fca5a5;
-        }
-
-        .btn-logout:hover {
-            background: #e53e3e;
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-            background: none;
-            border: none;
-            padding: 0.5rem;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-secondary);
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-buttons {
-                gap: 0.5rem;
-            }
-
-            .btn-login, .btn-signup {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Loading Animation */
+        /* Loading overlay - minimal inline style for immediate display */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--gradient-purple);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-
-        [data-theme="dark"] .loading-overlay {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
-        }
-
-        .loading-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-container {
-            text-align: center;
-            color: white;
-        }
-
-        .loading-logo {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        .loading-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            animation: fadeInOut 2s ease-in-out infinite;
-        }
-
-        .loading-subtext {
-            font-size: 1rem;
-            opacity: 0.8;
-            animation: fadeInOut 2s ease-in-out infinite 0.5s;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-light: #94a3b8;
-            --text-color: #1e293b;
-            --primary-color: #667eea;
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--bg-primary);
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Modern Hero Section */
-        .hero-section {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        [data-theme="dark"] .hero-section {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 30%, #475569 100%);
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
-        
-        [data-theme="dark"] .hero-section::before {
-            display: none !important;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: white;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-        
-        [data-theme="dark"] .hero-title {
-            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e0 50%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 40px;
-            font-weight: 400;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-        
-        [data-theme="dark"] .hero-subtitle {
-            color: var(--text-secondary);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.95);
-            color: #667eea;
-            padding: 16px 32px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border: none;
-            cursor: pointer;
-        }
-
-        [data-theme="dark"] .btn-primary {
-            background: var(--gradient-purple);
-            color: #ffffff;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-        }
-        
-        [data-theme="dark"] .btn-primary:hover {
-            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
-            transform: translateY(-3px);
-        }
-
-        .btn-primary:hover {
-            background: white;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-        }
-        
-        [data-theme="dark"] .btn-secondary {
-            color: var(--text-primary) !important;
-            border-color: rgba(139, 92, 246, 0.3) !important;
-        }
-        
-        [data-theme="dark"] .btn-secondary:hover {
-            background: rgba(99, 102, 241, 0.1) !important;
-            border-color: rgba(139, 92, 246, 0.5) !important;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-        }
-
-        /* Floating Elements */
-        .floating-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .floating-element {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        [data-theme="dark"] .floating-element {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.08) 100%) !important;
-        }
-
-        .floating-element:nth-child(1) {
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-            width: 80px;
-            height: 80px;
-        }
-
-        .floating-element:nth-child(3) {
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-            width: 40px;
-            height: 40px;
-        }
-
-        /* Education Areas Section */
-        .education-areas {
-            padding: 120px 0;
-            background: var(--bg-primary);
-            position: relative;
-        }
-
-        [data-theme="dark"] .education-areas {
-            background: var(--bg-primary);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 4vw, 3.5rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: var(--primary-gradient);
-            border-radius: 2px;
-        }
-
-        .section-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .category-tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .tab-btn {
-            background: var(--card-bg);
-            border: 2px solid rgba(102, 126, 234, 0.1);
-            border-radius: 16px;
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(10px);
-        }
-
-        [data-theme="dark"] .tab-btn {
-            background: var(--card-bg);
-            border-color: var(--border-color);
-            color: var(--text-primary);
-        }
-        
-        [data-theme="dark"] .tab-btn:hover {
-            background: var(--card-hover);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-        
-        [data-theme="dark"] .tab-btn.active {
-            background: var(--gradient-purple);
-            border-color: transparent;
-            color: #ffffff;
-        }
-
-        .tab-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
-            transition: left 0.3s ease;
-            z-index: -1;
-        }
-
-        .tab-btn:hover::before {
-            left: 0;
-        }
-
-        .tab-btn:hover {
-            border-color: rgba(102, 126, 234, 0.4);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
-            color: white;
-        }
-
-        .tab-btn.active {
-            background: var(--primary-gradient);
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
-            transform: scale(1.05);
-        }
-
-        .tab-btn i {
-            font-size: 0.9rem !important;
-            width: 24px;
-            text-align: center;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 120px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            position: relative;
-        }
-
-        [data-theme="dark"] .features {
-            background: var(--bg-primary);
-        }
-
-        .features::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(102,126,234,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(102,126,234,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(102,126,234,0.1)"/></svg>');
-            opacity: 0.5;
-        }
-        
-        [data-theme="dark"] .features::before {
-            display: none !important;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-top: 80px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 24px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-
-        [data-theme="dark"] .feature-card {
-            background: var(--card-bg);
-            border-color: var(--border-color);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        [data-theme="dark"] .feature-card:hover {
-            background: var(--card-hover);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--primary-gradient);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .feature-icon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        [data-theme="dark"] .feature-icon::before {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, transparent 100%) !important;
-        }
-
-        .feature-card:hover .feature-icon::before {
-            opacity: 1;
-        }
-
-        .feature-card h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem !important;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 120px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        [data-theme="dark"] .stats {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
-        }
-
-        .stats::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-            opacity: 0.3;
-        }
-        
-        [data-theme="dark"] .stats::before {
-            display: none !important;
-        }
-
-        .stats-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 60px;
-            margin-top: 80px;
-        }
-
-        .stat-card {
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3rem, 5vw, 5rem);
-            font-weight: 900;
-            margin-bottom: 16px;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
-            position: relative;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-        }
-        
-        [data-theme="dark"] .stat-number {
-            color: var(--text-primary) !important;
-            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e0 60%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none !important;
-            filter: none !important;
-        }
-
-        .stat-number::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 1px;
-        }
-        
-        [data-theme="dark"] .stat-number::after {
-            background: rgba(129, 140, 248, 0.4) !important;
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 120px 0;
-            background: var(--primary-gradient-soft);
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        [data-theme="dark"] .cta-section {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="0,0 100,0 50,100" fill="rgba(255,255,255,0.05)"/></svg>');
-            opacity: 0.5;
-        }
-        
-        [data-theme="dark"] .cta-section::before {
-            display: none !important;
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .cta-content h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 4vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 24px;
-        }
-
-        .cta-content p {
-            font-size: 1.25rem;
-            margin-bottom: 50px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-buttons .btn-primary,
-        .cta-buttons .btn-secondary {
-            min-width: 200px;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(0px) rotate(0deg); 
-            }
-            50% { 
-                transform: translateY(-20px) rotate(180deg); 
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-
-            .category-tabs {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .tab-btn {
-                padding: 20px;
-                font-size: 1rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .feature-card {
-                padding: 30px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 40px;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .cta-buttons .btn-primary,
-            .cta-buttons .btn-secondary {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-section {
-                min-height: 80vh;
-            }
-
-            .education-areas,
-            .features,
-            .stats,
-            .cta-section {
-                padding: 80px 0;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-        }
-
-        /* Signup Button Styles */
-        .btn-signup-nav {
-            background: var(--accent-gradient) !important;
-            color: white !important;
-            padding: 10px 20px !important;
-            border-radius: 25px !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .btn-signup-nav:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 20px rgba(49, 130, 206, 0.3) !important;
-        }
-
-        .btn-signup-nav::after {
-            display: none !important;
-        }
-
-        /* Simulations Preview Section */
-        .simulations-preview {
-            padding: 6rem 0;
-            background: var(--bg-primary);
-        }
-
-        [data-theme="dark"] .simulations-preview {
-            background: var(--bg-primary);
-        }
-
-        .simulations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .simulation-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-        
-        [data-theme="dark"] .simulation-card {
-            background: var(--card-bg) !important;
-            border-color: var(--border-color) !important;
-            box-shadow: var(--shadow-md) !important;
-        }
-        
-        [data-theme="dark"] .simulation-card:hover {
-            background: var(--card-hover);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .simulation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-        }
-
-        .simulation-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .simulation-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-
-        .simulation-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--primary-gradient);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 1.75rem;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .simulation-card:hover .simulation-icon {
-            transform: scale(1.15) rotate(360deg);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .simulation-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem !important;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .simulation-description {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .simulation-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .difficulty-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .difficulty-intermediate {
-            background: rgba(250, 204, 21, 0.1);
-            color: var(--warning-color);
-        }
-
-        .difficulty-advanced {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger-color);
-        }
-
-        .simulation-duration {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: var(--primary-gradient);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-align: center;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <!-- Yükleme Ekranı -->
+    <!-- Sayfa yüklendiğinde otomatik olarak gizlenecek -->
+    <!-- Varsayılan olarak gizli başlat (CSS ile), JavaScript ile göster/gizle -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-container">
+            <!-- Logo - SVG fallback ile -->
             <div class="loading-logo">
-                <img src="SEBS.png" alt="SEBS Logo" style="width: 60px; height: 60px; object-fit: contain;"/>
+                <img src="/images/SEBS.png" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="60" height="60" viewBox="0 0 60 60" style="display:none; fill: white;">
+                    <rect width="60" height="60" rx="12" fill="rgba(255,255,255,0.2)"/>
+                    <text x="30" y="38" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
             </div>
+            <!-- Yükleme spinner animasyonu -->
             <div class="loading-spinner"></div>
             <div class="loading-text">SEBS Global</div>
             <div class="loading-subtext">Yükleniyor...</div>
@@ -1441,37 +170,55 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <a href="/index.html" class="nav-logo">
+                <!-- Logo resmi - yüklenemezse SVG fallback -->
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
+                     onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
             </a>
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li class="nav-item" role="none">
-                    <a href="index.html" class="nav-link" data-page="index" role="menuitem">
-                        <i class="fas fa-home"></i> Ana Sayfa
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="modules.html" class="nav-link" data-page="modules" role="menuitem">
-                        <i class="fas fa-book"></i> Eğitim Modülleri
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="simulations.html" class="nav-link" data-page="simulations" role="menuitem">
-                        <i class="fas fa-flask"></i> Simülasyonlar
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="about.html" class="nav-link" data-page="about" role="menuitem">
-                        <i class="fas fa-info-circle"></i> Hakkımızda
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="contact.html" class="nav-link" data-page="contact" role="menuitem">
-                        <i class="fas fa-envelope"></i> İletişim
-                    </a>
-                </li>
+                <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <i class="fas fa-book"></i> Eğitim Modülleri
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <i class="fas fa-flask"></i> Simülasyonlar
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
+                    <i class="fas fa-info-circle"></i> Hakkımızda
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <i class="fas fa-envelope"></i> İletişim
+                </a>
+            </li>
+            <li class="nav-item" role="none">
+                <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                    <i class="fas fa-tachometer-alt"></i> Panelim
+                </a>
+            </li>
             </ul>
             <div class="nav-buttons">
                 <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
@@ -1481,12 +228,9 @@
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span class="user-name" id="userName">Kullanıcı</span>
                 </div>
-                <a href="login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
-                <a href="signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
-                <a href="dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
-                    <i class="fas fa-tachometer-alt"></i> Panel
-                </a>
-                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Çıkış Yap
                 </a>
             </div>
@@ -1507,18 +251,21 @@
         </div>
         <div class="container">
         <div class="hero-content">
-                <div class="hero-badge">
+                <div class="hero-logo-wrap reveal">
+                    <img src="/images/SEBS.png" alt="SEBS Global" />
+                </div>
+                <div class="hero-badge reveal reveal-delay-1">
                     <i class="fas fa-star"></i>
                     <span>Profesyonel Eğitim Platformu</span>
                 </div>
-                <h1 class="hero-title">SEBS Global Eğitim Merkezi</h1>
-                <p class="hero-subtitle">Çok Alanlı Profesyonel Eğitim Platformu ile Geleceğinizi Şekillendirin</p>
-            <div class="hero-buttons">
-                    <a href="modules.html" class="btn-primary">
+                <h1 class="hero-title reveal reveal-delay-2">SEBS Global Eğitim Merkezi</h1>
+                <p class="hero-subtitle reveal reveal-delay-3">Çok Alanlı Profesyonel Eğitim Platformu ile Geleceğinizi Şekillendirin</p>
+            <div class="hero-buttons reveal reveal-delay-4">
+                    <a href="/modules.html" class="btn-primary">
                         <i class="fas fa-play"></i>
                         <span>Eğitimlere Başla</span>
                 </a>
-                    <a href="about.html" class="btn-secondary">
+                    <a href="/about.html" class="btn-secondary">
                         <i class="fas fa-info-circle"></i>
                         <span>Hakkımızda</span>
                 </a>
@@ -1530,35 +277,47 @@
     <!-- Education Areas Section -->
     <section class="education-areas">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Eğitim Alanlarımız</h2>
                 <p class="section-subtitle">Farklı alanlarda uzmanlaşmak için kapsamlı eğitim programlarımızı keşfedin</p>
             </div>
             
-            <div class="category-tabs">
-                <a href="#" onclick="redirectToModules(event, 'cybersecurity')" class="tab-btn active">
+            <div class="category-cards-grid">
+                <a href="#" onclick="redirectToModules(event, 'cybersecurity')" class="category-card reveal" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80');">
+                    <div class="category-card-content">
                         <i class="fas fa-shield-alt"></i>
-                    <span>Siber Güvenlik</span>
+                        <span>Siber Güvenlik</span>
+                    </div>
                 </a>
-                <a href="#" onclick="redirectToModules(event, 'cloud')" class="tab-btn">
-                    <i class="fas fa-cloud"></i>
-                    <span>Bulut Bilişim</span>
+                <a href="#" onclick="redirectToModules(event, 'cloud')" class="category-card reveal reveal-delay-1" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80');">
+                    <div class="category-card-content">
+                        <i class="fas fa-cloud"></i>
+                        <span>Bulut Bilişim</span>
+                    </div>
                 </a>
-                <a href="#" onclick="redirectToModules(event, 'data-science')" class="tab-btn">
-                    <i class="fas fa-database"></i>
-                    <span>Veri Bilimleri</span>
+                <a href="#" onclick="redirectToModules(event, 'data-science')" class="category-card reveal reveal-delay-2" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80');">
+                    <div class="category-card-content">
+                        <i class="fas fa-database"></i>
+                        <span>Veri Bilimleri</span>
+                    </div>
                 </a>
-                <a href="#" onclick="redirectToModules(event, 'technology')" class="tab-btn">
+                <a href="#" onclick="redirectToModules(event, 'technology')" class="category-card reveal reveal-delay-3" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80');">
+                    <div class="category-card-content">
                         <i class="fas fa-code"></i>
-                    <span>Teknoloji</span>
+                        <span>Teknoloji</span>
+                    </div>
                 </a>
-                <a href="#" onclick="redirectToModules(event, 'business')" class="tab-btn">
-                    <i class="fas fa-briefcase"></i>
-                    <span>İş Dünyası</span>
+                <a href="#" onclick="redirectToModules(event, 'business')" class="category-card reveal reveal-delay-2" style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80');">
+                    <div class="category-card-content">
+                        <i class="fas fa-briefcase"></i>
+                        <span>İş Dünyası</span>
+                    </div>
                 </a>
-                <a href="#" onclick="redirectToModules(event, 'personal')" class="tab-btn">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Kişisel Gelişim</span>
+                <a href="#" onclick="redirectToModules(event, 'personal')" class="category-card reveal reveal-delay-4" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80');">
+                    <div class="category-card-content">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Kişisel Gelişim</span>
+                    </div>
                 </a>
             </div>
         </div>
@@ -1567,13 +326,14 @@
     <!-- Simulations Section -->
     <section class="simulations-preview">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Siber Güvenlik Simülasyonları</h2>
                 <p class="section-subtitle">Gerçek dünya senaryolarını güvenli bir ortamda deneyimleyin</p>
             </div>
             
             <div class="simulations-grid">
-                <div class="simulation-card">
+                <div class="simulation-card reveal">
+                    <div class="simulation-card-image" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80');"></div>
                     <div class="simulation-icon">
                         <i class="fas fa-shield-virus"></i>
                     </div>
@@ -1586,10 +346,11 @@
                         <span class="difficulty-badge difficulty-intermediate">Orta</span>
                         <span class="simulation-duration">4-6 saat</span>
                 </div>
-                    <a href="simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
+                    <a href="/simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
                 </div>
                 
-                <div class="simulation-card">
+                <div class="simulation-card reveal reveal-delay-1">
+                    <div class="simulation-card-image" style="background-image: url('https://images.unsplash.com/photo-1633265486064-086b219458ec?w=600&q=80');"></div>
                     <div class="simulation-icon">
                         <i class="fas fa-bug"></i>
                     </div>
@@ -1602,10 +363,11 @@
                         <span class="difficulty-badge difficulty-advanced">İleri</span>
                         <span class="simulation-duration">3-5 saat</span>
                 </div>
-                    <a href="simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
+                    <a href="/simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
                 </div>
                 
-                <div class="simulation-card">
+                <div class="simulation-card reveal reveal-delay-2">
+                    <div class="simulation-card-image" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80');"></div>
                     <div class="simulation-icon">
                         <i class="fas fa-network-wired"></i>
                     </div>
@@ -1618,7 +380,7 @@
                         <span class="difficulty-badge difficulty-intermediate">Orta</span>
                         <span class="simulation-duration">5-7 saat</span>
                 </div>
-                    <a href="simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
+                    <a href="/simulations.html" class="btn-primary">Simülasyonları Görüntüle</a>
                     </div>
             </div>
         </div>
@@ -1627,13 +389,14 @@
     <!-- Features Section -->
     <section class="features">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Neden SEBS Global?</h2>
                 <p class="section-subtitle">Çok alanlı profesyonel eğitimin adresi</p>
             </div>
             
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card reveal">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -1641,7 +404,8 @@
                     <p>Teknoloji, iş dünyası, kişisel gelişim ve uzmanlık alanlarında kapsamlı eğitim modülleri sunuyoruz.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-laptop-code"></i>
                     </div>
@@ -1649,7 +413,8 @@
                     <p>Gerçek dünya senaryolarında pratik yapma imkanı. Laboratuvar ortamında güvenli şekilde öğrenin ve deneyim kazanın.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-certificate"></i>
                     </div>
@@ -1657,15 +422,17 @@
                     <p>SEBS Global tarafından verilen uluslararası geçerliliği olan sertifikalarla kariyerinizi güçlendirin.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
-            </div>
+                    </div>
                     <h3>Uzman Eğitmenler</h3>
                     <p>SEBS Global bünyesindeki alanında uzman eğitmenlerden öğrenin ve profesyonel gelişiminizi hızlandırın.</p>
         </div>
                 
-                <div class="feature-card">
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-flask"></i>
                     </div>
@@ -1673,7 +440,8 @@
                     <p>7/24 erişilebilir sanal laboratuvar ortamında farklı alanlarda pratik yapın.</p>
             </div>
             
-                <div class="feature-card">
+                <div class="feature-card reveal reveal-delay-4">
+                    <div class="feature-card-image" style="background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80');"></div>
                     <div class="feature-icon">
                         <i class="fas fa-headset"></i>
                     </div>
@@ -1688,25 +456,25 @@
     <section class="stats">
         <div class="container">
             <div class="stats-content">
-            <div class="section-header">
+            <div class="section-header reveal">
                     <h2 class="section-title">Yolculuğumuzun İlk Adımları</h2>
                     <p class="section-subtitle">Yeni kurulmuş olmamıza rağmen hızla büyüyen ekibimiz ve projelerimiz</p>
                 </div>
                 
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card reveal">
                         <div class="stat-number" data-target="150">0</div>
                         <div class="stat-label">Aktif Öğrenci</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card reveal reveal-delay-1">
                         <div class="stat-number" data-target="5">0</div>
                         <div class="stat-label">Uzman Eğitmen</div>
                         </div>
-                    <div class="stat-card">
+                    <div class="stat-card reveal reveal-delay-2">
                         <div class="stat-number" data-target="12">0</div>
                         <div class="stat-label">Eğitim Modülü</div>
                         </div>
-                    <div class="stat-card">
+                    <div class="stat-card reveal reveal-delay-3">
                         <div class="stat-number" data-target="98">0</div>
                         <div class="stat-label">Memnuniyet Oranı (%)</div>
                     </div>
@@ -1718,7 +486,7 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
-            <div class="cta-content">
+            <div class="cta-content reveal">
                 <h2>Eğitim Yolculuğunuza Bugün Başlayın</h2>
                 <p>SEBS Global ile profesyonel gelişiminizi hızlandırın ve kariyerinizde yeni ufuklar açın</p>
                 <div class="cta-buttons">
@@ -1726,7 +494,7 @@
                         <i class="fas fa-play"></i>
                         <span>Eğitimlere Başla</span>
                     </a>
-                    <a href="contact.html" class="btn-secondary">
+                    <a href="/contact.html" class="btn-secondary">
                         <i class="fas fa-phone"></i>
                         <span>İletişime Geç</span>
                     </a>
@@ -1762,8 +530,8 @@
                 <div class="footer-section">
                     <h4>Kurumsal</h4>
                     <ul>
-                        <li><a href="about.html">Hakkımızda</a></li>
-                        <li><a href="contact.html">İletişim</a></li>
+                        <li><a href="/about.html">Hakkımızda</a></li>
+                        <li><a href="/contact.html">İletişim</a></li>
                         <li><a href="#">Kariyer</a></li>
                         <li><a href="#">Basın</a></li>
                     </ul>
@@ -1772,8 +540,8 @@
                 <div class="footer-section">
                     <h4>İletişim</h4>
                     <ul>
-                        <li><i class="fas fa-envelope"></i> info@sebs-global.com</li>
-                        <li><i class="fas fa-phone"></i> +90 (212) 555 0123</li>
+                        <li><i class="fas fa-envelope"></i> info@sebsglobal.com</li>
+                        <li><i class="fas fa-phone"></i> 533 266 9087</li>
                         <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
                     </ul>
                 </div>
@@ -1791,32 +559,96 @@
 
     <!-- JavaScript -->
     <script>
-        // Loading Animation
-        window.addEventListener('load', function() {
+        // ============================================
+        // YÜKLEME EKRANI YÖNETİMİ
+        // ============================================
+        // Sayfa yüklendiğinde yükleme ekranını gizler
+        let loadingHidden = false; // Çift gizleme önleme bayrağı
+        
+        function hideLoadingScreen() {
+            // Zaten gizlenmişse tekrar gizlemeye çalışma
+            if (loadingHidden) return;
+            
             const loadingOverlay = document.getElementById('loadingOverlay');
-            setTimeout(() => {
+            if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
+                loadingHidden = true; // Bayrağı set et
+                
+                // Fade out animasyonu ile gizle
                 loadingOverlay.classList.add('hidden');
+                
+                // Animasyon tamamlandıktan sonra DOM'dan kaldır
                 setTimeout(() => {
                     loadingOverlay.style.display = 'none';
-                }, 500);
-            }, 1500); // 1.5 saniye loading göster
-        });
-
-        // Access Control Functions
-        function checkAccess() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            
-            if (!isLoggedIn || !isVerified) {
-                return false;
+                    console.log('✅ Yükleme ekranı gizlendi');
+                }, 500); // CSS transition süresi ile eşleşmeli
             }
-            return true;
         }
 
-        function redirectToModules(event, category = null) {
+        // Global olarak erişilebilir yap (debug için)
+        window.hideLoadingScreen = hideLoadingScreen;
+
+        // Yükleme ekranını gizlemek için çoklu yöntem kullan
+        // 1. DOMContentLoaded (DOM hazır olduğunda)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('📄 DOM hazır - yükleme ekranı kısa süre sonra gizlenecek');
+                setTimeout(hideLoadingScreen, 200);
+            });
+        } else {
+            // DOM zaten yüklenmişse hemen başlat
+            console.log('📄 DOM zaten hazır - yükleme ekranı hızlıca gizlenecek');
+            setTimeout(hideLoadingScreen, 150);
+        }
+
+        // 2. Window load (tüm kaynaklar yüklendiğinde)
+        window.addEventListener('load', function() {
+            console.log('🖼️ Tüm kaynaklar yüklendi - yükleme ekranı hızla gizlenecek');
+            setTimeout(hideLoadingScreen, 100);
+        });
+
+        // 3. Güvenlik: 0.8 saniye sonra kesinlikle gizle (hata durumunda takılmasın)
+        setTimeout(function() {
+            if (!loadingHidden) {
+                console.warn('⚠️ Yükleme ekranı 0.8 saniye sonra zorla gizleniyor (timeout)');
+                hideLoadingScreen();
+            }
+        }, 800);
+
+        // 4. Çift güvenlik: 1.2 saniye sonra kesinlikle gizle
+        setTimeout(function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+                console.warn('⚠️ Yükleme ekranı 1.2 saniye sonra zorla gizlendi (final timeout)');
+                loadingOverlay.style.display = 'none';
+                loadingOverlay.classList.add('hidden');
+                loadingHidden = true;
+            }
+        }, 1200);
+
+        // Access Control Functions (Supabase)
+        async function checkAccess() {
+            try {
+                // Supabase session kontrolü
+                if (typeof window.initSupabase !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    return !!(session && session.user && session.user.email_confirmed_at);
+                }
+                
+                // Fallback: localStorage kontrolü (eski sistem için)
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+                const isVerified = localStorage.getItem('isVerified');
+                return isLoggedIn === 'true' && isVerified === 'true';
+            } catch (error) {
+                console.warn('checkAccess error:', error);
+                return false;
+            }
+        }
+
+        async function redirectToModules(event, category = null) {
             event.preventDefault();
             
-            if (!checkAccess()) {
+            const hasAccess = await checkAccess();
+            if (!hasAccess) {
                 // Show access required message
                 showAccessRequiredModal();
                 return;
@@ -1867,8 +699,8 @@
                 <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; margin-bottom: 15px; ${isDark ? 'color: #f1f5f9;' : 'color: #1e293b;'}">Erişim Gerekli</h2>
                 <p style="${isDark ? 'color: #cbd5e0;' : 'color: #64748b;'} margin-bottom: 30px; line-height: 1.6;">Eğitim modüllerine erişmek için üye olmanız ve e-posta doğrulaması yapmanız gerekmektedir.</p>
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <a href="signup.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">Üye Ol</a>
-                    <a href="login.html" style="background: ${isDark ? 'rgba(99, 102, 241, 0.1)' : 'rgba(102, 126, 234, 0.1)'}; color: ${isDark ? '#818cf8' : '#667eea'}; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 2px solid ${isDark ? '#818cf8' : '#667eea'}; transition: all 0.3s ease;">Giriş Yap</a>
+                    <a href="/signup.html" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">Üye Ol</a>
+                    <a href="/login.html" style="background: ${isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(30, 64, 175, 0.1)'}; color: ${isDark ? '#60a5fa' : '#3b82f6'}; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 2px solid ${isDark ? '#60a5fa' : '#3b82f6'}; transition: all 0.3s ease;">Giriş Yap</a>
                 </div>
                 <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; ${isDark ? 'color: #cbd5e0;' : 'color: #64748b;'} margin-top: 20px; cursor: pointer; font-size: 0.9rem;">Kapat</button>
             `;
@@ -1957,70 +789,82 @@
             });
         });
 
-        // Check authentication status
-        function checkAuthStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            
-            // Find the modules and simulations links
-            const modulesLink = document.querySelector('a[onclick="redirectToModules(event)"]');
-            const simulationsLink = document.querySelector('a[href="simulations.html"]');
-            
-            if (isLoggedIn === 'true' && isVerified === 'true') {
-                // User is logged in
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('signupBtn').style.display = 'none';
-                document.getElementById('userProfile').style.display = 'flex';
-                document.getElementById('logoutBtn').style.display = 'block';
-                
-                // Show modules link for logged in users
-                if (modulesLink) {
-                    modulesLink.parentElement.style.display = 'block';
+        // Check authentication status (Supabase)
+        async function checkAuthStatus() {
+            try {
+                // Supabase session kontrolü
+                if (typeof window.initSupabase !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    
+                    if (session && session.user && session.user.email_confirmed_at) {
+                        // User is logged in and verified
+                        document.getElementById('loginBtn').style.display = 'none';
+                        document.getElementById('signupBtn').style.display = 'none';
+                        document.getElementById('userProfile').style.display = 'flex';
+                        document.getElementById('logoutBtn').style.display = 'block';
+                        
+                        // Update user info - sadece kullanıcı adı (e-posta değil)
+                        const userNameEl = document.getElementById('userName');
+                        const userAvatarEl = document.getElementById('userAvatar');
+                        let displayName = 'Kullanıcı';
+                        try {
+                            const { data: profile } = await window.supabaseAuthSystem.supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
+                            if (profile && profile.full_name) displayName = profile.full_name;
+                        } catch (_) {}
+                        if (userNameEl) userNameEl.textContent = displayName;
+                        if (userAvatarEl) userAvatarEl.textContent = (displayName.trim() || 'K').charAt(0).toUpperCase();
+                        
+                        // Make user profile clickable to go to dashboard
+                        const userProfileEl = document.getElementById('userProfile');
+                        if (userProfileEl) {
+                            userProfileEl.onclick = function() {
+                                window.location.href = 'dashboard.html';
+                            };
+                        }
+                        
+                        return;
+                    }
                 }
                 
-                // Show simulations link for logged in users
-                if (simulationsLink) {
-                    simulationsLink.parentElement.style.display = 'block';
-                }
-                
-                // Update user info
-                const userName = userData.name || userData.firstName || 'Kullanıcı';
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
-                
-                // Make user profile clickable to go to dashboard
-                document.getElementById('userProfile').onclick = function() {
-                    window.location.href = 'dashboard.html';
-                };
-            } else {
                 // User is not logged in
                 document.getElementById('loginBtn').style.display = 'block';
                 document.getElementById('signupBtn').style.display = 'block';
                 document.getElementById('userProfile').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 
-                // Hide modules link for non-logged in users
-                if (modulesLink) {
-                    modulesLink.parentElement.style.display = 'none';
-                }
-                
-                // Hide simulations link for non-logged in users
-                if (simulationsLink) {
-                    simulationsLink.parentElement.style.display = 'none';
-                }
+            } catch (error) {
+                console.error('checkAuthStatus error:', error);
+                // On error, show login buttons
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('signupBtn').style.display = 'block';
+                document.getElementById('userProfile').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
             }
         }
 
-        // Logout function
-        function logout() {
+        // Logout function (Supabase)
+        async function logout() {
             if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                try {
+                    // Supabase logout
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                        await window.supabaseAuthSystem.logout();
+                    } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                        await window.supabaseAuthSystem.supabase.auth.signOut();
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+                
+                // LocalStorage temizle (eski sistem için)
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('isVerified');
                 localStorage.removeItem('userData');
                 localStorage.removeItem('userProgress');
                 localStorage.removeItem('recentActivities');
                 localStorage.removeItem('achievements');
+                localStorage.removeItem('authToken');
+                
                 window.location.reload();
             }
         }
@@ -2033,9 +877,9 @@
             
             if (navLogoImg) {
                 if (currentTheme === 'dark') {
-                    navLogoImg.src = 'SEBS.png';
+                    navLogoImg.src = '/images/SEBS.png';
                 } else {
-                    navLogoImg.src = 'SEBS.png';
+                    navLogoImg.src = '/images/SEBS.png';
                 }
             }
         }
@@ -2204,13 +1048,53 @@
         }
 
         // Initialize auth status when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
+        document.addEventListener('DOMContentLoaded', async function() {
             initDarkMode();
             applyDarkModeStyles();
+            
+            // Logout button event listener
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+            
+            // Supabase yüklenmesini bekle
+            if (typeof window.initSupabase !== 'undefined') {
+                try {
+                    await window.initSupabase();
+                    // SupabaseAuthSystem'in yüklenmesini bekle
+                    let attempts = 0;
+                    while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                    await checkAuthStatus();
+                } catch (error) {
+                    console.error('Auth status check error:', error);
+                }
+            } else {
+                // initSupabase henüz yüklenmedi, biraz bekle
+                setTimeout(async () => {
+                    if (typeof window.initSupabase !== 'undefined') {
+                        await checkAuthStatus();
+                    }
+                }, 1000);
+            }
         });
     </script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
     <!-- Navigation Script -->
-    <script src="js/navigation.js?v=2.0"></script>
+    <script src="js/navigation.js?v=2.0" defer></script>
+    <!-- Animations -->
+    <script src="/js/animations.js" defer></script>
 </body>
 </html>

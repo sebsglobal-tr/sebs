@@ -52,27 +52,24 @@ window.TimeTracker = {
         const tracker = this.trackers[trackerId];
         if (!tracker) return;
         
-        const elapsedMinutes = Math.floor((Date.now() - tracker.startTime) / 1000 / 60);
+        const elapsedSeconds = Math.max(0, Math.floor((Date.now() - tracker.startTime) / 1000));
+        const elapsedMinutes = isFinal && elapsedSeconds > 0
+            ? Math.max(1, Math.ceil(elapsedSeconds / 60))
+            : Math.floor(elapsedSeconds / 60);
+        if (elapsedMinutes < 1 && !isFinal) return;
         
-        // Save to localStorage
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const isVerified = localStorage.getItem('isVerified');
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const token = localStorage.getItem('authToken');
+        const hasAuth = !!token;
         
-        if (isLoggedIn === 'true' && isVerified === 'true') {
-            const userId = userData.email || userData.id || 'guest';
+        if (hasAuth) {
+            const userId = (JSON.parse(localStorage.getItem('userData') || '{}').email) || 'guest';
             const storageKey = 'userProgress_' + userId;
             const savedProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            
             if (!savedProgress.modules) savedProgress.modules = {};
-            if (!savedProgress.modules[tracker.moduleName]) {
-                savedProgress.modules[tracker.moduleName] = {};
-            }
-            
-            const previousTime = savedProgress.modules[tracker.moduleName].timeSpentMinutes || 0;
-            savedProgress.modules[tracker.moduleName].timeSpentMinutes = previousTime + elapsedMinutes;
+            if (!savedProgress.modules[tracker.moduleName]) savedProgress.modules[tracker.moduleName] = {};
+            const prev = savedProgress.modules[tracker.moduleName].timeSpentMinutes || 0;
+            savedProgress.modules[tracker.moduleName].timeSpentMinutes = prev + elapsedMinutes;
             savedProgress.modules[tracker.moduleName].lastUpdated = new Date().toISOString();
-            
             localStorage.setItem(storageKey, JSON.stringify(savedProgress));
             
             // Save to backend
@@ -87,28 +84,16 @@ window.TimeTracker = {
                 if (moduleId && window.APIClient) {
                     const result = await window.APIClient.updateTimeSpent(moduleId, elapsedMinutes);
                     if (result && result.success) {
-                        console.log('✅ Time saved to backend:', elapsedMinutes, 'minutes');
+                        console.log('✅ Süre veritabanına kaydedildi:', elapsedMinutes, 'dakika');
                     }
-                } else if (moduleId) {
-                    // Fallback: Direct API call
-                    const token = localStorage.getItem('authToken');
-                    if (token) {
-                        const response = await fetch('http://localhost:8006/api/progress/time', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                moduleId: moduleId,
-                                minutes: elapsedMinutes // Backend expects 'minutes', not 'timeSpentMinutes'
-                            })
-                        });
-                        
-                        if (response.ok) {
-                            console.log('✅ Time saved to backend:', elapsedMinutes, 'minutes');
-                        }
-                    }
+                } else if (moduleId && token) {
+                    const apiBase = (window.location?.origin || '') + '/api';
+                    const res = await fetch(apiBase + '/progress/time', {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ moduleId, timeSpentMinutes: elapsedMinutes })
+                    });
+                    if (res.ok) console.log('✅ Süre veritabanına kaydedildi:', elapsedMinutes, 'dakika');
                 }
             } catch (error) {
                 console.error('❌ Failed to save time to backend:', error);

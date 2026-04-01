@@ -1,5 +1,8 @@
 -- Fix Supabase Security Advisor Issues
--- Güvenlik danışmanı uyarılarını düzelt
+-- Düzeltilen güvenlik danışmanı uyarıları:
+-- 1. Function search path mutable sorunları
+-- 2. Row Level Security (RLS) etkinleştirme
+-- 3. RLS politikaları oluşturma
 
 -- ============================================
 -- 1. FIX FUNCTION SEARCH PATH MUTABLE

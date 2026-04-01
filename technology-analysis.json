@@ -1,0 +1,40 @@
+{
+  "current_stack": {
+    "runtime": "Node.js 18+",
+    "framework": "Express.js 4.18.2",
+    "database": "PostgreSQL (Supabase)",
+    "orm": "Prisma 5.7.1",
+    "authentication": "JWT (jsonwebtoken)",
+    "password_hashing": "bcrypt 5.1.1",
+    "email": "Nodemailer 7.0.10",
+    "validation": "Zod 3.22.4",
+    "security": ["Helmet", "CORS", "express-rate-limit"],
+    "logging": ["Morgan", "Winston"],
+    "language": "JavaScript (ES Modules)"
+  },
+  "changeable_components": {
+    "easy": [
+      "Password hashing (bcrypt → Argon2)",
+      "Email service (Nodemailer → SendGrid/Mailgun)",
+      "Logging (Morgan → Pino)",
+      "Validation (Zod → Joi - opsiyonel)"
+    ],
+    "medium": [
+      "Framework (Express → Fastify/Koa)",
+      "Rate limiting (express-rate-limit → alternatifler)"
+    ],
+    "hard": [
+      "ORM (Prisma → TypeORM/Sequelize)",
+      "Database (PostgreSQL → MongoDB)",
+      "Runtime (Node.js → Deno/Bun)",
+      "Language (JavaScript → TypeScript)"
+    ]
+  },
+  "recommendations": {
+    "security": "Argon2 for password hashing (OWASP recommended)",
+    "performance": "Fastify for better performance",
+    "email": "SendGrid/Mailgun for reliability",
+    "logging": "Pino for faster logging",
+    "typescript": "Consider migrating to TypeScript for type safety"
+  }
+}

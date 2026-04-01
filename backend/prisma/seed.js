@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const courses = [
-  // BAŞLANGIÇ SEVİYESİ
+    // BAŞLANGIÇ SEVİYESİ
   {
     title: 'Siber Güvenliğe Giriş',
     category: 'cybersecurity',

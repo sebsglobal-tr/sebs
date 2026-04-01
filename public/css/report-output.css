@@ -1,0 +1,299 @@
+/* ============================================
+   SEBS GLOBAL - Report Output Styles
+   Premium print-friendly layout
+   ============================================ */
+
+.page-report-output {
+    padding-bottom: 4rem;
+}
+
+.report-hero {
+    padding-top: 5.5rem;
+}
+
+.print-controls {
+    max-width: 1200px;
+    margin: -1rem auto 1.25rem;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 5;
+}
+
+.print-controls .btn-secondary {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.report-output-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.75rem;
+    align-items: start;
+    position: relative;
+    z-index: 2;
+}
+
+.report-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: 0 20px 60px -30px rgba(0, 0, 0, 0.35);
+}
+
+.report-title {
+    font-family: 'Cormorant Garamond', 'Space Grotesk', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.report-title i {
+    color: var(--accent-2);
+}
+
+.certificate-preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.certificate-preview {
+    background: #ffffff;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(212, 168, 83, 0.35);
+}
+
+.certificate-top {
+    background: linear-gradient(135deg, #1e40af 0%, #d4a853 100%);
+    color: #fff;
+    padding: 1.25rem 1.25rem 1rem;
+    position: relative;
+}
+
+.certificate-top::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.35), transparent 45%),
+        radial-gradient(circle at 85% 0%, rgba(255,255,255,0.22), transparent 40%),
+        linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.02));
+    pointer-events: none;
+}
+
+.certificate-top-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.certificate-top h1 {
+    font-size: 1.85rem;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    margin: 0;
+}
+
+.certificate-top p {
+    margin-top: 0.25rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.95rem;
+}
+
+.cert-seal {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.cert-seal span {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.certificate-body {
+    padding: 1.35rem 1.35rem 1.05rem;
+    text-align: center;
+}
+
+.certificate-subtitle {
+    font-family: 'Cormorant Garamond', 'Space Grotesk', serif;
+    font-size: 1.2rem;
+    color: #0f172a;
+    opacity: 0.9;
+    margin-bottom: 0.75rem;
+}
+
+.certificate-recipient {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e40af;
+    margin: 0.25rem 0 1rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.certificate-desc {
+    color: #475569;
+    font-size: 0.98rem;
+    line-height: 1.75;
+    margin: 0 auto 1rem;
+    max-width: 42ch;
+}
+
+.certificate-details {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    text-align: left;
+}
+
+.cert-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cert-detail .label {
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.cert-detail .value {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.certificate-footer {
+    padding: 1rem 1.35rem 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cert-signature {
+    flex: 1;
+    text-align: left;
+}
+
+.signature-line {
+    width: 190px;
+    max-width: 100%;
+    border-top: 2px solid rgba(15, 23, 42, 0.85);
+    margin-bottom: 0.35rem;
+    opacity: 0.9;
+}
+
+.cert-signature .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.certificate-id {
+    text-align: right;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.cert-bottom-hr {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 168, 83, 0.55), transparent);
+    opacity: 0.8;
+}
+
+.print-hint {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+@media (max-width: 980px) {
+    .report-output-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .print-controls {
+        padding: 0 1.25rem;
+    }
+
+    .report-output-grid {
+        padding: 0 1.25rem;
+    }
+}
+
+@media print {
+    /* Hide dark UI extras */
+    .navbar,
+    .print-controls,
+    .print-hint {
+        display: none !important;
+    }
+
+    body::before,
+    body::after {
+        display: none !important;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    .report-card {
+        background: #ffffff !important;
+        border: 1px solid rgba(15, 23, 42, 0.12) !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* Keep the paper-like certificate crisp */
+    .certificate-preview {
+        box-shadow: none !important;
+    }
+
+    .report-output-grid {
+        grid-template-columns: 1fr !important;
+        padding: 0 !important;
+    }
+}
+

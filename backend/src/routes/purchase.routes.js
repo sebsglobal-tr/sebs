@@ -1,6 +1,6 @@
 // Purchase/Entitlement Routes
 import express from 'express';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 import { purchasePackage, getUserEntitlements, getAvailablePackages } from '../controllers/purchase.controller.js';
 
 const router = express.Router();
@@ -16,23 +16,15 @@ router.get('/packages', async (req, res, next) => {
       return getAvailablePackages({ user: null }, res, next);
     }
 
-    const token = authHeader.substring(7);
-    const { verifyAccessToken } = await import('../utils/jwt.js');
-    const decoded = verifyAccessToken(token);
-    const { prisma } = await import('../server.js');
-    
-    const user = await prisma.user.findUnique({
-      where: { publicId: decoded.publicId },
-      select: { id: true, isActive: true }
-    });
-
-    if (user && user.isActive) {
-      req.user = user;
-    } else {
+    // Try to authenticate, but don't fail if token is invalid
+    try {
+      await authenticate(req, res, () => {
+        getAvailablePackages(req, res, next);
+      });
+    } catch (error) {
       req.user = null;
+      return getAvailablePackages(req, res, next);
     }
-
-    return getAvailablePackages(req, res, next);
   } catch (error) {
     req.user = null;
     return getAvailablePackages(req, res, next);

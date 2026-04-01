@@ -29,8 +29,9 @@ CREATE TABLE IF NOT EXISTS behavior_data (
         REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS behavior_data_user_id_idx ON behavior_data(user_id);
-CREATE INDEX IF NOT EXISTS behavior_data_created_at_idx ON behavior_data(created_at);
+-- NOTE: Indexes are created by Prisma schema (@@index directives)
+-- Prisma will create: idx_behavior_data_user_id and idx_behavior_data_created_at
+-- Manual index creation removed to prevent duplicates
 
 -- Create skill_scores table
 CREATE TABLE IF NOT EXISTS skill_scores (
@@ -51,8 +52,9 @@ CREATE TABLE IF NOT EXISTS skill_scores (
     CONSTRAINT skill_scores_user_skill_unique UNIQUE (user_id, skill_name)
 );
 
-CREATE INDEX IF NOT EXISTS skill_scores_user_id_idx ON skill_scores(user_id);
-CREATE INDEX IF NOT EXISTS skill_scores_skill_name_idx ON skill_scores(skill_name);
+-- NOTE: Indexes are created by Prisma schema (@@index directives)
+-- Prisma will create: idx_skill_scores_user_id and idx_skill_scores_skill_name
+-- Manual index creation removed to prevent duplicates
 
 -- Create ai_analysis table
 CREATE TABLE IF NOT EXISTS ai_analysis (
@@ -70,9 +72,9 @@ CREATE TABLE IF NOT EXISTS ai_analysis (
         REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS ai_analysis_user_id_idx ON ai_analysis(user_id);
-CREATE INDEX IF NOT EXISTS ai_analysis_risk_level_idx ON ai_analysis(risk_level);
-CREATE INDEX IF NOT EXISTS ai_analysis_created_at_idx ON ai_analysis(created_at);
+-- NOTE: Indexes are created by Prisma schema (@@index directives)
+-- Prisma will create: idx_ai_analysis_user_id, idx_ai_analysis_risk_level, idx_ai_analysis_created_at
+-- Manual index creation removed to prevent duplicates
 
 -- Create security_logs table
 CREATE TABLE IF NOT EXISTS security_logs (
@@ -93,7 +95,7 @@ CREATE TABLE IF NOT EXISTS security_logs (
         REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE INDEX IF NOT EXISTS security_logs_admin_id_idx ON security_logs(admin_id);
-CREATE INDEX IF NOT EXISTS security_logs_user_id_idx ON security_logs(user_id);
-CREATE INDEX IF NOT EXISTS security_logs_action_idx ON security_logs(action);
-CREATE INDEX IF NOT EXISTS security_logs_created_at_idx ON security_logs(created_at);
+-- NOTE: Indexes are created by Prisma schema (@@index directives)
+-- Prisma will create: idx_security_logs_admin_id, idx_security_logs_user_id, 
+--                     idx_security_logs_action, idx_security_logs_created_at
+-- Manual index creation removed to prevent duplicates

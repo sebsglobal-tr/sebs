@@ -11,19 +11,25 @@ const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
-// Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: (process.env.DATABASE_URL && (
-        process.env.DATABASE_URL.includes('sslmode=require') || 
-        process.env.DATABASE_URL.includes('supabase')
-    )) || (process.env.DB_HOST && process.env.DB_HOST.includes('supabase'))
-        ? { 
-            rejectUnauthorized: false,
-            require: true
-        } 
-        : false
-});
+// Database connection (server.js ile uyumlu: DATABASE_URL veya DB_*)
+const createPool = () => {
+    const url = (process.env.DATABASE_URL || '').trim();
+    if (url && !url.includes('YOUR-PASSWORD')) {
+        return new Pool({
+            connectionString: url,
+            ssl: (url.includes('supabase') || url.includes('pooler')) ? { rejectUnauthorized: false } : false
+        });
+    }
+    return new Pool({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT, 10) || 5432,
+        database: process.env.DB_NAME || 'sebs_education',
+        user: process.env.DB_USER || 'postgres',
+        password: process.env.DB_PASSWORD || '',
+        ssl: false
+    });
+};
+const pool = createPool();
 
 async function setupDatabaseTables() {
     const client = await pool.connect();
@@ -33,37 +39,50 @@ async function setupDatabaseTables() {
         
         console.log('\n🔄 Veritabanı tabloları kontrol ediliyor ve oluşturuluyor...\n');
         
-        // Read migration SQL files
-        const purchasesMigrationPath = path.join(__dirname, 'backend/migrations/create_purchases_table_simple.sql');
-        const updateMigrationPath = path.join(__dirname, 'backend/migrations/update_existing_tables.sql');
+        // 1) Ana migration: Eksiksiz şema (010) - tablolar, indexler, güvenlik
+        const mainMigrationPath = path.join(__dirname, 'backend/migrations/010_complete_schema_secure.sql');
+        if (fs.existsSync(mainMigrationPath)) {
+            const mainSQL = fs.readFileSync(mainMigrationPath, 'utf8');
+            await client.query(mainSQL);
+            console.log('✅ 010_complete_schema_secure.sql çalıştırıldı');
+        } else {
+            const fallbackPath = path.join(__dirname, 'backend/migrations/007_server_required_tables_all.sql');
+            if (fs.existsSync(fallbackPath)) {
+                await client.query(fs.readFileSync(fallbackPath, 'utf8'));
+                console.log('✅ 007_server_required_tables_all.sql (fallback) çalıştırıldı');
+            }
+        }
+
+        // 2) Eksik kolonlar (009 - last_step vb.)
+        const lastStepPath = path.join(__dirname, 'backend/migrations/009_module_progress_last_step.sql');
+        if (fs.existsSync(lastStepPath)) {
+            await client.query(fs.readFileSync(lastStepPath, 'utf8'));
+            console.log('✅ 009_module_progress_last_step.sql çalıştırıldı');
+        }
+
+        // 3) RLS (Row Level Security) - Supabase güvenlik
+        const rlsPath = path.join(__dirname, 'backend/migrations/011_enable_rls_all_tables.sql');
+        if (fs.existsSync(rlsPath)) {
+            await client.query(fs.readFileSync(rlsPath, 'utf8'));
+            console.log('✅ 011_enable_rls_all_tables.sql çalıştırıldı');
+        }
         
-        // Execute purchases table creation
-        const purchasesSQL = fs.readFileSync(purchasesMigrationPath, 'utf8');
-        await client.query(purchasesSQL);
-        console.log('✅ Purchases table migration executed');
-        
-        // Execute existing tables update
-        const updateSQL = fs.readFileSync(updateMigrationPath, 'utf8');
-        await client.query(updateSQL);
-        console.log('✅ Existing tables update migration executed');
-        
-        // Verify tables
+        // Doğrulama: server.js tarafından kullanılan tablolar
         const requiredTables = [
             'users',
-            'courses',
             'modules',
+            'lessons',
             'enrollments',
+            'user_lesson_progress',
+            'user_module_progress',
             'module_progress',
-            'simulation_runs',
-            'refresh_tokens',
-            'certificates',
-            'entitlements',
-            'behavior_data',
-            'skill_scores',
-            'ai_analysis',
-            'security_logs',
             'purchases',
-            'user_package_purchases'
+            'user_package_purchases',
+            'simulation_runs',
+            'certificates',
+            'user_activities',
+            'user_achievements',
+            'refresh_tokens'
         ];
         
         const result = await client.query(
@@ -89,13 +108,17 @@ async function setupDatabaseTables() {
         // Check columns for critical tables
         console.log('\n📊 Kritik Tabloların Kolon Kontrolü:\n');
         
-        // Check users table
-        const usersColumns = await client.query(
-            `SELECT column_name FROM information_schema.columns 
-             WHERE table_name = 'users'`
-        );
-        const usersColNames = usersColumns.rows.map(r => r.column_name);
-        console.log(`   users: ${usersColNames.includes('access_level') ? '✅' : '❌'} access_level`);
+        // Check users table (Supabase kullanıyorsanız sadece profiles olabilir)
+        if (existingTables.includes('users')) {
+            const usersColumns = await client.query(
+                `SELECT column_name FROM information_schema.columns 
+                 WHERE table_schema = 'public' AND table_name = 'users'`
+            );
+            const usersColNames = usersColumns.rows.map(r => r.column_name);
+            console.log(`   users: ${usersColNames.includes('access_level') ? '✅' : '❌'} access_level`);
+        } else {
+            console.log('   users: (yok – Supabase kullanıyorsanız profiles tablosu kullanılıyor olabilir)');
+        }
         
         // Check purchases table
         if (existingTables.includes('purchases')) {
@@ -114,7 +137,9 @@ async function setupDatabaseTables() {
                  WHERE table_name = 'module_progress'`
             );
             const progressColNames = progressColumns.rows.map(r => r.column_name);
-            console.log(`   module_progress: ${progressColNames.includes('time_spent_minutes') ? '✅' : '❌'} time_spent_minutes`);
+            const hasTime = progressColNames.includes('time_spent_minutes');
+            const hasLastStep = progressColNames.includes('last_step');
+            console.log(`   module_progress: ${hasTime ? '✅' : '❌'} time_spent_minutes, ${hasLastStep ? '✅' : '❌'} last_step`);
         }
         
         await client.query('COMMIT');

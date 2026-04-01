@@ -33,15 +33,77 @@
         return page;
     }
 
-    // Kullanıcının giriş yapıp yapmadığını kontrol et
-    function isLoggedIn() {
-        return localStorage.getItem('isLoggedIn') === 'true';
+    // Kullanıcının giriş yapıp yapmadığını kontrol et (Supabase)
+    async function isLoggedIn() {
+        try {
+            // Supabase session kontrolü
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                return !!(session && session.user && session.user.email_confirmed_at);
+            }
+            
+            // Fallback: localStorage kontrolü (eski sistem için)
+            return localStorage.getItem('isLoggedIn') === 'true';
+        } catch (error) {
+            console.warn('isLoggedIn check error:', error);
+            // Fallback: localStorage kontrolü
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
     }
 
-    // Kullanıcı verilerini getir
-    function getUserData() {
-        const userData = localStorage.getItem('userData');
-        return userData ? JSON.parse(userData) : null; // JSON parse et, yoksa null döndür
+    // Kullanıcı verilerini getir (Supabase)
+    async function getUserData() {
+        try {
+            // Supabase'den kullanıcı bilgilerini al
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (session && session.user) {
+                    // Profile bilgilerini al
+                    try {
+                        const { data: profile } = await window.supabaseAuthSystem.supabase
+                            .from('profiles')
+                            .select('full_name, role, access_level')
+                            .eq('id', session.user.id)
+                            .single();
+                        
+                        if (profile) {
+                            return {
+                                email: session.user.email,
+                                firstName: profile.full_name?.split(' ')[0] || null,
+                                lastName: profile.full_name?.split(' ').slice(1).join(' ') || '',
+                                fullName: profile.full_name || null,
+                                role: profile.role || 'user',
+                                accessLevel: profile.access_level || 'beginner',
+                                isVerified: !!session.user.email_confirmed_at
+                            };
+                        }
+                    } catch (profileError) {
+                        console.warn('Profile fetch error:', profileError);
+                    }
+                    
+                    // Profile yoksa session metadata'dan ad (e-posta gösterme)
+                    return {
+                        email: session.user.email,
+                        firstName: session.user.user_metadata?.full_name?.split(' ')[0] || null,
+                        lastName: session.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                        fullName: session.user.user_metadata?.full_name || null,
+                        role: 'user',
+                        accessLevel: 'beginner',
+                        isVerified: !!session.user.email_confirmed_at
+                    };
+                }
+            }
+            
+            // Fallback: localStorage'dan al (eski sistem için)
+            const userData = localStorage.getItem('userData');
+            return userData ? JSON.parse(userData) : null;
+        } catch (error) {
+            console.warn('getUserData error:', error);
+            // Fallback: localStorage'dan al
+            const userData = localStorage.getItem('userData');
+            return userData ? JSON.parse(userData) : null;
+        }
     }
 
     // ============================================
@@ -49,15 +111,16 @@
     // ============================================
     // Mevcut sayfa ve giriş durumuna göre navigasyonu günceller
     // Aktif link, giriş/çıkış butonları, kullanıcı profil bilgilerini günceller
-    function updateNavigation() {
+    async function updateNavigation() {
         const currentPage = getCurrentPage();
-        const loggedIn = isLoggedIn();
-        const userData = getUserData();
+        const loggedIn = await isLoggedIn();
+        const userData = await getUserData();
         
         // Aktif link'i güncelle (mevcut sayfaya göre)
         document.querySelectorAll('.nav-link').forEach(link => {
+            const href = link.getAttribute('href') || '';
             const linkPage = link.getAttribute('data-page') || 
-                           link.getAttribute('href')?.replace('.html', '').replace('../', '').replace('/', '') || '';
+                           href.replace(/\.html$/, '').replace(/^\.\.\//, '').replace(/^\//, '') || '';
             // Link mevcut sayfa ile eşleşiyorsa 'active' class'ı ekle
             if (linkPage === currentPage || 
                 (currentPage === 'index' && linkPage === '') ||
@@ -86,27 +149,26 @@
             if (loginBtn) loginBtn.style.display = 'none';
             if (signupBtn) signupBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'block';
-            if (dashboardBtn) {
-                dashboardBtn.style.display = 'block';
-                // Admin kullanıcılar için dashboard butonunu güncelle
-                if (isAdmin) {
-                    dashboardBtn.href = 'admin.html';
-                    dashboardBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panel';
-                } else {
-                    dashboardBtn.href = 'dashboard.html';
-                    dashboardBtn.innerHTML = '<i class="fas fa-tachometer-alt"></i> Panel';
+            if (dashboardBtn) dashboardBtn.style.display = 'none'; // Panel butonu kaldırıldı, tıklanabilir kullanıcı adı kullanılıyor
+            
+            if (userProfile) {
+                userProfile.style.display = 'flex';
+                userProfile.style.cursor = 'pointer';
+                userProfile.setAttribute('role', 'link');
+                userProfile.setAttribute('title', 'Panele git');
+                // Tıklanınca dashboard veya admin paneline git
+                if (!userProfile.hasAttribute('data-dashboard-listener')) {
+                    userProfile.addEventListener('click', function() {
+                        window.location.href = isAdmin ? '/admin.html' : '/dashboard.html';
+                    });
+                    userProfile.setAttribute('data-dashboard-listener', 'true');
                 }
             }
-            if (userProfile) userProfile.style.display = 'flex'; // Kullanıcı profilini göster
             
-            // Kullanıcı bilgilerini güncelle
-            if (userName && userData.firstName) {
-                userName.textContent = userData.firstName || userData.email || 'Kullanıcı';
-            }
-            if (userAvatar && userData.firstName) {
-                // Avatar için kullanıcı adının ilk harfini kullan
-                userAvatar.textContent = (userData.firstName || 'U')[0].toUpperCase();
-            }
+            // Sadece kullanıcı adı (ad/soyad); e-posta gösterme
+            const displayName = userData.fullName || userData.firstName || 'Kullanıcı';
+            if (userName) userName.textContent = displayName;
+            if (userAvatar) userAvatar.textContent = (String(displayName).trim() || 'U')[0].toUpperCase();
         } else {
             // Kullanıcı giriş yapmamışsa
             if (loginBtn) loginBtn.style.display = 'block';
@@ -116,35 +178,8 @@
             if (userProfile) userProfile.style.display = 'none';
         }
 
-        // Modül sayfaları için navigasyon linklerini güncelle (../ öneki kullanırlar)
-        // Modül sayfaları alt klasörde olduğu için üst klasöre çıkmak için ../ gerekir
-        const isModulePage = window.location.pathname.includes('/modules/') || 
-                            window.location.pathname.includes('modules/');
-        
-        if (isModulePage) {
-            // Tüm navigasyon linklerine ../ öneki ekle (yoksa)
-            document.querySelectorAll('.nav-link[data-page]').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && !href.startsWith('../') && !href.startsWith('http')) {
-                    link.setAttribute('href', '../' + href);
-                }
-            });
-            
-            // Buton linklerini güncelle
-            const loginBtn = document.getElementById('loginBtn');
-            const signupBtn = document.getElementById('signupBtn');
-            const dashboardBtn = document.getElementById('dashboardBtn');
-            
-            if (loginBtn && !loginBtn.getAttribute('href').startsWith('../')) {
-                loginBtn.setAttribute('href', '../' + loginBtn.getAttribute('href'));
-            }
-            if (signupBtn && !signupBtn.getAttribute('href').startsWith('../')) {
-                signupBtn.setAttribute('href', '../' + signupBtn.getAttribute('href'));
-            }
-            if (dashboardBtn && !dashboardBtn.getAttribute('href').startsWith('../')) {
-                dashboardBtn.setAttribute('href', '../' + dashboardBtn.getAttribute('href'));
-            }
-        }
+        // Tüm navigasyon linkleri root-relative (/index.html, /modules.html) kullanmalı;
+        // alt dizinlerde (modules/, auth/, simulation/) doğru çalışır.
     }
 
     // ============================================
@@ -167,10 +202,21 @@
             // Menü dışına tıklandığında menüyü kapat
             document.addEventListener('click', function(e) {
                 if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                    if (navMenu.classList.contains('active')) {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+            
+            // Menü linklerine tıklandığında menüyü kapat
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
                     hamburger.classList.remove('active');
                     navMenu.classList.remove('active');
                     hamburger.setAttribute('aria-expanded', 'false');
-                }
+                });
             });
         }
     }
@@ -178,11 +224,22 @@
     // ============================================
     // ÇIKIŞ FONKSİYONU
     // ============================================
-    // Kullanıcı çıkış işlemi - localStorage'ı temizler ve ana sayfaya yönlendirir
-    window.logout = function() {
+    // Kullanıcı çıkış işlemi - Supabase'den çıkış yapar ve localStorage'ı temizler
+    window.logout = async function() {
         // Kullanıcıdan onay al
         if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-            // Tüm kullanıcı verilerini localStorage'dan temizle
+            try {
+                // Supabase logout
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                    await window.supabaseAuthSystem.logout();
+                } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    await window.supabaseAuthSystem.supabase.auth.signOut();
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            
+            // Tüm kullanıcı verilerini localStorage'dan temizle (eski sistem için)
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('isVerified');
             localStorage.removeItem('userEmail');
@@ -190,46 +247,213 @@
             localStorage.removeItem('authToken');
             localStorage.removeItem('userRole');
             
-            // Mevcut sayfaya göre yönlendirme yap
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('admin.html')) {
-                window.location.href = 'index.html'; // Admin sayfasındaysa ana sayfaya yönlendir
-            } else {
-                window.location.href = 'index.html'; // Diğer sayfalardan ana sayfaya yönlendir
-            }
+            // Ana sayfaya yönlendir (root-relative - tüm dizinlerde doğru çalışır)
+            window.location.href = '/index.html';
         }
     };
 
     // Modüller sayfasına yönlendirme fonksiyonu
     window.redirectToModules = function(event) {
         if (event) event.preventDefault(); // Varsayılan link davranışını engelle
-        window.location.href = 'modules.html';
+        window.location.href = '/modules.html';
     };
+
+    // ============================================
+    // DARK MODE DESTEĞİ
+    // ============================================
+    // Dark mode toggle fonksiyonu
+    function initDarkModeToggle() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const html = document.documentElement;
+        
+        if (!darkModeToggle) return;
+        
+        // Kaydedilmiş tema kontrolü
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+        }
+        
+        // Toggle event listener
+        darkModeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                if (darkModeIcon) darkModeIcon.className = 'fas fa-moon';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+            }
+        });
+    }
 
     // ============================================
     // BAŞLATMA
     // ============================================
     // DOM hazır olduğunda navigasyonu başlat
     // DOM yüklenme durumunu kontrol et
+    async function initNavigation() {
+        // Supabase yüklenmesini bekle
+        if (typeof window.initSupabase !== 'undefined') {
+            try {
+                await window.initSupabase();
+                // SupabaseAuthSystem'in yüklenmesini bekle
+                let attempts = 0;
+                while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                // Auth state listener'ı kur
+                setupAuthStateListener();
+            } catch (error) {
+                console.warn('Supabase init error in navigation:', error);
+            }
+        }
+        
+        // Navigasyonu güncelle
+        await updateNavigation();
+        initHamburgerMenu();
+        initDarkModeToggle();
+        
+        // Logout button event listener'larını ekle
+        setupLogoutButtons();
+    }
+    
+    // ============================================
+    // LOGOUT BUTTON SETUP
+    // ============================================
+    // Tüm logout butonlarına event listener ekler
+    function setupLogoutButtons() {
+        const logoutButtons = document.querySelectorAll('.btn-logout, #logoutBtn');
+        logoutButtons.forEach(btn => {
+            // Eğer zaten listener eklenmişse tekrar ekleme
+            if (!btn.hasAttribute('data-logout-listener')) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.logout) {
+                        window.logout();
+                    }
+                });
+                btn.setAttribute('data-logout-listener', 'true');
+            }
+        });
+    }
+    
     if (document.readyState === 'loading') {
         // DOM henüz yükleniyorsa, yüklendiğinde başlat
         document.addEventListener('DOMContentLoaded', function() {
-            updateNavigation();
-            initHamburgerMenu();
+            initNavigation();
         });
     } else {
         // DOM zaten yüklenmişse hemen başlat
-        updateNavigation();
-        initHamburgerMenu();
+        initNavigation();
     }
 
     // Giriş durumu değiştiğinde navigasyonu güncelle
     // Başka bir sekmede giriş/çıkış yapıldığında bu sekmede de güncelleme yapılır
-    window.addEventListener('storage', function(e) {
+    window.addEventListener('storage', async function(e) {
         if (e.key === 'isLoggedIn' || e.key === 'userData') {
-            updateNavigation();
+            await updateNavigation();
         }
     });
+    
+    // Sayfa focus olduğunda session'ı kontrol et (sayfa değişikliklerinde)
+    window.addEventListener('focus', async function() {
+        if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+            try {
+                await window.supabaseAuthSystem.checkSession();
+                await updateNavigation();
+            } catch (error) {
+                console.warn('Focus session check error:', error);
+            }
+        }
+    });
+    
+    // Visibility change event (tab değişikliklerinde)
+    document.addEventListener('visibilitychange', async function() {
+        if (!document.hidden && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+            try {
+                await window.supabaseAuthSystem.checkSession();
+                await updateNavigation();
+            } catch (error) {
+                console.warn('Visibility change session check error:', error);
+            }
+        }
+    });
+    
+    // Supabase auth state değişikliklerini dinle
+    // Bu listener'ı initNavigation içinde de ekleyeceğiz
+    function setupAuthStateListener() {
+        if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+            // Eğer zaten listener varsa tekrar ekleme
+            if (!window.supabaseAuthSystem._navListenerAdded) {
+                window.supabaseAuthSystem.supabase.auth.onAuthStateChange(async (event, session) => {
+                    console.log('🔔 Navigation: Auth state changed:', event);
+                    await updateNavigation();
+                });
+                window.supabaseAuthSystem._navListenerAdded = true;
+            }
+        } else {
+            // SupabaseAuthSystem henüz yüklenmediyse, yüklendiğinde dinle
+            const checkSupabase = setInterval(() => {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    clearInterval(checkSupabase);
+                    if (!window.supabaseAuthSystem._navListenerAdded) {
+                        window.supabaseAuthSystem.supabase.auth.onAuthStateChange(async (event, session) => {
+                            console.log('🔔 Navigation: Auth state changed:', event);
+                            await updateNavigation();
+                        });
+                        window.supabaseAuthSystem._navListenerAdded = true;
+                    }
+                }
+            }, 500);
+            
+            // 10 saniye sonra timeout
+            setTimeout(() => clearInterval(checkSupabase), 10000);
+        }
+    }
+    
+    // Auth state listener'ı kur
+    setupAuthStateListener();
+    
+    // ============================================
+    // NAVBAR SCROLL EFFECT
+    // ============================================
+    // Scroll yapıldığında navbar'ın görünümünü günceller
+    let scrollTicking = false;
+    let lastScrollY = window.pageYOffset || window.scrollY;
+    
+    function updateNavbarOnScroll() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        const scrollY = window.pageYOffset || window.scrollY;
+        
+        if (scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        scrollTicking = false;
+    }
+    
+    window.addEventListener('scroll', () => {
+        lastScrollY = window.pageYOffset || window.scrollY;
+        if (!scrollTicking) {
+            scrollTicking = true;
+            requestAnimationFrame(updateNavbarOnScroll);
+        }
+    }, { passive: true });
+    
+    // İlk yüklemede kontrol et
+    updateNavbarOnScroll();
 
 })();
 

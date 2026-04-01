@@ -1,6 +1,6 @@
 // Enrollment Routes
 import express from 'express';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 import { prisma } from '../server.js';
 
 const router = express.Router();

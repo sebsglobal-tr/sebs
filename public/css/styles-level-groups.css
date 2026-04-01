@@ -1,0 +1,266 @@
+/* ============================================
+   LEVEL GROUP CARDS - ULTRA MODERN DESIGN
+   Enhanced styles for level-based module groups
+   ============================================ */
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Level Groups Container */
+.level-groups-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 1200px) {
+    .level-groups-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Level Group Card - modules.css ile uyumlu, sade (override sadece detaylar) */
+.level-group-content {
+    padding: 0;
+}
+
+.level-group-modules {
+    margin-bottom: 2rem;
+}
+
+.level-group-modules h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.level-group-modules h3::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    border-radius: 2px;
+}
+
+.module-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.module-list li {
+    padding: 0.625rem 0;
+    padding-left: 1.75rem;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: #4a5568;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+    line-height: 1.5;
+}
+
+.module-list li:last-child {
+    border-bottom: none;
+}
+
+.module-list li:hover {
+    color: #1e40af;
+}
+
+.module-list li i {
+    position: absolute;
+    left: 0;
+    color: #1e40af;
+    font-size: 1rem;
+}
+
+/* Level Group Features */
+.level-group-features {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    margin-top: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.feature-item i {
+    color: #1e40af;
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Level Group Footer */
+.level-group-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    gap: 1rem;
+}
+
+.level-group-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.price-label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.price-amount {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+/* Purchase Button */
+/* btn-purchase ana stiller modules.css'de */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .level-groups-container {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 0 1rem;
+    }
+
+    .level-group-header {
+        padding: 1.25rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .level-group-icon {
+        align-self: center;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .level-group-title {
+        font-size: 1.25rem;
+    }
+
+    .level-group-description {
+        font-size: 0.875rem;
+    }
+
+    .level-group-content {
+        padding: 1.25rem;
+    }
+
+    .level-group-footer {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .level-group-price {
+        text-align: center;
+    }
+
+    .price-amount {
+        font-size: 1.5rem;
+    }
+
+    .btn-purchase {
+        width: 100%;
+        justify-content: center;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .level-group-features {
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .level-groups-container {
+        padding: 0 0.75rem;
+        gap: 1rem;
+    }
+
+    .level-group-header {
+        padding: 1rem;
+    }
+
+    .level-group-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.25rem;
+    }
+
+    .level-group-title {
+        font-size: 1.1rem;
+    }
+
+    .level-group-description {
+        font-size: 0.8rem;
+    }
+
+    .level-group-content {
+        padding: 1rem;
+    }
+
+    .level-group-modules h3 {
+        font-size: 0.95rem;
+    }
+
+    .module-list li {
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+    }
+
+    .level-group-footer {
+        padding: 0.875rem 1rem;
+    }
+
+    .price-amount {
+        font-size: 1.4rem;
+    }
+
+    .btn-purchase {
+        padding: 0.625rem 1rem;
+        font-size: 0.85rem;
+    }
+}

@@ -2,6 +2,7 @@
 import { prisma } from '../server.js';
 import { generateCertificate } from '../utils/certificate-generator.js';
 import { generateAdvancedAIReport } from '../utils/ai-reporter.js';
+import { generateAIReport } from '../utils/real-ai-service.js';
 
 // Get user certificates
 export async function getUserCertificates(req, res, next) {
@@ -239,20 +240,36 @@ export async function getCertificateReport(req, res, next) {
     
     console.log('📈 User progress:', userProgress.length, 'modules');
     
-    // Use advanced AI reporter
+    // Prepare user data for AI analysis
+    const userData = {
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email,
+      accessLevel: user.accessLevel || 'beginner'
+    };
+    
+    // Try to generate real AI report first, fallback to pattern-based
     let report;
     try {
+      // Try real AI service (OpenAI if configured)
+      report = await generateAIReport(userData, certificate, metadata);
+      console.log('✅ AI report generated successfully');
+    } catch (aiError) {
+      console.error('❌ AI report error, using fallback:', aiError.message);
+      // Fallback to pattern-based analysis
+    try {
       report = generateAdvancedAIReport(certificate, metadata, userProgress);
-      console.log('✅ Report generated successfully');
+        console.log('✅ Fallback report generated successfully');
     } catch (reportError) {
-      console.error('❌ Error generating report:', reportError);
-      // Fallback to simple report
+        console.error('❌ Fallback report error:', reportError);
+        // Final fallback
       report = {
         summary: 'Rapor oluşturulurken bir hata oluştu.',
         strengths: [],
         areasForImprovement: ['Lütfen sistem yöneticisine bildirin.'],
         recommendations: []
       };
+      }
     }
 
     res.json({
@@ -457,91 +474,5 @@ function getCategoryTitle(category) {
 
 function getCategoryDescription(category) {
   return `${getCategoryTitle(category)} sertifikasyon programını başarıyla tamamladınız.`;
-}
-
-function generateAIReport(certificate, metadata) {
-  const report = {
-    summary: `Bu sertifika ${Math.round(certificate.completionTime / 60)} saatte tamamlandı. ${metadata.modules?.length || 0} modül ve ${metadata.simulations?.length || 0} simülasyon başarıyla tamamlandı.`,
-    strengths: [],
-    areasForImprovement: [],
-    recommendations: []
-  };
-
-  // Analyze performance
-  if (metadata.avgScore) {
-    if (metadata.avgScore >= 90) {
-      report.strengths.push('Mükemmel başarı oranı (%' + metadata.avgScore + ')');
-      report.strengths.push('Yüksek performans gösterdiniz');
-    } else if (metadata.avgScore >= 80) {
-      report.strengths.push('İyi başarı oranı (%' + metadata.avgScore + ')');
-    } else if (metadata.avgScore >= 70) {
-      report.areasForImprovement.push('Başarı oranınız %' + metadata.avgScore + ' - İyileştirme için ek çalışma önerilir');
-    } else if (metadata.avgScore >= 60) {
-      report.areasForImprovement.push('Başarı oranınız %' + metadata.avgScore + ' - Bu alanlarda daha fazla pratik yapmalısınız');
-    } else {
-      report.areasForImprovement.push('Başarı oranınız %' + metadata.avgScore + ' - Temel konuları tekrar gözden geçirmeniz önerilir');
-    }
-  }
-
-  // Analyze time spent
-  const hours = Math.round(certificate.completionTime / 60);
-  if (hours < 10) {
-    report.strengths.push('Hızlı tamamlama - Etkili çalışma yaptınız');
-  } else if (hours > 50) {
-    report.strengths.push('Derinlemesine çalışma - Konuları detaylı öğrendiniz');
-  }
-
-  // Analyze errors
-  if (metadata.errors && metadata.errors.length > 0) {
-    report.areasForImprovement.push(
-      `${metadata.errors.length} farklı konuda hata tespit edildi. Bu konularda ek çalışma yapmanız önerilir.`
-    );
-    
-    // Group errors by category if possible
-    if (metadata.errors.length > 5) {
-      report.areasForImprovement.push(
-        'Çok sayıda hata tespit edildi - Temel konuları tekrar gözden geçirin'
-      );
-    }
-  }
-
-  // Analyze simulations
-  if (metadata.simulations && metadata.simulations.length > 0) {
-    const avgSimScore = metadata.simulations.reduce((sum, s) => sum + (s.score || 0), 0) / metadata.simulations.length;
-    if (avgSimScore >= 80) {
-      report.strengths.push('Simülasyonlarda yüksek performans gösterdiniz');
-    } else {
-      report.areasForImprovement.push('Simülasyonlarda daha fazla pratik yapmanız önerilir');
-    }
-  }
-
-  // Generate recommendations
-  if (metadata.avgScore < 70) {
-    report.recommendations.push(
-      'Temel konuları tekrar gözden geçirin',
-      'Daha fazla pratik yapın',
-      'Simülasyonları tekrar çözün'
-    );
-  } else if (metadata.avgScore < 85) {
-    report.recommendations.push(
-      'Eksik konularda ek kaynaklar inceleyin',
-      'Pratik yapmaya devam edin',
-      'İleri seviye konulara geçebilirsiniz'
-    );
-  } else {
-    report.recommendations.push(
-      'Mükemmel performans!',
-      'İleri seviye konuları öğrenebilirsiniz',
-      'Sertifikasyon sonrası pratik yapmaya devam edin'
-    );
-  }
-
-  // Add general recommendations
-  report.recommendations.push(
-    'Düzenli çalışma alışkanlığı edinin',
-    'Yaparak öğrenme yöntemini kullanın'
-  );
-
-  return report;
 }
 

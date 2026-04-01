@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-posta Doğrulama - SEBS Global</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .success {
+            color: #10b981;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success">⏳</div>
+        <h1>E-posta Doğrulanıyor...</h1>
+        <p>Lütfen bekleyin, e-posta doğrulama işlemi tamamlanıyor.</p>
+    </div>
+
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    
+    <script>
+        (async function() {
+            try {
+                // Supabase client'ı başlat
+                if (typeof window.initSupabase === 'undefined') {
+                    document.querySelector('.container').innerHTML = `
+                        <div class="success" style="color: #f59e0b;">⚠️</div>
+                        <h1>Yükleniyor...</h1>
+                        <p>Supabase client başlatılıyor, lütfen bekleyin.</p>
+                    `;
+                    
+                    // Script yüklenmesini bekle
+                    let attempts = 0;
+                    while (typeof window.initSupabase === 'undefined' && attempts < 50) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                    
+                    if (typeof window.initSupabase === 'undefined') {
+                        throw new Error('Supabase client yüklenemedi');
+                    }
+                }
+                
+                const supabase = await window.initSupabase();
+                
+                if (!supabase) {
+                    throw new Error('Supabase client oluşturulamadı');
+                }
+                
+                // Get hash from URL (Supabase redirects with hash)
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                const accessToken = hashParams.get('access_token');
+                const type = hashParams.get('type');
+                
+                if (type === 'recovery') {
+                    // Password reset
+                    document.querySelector('.container').innerHTML = `
+                        <div class="success">🔑</div>
+                        <h1>Şifre Sıfırlama</h1>
+                        <p>Şifrenizi sıfırlamak için yeni bir sayfa açılacak.</p>
+                    `;
+                    // Redirect to password reset page
+                    setTimeout(() => {
+                        window.location.href = 'reset-password.html' + window.location.hash;
+                    }, 1500);
+                    return;
+                }
+                
+                if (accessToken) {
+                    // Set session
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: hashParams.get('refresh_token')
+                    });
+                    
+                    if (error) {
+                        console.error('Session set error:', error);
+                        document.querySelector('.container').innerHTML = `
+                            <div class="success" style="color: #ef4444;">❌</div>
+                            <h1>Doğrulama Hatası</h1>
+                            <p>${error.message || 'E-posta doğrulama sırasında bir hata oluştu.'}</p>
+                            <a href="/login.html" class="btn">Giriş Sayfasına Dön</a>
+                        `;
+                        return;
+                    }
+                    
+                    if (data && data.user) {
+                        // Profile oluşturulduğundan emin ol (trigger olmalı ama kontrol edelim)
+                        try {
+                            const { data: profile } = await supabase
+                                .from('profiles')
+                                .select('id')
+                                .eq('id', data.user.id)
+                                .single();
+                            
+                            if (!profile) {
+                                console.log('Profile not found, will be created by trigger');
+                            }
+                        } catch (profileError) {
+                            console.log('Profile check error (will be created automatically):', profileError);
+                        }
+                        
+                        document.querySelector('.container').innerHTML = `
+                            <div class="success">✅</div>
+                            <h1>E-posta Başarıyla Doğrulandı!</h1>
+                            <p>Hesabınız aktif edildi. Dashboard'a yönlendiriliyorsunuz...</p>
+                        `;
+                        
+                        setTimeout(() => {
+                            window.location.href = '/dashboard.html';
+                        }, 2000);
+                    } else {
+                        throw new Error('Kullanıcı bilgisi alınamadı');
+                    }
+                } else {
+                    // URL'de hash yoksa, query string'i kontrol et
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const accessTokenQuery = urlParams.get('access_token');
+                    
+                    if (accessTokenQuery) {
+                        // Query string'den session oluştur
+                        const { data, error } = await supabase.auth.setSession({
+                            access_token: accessTokenQuery,
+                            refresh_token: urlParams.get('refresh_token')
+                        });
+                        
+                        if (error || !data || !data.user) {
+                            throw new Error('Session oluşturulamadı');
+                        }
+                        
+                        document.querySelector('.container').innerHTML = `
+                            <div class="success">✅</div>
+                            <h1>E-posta Başarıyla Doğrulandı!</h1>
+                            <p>Hesabınız aktif edildi. Dashboard'a yönlendiriliyorsunuz...</p>
+                        `;
+                        
+                        setTimeout(() => {
+                            window.location.href = '/dashboard.html';
+                        }, 2000);
+                    } else {
+                        throw new Error('Doğrulama linki bulunamadı');
+                    }
+                }
+            } catch (error) {
+                console.error('Callback error:', error);
+                document.querySelector('.container').innerHTML = `
+                    <div class="success" style="color: #f59e0b;">⚠️</div>
+                    <h1>Doğrulama Linki Bulunamadı</h1>
+                    <p>Geçerli bir doğrulama linki değil. Lütfen e-postanızdaki linki kullanın.</p>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">Hata: ${error.message || 'Bilinmeyen hata'}</p>
+                    <a href="login.html" class="btn" style="margin-top: 20px;">Giriş Sayfasına Dön</a>
+                `;
+            }
+        })();
+    </script>
+</body>
+</html>

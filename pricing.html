@@ -7,8 +7,8 @@
     <meta name="description" content="SEBS Global eğitim paketleri. Siber güvenlik, bulut bilişim ve daha fazlası için uygun fiyatlı paketler.">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png">
-    <link rel="apple-touch-icon" href="SEBS.png">
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,56 +19,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
     
-    <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            --gradient-green: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        <style>
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
         }
-
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-        }
-
+        
+        /* ============================================
+           PRICING PAGE - ULTRA MODERN DESIGN
+           ============================================ */
+        
         /* Hero Section */
         .pricing-hero {
-            background: var(--gradient-purple);
-            padding: 120px 0 80px;
-            text-align: center;
-            color: white;
             position: relative;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
             overflow: hidden;
         }
-
-        [data-theme="dark"] .pricing-hero {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 30%, #475569 100%);
-        }
-
+        
         .pricing-hero::before {
             content: '';
             position: absolute;
@@ -76,83 +61,138 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 64, 175, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 50%);
+            z-index: 0;
         }
-
+        
+        .pricing-hero .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
         .pricing-hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #d4a853 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
+            line-height: 1.2;
         }
-
+        
         .pricing-hero p {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            max-width: 600px;
+            font-size: 1.35rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            line-height: 1.8;
         }
-
+        
         /* Category Tabs */
         .category-tabs {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin: 3rem 0;
+            margin: 3rem auto;
+            max-width: 800px;
             flex-wrap: wrap;
         }
-
+        
         .category-tab {
-            padding: 0.75rem 1.5rem;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 1rem 2.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.05rem;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: 500;
             transition: all 0.3s ease;
-            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
-
+        
+        .category-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .category-tab:hover::before {
+            left: 100%;
+        }
+        
         .category-tab:hover {
-            border-color: var(--gradient-purple);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(30, 64, 175, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
+        }
+        
+        .category-tab.active {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            border-color: #1e40af;
+            color: white;
+            box-shadow: 0 8px 30px rgba(30, 64, 175, 0.5);
             transform: translateY(-2px);
         }
-
-        .category-tab.active {
-            background: var(--gradient-purple);
-            color: white;
-            border-color: transparent;
-        }
-
-        /* Pricing Cards */
+        
+        /* Pricing Container */
         .pricing-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+            padding: 4rem 0 6rem;
+            background: var(--bg-primary);
+            position: relative;
         }
-
+        
+        .pricing-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(30, 64, 175, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
         }
-
+        
+        /* Pricing Card */
         .pricing-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 2.5rem;
-            position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
-
+        
         .pricing-card::before {
             content: '';
             position: absolute;
@@ -160,229 +200,300 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gradient-purple);
+            background: linear-gradient(90deg, #1e40af, #2563eb, #d4a853);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
+        
         .pricing-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border-color: var(--gradient-purple);
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(30, 64, 175, 0.5);
+            box-shadow: 0 20px 60px rgba(30, 64, 175, 0.4), 0 0 80px rgba(37, 99, 235, 0.2);
         }
-
-        [data-theme="dark"] .pricing-card:hover {
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
+        
         .pricing-card:hover::before {
             opacity: 1;
         }
-
+        
         .pricing-card.featured {
-            border: 3px solid;
-            border-image: var(--gradient-purple) 1;
+            border-color: rgba(30, 64, 175, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(30, 64, 175, 0.3);
             transform: scale(1.05);
         }
-
+        
         .pricing-card.featured::before {
             opacity: 1;
         }
-
+        
+        .pricing-card.featured .pricing-level {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        /* Pricing Header */
         .pricing-header {
             text-align: center;
             margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .pricing-level {
-            font-size: 0.875rem;
-            font-weight: 600;
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: rgba(30, 64, 175, 0.2);
+            border: 1px solid rgba(30, 64, 175, 0.3);
+            border-radius: 50px;
+            color: #818cf8;
+            font-size: 0.85rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.75rem;
-            font-weight: 700;
+            letter-spacing: 1px;
             margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .pricing-price {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            background: var(--gradient-purple);
+        }
+        
+        .pricing-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .pricing-price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #d4a853 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1;
             margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
         }
-
+        
         .pricing-period {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
         }
-
+        
+        /* Pricing Features */
         .pricing-features {
             list-style: none;
             padding: 0;
-            margin: 2rem 0;
-        }
-
-        .pricing-features li {
-            padding: 0.75rem 0;
+            margin: 0 0 2rem 0;
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-primary);
+            flex-direction: column;
+            gap: 1rem;
         }
-
-        .pricing-features li i {
-            color: #22c55e;
-            font-size: 1.125rem;
+        
+        .pricing-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            line-height: 1.6;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
-
+        
+        .pricing-features li:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+            border-color: rgba(30, 64, 175, 0.3);
+        }
+        
         .pricing-features li.disabled {
             opacity: 0.5;
-            color: var(--text-secondary);
+            text-decoration: line-through;
         }
-
+        
+        .pricing-features li i {
+            color: #22c55e;
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+        
         .pricing-features li.disabled i {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.3);
         }
-
+        
+        /* Purchase Button */
         .btn-purchase {
             width: 100%;
-            padding: 1rem 2rem;
-            background: var(--gradient-purple);
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
-
-        .btn-purchase:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-purchase:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Access Level Info */
-        .access-info {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .access-info p {
-            margin: 0;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        /* Loading Overlay */
-        .loading-overlay {
-            position: fixed;
+        
+        .btn-purchase::before {
+            content: '';
+            position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: var(--gradient-purple);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
         }
-
-        [data-theme="dark"] .loading-overlay {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
+        
+        .btn-purchase:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(30, 64, 175, 0.6), 0 0 60px rgba(37, 99, 235, 0.4);
         }
-
-        .loading-overlay.active {
-            display: flex;
+        
+        .btn-purchase:hover::before {
+            left: 100%;
         }
-
-        .loading-container {
+        
+        .btn-purchase:disabled {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+        
+        .btn-purchase:disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        
+        .btn-purchase i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-purchase:hover i:not(:disabled) {
+            transform: rotate(360deg) scale(1.2);
+        }
+        
+        /* Access Info */
+        .access-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            color: #22c55e;
+            font-size: 0.9rem;
             text-align: center;
-            color: white;
-        }
-
-        .loading-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 2rem;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
+            gap: 0.5rem;
         }
-
-        .loading-logo img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
+        
+        .access-info i {
+            font-size: 1.1rem;
         }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
+        
+        /* Info Section */
+        .access-info-section {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-align: center;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            animation: fadeInOut 2s ease-in-out infinite;
-        }
-
-        .loading-subtext {
+        
+        .access-info-section p {
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1rem;
-            opacity: 0.8;
-            animation: fadeInOut 2s ease-in-out infinite;
+            line-height: 1.8;
+            margin: 0;
         }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        
+        .access-info-section i {
+            color: #818cf8;
+            margin-right: 0.5rem;
         }
-
+        
+        .access-info-section strong {
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+        
         @media (max-width: 768px) {
+            .pricing-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .pricing-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 0 1.5rem;
+            }
+            
+            .pricing-card {
+                padding: 2rem;
+            }
+            
+            .pricing-price {
+                font-size: 2.75rem;
+            }
+            
+            .category-tabs {
+                gap: 0.75rem;
+            }
+            
+            .category-tab {
+                padding: 0.875rem 1.75rem;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pricing-hero {
+                padding: 6rem 0 3rem;
+                min-height: 40vh;
+            }
+            
             .pricing-hero h1 {
                 font-size: 2rem;
             }
-
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-card.featured {
-                transform: scale(1);
+            
+            .pricing-price {
+                font-size: 2.25rem;
             }
         }
     </style>
@@ -392,7 +503,7 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
-                <img src="SEBS.png" alt="SEBS Global">
+                <img src="/images/SEBS.png" alt="SEBS Global">
             </div>
             <div class="loading-spinner"></div>
             <div class="loading-text">Yükleniyor...</div>
@@ -429,8 +540,8 @@
 
     <!-- Access Level Info -->
     <div class="container">
-        <div class="access-info">
-            <p><i class="fas fa-info-circle"></i> <strong>Not:</strong> Her paket sadece kendi seviyesine erişim sağlar. Temel Paket sadece başlangıç seviyesi, Orta Paket sadece orta seviye, Final Paketi sadece ileri seviye modül ve simülasyonlara erişim sağlar.</p>
+        <div class="access-info-section">
+            <p><i class="fas fa-info-circle"></i> <strong>Önemli Not:</strong> Her paket sadece kendi seviyesine erişim sağlar. Temel Paket sadece başlangıç seviyesi, Orta Paket sadece orta seviye, Final Paketi sadece ileri seviye modül ve simülasyonlara erişim sağlar.</p>
         </div>
     </div>
 
@@ -600,30 +711,54 @@
             return localStorage.getItem('isLoggedIn') === 'true';
         }
 
-        // Get user access level
-        function getUserAccessLevel() {
-            const userData = localStorage.getItem('userData');
-            if (userData) {
-                try {
-                    const user = JSON.parse(userData);
-                    return user.accessLevel || 'beginner';
-                } catch (e) {
-                    return 'beginner';
-                }
+        // Get user purchases from API
+        let userPurchases = [];
+        async function fetchUserPurchases() {
+            if (!isLoggedIn()) {
+                userPurchases = [];
+                return;
             }
-            return 'beginner';
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch((window.location.origin || '') + '/api/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.data && result.data.purchases) {
+                        userPurchases = result.data.purchases;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user purchases:', error);
+                userPurchases = [];
+            }
+        }
+
+        // Check if user owns a specific package
+        function hasPurchasedPackage(category, level) {
+            return userPurchases.some(p => 
+                p.category === category && 
+                p.level === level &&
+                (p.expiresAt === null || new Date(p.expiresAt) > new Date())
+            );
         }
 
         // Render pricing cards
-        function renderPricingCards(category) {
+        async function renderPricingCards(category) {
+            // Önce kullanıcı satın alımlarını getir
+            await fetchUserPurchases();
+            
             const grid = document.getElementById('pricingGrid');
             const data = pricingData[category];
-            const userAccessLevel = getUserAccessLevel();
 
             grid.innerHTML = data.packages.map((pkg, index) => {
-                // Her paket sadece kendi seviyesine erişim sağlar
-                // Kullanıcı pakete sahipse sadece o seviyeye erişebilir
-                const isOwned = userAccessLevel === pkg.level;
+                // Gerçek satın alımlara göre kontrol et
+                const isOwned = hasPurchasedPackage(category, pkg.level);
                 const isFeatured = index === 1; // Middle package is featured
 
                 return `
@@ -652,38 +787,35 @@
                         >
                             ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-shopping-cart"></i> Satın Al'}
                         </button>
-                        ${isOwned ? '<div class="access-info" style="margin-top: 1rem; padding: 0.75rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; color: #22c55e; font-size: 0.875rem;"><i class="fas fa-check-circle"></i> Bu pakete sahipsiniz</div>' : ''}
+                        ${isOwned ? '<div class="access-info"><i class="fas fa-check-circle"></i> Bu pakete sahipsiniz</div>' : ''}
                     </div>
                 `;
             }).join('');
         }
 
         // Handle category tab click
-        document.getElementById('categoryTabs').addEventListener('click', (e) => {
+        document.getElementById('categoryTabs').addEventListener('click', async (e) => {
             if (e.target.classList.contains('category-tab')) {
                 document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
                 e.target.classList.add('active');
                 currentCategory = e.target.dataset.category;
-                renderPricingCards(currentCategory);
+                await renderPricingCards(currentCategory);
             }
         });
 
         // Handle purchase click (not logged in)
         function handlePurchaseClick(event) {
             event.preventDefault();
-            if (!isLoggedIn()) {
-                if (confirm('Satın alma işlemi için giriş yapmanız gerekiyor. Giriş sayfasına yönlendirileceksiniz.')) {
-                    window.location.href = 'login.html?redirect=pricing.html';
-                }
-            }
+            event.stopPropagation();
+            // Giriş yapılmamışsa direkt login sayfasına yönlendir
+            window.location.href = 'login.html?redirect=pricing.html&message=Satın alma işlemi için giriş yapmanız veya kayıt olmanız gerekiyor.';
         }
 
         // Handle purchase
         async function handlePurchase(event) {
+            // Giriş kontrolü - giriş yapılmamışsa direkt login sayfasına yönlendir
             if (!isLoggedIn()) {
-                if (confirm('Satın alma işlemi için giriş yapmanız gerekiyor. Giriş sayfasına yönlendirileceksiniz.')) {
-                    window.location.href = 'login.html?redirect=pricing.html';
-                }
+                window.location.href = 'login.html?redirect=pricing.html&message=Satın alma işlemi için giriş yapmanız veya kayıt olmanız gerekiyor.';
                 return;
             }
 
@@ -710,7 +842,7 @@
 
             try {
                 const token = localStorage.getItem('authToken');
-                const response = await fetch('http://localhost:8006/api/purchase', {
+                const response = await fetch((window.location.origin || '') + '/api/purchase', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -726,13 +858,14 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Purchase saved to database - no need to store in localStorage
-                    // All data will be fetched from database when needed
+                    // Purchase saved to database - refresh purchases and re-render cards
                     console.log('✅ Purchase successful - saved to database');
                     
-                    // Redirect to modules page to view purchased content
-                    alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi. Modüller sayfasına yönlendiriliyorsunuz...');
-                    window.location.href = 'modules.html';
+                    // Satın alımları yeniden getir ve kartları güncelle
+                    await fetchUserPurchases();
+                    await renderPricingCards(category);
+                    
+                    alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi.');
                 } else {
                     alert('❌ Satın alma işlemi başarısız: ' + (result.message || 'Bilinmeyen hata'));
                     button.disabled = false;
@@ -766,7 +899,7 @@
                 });
             }
             
-            renderPricingCards(currentCategory);
+            await renderPricingCards(currentCategory);
             
             // Scroll to pricing cards if level is specified
             if (urlLevel) {
@@ -775,8 +908,8 @@
                     if (targetCard) {
                         targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         // Highlight the card
-                        targetCard.closest('.pricing-card').style.border = '3px solid #667eea';
-                        targetCard.closest('.pricing-card').style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
+                        targetCard.closest('.pricing-card').style.border = '3px solid #1e40af';
+                        targetCard.closest('.pricing-card').style.boxShadow = '0 0 20px rgba(30, 64, 175, 0.5)';
                     }
                 }, 500);
             }
@@ -787,6 +920,15 @@
             }, 500);
         });
     </script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <!-- Navigation Script -->
+    <script src="js/navigation.js"></script>
 </body>
 </html>
 

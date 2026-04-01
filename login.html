@@ -9,8 +9,9 @@
     <meta name="author" content="SEBS Global">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png?v=1.0">
-    <link rel="apple-touch-icon" href="SEBS.png?v=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,206 +22,101 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
     
-    <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-            --success-color: #22c55e;
-            --warning-color: #facc15;
-            --danger-color: #ef4444;
-        }
-
-        [data-theme="dark"] {
-            /* Modern Dark Theme - Professional Design */
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+        <style>
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
             justify-content: center;
-            background: var(--primary-gradient);
-            padding: 20px;
-        }
-
-        .login-card {
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-        }
-
-        .login-header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .form-group input.error {
-            border-color: var(--danger-color);
-        }
-
-        .error-message {
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        .success-message {
-            color: var(--success-color);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(49, 130, 206, 0.3);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .signup-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .login-status {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .login-status.success {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            border-left: 4px solid var(--success-color);
-        }
-
-        .login-status.error {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            border-left: 4px solid var(--danger-color);
-        }
-
-
-        @media (max-width: 768px) {
-            .login-card {
-                padding: 30px 20px;
-            }
-            
-            .login-header h1 {
-                font-size: 2rem;
-            }
+            align-items: center;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="nav-logo">
+                <!-- Logo resmi - yüklenemezse SVG fallback -->
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" id="navLogoImg"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panelim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -253,13 +149,40 @@
             </div>
 
             <div class="signup-link">
-                <p>Hesabınız yok mu? <a href="signup.html">Üye Olun</a></p>
+                <p>Hesabınız yok mu? <a href="/signup.html">Üye Olun</a></p>
             </div>
         </div>
     </div>
 
     <script>
         console.log('✅ Login page script loaded');
+        
+        // Logo error handler (CSP uyumlu)
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImg = document.getElementById('navLogoImg');
+            if (logoImg) {
+                logoImg.addEventListener('error', function() {
+                    const svg = this.nextElementSibling;
+                    if (svg && svg.classList.contains('nav-logo-svg')) {
+                        this.style.display = 'none';
+                        svg.style.display = 'inline-flex';
+                    }
+                });
+            }
+            
+            // Logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                        window.supabaseAuthSystem.logout();
+                    } else if (window.logout) {
+                        window.logout();
+                    }
+                });
+            }
+        });
         
         // Global error handler
         window.addEventListener('error', function(e) {
@@ -344,6 +267,11 @@
             console.log('Progress sync skipped - all data stored in database');
             return;
 
+            /* 
+            // OLD CODE - Commented out to prevent syntax errors
+            // This code is no longer used but kept for reference
+            
+            try {
                 // Get all courses to map module names to IDs
                 const coursesResponse = await fetch('http://localhost:8006/api/courses', {
                     headers: {
@@ -418,6 +346,7 @@
             } catch (error) {
                 console.error('Error syncing progress:', error);
             }
+            */
         }
 
         // Form submission
@@ -434,92 +363,135 @@
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
                 
-                // API login call
-                const response = await fetch('http://localhost:8006/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                });
+                console.log('🔍 Login attempt started');
+                console.log('   Email:', email);
                 
-                const result = await response.json();
-                console.log('🔍 Login response:', result);
+                // Supabase script yüklendi mi kontrol et
+                if (typeof window.supabase === 'undefined') {
+                    console.error('❌ Supabase script yüklenmedi!');
+                    showLoginStatus(`
+                        <h4><i class="fas fa-exclamation-triangle"></i> Supabase Yüklenemedi</h4>
+                        <p>Supabase kütüphanesi yüklenemedi. Lütfen:</p>
+                        <ul style="text-align: left; margin: 10px 0; padding-left: 20px;">
+                            <li>Sayfayı yenileyin (F5 veya Ctrl+Shift+R)</li>
+                            <li>Internet bağlantınızı kontrol edin</li>
+                            <li>Tarayıcı console'unu kontrol edin (F12)</li>
+                        </ul>
+                    `, false);
+                    return;
+                }
                 
-                if (result.success) {
-                    // Login successful
-                    // Handle both response formats: { data: { tokens: { accessToken } } } or { data: { token } }
-                    const accessToken = result.data.tokens?.accessToken || result.data.token || result.data.accessToken;
-                    const userRole = result.data.user?.role || result.data.role || 'user';
-                    
-                    if (!accessToken) {
-                        console.error('❌ No access token in response:', result);
+                console.log('✅ Supabase script loaded');
+                
+                // Supabase client'ı başlat
+                if (typeof window.initSupabase === 'undefined') {
+                    console.error('❌ initSupabase fonksiyonu bulunamadı!');
+                    showLoginStatus(`
+                        <h4><i class="fas fa-exclamation-triangle"></i> Başlatma Hatası</h4>
+                        <p>Supabase client başlatılamadı. Lütfen sayfayı yenileyin.</p>
+                    `, false);
+                    return;
+                }
+                
+                console.log('⏳ Supabase client başlatılıyor...');
+                await window.initSupabase();
+                
+                // SupabaseAuthSystem oluştur
+                if (!window.supabaseAuthSystem) {
+                    if (typeof SupabaseAuthSystem === 'undefined') {
+                        console.error('❌ SupabaseAuthSystem class bulunamadı!');
                         showLoginStatus(`
-                            <h4><i class="fas fa-exclamation-triangle"></i> Hata</h4>
-                            <p>Login başarılı ancak token alınamadı. Lütfen tekrar deneyin.</p>
+                            <h4><i class="fas fa-exclamation-triangle"></i> Sistem Hatası</h4>
+                            <p>Supabase Auth System yüklenemedi. Lütfen sayfayı yenileyin.</p>
                         `, false);
                         return;
                     }
+                    console.log('⏳ SupabaseAuthSystem oluşturuluyor...');
+                    window.supabaseAuthSystem = new SupabaseAuthSystem();
                     
+                    // Init'in tamamlanmasını bekle
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.error('❌ Supabase client oluşturulamadı!');
+                    showLoginStatus(`
+                        <h4><i class="fas fa-exclamation-triangle"></i> Bağlantı Hatası</h4>
+                        <p>Supabase client oluşturulamadı. Lütfen sayfayı yenileyin.</p>
+                    `, false);
+                    return;
+                }
+                
+                console.log('✅ Supabase client ready');
+                console.log('⏳ Giriş yapılıyor...');
+                
+                const result = await window.supabaseAuthSystem.signIn(email, password);
+                console.log('🔍 Login response:', result);
+                
+                if (result.success) {
                     console.log('✅ Login successful');
-                    console.log('   Access Token:', accessToken ? 'Present' : 'Missing');
-                    console.log('   User Role:', userRole);
-                    console.log('   User Data:', result.data.user || result.data);
+                    console.log('   User:', result.user.email);
+                    console.log('   Session:', result.session ? 'Active' : 'Missing');
                     
-                    // Get full user data including purchases from /api/users/me
-                    let fullUserData = result.data.user || result.data;
+                    // Get user profile from Supabase (optional - if fails, continue with default)
+                    let userProfile = null;
                     try {
-                        const userMeResponse = await fetch('http://localhost:8006/api/users/me', {
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`
-                            }
-                        });
-                        if (userMeResponse.ok) {
-                            const userMeResult = await userMeResponse.json();
-                            if (userMeResult.success && userMeResult.data) {
-                                fullUserData = userMeResult.data;
-                                console.log('✅ Full user data with purchases loaded:', fullUserData);
-                            }
+                        const { data: profile, error: profileError } = await window.supabaseAuthSystem.supabase
+                            .from('profiles')
+                            .select('role, access_level')
+                            .eq('id', result.user.id)
+                            .single();
+                        
+                        if (!profileError && profile) {
+                            userProfile = profile;
+                            console.log('✅ User profile loaded:', userProfile);
+                        } else if (profileError) {
+                            // Profile yoksa oluştur (trigger olmalı ama yoksa manuel oluştur)
+                            console.warn('Profile not found, will be created automatically by trigger');
                         }
                     } catch (err) {
-                        console.warn('Could not fetch full user data, using login response:', err);
+                        console.warn('Could not fetch user profile:', err);
+                        // Profile yoksa sorun değil, trigger otomatik oluşturacak
                     }
                     
-                    // Store only essential data in localStorage (token and basic info)
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('isVerified', 'true');
-                    localStorage.setItem('userEmail', email);
-                    localStorage.setItem('authToken', accessToken);
-                    localStorage.setItem('userRole', userRole);
-                    
-                    // Store minimal user data (ID only for API calls)
-                    localStorage.setItem('userId', fullUserData.id || '');
-                    
-                    // DO NOT store full user data, purchases, or progress in localStorage
-                    // All data will be fetched from database when needed
-                    console.log('✅ Login successful - data will be fetched from database');
-                    
-                    // Check if user is admin
+                    const userRole = userProfile?.role || 'user';
                     const isAdmin = userRole === 'admin';
-                    const redirectUrl = isAdmin ? 'admin.html' : 'dashboard.html';
+                    
+                    // Check for redirect parameter in URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let redirectUrl = urlParams.get('redirect');
+                    
+                    // If no redirect specified, use default based on role
+                    // Normal kullanıcılar için her zaman dashboard.html'e yönlendir
+                    if (!redirectUrl) {
+                        redirectUrl = 'dashboard.html';
+                    }
+                    
+                    // Add category and level parameters if they exist
+                    const category = urlParams.get('category');
+                    const level = urlParams.get('level');
+                    if (category && level && redirectUrl.includes('pricing.html')) {
+                        redirectUrl += `?category=${category}&level=${level}`;
+                    }
+                    
                     const panelName = isAdmin ? 'Admin Panel' : 'Kişisel Panel';
                     
-                    console.log('   Is Admin:', isAdmin);
+                    console.log('   User Role:', userRole);
                     console.log('   Redirect URL:', redirectUrl);
                     
-                    // No need to sync - all data is in database
-                    console.log('✅ Login successful - all data will be loaded from database');
-                    
+                    const buttonId = 'redirectBtn_' + Date.now();
                     showLoginStatus(`
                         <h4><i class="fas fa-check-circle"></i> Giriş Başarılı!</h4>
                         <p>Hoş geldiniz! ${panelName}inize yönlendiriliyorsunuz...</p>
-                        <button onclick="window.location.href='${redirectUrl}'" class="btn-login" style="margin-top: 15px;">
+                        <button id="${buttonId}" class="btn-login" style="margin-top: 15px;">
                             ${panelName}e Git
                         </button>
                     `, true);
+                    
+                    // Button click handler (CSP uyumlu)
+                    document.getElementById(buttonId).addEventListener('click', function() {
+                        window.location.href = redirectUrl;
+                    });
                     
                     // Auto redirect after 2 seconds
                     setTimeout(() => {
@@ -530,33 +502,128 @@
                     document.getElementById('loginForm').reset();
                     
                 } else {
-                    showLoginStatus(`
-                        <h4><i class="fas fa-exclamation-triangle"></i> Giriş Başarısız</h4>
-                        <p>${result.message}</p>
-                    `, false);
+                    // Email doğrulama gerekiyorsa özel mesaj göster
+                    if (result.requiresEmailVerification) {
+                        showLoginStatus(`
+                            <h4><i class="fas fa-envelope"></i> E-posta Doğrulama Gerekli</h4>
+                            <p>${result.message || 'E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin ve doğrulama linkine tıklayın.'}</p>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">
+                                <a href="/signup.html" style="color: #3b82f6;">Yeni hesap oluştur</a> veya 
+                                <a href="#" id="resendVerificationLink" style="color: #3b82f6;">Doğrulama e-postasını tekrar gönder</a>
+                            </p>
+                        `, false);
+                        
+                        // Resend verification email handler
+                        const resendLink = document.getElementById('resendVerificationLink');
+                        if (resendLink) {
+                            resendLink.addEventListener('click', async function(e) {
+                                e.preventDefault();
+                                try {
+                                    const email = document.getElementById('email').value.trim();
+                                    if (email) {
+                                        const { error: resendError } = await window.supabaseAuthSystem.supabase.auth.resend({
+                                            type: 'signup',
+                                            email: email
+                                        });
+                                        if (resendError) {
+                                            alert('E-posta gönderilemedi: ' + resendError.message);
+                                        } else {
+                                            alert('Doğrulama e-postası tekrar gönderildi!');
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error('Resend verification error:', err);
+                                }
+                            });
+                        }
+                    } else {
+                        showLoginStatus(`
+                            <h4><i class="fas fa-exclamation-triangle"></i> Giriş Başarısız</h4>
+                            <p>${result.message || 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.'}</p>
+                        `, false);
+                    }
                 }
 
             } catch (error) {
+                console.error('❌ Login error:', error);
+                console.error('   Error type:', error.constructor.name);
+                console.error('   Error message:', error.message);
+                console.error('   Error stack:', error.stack);
+                
+                let errorMessage = 'Giriş işlemi sırasında bir hata oluştu.';
+                
+                if (error.message) {
+                    if (error.message.includes('Supabase')) {
+                        errorMessage = 'Supabase bağlantı hatası. Lütfen sayfayı yenileyin (F5).';
+                    } else if (error.message.includes('network') || error.message.includes('fetch')) {
+                        errorMessage = 'Sunucuya bağlanılamadı. Internet bağlantınızı kontrol edin.';
+                    } else if (error.message.includes('timeout')) {
+                        errorMessage = 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.';
+                    } else {
+                        errorMessage = error.message;
+                    }
+                }
+                
                 showLoginStatus(`
                     <h4><i class="fas fa-exclamation-triangle"></i> Hata</h4>
-                    <p>Giriş işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.</p>
+                    <p>${errorMessage}</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                        Detaylar için tarayıcı console'unu kontrol edin (F12)
+                    </p>
                 `, false);
             } finally {
                 hideLoading();
             }
         });
 
-        // Check if already logged in
-        function checkIfLoggedIn() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const userRole = localStorage.getItem('userRole') || 'user';
-            
-            if (isLoggedIn) {
-                // Already logged in, redirect to appropriate panel
-                const redirectUrl = userRole === 'admin' ? 'admin.html' : 'dashboard.html';
-                console.log('Already logged in, redirecting to:', redirectUrl);
-                window.location.href = redirectUrl;
-                return true;
+        // Check if already logged in (Supabase)
+        async function checkIfLoggedIn() {
+            try {
+                // Supabase client'ı başlat
+                if (typeof window.initSupabase === 'undefined') {
+                    console.warn('initSupabase not available yet');
+                    return false;
+                }
+                
+                await window.initSupabase();
+                
+                if (!window.supabaseAuthSystem) {
+                    if (typeof SupabaseAuthSystem === 'undefined') {
+                        console.warn('SupabaseAuthSystem not loaded yet');
+                        return false;
+                    }
+                    window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    // Init'in tamamlanmasını bekle
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.warn('Supabase client not ready');
+                    return false;
+                }
+                
+                const { data: { session }, error } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (error) {
+                    console.warn('Session check error:', error);
+                    return false;
+                }
+                
+                if (session && session.user) {
+                    // Email doğrulanmamışsa login sayfasında kal
+                    if (!session.user.email_confirmed_at) {
+                        console.log('User not verified, staying on login page');
+                        return false;
+                    }
+                    
+                    // Normal kullanıcılar için her zaman dashboard.html'e yönlendir
+                    const redirectUrl = 'dashboard.html';
+                    console.log('Already logged in, redirecting to:', redirectUrl);
+                    window.location.href = redirectUrl;
+                    return true;
+                }
+            } catch (error) {
+                console.error('Session check error:', error);
             }
             return false;
         }
@@ -564,6 +631,64 @@
         // Initialize form
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Login page DOM loaded');
+            
+            // Supabase script yüklendi mi kontrol et
+            setTimeout(() => {
+                if (typeof window.supabase === 'undefined') {
+                    console.error('❌ Supabase script yüklenmedi!');
+                    console.log('   Beklenen: /assets/vendor/supabase.min.js');
+                    console.log('   Kontrol: Script tag var mı?');
+                    
+                    // Script tag'i kontrol et
+                    const scripts = document.querySelectorAll('script[src*="supabase"]');
+                    console.log('   Bulunan script tag sayısı:', scripts.length);
+                    scripts.forEach((script, index) => {
+                        console.log(`   Script ${index + 1}:`, script.src);
+                    });
+                } else {
+                    console.log('✅ Supabase script yüklendi');
+                }
+                
+                // initSupabase fonksiyonu var mı?
+                if (typeof window.initSupabase === 'undefined') {
+                    console.error('❌ initSupabase fonksiyonu bulunamadı!');
+                    console.log('   Beklenen: /js/supabase-client.js yüklenmeli');
+                } else {
+                    console.log('✅ initSupabase fonksiyonu mevcut');
+                }
+                
+                // SupabaseAuthSystem class var mı?
+                if (typeof SupabaseAuthSystem === 'undefined') {
+                    console.error('❌ SupabaseAuthSystem class bulunamadı!');
+                    console.log('   Beklenen: /js/supabase-auth.js yüklenmeli');
+                } else {
+                    console.log('✅ SupabaseAuthSystem class mevcut');
+                }
+            }, 1000);
+            
+            // Check for message parameter and display it
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            if (message) {
+                // Show message to user
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'info-message';
+                messageDiv.style.cssText = `
+                    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    margin-bottom: 1.5rem;
+                    text-align: center;
+                    font-size: 0.95rem;
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                `;
+                messageDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${decodeURIComponent(message)}`;
+                const loginContainer = document.querySelector('.login-container');
+                if (loginContainer) {
+                    loginContainer.insertBefore(messageDiv, loginContainer.firstChild);
+                }
+            }
             
             // Check if already logged in
             if (checkIfLoggedIn()) {
@@ -601,5 +726,28 @@
             }
         });
     </script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script>
+        // Supabase yüklendi mi kontrol et
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (typeof window.supabase === 'undefined') {
+                    console.error('❌ Supabase kütüphanesi yüklenemedi!');
+                    console.log('   CDN bağlantısı başarısız olabilir');
+                    console.log('   Internet bağlantınızı kontrol edin');
+                } else {
+                    console.log('✅ Supabase kütüphanesi yüklendi');
+                }
+            }, 500);
+        });
+    </script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <!-- Navigation Script -->
+    <script src="js/navigation.js"></script>
 </body>
 </html>

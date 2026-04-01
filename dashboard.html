@@ -6,866 +6,36 @@
     <title>Kullanıcı Paneli - SEBS Global</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png">
-    <link rel="apple-touch-icon" href="SEBS.png">
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Main Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
     
-    <style>
-        /* Dashboard Specific Styles */
-        .dashboard-main {
-            padding-top: 70px;
-            min-height: 100vh;
-        }
-
-        /* Hero Section */
-        .dashboard-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 4rem 2rem;
-            margin-bottom: 3rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dashboard-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
-            opacity: 0.3;
-            animation: backgroundMove 20s linear infinite;
-        }
-
-        @keyframes backgroundMove {
-            0% {
-                background-position: 0 0;
-            }
-            100% {
-                background-position: 100px 100px;
-            }
-        }
-
-        .dashboard-hero::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: float 15s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            animation: slideInDown 0.8s ease-out;
-        }
-
-        .welcome-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            animation: slideInUp 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 0.95;
-                transform: translateY(0);
-            }
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto 3rem;
-            padding: 0 2rem;
-        }
-
-        .stats-grid .stat-card {
-            animation: fadeInUp 0.6s ease both;
-        }
-
-        .stats-grid .stat-card:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        .stats-grid .stat-card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .stats-grid .stat-card:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .stats-grid .stat-card:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        /* Animated Counter */
-        .stat-number.animated {
-            animation: countUp 1.5s ease-out;
-        }
-
-        @keyframes countUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Pulse Animation for Icons */
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .stat-icon {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* Gradient Text */
-        .stat-number.gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Fade In Up Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Progress Fill Animation */
-        .progress-fill {
-            width: 0%;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .progress-fill.animate {
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Badge Styles */
-        .badge-success {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .badge-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .stat-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-icon.blue { background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%); }
-        .stat-icon.green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .stat-icon.purple { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
-        .stat-icon.orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-
-        /* Progress Section */
-        .progress-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem 3rem;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .progress-list {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .progress-item {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .progress-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .progress-item:hover::before {
-            left: 100%;
-        }
-
-        .progress-item:hover {
-            box-shadow: var(--shadow-xl);
-            transform: translateY(-5px) scale(1.01);
-            border-color: var(--primary-color);
-        }
-
-        .progress-item:active {
-            transform: translateY(-2px) scale(0.99);
-        }
-
-        .progress-item-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .progress-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-        }
-
-        .progress-info {
-            flex: 1;
-        }
-
-        .progress-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-detail {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .progress-circle {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .progress-circle svg {
-            transform: rotate(-90deg);
-            transition: all 0.6s ease;
-        }
-
-        .progress-circle-circle {
-            transition: stroke-dashoffset 1s ease-out;
-        }
-
-        .progress-circle-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: var(--primary-color);
-            transition: all 0.3s ease;
-        }
-
-        .progress-item:hover .progress-circle-text {
-            transform: translate(-50%, -50%) scale(1.1);
-            color: #667eea;
-        }
-
-        .progress-item:hover .progress-circle svg {
-            transform: rotate(-90deg) scale(1.05);
-        }
-
-        .progress-bar-container {
-            margin-top: 1rem;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .progress-action {
-            margin-top: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-
-        .btn-primary:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-primary:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0.25rem;
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            gap: 1rem;
-        }
-
-        .loading::after {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 3px solid #e2e8f0;
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .no-data i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .no-data h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .welcome-title {
-                font-size: 2rem;
-            }
-            .progress-item-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .progress-circle {
-                margin: 0 auto;
-            }
-        }
-
-        /* Certificates Section */
-        .certificates-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem 3rem;
-        }
-
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .certificate-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .certificate-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: height 0.3s ease;
-        }
-
-        .certificate-card::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-            pointer-events: none;
-        }
-
-        .certificate-card:hover::before {
-            height: 8px;
-        }
-
-        .certificate-card:hover::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        .certificate-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-color);
-        }
-
-        .certificate-card:active {
-            transform: translateY(-5px) scale(1);
-        }
-
-        .certificate-header-card {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .certificate-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .certificate-card:hover .certificate-icon {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .certificate-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .certificate-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .certificate-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        /* AI Report Modal */
-        .modal {
-            display: none;
+        <style>
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 10000;
-            overflow-y: auto;
-            padding: 2rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 900px;
             width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 2.5rem;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: scale(0.9) translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .modal-header h2 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .modal-close {
-            background: #f1f5f9;
-            border: none;
-            font-size: 1.5rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
+            height: 100%;
+            display: none;
             justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: #e2e8f0;
-            color: var(--text-primary);
-            transform: rotate(90deg);
-        }
-
-        .ai-report-section {
-            margin-bottom: 2rem;
-        }
-
-        .report-section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .report-item {
-            background: #f8fafc;
-            padding: 1.25rem;
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
-        }
-
-        .report-item:hover {
-            background: #f1f5f9;
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
-        }
-
-        .report-item.strength {
-            border-left-color: #22c55e;
-            background: #f0fdf4;
-        }
-
-        .report-item.strength:hover {
-            background: #dcfce7;
-        }
-
-        .report-item.improvement {
-            border-left-color: #f59e0b;
-            background: #fffbeb;
-        }
-
-        .report-item.improvement:hover {
-            background: #fef3c7;
-        }
-
-        /* Loading Animation */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .loading {
-            animation: pulse 2s infinite;
+            align-items: center;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -873,34 +43,47 @@
     <!-- Navbar -->
     <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo" id="navLogo">
-                <img src="SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <a href="/index.html" class="nav-logo" id="navLogo">
+                <!-- Logo resmi - yüklenemezse SVG fallback -->
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
+                     onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
             </a>
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li class="nav-item" role="none">
-                    <a href="index.html" class="nav-link" data-page="index" role="menuitem">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
                         <i class="fas fa-home"></i> Ana Sayfa
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
                         <i class="fas fa-book"></i> Eğitim Modülleri
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
                         <i class="fas fa-flask"></i> Simülasyonlar
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="about.html" class="nav-link" data-page="about" role="menuitem">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
                         <i class="fas fa-info-circle"></i> Hakkımızda
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
                         <i class="fas fa-envelope"></i> İletişim
                     </a>
                 </li>
@@ -913,10 +96,9 @@
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span class="user-name" id="userName">Kullanıcı</span>
                 </div>
-                <a href="dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: block;">
-                    <i class="fas fa-tachometer-alt"></i> Panel
-                </a>
-                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: block;">
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Çıkış Yap
                 </a>
             </div>
@@ -928,13 +110,46 @@
         </div>
     </nav>
 
+    <!-- Loading Overlay - Modern -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: flex; background: rgba(10, 10, 15, 0.92); backdrop-filter: blur(12px);">
+        <div style="text-align: center;">
+            <div class="loading-spinner" style="
+                width: 56px;
+                height: 56px;
+                border: 3px solid rgba(255,255,255,0.1);
+                border-top-color: #1e40af;
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+                margin: 0 auto 1.25rem;
+            "></div>
+            <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; font-weight: 500;">Dashboard yükleniyor...</p>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
     <!-- Dashboard Main -->
     <main class="dashboard-main">
         <!-- Hero Section -->
         <div class="dashboard-hero">
             <div class="hero-content">
-                <div class="welcome-title" id="welcomeTitle">Hoş Geldiniz!</div>
+                <div class="welcome-title" id="welcomeTitle">Kullanıcı</div>
                 <div class="welcome-subtitle">Eğitim yolculuğunuzda size özel içerikler ve ilerleme takibi</div>
+            </div>
+        </div>
+
+        <!-- Onboarding: ilk kullanıcı yönlendirmesi -->
+        <div id="onboardingCard" class="onboarding-card" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <div style="font-size: 2rem;">👋</div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">İlk adım: Eğitim modüllerinden birini seçin</strong>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Modülleri tamamlayarak ilerleme ve sertifika kazanabilirsiniz.</p>
+                </div>
+                <a href="/modules.html" class="btn-primary" style="margin-left: auto;">Eğitim Modüllerine Git</a>
             </div>
         </div>
 
@@ -967,12 +182,12 @@
                 </div>
                 <div class="stat-number" id="studyHours">0</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" title="Ardışık günlerde giriş yaparak veya modül tamamlayarak artar.">
                 <div class="stat-header">
                     <div class="stat-icon orange">
                         <i class="fas fa-fire"></i>
                     </div>
-                    <div class="stat-label">Günlük Seri</div>
+                    <div class="stat-label">Günlük Seri <i class="fas fa-info-circle" style="font-size: 0.75rem; opacity: 0.7;" title="Ardışık günlerde giriş veya modül tamamlama ile artar"></i></div>
                 </div>
                 <div class="stat-number" id="currentStreak">0</div>
             </div>
@@ -983,11 +198,27 @@
             <div class="progress-header">
                 <h2 class="section-title">Eğitim İlerlemesi</h2>
             </div>
-            <div class="progress-list" id="progressList">
-                <div class="no-data">
+            <!-- Tüm modüller için yatay kaydırmalı kart listesi -->
+            <div class="progress-list" id="progressList" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.75rem; scroll-snap-type: x mandatory;">
+                <div class="no-data" style="min-width: 260px;">
                     <i class="fas fa-book-reader"></i>
                     <h3>Henüz modül başlatmadınız</h3>
                     <p>Eğitim modüllerine göz atarak başlayın!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simülasyon geçmişi (API: progress/overview → simulationRuns) -->
+        <div class="progress-section" id="simulationHistorySection" style="margin-top: 2rem;">
+            <div class="progress-header">
+                <h2 class="section-title"><i class="fas fa-flask" style="margin-right: 0.5rem;"></i>Simülasyon Geçmişi</h2>
+            </div>
+            <div class="progress-list" id="simulationHistoryList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div class="no-data" id="simulationHistoryEmpty" style="width: 100%;">
+                    <i class="fas fa-flask"></i>
+                    <h3>Henüz simülasyon kaydı yok</h3>
+                    <p>Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p>
+                    <a href="/simulations.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Simülasyonlara Git</a>
                 </div>
             </div>
         </div>
@@ -1009,6 +240,9 @@
             <div class="progress-header">
                 <h2 class="section-title">Sertifikalarım</h2>
             </div>
+            <div class="certificate-howto" style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--card-bg); border-radius: 8px; font-size: 0.9rem; color: var(--text-secondary);">
+                <strong>Sertifika nasıl kazanılır?</strong> İlgili kategoride (örn. Siber Güvenlik) en az bir modülü <strong>tamamlayın</strong>: tüm derslere girin ve modül sonundaki quiz’i bitirin. Sistem otomatik olarak sertifikanızı oluşturur.
+            </div>
             <div class="certificates-grid" id="certificatesGrid">
                 <div class="no-data">
                     <i class="fas fa-certificate"></i>
@@ -1017,15 +251,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Değerlendirme Raporu Section -->
+        <div class="evaluation-section" style="margin-top: 2rem;">
+            <div class="progress-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <h2 class="section-title"><i class="fas fa-chart-line" style="margin-right: 0.5rem;"></i>Değerlendirme Raporum</h2>
+                <button type="button" class="btn-primary" id="loadEvaluationReportBtn" onclick="loadEvaluationReport()">
+                    <i class="fas fa-sync-alt"></i> Raporu Yükle
+                </button>
+            </div>
+            <div id="evaluationReportBox" class="evaluation-report-box" style="display: none; background: var(--card-bg, #1a1d24); border-radius: 12px; padding: 1.5rem; margin-top: 1rem; border: 1px solid var(--border-color, rgba(255,255,255,0.08));">
+                <div id="evaluationReportContent"></div>
+            </div>
+            <div id="evaluationReportPlaceholder" class="evaluation-placeholder" style="text-align: center; padding: 2rem; color: var(--text-secondary, #94a3b8);">
+                <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6;"></i>
+                <p>Quiz ve simülasyon verilerinize göre genel değerlendirme raporu.</p>
+                <p style="font-size: 0.9rem;">Raporu görmek için &quot;Raporu Yükle&quot; butonuna tıklayın. Henüz veri yoksa rapor kısa olacaktır.</p>
+            </div>
+        </div>
     </main>
 
-    <!-- AI Report Modal -->
+    <!-- Sertifika Özeti Modal (otomatik özet - AI değil) -->
     <div class="modal" id="aiReportModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>AI Analiz Raporu</h2>
+                <h2>Sertifika Özeti</h2>
                 <button class="modal-close" onclick="closeReportModal()">&times;</button>
             </div>
+            <p class="report-subtitle" style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--text-secondary);">Bu özet sertifika verilerinizden otomatik oluşturulmuştur.</p>
             <div id="aiReportContent">
                 <div class="loading">Rapor yükleniyor...</div>
             </div>
@@ -1033,89 +286,73 @@
     </div>
 
     <script>
-        // SEBS - Abidin Samet Çay
-        function animateCounter(element, start, end, duration = 1500) {
-            if (!element) return;
-            
-            // SEBS - Abidin Samet Çay
-            if (start === end) {
-                element.textContent = end;
-                element.classList.add('animated');
-                return;
+        // Canlı ortam uyumu: API adresi ve token (Supabase veya JWT)
+        function getApiBaseUrl() {
+            return (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+        }
+        async function getAuthToken() {
+            var t = localStorage.getItem('authToken');
+            if (!t && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                try {
+                    var s = (await window.supabaseAuthSystem.supabase.auth.getSession()).data.session;
+                    if (s) t = s.access_token;
+                } catch (e) {}
             }
-            
-            const range = end - start;
-            const steps = Math.min(Math.abs(range), 100); // Max 100 steps
-            const stepTime = duration / steps;
-            const increment = range / steps;
-            let current = start;
-            let step = 0;
-            
-            element.textContent = start;
-            
-            const timer = setInterval(() => {
-                step++;
-                current = start + (increment * step);
-                
-                // SEBS - Abidin Samet Çay
-                if (Math.abs(end - current) < Math.abs(increment)) {
-                    current = end;
-                }
-                
-                element.textContent = Math.round(current);
-                
-                if (step >= steps || current === end) {
-                    clearInterval(timer);
-                    element.textContent = end;
-                    element.classList.add('animated');
-                }
-            }, stepTime);
+            return t;
         }
 
         // SEBS - Abidin Samet Çay
-        function createCircleProgress(percent, elementId, size = 100, strokeWidth = 8) {
-            // SEBS - Abidin Samet Çay
+        function animateCounter(element, start, end, duration = 1500) {
+            if (!element) return;
+            const startValue = Number(start) || 0;
+            const endValue = Number(end) || 0;
+
+            if (startValue === endValue) {
+                element.textContent = endValue;
+                element.classList.add('animated');
+                return;
+            }
+
+            const range = endValue - startValue;
+            const startTime = performance.now();
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = startValue + (range * progress);
+                element.textContent = Math.round(current);
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = endValue;
+                    element.classList.add('animated');
+                }
+            };
+
+            requestAnimationFrame(step);
+        }
+
+        // SEBS - Abidin Samet Çay - Yüzde dairenin altında, taşma yok
+        function createCircleProgress(percent, elementId, size = 88, strokeWidth = 6) {
             percent = Math.max(0, Math.min(100, percent || 0));
-            
             const radius = (size - strokeWidth) / 2;
             const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (percent / 100) * circumference;
-            
-            // SEBS - Abidin Samet Çay
             const safeId = elementId.replace(/[^a-zA-Z0-9]/g, '-');
-            
             return `
-                <svg class="progress-circle-svg" width="${size}" height="${size}">
-                    <circle
-                        cx="${size / 2}"
-                        cy="${size / 2}"
-                        r="${radius}"
-                        stroke="#e2e8f0"
-                        stroke-width="${strokeWidth}"
-                        fill="none"
-                    />
-                    <circle
-                        id="circle-${safeId}"
-                        class="progress-circle-circle"
-                        cx="${size / 2}"
-                        cy="${size / 2}"
-                        r="${radius}"
-                        stroke="url(#gradient-${safeId})"
-                        stroke-width="${strokeWidth}"
-                        fill="none"
-                        stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${circumference}"
-                        stroke-linecap="round"
-                        style="transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);"
-                    />
-                    <defs>
-                        <linearGradient id="gradient-${safeId}" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="progress-circle-text">${Math.round(percent)}%</div>
+                <div class="progress-circle-wrap">
+                    <svg class="progress-circle-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+                        <circle cx="${size/2}" cy="${size/2}" r="${radius}" stroke="rgba(255,255,255,0.12)" stroke-width="${strokeWidth}" fill="none"/>
+                        <circle id="circle-${safeId}" class="progress-circle-circle" cx="${size/2}" cy="${size/2}" r="${radius}" stroke="url(#gradient-${safeId})" stroke-width="${strokeWidth}" fill="none" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" stroke-linecap="round" style="transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)"/>
+                        <defs>
+                            <linearGradient id="gradient-${safeId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="progress-circle-text">${Math.round(percent)}%</div>
+                </div>
             `;
         }
         
@@ -1137,83 +374,231 @@
         }
 
         // SEBS - Abidin Samet Çay
-        function initDashboard() {
-            // SEBS - Abidin Samet Çay
-            
-            // SEBS - Abidin Samet Çay
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            
-            if (isLoggedIn !== 'true' || isVerified !== 'true') {
-                window.location.href = 'login.html';
-                return;
+        let userMePromise = null;
+
+        async function getUserMe() {
+            if (userMePromise) {
+                return userMePromise;
             }
 
-            // Load user info
-            loadUserInfo();
+            // Önce Supabase'den kullanıcı bilgilerini al
+            try {
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    await window.initSupabase();
+                    if (!window.supabaseAuthSystem) {
+                        window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    }
+                }
+                
+                const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (!session || !session.user) {
+                    return null;
+                }
+                
+                // Supabase'den profile bilgilerini al
+                const { data: profile, error: profileError } = await window.supabaseAuthSystem.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = not found
+                    console.warn('Profile fetch error:', profileError);
+                }
+                
+                // Kullanıcı bilgilerini birleştir
+                const userData = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    firstName: profile?.full_name?.split(' ')[0] || session.user.user_metadata?.full_name?.split(' ')[0] || 'Kullanıcı',
+                    lastName: profile?.full_name?.split(' ').slice(1).join(' ') || session.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                    fullName: profile?.full_name || session.user.user_metadata?.full_name || session.user.email,
+                    role: profile?.role || 'user',
+                    accessLevel: profile?.access_level || 'beginner',
+                    isVerified: !!session.user.email_confirmed_at,
+                    purchases: [] // Purchases ayrı yüklenecek
+                };
+                
+                // Backend API'den purchases bilgilerini al (opsiyonel)
+                try {
+                    // Supabase session token'ı kullanarak backend'e istek at
+                    const { data: { session: currentSession } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (currentSession) {
+                        const purchasesResponse = await fetch(getApiBaseUrl() + '/api/users/me', {
+                            headers: {
+                                'Authorization': 'Bearer ' + currentSession.access_token
+                            }
+                        });
+                        
+                        if (purchasesResponse.ok) {
+                            const purchasesData = await purchasesResponse.json();
+                            if (purchasesData.success && purchasesData.data && purchasesData.data.purchases) {
+                                userData.purchases = purchasesData.data.purchases;
+                            }
+                        }
+                    }
+                } catch (apiError) {
+                    console.warn('Backend API error (non-critical):', apiError);
+                    // Backend hatası kritik değil, Supabase'den gelen verilerle devam et
+                }
+                
+                return userData;
+                
+            } catch (error) {
+                console.error('getUserMe error:', error);
+                return null;
+            } finally {
+                userMePromise = null;
+            }
+        }
+
+        async function initDashboard() {
+            console.log('🔍 Dashboard başlatılıyor...');
             
-            // Load purchases
-            loadPurchases();
-            
-            // Load progress
-            loadProgress();
+            // Supabase Auth kontrolü
+            try {
+                // Supabase client'ı başlat
+                if (typeof window.initSupabase === 'undefined') {
+                    console.error('❌ initSupabase fonksiyonu bulunamadı!');
+                    showLoadingError('Supabase yüklenemedi. Lütfen sayfayı yenileyin.');
+                    return;
+                }
+                
+                await window.initSupabase();
+                
+                if (!window.supabaseAuthSystem) {
+                    if (typeof SupabaseAuthSystem === 'undefined') {
+                        console.error('❌ SupabaseAuthSystem class bulunamadı!');
+                        showLoadingError('Supabase Auth System yüklenemedi. Lütfen sayfayı yenileyin.');
+                        return;
+                    }
+                    window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    // Init'in tamamlanmasını bekle
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.error('❌ Supabase client oluşturulamadı!');
+                    showLoadingError('Supabase bağlantı hatası. Lütfen sayfayı yenileyin.');
+                    return;
+                }
+                
+                // Session kontrolü
+                const { data: { session }, error: sessionError } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (sessionError) {
+                    console.error('Session check error:', sessionError);
+                    window.location.href = 'login.html?message=' + encodeURIComponent('Oturum kontrolü başarısız. Lütfen tekrar giriş yapın.');
+                    return;
+                }
+                
+                if (!session || !session.user) {
+                    console.log('❌ Kullanıcı giriş yapmamış, login sayfasına yönlendiriliyor...');
+                    window.location.href = 'login.html?message=' + encodeURIComponent('Dashboard\'a erişmek için giriş yapmanız gerekiyor.');
+                    return;
+                }
+                
+                // Email doğrulama kontrolü
+                if (!session.user.email_confirmed_at) {
+                    console.log('⚠️ Email doğrulanmamış');
+                    window.location.href = 'login.html?message=' + encodeURIComponent('E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.');
+                    return;
+                }
+                
+                console.log('✅ Kullanıcı giriş yapmış, dashboard yükleniyor...');
+                console.log('   User:', session.user.email);
+                
+                // Loading overlay'i gizle
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
+                // Load user info
+                await loadUserInfo();
+                
+                // Load purchases
+                await loadPurchases();
+                
+                // Load progress
+                await loadProgress();
+                
+            } catch (error) {
+                console.error('❌ Dashboard init error:', error);
+                showLoadingError('Dashboard yüklenirken bir hata oluştu: ' + (error.message || 'Bilinmeyen hata'));
+            }
+        }
+        
+        function showLoadingError(message) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h2>Yükleme Hatası</h2>
+                        <p>${message}</p>
+                        <button onclick="window.location.reload()" style="
+                            margin-top: 1rem;
+                            padding: 0.75rem 1.5rem;
+                            background: #ffffff;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 1rem;
+                        ">Sayfayı Yenile</button>
+                    </div>
+                `;
+            }
         }
 
         // Load user info from database
         async function loadUserInfo() {
             try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    return;
-                }
-
-                const response = await fetch('http://localhost:8006/api/users/me', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                const user = await getUserMe();
+                if (user) {
+                    const firstName = user.firstName || user.fullName?.split(' ')[0] || 'Kullanıcı';
+                    const userNameEl = document.getElementById('userName');
+                    const welcomeTitleEl = document.getElementById('welcomeTitle');
+                    
+                    if (userNameEl) {
+                        userNameEl.textContent = firstName;
                     }
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success && result.data) {
-                        const firstName = result.data.firstName || 'Kullanıcı';
-                        document.getElementById('userName').textContent = firstName;
-                        document.getElementById('welcomeTitle').textContent = `Hoş Geldiniz, ${firstName}!`;
+                    if (welcomeTitleEl) {
+                        welcomeTitleEl.textContent = user.fullName || firstName;
                     }
+                    
+                    console.log('✅ User info loaded:', {
+                        email: user.email,
+                        name: firstName,
+                        role: user.role,
+                        accessLevel: user.accessLevel
+                    });
+                } else {
+                    console.warn('⚠️ User data not available');
+                    // Fallback
+                    const userNameEl = document.getElementById('userName');
+                    const welcomeTitleEl = document.getElementById('welcomeTitle');
+                    if (userNameEl) userNameEl.textContent = 'Kullanıcı';
+                    if (welcomeTitleEl) welcomeTitleEl.textContent = 'Kullanıcı';
                 }
             } catch (error) {
                 console.error('Error loading user info:', error);
-                // Fallback to localStorage if API fails
-                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                const firstName = userData.firstName || userData.name || 'Kullanıcı';
-                document.getElementById('userName').textContent = firstName;
-                document.getElementById('welcomeTitle').textContent = `Hoş Geldiniz, ${firstName}!`;
+                // Fallback
+                const userNameEl = document.getElementById('userName');
+                const welcomeTitleEl = document.getElementById('welcomeTitle');
+                if (userNameEl) userNameEl.textContent = 'Kullanıcı';
+                if (welcomeTitleEl) welcomeTitleEl.textContent = 'Kullanıcı';
             }
         }
 
         // Load purchases from database
         async function loadPurchases() {
             try {
-                const token = localStorage.getItem('authToken');
-                if (!token) {
-                    displayNoPurchases();
-                    return;
-                }
-
-                const response = await fetch('http://localhost:8006/api/users/me', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    displayNoPurchases();
-                    return;
-                }
-
-                const result = await response.json();
-                if (result.success && result.data.purchases) {
-                    displayPurchases(result.data.purchases);
+                const user = await getUserMe();
+                if (user && Array.isArray(user.purchases)) {
+                    displayPurchases(user.purchases);
                 } else {
                     displayNoPurchases();
                 }
@@ -1281,7 +666,7 @@
                         </div>
                         <div class="certificate-actions">
                             <button class="btn-secondary" onclick="window.location.href='modules.html'" style="flex: 1;">
-                                <i class="fas fa-book"></i> Modülleri Görüntüle
+                                <i class="fas fa-book"></i> Modüllere Git
                             </button>
                         </div>
                     </div>
@@ -1306,33 +691,97 @@
             `;
         }
 
+        // localStorage ilerlemesini API'ye senkronize et (modül ID gerekli)
+        async function syncLocalProgressToApi(token) {
+            try {
+                const local = JSON.parse(localStorage.getItem('module_progress_siber_guvenlik_giris') || '{}');
+                const completed = local.completedLessons || [];
+                const total = local.totalLessons || 60;
+                if (completed.length === 0 || !token) return;
+                const pct = total ? Math.round((completed.length / total) * 100) : 0;
+                const coursesRes = await fetch(getApiBaseUrl() + '/api/courses', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!coursesRes.ok) return;
+                const coursesData = await coursesRes.json();
+                if (!coursesData.success || !coursesData.data) return;
+                let moduleId = null;
+                for (const c of coursesData.data) {
+                    if ((c.title === 'Siber Güvenliğe Giriş' || (c.title && c.title.includes('Siber'))) && c.modules && c.modules[0]) {
+                        moduleId = c.modules[0].id;
+                        break;
+                    }
+                }
+                if (!moduleId) return;
+                await fetch(getApiBaseUrl() + '/api/progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({
+                        moduleId,
+                        percentComplete: pct,
+                        lastStep: JSON.stringify({ completedLessons: completed, totalLessons: total }),
+                        isCompleted: pct >= 100
+                    })
+                });
+            } catch (e) { console.warn('syncLocalProgressToApi:', e); }
+        }
+
         // SEBS - Abidin Samet Çay
         async function loadProgress() {
-            
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                console.log('No token, cannot load progress');
-                return;
-            }
-            
-            // SEBS - Abidin Samet Çay
-            if (token) {
+            try {
+                // Supabase session token al
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.warn('Supabase not available, cannot load progress');
+                    return;
+                }
+                
+                const { data: { session }, error: sessionError } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (sessionError || !session) {
+                    console.warn('No session available, cannot load progress');
+                    return;
+                }
+                
+                const token = session.access_token;
+                
                 try {
-                    
                     // SEBS - Abidin Samet Çay
-                    const progressResponse = await fetch('http://localhost:8006/api/progress/overview', {
+                    const progressResponse = await fetch(getApiBaseUrl() + '/api/progress/overview', {
                         headers: {
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': 'Bearer ' + token
                         }
                     });
                     
+                    if (handle401Response(progressResponse)) return;
                     if (progressResponse.ok) {
                         const progressData = await progressResponse.json();
                         
                         if (progressData.success && progressData.data) {
-                            const modules = progressData.data.modules || [];
-                            const completedModules = modules.filter(m => m.isCompleted).length;
-                            const totalStudyTime = modules.reduce((total, m) => total + (m.timeSpentMinutes || 0), 0);
+                            let modules = progressData.data.modules || [];
+                            // API boşsa localStorage'dan Siber Güvenliğe Giriş ilerlemesini al ve göster
+                            if (modules.length === 0) {
+                                const localKey = 'module_progress_siber_guvenlik_giris';
+                                const local = JSON.parse(localStorage.getItem(localKey) || '{}');
+                                const completed = local.completedLessons || [];
+                                const total = local.totalLessons || 60;
+                                if (completed.length > 0) {
+                                    const pct = total ? Math.round((completed.length / total) * 100) : 0;
+                                    modules = [{
+                                        title: 'Siber Güvenliğe Giriş',
+                                        courseTitle: 'Siber Güvenliğe Giriş',
+                                        percentComplete: pct,
+                                        isCompleted: pct >= 100,
+                                        timeSpentMinutes: 0
+                                    }];
+                                    // Arka planda API'ye senkronize et
+                                    syncLocalProgressToApi(token).catch(function(){});
+                                }
+                            }
+                            const completedModules = progressData.data.completedModules || modules.filter(m => m.isCompleted).length;
+                            const totalStudyTime = progressData.data.totalStudyTime || modules.reduce((total, m) => {
+                                if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                                    return total + m.lastStep.timeSpentMinutes;
+                                }
+                                return total;
+                            }, 0);
                             
                             // SEBS - Abidin Samet Çay
                             const completedEl = document.getElementById('completedModules');
@@ -1350,17 +799,67 @@
                             
                             // SEBS - Abidin Samet Çay
                             displayModulesFromBackend(modules);
-                            
+                            displaySimulationRuns(progressData.data.simulationRuns || []);
+                            var ob = document.getElementById('onboardingCard');
+                            if (ob) ob.style.display = (completedModules === 0) ? 'block' : 'none';
+
                             // SEBS - Abidin Samet Çay
                             await loadCertificates();
                             return;
                         }
+                    } else {
+                        const errorData = await progressResponse.json().catch(() => ({}));
+                        const msg = (errorData && errorData.message) ? errorData.message : ('İlerleme verisi alınamadı (' + progressResponse.status + ')');
+                        showToast(msg, 'error');
                     }
                 } catch (error) {
+                    showToast(error.message || 'İlerleme yüklenirken bir hata oluştu.', 'error');
                 }
+            } catch (error) {
+                console.error('Error getting session for progress:', error);
             }
             
-            // Fallback to localStorage
+            // API hata verdi veya boş - localStorage fallback (module_progress_siber_guvenlik_giris)
+            const localKey = 'module_progress_siber_guvenlik_giris';
+            const localProgress = JSON.parse(localStorage.getItem(localKey) || '{}');
+            const localCompleted = localProgress.completedLessons || [];
+            const localTotal = localProgress.totalLessons || 60;
+            if (localCompleted.length > 0) {
+                const pct = localTotal ? Math.round((localCompleted.length / localTotal) * 100) : 0;
+                const modules = [{
+                    title: 'Siber Güvenliğe Giriş',
+                    courseTitle: 'Siber Güvenliğe Giriş',
+                    percentComplete: pct,
+                    isCompleted: pct >= 100,
+                    timeSpentMinutes: 0
+                }];
+                displayModulesFromBackend(modules);
+                displaySimulationRuns([]);
+                const completedEl = document.getElementById('completedModules');
+                const hoursEl = document.getElementById('studyHours');
+                if (completedEl) { animateCounter(completedEl, 0, pct >= 100 ? 1 : 0, 1500); completedEl.classList.add('gradient'); }
+                if (hoursEl) { animateCounter(hoursEl, 0, 0, 1500); hoursEl.classList.add('gradient'); }
+                var obEl = document.getElementById('onboardingCard');
+                if (obEl) obEl.style.display = 'none';
+                await loadCertificates();
+                return;
+            }
+            
+            // Fallback to localStorage (eski format)
+            // Get userData from localStorage or API
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // If userData is empty, try to get from API
+            if (!userData || !userData.email) {
+                try {
+                    const user = await getUserMe();
+                    if (user) {
+                        userData = user;
+                    }
+                } catch (err) {
+                    console.warn('Could not fetch user data for fallback:', err);
+                }
+            }
             
             const userId = userData.email || userData.id || 'guest';
             const storageKey = 'userProgress_' + userId;
@@ -1398,9 +897,62 @@
 
             // Display modules
             displayModules(modules);
-            
+            displaySimulationRuns([]);
+            var ob = document.getElementById('onboardingCard');
+            if (ob) ob.style.display = (completedModules === 0) ? 'block' : 'none';
+
             // Load certificates
             await loadCertificates();
+        }
+
+        function formatSimulationDate(iso) {
+            if (!iso) return '—';
+            try {
+                return new Date(iso).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
+            } catch (e) {
+                return '—';
+            }
+        }
+
+        function displaySimulationRuns(runs) {
+            var list = document.getElementById('simulationHistoryList');
+            if (!list) return;
+            var SIM_LABELS = {
+                'temel-siber-guvenlik-lab': 'Temel Siber Güvenlik Lab',
+                'linux-forensik-lab': 'Linux Sunucu Forensik Lab',
+                'semptom-etki-zinciri': 'Semptom–Etki Zinciri',
+                'kayit-haftasi-krizi': 'Kayıt Haftası Krizi',
+                'bir-seyler-yanlis-ama-ne': 'Bir Şeyler Yanlış Ama Ne?'
+            };
+            if (!runs || runs.length === 0) {
+                list.innerHTML = '<div class="no-data" style="width:100%;"><i class="fas fa-flask"></i><h3>Henüz simülasyon kaydı yok</h3><p>Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p><a href="/simulations.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Simülasyonlara Git</a></div>';
+                return;
+            }
+            list.innerHTML = runs.map(function (r, index) {
+                var sid = r.simulationId || '';
+                var title = SIM_LABELS[sid] || sid;
+                var statusBadge = '';
+                if (r.status === 'started' || r.completedAt == null) {
+                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(59,130,246,0.15);color:#93c5fd;font-size:0.8rem;">Başlatıldı</span>';
+                } else if (r.status === 'success' || r.statusLabel === 'Başarılı') {
+                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(34,197,94,0.15);color:#86efac;font-size:0.8rem;">Başarılı</span>';
+                } else {
+                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(239,68,68,0.15);color:#fca5a5;font-size:0.8rem;">Başarısız</span>';
+                }
+                var scoreStr = (r.completedAt != null && r.score != null) ? (r.score + '%') : '—';
+                var cr = (r.correctCount != null) ? r.correctCount : 0;
+                var wr = (r.wrongCount != null) ? r.wrongCount : 0;
+                var showDy = (r.completedAt != null);
+                return '<div class="progress-item" style="width:100%;max-width:100%;animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">' +
+                    '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.75rem;">' +
+                    '<div><div style="font-weight:600;margin-bottom:0.25rem;">' + escapeHtml(title) + '</div>' +
+                    '<div style="font-size:0.85rem;color:var(--text-muted);">Başlangıç: ' + escapeHtml(formatSimulationDate(r.startedAt)) + '</div>' +
+                    (r.completedAt ? '<div style="font-size:0.85rem;color:var(--text-muted);">Tamamlanma: ' + escapeHtml(formatSimulationDate(r.completedAt)) + '</div>' : '') +
+                    '</div>' +
+                    '<div style="text-align:right;">' + statusBadge + '<div style="margin-top:0.35rem;font-size:0.9rem;">Skor: ' + escapeHtml(String(scoreStr)) + '</div>' +
+                    (showDy ? '<div style="font-size:0.85rem;color:var(--text-muted);">Doğru: ' + cr + ' · Yanlış: ' + wr + '</div>' : '') +
+                    '</div></div></div>';
+            }).join('');
         }
         
         function displayModulesFromBackend(modules) {
@@ -1424,16 +976,15 @@
                 const moduleId = `module-${index}-${timestamp}`;
                 
                 return `
-                <div class="progress-item" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
+                <div class="progress-item" style="min-width: 260px; max-width: 320px; flex: 0 0 auto; scroll-snap-align: start; animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
                     <div class="progress-item-header">
                         <div class="progress-icon">
                             <i class="fas fa-book"></i>
                         </div>
                         <div class="progress-info" style="flex: 1;">
-                            <div class="progress-name">${module.title || module.module?.title || 'Modül'}</div>
+                            <div class="progress-name">${(module.courseTitle === 'Siber Güvenliğe Giriş' && module.title === 'Giriş') ? 'Siber Güvenliğe Giriş' : (module.title || module.module?.title || 'Modül')}</div>
                             <div class="progress-detail">
-                                ${module.timeSpentMinutes || 0} dakika • 
-                                ${module.isCompleted ? 'Tamamlandı' : 'Devam Ediyor'}
+                                ${module.isCompleted ? 'Tamamlandı' : ((module.percentComplete || 0) > 0 ? module.percentComplete + '% tamamlandı • Devam Ediyor' : (module.timeSpentMinutes || 0) + ' dakika • Devam Ediyor')}
                             </div>
                             <div class="progress-bar-container" style="margin-top: 1rem;">
                                 <div class="progress-bar">
@@ -1484,19 +1035,32 @@
         // Load certificates from API
         async function loadCertificates() {
             try {
-                const token = localStorage.getItem('authToken');
-                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                
-                if (!token || !userData.publicId) {
-                    return;
+                const token = await getAuthToken();
+                if (!token) return;
+
+                // Sertifika kazanma kontrolü: kategorileri kontrol et, kazanılmışsa listeye eklenir
+                var categories = ['cybersecurity', 'siber-guvenlik', 'cloud', 'data-science'];
+                for (var i = 0; i < categories.length; i++) {
+                    try {
+                        var checkRes = await fetch(getApiBaseUrl() + '/api/certificates/check/' + categories[i], {
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        if (handle401Response(checkRes)) return;
+                        if (checkRes.ok) {
+                            var checkData = await checkRes.json();
+                            if (checkData.success && checkData.earned === true) {
+                                break;
+                            }
+                        }
+                    } catch (e) { /* ignore */ }
                 }
-                
-                const response = await fetch('http://localhost:8006/api/certificates', {
+
+                const response = await fetch(getApiBaseUrl() + '/api/certificates', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': 'Bearer ' + token
                     }
                 });
-                
+                if (handle401Response(response)) return;
                 const data = await response.json();
                 
                 if (data.success && data.data.certificates) {
@@ -1508,9 +1072,142 @@
                         animateCounter(certCountEl, 0, data.data.certificates.length, 1500);
                         certCountEl.classList.add('gradient');
                     }
+                } else if (!response.ok) {
+                    const errMsg = (data && data.message) ? data.message : 'Sertifikalar yüklenemedi.';
+                    showToast(errMsg, 'error');
                 }
             } catch (error) {
+                showToast(error.message || 'Sertifikalar yüklenirken bir hata oluştu.', 'error');
             }
+        }
+
+        // Değerlendirme raporunu yükle ve göster (JWT authToken ile)
+        async function loadEvaluationReport() {
+            const box = document.getElementById('evaluationReportBox');
+            const content = document.getElementById('evaluationReportContent');
+            const placeholder = document.getElementById('evaluationReportPlaceholder');
+            const btn = document.getElementById('loadEvaluationReportBtn');
+
+            const token = await getAuthToken();
+            if (!token) {
+                showToast('Raporu görmek için lütfen giriş yapın.', 'warning');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
+            }
+            if (placeholder) placeholder.style.display = 'none';
+            if (box) { box.style.display = 'block'; content.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Rapor hazırlanıyor...</p>'; }
+
+            try {
+                const response = await fetch(getApiBaseUrl() + '/api/evaluation/report', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (handle401Response(response)) return;
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Rapor alınamadı');
+                }
+
+                if (!data.success || !data.data) {
+                    throw new Error(data.message || 'Rapor verisi yok');
+                }
+
+                const report = data.data;
+                const s = report.scores || {};
+                const i = report.interpretation || {};
+
+                let html = '';
+                html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Skor Özeti</h3>';
+                html += '<p><strong>Genel skor:</strong> ' + (s.overall != null ? s.overall + '%' : '-') + '</p>';
+                html += '<p><strong>Quiz ortalaması:</strong> ' + (s.quizAverage != null ? s.quizAverage + '%' : '-') + ' (' + (s.quizCount || 0) + ' quiz)</p>';
+                html += '<p><strong>Simülasyon ortalaması:</strong> ' + (s.simulationAverage != null ? s.simulationAverage + '%' : '-') + ' (' + (s.simulationCount || 0) + ' simülasyon)</p>';
+                html += '<p><strong>Toplam süre:</strong> ' + (s.totalTimeMinutes != null ? Math.round(s.totalTimeMinutes / 60) + ' saat' : '-') + '</p>';
+                html += '</div>';
+
+                if (i.overall) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Genel Değerlendirme</h3>';
+                    html += '<p>' + escapeHtml(i.overall) + '</p>';
+                    html += '</div>';
+                }
+
+                if (i.strengths && i.strengths.length > 0) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Güçlü Yönler</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.strengths.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (i.weaknesses && i.weaknesses.length > 0) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Geliştirme Alanları</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.weaknesses.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (i.recommendations && i.recommendations.length > 0) {
+                    html += '<div class="report-section">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Öneriler</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.recommendations.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+
+                content.innerHTML = html;
+                showToast('Rapor yüklendi.', 'success');
+            } catch (err) {
+                content.innerHTML = '<p class="error-message" style="color: var(--error-color, #ef4444);">' + escapeHtml(err.message || 'Rapor yüklenirken hata oluştu.') + '</p>';
+                showToast(err.message || 'Rapor yüklenemedi.', 'error');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Raporu Yükle';
+                }
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        function escapeAttr(text) {
+            if (!text) return '';
+            return String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        function handle401Response(response) {
+            if (response && response.status === 401) {
+                showToast('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.', 'error');
+                setTimeout(function () {
+                    window.location.href = 'login.html?redirect=dashboard.html&message=' + encodeURIComponent('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+                }, 1500);
+                return true;
+            }
+            return false;
+        }
+
+        function showToast(message, type) {
+            if (typeof window.showToast === 'function') {
+                window.showToast(message, type);
+                return;
+            }
+            try {
+                var existing = document.getElementById('toast-message');
+                if (existing) existing.remove();
+                var toast = document.createElement('div');
+                toast.id = 'toast-message';
+                toast.setAttribute('role', 'alert');
+                toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:8px;background:var(--card-bg,#1a1d24);color:var(--text-primary,#fff);border:1px solid var(--border-color,rgba(255,255,255,0.08));z-index:10000;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+                if (type === 'error') toast.style.borderColor = '#ef4444';
+                if (type === 'success') toast.style.borderColor = '#22c55e';
+                if (type === 'warning') toast.style.borderColor = '#f59e0b';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(function () { toast.remove(); }, 4000);
+            } catch (e) {}
         }
         
         // Display certificates
@@ -1541,29 +1238,30 @@
                 };
                 
                 const iconColors = {
-                    'siber-guvenlik': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'siber-guvenlik': 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
                     'bulut-bilisim': 'linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%)',
                     'veri-bilimi': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
                 };
                 
+                var safeUrl = escapeAttr(cert.certificateUrl || '');
                 card.innerHTML = `
                     <div class="certificate-header-card">
                         <div class="certificate-icon" style="background: ${iconColors[cert.category] || iconColors['siber-guvenlik']};">
                             <i class="${categoryIcons[cert.category] || 'fas fa-certificate'}"></i>
                         </div>
-                        <div class="certificate-title">${cert.title}</div>
+                        <div class="certificate-title">${escapeHtml(cert.title)}</div>
                     </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${cert.description || ''}</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${escapeHtml(cert.description || '')}</p>
                     <div class="certificate-meta">
-                        <span><i class="fas fa-clock"></i> ${Math.round(cert.completionTime / 60)} saat</span>
-                        <span><i class="fas fa-calendar"></i> ${new Date(cert.earnedAt).toLocaleDateString('tr-TR')}</span>
+                        <span><i class="fas fa-clock"></i> ${Math.round((cert.completionTime || 0) / 60)} saat</span>
+                        <span><i class="fas fa-calendar"></i> ${cert.earnedAt ? new Date(cert.earnedAt).toLocaleDateString('tr-TR') : '-'}</span>
                     </div>
                     <div class="certificate-actions">
-                        <button class="btn-secondary" onclick="viewCertificate('${cert.certificateUrl || ''}')">
+                        <button class="btn-secondary" onclick="viewCertificate(this.getAttribute('data-url'))" data-url="${safeUrl}">
                             <i class="fas fa-eye"></i> Görüntüle
                         </button>
-                        <button class="btn-secondary" onclick="viewAIReport('${cert.id}')">
-                            <i class="fas fa-robot"></i> AI Rapor
+                        <button class="btn-secondary" onclick="viewAIReport('${escapeAttr(cert.id)}')">
+                            <i class="fas fa-file-alt"></i> Sertifika Özeti
                         </button>
                     </div>
                 `;
@@ -1574,10 +1272,10 @@
         
         // View certificate
         function viewCertificate(url) {
-            if (url) {
+            if (url && url.trim()) {
                 window.open(url, '_blank');
             } else {
-                alert('Sertifika henüz oluşturulmamış.');
+                showToast('Sertifika belgesi (PDF) henüz oluşturulmadı. Kazandığınız sertifikalar burada listelenir.', 'warning');
             }
         }
         
@@ -1591,20 +1289,20 @@
             content.innerHTML = '<div class="loading">Rapor yükleniyor...</div>';
             
             try {
-                const token = localStorage.getItem('authToken');
+                const token = await getAuthToken();
                 if (!token) {
                     throw new Error('Giriş yapmanız gerekiyor');
                 }
-                
-                const response = await fetch(`http://localhost:8006/api/certificates/${certificateId}/report`, {
+                const response = await fetch(getApiBaseUrl() + '/api/certificates/' + certificateId + '/report', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': 'Bearer ' + token
                     }
                 });
                 
                 
                 if (!response.ok) {
-                    throw new Error(`API hatası: ${response.status}`);
+                    const errBody = await response.json().catch(() => ({}));
+                    throw new Error((errBody && errBody.message) ? errBody.message : ('Rapor alınamadı (' + response.status + ')'));
                 }
                 
                 const data = await response.json();
@@ -1765,21 +1463,23 @@
                     
                     content.innerHTML = reportHTML;
                 } else {
+                    const apiMsg = (data && data.message) ? data.message : 'Rapor bulunamadı.';
                     content.innerHTML = `
-                        <div class="report-item" style="color: red;">
-                            <strong>Rapor bulunamadı.</strong><br>
-                            <small>API yanıtı: ${JSON.stringify(data, null, 2)}</small>
+                        <div class="report-item error-message">
+                            <strong>Rapor alınamadı.</strong><br>
+                            <small>${escapeHtml(apiMsg)}</small>
                         </div>
                     `;
+                    showToast(apiMsg, 'error');
                 }
             } catch (error) {
                 content.innerHTML = `
-                    <div class="report-item" style="color: red;">
+                    <div class="report-item error-message">
                         <strong>Rapor yüklenirken hata oluştu.</strong><br>
-                        <small>Hata: ${error.message}</small><br>
-                        <small>Lütfen konsolu kontrol edin (F12) ve hatayı bildirin.</small>
+                        <small>${escapeHtml(error.message || 'Bilinmeyen hata')}</small>
                     </div>
                 `;
+                showToast(error.message || 'Rapor yüklenemedi.', 'error');
             }
         }
         
@@ -1802,6 +1502,7 @@
 
             const moduleIcons = {
                 'Temel Siber Güvenlik': 'fas fa-shield-alt',
+                'Temel Network Eğitimi': 'fas fa-network-wired',
                 'Network Güvenliği': 'fas fa-network-wired',
                 'Malware Analizi': 'fas fa-bug',
                 'Threat Hunting': 'fas fa-search',
@@ -1824,7 +1525,7 @@
             
             moduleArray.forEach(({ name: moduleName, progress, index }) => {
                 // Skip duplicates and wrong formats
-                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Network Güvenliği')) {
+                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği')) {
                     return;
                 }
 
@@ -1840,7 +1541,7 @@
                 item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0;`;
                 
                 let iconClass = moduleIcons[moduleName] || 'fas fa-book';
-                let statusColor = '#667eea';
+                let statusColor = '#1e40af';
                 if (status === 'Tamamlandı') {
                     iconClass = 'fas fa-trophy';
                     statusColor = '#22c55e';
@@ -1901,19 +1602,118 @@
         }
 
         // Logout function
-        function logout() {
+        async function logout() {
             if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                try {
+                    // Supabase logout
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                        await window.supabaseAuthSystem.logout();
+                    } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                        await window.supabaseAuthSystem.supabase.auth.signOut();
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+                
+                // LocalStorage temizle (eski sistem için)
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('isVerified');
                 localStorage.removeItem('userData');
+                localStorage.removeItem('authToken');
+                
                 window.location.href = 'index.html';
             }
         }
 
+        // Dark Mode Toggle
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const darkModeIcon = document.getElementById('darkModeIcon');
+            const html = document.documentElement;
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+            }
+            
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function() {
+                    const currentTheme = html.getAttribute('data-theme');
+                    if (currentTheme === 'dark') {
+                        html.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                        if (darkModeIcon) darkModeIcon.className = 'fas fa-moon';
+                    } else {
+                        html.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                        if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+                    }
+                });
+            }
+        }
+
         // Initialize on load
-        window.addEventListener('load', initDashboard);
+        window.addEventListener('load', async function() {
+            console.log('✅ Dashboard page loaded');
+            
+            // Loading overlay'i göster
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+            
+            initDarkMode();
+            
+            // Supabase yüklenmesini bekle
+            if (typeof window.initSupabase !== 'undefined') {
+                try {
+                    await window.initSupabase();
+                    // SupabaseAuthSystem'in yüklenmesini bekle
+                    let attempts = 0;
+                    while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                    await initDashboard();
+                } catch (error) {
+                    console.error('Dashboard initialization error:', error);
+                    showLoadingError('Dashboard başlatılamadı: ' + (error.message || 'Bilinmeyen hata'));
+                }
+            } else {
+                // initSupabase henüz yüklenmedi, biraz bekle
+                setTimeout(async () => {
+                    if (typeof window.initSupabase !== 'undefined') {
+                        await initDashboard();
+                    } else {
+                        showLoadingError('Supabase yüklenemedi. Lütfen sayfayı yenileyin.');
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Also initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            
+            // Logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+        });
     </script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
     <!-- Navigation Script -->
-    <script src="js/navigation.js?v=2.0"></script>
+    <script src="js/navigation.js?v=2.0" defer></script>
 </body>
 </html>

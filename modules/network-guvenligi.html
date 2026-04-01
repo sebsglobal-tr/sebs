@@ -3,25 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Güvenliği Eğitimi - SEBS Global</title>
-    <meta name="description" content="Network güvenliği temellerini öğrenin. Firewall yapılandırması, VPN kurulumu ve network izleme teknikleri.">
+    <title>Network Güvenliği - CyberGuard Academy</title>
+    <meta name="description" content="Network Güvenliği modülü ile firewall, VPN, ağ izleme ve güvenlik protokollerini öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
+    <meta name="keywords" content="network güvenliği, firewall, VPN, ağ güvenliği, siber güvenlik eğitimi">
+    <meta name="author" content="CyberGuard Academy">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish">
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sebs-global.com/modules/network-guvenligi.html">
+    <meta property="og:title" content="Network Güvenliği - CyberGuard Academy">
+    <meta property="og:description" content="Network Güvenliği modülü ile firewall, VPN, ağ izleme ve güvenlik protokollerini öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
+    <meta property="og:image" content="https://sebs-global.com/og-network-guvenligi.jpg">
+    <meta property="og:site_name" content="CyberGuard Academy">
+    <meta property="og:locale" content="tr_TR">
     
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Network Güvenliği - CyberGuard Academy">
+    <meta name="twitter:description" content="Network Güvenliği modülü ile firewall, VPN, ağ izleme ve güvenlik protokollerini öğrenin.">
+    <meta name="twitter:image" content="https://sebs-global.com/og-network-guvenligi.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sebs-global.com/modules/network-guvenligi.html">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "Network Güvenliği",
+        "description": "Firewall, VPN, ağ izleme ve güvenlik protokollerini öğrenin",
+        "provider": {
+            "@type": "Organization",
+            "name": "CyberGuard Academy",
+            "url": "https://sebs-global.com"
+        },
+        "courseMode": "online",
+        "educationalLevel": "beginner",
+        "inLanguage": "tr",
+        "teaches": [
+            "Network Temelleri",
+            "Firewall Yapılandırması",
+            "VPN Teknolojileri",
+            "Network İzleme"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "2500",
+            "priceCurrency": "TRY"
+        }
+    }
+    </script>
     
     <!-- Module Progress Tracker -->
     <script src="../utils/module-progress.js"></script>
     <!-- Time Tracker -->
     <script src="../utils/time-tracker.js"></script>
     
-    <!-- Styles -->
-    <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="../modules.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/premium-lesson.css">
     
     <style>
         :root {
@@ -51,7 +93,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
@@ -64,77 +106,109 @@
             top: 0;
             left: 0;
             right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
             z-index: 1000;
-            background: var(--bg-secondary);
-            box-shadow: var(--shadow-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
         }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem !important;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-logo .sebs { color: #2d3748; }
+        .nav-logo .global {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.813rem !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover { color: #3182ce; }
+        .nav-link.active { color: #3182ce; font-weight: 600; }
 
         .module-layout {
             display: flex;
-            min-height: 100vh;
-            background: var(--bg-primary);
-            margin-top: 80px; /* Navbar height */
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
         }
 
         .module-sidebar {
             width: 300px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md);
-            position: fixed;
-            height: calc(100vh - 80px);
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 0;
             overflow-y: auto;
-            z-index: 100;
-            top: 80px;
         }
 
         .sidebar-header {
-            padding: 2rem;
-            background: var(--primary-gradient);
-            color: white;
-            text-align: center;
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .sidebar-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-header p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .progress-container {
-            margin-top: 1.5rem;
+        .sidebar-header h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
         }
 
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+            background: #e2e8f0;
+            border-radius: 4px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #22c55e, #16a34a);
-            border-radius: 10px;
-            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
             transition: width 0.3s ease;
         }
 
         .progress-text {
-            color: white;
             font-size: 0.9rem;
-            font-weight: 600;
+            color: #64748b;
             margin-top: 0.5rem;
         }
 
         .sidebar-nav {
-            padding: 1rem;
+            padding: 2rem 0;
         }
 
         .nav-section {
@@ -142,61 +216,77 @@
         }
 
         .nav-section h4 {
+            color: #1e293b;
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding: 0 2rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-            padding-left: 1rem;
+        }
+
+        .nav-section h4 i {
+            margin-right: 0.5rem;
+            color: #3b82f6;
         }
 
         .nav-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
-        .nav-item {
+        .sidebar-nav .nav-item {
             display: flex;
             align-items: center;
-            padding: 0.8rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 10px;
+            padding: 0.75rem 2rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            border-left: 3px solid transparent;
             color: var(--text-primary);
-            font-weight: 500;
         }
 
-        .nav-item:hover {
-            background: var(--glass-bg);
-            transform: translateX(5px);
+        .sidebar-nav .nav-item:hover {
+            background: #f1f5f9;
         }
 
-        .nav-item.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: var(--shadow-md);
+        .sidebar-nav .nav-item.active {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+            color: #1d4ed8;
         }
 
-        .nav-item i {
-            margin-right: 0.8rem;
-            width: 20px;
+        .sidebar-nav .nav-item i:first-child {
+            margin-right: 0.75rem;
+            width: 16px;
             text-align: center;
         }
 
-        .nav-item span {
+        .sidebar-nav .nav-item span {
             flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav .nav-item i:last-child {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .sidebar-nav .nav-item.completed i:last-child {
+            color: #10b981;
+        }
+
+        .sidebar-nav .nav-item.locked i:last-child {
+            color: #ef4444;
+        }
+
+        .module-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
         }
 
         .content-section {
             display: none;
-            padding: 2rem;
-            margin-left: 300px;
-            width: calc(100% - 300px);
-            background: var(--bg-secondary);
-            min-height: calc(100vh - 80px);
+            padding: 0;
         }
 
         .content-section.active {
@@ -206,40 +296,61 @@
         .section-header {
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .section-header h2 {
+            color: #1e293b;
             font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
             margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-header h2 i {
-            margin-right: 1rem;
-            color: var(--primary-color);
         }
 
         .section-header p {
+            color: #64748b;
             font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin: 0;
         }
 
+        .lesson-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .lesson-status {
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-body { margin-top: 1rem; }
+
         .lesson-content {
-            line-height: 1.8;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            line-height: 1.7;
         }
 
         .lesson-content h3 {
+            color: #1e293b;
             font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 2rem 0 1rem 0;
-            padding-left: 1rem;
-            border-left: 4px solid var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .lesson-content h3 i {
+            color: #3b82f6;
         }
 
         .lesson-content h4 {
@@ -297,6 +408,74 @@
             border-radius: 10px;
             padding: 1.5rem;
             margin: 1.5rem 0;
+        }
+
+        .detailed-explanation {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .detailed-explanation h4 {
+            color: #1e293b;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cybersecurity-fundamentals {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid #0ea5e9;
+        }
+
+        .cybersecurity-domains {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid #22c55e;
+        }
+
+        .cybersecurity-challenges {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid #ef4444;
+        }
+
+        .cybersecurity-fundamentals h5, .cybersecurity-domains h5, .cybersecurity-challenges h5 {
+            color: #1e293b;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .btn-complete-lesson {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-complete-lesson:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         /* Tables */
@@ -733,35 +912,40 @@
         <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
         <div class="nav-container">
-            <a href="../index.html" class="nav-logo" id="navLogo">
-                <img src="../SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <a href="/index.html" class="nav-logo" id="navLogo">
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation"/>
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
             </a>
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li class="nav-item" role="none">
-                    <a href="../index.html" class="nav-link" data-page="index" role="menuitem">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
                         <i class="fas fa-home"></i> Ana Sayfa
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
                         <i class="fas fa-book"></i> Eğitim Modülleri
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
                         <i class="fas fa-flask"></i> Simülasyonlar
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../about.html" class="nav-link" data-page="about" role="menuitem">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
                         <i class="fas fa-info-circle"></i> Hakkımızda
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
                         <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panelim
                     </a>
                 </li>
             </ul>
@@ -773,11 +957,8 @@
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span class="user-name" id="userName">Kullanıcı</span>
                 </div>
-                <a href="../login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
-                <a href="../signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
-                <a href="../dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
-                    <i class="fas fa-tachometer-alt"></i> Panel
-                </a>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
                 <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Çıkış Yap
                 </a>
@@ -792,141 +973,92 @@
 
     <div class="module-layout">
         <!-- Sidebar -->
-        <div class="module-sidebar">
+        <aside class="module-sidebar">
             <div class="sidebar-header">
-                <h1><i class="fas fa-network-wired"></i> Network Güvenliği</h1>
-                <p>Kapsamlı ağ güvenliği eğitimi</p>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <div class="progress-text">0% Tamamlandı</div>
+                <h3>Modül İçeriği</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
                 </div>
+                <span class="progress-text">0% Tamamlandı</span>
             </div>
-            
-            <div class="sidebar-nav">
+            <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <h4>Dersler</h4>
+                    <h4>İçerik</h4>
                     <ul class="nav-list">
                         <li class="nav-item active" data-section="intro">
-                            <i class="fas fa-play"></i>
-                            <span>Giriş ve Tanıtım</span>
-                        </li>
-                        <li class="nav-item" data-section="lesson1">
-                            <i class="fas fa-lock"></i>
-                            <span>1. Network Temelleri</span>
+                            <i class="fas fa-info-circle"></i>
+                            <span>1. Giriş ve Network Temelleri</span>
+                            <i class="fas fa-check-circle completed"></i>
                         </li>
                         <li class="nav-item" data-section="lesson2">
+                            <i class="fas fa-book"></i>
+                            <span>2. Firewall</span>
                             <i class="fas fa-lock"></i>
-                            <span>2. Firewall Yapılandırması</span>
                         </li>
                         <li class="nav-item" data-section="lesson3">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-book"></i>
                             <span>3. VPN Teknolojileri</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                         <li class="nav-item" data-section="lesson4">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-book"></i>
                             <span>4. Network İzleme</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                         <li class="nav-item" data-section="lesson5">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-book"></i>
                             <span>5. Wireless Güvenlik</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                         <li class="nav-item" data-section="lesson6">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-book"></i>
                             <span>6. Network Saldırıları</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                     </ul>
                 </div>
-                
-                <div class="nav-section">
-                    <h4>Pratik Uygulamalar</h4>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-section="lab1">
-                            <i class="fas fa-lock"></i>
-                            <span>Lab 1: Firewall Yapılandırması</span>
-                        </li>
-                        <li class="nav-item" data-section="lab2">
-                            <i class="fas fa-lock"></i>
-                            <span>Lab 2: VPN Kurulumu</span>
-                        </li>
-                        <li class="nav-item" data-section="lab3">
-                            <i class="fas fa-lock"></i>
-                            <span>Lab 3: Network Analizi</span>
-                        </li>
-                    </ul>
-                </div>
-                
                 <div class="nav-section">
                     <h4>Sınavlar</h4>
                     <ul class="nav-list">
                         <li class="nav-item" data-section="midterm">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-clipboard-check"></i>
                             <span>Ara Sınav</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                         <li class="nav-item" data-section="final">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-trophy"></i>
                             <span>Final Sınavı</span>
+                            <i class="fas fa-lock"></i>
                         </li>
                     </ul>
                 </div>
-            </div>
-        </div>
+            </nav>
+        </aside>
 
-        <!-- Content -->
-        <div class="content-section active" id="intro">
+        <!-- Main Content -->
+        <main class="module-content">
+            <!-- 1. Giriş ve Network Temelleri -->
+            <section class="content-section active" id="intro">
             <div class="section-header">
-                <h2><i class="fas fa-play-circle"></i> Giriş ve Tanıtım</h2>
-                <p>Network Güvenliği modülüne hoş geldiniz</p>
-            </div>
-            
-            <div class="lesson-content">
-                <h3>🎯 Modül Hakkında</h3>
-                <p>Bu modülde network güvenliğinin temel kavramlarından başlayarak, firewall yapılandırması, VPN teknolojileri, network izleme ve güvenlik protokolleri konularında kapsamlı bilgi edineceksiniz.</p>
-                
-                <div class="highlight-box">
-                    <h4><i class="fas fa-lightbulb"></i> Öğrenecekleriniz</h4>
-                    <ul>
-                        <li>Network güvenliği temel kavramları</li>
-                        <li>Firewall yapılandırma teknikleri</li>
-                        <li>VPN kurulumu ve yönetimi</li>
-                        <li>Network trafiği izleme ve analizi</li>
-                        <li>Wireless güvenlik protokolleri</li>
-                        <li>Network saldırı türleri ve korunma yöntemleri</li>
-                    </ul>
-                </div>
-                
-                <h3>📚 Modül İçeriği</h3>
-                <p>Modül 6 ana ders, 3 pratik laboratuvar ve 2 sınavdan oluşmaktadır. Her ders teorik bilgilerin yanında pratik örnekler ve uygulamalar içerir.</p>
-                
-                <div class="success-box">
-                    <h4><i class="fas fa-check-circle"></i> Başarı Kriterleri</h4>
-                    <p>Modülü başarıyla tamamlamak için tüm dersleri tamamlamanız ve sınavlardan geçer not almanız gerekmektedir.</p>
-                </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
+                <h2>1. Giriş ve Network Temelleri</h2>
+                <p>Modül tanıtımı ve ağ güvenliğinin temel kavramları</p>
+                <p class="section-intro" style="color: var(--text-secondary); line-height: 1.75; margin-top: 0.75rem; max-width: 72ch;">Ağ güvenliği, yalnızca bir firewall kutusu kurmak değil; ağınızın gizliliğini, bütünlüğünü ve erişilebilirliğini korumak için katmanlı önlemler almak anlamına gelir. Bu bölümde CIA triad, Defense in Depth ve Zero Trust gibi temel prensipleri, ardından OSI katmanlarına göre güvenlik önlemlerini tablolar ve kartlarla net bir şekilde göreceksiniz. Örnekler ve karşılaştırmalar, konuyu günlük senaryolarla bağlamanıza yardımcı olur.</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
                     <button class="btn-complete-lesson" onclick="completeLesson('intro')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 1: Network Temelleri -->
-        <div class="content-section" id="lesson1">
-            <div class="section-header">
-                <h2><i class="fas fa-book"></i> 📚 Ders 1: Network Temelleri</h2>
-                <p>Network güvenliğinin temel kavramları ve protokolleri</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>🌐 Network Güvenliği Kavramları</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>Network Güvenliği Kavramları</h3>
                 <p>Network güvenliği, bilgisayar ağlarının bütünlüğünü, gizliliğini ve erişilebilirliğini korumak için alınan önlemlerin bütünüdür. Modern işletmelerde network güvenliği, siber tehditlere karşı ilk savunma hattıdır.</p>
                 
                 <div class="info-cards">
                     <div class="info-card">
-                        <h4><i class="fas fa-shield-alt"></i> Güvenlik Prensipleri</h4>
+                        <h4>Güvenlik Prensipleri</h4>
                         <p>Network güvenliği temel prensipleri üzerine kuruludur:</p>
                         <ul>
                             <li><strong>CIA Triad:</strong> Confidentiality (Gizlilik), Integrity (Bütünlük), Availability (Erişilebilirlik)</li>
@@ -937,7 +1069,7 @@
                     </div>
                     
                     <div class="info-card">
-                        <h4><i class="fas fa-exclamation-triangle"></i> Güvenlik Tehditleri</h4>
+                        <h4>Güvenlik Tehditleri</h4>
                         <p>Network güvenliğini tehdit eden ana kategoriler:</p>
                         <ul>
                             <li><strong>External Threats:</strong> Dış kaynaklı saldırılar</li>
@@ -948,7 +1080,7 @@
                     </div>
                 </div>
                 
-                <h3>📊 OSI Modeli ve Güvenlik Katmanları</h3>
+                <h3>OSI Modeli ve Güvenlik Katmanları</h3>
                 <p>OSI (Open Systems Interconnection) modeli, network güvenliğinin her katmanında farklı güvenlik önlemleri alınmasını gerektirir.</p>
                 
                 <table class="data-table">
@@ -1006,23 +1138,20 @@
                     </tbody>
                 </table>
                 
-                <div class="diagram-container">
-                    <h4>OSI Modeli Güvenlik Katmanları</h4>
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white; text-align: center;">
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 0.5rem; font-size: 0.9rem;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">7. Application Layer - HTTPS, SSH, SFTP</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">6. Presentation Layer - SSL/TLS, Şifreleme</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">5. Session Layer - Oturum Yönetimi</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">4. Transport Layer - TCP/UDP, TLS</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">3. Network Layer - IPsec, Firewall</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">2. Data Link Layer - 802.1X, VLAN</div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 5px;">1. Physical Layer - Fiziksel Güvenlik</div>
-                        </div>
-                    </div>
-                    <p class="diagram-caption">OSI Modeli ve her katmandaki güvenlik protokolleri</p>
+                <div class="info-box">
+                    <h4>OSI Katmanları ve Güvenlik</h4>
+                    <ul>
+                        <li>7. Application — HTTPS, SSH, SFTP</li>
+                        <li>6. Presentation — SSL/TLS, şifreleme</li>
+                        <li>5. Session — Oturum yönetimi</li>
+                        <li>4. Transport — TCP/UDP, TLS</li>
+                        <li>3. Network — IPsec, firewall</li>
+                        <li>2. Data Link — 802.1X, VLAN</li>
+                        <li>1. Physical — Fiziksel güvenlik</li>
+                    </ul>
                 </div>
                 
-                <h3>🔒 Güvenlik Protokolleri Karşılaştırması</h3>
+                <h3>Güvenlik Protokolleri</h3>
                 <p>Network güvenliğinde kullanılan protokollerin karşılaştırmalı analizi:</p>
                 
                 <table class="comparison-table">
@@ -1075,7 +1204,7 @@
                 </table>
                 
                 <div class="highlight-box">
-                    <h4><i class="fas fa-lightbulb"></i> Protokol Seçimi Kriterleri</h4>
+                    <h4>Protokol Seçimi</h4>
                     <p>Doğru güvenlik protokolünü seçerken dikkat edilmesi gereken faktörler:</p>
                     <ul>
                         <li><strong>Performans:</strong> Protokolün network performansına etkisi</li>
@@ -1086,38 +1215,18 @@
                     </ul>
                 </div>
                 
-                <h3>🌐 Network Topolojisi ve Güvenlik</h3>
+                <h3>Network Topolojisi ve Güvenlik</h3>
                 <p>Farklı network topolojilerinin güvenlik açısından değerlendirilmesi:</p>
                 
-                <div class="network-topology">
-                    <div class="network-device">
-                        <div class="device-icon"><i class="fas fa-sitemap"></i></div>
-                        <div class="device-name">Star Topology</div>
-                        <div class="device-ip">Merkezi Hub</div>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Tek nokta arızası riski</p>
-                    </div>
-                    <div class="network-device">
-                        <div class="device-icon"><i class="fas fa-project-diagram"></i></div>
-                        <div class="device-name">Mesh Topology</div>
-                        <div class="device-ip">Tam Bağlantılı</div>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Yüksek güvenilirlik</p>
-                    </div>
-                    <div class="network-device">
-                        <div class="device-icon"><i class="fas fa-circle"></i></div>
-                        <div class="device-name">Ring Topology</div>
-                        <div class="device-ip">Halka Yapı</div>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Tek nokta arızası</p>
-                    </div>
-                    <div class="network-device">
-                        <div class="device-icon"><i class="fas fa-stream"></i></div>
-                        <div class="device-name">Bus Topology</div>
-                        <div class="device-ip">Ortak Yol</div>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Güvenlik açığı riski</p>
-                    </div>
-                </div>
+                <ul>
+                    <li><strong>Star:</strong> Merkezi hub; tek nokta arızası riski</li>
+                    <li><strong>Mesh:</strong> Tam bağlantılı; yüksek güvenilirlik</li>
+                    <li><strong>Ring:</strong> Halka yapı; tek nokta arızası</li>
+                    <li><strong>Bus:</strong> Ortak yol; güvenlik açığı riski</li>
+                </ul>
                 
                 <div class="success-box">
-                    <h4><i class="fas fa-check-circle"></i> Güvenlik En İyi Uygulamaları</h4>
+                    <h4>Güvenlik En İyi Uygulamaları</h4>
                     <ul>
                         <li><strong>Network Segmentation:</strong> Ağları mantıksal bölümlere ayırma</li>
                         <li><strong>Access Control Lists (ACL):</strong> Erişim kontrol listeleri</li>
@@ -1126,25 +1235,26 @@
                         <li><strong>Monitoring:</strong> Sürekli ağ izleme ve loglama</li>
                     </ul>
                 </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson1')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Firewall -->
+        <section class="content-section" id="lesson2">
+            <div class="section-header">
+                <h2>2. Firewall Yapılandırması</h2>
+                <p>Güvenlik duvarları ve pratik uygulama</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
+                    <button class="btn-complete-lesson" onclick="completeLesson('lesson2')">
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 2: Firewall Yapılandırması -->
-        <div class="content-section" id="lesson2">
-            <div class="section-header">
-                <h2><i class="fas fa-shield-alt"></i> 🔥 Ders 2: Firewall Yapılandırması</h2>
-                <p>Güvenlik duvarları kurulumu ve yapılandırması</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>🛡️ Firewall Kavramları ve Türleri</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>Firewall Kavramları ve Türleri</h3>
                 <p>Firewall'lar network trafiğini kontrol eden ve zararlı trafiği engelleyen güvenlik cihazlarıdır. Modern network güvenliğinin temel taşıdır.</p>
                 
                 <div class="info-cards">
@@ -1171,7 +1281,7 @@
                     </div>
                 </div>
                 
-                <h3>📊 Firewall Türleri Karşılaştırması</h3>
+                <h3>Firewall Türleri</h3>
                 <p>Farklı firewall türlerinin özelliklerinin karşılaştırmalı analizi:</p>
                 
                 <table class="comparison-table">
@@ -1221,7 +1331,7 @@
                     </tbody>
                 </table>
                 
-                <h3>🔧 Firewall Kural Yapılandırması</h3>
+                <h3>Kural Yapılandırması</h3>
                 <p>Firewall kuralları, network trafiğinin nasıl işleneceğini belirler. Kurallar sıralı olarak değerlendirilir.</p>
                 
                 <div class="code-block">
@@ -1259,7 +1369,7 @@ end
                     </pre>
                 </div>
                 
-                <h3>📋 Firewall Kural Öncelikleri</h3>
+                <h3>Kural Öncelikleri</h3>
                 <p>Firewall kurallarının öncelik sıralaması ve en iyi uygulamalar:</p>
                 
                 <table class="data-table">
@@ -1293,31 +1403,9 @@ end
                     </tbody>
                 </table>
                 
-                <div class="diagram-container">
-                    <h4>Firewall Trafik Akışı</h4>
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-arrow-right" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>Gelen Trafik</div>
-                                <div style="font-size: 0.8rem;">Internet → Firewall</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-filter" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>Kural Kontrolü</div>
-                                <div style="font-size: 0.8rem;">Allow/Deny</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-arrow-right" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>İç Ağ</div>
-                                <div style="font-size: 0.8rem;">Firewall → LAN</div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="diagram-caption">Firewall trafik akışı ve kural değerlendirme süreci</p>
-                </div>
+                <p>Trafik akışı: Internet → Firewall (kural kontrolü) → İç ağ. Kurallar sırayla değerlendirilir; eşleşen ilk kural uygulanır.</p>
                 
-                <h3>🔍 Firewall Monitoring ve Logging</h3>
+                <h3>İzleme ve Loglama</h3>
                 <p>Firewall'ların etkili izlenmesi ve loglanması güvenlik açısından kritiktir.</p>
                 
                 <div class="info-cards">
@@ -1344,8 +1432,30 @@ end
                     </div>
                 </div>
                 
+                <h3>Pratik: Firewall Lab</h3>
+                <p>Firewall kurulumu ve güvenlik kuralları oluşturma adımları:</p>
+                <ol>
+                    <li>Firewall cihazı kurulumu ve temel yapılandırma</li>
+                    <li>ACL ve güvenlik kuralları tanımlama</li>
+                    <li>NAT yapılandırması</li>
+                    <li>Log analizi ve izleme</li>
+                </ol>
+                <div class="code-block">
+                    <pre>
+# Web sunucusu için temel kural örneği
+config firewall policy
+    edit 1
+        set srcintf "wan1"
+        set dstintf "internal"
+        set dstaddr "web-server"
+        set action accept
+        set service "HTTP" "HTTPS"
+        set logtraffic all
+    next
+end</pre>
+                </div>
                 <div class="warning-box">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Firewall Güvenlik Önlemleri</h4>
+                    <h4>Güvenlik Önlemleri</h4>
                     <ul>
                         <li><strong>Regular Updates:</strong> Düzenli firmware güncellemeleri</li>
                         <li><strong>Rule Optimization:</strong> Kural optimizasyonu ve temizliği</li>
@@ -1354,25 +1464,26 @@ end
                         <li><strong>Penetration Testing:</strong> Düzenli penetrasyon testleri</li>
                     </ul>
                 </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson2')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. VPN Teknolojileri -->
+        <section class="content-section" id="lesson3">
+            <div class="section-header">
+                <h2>3. VPN Teknolojileri</h2>
+                <p>Sanal özel ağlar ve güvenli bağlantılar</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
+                    <button class="btn-complete-lesson" onclick="completeLesson('lesson3')">
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 3: VPN Teknolojileri -->
-        <div class="content-section" id="lesson3">
-            <div class="section-header">
-                <h2><i class="fas fa-lock"></i> 🔐 Ders 3: VPN Teknolojileri</h2>
-                <p>Sanal özel ağlar ve güvenli bağlantılar</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>🌐 VPN Kavramları ve Türleri</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>VPN Kavramları ve Türleri</h3>
                 <p>VPN (Virtual Private Network), internet üzerinden güvenli bir tünel oluşturarak uzaktan erişim sağlayan teknolojidir. Modern işletmelerde kritik bir güvenlik bileşenidir.</p>
                 
                 <div class="info-cards">
@@ -1399,7 +1510,7 @@ end
                     </div>
                 </div>
                 
-                <h3>📊 VPN Protokolleri Karşılaştırması</h3>
+                <h3>VPN Protokolleri</h3>
                 <p>Farklı VPN protokollerinin özelliklerinin detaylı karşılaştırması:</p>
                 
                 <table class="comparison-table">
@@ -1457,7 +1568,7 @@ end
                     </tbody>
                 </table>
                 
-                <h3>🔧 IPsec VPN Yapılandırması</h3>
+                <h3>IPsec Yapılandırması</h3>
                 <p>IPsec VPN'in detaylı yapılandırma süreci ve örnekleri:</p>
                 
                 <div class="code-block">
@@ -1489,7 +1600,7 @@ interface GigabitEthernet0/0
                     </pre>
                 </div>
                 
-                <h3>🔐 VPN Güvenlik Katmanları</h3>
+                <h3>Güvenlik Katmanları</h3>
                 <p>VPN güvenliğinin farklı katmanları ve koruma mekanizmaları:</p>
                 
                 <table class="data-table">
@@ -1535,41 +1646,9 @@ interface GigabitEthernet0/0
                     </tbody>
                 </table>
                 
-                <div class="diagram-container">
-                    <h4>VPN Tünel Oluşturma Süreci</h4>
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
-                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; text-align: center; font-size: 0.8rem;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px;">
-                                <i class="fas fa-handshake" style="font-size: 1.5rem; margin-bottom: 0.3rem;"></i>
-                                <div>IKE Phase 1</div>
-                                <div>Authentication</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px;">
-                                <i class="fas fa-key" style="font-size: 1.5rem; margin-bottom: 0.3rem;"></i>
-                                <div>Key Exchange</div>
-                                <div>DH Group</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px;">
-                                <i class="fas fa-shield-alt" style="font-size: 1.5rem; margin-bottom: 0.3rem;"></i>
-                                <div>IPsec Phase 2</div>
-                                <div>Security Association</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px;">
-                                <i class="fas fa-lock" style="font-size: 1.5rem; margin-bottom: 0.3rem;"></i>
-                                <div>Data Encryption</div>
-                                <div>AES-256</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px;">
-                                <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-bottom: 0.3rem;"></i>
-                                <div>Secure Tunnel</div>
-                                <div>Active</div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="diagram-caption">VPN tünel oluşturma süreci ve güvenlik katmanları</p>
-                </div>
+                <p>Tünel kurulumu: IKE Phase 1 (kimlik doğrulama) → Anahtar değişimi → IPsec Phase 2 (SA) → Şifreleme → Aktif tünel.</p>
                 
-                <h3>🌍 VPN Deployment Modelleri</h3>
+                <h3>Kurulum Modelleri</h3>
                 <p>Farklı VPN deployment modelleri ve kullanım senaryoları:</p>
                 
                 <div class="info-cards">
@@ -1596,7 +1675,7 @@ interface GigabitEthernet0/0
                     </div>
                 </div>
                 
-                <h3>📈 VPN Performance Optimization</h3>
+                <h3>Performans Optimizasyonu</h3>
                 <p>VPN performansını optimize etme teknikleri:</p>
                 
                 <table class="data-table">
@@ -1642,8 +1721,24 @@ interface GigabitEthernet0/0
                     </tbody>
                 </table>
                 
+                <h3>Pratik: VPN Lab</h3>
+                <p>Site-to-site VPN kurulumu adımları:</p>
+                <ol>
+                    <li>VPN uç noktaları yapılandırma</li>
+                    <li>IPsec tüneli kurulumu (Phase 1 ve 2)</li>
+                    <li>Routing ve bağlantı testleri</li>
+                </ol>
+                <div class="code-block">
+                    <pre>
+# IPsec Phase 1–2 özet
+crypto isakmp policy 10
+ encryption aes 256  hash sha256  authentication pre-share  group 14
+crypto ipsec transform-set ESP-AES256-SHA256 esp-aes 256 esp-sha256-hmac
+crypto map VPN-MAP 10 ipsec-isakmp
+ set peer 203.0.113.1  set transform-set ESP-AES256-SHA256  match address VPN-ACL</pre>
+                </div>
                 <div class="success-box">
-                    <h4><i class="fas fa-check-circle"></i> VPN En İyi Uygulamaları</h4>
+                    <h4>VPN En İyi Uygulamaları</h4>
                     <ul>
                         <li><strong>Strong Authentication:</strong> Güçlü kimlik doğrulama yöntemleri</li>
                         <li><strong>Regular Key Rotation:</strong> Düzenli anahtar rotasyonu</li>
@@ -1652,25 +1747,26 @@ interface GigabitEthernet0/0
                         <li><strong>Security Updates:</strong> Düzenli güvenlik güncellemeleri</li>
                     </ul>
                 </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson3')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Network İzleme -->
+        <section class="content-section" id="lesson4">
+            <div class="section-header">
+                <h2>4. Network İzleme</h2>
+                <p>Network trafiği izleme ve analiz teknikleri</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
+                    <button class="btn-complete-lesson" onclick="completeLesson('lesson4')">
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 4: Network İzleme -->
-        <div class="content-section" id="lesson4">
-            <div class="section-header">
-                <h2><i class="fas fa-chart-line"></i> 📊 Ders 4: Network İzleme</h2>
-                <p>Network trafiği izleme ve analiz teknikleri</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>🔍 Network Monitoring Kavramları</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>Monitoring Kavramları</h3>
                 <p>Network izleme, ağ trafiğinin sürekli gözlemlenmesi ve analiz edilmesi sürecidir. Proaktif güvenlik ve performans yönetimi için kritiktir.</p>
                 
                 <div class="info-cards">
@@ -1697,7 +1793,7 @@ interface GigabitEthernet0/0
                     </div>
                 </div>
                 
-                <h3>📊 Network Monitoring Araçları</h3>
+                <h3>Monitoring Araçları</h3>
                 <p>Farklı network izleme araçlarının karşılaştırmalı analizi:</p>
                 
                 <table class="comparison-table">
@@ -1755,7 +1851,7 @@ interface GigabitEthernet0/0
                     </tbody>
                 </table>
                 
-                <h3>📈 Network Performance Metrics</h3>
+                <h3>Performans Metrikleri</h3>
                 <p>Network performansını değerlendirmek için kullanılan temel metrikler:</p>
                 
                 <table class="data-table">
@@ -1814,7 +1910,7 @@ interface GigabitEthernet0/0
                     </tbody>
                 </table>
                 
-                <h3>🔧 SNMP Monitoring Yapılandırması</h3>
+                <h3>SNMP Yapılandırması</h3>
                 <p>SNMP (Simple Network Management Protocol) ile network izleme:</p>
                 
                 <div class="code-block">
@@ -1843,36 +1939,12 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </pre>
                 </div>
                 
-                <div class="diagram-container">
-                    <h4>Network Monitoring Mimarisi</h4>
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-network-wired" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>Network Devices</div>
-                                <div style="font-size: 0.8rem;">Routers, Switches</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-broadcast-tower" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>SNMP Agents</div>
-                                <div style="font-size: 0.8rem;">Data Collection</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-server" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>Monitoring Server</div>
-                                <div style="font-size: 0.8rem;">Data Processing</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 5px;">
-                                <i class="fas fa-desktop" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div>Dashboard</div>
-                                <div style="font-size: 0.8rem;">Visualization</div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="diagram-caption">Network monitoring sisteminin genel mimarisi</p>
+                <div class="info-box">
+                    <h4>Monitoring Mimarisi</h4>
+                    <p>Ağ cihazları (router, switch) → SNMP agent → Monitoring sunucu → Dashboard. Veri toplama, işleme ve görselleştirme akışı.</p>
                 </div>
                 
-                <h3>🚨 Alert Management ve Thresholds</h3>
+                <h3>Uyarı Yönetimi ve Eşikler</h3>
                 <p>Etkili uyarı yönetimi ve eşik değerlerinin belirlenmesi:</p>
                 
                 <div class="info-cards">
@@ -1899,7 +1971,7 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </div>
                 </div>
                 
-                <h3>📊 Network Traffic Analysis</h3>
+                <h3>Trafik Analizi</h3>
                 <p>Network trafiğinin detaylı analizi ve pattern recognition:</p>
                 
                 <table class="data-table">
@@ -1945,8 +2017,23 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </tbody>
                 </table>
                 
+                <h3>Pratik: Network Analiz Lab</h3>
+                <p>Trafik analizi ve güvenlik değerlendirmesi adımları:</p>
+                <ol>
+                    <li>Traffic capture (Wireshark, tcpdump)</li>
+                    <li>Paket analizi ve anomali tespiti</li>
+                    <li>Güvenlik raporu hazırlama</li>
+                </ol>
+                <div class="code-block">
+                    <pre>
+# Wireshark filtresi örnekleri
+http.request.method == "POST"
+tcp.flags.syn == 1 and tcp.flags.ack == 0
+tcp.len > 1000
+dns.qry.name contains "suspicious"</pre>
+                </div>
                 <div class="warning-box">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Monitoring Best Practices</h4>
+                    <h4>Monitoring Best Practices</h4>
                     <ul>
                         <li><strong>Comprehensive Coverage:</strong> Tüm kritik sistemleri izle</li>
                         <li><strong>Baseline Establishment:</strong> Normal davranış baz çizgisi oluştur</li>
@@ -1956,24 +2043,26 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </ul>
                 </div>
                 
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson4')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Wireless Güvenlik -->
+        <section class="content-section" id="lesson5">
+            <div class="section-header">
+                <h2>5. Wireless Güvenlik</h2>
+                <p>Kablosuz ağ güvenliği ve protokolleri</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
+                    <button class="btn-complete-lesson" onclick="completeLesson('lesson5')">
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 5: Wireless Güvenlik -->
-        <div class="content-section" id="lesson5">
-            <div class="section-header">
-                <h2><i class="fas fa-wifi"></i> 📶 Ders 5: Wireless Güvenlik</h2>
-                <p>Kablosuz ağ güvenliği ve protokolleri</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>📡 Wireless Security Kavramları</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>Wireless Kavramları</h3>
                 <p>Kablosuz ağlar, fiziksel bağlantı gerektirmediği için özel güvenlik önlemleri gerektirir. Modern işletmelerde wireless güvenlik kritik bir konudur.</p>
                 
                 <div class="info-cards">
@@ -2000,7 +2089,7 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </div>
                 </div>
                 
-                <h3>📊 Wireless Güvenlik Protokolleri Karşılaştırması</h3>
+                <h3>Güvenlik Protokolleri</h3>
                 <p>Farklı wireless güvenlik protokollerinin detaylı karşılaştırması:</p>
                 
                 <table class="comparison-table">
@@ -2050,7 +2139,7 @@ snmpwalk -v2c -c public 192.168.1.1 1.3.6.1.2.1.2.2.1.16 # Interface Out Octets
                     </tbody>
                 </table>
                 
-                <h3>🔧 WPA2 Enterprise Yapılandırması</h3>
+                <h3>WPA2 Enterprise Yapılandırması</h3>
                 <p>Kurumsal ortamlar için WPA2 Enterprise detaylı yapılandırması:</p>
                 
                 <div class="code-block">
@@ -2086,7 +2175,7 @@ ap profile "Office-AP"
                     </pre>
                 </div>
                 
-                <h3>📈 Wireless Performance Metrikleri</h3>
+                <h3>Performans Metrikleri</h3>
                 <p>Wireless network performansını değerlendirmek için kullanılan metrikler:</p>
                 
                 <table class="data-table">
@@ -2206,7 +2295,7 @@ ap profile "Office-AP"
                     </div>
                 </div>
                 
-                <h3>🛡️ Wireless Security Best Practices</h3>
+                <h3>En İyi Uygulamalar</h3>
                 <p>Kablosuz ağ güvenliği için en iyi uygulamalar:</p>
                 
                 <table class="data-table">
@@ -2270,24 +2359,26 @@ ap profile "Office-AP"
                     </ul>
                 </div>
                 
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson5')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Network Saldırıları -->
+        <section class="content-section" id="lesson6">
+            <div class="section-header">
+                <h2>6. Network Saldırıları</h2>
+                <p>Network saldırı türleri ve korunma yöntemleri</p>
+                <div class="lesson-controls">
+                    <span class="lesson-status">Ders Başlamadı</span>
+                    <button class="btn-complete-lesson" onclick="completeLesson('lesson6')">
+                        <i class="fas fa-check"></i> Dersi Tamamla
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Lesson 6: Network Saldırıları -->
-        <div class="content-section" id="lesson6">
-            <div class="section-header">
-                <h2><i class="fas fa-bug"></i> ⚔️ Ders 6: Network Saldırıları</h2>
-                <p>Network saldırı türleri ve korunma yöntemleri</p>
-            </div>
             
-            <div class="lesson-content">
-                <h3>🎯 Network Saldırı Türleri ve Kategorileri</h3>
+            <div class="content-body">
+                <div class="lesson-content">
+                    <h3>Saldırı Türleri ve Kategorileri</h3>
                 <p>Network güvenliğini tehdit eden çeşitli saldırı türleri ve bunlara karşı alınabilecek önlemler. Modern siber tehditlerin anlaşılması kritiktir.</p>
                 
                 <div class="info-cards">
@@ -2314,7 +2405,7 @@ ap profile "Office-AP"
                     </div>
                 </div>
                 
-                <h3>📊 Saldırı Türleri Karşılaştırması</h3>
+                <h3>Saldırı Türleri</h3>
                 <p>Farklı network saldırı türlerinin özelliklerinin detaylı karşılaştırması:</p>
                 
                 <table class="comparison-table">
@@ -2372,7 +2463,7 @@ ap profile "Office-AP"
                     </tbody>
                 </table>
                 
-                <h3>🔧 Saldırı Tespit ve Önleme Sistemleri</h3>
+                <h3>Saldırı Tespit ve Önleme Sistemleri</h3>
                 <p>Network saldırılarını tespit etmek ve önlemek için kullanılan sistemler:</p>
                 
                 <div class="code-block">
@@ -2403,7 +2494,7 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
                     </pre>
                 </div>
                 
-                <h3>📈 Saldırı Vektörleri ve Hedefler</h3>
+                <h3>Saldırı Vektörleri ve Hedefler</h3>
                 <p>Network saldırılarının farklı vektörleri ve hedefleri:</p>
                 
                 <table class="data-table">
@@ -2455,44 +2546,20 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
                     </tbody>
                 </table>
                 
-                <div class="diagram-container">
-                    <h4>Network Saldırı Katmanları</h4>
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 0.5rem; font-size: 0.9rem;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>7. Application Layer</span>
-                                <span style="color: #facc15;">SQL Injection, XSS</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>6. Presentation Layer</span>
-                                <span style="color: #facc15;">SSL Stripping</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>5. Session Layer</span>
-                                <span style="color: #facc15;">Session Hijacking</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>4. Transport Layer</span>
-                                <span style="color: #facc15;">SYN Flood, Port Scan</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>3. Network Layer</span>
-                                <span style="color: #facc15;">DDoS, IP Spoofing</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>2. Data Link Layer</span>
-                                <span style="color: #facc15;">ARP Spoofing, MAC Flood</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.2); padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between;">
-                                <span>1. Physical Layer</span>
-                                <span style="color: #facc15;">Cable Tapping</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="diagram-caption">OSI katmanlarına göre network saldırı türleri</p>
+                <div class="info-box">
+                    <h4>OSI Katmanlarına Göre Saldırılar</h4>
+                    <ul>
+                        <li>7. Application — SQL Injection, XSS</li>
+                        <li>6. Presentation — SSL Stripping</li>
+                        <li>5. Session — Session Hijacking</li>
+                        <li>4. Transport — SYN Flood, Port Scan</li>
+                        <li>3. Network — DDoS, IP Spoofing</li>
+                        <li>2. Data Link — ARP Spoofing, MAC Flood</li>
+                        <li>1. Physical — Cable Tapping</li>
+                    </ul>
                 </div>
                 
-                <h3>🛡️ Saldırı Önleme Stratejileri</h3>
+                <h3>Saldırı Önleme Stratejileri</h3>
                 <p>Network saldırılarına karşı kapsamlı korunma stratejileri:</p>
                 
                 <div class="info-cards">
@@ -2519,7 +2586,7 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
                     </div>
                 </div>
                 
-                <h3>🚨 Incident Response Plan</h3>
+                <h3>Olay Müdahale Planı</h3>
                 <p>Saldırı durumunda izlenecek prosedürler ve yanıt planı:</p>
                 
                 <table class="data-table">
@@ -2578,7 +2645,7 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
                     </tbody>
                 </table>
                 
-                <h3>📊 Saldırı İstatistikleri ve Trendler</h3>
+                <h3>İstatistikler ve Trendler</h3>
                 <p>Güncel siber güvenlik tehditleri ve trendleri:</p>
                 
                 <div class="info-cards">
@@ -2617,159 +2684,11 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
                     </ul>
                 </div>
                 
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lesson6')">
-                        <i class="fas fa-check-circle"></i> Dersi Tamamla
-                    </button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Lab 1: Firewall Yapılandırması -->
-        <div class="content-section" id="lab1">
-            <div class="section-header">
-                <h2><i class="fas fa-flask"></i> 🧪 Lab 1: Firewall Yapılandırması</h2>
-                <p>Pratik firewall kurulumu ve yapılandırması</p>
-            </div>
-            
-            <div class="lesson-content">
-                <h3>🎯 Lab Hedefleri</h3>
-                <p>Bu laboratuvarda bir firewall kurulumu yaparak güvenlik kuralları oluşturacaksınız.</p>
-                
-                <h4>Lab Adımları</h4>
-                <ol>
-                    <li>Firewall cihazını kurulum</li>
-                    <li>Temel güvenlik kuralları oluşturma</li>
-                    <li>NAT yapılandırması</li>
-                    <li>VPN tüneli kurulumu</li>
-                    <li>Log analizi ve monitoring</li>
-                </ol>
-                
-                <div class="code-block">
-                    <h4>Firewall Kural Örneği</h4>
-                    <pre>
-# Web sunucusu için kurallar
-config firewall policy
-    edit 1
-        set srcintf "wan1"
-        set dstintf "internal"
-        set srcaddr "all"
-        set dstaddr "web-server"
-        set action accept
-        set schedule "always"
-        set service "HTTP" "HTTPS"
-        set logtraffic all
-    next
-end
-                    </pre>
-                </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lab1')">
-                        <i class="fas fa-check-circle"></i> Lab'ı Tamamla
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lab 2: VPN Kurulumu -->
-        <div class="content-section" id="lab2">
-            <div class="section-header">
-                <h2><i class="fas fa-network-wired"></i> 🔗 Lab 2: VPN Kurulumu</h2>
-                <p>Site-to-site VPN kurulumu ve yapılandırması</p>
-            </div>
-            
-            <div class="lesson-content">
-                <h3>🎯 Lab Hedefleri</h3>
-                <p>İki farklı lokasyon arasında güvenli VPN bağlantısı kuracaksınız.</p>
-                
-                <h4>Lab Adımları</h4>
-                <ol>
-                    <li>VPN endpoint'leri yapılandırma</li>
-                    <li>IPsec tüneli kurulumu</li>
-                    <li>Routing yapılandırması</li>
-                    <li>Bağlantı testleri</li>
-                    <li>Performans optimizasyonu</li>
-                </ol>
-                
-                <div class="code-block">
-                    <h4>IPsec VPN Yapılandırması</h4>
-                    <pre>
-# Phase 1
-crypto isakmp policy 10
- encryption aes 256
- hash sha256
- authentication pre-share
- group 14
- lifetime 86400
-
-# Phase 2
-crypto ipsec transform-set ESP-AES256-SHA256 esp-aes 256 esp-sha256-hmac
-crypto map VPN-MAP 10 ipsec-isakmp
- set peer 203.0.113.1
- set transform-set ESP-AES256-SHA256
- match address VPN-ACL
-                    </pre>
-                </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lab2')">
-                        <i class="fas fa-check-circle"></i> Lab'ı Tamamla
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lab 3: Network Analizi -->
-        <div class="content-section" id="lab3">
-            <div class="section-header">
-                <h2><i class="fas fa-search"></i> 🔍 Lab 3: Network Analizi</h2>
-                <p>Network trafiği analizi ve güvenlik değerlendirmesi</p>
-            </div>
-            
-            <div class="lesson-content">
-                <h3>🎯 Lab Hedefleri</h3>
-                <p>Network trafiğini analiz ederek güvenlik açıklarını tespit edeceksiniz.</p>
-                
-                <h4>Lab Adımları</h4>
-                <ol>
-                    <li>Traffic capture alma</li>
-                    <li>Paket analizi yapma</li>
-                    <li>Anomali tespiti</li>
-                    <li>Güvenlik raporu hazırlama</li>
-                    <li>Öneriler geliştirme</li>
-                </ol>
-                
-                <div class="code-block">
-                    <h4>Wireshark Analiz Komutları</h4>
-                    <pre>
-# HTTP trafiği analizi
-http.request.method == "POST"
-
-# Şüpheli trafik
-tcp.flags.syn == 1 and tcp.flags.ack == 0
-
-# Büyük dosya transferleri
-tcp.len > 1000
-
-# DNS sorguları
-dns.qry.name contains "suspicious"
-                    </pre>
-                </div>
-                
-                <!-- Dersi Tamamla Butonu -->
-                <div class="lesson-completion">
-                    <button class="btn-complete-lesson" onclick="completeLesson('lab3')">
-                        <i class="fas fa-check-circle"></i> Lab'ı Tamamla
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Midterm Exam -->
+        <!-- Ara Sınav -->
         <div class="content-section" id="midterm">
             <div class="section-header">
                 <h2><i class="fas fa-clipboard-check"></i> 📝 Ara Sınav</h2>
@@ -2777,7 +2696,7 @@ dns.qry.name contains "suspicious"
             </div>
             
             <div class="lesson-content">
-                <h3>📋 Sınav Bilgileri</h3>
+                <h3>Sınav Bilgileri</h3>
                 <p>Bu sınav Network Temelleri, Firewall Yapılandırması ve VPN Teknolojileri konularını kapsamaktadır.</p>
                 
                 <div class="highlight-box">
@@ -2791,7 +2710,7 @@ dns.qry.name contains "suspicious"
                 </div>
                 
                 <div class="warning-box">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Önemli Notlar</h4>
+                    <h4>Önemli Notlar</h4>
                     <p>Sınav sırasında başka sekmeler açmayın ve internet bağlantınızın stabil olduğundan emin olun.</p>
                 </div>
                 
@@ -2812,7 +2731,7 @@ dns.qry.name contains "suspicious"
             </div>
             
             <div class="lesson-content">
-                <h3>🏆 Final Sınavı</h3>
+                <h3>Final Sınavı</h3>
                 <p>Bu sınav tüm modül içeriğini kapsayan kapsamlı bir değerlendirmedir.</p>
                 
                 <div class="success-box">
@@ -2845,6 +2764,7 @@ dns.qry.name contains "suspicious"
                 </div>
             </div>
         </div>
+        </main>
     </div>
 
     <script>
@@ -2868,10 +2788,10 @@ dns.qry.name contains "suspicious"
                 ModuleProgressTracker.initializeModule('Network Güvenliği', 12);
             }
             
-            const navItems = document.querySelectorAll('.nav-item');
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
             const contentSections = document.querySelectorAll('.content-section');
             
-            navItems.forEach(item => {
+            document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const targetSection = this.getAttribute('data-section');
                     
@@ -2901,8 +2821,8 @@ dns.qry.name contains "suspicious"
         });
         
         function updateProgress() {
-            const completedItems = document.querySelectorAll('.nav-item i.fa-check-circle.completed').length;
-            const totalItems = document.querySelectorAll('.nav-item').length;
+            const completedItems = document.querySelectorAll('.sidebar-nav .nav-item i.fa-check-circle.completed').length;
+            const totalItems = document.querySelectorAll('.sidebar-nav .nav-item').length;
             const progressPercentage = Math.round((completedItems / totalItems) * 100);
             
             const progressFill = document.querySelector('.progress-fill');
@@ -2919,7 +2839,7 @@ dns.qry.name contains "suspicious"
         // Lesson completion system
         function completeLesson(lessonId) {
             // Mark current lesson as completed
-            const currentNavItem = document.querySelector(`[data-section="${lessonId}"]`);
+            const currentNavItem = document.querySelector(`.sidebar-nav [data-section="${lessonId}"]`);
             if (currentNavItem) {
                 currentNavItem.classList.add('completed');
                 // Change icon if it exists
@@ -2937,22 +2857,18 @@ dns.qry.name contains "suspicious"
             }
             
             // Define lesson order manually to ensure correct sequence
-            const lessonOrder = ['intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'lab1', 'lab2', 'lab3', 'midterm', 'final'];
+            const lessonOrder = ['intro', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'midterm', 'final'];
             const currentIndex = lessonOrder.indexOf(lessonId);
             const nextIndex = currentIndex + 1;
             
             // Save lesson progress to database
             const lessonMap = {
-                'intro': 'Giriş ve Tanıtım',
-                'lesson1': 'Network Temelleri',
+                'intro': 'Giriş ve Network Temelleri',
                 'lesson2': 'Firewall Yapılandırması',
                 'lesson3': 'VPN Teknolojileri',
                 'lesson4': 'Network İzleme',
                 'lesson5': 'Wireless Güvenlik',
                 'lesson6': 'Network Saldırıları',
-                'lab1': 'Lab 1: Firewall Yapılandırması',
-                'lab2': 'Lab 2: VPN Kurulumu',
-                'lab3': 'Lab 3: Network Analizi',
                 'midterm': 'Ara Sınav',
                 'final': 'Final Sınavı'
             };
@@ -2971,7 +2887,7 @@ dns.qry.name contains "suspicious"
             
             if (nextIndex < lessonOrder.length) {
                 const nextSectionId = lessonOrder[nextIndex];
-                const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
+                const nextNavItem = document.querySelector(`.sidebar-nav [data-section="${nextSectionId}"]`);
                 
                 if (nextNavItem) {
                     // Unlock next lesson
@@ -3036,11 +2952,11 @@ dns.qry.name contains "suspicious"
         
         function navigateToNextLesson(nextSectionId) {
             // Remove active class from all nav items
-            const navItems = document.querySelectorAll('.nav-item');
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
             navItems.forEach(nav => nav.classList.remove('active'));
             
             // Add active class to next lesson
-            const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
+            const nextNavItem = document.querySelector(`.sidebar-nav [data-section="${nextSectionId}"]`);
             if (nextNavItem) {
                 nextNavItem.classList.add('active');
             }
@@ -3130,8 +3046,9 @@ dns.qry.name contains "suspicious"
         }
         
         async function apiRequest(endpoint, method = 'GET', data = null) {
-            const baseUrl = 'http://localhost:8006';
-            const url = baseUrl + endpoint;
+            const baseUrl = window.location.origin || '';
+            const path = endpoint.startsWith('/api') ? endpoint : '/api' + (endpoint.startsWith('/') ? endpoint : '/' + endpoint);
+            const url = baseUrl + path;
             
             const options = {
                 method: method,
@@ -3177,8 +3094,8 @@ dns.qry.name contains "suspicious"
         function getCompletedLessons() {
             const completedLessons = [];
             // Get all nav items with completed class
-            document.querySelectorAll('.nav-item.completed').forEach(navItem => {
-                const lessonName = navItem.querySelector('.nav-text')?.textContent.trim();
+            document.querySelectorAll('.sidebar-nav .nav-item.completed').forEach(navItem => {
+                const lessonName = navItem.querySelector('span')?.textContent.trim();
                 if (lessonName) {
                     completedLessons.push(lessonName);
                 }
@@ -3218,7 +3135,7 @@ dns.qry.name contains "suspicious"
                         };
                         
                         const lessonId = lessonMap[lessonName] || lessonName.toLowerCase().replace(/ /g, '-');
-                        const navItem = document.querySelector(`[data-section="${lessonId}"]`);
+                        const navItem = document.querySelector(`.sidebar-nav [data-section="${lessonId}"]`);
                         
                         if (navItem) {
                             const icon = navItem.querySelector('i');
@@ -3228,13 +3145,13 @@ dns.qry.name contains "suspicious"
                             navItem.classList.add('completed');
                             
                             // Unlock next lesson
-                            const lessonOrder = ['intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'lab1', 'lab2', 'lab3', 'midterm', 'final'];
+                            const lessonOrder = ['intro', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'midterm', 'final'];
                             const currentIndex = lessonOrder.indexOf(lessonId);
                             const nextIndex = currentIndex + 1;
                             
                             if (nextIndex < lessonOrder.length) {
                                 const nextSectionId = lessonOrder[nextIndex];
-                                const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
+                                const nextNavItem = document.querySelector(`.sidebar-nav [data-section="${nextSectionId}"]`);
                                 
                                 if (nextNavItem) {
                                     const nextLockIcon = nextNavItem.querySelector('i.fa-lock');

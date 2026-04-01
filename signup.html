@@ -30,8 +30,8 @@
     <link rel="canonical" href="https://sebs-global.com/signup.html">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png">
-    <link rel="apple-touch-icon" href="SEBS.png">
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,426 +42,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-light: #94a3b8;
-            --text-color: #2d3748;
-            --primary-color: #667eea;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] {
-            /* Modern Dark Theme - Professional Design */
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --text-light: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--primary-gradient);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        /* Loading Animation */
+    <link rel="stylesheet" href="/css/styles.css">
+        <style>
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--gradient-purple);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-
-        [data-theme="dark"] .loading-overlay {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
-        }
-
-        .loading-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-container {
-            text-align: center;
-            color: white;
-        }
-
-        .loading-logo {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        .loading-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            animation: fadeInOut 2s ease-in-out infinite;
-        }
-
-        .loading-subtext {
-            font-size: 1rem;
-            opacity: 0.8;
-            animation: fadeInOut 2s ease-in-out infinite 0.5s;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        /* Signup Container */
-        .signup-container {
-            width: 100%;
-            max-width: 500px;
-            background: var(--bg-secondary);
-            border-radius: 25px;
-            padding: 3rem;
-            box-shadow: var(--shadow-xl);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .signup-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
-        }
-
-        .signup-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .signup-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .signup-logo .sebs {
-            color: #2d3748;
-        }
-
-        .signup-logo .global {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .signup-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .signup-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Form Styles */
-        .signup-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .form-input {
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: var(--bg-primary);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-input.error {
-            border-color: #e53e3e;
-            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
-        }
-
-        .form-error {
-            color: #e53e3e;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Button Styles */
-        .btn-signup {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-signup:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-signup:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-signup.loading {
-            color: transparent;
-        }
-
-        .btn-signup.loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        /* Links */
-        .signup-links {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .signup-links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .signup-links a:hover {
-            color: #2b6cb0;
-        }
-
-        /* Success Message */
-        .success-message {
-            background: #f0fff4;
-            border: 1px solid #9ae6b4;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            color: #22543d;
-            text-align: center;
-        }
-
-        .success-message i {
-            color: #38a169;
-            margin-right: 0.5rem;
-        }
-
-        /* Verification Code Input */
-        .verification-container {
-            display: none;
-            text-align: center;
-        }
-
-        .verification-container.active {
-            display: block;
-        }
-
-        .verification-code-input {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .verification-digit {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .verification-digit:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .signup-container {
-                padding: 2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .verification-digit {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-        }
-
-        /* Floating Elements */
-        .floating-element {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-element:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .floating-element:nth-child(3) {
-                width: 60px;
-                height: 60px;
-            top: 40%;
-            left: 80%;
-            animation-delay: 4s;
-            }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
         }
     </style>
 </head>
@@ -470,13 +66,87 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
-                <img src="SEBS.png" alt="SEBS Logo" style="width: 60px; height: 60px; object-fit: contain;"/>
+                <img src="/images/SEBS.png" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;"/>
             </div>
             <div class="loading-spinner"></div>
             <div class="loading-text">SEBS Global</div>
             <div class="loading-subtext">Üyelik sayfası yükleniyor...</div>
         </div>
     </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="nav-logo">
+                <!-- Logo resmi - yüklenemezse SVG fallback -->
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" id="navLogoImg"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panelim
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
 
     <!-- Floating Elements -->
     <div class="floating-element"></div>
@@ -485,14 +155,14 @@
 
     <!-- Signup Container -->
     <div class="signup-container">
-            <div class="signup-header">
-                <div class="signup-logo">
+        <div class="signup-header">
+            <div class="signup-logo">
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
-                </div>
+            </div>
             <h1 class="signup-title">Hesap Oluştur</h1>
             <p class="signup-subtitle">Eğitim yolculuğunuza başlayın</p>
-            </div>
+        </div>
 
         <!-- Success Message -->
         <div class="success-message" id="successMessage" style="display: none;">
@@ -502,35 +172,35 @@
 
         <!-- Signup Form -->
         <form class="signup-form" id="signupForm">
-                <div class="form-group">
+            <div class="form-group">
                 <label class="form-label" for="firstName">Ad</label>
                 <input type="text" id="firstName" name="firstName" class="form-input" required>
                 <div class="form-error" id="firstNameError"></div>
-                </div>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                 <label class="form-label" for="lastName">Soyad</label>
                 <input type="text" id="lastName" name="lastName" class="form-input" required>
                 <div class="form-error" id="lastNameError"></div>
-                </div>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                 <label class="form-label" for="email">E-posta Adresi</label>
                 <input type="email" id="email" name="email" class="form-input" required>
                 <div class="form-error" id="emailError"></div>
-                </div>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                 <label class="form-label" for="password">Şifre</label>
                 <input type="password" id="password" name="password" class="form-input" required minlength="8" placeholder="En az 8 karakter, büyük harf içermeli">
                 <div class="form-error" id="passwordError"></div>
-                </div>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                 <label class="form-label" for="confirmPassword">Şifre Tekrar</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
                 <div class="form-error" id="confirmPasswordError"></div>
-                </div>
+            </div>
 
             <button type="submit" class="btn-signup" id="signupBtn">
                 <span id="signupBtnText">Hesap Oluştur</span>
@@ -557,25 +227,57 @@
 
             <button type="button" class="btn-signup" id="verifyBtn" style="margin-top: 1rem;">
                 <span id="verifyBtnText">Doğrula</span>
-                </button>
+            </button>
 
-            <button type="button" id="resendBtn" style="background: none; border: none; color: var(--primary-color); margin-top: 1rem; cursor: pointer;">
+            <button type="button" id="resendBtn" style="background: none; border: none; color: var(--primary); margin-top: 1rem; cursor: pointer; font-size: 0.95rem;">
                 Kodu tekrar gönder
             </button>
-    </div>
+        </div>
 
         <!-- Links -->
         <div class="signup-links">
-            <p>Zaten hesabınız var mı? <a href="login.html">Giriş Yapın</a></p>
-            <p style="margin-top: 1rem;"><a href="index.html">← Ana Sayfaya Dön</a></p>
+            <p>Zaten hesabınız var mı? <a href="/login.html">Giriş Yapın</a></p>
+            <p style="margin-top: 1rem;"><a href="/index.html">← Ana Sayfaya Dön</a></p>
         </div>
     </div>
 
-    <!-- API Integration Script -->
-    <script src="js/api-integration.js"></script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
     
     <!-- Signup Script -->
     <script>
+        // Logo error handler (CSP uyumlu)
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImg = document.getElementById('navLogoImg');
+            if (logoImg) {
+                logoImg.addEventListener('error', function() {
+                    const svg = this.nextElementSibling;
+                    if (svg && svg.classList.contains('nav-logo-svg')) {
+                        this.style.display = 'none';
+                        svg.style.display = 'inline-flex';
+                    }
+                });
+            }
+            
+            // Logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                        window.supabaseAuthSystem.logout();
+                    } else if (window.logout) {
+                        window.logout();
+                    }
+                });
+            }
+        });
+        
         // Loading Animation
         window.addEventListener('load', function() {
                 const loadingOverlay = document.getElementById('loadingOverlay');
@@ -583,8 +285,8 @@
                 loadingOverlay.classList.add('hidden');
                 setTimeout(() => {
                     loadingOverlay.style.display = 'none';
-                }, 500);
-            }, 1500);
+                }, 150);
+            }, 200);
         });
 
         // Form Elements
@@ -701,30 +403,142 @@
             signupBtn.disabled = true;
 
             try {
-                const response = await window.educationAPI.register(formData);
+                // Supabase script yüklendi mi kontrol et ve bekle (maksimum 15 saniye)
+                let attempts = 0;
+                const maxAttempts = 150; // 15 saniye (150 * 100ms)
+                
+                while ((typeof window.supabase === 'undefined' || typeof window.initSupabase === 'undefined') && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                    
+                    // Her 2 saniyede bir console'a durum yazdır
+                    if (attempts % 20 === 0) {
+                        console.log(`⏳ Supabase yüklenmesi bekleniyor... (${attempts * 100 / 1000}s)`);
+                    }
+                }
+                
+                if (typeof window.supabase === 'undefined') {
+                    throw new Error('Supabase kütüphanesi yüklenemedi. Lütfen sayfayı yenileyin (F5 veya Ctrl+Shift+R) ve internet bağlantınızı kontrol edin.');
+                }
+                
+                if (typeof window.initSupabase === 'undefined') {
+                    throw new Error('Supabase client script\'i yüklenemedi. Lütfen sayfayı yenileyin (F5 veya Ctrl+Shift+R).');
+                }
+                
+                // Initialize Supabase if needed
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    await window.initSupabase();
+                    if (!window.supabaseAuthSystem) {
+                        if (typeof SupabaseAuthSystem === 'undefined') {
+                            throw new Error('Supabase Auth System yüklenemedi. Lütfen sayfayı yenileyin (F5).');
+                        }
+                        window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    }
+                }
+                
+                // Supabase Auth signup
+                const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+                const response = await window.supabaseAuthSystem.signUp(
+                    formData.email,
+                    formData.password,
+                    fullName
+                );
                 
                 if (response.success) {
-                    currentUser = response.data.user;
+                    currentUser = response.user;
+                    
+                    // Form'u gizle
+                    signupForm.style.display = 'none';
                     
                     // Show success message
                     successMessage.style.display = 'block';
-                    document.getElementById('successText').textContent = response.message;
+                    const successText = response.message || 'Kayıt başarılı! E-posta adresinize gönderilen doğrulama linkine tıklayın.';
+                    document.getElementById('successText').textContent = successText;
                     
-                    // Show verification container
-                    verificationContainer.classList.add('active');
-                    signupForm.style.display = 'none';
-                    
-                    // Focus first verification digit
-                    document.querySelector('.verification-digit[data-index="0"]').focus();
+                    // Email doğrulama gerekiyorsa bilgilendir
+                    if (response.requiresEmailVerification) {
+                        // Check for redirect parameter
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const category = urlParams.get('category');
+                        const level = urlParams.get('level');
+                        
+                        // Kayıt sonrası login sayfasına yönlendir
+                        // Kullanıcı email doğrulamasından sonra dashboard'a gidecek
+                        let redirectUrl = 'login.html?message=' + encodeURIComponent('Kayıt başarılı! E-posta adresinize gönderilen doğrulama linkine tıklayın.');
+                        if (redirect) {
+                            redirectUrl = redirect + '?message=' + encodeURIComponent('Kayıt başarılı! E-posta adresinize gönderilen doğrulama linkine tıklayın.');
+                            if (category && level && redirect.includes('pricing.html')) {
+                                redirectUrl += `&category=${category}&level=${level}`;
+                            }
+                        }
+                        
+                        // Daha kullanıcı dostu mesaj göster
+                        setTimeout(() => {
+                            const confirmRedirect = confirm(
+                                'Kayıt başarılı!\n\n' +
+                                'E-posta adresinize doğrulama linki gönderildi.\n\n' +
+                                'Lütfen e-postanızı kontrol edin ve linke tıklayın.\n\n' +
+                                'Doğrulama sonrası giriş yapabileceksiniz.\n\n' +
+                                'Giriş sayfasına yönlendirilsin mi?'
+                            );
+                            if (confirmRedirect) {
+                                window.location.href = redirectUrl;
+                            }
+                        }, 2000);
+                    } else {
+                        // Email doğrulama gerekmiyorsa direkt dashboard'a yönlendir
+                        const urlParams = new URLSearchParams(window.location.search);
+                        let redirectUrl = 'dashboard.html';
+                        const redirect = urlParams.get('redirect');
+                        if (redirect) {
+                            redirectUrl = redirect;
+                            const category = urlParams.get('category');
+                            const level = urlParams.get('level');
+                            if (category && level && redirect.includes('pricing.html')) {
+                                redirectUrl += `?category=${category}&level=${level}`;
+                            }
+                        }
+                        
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 2000);
+                    }
                     
                 } else {
-                    showError('emailError', response.message);
+                    // Hata mesajını göster
+                    const errorMsg = response.message || 'Kayıt sırasında bir hata oluştu.';
+                    
+                    // Hata tipine göre uygun alana göster
+                    if (errorMsg.includes('email') || errorMsg.includes('e-posta')) {
+                        showError('emailError', errorMsg);
+                    } else if (errorMsg.includes('password') || errorMsg.includes('şifre')) {
+                        showError('passwordError', errorMsg);
+                    } else {
+                        showError('emailError', errorMsg);
+                    }
                 }
             } catch (error) {
                 console.error('Signup error:', error);
-                const errorMessage = error.message || 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+                let errorMessage = error.message || 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+                
+                // Network hatalarını kontrol et
+                if (error.message && error.message.includes('fetch')) {
+                    errorMessage = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                } else if (error.message && error.message.includes('Supabase')) {
+                    errorMessage = 'Supabase bağlantı hatası. Lütfen sayfayı yenileyin (F5).';
+                }
+                
                 console.log('Error details:', errorMessage);
-                showError('emailError', errorMessage);
+                
+                // Hata tipine göre uygun alana göster
+                if (errorMessage.includes('email') || errorMessage.includes('e-posta')) {
+                    showError('emailError', errorMessage);
+                } else if (errorMessage.includes('password') || errorMessage.includes('şifre')) {
+                    showError('passwordError', errorMessage);
+                } else {
+                    showError('emailError', errorMessage);
+                }
             } finally {
                 signupBtn.classList.remove('loading');
                 signupBtn.disabled = false;
@@ -773,27 +587,42 @@
             verifyBtn.disabled = true;
 
             try {
-                const response = await window.educationAPI.verifyEmail(currentUser.email, verificationCode);
+                // Supabase email verification is done via email link
+                // This code input is not needed for Supabase Auth
+                document.getElementById('verificationError').textContent = '';
+                document.getElementById('verificationError').style.color = '#f59e0b';
+                document.getElementById('verificationError').textContent = '⚠️ Supabase Auth kullanıyoruz. Lütfen e-posta adresinize gönderilen linke tıklayın.';
                 
-                if (response.success) {
-                    // Store user data and token
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('isVerified', 'true');
-                    localStorage.setItem('userData', JSON.stringify(response.data.user));
-                    localStorage.setItem('authToken', response.data.token);
+                // Check if user is already verified
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    await window.initSupabase();
+                    if (!window.supabaseAuthSystem) {
+                        window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    }
+                }
+                
+                const { data: { user } } = await window.supabaseAuthSystem.supabase.auth.getUser();
+                if (user && user.email_confirmed_at) {
+                    // Check for redirect parameter
+                    const urlParams = new URLSearchParams(window.location.search);
+                    // Email doğrulamasından sonra her zaman dashboard.html'e yönlendir
+                    let redirectUrl = urlParams.get('redirect') || 'dashboard.html';
+                    const category = urlParams.get('category');
+                    const level = urlParams.get('level');
                     
-                    // Show success message
-                    document.getElementById('verificationError').textContent = '';
+                    // Eğer redirect pricing.html ise category ve level parametrelerini ekle
+                    if (category && level && redirectUrl.includes('pricing.html')) {
+                        redirectUrl += `?category=${category}&level=${level}`;
+                    } else if (!redirectUrl || redirectUrl === 'dashboard.html') {
+                        // Varsayılan olarak dashboard'a yönlendir
+                        redirectUrl = 'dashboard.html';
+                    }
+                    
                     document.getElementById('verificationError').style.color = '#10b981';
-                    document.getElementById('verificationError').textContent = '✅ E-posta başarıyla doğrulandı! Dashboard\'a yönlendiriliyorsunuz...';
-                    
-                    // Redirect to dashboard after 2 seconds
+                    document.getElementById('verificationError').textContent = '✅ E-posta başarıyla doğrulandı! Dashboard sayfasına yönlendiriliyorsunuz...';
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = redirectUrl;
                     }, 2000);
-                } else {
-                    document.getElementById('verificationError').textContent = response.message;
-                    document.getElementById('verificationError').style.color = '#e53e3e';
                 }
             } catch (error) {
                 console.error('Verification error:', error);
@@ -812,7 +641,7 @@
 
             try {
                 // Generate new verification code for existing user
-                const response = await fetch('http://localhost:8006/api/auth/resend-code', {
+                const response = await fetch((window.location.origin || '') + '/api/auth/resend-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -857,5 +686,7 @@
             }, 1000);
         }
     </script>
+    <!-- Navigation Script -->
+    <script src="js/navigation.js"></script>
 </body>
 </html>

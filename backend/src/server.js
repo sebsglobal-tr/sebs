@@ -6,8 +6,7 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { PrismaClient } from '@prisma/client';
-import authRoutes from './routes/auth.routes.js';
+import { prisma } from './lib/prisma.js';
 import userRoutes from './routes/user.routes.js';
 import progressRoutes from './routes/progress.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
@@ -16,6 +15,7 @@ import certificateRoutes from './routes/certificate.routes.js';
 import simulationRoutes from './routes/simulation.routes.js';
 import purchaseRoutes from './routes/purchase.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import evaluationRoutes from './routes/evaluation.routes.js';
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8006;
-export const prisma = new PrismaClient();
+export { prisma };
 
 // Get root directory (two levels up from backend/src)
 const rootDir = path.resolve(__dirname, '../..');
@@ -76,7 +76,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
+// Note: Auth is now handled by Supabase Auth
 app.use('/api/users', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
@@ -85,6 +85,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/simulations', simulationRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/evaluation', evaluationRoutes);
 
 // 404 Handler - Check if it's an API route or static file
 app.use('*', (req, res) => {

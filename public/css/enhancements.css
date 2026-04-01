@@ -1,0 +1,276 @@
+/* ============================================
+   SEBS GLOBAL - FRONTEND ENHANCEMENTS
+   Kurumsal, Interaktif, Göz Alıcı
+   ============================================ */
+
+/* Scroll Reveal - Görünürlük Animasyonları */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Hero Logo - SEBS logosu vurgusu */
+.hero-logo-wrap {
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+.hero-logo-wrap img {
+    width: 110px;
+    height: 90px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.hero-logo-wrap:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(30, 64, 175, 0.25);
+}
+
+/* category-card button versiyonu (modules/simulations sayfaları) */
+.category-card-btn {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+}
+.category-card-btn:focus {
+    outline: none;
+}
+
+/* Eğitim Alanları - Görselli Kartlar Grid */
+.category-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 2rem auto 0;
+}
+
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    aspect-ratio: 16/9;
+    min-height: 140px;
+    display: flex;
+    align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+.category-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(5, 5, 8, 0.95) 0%, rgba(5, 5, 8, 0.4) 50%, transparent 100%);
+    transition: opacity 0.4s ease;
+}
+.category-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+.category-card:hover::before {
+    background: linear-gradient(to top, rgba(5, 5, 8, 0.9) 0%, rgba(30, 64, 175, 0.2) 100%);
+}
+.category-card-content {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    width: 100%;
+}
+.category-card-content i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: rgba(212, 168, 83, 0.9);
+    transition: transform 0.3s ease;
+}
+.category-card:hover .category-card-content i {
+    transform: scale(1.2);
+}
+.category-card-content span {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+}
+
+/* Feature Card - Görselli */
+.feature-card-image {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    margin: -2.5rem -2.5rem 1.5rem -2.5rem;
+    border-radius: 16px 16px 0 0;
+    transition: transform 0.5s ease;
+}
+.feature-card:hover .feature-card-image {
+    transform: scale(1.08);
+}
+
+/* Simulation Card - Görselli */
+.simulation-card-image {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    margin: -2.5rem -2.5rem 1.5rem -2.5rem;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transition: transform 0.5s ease;
+}
+.simulation-card:hover .simulation-card-image {
+    transform: scale(1.05);
+}
+
+/* Buton Ripple Etkisi */
+.btn-primary, .btn-signup, .tab-btn, .category-card {
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary:active::after,
+.btn-signup:active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 70%);
+    animation: ripple 0.6s ease-out;
+}
+@keyframes ripple {
+    to { transform: scale(2); opacity: 0; }
+}
+
+/* Tab Hover - Daha Belirgin */
+.tab-btn, .category-card {
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tab-btn:active {
+    transform: scale(0.98);
+}
+
+/* CTA Section - Daha Etkileyici */
+.cta-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+.cta-content p {
+    font-size: 1.15rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+/* Stat Card - Hover Pulse */
+.stat-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-card:hover .stat-number {
+    color: #fff;
+}
+
+/* Smooth Scroll Link */
+a[href^="#"] {
+    scroll-behavior: smooth;
+}
+
+/* Focus Visible - Erişilebilirlik */
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid rgba(212, 168, 83, 0.8);
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.btn-primary.loading,
+.btn-signup.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+.btn-primary.loading::after,
+.btn-signup.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+@keyframes spin {
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Responsive - Eğitim kartları mobil */
+@media (max-width: 640px) {
+    .category-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .category-card {
+        min-height: 120px;
+    }
+}
+
+/* ============================================
+   MODULES & SIMULATIONS - Görselli Kartlar
+   ============================================ */
+
+/* simulation-card-detailed üst görsel */
+.simulation-card-detailed .card-image-top {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    margin: -2.5rem -2.5rem 1.5rem -2.5rem;
+    border-radius: 16px 16px 0 0;
+    transition: transform 0.5s ease;
+}
+.simulation-card-detailed:hover .card-image-top {
+    transform: scale(1.05);
+}
+
+/* Kategori fallback - sadece data-image yoksa uygulanır */
+.simulation-card-detailed[data-category="cybersecurity"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80'); }
+.simulation-card-detailed[data-category="cloud"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80'); }
+.simulation-card-detailed[data-category="data-science"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80'); }
+.simulation-card-detailed[data-category="technology"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80'); }
+.simulation-card-detailed[data-category="business"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80'); }
+.simulation-card-detailed[data-category="personal"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80'); }
+/* Başlıkla alakalı görseller - data-image ile (önce gelen fallback’i geçersiz kılar) */
+.simulation-card-detailed[data-image="cyber-intro"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80'); }
+.simulation-card-detailed[data-image="network"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80'); }
+.simulation-card-detailed[data-image="os-security"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80'); }
+.simulation-card-detailed[data-image="crypto"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1614064548237-7042ac541c7a?w=600&q=80'); }
+.simulation-card-detailed[data-image="social-eng"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1521791055366-0d553872125f?w=600&q=80'); }
+.simulation-card-detailed[data-image="web-security"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80'); }
+.simulation-card-detailed[data-image="malware"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1633265486064-086b219458ec?w=600&q=80'); }
+.simulation-card-detailed[data-image="soc"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80'); }
+.simulation-card-detailed[data-image="forensics"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80'); }
+.simulation-card-detailed[data-image="pentest"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80'); }
+.simulation-card-detailed[data-image="threat-intel"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80'); }
+.simulation-card-detailed[data-image="aws"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1544197151-b4242d8b2a50?w=600&q=80'); }
+.simulation-card-detailed[data-image="azure"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&q=80'); }
+.simulation-card-detailed[data-image="gcp"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1544197151-b4242d8b2a50?w=600&q=80'); }
+.simulation-card-detailed[data-image="cloud-security"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80'); }
+.simulation-card-detailed[data-image="python-data"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&q=80'); }
+.simulation-card-detailed[data-image="ml"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80'); }
+.simulation-card-detailed[data-image="deep-learning"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80'); }
+.simulation-card-detailed[data-image="web-dev"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80'); }
+.simulation-card-detailed[data-image="mobile"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80'); }
+.simulation-card-detailed[data-image="project-mgmt"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80'); }
+.simulation-card-detailed[data-image="digital-mkt"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80'); }
+.simulation-card-detailed[data-image="communication"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80'); }
+.simulation-card-detailed[data-image="time-mgmt"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&q=80'); }

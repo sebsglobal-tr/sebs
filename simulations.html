@@ -30,8 +30,8 @@
     <link rel="canonical" href="https://sebs-global.com/simulations.html">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="SEBS.png">
-    <link rel="apple-touch-icon" href="SEBS.png">
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,888 +42,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/modules.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
     
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-            --success-color: #22c55e;
-            --warning-color: #facc15;
-            --danger-color: #ef4444;
-        }
-
-        [data-theme="dark"] {
-            /* Modern Dark Theme - Professional Design */
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--bg-primary);
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            background: none;
-            border: 2px solid var(--text-secondary);
-            border-radius: 12px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-            margin-left: 1rem;
-        }
-
-        .dark-mode-toggle:hover {
-            background: var(--bg-secondary);
-            border-color: var(--text-primary);
-        }
-
-        [data-theme="dark"] .dark-mode-toggle {
-            border-color: #1e40af;
-            color: #60a5fa;
-        }
-
-        [data-theme="dark"] .dark-mode-toggle:hover {
-            background: #1e3a8a;
-            border-color: #60a5fa;
-        }
-
-        /* Loading Screen */
-        .loading-screen {
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--gradient-purple);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-
-        [data-theme="dark"] .loading-screen {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1e3a8a 100%);
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-container {
-            text-align: center;
-            color: white;
-        }
-
-        .loading-logo {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        .loading-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            animation: fadeInOut 2s ease-in-out infinite;
-        }
-
-        .loading-subtext {
-            font-size: 1rem;
-            opacity: 0.8;
-            animation: fadeInOut 2s ease-in-out infinite 0.5s;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Navigation */
-        .navbar {
-            background: var(--navbar-bg);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .navbar {
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem !important;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-
-.nav-logo-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    object-fit: cover;
-    margin-right: 8px;
-}
-
-        .sebs {
-            color: var(--text-primary);
-        }
-
-        [data-theme="dark"] .sebs {
-            color: #e2e8f0;
-        }
-
-        .global {
-            background: var(--gradient-purple);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        [data-theme="dark"] .global {
-            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: var(--text-primary);
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-gradient);
-            border-radius: 1px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .btn-login, .btn-signup, .btn-logout {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-login {
-            color: var(--text-primary);
-            background: transparent;
-            border: 2px solid var(--border-color);
-        }
-
-        .btn-login:hover {
-            background: var(--bg-primary);
-            border-color: var(--text-primary);
-        }
-
-        .btn-signup {
-            background: var(--primary-gradient);
-            color: white;
-        }
-
-        .btn-signup:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-logout {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .btn-logout:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: var(--bg-primary);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .user-name {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 15s ease infinite;
-            padding: 6rem 0 4rem;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.4;
-            animation: pulse 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.6; }
-        }
-
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #ffffff 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-
-        /* Simulation Categories */
-        .simulation-categories {
-            background: var(--bg-secondary);
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: transparent;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover,
-        .tab-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
-        }
-
-        .tab-btn i {
-            font-size: 1.1rem;
-        }
-
-        /* Simulations Grid */
-        .simulations-grid-section {
-            padding: 4rem 0;
-            background: var(--bg-primary);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .simulations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .simulation-card-detailed {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 0;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            overflow: hidden;
-            display: none;
-            position: relative;
-        }
-
-        .simulation-card-detailed::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-            z-index: 1;
-        }
-
-        .simulation-card-detailed:hover::before {
-            transform: scaleX(1);
-        }
-
-        .simulation-card-detailed[data-category="cybersecurity"] {
-            display: block;
-        }
-
-        .simulation-card-detailed:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .simulation-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .simulation-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--primary-gradient);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.75rem;
-            flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .simulation-icon::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .simulation-card-detailed:hover .simulation-icon {
-            transform: scale(1.15) rotate(360deg);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .simulation-card-detailed:hover .simulation-icon::before {
-            opacity: 1;
-        }
-
-        .simulation-info h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0 0 0.5rem 0;
-        }
-
-        .simulation-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .level-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .level-badge.beginner {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success-color);
-        }
-
-        .level-badge.intermediate {
-            background: rgba(250, 204, 21, 0.1);
-            color: var(--warning-color);
-        }
-
-        .level-badge.advanced {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger-color);
-        }
-
-        .simulation-content {
-            padding: 1.5rem;
-        }
-
-        .simulation-content p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .simulation-scenarios h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
-        }
-
-        .simulation-scenarios ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .simulation-scenarios li {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .simulation-scenarios li::before {
-            content: '✓';
-            color: var(--success-color);
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        .simulation-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            background: var(--bg-primary);
-        }
-
-        .simulation-status {
-            display: flex;
-            align-items: center;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-badge.available {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success-color);
-        }
-
-        .status-badge.coming-soon {
-            background: rgba(250, 204, 21, 0.1);
-            color: var(--warning-color);
-        }
-
-        .btn-simulation {
-            padding: 0.875rem 1.75rem;
-            background: var(--primary-gradient);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-simulation::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-simulation:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-simulation:hover::before {
-            left: 100%;
-        }
-
-        .btn-simulation.disabled {
-            background: var(--text-secondary);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .btn-simulation.disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .simulation-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .simulation-actions .btn-simulation {
-            flex: 1;
-            font-size: 0.85rem;
-            padding: 0.6rem 1rem;
-        }
-
-
-        /* Footer */
-        .footer {
-            background: var(--text-primary);
-            color: white;
-            padding: 3rem 0 2rem;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .footer-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .nav-menu {
-                display: none;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .simulations-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .simulation-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .simulation-meta {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .simulation-footer {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .category-tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .tab-btn {
-                width: 200px;
-                justify-content: center;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
         }
     </style>
 </head>
@@ -932,7 +69,7 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-container">
             <div class="loading-logo">
-                <img src="SEBS.png" alt="SEBS Logo" style="width: 60px; height: 60px; object-fit: contain;"/>
+                <img src="/images/SEBS.png" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;"/>
             </div>
             <div class="loading-spinner"></div>
             <div class="loading-text">Simülasyonlar Yükleniyor</div>
@@ -943,35 +80,53 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <a href="/index.html" class="nav-logo">
+                <!-- Logo resmi - yüklenemezse SVG fallback -->
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
+                     onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
+                <!-- Logo yüklenemezse SVG göster -->
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
             </a>
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li class="nav-item" role="none">
-                    <a href="index.html" class="nav-link" data-page="index" role="menuitem">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
                         <i class="fas fa-home"></i> Ana Sayfa
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
                         <i class="fas fa-book"></i> Eğitim Modülleri
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
                         <i class="fas fa-flask"></i> Simülasyonlar
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="about.html" class="nav-link" data-page="about" role="menuitem">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
                         <i class="fas fa-info-circle"></i> Hakkımızda
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
                         <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panelim
                     </a>
                 </li>
             </ul>
@@ -983,16 +138,13 @@
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span class="user-name" id="userName">Kullanıcı</span>
                 </div>
-                <a href="login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
-                <a href="signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
-                <a href="dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
-                    <i class="fas fa-tachometer-alt"></i> Panel
-                </a>
-                <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Çıkış Yap
                 </a>
             </div>
-            <button class="hamburger">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -1003,7 +155,7 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Hero Section -->
-        <section class="hero-section">
+        <section class="hero-section modules-hero">
             <div class="hero-content">
                 <h1 class="hero-title">Siber Güvenlik Simülasyonları</h1>
                 <p class="hero-subtitle">
@@ -1027,33 +179,45 @@
             </div>
         </section>
 
-        <!-- Simulations Categories -->
+        <!-- Simulations Categories - Görselli kartlar -->
         <section class="simulation-categories">
             <div class="container">
-                <div class="category-tabs">
-                    <button class="tab-btn active" data-category="cybersecurity">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Siber Güvenlik</span>
+                <div class="category-cards-grid">
+                    <button type="button" class="category-card category-card-btn tab-btn active" data-category="cybersecurity" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Siber Güvenlik</span>
+                        </div>
                     </button>
-                    <button class="tab-btn" data-category="cloud">
-                        <i class="fas fa-cloud"></i>
-                        <span>Bulut Bilişim</span>
+                    <button type="button" class="category-card category-card-btn tab-btn" data-category="cloud" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-cloud"></i>
+                            <span>Bulut Bilişim</span>
+                        </div>
                     </button>
-                    <button class="tab-btn" data-category="data-science">
-                        <i class="fas fa-database"></i>
-                        <span>Veri Bilimleri</span>
+                    <button type="button" class="category-card category-card-btn tab-btn" data-category="data-science" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-database"></i>
+                            <span>Veri Bilimleri</span>
+                        </div>
                     </button>
-                    <button class="tab-btn" data-category="technology">
-                        <i class="fas fa-code"></i>
-                        <span>Teknoloji</span>
+                    <button type="button" class="category-card category-card-btn tab-btn" data-category="technology" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-code"></i>
+                            <span>Teknoloji</span>
+                        </div>
                     </button>
-                    <button class="tab-btn" data-category="business">
-                        <i class="fas fa-briefcase"></i>
-                        <span>İş Dünyası</span>
+                    <button type="button" class="category-card category-card-btn tab-btn" data-category="business" style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-briefcase"></i>
+                            <span>İş Dünyası</span>
+                        </div>
                     </button>
-                    <button class="tab-btn" data-category="personal">
-                        <i class="fas fa-user-graduate"></i>
-                        <span>Kişisel Gelişim</span>
+                    <button type="button" class="category-card category-card-btn tab-btn" data-category="personal" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80');">
+                        <div class="category-card-content">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Kişisel Gelişim</span>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -1063,68 +227,211 @@
         <section class="simulations-grid-section">
             <div class="container">
                 <h2 class="section-title">Siber Güvenlik Simülasyonları</h2>
-                <p class="section-subtitle">Gerçek dünya senaryolarını güvenli bir ortamda deneyimleyin</p>
+                <p class="section-subtitle">Modüllerle uyumlu konu başlıkları — kolaydan zora (Başlangıç → Orta → İleri)</p>
                 
                 <div class="simulations-grid">
-                    <!-- Temel Siber Güvenlik Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
+                    <!-- BAŞLANGIÇ SEVİYESİ (5 modül) -->
+                    <!-- 1. Siber Güvenliğe Giriş -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="cyber-intro">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-lock"></i>
-                            </div>
+                            <div class="simulation-icon"><i class="fas fa-lock"></i></div>
                             <div class="simulation-info">
-                                <h3>Temel Siber Güvenlik Lab</h3>
+                                <h3>Siber Güvenliğe Giriş</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge beginner">Başlangıç</span>
-                                    <span class="duration">2-3 saat</span>
-                                    <span class="participants">200+ katılımcı</span>
+                                    <span class="duration">25 saat</span>
+                                    <span class="participants">500+ katılımcı</span>
                                 </div>
                             </div>
                         </div>
                         <div class="simulation-content">
-                            <p>Siber güvenlik temellerini pratik olarak öğrenin. Linux komutları ve kurumsal güvenlik senaryolarını deneyimleyin.</p>
+                            <p>İki simülasyon: <strong>Kayıt Haftası Krizi</strong> (6 olay, varlık/CIA/attack chain) ve <strong>6 Bilgi Semptom-Etki Zinciri</strong> (gürültüden sinyal, erken kesin yargıdan kaçınma).</p>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions">
+                                <a href="simulation/siber-guvenlige-giris.html" class="btn-simulation">Simülasyonları Gör</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 2. Linux Sunucu Forensik Lab (Temel Siber Güvenlik) -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="os-security">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-search"></i></div>
+                            <div class="simulation-info">
+                                <h3>Linux Sunucu Forensik Lab</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge beginner">Başlangıç</span>
+                                    <span class="duration">45 dk</span>
+                                    <span class="participants">Temel Siber Güvenlik</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Şüpheli sunucu incelemesi senaryosu. Linux komutlarını <strong>hangi sırayla</strong> kullanacağınızı adım adım uygulayın: whoami, pwd, ls, cd, tail, grep, find, cat ile forensik analiz.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
-                                    <li>Linux komutlarıyla şifreye ulaşma</li>
-                                    <li>CIA Triad analizi ve uygulama</li>
-                                    <li>Tehdit tespiti ve kategorizasyon</li>
-                                    <li>Risk değerlendirmesi ve mitigation</li>
-                                    <li>Güvenlik politikaları oluşturma</li>
-                                    <li>Incident response yönetimi</li>
+                                    <li>Oturum ve konum (whoami, pwd, hostname)</li>
+                                    <li>Dizin yapısı ve log inceleme (ls, cd, tail, cat)</li>
+                                    <li>İçerik arama (grep) ve şüpheli dosya analizi</li>
+                                    <li>Komut sırası ve raporlama</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
                             <div class="simulation-actions">
-                                <a href="simulation/temel-siber-guvenlik.html" class="btn-simulation">Linux Lab</a>
-                                <a href="simulation/kurumsal-guvenlik.html" class="btn-simulation">Kurumsal Lab</a>
+                                <a href="simulation/linux-forensik-lab.html" class="btn-simulation">Simülasyonu Başlat</a>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Network Güvenliği Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
+                    <!-- 3. Temel Network Eğitimi -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="network">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-network-wired"></i>
-                            </div>
+                            <div class="simulation-icon"><i class="fas fa-network-wired"></i></div>
                             <div class="simulation-info">
-                                <h3>Network Güvenliği Lab</h3>
+                                <h3>Temel Network Eğitimi</h3>
                                 <div class="simulation-meta">
-                                    <span class="level-badge intermediate">Orta</span>
-                                    <span class="duration">4-5 saat</span>
-                                    <span class="participants">150+ katılımcı</span>
+                                    <span class="level-badge beginner">Başlangıç</span>
+                                    <span class="duration">30 saat</span>
+                                    <span class="participants">450+ katılımcı</span>
                                 </div>
                             </div>
                         </div>
                         <div class="simulation-content">
-                            <p>Packet Tracer tarzı network kurulumu, Evil Twin saldırısı ve PCAP dosyası analizi simülasyonları. Network güvenlik testleri.</p>
+                            <p>Network temellerini öğrenin. TCP/IP, OSI modeli, subnetting ve temel network kavramlarını kavrayın.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>TCP/IP protokol yığını</li>
+                                    <li>OSI modeli</li>
+                                    <li>Subnetting ve IP adresleme</li>
+                                    <li>Network cihazları ve topolojileri</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/temel-network-egitimi.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 3. İşletim Sistemleri Güvenliği (Temel) -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="os-security">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-desktop"></i></div>
+                            <div class="simulation-info">
+                                <h3>İşletim Sistemleri Güvenliği (Temel)</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge beginner">Başlangıç</span>
+                                    <span class="duration">35 saat</span>
+                                    <span class="participants">320+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Windows ve Linux sistemlerinin temel güvenlik yapılandırmalarını öğrenin. Temel hardening tekniklerini uygulayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Windows temel güvenlik ayarları</li>
+                                    <li>Linux temel hardening</li>
+                                    <li>User ve grup yönetimi</li>
+                                    <li>Temel sistem izleme</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/isletim-sistemi-guvenligi.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 4. Temel Kriptografi -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="crypto">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-key"></i></div>
+                            <div class="simulation-info">
+                                <h3>Temel Kriptografi</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge beginner">Başlangıç</span>
+                                    <span class="duration">25 saat</span>
+                                    <span class="participants">380+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Kriptografi temellerini öğrenin. Şifreleme algoritmaları, hash fonksiyonları ve dijital imzaları kavrayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Simetrik ve asimetrik şifreleme</li>
+                                    <li>Hash fonksiyonları</li>
+                                    <li>Dijital imzalar</li>
+                                    <li>PKI (Public Key Infrastructure)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/coming-soon.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 5. Sosyal Mühendisliğe Giriş -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="social-eng">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-user-secret"></i></div>
+                            <div class="simulation-info">
+                                <h3>Sosyal Mühendisliğe Giriş</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge beginner">Başlangıç</span>
+                                    <span class="duration">20 saat</span>
+                                    <span class="participants">400+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Sosyal mühendislik saldırılarını tanıyın ve korunma yöntemlerini öğrenin. Phishing, pretexting ve diğer teknikleri kavrayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Phishing saldırıları</li>
+                                    <li>Pretexting teknikleri</li>
+                                    <li>Fiziksel güvenlik</li>
+                                    <li>Korunma stratejileri</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/coming-soon.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+
+                    <!-- ORTA SEVİYE (6 modül) -->
+                    <!-- 6. Network Güvenliği -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="network">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="simulation-info">
+                                <h3>Network Güvenliği</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge intermediate">Orta</span>
+                                    <span class="duration">35 saat</span>
+                                    <span class="participants">380+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Packet Tracer tarzı network kurulumu, Evil Twin saldırısı ve PCAP dosyası analizi. Network güvenlik testleri.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>LAN/WAN network kurulumu</li>
                                     <li>Cihaz bağlantıları ve test</li>
@@ -1134,9 +441,7 @@
                             </div>
                         </div>
                         <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
                             <div class="simulation-actions">
                                 <a href="simulation/network-guvenligi.html" class="btn-simulation">Packet Tracer</a>
                                 <a href="simulation/cafe-hack.html" class="btn-simulation">Cafe Hack</a>
@@ -1144,166 +449,24 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Malware Analizi Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
+                    <!-- 7. Web Uygulama Güvenliği -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="web-security">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-bug"></i>
-                            </div>
+                            <div class="simulation-icon"><i class="fas fa-globe"></i></div>
                             <div class="simulation-info">
-                                <h3>Malware Analizi Sandbox</h3>
-                                <div class="simulation-meta">
-                                    <span class="level-badge advanced">İleri</span>
-                                    <span class="duration">3-4 saat</span>
-                                    <span class="participants">100+ katılımcı</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simulation-content">
-                            <p>Güvenli bir sandbox ortamında malware analizi yapın. Static ve dynamic analysis tekniklerini uygulayın.</p>
-                            <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
-                                <ul>
-                                    <li>Static malware analysis</li>
-                                    <li>Dynamic behavior analysis</li>
-                                    <li>Sandbox evasion techniques</li>
-                                    <li>IOC extraction ve reporting</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
-                            <a href="simulation/malware-analizi.html" class="btn-simulation">Simülasyonu Başlat</a>
-                        </div>
-                    </div>
-
-                    <!-- Penetration Testing Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
-                        <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-shield-virus"></i>
-                            </div>
-                            <div class="simulation-info">
-                                <h3>Penetration Testing Lab</h3>
+                                <h3>Web Uygulama Güvenliği</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge intermediate">Orta</span>
-                                    <span class="duration">5-6 saat</span>
-                                    <span class="participants">120+ katılımcı</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simulation-content">
-                            <p>Gerçek bir şirket ağını simüle eden penetration testing ortamı. Vulnerability assessment ve exploitation tekniklerini öğrenin.</p>
-                            <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
-                                <ul>
-                                    <li>Reconnaissance ve information gathering</li>
-                                    <li>Vulnerability scanning ve assessment</li>
-                                    <li>Exploitation ve privilege escalation</li>
-                                    <li>Post-exploitation ve reporting</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
-                            <a href="simulation/penetration-testing.html" class="btn-simulation">Simülasyonu Başlat</a>
-                        </div>
-                    </div>
-
-                    <!-- Threat Hunting Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
-                        <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <div class="simulation-info">
-                                <h3>Threat Hunting Workshop</h3>
-                                <div class="simulation-meta">
-                                    <span class="level-badge advanced">İleri</span>
-                                    <span class="duration">4-5 saat</span>
-                                    <span class="participants">80+ katılımcı</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simulation-content">
-                            <p>Proaktif threat hunting tekniklerini öğrenin. Gelişmiş persistent threats (APT) senaryolarını analiz edin.</p>
-                            <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
-                                <ul>
-                                    <li>APT simulation ortamı</li>
-                                    <li>SIEM query yazma ve analiz</li>
-                                    <li>Behavioral analysis teknikleri</li>
-                                    <li>Threat intelligence integration</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
-                            <a href="simulation/threat-hunting.html" class="btn-simulation">Simülasyonu Başlat</a>
-                        </div>
-                    </div>
-
-                    <!-- Incident Response Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
-                        <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="simulation-info">
-                                <h3>Incident Response Drill</h3>
-                                <div class="simulation-meta">
-                                    <span class="level-badge advanced">İleri</span>
-                                    <span class="duration">6-7 saat</span>
-                                    <span class="participants">90+ katılımcı</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simulation-content">
-                            <p>Siber güvenlik olaylarına müdahale süreçlerini öğrenin. Gerçek zamanlı incident response senaryolarını deneyimleyin.</p>
-                            <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
-                                <ul>
-                                    <li>Gerçek zamanlı olay simülasyonu</li>
-                                    <li>Forensic analysis araçları</li>
-                                    <li>Communication protocols</li>
-                                    <li>Post-incident reporting</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
-                            </div>
-                            <a href="simulation/incident-response.html" class="btn-simulation">Simülasyonu Başlat</a>
-                        </div>
-                    </div>
-
-                    <!-- Web Uygulama Güvenliği Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cybersecurity">
-                        <div class="simulation-header">
-                            <div class="simulation-icon">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <div class="simulation-info">
-                                <h3>Web App Security Lab</h3>
-                                <div class="simulation-meta">
-                                    <span class="level-badge beginner">Başlangıç</span>
-                                    <span class="duration">3-4 saat</span>
-                                    <span class="participants">180+ katılımcı</span>
+                                    <span class="duration">42 saat</span>
+                                    <span class="participants">220+ katılımcı</span>
                                 </div>
                             </div>
                         </div>
                         <div class="simulation-content">
                             <p>Web uygulama güvenlik açıklarını keşfedin ve exploit edin. OWASP Top 10 güvenlik açıklarını pratik olarak öğrenin.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Vulnerable web applications</li>
                                     <li>OWASP Top 10 senaryoları</li>
@@ -1313,21 +476,332 @@
                             </div>
                         </div>
                         <div class="simulation-footer">
-                            <div class="simulation-status">
-                                <span class="status-badge available">Mevcut</span>
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="simulation/web-app-security.html" class="btn-simulation">Simülasyonu Başlat</a></div>
+                        </div>
+                    </div>
+                    <!-- 8. Malware Analizi (Orta Seviye) -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="malware">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-virus"></i></div>
+                            <div class="simulation-info">
+                                <h3>Malware Analizi (Orta Seviye)</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge intermediate">Orta</span>
+                                    <span class="duration">40 saat</span>
+                                    <span class="participants">200+ katılımcı</span>
+                                </div>
                             </div>
-                            <a href="simulation/web-app-security.html" class="btn-simulation">Simülasyonu Başlat</a>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Zararlı yazılımları analiz etmeyi öğrenin. Static ve dynamic analiz tekniklerini kullanarak malware'i anlayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Static malware analysis</li>
+                                    <li>Dynamic behavior analysis</li>
+                                    <li>Sandbox evasion techniques</li>
+                                    <li>IOC extraction ve reporting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/malware-analizi.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 9. SOC (Security Operations Center) Eğitimi -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="soc">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-eye"></i></div>
+                            <div class="simulation-info">
+                                <h3>SOC (Security Operations Center) Eğitimi</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge intermediate">Orta</span>
+                                    <span class="duration">48 saat</span>
+                                    <span class="participants">150+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Güvenlik operasyon merkezi işleyişini öğrenin. SIEM sistemleri ve incident response süreçlerini uygulayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>SIEM sistemleri</li>
+                                    <li>Log analysis</li>
+                                    <li>Incident response</li>
+                                    <li>Security monitoring</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/soc.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 10. İşletim Sistemi Güvenliği (İleri Temel) -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="os-security">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-server"></i></div>
+                            <div class="simulation-info">
+                                <h3>İşletim Sistemi Güvenliği (İleri Temel)</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge intermediate">Orta</span>
+                                    <span class="duration">38 saat</span>
+                                    <span class="participants">280+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Windows ve Linux sistemlerinin ileri seviye güvenlik yapılandırmalarını öğrenin. Gelişmiş hardening tekniklerini uygulayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Gelişmiş Windows hardening</li>
+                                    <li>Linux güvenlik yapılandırmaları</li>
+                                    <li>Access control ve permissions</li>
+                                    <li>Gelişmiş sistem izleme</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/isletim-sistemi-guvenligi.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- İLERİ SEVİYE (5 modül - sadece siber güvenlik) -->
+                    <!-- 12. İleri Malware Analizi & Reverse Engineering -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="malware">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-code"></i></div>
+                            <div class="simulation-info">
+                                <h3>İleri Malware Analizi & Reverse Engineering</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">55 saat</span>
+                                    <span class="participants">150+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Güvenli bir sandbox ortamında malware analizi yapın. Static ve dynamic analysis tekniklerini uygulayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Static malware analysis</li>
+                                    <li>Dynamic behavior analysis</li>
+                                    <li>Sandbox evasion techniques</li>
+                                    <li>IOC extraction ve reporting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="simulation/malware-analizi.html" class="btn-simulation">Simülasyonu Başlat</a></div>
+                        </div>
+                    </div>
+                    <!-- 13. Olay Müdahalesi & Digital Forensics -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="forensics">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="simulation-info">
+                                <h3>Olay Müdahalesi & Digital Forensics</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">50 saat</span>
+                                    <span class="participants">160+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Siber güvenlik olaylarına müdahale süreçlerini öğrenin. Gerçek zamanlı incident response senaryolarını deneyimleyin.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Gerçek zamanlı olay simülasyonu</li>
+                                    <li>Forensic analysis araçları</li>
+                                    <li>Communication protocols</li>
+                                    <li>Post-incident reporting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="simulation/incident-response.html" class="btn-simulation">Simülasyonu Başlat</a></div>
+                        </div>
+                    </div>
+                    <!-- 14. İleri Kriptografi -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="crypto">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-lock"></i></div>
+                            <div class="simulation-info">
+                                <h3>İleri Kriptografi</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">45 saat</span>
+                                    <span class="participants">120+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>İleri seviye kriptografi konularını öğrenin. Kuantum kriptografi, homomorphic encryption ve gelişmiş şifreleme tekniklerini kavrayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Kuantum kriptografi</li>
+                                    <li>Homomorphic encryption</li>
+                                    <li>Post-quantum cryptography</li>
+                                    <li>Kriptanaliz teknikleri</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/coming-soon.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- 15. Red Team & Pentest (İleri) -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="pentest">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-shield-virus"></i></div>
+                            <div class="simulation-info">
+                                <h3>Red Team & Pentest (İleri)</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">60 saat</span>
+                                    <span class="participants">180+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Gerçek bir şirket ağını simüle eden penetration testing ortamı. Vulnerability assessment ve exploitation tekniklerini öğrenin.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Reconnaissance ve information gathering</li>
+                                    <li>Vulnerability scanning ve assessment</li>
+                                    <li>Exploitation ve privilege escalation</li>
+                                    <li>Post-exploitation ve reporting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="simulation/penetration-testing.html" class="btn-simulation">Simülasyonu Başlat</a></div>
+                        </div>
+                    </div>
+                    <!-- 16. Threat Intelligence -->
+                    <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="threat-intel">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-search"></i></div>
+                            <div class="simulation-info">
+                                <h3>Threat Intelligence</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">45 saat</span>
+                                    <span class="participants">140+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Proaktif threat hunting tekniklerini öğrenin. Gelişmiş persistent threats (APT) senaryolarını analiz edin.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>APT simulation ortamı</li>
+                                    <li>SIEM query yazma ve analiz</li>
+                                    <li>Behavioral analysis teknikleri</li>
+                                    <li>Threat intelligence integration</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="simulation/threat-hunting.html" class="btn-simulation">Simülasyonu Başlat</a></div>
                         </div>
                     </div>
 
-                    <!-- Bulut Güvenliği Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cloud">
+                    <!-- BULUT BİLİŞİM - Sadece bulut konuları -->
+                    <!-- Temel Cloud Security -->
+                    <div class="simulation-card-detailed reveal" data-category="cloud" data-image="cloud-security">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-cloud"></i></div>
+                            <div class="simulation-info">
+                                <h3>Temel Cloud Security</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge intermediate">Orta</span>
+                                    <span class="duration">35 saat</span>
+                                    <span class="participants">250+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>Bulut güvenliği temellerini öğrenin. AWS, Azure ve GCP güvenlik yapılandırmalarını kavrayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Cloud güvenlik modelleri</li>
+                                    <li>Identity and Access Management</li>
+                                    <li>Cloud data protection</li>
+                                    <li>Temel cloud compliance</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/coming-soon.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- Cloud Security (İleri) -->
+                    <div class="simulation-card-detailed reveal" data-category="cloud" data-image="cloud-security">
+                        <div class="card-image-top"></div>
+                        <div class="simulation-header">
+                            <div class="simulation-icon"><i class="fas fa-cloud-shield-alt"></i></div>
+                            <div class="simulation-info">
+                                <h3>Cloud Security (İleri)</h3>
+                                <div class="simulation-meta">
+                                    <span class="level-badge advanced">İleri</span>
+                                    <span class="duration">50 saat</span>
+                                    <span class="participants">100+ katılımcı</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-content">
+                            <p>İleri seviye bulut güvenliği konularını öğrenin. Multi-cloud security, container security ve serverless güvenliği kavrayın.</p>
+                            <div class="simulation-scenarios">
+                                <h4>Konular:</h4>
+                                <ul>
+                                    <li>Multi-cloud security architecture</li>
+                                    <li>Container ve Kubernetes güvenliği</li>
+                                    <li>Serverless security</li>
+                                    <li>Cloud compliance ve governance</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="simulation-footer">
+                            <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
+                            <div class="simulation-actions"><a href="modules/coming-soon.html" class="btn-simulation">Modüle Git</a></div>
+                        </div>
+                    </div>
+                    <!-- AWS Temelleri -->
+                    <div class="simulation-card-detailed reveal" data-category="cloud" data-image="aws">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-cloud"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>AWS Güvenlik Lab</h3>
+                                <h3>AWS Temelleri</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge intermediate">Orta</span>
                                     <span class="duration">4-5 saat</span>
@@ -1338,7 +812,7 @@
                         <div class="simulation-content">
                             <p>AWS bulut ortamında güvenlik senaryolarını simüle edin. IAM, VPC, CloudTrail ve diğer güvenlik servislerini yapılandırın.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>IAM policy yapılandırması</li>
                                     <li>VPC güvenlik grupları</li>
@@ -1356,13 +830,14 @@
                     </div>
 
                     <!-- Azure Güvenliği Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cloud">
+                    <div class="simulation-card-detailed reveal" data-category="cloud" data-image="azure">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-cloud"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>Azure Güvenlik Lab</h3>
+                                <h3>Microsoft Azure</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge intermediate">Orta</span>
                                     <span class="duration">4-5 saat</span>
@@ -1373,7 +848,7 @@
                         <div class="simulation-content">
                             <p>Microsoft Azure bulut ortamında güvenlik senaryolarını simüle edin. Azure AD, NSG ve Security Center yapılandırmalarını öğrenin.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Azure AD conditional access</li>
                                     <li>Network Security Groups</li>
@@ -1391,13 +866,14 @@
                     </div>
 
                     <!-- Google Cloud Güvenliği Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="cloud">
+                    <div class="simulation-card-detailed reveal" data-category="cloud" data-image="gcp">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-cloud"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>Google Cloud Security Lab</h3>
+                                <h3>Google Cloud Platform</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge intermediate">Orta</span>
                                     <span class="duration">4-5 saat</span>
@@ -1408,7 +884,7 @@
                         <div class="simulation-content">
                             <p>Google Cloud Platform güvenlik senaryolarını simüle edin. IAM, VPC, Cloud Security Command Center yapılandırmalarını öğrenin.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Cloud IAM policy management</li>
                                     <li>VPC firewall rules</li>
@@ -1426,13 +902,14 @@
                     </div>
 
                     <!-- Veri Bilimi Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="data-science">
+                    <div class="simulation-card-detailed reveal" data-category="data-science" data-image="python-data">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-chart-line"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>Python Veri Analizi Lab</h3>
+                                <h3>Python ile Veri Analizi</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge beginner">Başlangıç</span>
                                     <span class="duration">3-4 saat</span>
@@ -1443,7 +920,7 @@
                         <div class="simulation-content">
                             <p>Python ile veri analizi senaryolarını simüle edin. Pandas, NumPy ve Matplotlib kullanarak gerçek veri setleri üzerinde çalışın.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Veri temizleme ve preprocessing</li>
                                     <li>Exploratory data analysis</li>
@@ -1461,13 +938,14 @@
                     </div>
 
                     <!-- Makine Öğrenmesi Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="data-science">
+                    <div class="simulation-card-detailed reveal" data-category="data-science" data-image="ml">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-brain"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>Makine Öğrenmesi Lab</h3>
+                                <h3>Makine Öğrenmesi</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge intermediate">Orta</span>
                                     <span class="duration">5-6 saat</span>
@@ -1478,7 +956,7 @@
                         <div class="simulation-content">
                             <p>Makine öğrenmesi algoritmalarını pratik olarak öğrenin. Scikit-learn ile gerçek projeler üzerinde çalışın.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Supervised learning algorithms</li>
                                     <li>Model training ve validation</li>
@@ -1496,13 +974,14 @@
                     </div>
 
                     <!-- Derin Öğrenme Simülasyonu -->
-                    <div class="simulation-card-detailed" data-category="data-science">
+                    <div class="simulation-card-detailed reveal" data-category="data-science" data-image="deep-learning">
+                        <div class="card-image-top"></div>
                         <div class="simulation-header">
                             <div class="simulation-icon">
                                 <i class="fas fa-network-wired"></i>
                             </div>
                             <div class="simulation-info">
-                                <h3>Derin Öğrenme Lab</h3>
+                                <h3>Derin Öğrenme</h3>
                                 <div class="simulation-meta">
                                     <span class="level-badge advanced">İleri</span>
                                     <span class="duration">6-7 saat</span>
@@ -1513,7 +992,7 @@
                         <div class="simulation-content">
                             <p>Derin öğrenme modellerini TensorFlow ve PyTorch ile geliştirin. CNN, RNN ve Transformer modellerini uygulayın.</p>
                             <div class="simulation-scenarios">
-                                <h4>Simülasyon Senaryoları:</h4>
+                                <h4>Konular:</h4>
                                 <ul>
                                     <li>Convolutional Neural Networks</li>
                                     <li>Recurrent Neural Networks</li>
@@ -1543,9 +1022,9 @@
                 <span class="global">Global</span>
             </div>
             <div class="footer-links">
-                <a href="index.html">Ana Sayfa</a>
-                <a href="about.html">Hakkımızda</a>
-                <a href="contact.html">İletişim</a>
+                <a href="/index.html">Ana Sayfa</a>
+                <a href="/about.html">Hakkımızda</a>
+                <a href="/contact.html">İletişim</a>
                 <a href="privacy.html">Gizlilik Politikası</a>
                 <a href="terms.html">Kullanım Şartları</a>
             </div>
@@ -1566,31 +1045,42 @@
         });
 
         // Redirect to modules function
-        function redirectToModules(event) {
+        async function redirectToModules(event) {
             event.preventDefault();
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
             
-            if (isLoggedIn === 'true' && isVerified === 'true') {
-                window.location.href = 'modules.html';
-            } else {
-                alert('Eğitim modüllerine erişim için giriş yapmanız gerekiyor.');
-                window.location.href = 'login.html';
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (session && session.user && session.user.email_confirmed_at) {
+                        window.location.href = 'modules.html';
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('redirectToModules error:', error);
             }
+            
+            alert('Eğitim modüllerine erişim için giriş yapmanız gerekiyor.');
+            window.location.href = 'login.html';
         }
 
         // Simulation functions
-        function startSimulation(simulationId) {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            
-            if (isLoggedIn === 'true' && isVerified === 'true') {
-                // Redirect to simulation
-                window.location.href = `simulation/${simulationId}.html`;
-            } else {
-                alert('Simülasyonlara erişim için giriş yapmanız gerekiyor.');
-                window.location.href = 'login.html';
+        async function startSimulation(simulationId) {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (session && session.user && session.user.email_confirmed_at) {
+                        // Redirect to simulation
+                        window.location.href = `simulation/${simulationId}.html`;
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('startSimulation error:', error);
             }
+            
+            alert('Simülasyonlara erişim için giriş yapmanız gerekiyor.');
+            window.location.href = 'login.html';
         }
 
         function viewDetails(simulationId) {
@@ -1628,32 +1118,116 @@
             sectionTitle.textContent = categoryNames[category] || 'Simülasyonlar';
         }
 
-        // Access Control
-        function checkAccess() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const isVerified = localStorage.getItem('isVerified') === 'true';
+        // Tam erişim e-postası: bu hesap simülasyonlara her zaman erişir (Supabase doğrulama atlanır)
+        const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
+
+        // Access Control - Async version with token verification
+        async function checkAccess() {
+            console.log('🔍 Simülasyonlar erişim kontrolü başlatılıyor...');
             
-            if (!isLoggedIn || !isVerified) {
-                // Show access denied message
+            try {
+                // Supabase client'ı önce başlat (token Supabase session'dan da alınabilir)
+                if (typeof window.initSupabase === 'undefined') {
+                    console.error('❌ initSupabase fonksiyonu bulunamadı!');
+                    showAccessDenied();
+                    return false;
+                }
+                
+                await window.initSupabase();
+                
+                // SupabaseAuthSystem oluştur
+                if (!window.supabaseAuthSystem) {
+                    if (typeof SupabaseAuthSystem === 'undefined') {
+                        console.error('❌ SupabaseAuthSystem class bulunamadı!');
+                        showAccessDenied();
+                        return false;
+                    }
+                    window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.error('❌ Supabase client oluşturulamadı!');
+                    showAccessDenied();
+                    return false;
+                }
+                
+                const { data: { session }, error: sessionError } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                // Token: localStorage veya Supabase session (Supabase ile girişte authToken bazen set edilmez)
+                const token = localStorage.getItem('authToken') || (session && session.access_token) || null;
+                if (token) {
+                    const apiBase = (window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+                    try {
+                        const res = await fetch(apiBase + '/users/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                        if (res.ok) {
+                            const json = await res.json();
+                            if (json.success && json.data) {
+                                const email = (json.data.email || '').toLowerCase().trim();
+                                if (json.data.role === 'admin' || email === FULL_ACCESS_EMAIL) {
+                                    console.log('✅ Kullanıcı (admin/tam erişim) giriş yapmış');
+                                    return true;
+                                }
+                            }
+                        }
+                    } catch (e) { /* devam et */ }
+                }
+                
+                if (sessionError) {
+                    console.error('Session check error:', sessionError);
+                    showAccessDenied();
+                    return false;
+                }
+                
+                if (!session || !session.user) {
+                    console.log('❌ Kullanıcı giriş yapmamış');
+                    showAccessDenied();
+                    return false;
+                }
+                
+                // Tam erişim e-postası için e-posta doğrulaması atlanır
+                const sessionEmail = (session.user.email || '').toLowerCase().trim();
+                if (sessionEmail !== FULL_ACCESS_EMAIL && !session.user.email_confirmed_at) {
+                    console.log('⚠️ Email doğrulanmamış');
+                    showAccessDenied('E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.');
+                    return false;
+                }
+                
+                console.log('✅ Kullanıcı giriş yapmış ve doğrulanmış');
+                console.log('   User:', session.user.email);
+                
+                return true;
+                
+            } catch (error) {
+                console.error('❌ checkAccess error:', error);
+                showAccessDenied();
+                return false;
+            }
+        }
+        
+        function showAccessDenied(customMessage = null) {
                 const mainContent = document.querySelector('.main-content') || document.querySelector('main');
                 if (mainContent) {
+                    const message = customMessage || 'Simülasyonları görüntülemek için lütfen giriş yapın ve hesabınızı doğrulayın.';
+                    
                     mainContent.innerHTML = `
-                        <div style="text-align: center; padding: 60px 20px; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-                            <div>
-                                <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; font-size: 2.5rem; color: white;">
+                        <div class="access-denied-wrap" style="position: relative; text-align: center; padding: 60px 20px; min-height: calc(100vh - 72px); display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(180deg, rgba(5,5,12,0.97) 0%, rgba(10,15,30,0.98) 100%);">
+                            <div style="position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1920&q=90'); background-size: cover; background-position: center; opacity: 0.5; pointer-events: none;"></div>
+                            <div style="position: relative; z-index: 1;">
+                                <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; font-size: 2.5rem; color: white;">
                                     <i class="fas fa-lock"></i>
                                 </div>
-                                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
+                                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; text-shadow: 0 2px 20px rgba(0,0,0,0.5);">
                                     Erişim Gerekli
                                 </h2>
-                                <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                                    Simülasyonları görüntülemek için lütfen giriş yapın ve hesabınızı doğrulayın.
+                                <p style="color: rgba(255,255,255,0.95); font-size: 1.2rem; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; text-shadow: 0 1px 10px rgba(0,0,0,0.4);">
+                                    ${message}
                                 </p>
-                                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                                    <a href="login.html" style="padding: 1rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: transform 0.3s ease; display: inline-block;">
+                                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                                    <a href="/login.html" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(30,64,175,0.4);">
                                         Giriş Yap
                                     </a>
-                                    <a href="signup.html" style="padding: 1rem 2rem; background: var(--bg-secondary); color: var(--text-primary); text-decoration: none; border: 2px solid var(--border-color); border-radius: 12px; font-weight: 600; transition: transform 0.3s ease; display: inline-block;">
+                                    <a href="/signup.html" style="background: rgba(255,255,255,0.1); color: #ffffff; padding: 15px 30px; border: 2px solid rgba(255,255,255,0.5); border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
                                         Üye Ol
                                     </a>
                                 </div>
@@ -1661,22 +1235,23 @@
                         </div>
                     `;
                 }
-                
-                // Hide navigation menu items that require login
-                const navMenu = document.querySelector('.nav-menu');
-                if (navMenu) {
-                    navMenu.style.display = 'none';
-                }
-                
-                return false;
-            }
-            return true;
+                // Navigasyonu gizleme - kullanıcı navigasyonu görebilmeli
         }
 
         // Initialize category tabs
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+            
             // Check access first
-            if (!checkAccess()) {
+            const hasAccess = await checkAccess();
+            if (!hasAccess) {
                 return; // Stop execution if access is denied
             }
             
@@ -1687,72 +1262,86 @@
                     filterSimulations(category);
                 });
             });
+            // Sayfa açılışında sadece Siber Güvenlik kartlarını göster (bulut vb. gizle)
+            filterSimulations('cybersecurity');
         });
 
         // Check authentication status
-        function checkAuthStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            
-            // Find the modules and simulations links
-            const modulesLink = document.querySelector('a[onclick="redirectToModules(event)"]');
-            const simulationsLink = document.querySelector('a[href="simulations.html"]');
-            
-            if (isLoggedIn === 'true' && isVerified === 'true') {
-                // User is logged in
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('signupBtn').style.display = 'none';
-                document.getElementById('userProfile').style.display = 'flex';
-                document.getElementById('logoutBtn').style.display = 'block';
-                
-                // Show modules link for logged in users
-                if (modulesLink) {
-                    modulesLink.parentElement.style.display = 'block';
+        async function checkAuthStatus() {
+            try {
+                // Supabase session kontrolü
+                if (typeof window.initSupabase !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    
+                    if (session && session.user && session.user.email_confirmed_at) {
+                        // User is logged in and verified
+                        document.getElementById('loginBtn').style.display = 'none';
+                        document.getElementById('signupBtn').style.display = 'none';
+                        document.getElementById('userProfile').style.display = 'flex';
+                        document.getElementById('logoutBtn').style.display = 'block';
+                        
+                        // Update user info - sadece kullanıcı adı (e-posta değil)
+                        const userNameEl = document.getElementById('userName');
+                        const userAvatarEl = document.getElementById('userAvatar');
+                        let displayName = 'Kullanıcı';
+                        try {
+                            const { data: profile } = await window.supabaseAuthSystem.supabase.from('profiles').select('full_name').eq('id', session.user.id).single();
+                            if (profile && profile.full_name) displayName = profile.full_name;
+                        } catch (_) {}
+                        if (userNameEl) userNameEl.textContent = displayName;
+                        if (userAvatarEl) userAvatarEl.textContent = (displayName.trim() || 'K').charAt(0).toUpperCase();
+                        
+                        // Make user profile clickable to go to dashboard
+                        const userProfileEl = document.getElementById('userProfile');
+                        if (userProfileEl) {
+                            userProfileEl.onclick = function() {
+                                window.location.href = 'dashboard.html';
+                            };
+                        }
+                        
+                        return;
+                    }
                 }
                 
-                // Show simulations link for logged in users
-                if (simulationsLink) {
-                    simulationsLink.parentElement.style.display = 'block';
-                }
-                
-                // Update user info
-                const userName = userData.name || userData.firstName || 'Kullanıcı';
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
-                
-                // Make user profile clickable to go to dashboard
-                document.getElementById('userProfile').onclick = function() {
-                    window.location.href = 'dashboard.html';
-                };
-            } else {
                 // User is not logged in
                 document.getElementById('loginBtn').style.display = 'block';
                 document.getElementById('signupBtn').style.display = 'block';
                 document.getElementById('userProfile').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 
-                // Hide modules link for non-logged in users
-                if (modulesLink) {
-                    modulesLink.parentElement.style.display = 'none';
-                }
-                
-                // Hide simulations link for non-logged in users
-                if (simulationsLink) {
-                    simulationsLink.parentElement.style.display = 'none';
-                }
+            } catch (error) {
+                console.error('checkAuthStatus error:', error);
+                // On error, show login buttons
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('signupBtn').style.display = 'block';
+                document.getElementById('userProfile').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
             }
         }
 
         // Logout function
-        function logout() {
+        async function logout() {
             if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                try {
+                    // Supabase logout
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                        await window.supabaseAuthSystem.logout();
+                    } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                        await window.supabaseAuthSystem.supabase.auth.signOut();
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+                
+                // LocalStorage temizle (eski sistem için)
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('isVerified');
                 localStorage.removeItem('userData');
                 localStorage.removeItem('userProgress');
                 localStorage.removeItem('recentActivities');
                 localStorage.removeItem('achievements');
+                localStorage.removeItem('authToken');
+                
                 window.location.reload();
             }
         }
@@ -1765,9 +1354,9 @@
             
             if (navLogoImg) {
                 if (currentTheme === 'dark') {
-                    navLogoImg.src = 'SEBS.png';
+                    navLogoImg.src = '/images/SEBS.png';
                 } else {
-                    navLogoImg.src = 'SEBS.png';
+                    navLogoImg.src = '/images/SEBS.png';
                 }
             }
         }
@@ -1806,14 +1395,40 @@
         }
 
         // Initialize auth status when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAccess(); // Check access before showing content
-            checkAuthStatus();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Always initialize dark mode regardless of access
             initDarkMode();
+            
+            const hasAccess = await checkAccess(); // Check access before showing content
+            if (hasAccess) {
+                // Supabase yüklenmesini bekle
+                if (typeof window.initSupabase !== 'undefined') {
+                    try {
+                        await window.initSupabase();
+                        // SupabaseAuthSystem'in yüklenmesini bekle
+                        let attempts = 0;
+                        while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                            attempts++;
+                        }
+                        await checkAuthStatus();
+                    } catch (error) {
+                        console.error('Auth status check error:', error);
+                    }
+                } else {
+                    // initSupabase henüz yüklenmedi, biraz bekle
+                    setTimeout(async () => {
+                        if (typeof window.initSupabase !== 'undefined') {
+                            await checkAuthStatus();
+                        }
+                    }, 1000);
+                }
+            }
         });
     </script>
     <!-- Navigation Script -->
     <script src="js/navigation.js"></script>
+    <script src="/js/animations.js" defer></script>
     <!-- Access Control -->
     <script src="utils/access-control.js"></script>
     
@@ -1860,5 +1475,14 @@
             });
         });
     </script>
+    <!-- Supabase Client -->
+    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
+            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
+                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <!-- Navigation Script -->
+    <script src="js/navigation.js"></script>
 </body>
 </html>

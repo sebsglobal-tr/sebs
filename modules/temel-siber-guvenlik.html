@@ -12,10 +12,10 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://cyberguard-academy.com/modules/temel-siber-guvenlik.html">
+    <meta property="og:url" content="https://sebs-global.com/modules/temel-siber-guvenlik.html">
     <meta property="og:title" content="Temel Siber Güvenlik - CyberGuard Academy">
     <meta property="og:description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
-    <meta property="og:image" content="https://cyberguard-academy.com/og-temel-siber-guvenlik.jpg">
+    <meta property="og:image" content="https://sebs-global.com/og-temel-siber-guvenlik.jpg">
     <meta property="og:site_name" content="CyberGuard Academy">
     <meta property="og:locale" content="tr_TR">
     
@@ -23,10 +23,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Temel Siber Güvenlik - CyberGuard Academy">
     <meta name="twitter:description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
-    <meta name="twitter:image" content="https://cyberguard-academy.com/og-temel-siber-guvenlik.jpg">
+    <meta name="twitter:image" content="https://sebs-global.com/og-temel-siber-guvenlik.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cyberguard-academy.com/modules/temel-siber-guvenlik.html">
+    <link rel="canonical" href="https://sebs-global.com/modules/temel-siber-guvenlik.html">
     
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -38,7 +38,7 @@
         "provider": {
             "@type": "Organization",
             "name": "CyberGuard Academy",
-            "url": "https://cyberguard-academy.com"
+            "url": "https://sebs-global.com"
         },
         "courseMode": "online",
         "educationalLevel": "beginner",
@@ -63,6 +63,7 @@
     <script src="../utils/time-tracker.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/premium-lesson.css">
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -156,11 +157,18 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            flex-wrap: nowrap;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .nav-logo .sebs {
             color: #2d3748;
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-right: 0.2em;
         }
 
         .nav-logo .global {
@@ -168,6 +176,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-menu {
@@ -1829,35 +1841,40 @@
         <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
         <div class="nav-container">
-            <a href="../index.html" class="nav-logo" id="navLogo">
-                <img src="../SEBS.png" alt="SEBS Logo" class="nav-logo-img"/>
+            <a href="/index.html" class="nav-logo" id="navLogo">
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation"/>
                 <span class="sebs">SEBS</span>
                 <span class="global">Global</span>
             </a>
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li class="nav-item" role="none">
-                    <a href="../index.html" class="nav-link" data-page="index" role="menuitem">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
                         <i class="fas fa-home"></i> Ana Sayfa
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../modules.html" class="nav-link" data-page="modules" role="menuitem">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
                         <i class="fas fa-book"></i> Eğitim Modülleri
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
                         <i class="fas fa-flask"></i> Simülasyonlar
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../about.html" class="nav-link" data-page="about" role="menuitem">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
                         <i class="fas fa-info-circle"></i> Hakkımızda
                     </a>
                 </li>
                 <li class="nav-item" role="none">
-                    <a href="../contact.html" class="nav-link" data-page="contact" role="menuitem">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
                         <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panelim
                     </a>
                 </li>
             </ul>
@@ -1869,11 +1886,8 @@
                     <div class="user-avatar" id="userAvatar">U</div>
                     <span class="user-name" id="userName">Kullanıcı</span>
                 </div>
-                <a href="../login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
-                <a href="../signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
-                <a href="../dashboard.html" class="btn-dashboard" id="dashboardBtn" style="display: none;">
-                    <i class="fas fa-tachometer-alt"></i> Panel
-                </a>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
                 <a href="#" onclick="logout()" class="btn-logout" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Çıkış Yap
                 </a>
@@ -2031,6 +2045,7 @@
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> 1. Siber Güvenlik Temelleri</h2>
                     <p>Siber güvenliğin temel kavramları ve CIA triad</p>
+                    <p class="section-intro" style="color: var(--text-secondary); line-height: 1.75; margin-top: 0.75rem; max-width: 72ch;">Siber güvenlik, yalnızca “virüs programı kurmak” veya “şifre güçlü olsun” demek değildir; sistemlerin, ağların ve verilerin gizliliğini, bütünlüğünü ve erişilebilirliğini korumak için teknik, operasyonel ve yönetimsel önlemlerin bütünüdür. Bu derste önce “CIA triad” (Gizlilik, Bütünlük, Erişilebilirlik) kavramını net bir şekilde öğrenecek, ardından günlük hayattan ve kurumsal ortamlardan örneklerle bu üç prensibin nasıl uygulandığını göreceksiniz. Tablolar ve kartlar, konuyu daha akıcı ve kalıcı biçimde kavramanızı sağlar.</p>
                     <div class="lesson-controls">
                         <span class="lesson-status">Ders Başlamadı</span>
                         <button class="btn-complete-lesson" onclick="completeLesson('lesson1')">
@@ -2424,7 +2439,7 @@
                                         
                             <div class="enhanced-text">
                                 <h6><i class="fas fa-info-circle"></i> CIA Triad Nedir?</h6>
-                                <p>CIA Triad, siber güvenliğin temelini oluşturan üç ana prensibi temsil eder: Confidentiality (Gizlilik), Integrity (Bütünlük) ve Availability (Erişilebilirlik). Bu üç prensip, tüm güvenlik önlemlerinin ve politikalarının temelini oluşturur ve birbirleriyle dengeli bir şekilde çalışır.</p>
+                                <p>CIA Triad, siber güvenliğin temelini oluşturan üç ana prensibi temsil eder: <strong>Confidentiality (Gizlilik)</strong>, <strong>Integrity (Bütünlük)</strong> ve <strong>Availability (Erişilebilirlik)</strong>. Bu üç prensip, tüm güvenlik önlemlerinin ve politikalarının temelini oluşturur ve birbirleriyle dengeli bir şekilde çalışır. Pratikte her güvenlik kararı bu üçlüden en az birine dokunur: Örneğin şifreleme gizliliği artırır ama yanlış yapılandırılırsa erişilebilirliği düşürebilir; yedekleme erişilebilirliği ve bütünlüğü destekler. Aşağıdaki tablolar ve örnekler, her prensibi somut teknikler ve günlük senaryolarla netleştirir.</p>
                                 
                                 <div class="visual-highlight">
                                     <h6><i class="fas fa-lightbulb"></i> Önemli Not</h6>
@@ -4025,7 +4040,7 @@
 
         // Save progress to localStorage
         // Database API configuration
-        const API_BASE_URL = 'http://127.0.0.1:8006/api';
+        const API_BASE_URL = (window.location.origin || '') + '/api';
         
         // Get current user ID from localStorage
         function getCurrentUserId() {

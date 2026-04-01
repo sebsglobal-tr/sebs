@@ -1,6 +1,6 @@
 // User Routes
 import express from 'express';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 import { prisma } from '../server.js';
 
 const router = express.Router();
@@ -9,23 +9,31 @@ router.use(authenticate);
 
 router.get('/me', async (req, res, next) => {
   try {
-    const user = await prisma.user.findUnique({
+    const profile = await prisma.profile.findUnique({
       where: { id: req.user.id },
       select: {
         id: true,
-        publicId: true,
-        email: true,
-        firstName: true,
-        lastName: true,
+        fullName: true,
         role: true,
-        lastLogin: true,
+        accessLevel: true,
         createdAt: true
       }
     });
 
+    if (!profile) {
+      return res.status(404).json({ success: false, message: 'Profil bulunamadı' });
+    }
+
     res.json({
       success: true,
-      data: user
+      data: {
+        id: profile.id,
+        fullName: profile.fullName,
+        email: req.user.email,
+        role: profile.role,
+        accessLevel: profile.accessLevel,
+        createdAt: profile.createdAt
+      }
     });
   } catch (error) {
     next(error);

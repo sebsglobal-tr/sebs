@@ -12,7 +12,8 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "node prisma/seed.js",
     "prisma:studio": "prisma studio",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "test:db": "node run-database-performance-security-test.js"
   },
   "keywords": [
     "education",
@@ -22,22 +23,21 @@
   "author": "SEBS Global",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.7.1",
-    "bcrypt": "^5.1.1",
+    "@prisma/client": "^5.22.0",
+    "@supabase/supabase-js": "^2.39.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "nodemailer": "^7.0.10",
-    "ulid": "^2.3.0",
+    "openai": "^4.28.0",
+    "pg": "^8.16.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.2",
-    "prisma": "^5.7.1"
+    "prisma": "^5.22.0"
   },
   "engines": {
     "node": ">=18.0.0",

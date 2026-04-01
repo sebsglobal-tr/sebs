@@ -20,8 +20,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS "entitlements_userId_category_level_key" ON "e
 -- Create foreign key constraint
 ALTER TABLE "entitlements" ADD CONSTRAINT "entitlements_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- Create index for faster queries
-CREATE INDEX IF NOT EXISTS "entitlements_user_id_idx" ON "entitlements"("user_id");
-CREATE INDEX IF NOT EXISTS "entitlements_category_idx" ON "entitlements"("category");
-CREATE INDEX IF NOT EXISTS "entitlements_level_idx" ON "entitlements"("level");
-CREATE INDEX IF NOT EXISTS "entitlements_is_active_idx" ON "entitlements"("is_active");
+-- Create indexes for faster queries
+-- NOTE: Using idx_ prefix to match Prisma naming convention
+-- This prevents duplicate indexes when Prisma migrations run
+CREATE INDEX IF NOT EXISTS "idx_entitlements_user_id" ON "entitlements"("user_id");
+CREATE INDEX IF NOT EXISTS "idx_entitlements_category" ON "entitlements"("category");
+CREATE INDEX IF NOT EXISTS "idx_entitlements_level" ON "entitlements"("level");
+CREATE INDEX IF NOT EXISTS "idx_entitlements_is_active" ON "entitlements"("is_active");

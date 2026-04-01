@@ -4,11 +4,20 @@
   "description": "SEBS Global Backend API - User Progress Tracking",
   "main": "server.js",
   "scripts": {
+    "build": "node scripts/verify-build.js",
+    "audit": "npm audit --audit-level=high",
     "start": "node server.js",
     "start:cluster": "node cluster-server.js",
+    "start:pm2": "pm2 start ecosystem.config.js --env production",
+    "start:pm2:dev": "pm2 start ecosystem.config.js --env development",
+    "stop:pm2": "pm2 stop sebs-global",
+    "restart:pm2": "pm2 restart sebs-global",
+    "logs:pm2": "pm2 logs sebs-global",
+    "status:pm2": "pm2 status",
     "dev": "nodemon server.js",
     "dev:cluster": "nodemon cluster-server.js",
-    "setup-db": "node scripts/setup-database.js",
+    "setup-db": "node setup-database-tables.js",
+    "db:setup": "node scripts/db-setup.js",
     "test:redis": "node test-redis.js",
     "test:cluster": "node test-cluster.js"
   },
@@ -23,12 +32,16 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
     "pg": "^8.16.3",
-    "redis": "^5.10.0"
+    "redis": "^5.10.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@vercel/node": "^3.2.0",
+    "nodemon": "^3.1.14",
+    "pm2": "^6.0.14",
+    "supabase": "^2.76.12"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }

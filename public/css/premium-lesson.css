@@ -1,0 +1,462 @@
+/* ============================================
+   SEBS GLOBAL - PREMIUM LESSON STYLES
+   Tüm modüllerde kullanılan callout, kart, tablo stilleri
+   Tema bağımsız (light/dark uyumlu)
+   ============================================ */
+
+/* Premium tablolar */
+.info-table-compact {
+    margin: 2rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.04);
+    width: 100%;
+    border-collapse: collapse;
+}
+.info-table-compact th {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+    color: white;
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+.info-table-compact td {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-secondary, #64748b);
+    transition: background 0.2s;
+}
+.info-table-compact tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.info-table-compact tbody tr:hover { background: rgba(59, 130, 246, 0.08); }
+.info-table-compact tbody tr:last-child td { border-bottom: none; }
+
+/* Concept kartlar */
+.concept-card {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(30, 64, 175, 0.08), rgba(15, 23, 42, 0.9));
+    border-radius: 16px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+.concept-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+.concept-card .concept-card-icon { font-size: 1.25rem; color: var(--accent, #d4a853); margin-bottom: 0.5rem; }
+.concept-card.advantage-card {
+    background: linear-gradient(145deg, rgba(34, 197, 94, 0.08), rgba(15, 23, 42, 0.9));
+    border-color: rgba(34, 197, 94, 0.25);
+}
+.concept-card.advantage-card .concept-card-icon { color: #22c55e; }
+.concept-card.disadvantage-card {
+    background: linear-gradient(145deg, rgba(239, 68, 68, 0.06), rgba(15, 23, 42, 0.9));
+    border-color: rgba(239, 68, 68, 0.2);
+}
+.concept-card.disadvantage-card .concept-card-icon { color: #ef4444; }
+.visual-card {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(212, 168, 83, 0.06), rgba(15, 23, 42, 0.95));
+    border-radius: 16px;
+    border-left: 4px solid var(--accent, #d4a853);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+}
+.visual-card:hover {
+    border-left-width: 6px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Premium callout kutuları */
+.callout-box {
+    margin: 1.25rem 0;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.callout-box:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
+.callout-box .callout-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+.callout-box .callout-body h5 { margin-bottom: 0.4rem; font-size: 0.95rem; }
+.callout-box .callout-body p, .callout-box .callout-body ul { margin: 0; font-size: 0.95rem; line-height: 1.6; }
+.callout-box.tip {
+    background: linear-gradient(135deg, rgba(212,168,83,0.12), rgba(212,168,83,0.05));
+    border-color: var(--accent, #d4a853);
+}
+.callout-box.tip .callout-icon { color: var(--accent, #d4a853); }
+.callout-box.info {
+    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.05));
+    border-color: var(--info-color, #3b82f6);
+}
+.callout-box.info .callout-icon { color: var(--info-color, #3b82f6); }
+.callout-box.warning {
+    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.05));
+    border-color: var(--warning-color, #facc15);
+}
+.callout-box.warning .callout-icon { color: var(--warning-color, #facc15); }
+.callout-box.success {
+    background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.05));
+    border-color: var(--success-color, #22c55e);
+}
+.callout-box.success .callout-icon { color: var(--success-color, #22c55e); }
+
+/* Key-point kartları */
+.key-points-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.key-point-card {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(145deg, rgba(30,64,175,0.1), rgba(15,23,42,0.9));
+    border-radius: 12px;
+    border: 1px solid rgba(59,130,246,0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.key-point-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    border-color: rgba(59,130,246,0.4);
+}
+.key-point-card i {
+    font-size: 1.5rem;
+    color: var(--accent-2, #60a5fa);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.key-point-card strong {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+    color: var(--text-primary, #1e293b);
+}
+.key-point-card span {
+    font-size: 0.85rem;
+    color: var(--text-light, #94a3b8);
+    line-height: 1.4;
+}
+
+/* Topoloji diyagramları - premium görseller */
+.topology-diagram {
+    margin: 1.5rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: transparent;
+    border: 1px solid rgba(59,130,246,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.topology-diagram:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    border-color: rgba(212,168,83,0.3);
+}
+.topology-diagram .topology-svg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+.topology-diagram .topology-svg svg {
+    width: 100%;
+    height: auto;
+}
+
+/* Sayfa sayfa görünüm: aynı anda tek subsection görünür */
+.content-section .lesson-subsection {
+    display: none;
+}
+.content-section .lesson-subsection.current-page {
+    display: block;
+}
+
+/* Terimler/Sorular blokları (tema uyumlu) */
+.terimler-block {
+    margin: 2.5rem 0;
+    padding: 1.5rem 1.75rem;
+    background: rgba(30, 64, 175, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 14px;
+}
+.sorular-block {
+    margin: 2.5rem 0;
+    padding: 1.5rem 1.75rem;
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 14px;
+}
+
+/* ScenarioBlock - Troubleshooting mini senaryosu */
+.scenario-block {
+    margin: 2rem 0;
+    padding: 1.5rem 1.75rem;
+    background: linear-gradient(145deg, rgba(212, 168, 83, 0.08), rgba(15, 23, 42, 0.95));
+    border: 1px solid rgba(212, 168, 83, 0.25);
+    border-left: 4px solid var(--accent, #d4a853);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+.scenario-block .scenario-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent, #d4a853);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.scenario-block .scenario-body p { margin: 0 0 0.75rem; line-height: 1.6; }
+.scenario-block .scenario-body p:last-child { margin-bottom: 0; }
+
+/* Module/Lesson image placeholders - responsive, lazy-loaded */
+.module-hero-image,
+.lesson-hero-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.lesson-hero-image { max-height: 240px; }
+.module-hero-image { max-height: 180px; }
+
+/* ========== INTERAKTİF ÖĞELER ========== */
+
+/* Accordion - Katlanabilir bölümler */
+.accordion-block {
+    margin: 1.5rem 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(30, 64, 175, 0.06);
+}
+.accordion-trigger {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(30, 64, 175, 0.05));
+    border: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, transform 0.2s;
+}
+.accordion-trigger:hover {
+    background: rgba(59, 130, 246, 0.15);
+}
+.accordion-trigger:active { transform: scale(0.99); }
+.accordion-trigger i.fa-chevron-down {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+.accordion-block.expanded .accordion-trigger i.fa-chevron-down {
+    transform: rotate(180deg);
+}
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+.accordion-block.expanded .accordion-content {
+    max-height: 2000px;
+}
+.accordion-content-inner {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+/* Flip kartlar - Terimler (ön: terim, arka: açıklama) */
+.flip-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.flip-card {
+    aspect-ratio: 1.2;
+    perspective: 1000px;
+    cursor: pointer;
+}
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+}
+.flip-card-front {
+    background: linear-gradient(145deg, rgba(30, 64, 175, 0.2), rgba(15, 23, 42, 0.9));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.flip-card-front strong {
+    font-size: 1rem;
+    color: var(--text-primary, #f1f5f9);
+}
+.flip-card-back {
+    background: linear-gradient(145deg, rgba(212, 168, 83, 0.15), rgba(15, 23, 42, 0.95));
+    border: 1px solid rgba(212, 168, 83, 0.3);
+    transform: rotateY(180deg);
+}
+.flip-card-back span {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #cbd5e0);
+    line-height: 1.4;
+}
+.flip-card:hover .flip-card-front {
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Reveal kart - Tıkla cevabı göster */
+.reveal-card {
+    margin: 1rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    background: rgba(34, 197, 94, 0.06);
+}
+.reveal-question {
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+}
+.reveal-trigger {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(34, 197, 94, 0.12);
+    border: none;
+    color: var(--accent, #d4a853);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.reveal-trigger:hover {
+    background: rgba(34, 197, 94, 0.2);
+}
+.reveal-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.reveal-card.revealed .reveal-answer {
+    max-height: 500px;
+}
+.reveal-answer-inner {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Sekmeli karşılaştırma */
+.tabs-container {
+    margin: 1.5rem 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    background: rgba(30, 64, 175, 0.1);
+}
+.tabs-nav button {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.9rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary, #94a3b8);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+}
+.tabs-nav button:hover {
+    color: var(--text-primary);
+    background: rgba(59, 130, 246, 0.1);
+}
+.tabs-nav button.active {
+    color: var(--accent, #d4a853);
+    background: rgba(59, 130, 246, 0.2);
+}
+.tab-panel {
+    display: none;
+    padding: 1.25rem;
+}
+.tab-panel.active {
+    display: block;
+}
+
+/* Hızlı kontrol kartları - Doğru/Yanlış */
+.quick-check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.quick-check-card {
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s;
+}
+.quick-check-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(59, 130, 246, 0.08);
+}
+.quick-check-card.correct {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+}
+.quick-check-card.incorrect {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
