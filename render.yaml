@@ -1,6 +1,11 @@
-# Render Blueprint — repo kökünden Web Service
+# Render Blueprint — monorepo (repo kökü)
 # Dashboard: New → Blueprint → Bu dosyayı bağlayın
 # Gizli değişkenleri (DATABASE_URL, JWT_SECRET, …) panelden ekleyin (sync: false)
+#
+# ÖNEMLİ: Start "node backend/server.js" ise bağımlılıklar backend/ altında kurulmalı:
+#   buildCommand: npm ci --prefix backend
+# Render’da Root Directory boş bırakın (repo kökü). Root Directory = backend kullanıyorsanız
+# Start Command mutlaka "node server.js" olsun (node backend/server.js değil).
 
 services:
   - type: web
@@ -8,9 +13,8 @@ services:
     runtime: node
     region: frankfurt
     plan: free
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: node server.js
+    buildCommand: npm ci --prefix backend
+    startCommand: node backend/server.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV

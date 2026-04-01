@@ -64,7 +64,6 @@ if (process.env.DATABASE_URL?.includes('supabase') || process.env.DB_PASSWORD) {
 }
 
 const app = express();
-const PORT = process.env.PORT || 8006;
 
 // Reverse proxy (Render, nginx) arkasında doğru istemci IP’si ve rate limit için
 if (process.env.TRUST_PROXY !== '0') {
@@ -81,11 +80,23 @@ function parseCorsOrigins() {
     return raw.split(',').map((s) => s.trim()).filter(Boolean);
 }
 
+// Production: JWT_SECRET yoksa ama Supabase JWT secret varsa aynı HS256 anahtarı kullan (Render’da tek secret yeter)
+if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
+    const j0 = (process.env.JWT_SECRET || '').trim();
+    const supaJwt = (process.env.SUPABASE_JWT_SECRET || '').trim();
+    if ((!j0 || j0 === 'your_super_secret_jwt_key_here') && supaJwt) {
+        process.env.JWT_SECRET = supaJwt;
+        logger.warn(
+            'JWT_SECRET yoktu; SUPABASE_JWT_SECRET ile dolduruldu. İsterseniz Render → Environment’da ayrı JWT_SECRET ekleyin (openssl rand -hex 32).'
+        );
+    }
+}
+
 // Validate critical environment variables in production (npm run build / verify-build için SKIP_ENV_VALIDATION=1)
 if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
     if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your_super_secret_jwt_key_here') {
-        logger.error('CRITICAL: JWT_SECRET must be set in production!');
-        logger.error('Please generate a strong secret and set it in .env file');
+        logger.error('CRITICAL: JWT_SECRET tanımlı değil (veya placeholder). Render → Environment → JWT_SECRET ekleyin veya SUPABASE_JWT_SECRET girin.');
+        logger.error('Örnek: openssl rand -hex 32 çıktısını JWT_SECRET olarak yapıştırın.');
         process.exit(1);
     }
     
@@ -2828,26 +2839,14 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
 module.exports = { app, pool, getPool };
 
 if (require.main === module) {
-    const server = app.listen(PORT, '0.0.0.0', () => {
-        const publicBase = (process.env.PUBLIC_SITE_URL || process.env.CORS_ORIGIN || '').split(',')[0]?.trim() || `http://localhost:${PORT}`;
-        logger.info(`Server running on port ${PORT}`);
-        logger.info(`Website: ${publicBase}`);
-        logger.info(`API: ${publicBase.replace(/\/$/, '')}/api`);
-        logger.info(`Health: ${publicBase.replace(/\/$/, '')}/api/health`);
-        if (process.env.NODE_ENV === 'development') {
-            console.log(`\n📄 Available pages:`);
-            console.log(`   - Home: http://localhost:${PORT}/`);
-            console.log(`   - Modules: http://localhost:${PORT}/modules.html`);
-            console.log(`   - Simulations: http://localhost:${PORT}/simulations.html`);
-            console.log(`   - About: http://localhost:${PORT}/about.html`);
-            console.log(`   - Contact: http://localhost:${PORT}/contact.html`);
-            console.log(`   - Dashboard: http://localhost:${PORT}/dashboard.html`);
-        }
+    const port = process.env.PORT || 3000;
+    const server = app.listen(port, () => {
+        console.log('Server running');
     });
     server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
             logger.error(
-                `Port ${PORT} kullanımda. Çözüm: PORT=8010 npm start  veya  lsof -i :${PORT}  ile süreci bulup kapatın.`
+                `Port ${port} kullanımda. Çözüm: PORT=8010 npm start  veya  lsof -i :${port}  ile süreci bulup kapatın.`
             );
         } else {
             logger.error('Sunucu dinleyicisi hatası:', err.message);
