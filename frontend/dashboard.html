@@ -1884,12 +1884,9 @@
             }
         });
     </script>
-    <!-- Supabase Client -->
-    <!-- CDN'den yükle - CSP ayarları server.js'de yapılandırılmış -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" 
-            onerror="console.error('❌ Supabase CDN yüklenemedi, alternatif deneniyor...'); 
-                     this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
-    <script src="/js/supabase-client.js"></script>
+    <!-- Supabase: env → ESM client (+esm) -->
+    <script src="/js/supabase-env.js"></script>
+    <script type="module" src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js"></script>
     <!-- Navigation Script -->
     <script src="js/navigation.js?v=2.0" defer></script>

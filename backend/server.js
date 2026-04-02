@@ -703,25 +703,6 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
 });
 
 // ============================================
-// SUPABASE FRONTEND YAPILANDIRMASI
-// ============================================
-// .env'deki SUPABASE_URL ve SUPABASE_ANON_KEY ile tek proje kullanımı
-// Frontend bu endpoint ile doğru projeye bağlanır (rate limit dışı)
-app.get('/api/supabase-config', (req, res) => {
-    const url = (process.env.SUPABASE_URL || '').trim();
-    const anonKey = (process.env.SUPABASE_ANON_KEY || '').trim();
-    if (url && anonKey) {
-        return res.json({ url, anonKey, configured: true });
-    }
-    res.json({
-        url: null,
-        anonKey: null,
-        configured: false,
-        hint: 'Sunucu .env içinde SUPABASE_URL ve SUPABASE_ANON_KEY tanımlı olmalı (Supabase Dashboard → Project Settings → API).'
-    });
-});
-
-// ============================================
 // CSP TEST ENDPOINT'İ (Sadece development için)
 // ============================================
 // CSP header'ını test etmek için
@@ -2851,9 +2832,11 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
 module.exports = { app, pool, getPool };
 
 if (require.main === module) {
-    const port = process.env.PORT || 3000;
-    const server = app.listen(port, () => {
-        console.log('Server running');
+    const port = Number(process.env.PORT) || 3000;
+    // Railway / Render / Docker: dışarıdan gelen trafik için tüm arayüzlere bağlan (yalnızca 127.0.0.1 değil)
+    const host = process.env.HOST || '0.0.0.0';
+    const server = app.listen(port, host, () => {
+        console.log(`Server running on http://${host}:${port}`);
     });
     server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
