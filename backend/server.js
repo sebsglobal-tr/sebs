@@ -450,7 +450,7 @@ const sendVerificationEmail = async (email, verificationCode, firstName) => {
                     <div style="text-align: center; color: #999; font-size: 14px;">
                         <p>Bu e-posta otomatik olarak gönderilmiştir. Lütfen yanıtlamayın.</p>
                         <p>© 2025 SEBS Global. Tüm hakları saklıdır.</p>
-                        <p>İletişim: info@sebs-global.com</p>
+                        <p>İletişim: info@sebsglobal.com</p>
                     </div>
                 </div>
             `
