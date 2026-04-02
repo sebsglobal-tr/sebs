@@ -15,6 +15,42 @@ let userMeCacheTime = 0;
 let userMePromise = null;
 const PURCHASES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+/** Supabase oturumu bazen yalnızca sb-*-auth-token içinde; API ile uyum için */
+function getBearerTokenFromStorage() {
+    let token = localStorage.getItem('authToken');
+    if (token) return token;
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || !/^sb-.*-auth-token$/.test(key)) continue;
+            const raw = localStorage.getItem(key);
+            if (!raw) continue;
+            const data = JSON.parse(raw);
+            const at =
+                data?.access_token ||
+                data?.session?.access_token ||
+                data?.currentSession?.access_token;
+            if (at && typeof at === 'string' && at.length > 20) {
+                return at;
+            }
+        }
+    } catch (e) {
+        /* ignore */
+    }
+    return null;
+}
+
+function levelRank(level) {
+    const order = { beginner: 0, intermediate: 1, advanced: 2 };
+    const k = String(level || 'beginner').toLowerCase();
+    return order[k] != null ? order[k] : 0;
+}
+
+/** Kullanıcı erişim seviyesi, gereken seviyeyi karşılıyor mu (beginner < intermediate < advanced) */
+function userMeetsRequiredLevel(userLevel, requiredLevel) {
+    return levelRank(userLevel) >= levelRank(requiredLevel);
+}
+
 /**
  * Get user purchases from API (with caching)
  * @returns {Promise<Array>} Array of purchases
@@ -53,7 +89,7 @@ async function fetchUserMe() {
         return userMePromise;
     }
 
-    const token = localStorage.getItem('authToken');
+    const token = getBearerTokenFromStorage();
     if (!token) {
         return null;
     }
@@ -116,8 +152,7 @@ async function getUserAccessLevel() {
 const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
 
 async function hasAccess(requiredLevel, category = null) {
-    // If not logged in, no access
-    const token = localStorage.getItem('authToken');
+    const token = getBearerTokenFromStorage();
     if (!token) {
         return false;
     }
@@ -127,11 +162,12 @@ async function hasAccess(requiredLevel, category = null) {
         return true;
     }
 
-    // Get purchases from database
     const purchases = await fetchUserPurchases();
-    
+
+    // Satın alma yok: ücretsiz/varsayılan erişim seviyesi (API'den veya 'beginner')
     if (purchases.length === 0) {
-        return false;
+        const userLevel = await getUserAccessLevel();
+        return userMeetsRequiredLevel(userLevel, requiredLevel);
     }
 
     // If category is specified, check purchases for that category
@@ -139,11 +175,14 @@ async function hasAccess(requiredLevel, category = null) {
         const categoryPurchase = purchases.find(p => 
             p.category === category && p.level === requiredLevel
         );
-        return !!categoryPurchase;
+        if (categoryPurchase) {
+            return true;
+        }
+        // Paket tam eşleşmezse profil seviyesi ile dene (ör. yükseltilmiş erişim)
+        const userLevel = await getUserAccessLevel();
+        return userMeetsRequiredLevel(userLevel, requiredLevel);
     }
 
-    // If no category specified, check if user has purchased this level in any category
-    // For now, we'll check if user has the level in cybersecurity (main category)
     const hasPurchase = purchases.some(p => 
         p.category === 'cybersecurity' && p.level === requiredLevel
     );
@@ -152,9 +191,8 @@ async function hasAccess(requiredLevel, category = null) {
         return true;
     }
 
-    // Fallback to database access level
     const userLevel = await getUserAccessLevel();
-    return userLevel === requiredLevel;
+    return userMeetsRequiredLevel(userLevel, requiredLevel);
 }
 
 /**
@@ -248,10 +286,15 @@ async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') 
  * @param {string} category - Category (optional, defaults to 'cybersecurity')
  * @returns {Promise<object>} { hasAccess: boolean, message: string }
  */
-async function checkSimulationAccess(simulationName, category = 'cybersecurity') {
-    // For now, simulations follow the same level structure as modules
-    // Beginner simulations for beginner access, etc.
-    const simulationLevel = getModuleLevel(simulationName);
+async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersecurity') {
+    // Kartlardan gelen 'beginner' | 'intermediate' | 'advanced' doğrudan kullanılır; aksi halde isimden seviye çıkarılır
+    let simulationLevel;
+    const raw = String(simulationNameOrLevel || '').toLowerCase();
+    if (['beginner', 'intermediate', 'advanced'].includes(raw)) {
+        simulationLevel = raw;
+    } else {
+        simulationLevel = getModuleLevel(simulationNameOrLevel);
+    }
     const userHasAccess = await hasAccess(simulationLevel, category);
     
     if (!userHasAccess) {
