@@ -220,7 +220,14 @@
             } catch (error) {
                 console.error('Logout error:', error);
             }
-            
+
+            try {
+                for (let i = localStorage.length - 1; i >= 0; i--) {
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith('sb-')) localStorage.removeItem(k);
+                }
+            } catch (e) {}
+
             // Tüm kullanıcı verilerini localStorage'dan temizle (eski sistem için)
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('isVerified');
@@ -228,7 +235,7 @@
             localStorage.removeItem('userData');
             localStorage.removeItem('authToken');
             localStorage.removeItem('userRole');
-            
+
             // Ana sayfaya yönlendir (root-relative - tüm dizinlerde doğru çalışır)
             window.location.href = '/index.html';
         }

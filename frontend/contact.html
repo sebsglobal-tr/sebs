@@ -32,8 +32,8 @@
     <link rel="canonical" href="https://sebs-global.com/contact.html">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/images/SEBS.png">
-    <link rel="apple-touch-icon" href="/images/SEBS.png">
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicons/favicon.svg">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
-                <img src="/images/SEBS.png" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;"/>
+                <img src="/favicons/favicon.svg" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;"/>
             </div>
             <div class="loading-spinner"></div>
             <div class="loading-text">SEBS Global</div>
@@ -81,7 +81,7 @@
         <div class="nav-container">
             <a href="/index.html" class="nav-logo">
                 <!-- Logo resmi - yüklenemezse SVG fallback -->
-                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
+                <img src="/favicons/favicon.svg" alt="" class="nav-logo-img" role="presentation" 
                      onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
                 <!-- Logo yüklenemezse SVG göster -->
                 <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
@@ -800,9 +800,9 @@
             
             if (navLogoImg) {
                 if (currentTheme === 'dark') {
-                    navLogoImg.src = '/images/SEBS.png';
+                    navLogoImg.src = '/favicons/favicon.svg';
                 } else {
-                    navLogoImg.src = '/images/SEBS.png';
+                    navLogoImg.src = '/favicons/favicon.svg';
                 }
             }
         }

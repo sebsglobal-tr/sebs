@@ -296,15 +296,35 @@ class SupabaseAuthSystem {
 
   async logout() {
     try {
-      const { error } = await this.supabase.auth.signOut();
-      if (error) throw error;
-      
+      if (this.supabase) {
+        const { error } = await this.supabase.auth.signOut({ scope: 'global' });
+        if (error) throw error;
+      }
+
       this.isLoggedIn = false;
       this.user = null;
-      window.location.href = 'index.html';
+
+      try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('sb-')) localStorage.removeItem(k);
+        }
+      } catch (e) {}
+      try {
+        localStorage.removeItem('authToken');
+      } catch (e) {}
+
+      window.location.href = '/index.html';
     } catch (error) {
       console.error('Logout error:', error);
-      alert('Çıkış yapılırken bir hata oluştu: ' + error.message);
+      try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('sb-')) localStorage.removeItem(k);
+        }
+        localStorage.removeItem('authToken');
+      } catch (e) {}
+      window.location.href = '/index.html';
     }
   }
 
