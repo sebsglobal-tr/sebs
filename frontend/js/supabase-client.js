@@ -1,6 +1,15 @@
 /**
- * Supabase client — resmi UMD SDK gerekir (HTML’de önce jsdelivr supabase.min.js).
- * Bundler kullanıyorsanız: npm i @supabase/supabase-js → import { createClient } from '@supabase/supabase-js'
+ * Supabase client — önce resmi UMD SDK (CDN), sonra env, sonra bu dosya.
+ *
+ * HTML sırası (kritik):
+ *   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.x/dist/umd/supabase.min.js"></script>
+ *   <script src="/js/supabase-env.js"></script>
+ *   <script src="/js/supabase-client.js"></script>
+ *   <script src="/js/supabase-auth.js"></script>
+ *
+ * Yerel /assets/vendor/supabase.min.js kullanmayın (Vercel’de 404); CDN veya npm+bundle.
+ * Bundle (Vite/Webpack): cd frontend && npm i @supabase/supabase-js
+ *   → import { createClient } from '@supabase/supabase-js'
  */
 (function () {
     'use strict';

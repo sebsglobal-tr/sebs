@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Giriş Yap - SEBS Global</title>
@@ -627,21 +629,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Login page DOM loaded');
             
-            // Supabase script yüklendi mi kontrol et
+            // UMD SDK yüklendi mi? (local /assets/vendor/... kullanılmıyor — CDN zorunlu)
             setTimeout(() => {
-                if (typeof window.supabase === 'undefined') {
-                    console.error('❌ Supabase UMD SDK yüklenmedi (window.supabase yok)!');
-                    console.log('   Beklenen: cdn.jsdelivr.net/.../@supabase/supabase-js/.../supabase.min.js');
-                    console.log('   Kontrol: Script tag var mı?');
-                    
-                    // Script tag'i kontrol et
+                console.log('[SEBS] Test: console.log(window.supabase) → createClient içeren nesne olmalı.');
+                console.log('window.supabase =', window.supabase);
+                if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient !== 'function') {
+                    console.error('❌ Supabase UMD SDK yok veya bozuk (window.supabase.createClient beklenir).');
+                    console.log('   Sıra: 1) jsdelivr .../dist/umd/supabase.min.js  2) supabase-env.js  3) supabase-client.js  4) supabase-auth.js');
                     const scripts = document.querySelectorAll('script[src*="supabase"]');
-                    console.log('   Bulunan script tag sayısı:', scripts.length);
+                    console.log('   Sayfadaki supabase script sayısı:', scripts.length);
                     scripts.forEach((script, index) => {
-                        console.log(`   Script ${index + 1}:`, script.src);
+                        console.log('   [' + (index + 1) + ']', script.src);
                     });
                 } else {
-                    console.log('✅ Supabase script yüklendi');
+                    console.log('✅ Supabase UMD SDK yüklü (window.supabase.createClient var)');
                 }
                 
                 // initSupabase fonksiyonu var mı?
