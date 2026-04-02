@@ -75,7 +75,7 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
-    <link rel="icon" type="image/svg+xml" href="/assets/sebs-logo.svg">
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
     <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
     <link rel="manifest" href="/favicons/site.webmanifest">
     
@@ -156,7 +156,7 @@
         <div class="loading-container">
             <!-- Logo - SVG fallback ile -->
             <div class="loading-logo">
-                <img src="/assets/sebs-logo.svg" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;" 
+                <img src="/images/SEBS.png" alt="" role="presentation" style="width: 60px; height: 60px; object-fit: contain;" 
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
                 <!-- Logo yüklenemezse SVG göster -->
                 <svg width="60" height="60" viewBox="0 0 60 60" style="display:none; fill: white;">
@@ -176,7 +176,7 @@
         <div class="nav-container">
             <a href="/index.html" class="nav-logo">
                 <!-- Logo resmi - yüklenemezse SVG fallback -->
-                <img src="/assets/sebs-logo.svg" alt="" class="nav-logo-img" role="presentation" 
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
                      onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
                 <!-- Logo yüklenemezse SVG göster -->
                 <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
@@ -256,7 +256,7 @@
         <div class="container">
         <div class="hero-content">
                 <div class="hero-logo-wrap reveal">
-                    <img src="/assets/sebs-logo.svg" alt="SEBS Global" />
+                    <img src="/images/SEBS.png" alt="SEBS Global" />
                 </div>
                 <div class="hero-badge reveal reveal-delay-1">
                     <i class="fas fa-star"></i>
@@ -881,9 +881,9 @@
             
             if (navLogoImg) {
                 if (currentTheme === 'dark') {
-                    navLogoImg.src = '/assets/sebs-logo.svg';
+                    navLogoImg.src = '/images/SEBS.png';
                 } else {
-                    navLogoImg.src = '/assets/sebs-logo.svg';
+                    navLogoImg.src = '/images/SEBS.png';
                 }
             }
         }
