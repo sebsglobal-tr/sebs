@@ -1211,6 +1211,10 @@
         }
         
         function showAccessDenied(customMessage = null) {
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
+                }
                 const mainContent = document.querySelector('.main-content') || document.querySelector('main');
                 if (mainContent) {
                     const message = customMessage || 'Simülasyonları görüntülemek için lütfen giriş yapın ve hesabınızı doğrulayın.';

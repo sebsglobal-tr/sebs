@@ -1570,6 +1570,10 @@
         }
         
         function showAccessDenied(customMessage = null) {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
                 const mainContent = document.querySelector('.main-content');
                 if (mainContent) {
                     const message = customMessage || 'Eğitim modüllerine erişim için üye olmanız ve e-posta adresinizi doğrulamanız gerekmektedir.';
