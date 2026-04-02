@@ -1,38 +1,80 @@
-// Önce supabase-env.js yüklenmeli (window.VITE_SUPABASE_*). Vite kullanıyorsanız import.meta.env doludur.
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/+esm';
+/**
+ * Supabase client — resmi UMD SDK gerekir (HTML’de önce jsdelivr supabase.min.js).
+ * Bundler kullanıyorsanız: npm i @supabase/supabase-js → import { createClient } from '@supabase/supabase-js'
+ */
+(function () {
+    'use strict';
 
-const supabaseUrl =
-    import.meta.env?.VITE_SUPABASE_URL ??
-    (typeof window !== 'undefined' ? window.VITE_SUPABASE_URL : '');
-const supabaseKey =
-    import.meta.env?.VITE_SUPABASE_ANON_KEY ??
-    (typeof window !== 'undefined' ? window.VITE_SUPABASE_ANON_KEY : '');
+    var supabase = null;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('❌ Supabase env eksik!');
-}
+    function getCredentials() {
+        var url =
+            (typeof window !== 'undefined' && window.VITE_SUPABASE_URL) ||
+            (typeof window !== 'undefined' && window.SUPABASE_URL) ||
+            '';
+        var key =
+            (typeof window !== 'undefined' && window.VITE_SUPABASE_ANON_KEY) ||
+            (typeof window !== 'undefined' && window.SUPABASE_ANON_KEY) ||
+            '';
+        return { url: String(url || '').trim(), key: String(key || '').trim() };
+    }
 
-const _url = String(supabaseUrl || '').trim();
-const _key = String(supabaseKey || '').trim();
+    function waitForSdk(maxMs) {
+        maxMs = maxMs || 5000;
+        var start = Date.now();
+        return new Promise(function (resolve) {
+            function tick() {
+                if (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
+                    resolve(true);
+                    return;
+                }
+                if (Date.now() - start > maxMs) {
+                    resolve(false);
+                    return;
+                }
+                setTimeout(tick, 50);
+            }
+            tick();
+        });
+    }
 
-export const supabase =
-    _url && _key
-        ? createClient(_url, _key, {
-              auth: {
-                  persistSession: true,
-                  autoRefreshToken: true,
-                  detectSessionInUrl: true,
-                  storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-                  storageKey: 'sb-' + _url.split('//')[1].split('.')[0] + '-auth-token'
-              }
-          })
-        : null;
+    async function initSupabase() {
+        if (supabase) {
+            return supabase;
+        }
 
-if (typeof window !== 'undefined') {
-    window.initSupabase = async function () {
-        if (!supabase) {
-            throw new Error('Supabase env eksik (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).');
+        var ok = await waitForSdk(8000);
+        if (!ok || !window.supabase || typeof window.supabase.createClient !== 'function') {
+            var err = new Error(
+                'Supabase SDK yüklenmedi! HTML’de @supabase/supabase-js UMD script, supabase-env.js’den ÖNCE veya hemen üstünde olmalı (cdn.jsdelivr.net/.../supabase.min.js).'
+            );
+            console.error('❌', err.message);
+            throw err;
+        }
+
+        var cfg = getCredentials();
+        if (!cfg.url || !cfg.key) {
+            console.error('❌ Supabase env eksik!');
+            throw new Error('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — supabase-env.js dosyasını kontrol edin.');
+        }
+
+        supabase = window.supabase.createClient(cfg.url, cfg.key, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+                storage: window.localStorage,
+                storageKey: 'sb-' + cfg.url.split('//')[1].split('.')[0] + '-auth-token'
+            }
+        });
+
+        if (typeof window !== 'undefined') {
+            window.supabaseClient = supabase;
         }
         return supabase;
-    };
-}
+    }
+
+    if (typeof window !== 'undefined') {
+        window.initSupabase = initSupabase;
+    }
+})();

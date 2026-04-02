@@ -630,8 +630,8 @@
             // Supabase script yüklendi mi kontrol et
             setTimeout(() => {
                 if (typeof window.supabase === 'undefined') {
-                    console.error('❌ Supabase script yüklenmedi!');
-                    console.log('   Beklenen: /assets/vendor/supabase.min.js');
+                    console.error('❌ Supabase UMD SDK yüklenmedi (window.supabase yok)!');
+                    console.log('   Beklenen: cdn.jsdelivr.net/.../@supabase/supabase-js/.../supabase.min.js');
                     console.log('   Kontrol: Script tag var mı?');
                     
                     // Script tag'i kontrol et
@@ -721,9 +721,11 @@
             }
         });
     </script>
-    <!-- Supabase: env → ESM client (+esm) -->
+    <!-- 1. Supabase UMD SDK  2. env  3. client  4. auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
+            onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
     <script src="/js/supabase-env.js"></script>
-    <script type="module" src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js"></script>
     <!-- Navigation Script -->
     <script src="js/navigation.js"></script>
