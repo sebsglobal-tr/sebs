@@ -75,7 +75,10 @@ const FULL_ACCESS_EMAIL = (process.env.SUPER_ADMIN_EMAIL ||
     (process.env.NODE_ENV === 'production' ? '' : 'asasferfer4566@gmail.com')).toLowerCase().trim();
 
 function parseCorsOrigins() {
-    const raw = (process.env.CORS_ORIGIN || '').trim();
+    let raw = (process.env.CORS_ORIGIN || '').trim();
+    if (!raw && (process.env.PUBLIC_SITE_URL || '').trim()) {
+        raw = (process.env.PUBLIC_SITE_URL || '').trim();
+    }
     if (!raw) return null;
     return raw.split(',').map((s) => s.trim()).filter(Boolean);
 }
@@ -94,24 +97,32 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
 
 // Validate critical environment variables in production (npm run build / verify-build için SKIP_ENV_VALIDATION=1)
 if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
-    if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your_super_secret_jwt_key_here') {
-        logger.error('CRITICAL: JWT_SECRET tanımlı değil (veya placeholder). Render → Environment → JWT_SECRET ekleyin veya SUPABASE_JWT_SECRET girin.');
-        logger.error('Örnek: openssl rand -hex 32 çıktısını JWT_SECRET olarak yapıştırın.');
+    const jwtSecretTrim = (process.env.JWT_SECRET || '').trim();
+    if (!jwtSecretTrim || jwtSecretTrim === 'your_super_secret_jwt_key_here') {
+        logger.error(
+            'CRITICAL: JWT_SECRET boş. Render → Environment: SUPABASE_JWT_SECRET ekleyin (Supabase Dashboard → Project Settings → API → JWT Secret / JWT Signing Key) veya JWT_SECRET=openssl rand -hex 32 çıktısı.'
+        );
         process.exit(1);
     }
     
     if (!process.env.DATABASE_URL && !process.env.DB_PASSWORD) {
-        logger.error('CRITICAL: DATABASE_URL veya DB_PASSWORD .env içinde olmalı!');
+        logger.error(
+            'CRITICAL: DATABASE_URL veya DB_PASSWORD yok. Render → Environment → DATABASE_URL ekleyin (Supabase: Project Settings → Database → Connection string → URI).'
+        );
         process.exit(1);
     }
 
     if (!parseCorsOrigins()?.length) {
-        logger.error('CRITICAL: CORS_ORIGIN canlıda zorunludur (örn. https://sebs-global.com veya birden fazla origin virgülle)');
+        logger.error(
+            'CRITICAL: CORS için Render → Environment: CORS_ORIGIN ekleyin (örn. https://xxx.vercel.app) veya PUBLIC_SITE_URL ile aynı kök adresi verin. Birden fazla origin virgülle.'
+        );
         process.exit(1);
     }
 
-    if (!process.env.SUPABASE_JWT_SECRET) {
-        logger.error('CRITICAL: SUPABASE_JWT_SECRET canlıda zorunludur (Supabase Auth ile uyum için).');
+    if (!(process.env.SUPABASE_JWT_SECRET || '').trim()) {
+        logger.error(
+            'CRITICAL: SUPABASE_JWT_SECRET boş. Supabase Dashboard → Project Settings → API → "JWT Secret" (veya Legacy JWT secret) — kopyala; Render’da Key tam olarak SUPABASE_JWT_SECRET olsun.'
+        );
         process.exit(1);
     }
 
@@ -725,35 +736,36 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // ============================================
-// SAĞLIK KONTROLÜ ENDPOINT'İ
+// SAĞLIK KONTROLÜ (Railway / Render / load balancer)
 // ============================================
-// Sistem sağlığını ve veritabanı bağlantısını kontrol eder
-// Monitoring ve load balancer'lar için kullanılır
-app.get('/api/health', async (req, res) => {
+// Her zaman 200 — süreç ayakta mı (DB kapalı olsa bile deploy sağlık kontrolü geçsin)
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+// Veritabanı + pool detayı (izleme; DB yoksa 503)
+app.get('/api/health/ready', async (req, res) => {
     try {
-        // Veritabanı bağlantısını test et (sunucu zamanı ve versiyonu al)
         const dbResult = await pool.query('SELECT NOW(), version()');
         const dbHealthy = dbResult.rows.length > 0;
-        
-        // Sistem sağlık durumunu döndür
+
         res.json({
             status: 'healthy',
             database: {
-                status: dbHealthy ? 'connected' : 'disconnected', // Veritabanı bağlantı durumu
+                status: dbHealthy ? 'connected' : 'disconnected',
                 type: 'postgresql',
-                serverTime: dbResult.rows[0]?.now, // Veritabanı sunucu zamanı
-                version: dbResult.rows[0]?.version?.split(' ')[0] + ' ' + dbResult.rows[0]?.version?.split(' ')[1] // PostgreSQL versiyonu
+                serverTime: dbResult.rows[0]?.now,
+                version: dbResult.rows[0]?.version?.split(' ')[0] + ' ' + dbResult.rows[0]?.version?.split(' ')[1]
             },
             pool: {
-                totalCount: pool.totalCount || 0, // Toplam bağlantı sayısı
-                idleCount: pool.idleCount || 0, // Boşta bekleyen bağlantı sayısı
-                waitingCount: pool.waitingCount || 0 // Bağlantı bekleyen istek sayısı
+                totalCount: pool.totalCount || 0,
+                idleCount: pool.idleCount || 0,
+                waitingCount: pool.waitingCount || 0
             },
-            timestamp: new Date().toISOString(), // Kontrol zamanı
+            timestamp: new Date().toISOString(),
             version: '1.0.0'
         });
     } catch (error) {
-        // Veritabanı bağlantısı başarısızsa 503 (Service Unavailable) hatası döndür
         res.status(503).json({
             status: 'unhealthy',
             database: {
