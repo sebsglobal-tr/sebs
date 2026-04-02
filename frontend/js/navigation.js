@@ -170,18 +170,66 @@
     // Mobil cihazlar için hamburger menü açma/kapatma işlevselliği
     function initHamburgerMenu() {
         const hamburger = document.querySelector('.hamburger');
+        const navPanel = document.querySelector('#navPanel') || document.querySelector('.nav-panel');
         const navMenu = document.querySelector('.nav-menu');
-        
-        if (hamburger && navMenu) {
-            // Hamburger butonuna tıklama event'i ekle
-            hamburger.addEventListener('click', function() {
-                hamburger.classList.toggle('active'); // Hamburger animasyonu için
-                navMenu.classList.toggle('active'); // Menüyü aç/kapa
-                const isExpanded = hamburger.classList.contains('active');
-                hamburger.setAttribute('aria-expanded', isExpanded); // Erişilebilirlik için
+
+        function closeMobileNav() {
+            if (hamburger) {
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+            if (navPanel) {
+                navPanel.classList.remove('active');
+            } else if (navMenu) {
+                navMenu.classList.remove('active');
+            }
+            document.body.classList.remove('nav-menu-open');
+            document.documentElement.classList.remove('nav-menu-open');
+        }
+
+        function openState(isOpen) {
+            document.body.classList.toggle('nav-menu-open', isOpen);
+            document.documentElement.classList.toggle('nav-menu-open', isOpen);
+        }
+
+        if (hamburger && navPanel) {
+            hamburger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const willOpen = !navPanel.classList.contains('active');
+                navPanel.classList.toggle('active', willOpen);
+                hamburger.classList.toggle('active', willOpen);
+                hamburger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                openState(willOpen);
             });
 
-            // Menü dışına tıklandığında menüyü kapat
+            document.addEventListener('click', function(e) {
+                if (!navPanel.classList.contains('active')) return;
+                if (!hamburger.contains(e.target) && !navPanel.contains(e.target)) {
+                    closeMobileNav();
+                }
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', closeMobileNav);
+            });
+
+            document.querySelectorAll('.nav-panel .btn-login, .nav-panel .btn-signup, .nav-panel .btn-logout, .nav-panel .btn-dashboard').forEach(el => {
+                el.addEventListener('click', closeMobileNav);
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && navPanel.classList.contains('active')) {
+                    closeMobileNav();
+                }
+            });
+        } else if (hamburger && navMenu) {
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                const isExpanded = hamburger.classList.contains('active');
+                hamburger.setAttribute('aria-expanded', isExpanded);
+            });
+
             document.addEventListener('click', function(e) {
                 if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
                     if (navMenu.classList.contains('active')) {
@@ -191,8 +239,7 @@
                     }
                 }
             });
-            
-            // Menü linklerine tıklandığında menüyü kapat
+
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', () => {
                     hamburger.classList.remove('active');
