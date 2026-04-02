@@ -11,9 +11,10 @@
     <meta name='description' content="SEBS Global ile teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitimler alın. Uzman eğitmenlerden öğrenin, sertifikalı uzman olun.">
     <meta name="keywords" content="SEBS Global, eğitim platformu, siber güvenlik, bulut bilişim, veri bilimleri, teknoloji eğitimi, iş dünyası eğitimi, kişisel gelişim">
     <meta name="author" content="SEBS Global">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="language" content="Turkish">
     <meta name="revisit-after" content="7 days">
+    <meta name="theme-color" content="#1e3a5f">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -21,6 +22,9 @@
     <meta property="og:title" content="SEBS Global - Çok Alanlı Profesyonel Eğitim Platformu">
     <meta property="og:description" content="SEBS Global ile teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitimler alın. Uzman eğitmenlerden öğrenin, sertifikalı uzman olun.">
     <meta property="og:image" content="https://sebsglobal.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="SEBS Global — siber güvenlik ve profesyonel eğitim platformu">
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
@@ -29,42 +33,63 @@
     <meta name="twitter:title" content="SEBS Global - Çok Alanlı Profesyonel Eğitim Platformu">
     <meta name="twitter:description" content="SEBS Global ile teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitimler alın. Uzman eğitmenlerden öğrenin, sertifikalı uzman olun.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-image.jpg">
+    <meta name="twitter:image:alt" content="SEBS Global — siber güvenlik ve profesyonel eğitim platformu">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sebsglobal.com/">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD: WebSite + EducationalOrganization (Google zengin sonuçlar için) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "EducationalOrganization",
-        "name": "SEBS Global",
-        "description": "Çok alanlı profesyonel eğitim platformu",
-        "url": "https://sebsglobal.com",
-        "logo": "https://sebsglobal.com/logo.png",
-        "sameAs": [
-            "https://www.linkedin.com/in/seb-s-global-19b18038a/",
-            "https://t.me/sebsglobal"
-        ],
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "TR",
-            "addressLocality": "İstanbul"
-        },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+90-533-266-9087",
-            "contactType": "customer service",
-            "email": "info@sebsglobal.com"
-        },
-        "offers": {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Course",
-                "name": "Profesyonel Eğitim Programları",
-                "description": "Teknoloji, iş dünyası ve kişisel gelişim alanlarında kapsamlı eğitim programları"
+        "@graph": [
+            {
+                "@type": "EducationalOrganization",
+                "@id": "https://sebsglobal.com/#organization",
+                "name": "SEBS Global",
+                "alternateName": "SEBS",
+                "description": "Çok alanlı profesyonel eğitim platformu; siber güvenlik, bulut ve teknoloji eğitimleri.",
+                "url": "https://sebsglobal.com/",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://sebsglobal.com/logo.png"
+                },
+                "sameAs": [
+                    "https://www.linkedin.com/in/seb-s-global-19b18038a/",
+                    "https://t.me/sebsglobal"
+                ],
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "TR",
+                    "addressLocality": "İstanbul"
+                },
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "telephone": "+90-533-266-9087",
+                    "contactType": "customer service",
+                    "email": "info@sebsglobal.com",
+                    "availableLanguage": ["Turkish", "English"]
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Course",
+                        "name": "Profesyonel Eğitim Programları",
+                        "description": "Teknoloji, iş dünyası ve kişisel gelişim alanlarında kapsamlı eğitim programları"
+                    }
+                }
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://sebsglobal.com/#website",
+                "url": "https://sebsglobal.com/",
+                "name": "SEBS Global",
+                "description": "Siber güvenlik, bulut bilişim ve teknoloji alanlarında sertifikalı online eğitim ve simülasyonlar.",
+                "publisher": { "@id": "https://sebsglobal.com/#organization" },
+                "inLanguage": "tr-TR"
             }
-        }
+        ]
     }
     </script>
     
@@ -249,6 +274,7 @@
         </div>
     </nav>
 
+    <main id="main-content">
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="floating-elements">
@@ -509,6 +535,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -518,7 +545,7 @@
                     <h4>SEBS Global</h4>
                     <p>Teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitim platformu</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="https://t.me/sebsglobal" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
                         <a href="https://www.linkedin.com/in/seb-s-global-19b18038a/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                         <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                     </div>
@@ -558,7 +585,7 @@
                 <div class="footer-links">
                     <a href="#">KVKK</a>
                     <a href="#">Çerez Politikası</a>
-                    <a href="#">Sitemap</a>
+                    <a href="/sitemap.xml">Sitemap</a>
                 </div>
             </div>
         </div>
