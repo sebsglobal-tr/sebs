@@ -198,6 +198,28 @@
         }
 
         if (hamburger && navPanel) {
+            if (!navPanel.querySelector('.nav-drawer-header')) {
+                var drawerHeader = document.createElement('div');
+                drawerHeader.className = 'nav-drawer-header';
+                drawerHeader.setAttribute('role', 'presentation');
+                drawerHeader.innerHTML =
+                    '<div class="nav-drawer-brand">' +
+                    '<span class="nav-drawer-title">SEBS Global</span>' +
+                    '<span class="nav-drawer-sub">Keşfet · Öğren · Geliş</span>' +
+                    '</div>' +
+                    '<button type="button" class="nav-drawer-close" aria-label="Menüyü kapat">' +
+                    '<i class="fas fa-times" aria-hidden="true"></i></button>';
+                navPanel.insertBefore(drawerHeader, navPanel.firstChild);
+                var closeBtn = drawerHeader.querySelector('.nav-drawer-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeMobileNav();
+                    });
+                }
+            }
+
             hamburger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const willOpen = !navPanel.classList.contains('active');
