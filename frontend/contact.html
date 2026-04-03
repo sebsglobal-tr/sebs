@@ -633,22 +633,79 @@
             });
         });
 
-        // Form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        function getApiBase() {
+            return (window.location && window.location.origin ? window.location.origin : '') + '/api';
+        }
+
+        // Form submission → backend SMTP ile CONTACT_INBOX_EMAIL adresine
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
+            const form = this;
+            const privacyEl = document.getElementById('privacy');
+            if (!privacyEl || !privacyEl.checked) {
+                showErrorMessage('Lütfen gizlilik politikasını kabul edin.');
+                return;
+            }
+
+            const formData = new FormData(form);
             const data = Object.fromEntries(formData);
-            
-            // Show success message
-            showSuccessMessage();
-            
-            // Reset form
-            this.reset();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Gönderiliyor...</span>';
+            }
+
+            try {
+                const res = await fetch(getApiBase() + '/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName: (data.firstName || '').trim(),
+                        lastName: (data.lastName || '').trim(),
+                        email: (data.email || '').trim(),
+                        phone: (data.phone || '').trim(),
+                        subject: data.subject || '',
+                        message: (data.message || '').trim(),
+                        privacyAccepted: true
+                    })
+                });
+                const json = await res.json().catch(function() { return {}; });
+                if (res.ok && json.success) {
+                    showSuccessMessage(json.message || null);
+                    form.reset();
+                } else {
+                    showErrorMessage(json.message || 'Mesaj gönderilemedi. Lütfen tekrar deneyin.');
+                }
+            } catch (err) {
+                console.error('Contact form:', err);
+                showErrorMessage('Bağlantı hatası. API adresinin doğru olduğundan ve sunucunun çalıştığından emin olun.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                }
+            }
         });
 
-        function showSuccessMessage() {
+        function showErrorMessage(text) {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:10000;backdrop-filter:blur(10px);';
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = 'background:white;padding:40px;border-radius:20px;text-align:center;max-width:500px;margin:20px;box-shadow:0 25px 50px rgba(0,0,0,0.3);';
+            modalContent.innerHTML =
+                '<div style="font-size:3rem;margin-bottom:20px;">⚠️</div>' +
+                '<h2 style="font-family:Space Grotesk, sans-serif;font-size:1.5rem;margin-bottom:15px;color:#1e293b;">Gönderilemedi</h2>' +
+                '<p style="color:#64748b;margin-bottom:24px;line-height:1.6;">' + String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>' +
+                '<button type="button" class="contact-modal-close" style="background:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);color:white;padding:12px 24px;border:none;border-radius:10px;cursor:pointer;font-weight:600;">Tamam</button>';
+            modal.className = 'modal-overlay';
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            modalContent.querySelector('.contact-modal-close').addEventListener('click', function() { modal.remove(); });
+            modal.addEventListener('click', function(ev) { if (ev.target === modal) modal.remove(); });
+        }
+
+        function showSuccessMessage(customText) {
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed;
@@ -678,7 +735,7 @@
             modalContent.innerHTML = `
                 <div style="font-size: 3rem; margin-bottom: 20px;">✅</div>
                 <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; margin-bottom: 15px; color: #1e293b;">Mesaj Gönderildi!</h2>
-                <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.</p>
+                <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">${customText ? String(customText).replace(/</g, '&lt;').replace(/>/g, '&gt;') : 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.'}</p>
                 <button onclick="this.closest('.modal-overlay').remove()" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">Tamam</button>
             `;
 

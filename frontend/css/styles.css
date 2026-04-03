@@ -1004,7 +1004,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 
 .category-tabs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 2rem;
     max-width: 1400px;
     margin: 0 auto;
@@ -1098,7 +1098,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
     gap: 4rem;
     margin-top: 4rem;
     position: relative;
@@ -1136,7 +1136,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 .features-grid,
 .simulations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
     gap: 2.5rem;
     margin-top: 4rem;
     position: relative;
@@ -1652,7 +1652,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 4rem;
     margin-bottom: 4rem;
 }
@@ -1955,6 +1955,10 @@ li:has(.nav-link[data-page="dashboard"]) {
    RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 768px) {
+    html {
+        scroll-padding-top: calc(4.25rem + env(safe-area-inset-top, 0px));
+    }
+    
     /* Üst bar: sadece logo + hamburger — menü ve butonlar .nav-panel içinde */
     .nav-container {
         flex-wrap: nowrap;
@@ -2220,6 +2224,30 @@ li:has(.nav-link[data-page="dashboard"]) {
         width: 100%;
         justify-content: center;
     }
+    
+    .hero-badge {
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.65rem 1.1rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+    }
+    
+    .feature-card,
+    .simulation-card {
+        padding: 1.5rem;
+    }
+    
+    .form-wrapper {
+        padding: 1.75rem 1.25rem;
+    }
+    
+    .contact-form .btn-primary {
+        width: 100%;
+        align-self: stretch;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2300,6 +2328,25 @@ li:has(.nav-link[data-page="dashboard"]) {
     
     .section-title {
         font-size: 2rem;
+    }
+    
+    .form-wrapper {
+        padding: 1.35rem 1rem;
+        border-radius: var(--radius-lg);
+    }
+    
+    .faq-question {
+        padding: 1.15rem 1rem;
+    }
+    
+    .faq-answer p {
+        padding: 0 1rem 1.15rem;
+    }
+    
+    .hours-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
     }
 }
 
@@ -3841,7 +3888,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 
 .story-timeline-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
     gap: 1.5rem;
 }
 
@@ -3956,7 +4003,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 /* İletişim formu – checkbox satırı (Gizlilik Politikası) */
 .contact-form .form-group.checkbox-group {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     padding: 0.25rem 0;
 }
@@ -4053,7 +4100,8 @@ li:has(.nav-link[data-page="dashboard"]) {
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.75rem;
     cursor: pointer;
     transition: all var(--transition-base);
 }
@@ -4067,11 +4115,17 @@ li:has(.nav-link[data-page="dashboard"]) {
     font-weight: 600;
     color: var(--text-light);
     margin: 0;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    line-height: 1.35;
 }
 
 .faq-question i {
     color: var(--accent);
     transition: transform var(--transition-base);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
 }
 
 .faq-item.active .faq-question i {
@@ -5085,7 +5139,7 @@ li:has(.nav-link[data-page="dashboard"]) {
 /* Certificates Grid */
 .certificates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 1.5rem;
 }
 

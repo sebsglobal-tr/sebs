@@ -155,6 +155,20 @@ const authLimiter = rateLimit({
     legacyHeaders: false
 });
 app.use('/api/auth', authLimiter);
+
+// İletişim formu — IP başına sınırlı (spam önleme)
+const contactFormLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_CONTACT_MAX, 10) || 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({
+            success: false,
+            message: 'Çok fazla mesaj gönderimi. Lütfen bir süre sonra tekrar deneyin.'
+        });
+    }
+});
 // CORS — canlıda CORS_ORIGIN (virgülle çoklu origin)
 const corsOrigins = parseCorsOrigins();
 app.use(cors({
@@ -467,6 +481,63 @@ const sendVerificationEmail = async (email, verificationCode, firstName) => {
     }
 };
 
+/** İletişim formu mesajlarının gideceği gelen kutusu (SMTP ile aynı hesap olmak zorunda değil) */
+const CONTACT_INBOX_EMAIL = (process.env.CONTACT_INBOX_EMAIL || 'sebsglobal@gmail.com').trim();
+
+async function sendContactFormNotification({ firstName, lastName, email, phone, subjectKey, message }) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || process.env.SMTP_PASS === 'your_gmail_app_password_here') {
+        logger.warn('Contact form: SMTP not configured');
+        return { success: false, error: 'SMTP not configured' };
+    }
+    try {
+        const transporter = createEmailTransporter();
+        await transporter.verify();
+        const subjectLabels = {
+            general: 'Genel Bilgi',
+            support: 'Teknik Destek',
+            partnership: 'İş Birliği',
+            feedback: 'Geri Bildirim',
+            other: 'Diğer'
+        };
+        const topic = subjectLabels[subjectKey] || subjectKey || 'İletişim';
+        const subjectLine = `[SEBS İletişim] ${topic}`;
+        const safePhone = phone ? sanitizeInput(String(phone).slice(0, 40)) : '—';
+        const textBody =
+            `Yeni iletişim formu mesajı\n\n` +
+            `Ad Soyad: ${firstName} ${lastName}\n` +
+            `E-posta: ${email}\n` +
+            `Telefon: ${safePhone}\n` +
+            `Konu: ${topic}\n\n` +
+            `Mesaj:\n${message}\n`;
+        const htmlBody = `
+            <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto;">
+                <h2 style="color:#1e40af;">SEBS Global — İletişim formu</h2>
+                <table style="border-collapse:collapse;width:100%;">
+                    <tr><td style="padding:8px 0;color:#64748b;width:120px;">Ad Soyad</td><td style="padding:8px 0;"><strong>${firstName} ${lastName}</strong></td></tr>
+                    <tr><td style="padding:8px 0;color:#64748b;">E-posta</td><td style="padding:8px 0;"><a href="mailto:${email}">${email}</a></td></tr>
+                    <tr><td style="padding:8px 0;color:#64748b;">Telefon</td><td style="padding:8px 0;">${safePhone}</td></tr>
+                    <tr><td style="padding:8px 0;color:#64748b;">Konu</td><td style="padding:8px 0;">${topic}</td></tr>
+                </table>
+                <h3 style="margin-top:24px;color:#334155;">Mesaj</h3>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;white-space:pre-wrap;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+            </div>`;
+
+        const info = await transporter.sendMail({
+            from: `"SEBS Global Web" <${process.env.SMTP_USER}>`,
+            to: CONTACT_INBOX_EMAIL,
+            replyTo: email,
+            subject: subjectLine,
+            text: textBody,
+            html: htmlBody
+        });
+        logger.info(`Contact form email sent to ${CONTACT_INBOX_EMAIL}: ${info.messageId}`);
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        logger.error('Contact form email error:', error.message);
+        return { success: false, error: error.message };
+    }
+}
+
 
 // ============================================
 // GÜVENLİK YARDIMCI FONKSİYONLARI
@@ -756,6 +827,82 @@ app.get('/api/health/ready', async (req, res) => {
             timestamp: new Date().toISOString(),
             version: '1.0.0'
         });
+    }
+});
+
+// ============================================
+// İLETİŞİM FORMU (SMTP → CONTACT_INBOX_EMAIL)
+// ============================================
+app.post('/api/contact', contactFormLimiter, async (req, res) => {
+    try {
+        const { firstName, lastName, email, phone, subject, message, privacyAccepted } = req.body || {};
+
+        if (!privacyAccepted) {
+            return res.status(400).json({
+                success: false,
+                message: 'Gizlilik politikasını kabul etmelisiniz.'
+            });
+        }
+
+        const fn = sanitizeInput(String(firstName || '').slice(0, 100));
+        const ln = sanitizeInput(String(lastName || '').slice(0, 100));
+        if (!fn || !ln) {
+            return res.status(400).json({
+                success: false,
+                message: 'Ad ve soyad zorunludur.'
+            });
+        }
+
+        const emailRaw = String(email || '').trim().toLowerCase();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailRaw)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçerli bir e-posta adresi girin.'
+            });
+        }
+
+        const allowedSubjects = ['general', 'support', 'partnership', 'feedback', 'other'];
+        if (!allowedSubjects.includes(subject)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçerli bir konu seçin.'
+            });
+        }
+
+        const msg = sanitizeInput(String(message || '').slice(0, 8000));
+        if (msg.length < 10) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mesaj en az 10 karakter olmalıdır.'
+            });
+        }
+
+        const phoneSanitized = phone ? sanitizeInput(String(phone).slice(0, 40)) : '';
+
+        const result = await sendContactFormNotification({
+            firstName: fn,
+            lastName: ln,
+            email: emailRaw,
+            phone: phoneSanitized,
+            subjectKey: subject,
+            message: msg
+        });
+
+        if (!result.success) {
+            return res.status(503).json({
+                success: false,
+                message:
+                    'Mesaj şu an e-posta ile iletilemiyor. Lütfen daha sonra tekrar deneyin veya info@sebsglobal.com adresine yazın.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Mesajınız alındı. En kısa sürede size dönüş yapılacaktır.'
+        });
+    } catch (error) {
+        return handleError(res, error, 'Mesaj gönderilemedi');
     }
 });
 
