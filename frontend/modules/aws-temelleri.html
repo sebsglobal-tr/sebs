@@ -1363,20 +1363,7 @@ Private Subnet 2: 10.0.20.0/24
             }, 1500); // 1.5 saniye loading göster
         });
 
-        // Mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }));
+        // Mobil üst menü: ../js/navigation.js
 
         // Lesson navigation with progress tracking
         document.addEventListener('DOMContentLoaded', function() {

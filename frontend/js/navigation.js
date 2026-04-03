@@ -160,19 +160,6 @@
             if (userProfile) userProfile.style.display = 'none';
         }
 
-        // Giriş + e-posta doğrulaması olmadan: modül, simülasyon ve panel menüleri gösterilmez
-        var gatedNavPages = ['modules', 'simulations', 'dashboard'];
-        document.querySelectorAll('.nav-link[data-page]').forEach(function(link) {
-            var page = link.getAttribute('data-page');
-            if (gatedNavPages.indexOf(page) === -1) return;
-            var li = link.closest('li.nav-item');
-            if (li) {
-                li.style.display = loggedIn ? '' : 'none';
-            } else {
-                link.style.display = loggedIn ? '' : 'none';
-            }
-        });
-
         // Ana sayfa vb.: .js-auth-only sadece giriş yapmış (doğrulanmış) kullanıcıya
         document.querySelectorAll('.js-auth-only').forEach(function(el) {
             el.style.display = loggedIn ? '' : 'none';

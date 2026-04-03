@@ -1959,6 +1959,16 @@ li:has(.nav-link[data-page="dashboard"]) {
         scroll-padding-top: calc(4.25rem + env(safe-area-inset-top, 0px));
     }
     
+    /* Mobil: menü açıkken arka plan karartması (yan panel dışı) */
+    html.nav-menu-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 996;
+        background: rgba(0, 0, 0, 0.45);
+        pointer-events: none;
+    }
+    
     /* Üst bar: sadece logo + hamburger — menü ve butonlar .nav-panel içinde */
     .nav-container {
         flex-wrap: nowrap;
@@ -2005,7 +2015,12 @@ li:has(.nav-link[data-page="dashboard"]) {
         display: flex;
         flex-direction: column;
         position: fixed;
-        inset: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: min(100%, 320px);
+        max-width: min(100vw, 100%);
         z-index: 998;
         padding: calc(env(safe-area-inset-top) + 56px) max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-right));
         margin: 0;
@@ -2018,12 +2033,26 @@ li:has(.nav-link[data-page="dashboard"]) {
         pointer-events: none;
         visibility: hidden;
         overscroll-behavior: contain;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .nav-panel.active {
         transform: translateX(0);
         pointer-events: auto;
         visibility: visible;
+    }
+    
+    .nav-panel .nav-menu::before {
+        content: 'Menü';
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        padding: 0 0 0.75rem 0.25rem;
+        margin-bottom: 0.35rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     .nav-menu {
