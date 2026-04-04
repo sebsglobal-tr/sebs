@@ -297,6 +297,7 @@
         </div>
     </div>
 
+    <script src="/utils/legacy-progress-storage-migrate.js"></script>
     <script>
         // Boş ilerleme kartında gösterilen kısa açıklama (cihazlar arası localStorage / API)
         var dashboardCrossDeviceHintHtml =
@@ -552,6 +553,10 @@
                 try {
                     sessionStorage.removeItem('sebs_dash_401_reload_once');
                 } catch (e) {}
+
+                if (typeof window.runSebsLegacyProgressStorageMigrationOnce === 'function') {
+                    window.runSebsLegacyProgressStorageMigrationOnce();
+                }
 
                 // Loading overlay'i gizle
                 const loadingOverlay = document.getElementById('loadingOverlay');
