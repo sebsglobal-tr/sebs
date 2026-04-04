@@ -576,30 +576,55 @@ const handleError = (res, error, customMessage = 'Internal server error') => {
 // ============================================
 // JWT KİMLİK DOĞRULAMA MIDDLEWARE'İ
 // ============================================
-// Supabase ile giriş yapan kullanıcıyı server.users tablosunda yoksa ekler / günceller
-// Tek kimlik: Supabase auth.users.id (UUID) = users.id
+// Supabase ile giriş: ilerleme tek satırda toplansın diye e-posta ile mevcut users.id kullanılır
+// (Eski e-posta/şifre kaydı + aynı e-posta ile Supabase → aynı users.id, tek ilerleme)
 const SUPABASE_PASSWORD_PLACEHOLDER = '[SUPABASE]';
 
+/**
+ * Supabase auth.sub ile senkronize eder; aynı e-posta zaten users’ta varsa o satırın id’sini döner (yeni INSERT yapmaz).
+ * @returns {Promise<string>} Veritabanındaki kanonik kullanıcı UUID’si
+ */
 async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) {
+    const em = String(email || '').trim();
+    if (!em) {
+        throw new Error('Supabase JWT içinde email yok');
+    }
+    const emNorm = em.toLowerCase();
     const fullName = userMetadata.full_name || userMetadata.name || '';
     const firstName = (typeof fullName === 'string' ? fullName.split(' ')[0] : '') || null;
     const lastName = (typeof fullName === 'string' ? fullName.split(' ').slice(1).join(' ') : '') || null;
     const now = new Date();
+
+    const existing = await pool.query(
+        `SELECT id, email, role FROM users WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))`,
+        [em]
+    );
+
+    if (existing.rows.length > 0) {
+        const { id } = existing.rows[0];
+        await pool.query(
+            `UPDATE users SET
+                first_name = COALESCE(NULLIF($2::varchar, ''), first_name),
+                last_name = COALESCE(NULLIF($3::varchar, ''), last_name),
+                last_login = $4,
+                updated_at = $4,
+                is_verified = true
+             WHERE id = $1::uuid`,
+            [id, firstName, lastName, now]
+        );
+        return id;
+    }
+
     await pool.query(
         `INSERT INTO users (id, email, first_name, last_name, password_hash, is_verified, role, is_active, access_level, last_login, created_at, updated_at)
-         VALUES ($1::uuid, $2, $3, $4, $5, true, 'user', true, 'beginner', $6, $6, $6)
-         ON CONFLICT (id) DO UPDATE SET
-           email = COALESCE(EXCLUDED.email, users.email),
-           first_name = COALESCE(NULLIF(EXCLUDED.first_name, ''), users.first_name),
-           last_name = COALESCE(NULLIF(EXCLUDED.last_name, ''), users.last_name),
-           last_login = EXCLUDED.last_login,
-           updated_at = EXCLUDED.updated_at`,
-        [supabaseUserId, email || '', firstName, lastName, SUPABASE_PASSWORD_PLACEHOLDER, now]
+         VALUES ($1::uuid, $2, $3, $4, $5, true, 'user', true, 'beginner', $6, $6, $6)`,
+        [supabaseUserId, emNorm, firstName, lastName, SUPABASE_PASSWORD_PLACEHOLDER, now]
     );
+    return supabaseUserId;
 }
 
 // JWT veya Supabase access token kabul eder; req.user = { userId, email, role? }
-// Önce kendi JWT'miz, olmazsa Supabase JWT ile doğrula ve users tablosunu senkronize et
+// userId her zaman public.users.id (e-posta ile tek kayıt)
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -616,8 +641,41 @@ const authenticateToken = (req, res, next) => {
     // 1) Kendi JWT'imiz ile dene
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (!err && decoded && decoded.userId) {
-            req.user = decoded;
-            return next();
+            (async () => {
+                try {
+                    if (decoded.email && String(decoded.email).trim()) {
+                        const r = await pool.query(
+                            `SELECT id, email, role FROM users WHERE LOWER(TRIM(email)) = LOWER(TRIM($1))`,
+                            [String(decoded.email).trim()]
+                        );
+                        if (r.rows.length > 0) {
+                            const u = r.rows[0];
+                            req.user = { userId: u.id, email: u.email, role: u.role || 'user' };
+                            if (
+                                FULL_ACCESS_EMAIL &&
+                                req.user.email &&
+                                req.user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL
+                            ) {
+                                req.user.role = 'admin';
+                            }
+                            return next();
+                        }
+                    }
+                    req.user = decoded;
+                    if (
+                        FULL_ACCESS_EMAIL &&
+                        req.user.email &&
+                        req.user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL
+                    ) {
+                        req.user.role = 'admin';
+                    }
+                    return next();
+                } catch (resolveErr) {
+                    logger.error('authenticateToken legacy email resolve:', resolveErr);
+                    return res.status(500).json({ success: false, message: 'Kimlik doğrulama sırasında bir hata oluştu.' });
+                }
+            })();
+            return;
         }
         // 2) Supabase JWT ile dene (SUPABASE_JWT_SECRET varsa)
         if (!process.env.SUPABASE_JWT_SECRET || !String(process.env.SUPABASE_JWT_SECRET).trim()) {
@@ -632,15 +690,27 @@ const authenticateToken = (req, res, next) => {
                 return res.status(401).json({ success: false, message: 'Invalid or expired token' });
             }
             try {
-                await ensureUserFromSupabase(
+                const supaEmail =
+                    supabaseDecoded.email ||
+                    (supabaseDecoded.user_metadata && supabaseDecoded.user_metadata.email) ||
+                    '';
+                const canonicalUserId = await ensureUserFromSupabase(
                     supabaseDecoded.sub,
-                    supabaseDecoded.email || '',
+                    supaEmail,
                     supabaseDecoded.user_metadata || {}
                 );
+                const userRow = await pool.query(
+                    'SELECT id, email, role FROM users WHERE id = $1::uuid',
+                    [canonicalUserId]
+                );
+                if (userRow.rows.length === 0) {
+                    return res.status(500).json({ success: false, message: 'Kullanıcı kaydı bulunamadı.' });
+                }
+                const u = userRow.rows[0];
                 req.user = {
-                    userId: supabaseDecoded.sub,
-                    email: supabaseDecoded.email,
-                    role: supabaseDecoded.role || 'user'
+                    userId: u.id,
+                    email: u.email,
+                    role: u.role || 'user'
                 };
                 if (FULL_ACCESS_EMAIL && req.user.email && req.user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL) {
                     req.user.role = 'admin';
