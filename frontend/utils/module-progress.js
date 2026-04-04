@@ -472,3 +472,88 @@ async function checkCategoryCompletion(moduleName) {
         console.error('❌ Failed to check category completion:', error);
     }
 }
+
+/** Supabase veya legacy JWT — modül sayfaları ve panel ortak kullanır */
+window.getProgressAuthToken = getSupabaseAccessToken;
+
+/**
+ * Tamamlanan ders listesini sunucu ile birleştirip POST /api/progress yazar (cihazlar arası tek kaynak).
+ * @param {string} moduleTitle - Veritabanındaki modül başlığına yakın isim
+ * @param {string[]} clientCompletedLessons - Bu oturumdaki tamamlanan ders kimlikleri/metinleri
+ * @param {number} totalLessons - Toplam ders sayısı
+ */
+window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLessons, totalLessons) {
+    try {
+        const token = await getSupabaseAccessToken();
+        if (!token) {
+            return { ok: false, reason: 'no_token' };
+        }
+        const moduleId = await getModuleIdFromName(moduleTitle);
+        if (!moduleId) {
+            return { ok: false, reason: 'no_module' };
+        }
+
+        const apiBase =
+            typeof window !== 'undefined' && window.location && window.location.origin
+                ? window.location.origin + '/api'
+                : 'http://localhost:8006/api';
+
+        let serverList = [];
+        let serverTotal = 0;
+        try {
+            const gr = await fetch(`${apiBase}/progress/module/${moduleId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (gr.ok) {
+                const jd = await gr.json();
+                if (jd.success && jd.data) {
+                    const raw = jd.data.lastStep;
+                    const lastStep =
+                        typeof raw === 'string' ? JSON.parse(raw || '{}') : raw || {};
+                    if (Array.isArray(lastStep.completedLessons)) {
+                        serverList = lastStep.completedLessons;
+                    }
+                    serverTotal = parseInt(String(lastStep.totalLessons), 10) || 0;
+                }
+            }
+        } catch (e) {
+            /* yok say */
+        }
+
+        const clientList = Array.isArray(clientCompletedLessons)
+            ? clientCompletedLessons.map((x) => String(x))
+            : [];
+        const merged = [...new Set([...serverList.map(String), ...clientList])];
+        const total = Math.max(
+            1,
+            parseInt(String(totalLessons), 10) || 0,
+            serverTotal,
+            merged.length
+        );
+        const pct = Math.min(100, Math.round((merged.length / total) * 100));
+        const lastStepPayload = {
+            completedLessons: merged,
+            totalLessons: total,
+            lastUpdated: new Date().toISOString()
+        };
+
+        const response = await fetch(apiBase + '/progress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                moduleId,
+                percentComplete: pct,
+                lastStep: JSON.stringify(lastStepPayload),
+                isCompleted: pct >= 100
+            })
+        });
+        const result = await response.json().catch(() => ({}));
+        return { ok: response.ok && result.success !== false, ...result };
+    } catch (error) {
+        console.warn('syncModuleProgressBulk:', error);
+        return { ok: false, reason: String(error && error.message) };
+    }
+};

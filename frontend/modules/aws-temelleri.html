@@ -1291,6 +1291,7 @@ Private Subnet 2: 10.0.20.0/24
         </div>
     </footer>
 
+    <script src="../utils/module-progress.js"></script>
     <!-- JavaScript -->
     <script>
         // Check if user is logged in
@@ -1305,11 +1306,8 @@ Private Subnet 2: 10.0.20.0/24
             return true;
         }
 
-        // Get module name from URL or page title
         function getModuleName() {
-            const path = window.location.pathname;
-            const moduleFile = path.split('/').pop();
-            return moduleFile.replace('.html', '').replace('-', ' ');
+            return 'AWS Temelleri';
         }
 
         // Save progress to localStorage
@@ -1338,11 +1336,12 @@ Private Subnet 2: 10.0.20.0/24
             localStorage.setItem('recentActivities', JSON.stringify(activities));
         }
 
-        // Load existing progress
         function loadProgress(moduleName) {
             const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}');
-            const moduleProgress = userProgress[moduleName];
-            
+            let moduleProgress = userProgress[moduleName];
+            if (!moduleProgress && userProgress['aws temelleri']) {
+                moduleProgress = userProgress['aws temelleri'];
+            }
             if (moduleProgress) {
                 return {
                     completedSections: moduleProgress.completedSections || 0,
@@ -1365,62 +1364,103 @@ Private Subnet 2: 10.0.20.0/24
 
         // Mobil üst menü: ../js/navigation.js
 
-        // Lesson navigation with progress tracking
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkAuth()) return;
 
             const moduleName = getModuleName();
             const navLinks = document.querySelectorAll('.nav-link[data-lesson]');
             const lessonContents = document.querySelectorAll('.lesson-content');
-            
-            // Load existing progress
+            window.MODULE_TOTAL_LESSONS = navLinks.length;
+
             const existingProgress = loadProgress(moduleName);
             let completedSections = existingProgress.completedSections;
             const totalSections = navLinks.length;
 
-            // Update UI with existing progress
+            function recountCompleted() {
+                completedSections = Array.from(navLinks).filter(function (l) {
+                    return l.classList.contains('completed');
+                }).length;
+            }
+
+            async function hydrateFromApi() {
+                if (!window.getModuleIdFromName || !window.getProgressAuthToken) return;
+                try {
+                    const token = await window.getProgressAuthToken();
+                    if (!token) return;
+                    const moduleId = await window.getModuleIdFromName(moduleName);
+                    if (!moduleId) return;
+                    const r = await fetch((window.location.origin || '') + '/api/progress/module/' + moduleId, {
+                        headers: { Authorization: 'Bearer ' + token }
+                    });
+                    if (!r.ok) return;
+                    const j = await r.json();
+                    const raw = j.data && j.data.lastStep;
+                    const step =
+                        typeof raw === 'string' ? JSON.parse(raw || '{}') : raw || {};
+                    const done = step.completedLessons;
+                    if (!Array.isArray(done) || !done.length) return;
+                    navLinks.forEach(function (link) {
+                        var id = link.getAttribute('data-lesson');
+                        if (id && done.indexOf(id) !== -1) link.classList.add('completed');
+                    });
+                    recountCompleted();
+                } catch (e) {
+                    console.warn('AWS modül API yükleme:', e);
+                }
+            }
+
             updateProgressUI();
 
             navLinks.forEach((link, index) => {
-                // Mark completed sections
                 if (index < completedSections) {
                     link.classList.add('completed');
                 }
 
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all links and lessons
+
                     navLinks.forEach(l => l.classList.remove('active'));
                     lessonContents.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
+
                     this.classList.add('active');
-                    
-                    // Show corresponding lesson
+
                     const lessonId = this.getAttribute('data-lesson');
                     document.getElementById(lessonId).classList.add('active');
 
-                    // Mark as completed if not already
                     if (!this.classList.contains('completed')) {
                         this.classList.add('completed');
-                        completedSections++;
+                        recountCompleted();
                         updateProgress();
                     }
                 });
             });
 
+            hydrateFromApi().then(function () {
+                recountCompleted();
+                updateProgressUI();
+            });
+
             function updateProgress() {
                 const percentage = Math.round((completedSections / totalSections) * 100);
-                
-                // Save progress to localStorage
+
                 saveProgress(moduleName, {
                     percentage: percentage,
                     completedSections: completedSections,
                     totalSections: totalSections
                 });
 
-                // Check if module is completed
+                if (window.syncModuleProgressBulk) {
+                    var doneIds = Array.from(navLinks)
+                        .filter(function (l) {
+                            return l.classList.contains('completed');
+                        })
+                        .map(function (l) {
+                            return l.getAttribute('data-lesson');
+                        })
+                        .filter(Boolean);
+                    window.syncModuleProgressBulk(moduleName, doneIds, totalSections).catch(function () {});
+                }
+
                 if (percentage === 100) {
                     // Add achievement
                     const achievements = JSON.parse(localStorage.getItem('achievements') || '[]');

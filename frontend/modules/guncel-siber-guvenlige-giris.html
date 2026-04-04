@@ -6027,13 +6027,16 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
         // Load progress (API when logged in, else localStorage)
         async function loadProgress() {
             const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            if (!localStorage.getItem('authToken') || !window.getModuleIdFromName) return local.completedLessons || [];
+            const token =
+                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
+                localStorage.getItem('authToken');
+            if (!token || !window.getModuleIdFromName) return local.completedLessons || [];
             try {
                 const moduleId = await window.getModuleIdFromName(MODULE_NAME);
                 if (!moduleId) return local.completedLessons || [];
                 const apiBase = (window.location?.origin || '') + '/api';
-                const r = await fetch(apiBase + '/progress/' + moduleId, {
-                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                const r = await fetch(apiBase + '/progress/module/' + moduleId, {
+                    headers: { Authorization: 'Bearer ' + token }
                 });
                 if (r.ok) {
                     const d = await r.json();
@@ -6108,8 +6111,7 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
 
-            // Save to API if logged in
-            if (window.ModuleProgressTracker?.saveLessonProgress && localStorage.getItem('authToken')) {
+            if (window.ModuleProgressTracker?.saveLessonProgress) {
                 try {
                     await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
                 } catch (e) {
@@ -6159,20 +6161,23 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
             markCompletedInSidebar(completed);
         })();
 
-        // Initialize module progress (totalLessons) for API
-        if (window.ModuleProgressTracker?.initializeModule && localStorage.getItem('authToken')) {
-            window.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(() => {});
-        }
-
-        // Başlat süre takibi - modülde geçirilen süre veritabanına kaydedilir
-        if (window.TimeTracker && localStorage.getItem('authToken') && window.getModuleIdFromName) {
-            (async () => {
+        (async function initTrackerIfLoggedIn() {
+            const t =
+                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
+                localStorage.getItem('authToken');
+            if (!t) return;
+            if (window.ModuleProgressTracker?.initializeModule) {
+                window.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(() => {});
+            }
+            if (window.TimeTracker && window.getModuleIdFromName) {
                 try {
                     const moduleId = await window.getModuleIdFromName(MODULE_NAME);
                     if (moduleId) window.TimeTracker.start(MODULE_NAME, moduleId);
-                } catch (e) { console.warn('TimeTracker başlatılamadı:', e); }
-            })();
-        }
+                } catch (e) {
+                    console.warn('TimeTracker başlatılamadı:', e);
+                }
+            }
+        })();
 
         // Mobile Menu Toggle
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -6218,8 +6223,6 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
             });
         }
 
-        // Initialize
-        updateProgress();
     </script>
     
     <!-- Module Access Check -->

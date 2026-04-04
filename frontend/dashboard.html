@@ -213,6 +213,9 @@
                     <i class="fas fa-book-reader"></i>
                     <h3>Henüz modül başlatmadınız</h3>
                     <p>Eğitim modüllerine göz atarak başlayın!</p>
+                    <p class="dashboard-cross-device-hint" style="font-size:0.85rem;line-height:1.55;color:rgba(255,255,255,0.68);max-width:28rem;margin:1rem auto 0;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.1);text-align:left;">
+                        <strong style="color:rgba(255,255,255,0.9);">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code style="font-size:0.8em;">www</code> ile <code style="font-size:0.8em;">www’siz</code> farklı depolama demektir).
+                    </p>
                 </div>
             </div>
         </div>
@@ -295,6 +298,12 @@
     </div>
 
     <script>
+        // Boş ilerleme kartında gösterilen kısa açıklama (cihazlar arası localStorage / API)
+        var dashboardCrossDeviceHintHtml =
+            '<p class="dashboard-cross-device-hint" style="font-size:0.85rem;line-height:1.55;color:rgba(255,255,255,0.68);max-width:28rem;margin:1rem auto 0;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.1);text-align:left;">' +
+            '<strong style="color:rgba(255,255,255,0.9);">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code style="font-size:0.8em;">www</code> ile <code style="font-size:0.8em;">www’siz</code> farklı depolama demektir).' +
+            '</p>';
+
         // Canlı ortam uyumu: API adresi ve token (Supabase veya JWT)
         function getApiBaseUrl() {
             return (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
@@ -731,82 +740,6 @@
             `;
         }
 
-        // localStorage ilerlemesini API'ye senkronize et (modül ID gerekli)
-        async function syncLocalProgressToApi(token) {
-            try {
-                const local = JSON.parse(localStorage.getItem('module_progress_siber_guvenlik_giris') || '{}');
-                const completed = local.completedLessons || [];
-                const total = local.totalLessons || 60;
-                if (completed.length === 0 || !token) return;
-                const pct = total ? Math.round((completed.length / total) * 100) : 0;
-                const coursesRes = await fetch(getApiBaseUrl() + '/api/courses', { headers: { 'Authorization': 'Bearer ' + token } });
-                if (!coursesRes.ok) return;
-                const coursesData = await coursesRes.json();
-                if (!coursesData.success || !coursesData.data) return;
-                let moduleId = null;
-                for (const c of coursesData.data) {
-                    if ((c.title === 'Siber Güvenliğe Giriş' || (c.title && c.title.includes('Siber'))) && c.modules && c.modules[0]) {
-                        moduleId = c.modules[0].id;
-                        break;
-                    }
-                }
-                if (!moduleId) return;
-                await fetch(getApiBaseUrl() + '/api/progress', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({
-                        moduleId,
-                        percentComplete: pct,
-                        lastStep: JSON.stringify({ completedLessons: completed, totalLessons: total }),
-                        isCompleted: pct >= 100
-                    })
-                });
-            } catch (e) { console.warn('syncLocalProgressToApi:', e); }
-        }
-
-        function normModuleTitle(s) {
-            return String(s || '').trim().toLowerCase();
-        }
-
-        /** API'de satır yoksa bile localStorage'daki modül ilerlemesini kartlara ekle (örn. Temel Network) */
-        function mergeDashboardLocalModuleProgress(modules) {
-            var out = Array.isArray(modules) ? modules.slice() : [];
-            var seen = {};
-            out.forEach(function (m) {
-                var t = m.moduleTitle || m.title;
-                if (t) seen[normModuleTitle(t)] = true;
-            });
-            var extras = [
-                { key: 'module_progress_temel_network', title: 'Temel Network Eğitimi' },
-                { key: 'module_progress_siber_guvenlik_giris', title: 'Siber Güvenliğe Giriş' }
-            ];
-            extras.forEach(function (x) {
-                if (seen[normModuleTitle(x.title)]) return;
-                var raw = localStorage.getItem(x.key);
-                if (!raw) return;
-                var local;
-                try {
-                    local = JSON.parse(raw);
-                } catch (e) {
-                    return;
-                }
-                var completed = local.completedLessons || [];
-                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
-                if (completed.length === 0) return;
-                var pct = Math.min(100, Math.round((completed.length / total) * 100));
-                out.push({
-                    title: x.title,
-                    moduleTitle: x.title,
-                    percentComplete: pct,
-                    isCompleted: pct >= 100,
-                    timeSpentMinutes: 0,
-                    lastStep: null
-                });
-                seen[normModuleTitle(x.title)] = true;
-            });
-            return out;
-        }
-
         /** localStorage → POST /api/progress (modül listesinden id bulunur) */
         async function syncLocalModuleProgressToApi(token, storageKey, moduleTitle) {
             try {
@@ -951,15 +884,49 @@
                               }, 0);
                 }
 
-                modules = mergeDashboardLocalModuleProgress(modules);
-
                 if (token && overviewOk) {
-                    syncLocalModuleProgressToApi(
-                        token,
-                        'module_progress_temel_network',
-                        'Temel Network Eğitimi'
-                    ).catch(function () {});
-                    syncLocalProgressToApi(token).catch(function () {});
+                    try {
+                        await Promise.all([
+                            syncLocalModuleProgressToApi(
+                                token,
+                                'module_progress_temel_network',
+                                'Temel Network Eğitimi'
+                            ),
+                            syncLocalModuleProgressToApi(
+                                token,
+                                'module_progress_siber_guvenlik_giris',
+                                'Siber Güvenliğe Giriş'
+                            )
+                        ]);
+                        var progressResponse2 = await fetch(getApiBaseUrl() + '/api/progress/overview', {
+                            headers: { Authorization: 'Bearer ' + token }
+                        });
+                        if (progressResponse2.ok) {
+                            var progressData2 = await progressResponse2.json();
+                            if (progressData2 && progressData2.success && progressData2.data) {
+                                progressData = progressData2;
+                                modules = progressData.data.modules || [];
+                                simulationRuns = progressData.data.simulationRuns || [];
+                                completedModules =
+                                    progressData.data.completedModules != null
+                                        ? progressData.data.completedModules
+                                        : modules.filter(function (m) {
+                                              return m.isCompleted;
+                                          }).length;
+                                totalStudyTime =
+                                    progressData.data.totalStudyTime != null
+                                        ? progressData.data.totalStudyTime
+                                        : modules.reduce(function (total, m) {
+                                              if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                                                  return total + m.lastStep.timeSpentMinutes;
+                                              }
+                                              return total;
+                                          }, 0);
+                            }
+                        }
+                    } catch (reSyncErr) {
+                        console.warn('İlerleme yeniden yükleme:', reSyncErr);
+                    }
                 }
 
                 if (!overviewOk && modules.length > 0) {
@@ -1111,13 +1078,13 @@
             if (!progressList) return;
             
             if (modules.length === 0) {
-                progressList.innerHTML = `
-                    <div class="no-data">
-                        <i class="fas fa-book-open"></i>
-                        <h3>Henüz modül başlatmadınız</h3>
-                        <p>Eğitim modüllerine göz atarak başlayın!</p>
-                    </div>
-                `;
+                progressList.innerHTML =
+                    '<div class="no-data">' +
+                    '<i class="fas fa-book-open"></i>' +
+                    '<h3>Henüz modül başlatmadınız</h3>' +
+                    '<p>Eğitim modüllerine göz atarak başlayın!</p>' +
+                    dashboardCrossDeviceHintHtml +
+                    '</div>';
                 return;
             }
             
@@ -1697,7 +1664,10 @@
             };
 
             if (Object.keys(modules).length === 0) {
-                progressList.innerHTML = '<div class="no-data"><i class="fas fa-book-reader"></i><h3>Henüz modül başlatmadınız</h3><p>Eğitim modüllerine göz atarak başlayın!</p></div>';
+                progressList.innerHTML =
+                    '<div class="no-data"><i class="fas fa-book-reader"></i><h3>Henüz modül başlatmadınız</h3><p>Eğitim modüllerine göz atarak başlayın!</p>' +
+                    dashboardCrossDeviceHintHtml +
+                    '</div>';
                 return;
             }
 

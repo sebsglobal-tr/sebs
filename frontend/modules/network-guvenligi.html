@@ -2842,7 +2842,7 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
         }
         
         // Lesson completion system
-        function completeLesson(lessonId) {
+        async function completeLesson(lessonId) {
             // Mark current lesson as completed
             const currentNavItem = document.querySelector(`.sidebar-nav [data-section="${lessonId}"]`);
             if (currentNavItem) {
@@ -2880,13 +2880,14 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
             
             const lessonName = lessonMap[lessonId] || lessonId;
             
-            // Track progress
             if (window.ModuleProgressTracker) {
-                ModuleProgressTracker.saveLessonProgress('Network Güvenliği', lessonName);
-                
-                // Check if module is complete
-                if (nextIndex >= lessonOrder.length) {
-                    ModuleProgressTracker.completeModule('Network Güvenliği');
+                try {
+                    await ModuleProgressTracker.saveLessonProgress('Network Güvenliği', lessonName);
+                    if (nextIndex >= lessonOrder.length) {
+                        await ModuleProgressTracker.completeModule('Network Güvenliği');
+                    }
+                } catch (e) {
+                    console.warn('Modül ilerlemesi kaydedilemedi:', e);
                 }
             }
             
@@ -2980,59 +2981,20 @@ content:"|00 00 00 00 00 00|"; sid:1005; rev:1;)
             updateProgress();
         }
         
-        // Save progress to database
         async function saveProgressToDatabase() {
             const moduleName = getModuleName();
             const completedItems = document.querySelectorAll('.nav-item i.fa-check-circle.completed').length;
             const totalItems = document.querySelectorAll('.nav-item').length;
             const progressPercentage = Math.round((completedItems / totalItems) * 100);
-            
+
             const progressData = {
                 percentage: progressPercentage,
                 completedSections: completedItems,
                 totalSections: totalItems,
                 status: progressPercentage === 100 ? 'Tamamlandı' : 'Devam Ediyor',
-                time_spent: Math.floor(Math.random() * 60) + 30 // Random time for demo
+                time_spent: Math.floor(Math.random() * 60) + 30
             };
-            
-            // Try to save to database first
-            const userId = getCurrentUserId();
-            if (userId) {
-                try {
-                    const response = await apiRequest('/progress', 'POST', {
-                        user_id: userId,
-                        module_name: moduleName,
-                        progress_data: progressData
-                    });
-                    
-                    if (response.success) {
-                        console.log('İlerleme veritabanına kaydedildi');
-                        
-                        // Add activity
-                        await apiRequest('/activity', 'POST', {
-                            user_id: userId,
-                            action: `${moduleName} modülünde ilerleme: ${progressPercentage}%`,
-                            module_name: moduleName,
-                            activity_type: 'progress_update'
-                        });
-                        
-                        // Add achievement if completed
-                        if (progressPercentage === 100) {
-                            await apiRequest('/achievement', 'POST', {
-                                user_id: userId,
-                                title: `${moduleName} Modülü Tamamlandı`,
-                                description: `${moduleName} modülünü başarıyla tamamladınız!`,
-                                icon: 'fas fa-trophy',
-                                achievement_type: 'module_completion'
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.log('Veritabanı kaydı başarısız, localStorage kullanılıyor');
-                }
-            }
-            
-            // Always save to localStorage as backup
+
             saveProgress(moduleName, progressData);
         }
         

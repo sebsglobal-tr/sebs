@@ -4624,13 +4624,16 @@
 
         async function loadProgress() {
             const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            if (!localStorage.getItem('authToken') || !window.getModuleIdFromName) return local.completedLessons || [];
+            const token =
+                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
+                localStorage.getItem('authToken');
+            if (!token || !window.getModuleIdFromName) return local.completedLessons || [];
             try {
                 const moduleId = await window.getModuleIdFromName(MODULE_NAME);
                 if (!moduleId) return local.completedLessons || [];
                 const apiBase = (window.location?.origin || '') + '/api';
                 const r = await fetch(apiBase + '/progress/module/' + moduleId, {
-                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                    headers: { Authorization: 'Bearer ' + token }
                 });
                 if (r.ok) {
                     const d = await r.json();
@@ -4699,9 +4702,12 @@
             completed.push(sectionId);
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
-            if (window.ModuleProgressTracker?.saveLessonProgress && localStorage.getItem('authToken')) {
-                try { await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId); }
-                catch (e) { console.warn('API save failed:', e); }
+            if (window.ModuleProgressTracker?.saveLessonProgress) {
+                try {
+                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
+                } catch (e) {
+                    console.warn('API save failed:', e);
+                }
             }
             if (currentIdx >= 0 && currentIdx + 1 < sections.length) goToSectionByIndex(currentIdx + 1);
         }
@@ -4756,17 +4762,23 @@
             markCompletedInSidebar(completed);
         })();
 
-        if (window.ModuleProgressTracker?.initializeModule && localStorage.getItem('authToken')) {
-            window.ModuleProgressTracker.initializeModule(MODULE_NAME, sections.length).catch(() => {});
-        }
-        if (window.TimeTracker && localStorage.getItem('authToken') && window.getModuleIdFromName) {
-            (async () => {
+        (async function initTrackerIfLoggedIn() {
+            const t =
+                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
+                localStorage.getItem('authToken');
+            if (!t) return;
+            if (window.ModuleProgressTracker?.initializeModule) {
+                window.ModuleProgressTracker.initializeModule(MODULE_NAME, sections.length).catch(() => {});
+            }
+            if (window.TimeTracker && window.getModuleIdFromName) {
                 try {
                     const moduleId = await window.getModuleIdFromName(MODULE_NAME);
                     if (moduleId) window.TimeTracker.start(MODULE_NAME, moduleId);
-                } catch (e) { console.warn('TimeTracker başlatılamadı:', e); }
-            })();
-        }
+                } catch (e) {
+                    console.warn('TimeTracker başlatılamadı:', e);
+                }
+            }
+        })();
 
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const moduleSidebar = document.querySelector('.module-sidebar');
