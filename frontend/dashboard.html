@@ -740,6 +740,54 @@
             `;
         }
 
+        function normModuleTitle(s) {
+            return String(s || '')
+                .trim()
+                .toLowerCase();
+        }
+
+        /**
+         * API'de satır yokken (veya overview boşken) module_progress_* anahtarlarındaki ilerlemeyi kartlara ekler.
+         * Sunucuda aynı başlık varsa yinelenmez; API verisi önceliklidir.
+         */
+        function mergeDashboardLocalModuleProgress(modules) {
+            var out = Array.isArray(modules) ? modules.slice() : [];
+            var seen = {};
+            out.forEach(function (m) {
+                var t = m.moduleTitle || m.title;
+                if (t) seen[normModuleTitle(t)] = true;
+            });
+            var extras = [
+                { key: 'module_progress_temel_network', title: 'Temel Network Eğitimi' },
+                { key: 'module_progress_siber_guvenlik_giris', title: 'Siber Güvenliğe Giriş' }
+            ];
+            extras.forEach(function (x) {
+                if (seen[normModuleTitle(x.title)]) return;
+                var raw = localStorage.getItem(x.key);
+                if (!raw) return;
+                var local;
+                try {
+                    local = JSON.parse(raw);
+                } catch (e) {
+                    return;
+                }
+                var completed = local.completedLessons || [];
+                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
+                if (completed.length === 0) return;
+                var pct = Math.min(100, Math.round((completed.length / total) * 100));
+                out.push({
+                    title: x.title,
+                    moduleTitle: x.title,
+                    percentComplete: pct,
+                    isCompleted: pct >= 100,
+                    timeSpentMinutes: 0,
+                    lastStep: null
+                });
+                seen[normModuleTitle(x.title)] = true;
+            });
+            return out;
+        }
+
         /** localStorage → POST /api/progress (modül listesinden id bulunur) */
         async function syncLocalModuleProgressToApi(token, storageKey, moduleTitle) {
             try {
@@ -928,6 +976,8 @@
                         console.warn('İlerleme yeniden yükleme:', reSyncErr);
                     }
                 }
+
+                modules = mergeDashboardLocalModuleProgress(modules);
 
                 if (!overviewOk && modules.length > 0) {
                     completedModules = modules.filter(function (m) {
