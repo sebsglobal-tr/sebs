@@ -13,6 +13,25 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 /** Aynı modül adı için eşzamanlı tek ağ isteği (429 önleme) */
 const moduleIdInflight = new Map();
 
+function normModuleTitleStr(s) {
+    return String(s || '')
+        .trim()
+        .replace(/[\s,;]+$/g, '')
+        .toLowerCase();
+}
+
+/** Eski/yanlış önbelleği temizler; oturum değişince çağrılmalı */
+window.invalidateModuleIdCache = function () {
+    moduleNameCache = null;
+    moduleCacheExpiry = 0;
+    try {
+        localStorage.removeItem('moduleNameCache');
+        localStorage.removeItem('moduleNameCacheTime');
+    } catch (e) {
+        /* ignore */
+    }
+};
+
 function getSupabaseAccessTokenFromStorage() {
     try {
         for (let i = 0; i < localStorage.length; i++) {
@@ -58,18 +77,10 @@ window.getModuleIdFromName = async function (rawName) {
         .trim()
         .replace(/[\s,;]+$/g, '');
 
-    // Check cache first
     if (moduleNameCache && Date.now() < moduleCacheExpiry) {
         if (moduleNameCache[moduleName]) {
             return moduleNameCache[moduleName];
         }
-    }
-
-    // Load from localStorage cache
-    const cache = JSON.parse(localStorage.getItem('moduleNameCache') || '{}');
-    const cacheTime = parseInt(localStorage.getItem('moduleNameCacheTime') || '0');
-    if (Date.now() - cacheTime < CACHE_DURATION && cache[moduleName]) {
-        return cache[moduleName];
     }
 
     if (moduleIdInflight.has(moduleName)) {
@@ -102,35 +113,49 @@ window.getModuleIdFromName = async function (rawName) {
                 return;
             }
 
-            function matchModuleTitle(a, b) {
+            function matchModuleTitleLoose(a, b) {
                 if (!a || !b) return false;
-                if (a === b) return true;
-                return a.includes(b) || b.includes(a);
+                const na = normModuleTitleStr(a);
+                const nb = normModuleTitleStr(b);
+                if (na === nb) return true;
+                return na.includes(nb) || nb.includes(na);
+            }
+
+            /** Önce tam başlık eşleşmesi; yoksa tek anlamlı “içerir” eşleşmesi (cihazlar arası aynı modül id) */
+            function pickModuleIdFromFlatList(list) {
+                if (!list || !list.length) return null;
+                const want = normModuleTitleStr(moduleName);
+                for (const m of list) {
+                    const t = normModuleTitleStr(m.title || m.name);
+                    if (t && t === want) return m.id;
+                }
+                const loose = [];
+                for (const m of list) {
+                    const t = normModuleTitleStr(m.title || m.name);
+                    if (t && matchModuleTitleLoose(t, want)) loose.push(m);
+                }
+                if (loose.length === 1) return loose[0].id;
+                if (loose.length > 1) {
+                    loose.sort(
+                        (a, b) =>
+                            normModuleTitleStr(b.title || b.name).length -
+                            normModuleTitleStr(a.title || a.name).length
+                    );
+                    return loose[0].id;
+                }
+                return null;
             }
 
             function pickIdFromCoursesPayload(coursesData) {
                 if (!coursesData.success || !coursesData.data) return null;
-                for (const course of coursesData.data) {
-                    if (
-                        course.title &&
-                        (course.title === moduleName ||
-                            course.title.includes(moduleName) ||
-                            moduleName.includes(course.title))
-                    ) {
-                        if (course.modules && course.modules.length > 0) {
-                            return course.modules[0].id;
-                        }
-                    }
-                }
+                const flat = [];
                 for (const course of coursesData.data) {
                     if (!course.modules) continue;
                     for (const mod of course.modules) {
-                        if (mod.title && matchModuleTitle(mod.title, moduleName)) {
-                            return mod.id;
-                        }
+                        if (mod && mod.id) flat.push(mod);
                     }
                 }
-                return null;
+                return pickModuleIdFromFlatList(flat);
             }
 
             async function fetchModulesList() {
@@ -140,13 +165,7 @@ window.getModuleIdFromName = async function (rawName) {
                 if (!modulesResponse.ok) return null;
                 const modulesData = await modulesResponse.json();
                 if (!modulesData.success || !Array.isArray(modulesData.data)) return null;
-                for (const m of modulesData.data) {
-                    const t = m.title || m.name;
-                    if (t && matchModuleTitle(t, moduleName)) {
-                        return m.id;
-                    }
-                }
-                return null;
+                return pickModuleIdFromFlatList(modulesData.data);
             }
 
             let resolvedId = await fetchModulesList();
@@ -165,10 +184,6 @@ window.getModuleIdFromName = async function (rawName) {
                 const cacheMap = { [moduleName]: resolvedId };
                 moduleNameCache = Object.assign({}, moduleNameCache, cacheMap);
                 moduleCacheExpiry = Date.now() + CACHE_DURATION;
-                const existingCache = JSON.parse(localStorage.getItem('moduleNameCache') || '{}');
-                Object.assign(existingCache, cacheMap);
-                localStorage.setItem('moduleNameCache', JSON.stringify(existingCache));
-                localStorage.setItem('moduleNameCacheTime', Date.now().toString());
                 settle(resolvedId);
             } else {
                 settle(null);
@@ -307,7 +322,15 @@ window.ModuleProgressTracker = {
                 if (progressResponse.ok) {
                     const progressData = await progressResponse.json();
                     if (progressData.success && progressData.data) {
-                        currentProgress = progressData.data;
+                        const raw = progressData.data;
+                        const ls =
+                            typeof raw.lastStep === 'string'
+                                ? JSON.parse(raw.lastStep || '{}')
+                                : raw.lastStep || {};
+                        currentProgress = {
+                            completedLessons: Array.isArray(ls.completedLessons) ? ls.completedLessons : [],
+                            totalLessons: ls.totalLessons || window.MODULE_TOTAL_LESSONS || 0
+                        };
                     }
                 }
             } catch (err) {
@@ -316,9 +339,14 @@ window.ModuleProgressTracker = {
 
             // Save to database (direct fetch)
             const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+            const doneLessons = currentProgress?.completedLessons || [];
+            const totalL =
+                currentProgress?.totalLessons ||
+                window.MODULE_TOTAL_LESSONS ||
+                (doneLessons.length > 0 ? doneLessons.length : 1);
             const lastStep = {
-                completedLessons: currentProgress?.completedLessons || [],
-                totalLessons: currentProgress?.totalLessons || 0,
+                completedLessons: doneLessons,
+                totalLessons: totalL,
                 status: 'Tamamlandı',
                 completedAt: new Date().toISOString()
             };

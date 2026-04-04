@@ -802,13 +802,29 @@
                 if (!modRes.ok) return;
                 var modData = await modRes.json();
                 if (!modData.success || !Array.isArray(modData.data)) return;
+                var want = normModuleTitle(moduleTitle);
                 var moduleId = null;
-                for (var i = 0; i < modData.data.length; i++) {
-                    var m = modData.data[i];
-                    var t = m.title || '';
-                    if (t === moduleTitle || t.indexOf(moduleTitle) !== -1 || moduleTitle.indexOf(t) !== -1) {
-                        moduleId = m.id;
+                var i;
+                for (i = 0; i < modData.data.length; i++) {
+                    if (normModuleTitle(modData.data[i].title || '') === want) {
+                        moduleId = modData.data[i].id;
                         break;
+                    }
+                }
+                if (!moduleId) {
+                    var cand = [];
+                    for (i = 0; i < modData.data.length; i++) {
+                        var m = modData.data[i];
+                        var t = normModuleTitle(m.title || '');
+                        if (!t) continue;
+                        if (t.indexOf(want) !== -1 || want.indexOf(t) !== -1) cand.push(m);
+                    }
+                    if (cand.length === 1) moduleId = cand[0].id;
+                    else if (cand.length > 1) {
+                        cand.sort(function (a, b) {
+                            return normModuleTitle(b.title || '').length - normModuleTitle(a.title || '').length;
+                        });
+                        moduleId = cand[0].id;
                     }
                 }
                 if (!moduleId) return;

@@ -62,6 +62,16 @@ class SupabaseAuthSystem {
     // Auth state değişikliklerini dinle
     this.supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('🔔 Auth state changed:', event);
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT') {
+        try {
+          if (typeof window.invalidateModuleIdCache === 'function') {
+            window.invalidateModuleIdCache();
+          } else {
+            localStorage.removeItem('moduleNameCache');
+            localStorage.removeItem('moduleNameCacheTime');
+          }
+        } catch (e) { /* ignore */ }
+      }
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         this.isLoggedIn = true;
         this.user = session?.user || null;
