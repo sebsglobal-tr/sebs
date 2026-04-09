@@ -72,57 +72,71 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header (same as index.html; anchor links use /# for all pages) -->
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-      <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
-        <img src="/images/SEBS.png" alt="SEBS" width="36" height="36" class="rounded-lg shadow-sm" />
-        <span class="text-lg font-bold tracking-tight text-slate-900">SEBS</span>
-      </a>
-      <nav class="hidden items-center gap-8 lg:flex" aria-label="Ana menü">
-        <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
-        <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
-        <a href="/#simulations" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a>
-        <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
-      </nav>
-      <div class="flex items-center gap-2 sm:gap-3">
-        <a href="/login.html" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
-        <a href="/contact.html" class="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 lg:inline focus-ring">Bize ulaşın</a>
-        <a href="/signup.html" class="rounded-full bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4">Ücretsiz başla</a>
-        <details class="relative lg:hidden">
-          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">
-            Menü
-          </summary>
-          <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-            <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
-            <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
-            <a href="/#simulations" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Simülasyonlar</a>
-            <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
-            <hr class="my-1 border-slate-100" />
-            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
-            <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
-          </div>
-        </details>
+<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
+<header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+    <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
+      <img src="/images/SEBS.png" alt="SEBS" width="36" height="36" class="rounded-lg shadow-sm" />
+      <span class="text-lg font-bold tracking-tight text-slate-900">SEBS</span>
+    </a>
+    <nav class="hidden items-center gap-5 xl:flex" aria-label="Ana menü">
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
+      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
+      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+    </nav>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
+      <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+      <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
       </div>
+      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
+      <details class="relative xl:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          Menü
+        </summary>
+        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <hr class="my-1 border-slate-100" />
+          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <hr class="my-1 border-slate-100" />
+          <div id="mobileGuestLinks">
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+          </div>
+          <div id="mobileUserLinks" style="display: none;">
+            <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Panel</a>
+            <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+          </div>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
+        </div>
+      </details>
     </div>
-  </header>
-
-    <!-- Navbar -->
+  </div>
+</header>
+<!-- Navbar -->
     
 
-    <!-- Loading Overlay - Modern -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: flex; background: rgba(10, 10, 15, 0.92); backdrop-filter: blur(12px);">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: flex; background: rgba(248, 250, 252, 0.92); backdrop-filter: blur(12px);">
         <div style="text-align: center;">
             <div class="loading-spinner" style="
                 width: 56px;
                 height: 56px;
-                border: 3px solid rgba(255,255,255,0.1);
-                border-top-color: #1e40af;
+                border: 3px solid #e2e8f0;
+                border-top-color: #2563eb;
                 border-radius: 50%;
                 animation: spin 0.8s linear infinite;
                 margin: 0 auto 1.25rem;
             "></div>
-            <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; font-weight: 500;">Dashboard yükleniyor...</p>
+            <p style="color: #64748b; font-size: 0.95rem; font-weight: 500;">Panel yükleniyor…</p>
         </div>
     </div>
     <style>
@@ -133,145 +147,166 @@
 
     <!-- Dashboard Main -->
     <main class="dashboard-main">
-        <!-- Hero Section -->
-        <div class="dashboard-hero">
-            <div class="hero-content">
-                <div class="welcome-title" id="welcomeTitle">Kullanıcı</div>
-                <div class="welcome-subtitle">Eğitim yolculuğunuzda size özel içerikler ve ilerleme takibi</div>
+        <!-- Hero: ana sayfa ile aynı pastel shell -->
+        <section class="hero-mesh relative overflow-hidden pt-28 pb-6 sm:pb-8" aria-labelledby="welcomeTitle">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div class="hero-remote-shell p-1 sm:p-1.5">
+                    <div class="hero-remote-inner px-6 py-10 text-center sm:px-8 sm:py-12">
+                        <p class="mb-3 inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            <span class="h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true"></span>
+                            Kullanıcı paneli
+                        </p>
+                        <div class="welcome-title text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.5rem]" id="welcomeTitle">Kullanıcı</div>
+                        <p class="welcome-subtitle mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                            Simülasyon ve modül performansınızın özeti; yetkinlik izinizi ve ilerlemenizi tek ekranda takip edin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Onboarding -->
+        <div id="onboardingCard" class="mx-auto mb-8 max-w-6xl px-4 sm:px-6 lg:px-8" style="display: none;">
+            <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-card sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl" aria-hidden="true">👋</span>
+                    <div>
+                        <strong class="block text-slate-900">İlk adım: bir modül veya simülasyon seçin</strong>
+                        <p class="mt-1 text-sm text-slate-600">Tamamladıkça ilerleme ve sertifika kayıtlarınız burada görünür.</p>
+                    </div>
+                </div>
+                <a href="/modules.html" class="inline-flex shrink-0 items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:ml-auto">
+                    Eğitim modülleri
+                </a>
             </div>
         </div>
 
-        <!-- Onboarding: ilk kullanıcı yönlendirmesi -->
-        <div id="onboardingCard" class="onboarding-card" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                <div style="font-size: 2rem;">👋</div>
-                <div>
-                    <strong style="display: block; margin-bottom: 0.25rem;">İlk adım: Eğitim modüllerinden birini seçin</strong>
-                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Modülleri tamamlayarak ilerleme ve sertifika kazanabilirsiniz.</p>
+        <!-- Özet metrikler — iletişim / ana sayfa contact-channel kartları ile aynı dil -->
+        <div class="mx-auto -mt-2 max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/[0.09] blur-2xl transition-opacity group-hover:opacity-100" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                    <i class="fas fa-book-open" aria-hidden="true"></i>
                 </div>
-                <a href="/modules.html" class="btn-primary" style="margin-left: auto;">Eğitim Modüllerine Git</a>
-            </div>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon blue">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <div class="stat-label">Tamamlanan Modül</div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Tamamlanan modül</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="completedModules">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-emerald-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
+                    <i class="fas fa-certificate" aria-hidden="true"></i>
                 </div>
-                <div class="stat-number" id="completedModules">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon green">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <div class="stat-label">Sertifika</div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Sertifika</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="totalCertificates">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sky-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-sky-50 text-sky-600 ring-1 ring-sky-100">
+                    <i class="fas fa-clock" aria-hidden="true"></i>
                 </div>
-                <div class="stat-number" id="totalCertificates">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon purple">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-label">Çalışma Saati</div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Çalışma saati</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="studyHours">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" title="Ardışık günlerde giriş yaparak veya modül tamamlayarak artar.">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-amber-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-amber-50 text-amber-600 ring-1 ring-amber-100">
+                    <i class="fas fa-fire" aria-hidden="true"></i>
                 </div>
-                <div class="stat-number" id="studyHours">0</div>
-            </div>
-            <div class="stat-card" title="Ardışık günlerde giriş yaparak veya modül tamamlayarak artar.">
-                <div class="stat-header">
-                    <div class="stat-icon orange">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <div class="stat-label">Günlük Seri <i class="fas fa-info-circle" style="font-size: 0.75rem; opacity: 0.7;" title="Ardışık günlerde giriş veya modül tamamlama ile artar"></i></div>
-                </div>
-                <div class="stat-number" id="currentStreak">0</div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Günlük seri <i class="fas fa-info-circle ml-1 text-xs font-normal text-slate-400" title="Ardışık günlerde giriş veya modül tamamlama ile artar"></i></h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="currentStreak">0</p>
+            </article>
             </div>
         </div>
 
         <!-- Progress Section -->
-        <div class="progress-section">
-            <div class="progress-header">
-                <h2 class="section-title">Eğitim İlerlemesi</h2>
-            </div>
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Eğitim ilerlemesi</h2>
+            <p class="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">Modül tamamlanma ve süre özeti; ana sayfadaki kartlarla aynı görsel dil.</p>
             <!-- Tüm modüller için yatay kaydırmalı kart listesi -->
-            <div class="progress-list progress-list--modules-row" id="progressList">
-                <div class="no-data">
-                    <i class="fas fa-book-reader"></i>
-                    <h3>Henüz modül başlatmadınız</h3>
-                    <p>Eğitim modüllerine göz atarak başlayın!</p>
-                    <p class="dashboard-cross-device-hint" style="font-size:0.85rem;line-height:1.55;color:rgba(255,255,255,0.68);max-width:28rem;margin:1rem auto 0;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.1);text-align:left;">
-                        <strong style="color:rgba(255,255,255,0.9);">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code style="font-size:0.8em;">www</code> ile <code style="font-size:0.8em;">www’siz</code> farklı depolama demektir).
+            <div class="progress-list progress-list--modules-row mt-8 flex flex-row flex-wrap gap-6" id="progressList">
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-book-reader text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>
+                    <p class="dashboard-cross-device-hint mt-4 max-w-lg border-t border-slate-200 pt-4 text-left text-sm leading-relaxed text-slate-600">
+                        <strong class="text-slate-800">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code class="rounded bg-slate-100 px-1 text-xs">www</code> ile <code class="rounded bg-slate-100 px-1 text-xs">www’siz</code> farklı depolama demektir).
                     </p>
                 </div>
             </div>
-        </div>
+            </div>
+        </section>
 
         <!-- Simülasyon geçmişi (API: progress/overview → simulationRuns) -->
-        <div class="progress-section" id="simulationHistorySection" style="margin-top: 2rem;">
-            <div class="progress-header">
-                <h2 class="section-title"><i class="fas fa-flask" style="margin-right: 0.5rem;"></i>Simülasyon Geçmişi</h2>
-            </div>
-            <div class="progress-list" id="simulationHistoryList" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <div class="no-data" id="simulationHistoryEmpty" style="width: 100%;">
-                    <i class="fas fa-flask"></i>
-                    <h3>Henüz simülasyon kaydı yok</h3>
-                    <p>Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p>
-                    <a href="/simulations.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Simülasyonlara Git</a>
+        <section class="border-t border-slate-100 bg-slate-50/80 py-12 sm:py-16" id="simulationHistorySection">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"><i class="fas fa-flask mr-2 text-blue-600" aria-hidden="true"></i>Simülasyon geçmişi</h2>
+            <p class="mt-2 text-sm text-slate-600 sm:text-base">Tamamladığınız senaryolar ve skor özeti.</p>
+            <div class="progress-list mt-8 flex flex-col gap-4" id="simulationHistoryList">
+                <div class="no-data w-full rounded-2xl border border-dashed border-slate-200 bg-white px-8 py-12 text-center shadow-sm" id="simulationHistoryEmpty">
+                    <i class="fas fa-flask text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz simülasyon kaydı yok</h3>
+                    <p class="mt-2 text-sm text-slate-600">Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p>
+                    <a href="/simulations.html" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Simülasyonlara git</a>
                 </div>
             </div>
-        </div>
+            </div>
+        </section>
 
         <!-- Purchases Section -->
-        <div class="certificates-section">
-            <div class="progress-header">
-                <h2 class="section-title">Satın Alınan Paketler</h2>
-            </div>
-            <div class="certificates-grid" id="purchasesGrid">
-                <div class="loading">
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Satın alınan paketler</h2>
+            <p class="mt-2 text-sm text-slate-600 sm:text-base">Erişim haklarınızın özeti.</p>
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="purchasesGrid">
+                <div class="loading col-span-full rounded-2xl border border-slate-200 bg-slate-50 py-10 text-center text-slate-600">
                     <i class="fas fa-spinner fa-spin"></i> Paketler yükleniyor...
                 </div>
             </div>
-        </div>
+            </div>
+        </section>
 
         <!-- Certificates Section -->
-        <div class="certificates-section">
-            <div class="progress-header">
-                <h2 class="section-title">Sertifikalarım</h2>
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Sertifikalarım</h2>
+            <p class="mt-2 text-sm text-slate-600 sm:text-base">Tamamlanan modüllerden otomatik üretilen kayıtlar.</p>
+            <div class="certificate-howto mb-6 mt-6 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <strong class="text-slate-800">Sertifika nasıl kazanılır?</strong> İlgili kategoride (örn. Siber Güvenlik) en az bir modülü <strong>tamamlayın</strong>: tüm derslere girin ve modül sonundaki quiz’i bitirin. Sistem otomatik olarak sertifikanızı oluşturur.
             </div>
-            <div class="certificate-howto" style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--card-bg); border-radius: 8px; font-size: 0.9rem; color: var(--text-secondary);">
-                <strong>Sertifika nasıl kazanılır?</strong> İlgili kategoride (örn. Siber Güvenlik) en az bir modülü <strong>tamamlayın</strong>: tüm derslere girin ve modül sonundaki quiz’i bitirin. Sistem otomatik olarak sertifikanızı oluşturur.
-            </div>
-            <div class="certificates-grid" id="certificatesGrid">
-                <div class="no-data">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Henüz sertifika kazanmadınız</h3>
-                    <p>Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="certificatesGrid">
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-certificate text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz sertifika kazanmadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
                 </div>
             </div>
-        </div>
+            </div>
+        </section>
 
         <!-- Değerlendirme Raporu Section -->
-        <div class="evaluation-section" style="margin-top: 2rem;">
-            <div class="progress-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                <h2 class="section-title"><i class="fas fa-chart-line" style="margin-right: 0.5rem;"></i>Değerlendirme Raporum</h2>
-                <button type="button" class="btn-primary" id="loadEvaluationReportBtn" onclick="loadEvaluationReport()">
-                    <i class="fas fa-sync-alt"></i> Raporu Yükle
+        <section class="evaluation-section border-t border-slate-100 bg-slate-50/80 py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"><i class="fas fa-chart-line mr-2 text-blue-600" aria-hidden="true"></i>Değerlendirme raporum</h2>
+                    <p class="mt-1 text-sm text-slate-600">Quiz ve simülasyon verilerinizden özet.</p>
+                </div>
+                <button type="button" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" id="loadEvaluationReportBtn" onclick="loadEvaluationReport()">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i> Raporu yükle
                 </button>
             </div>
-            <div id="evaluationReportBox" class="evaluation-report-box" style="display: none; background: var(--card-bg, #1a1d24); border-radius: 12px; padding: 1.5rem; margin-top: 1rem; border: 1px solid var(--border-color, rgba(255,255,255,0.08));">
+            <div id="evaluationReportBox" class="evaluation-report-box mt-4 hidden rounded-xl border border-slate-200 bg-white p-6 text-slate-700 shadow-card">
                 <div id="evaluationReportContent"></div>
             </div>
-            <div id="evaluationReportPlaceholder" class="evaluation-placeholder" style="text-align: center; padding: 2rem; color: var(--text-secondary, #94a3b8);">
-                <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6;"></i>
-                <p>Quiz ve simülasyon verilerinize göre genel değerlendirme raporu.</p>
-                <p style="font-size: 0.9rem;">Raporu görmek için &quot;Raporu Yükle&quot; butonuna tıklayın. Henüz veri yoksa rapor kısa olacaktır.</p>
+            <div id="evaluationReportPlaceholder" class="evaluation-placeholder rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-slate-600">
+                <i class="fas fa-file-alt mb-3 text-3xl text-slate-400"></i>
+                <p class="text-slate-700">Quiz ve simülasyon verilerinize göre genel değerlendirme raporu.</p>
+                <p class="mt-2 text-sm text-slate-500">Raporu görmek için &quot;Raporu yükle&quot; butonuna tıklayın. Henüz veri yoksa rapor kısa olacaktır.</p>
             </div>
-        </div>
+            </div>
+        </section>
     </main>
 
     <!-- Sertifika Özeti Modal (otomatik özet - AI değil) -->
@@ -293,8 +328,8 @@
     <script>
         // Boş ilerleme kartında gösterilen kısa açıklama (cihazlar arası localStorage / API)
         var dashboardCrossDeviceHintHtml =
-            '<p class="dashboard-cross-device-hint" style="font-size:0.85rem;line-height:1.55;color:rgba(255,255,255,0.68);max-width:28rem;margin:1rem auto 0;padding-top:0.85rem;border-top:1px solid rgba(255,255,255,0.1);text-align:left;">' +
-            '<strong style="color:rgba(255,255,255,0.9);">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code style="font-size:0.8em;">www</code> ile <code style="font-size:0.8em;">www’siz</code> farklı depolama demektir).' +
+            '<p class="dashboard-cross-device-hint mt-4 max-w-lg border-t border-slate-200 pt-4 text-left text-sm leading-relaxed text-slate-600">' +
+            '<strong class="text-slate-800">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code class="rounded bg-slate-100 px-1 text-xs">www</code> ile <code class="rounded bg-slate-100 px-1 text-xs">www’siz</code> farklı depolama demektir).' +
             '</p>';
 
         // Canlı ortam uyumu: API adresi ve token (Supabase veya JWT)
@@ -681,10 +716,15 @@
                 advanced: 'Final Paketi'
             };
 
-            const levelColors = {
-                beginner: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                intermediate: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                advanced: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)'
+            const levelIconWrap = {
+                beginner: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
+                intermediate: 'bg-blue-50 text-blue-600 ring-blue-100',
+                advanced: 'bg-violet-50 text-violet-600 ring-violet-100'
+            };
+            const levelBlob = {
+                beginner: 'bg-emerald-500/[0.09]',
+                intermediate: 'bg-blue-500/[0.09]',
+                advanced: 'bg-violet-500/[0.09]'
             };
 
             const categoryIcons = {
@@ -700,27 +740,32 @@
                     day: 'numeric'
                 });
 
+                var lw = levelIconWrap[purchase.level] || levelIconWrap.beginner;
+                var lb = levelBlob[purchase.level] || levelBlob.beginner;
                 return `
-                    <div class="certificate-card" style="animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;">
-                        <div class="certificate-header-card">
-                            <div class="certificate-icon" style="background: ${levelColors[purchase.level] || levelColors.beginner};">
-                                <i class="${categoryIcons[purchase.category] || 'fas fa-shopping-bag'}"></i>
+                    <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;">
+                        <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full ${lb} blur-2xl" aria-hidden="true"></div>
+                        <div class="relative flex items-start gap-4">
+                            <div class="contact-channel-icon-wrap shrink-0 ring-1 ${lw}">
+                                <i class="${categoryIcons[purchase.category] || 'fas fa-shopping-bag'}" aria-hidden="true"></i>
                             </div>
-                            <div class="certificate-title">${levelNames[purchase.level] || purchase.level}</div>
+                            <div class="min-w-0 flex-1">
+                                <h3 class="text-lg font-semibold text-slate-900">${levelNames[purchase.level] || purchase.level}</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                                    <strong class="text-slate-800">${categoryNames[purchase.category] || purchase.category}</strong> alanında ${levelNames[purchase.level] || purchase.level} satın alındı.
+                                </p>
+                                <div class="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                                    <span class="inline-flex items-center gap-2"><i class="fas fa-tag text-slate-400" aria-hidden="true"></i> ₺${purchase.price.toFixed(2)}</span>
+                                    <span class="inline-flex items-center gap-2"><i class="fas fa-calendar text-slate-400" aria-hidden="true"></i> ${purchaseDate}</span>
+                                </div>
+                                <div class="mt-6">
+                                    <button type="button" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring sm:w-auto" onclick="window.location.href='modules.html'">
+                                        <i class="fas fa-book" aria-hidden="true"></i> Modüllere git
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                            <strong>${categoryNames[purchase.category] || purchase.category}</strong> alanında ${levelNames[purchase.level] || purchase.level} satın alındı.
-                        </p>
-                        <div class="certificate-meta">
-                            <span><i class="fas fa-tag"></i> ₺${purchase.price.toFixed(2)}</span>
-                            <span><i class="fas fa-calendar"></i> ${purchaseDate}</span>
-                        </div>
-                        <div class="certificate-actions">
-                            <button class="btn-secondary" onclick="window.location.href='modules.html'" style="flex: 1;">
-                                <i class="fas fa-book"></i> Modüllere Git
-                            </button>
-                        </div>
-                    </div>
+                    </article>
                 `;
             }).join('');
         }
@@ -731,12 +776,12 @@
             if (!purchasesGrid) return;
 
             purchasesGrid.innerHTML = `
-                <div class="no-data" style="grid-column: 1/-1;">
-                    <i class="fas fa-shopping-bag"></i>
-                    <h3>Henüz paket satın almadınız</h3>
-                    <p>Eğitim paketlerini satın alarak modüllere erişebilirsiniz!</p>
-                    <button class="btn-primary" onclick="window.location.href='pricing.html'" style="margin-top: 1.5rem;">
-                        <i class="fas fa-shopping-cart"></i> Paketleri Görüntüle
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-shopping-bag text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz paket satın almadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Eğitim paketlerini satın alarak modüllere erişebilirsiniz!</p>
+                    <button type="button" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" onclick="window.location.href='pricing.html'">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i> Paketleri görüntüle
                     </button>
                 </div>
             `;
@@ -1111,7 +1156,7 @@
                 'bir-seyler-yanlis-ama-ne': 'Bir Şeyler Yanlış Ama Ne?'
             };
             if (!runs || runs.length === 0) {
-                list.innerHTML = '<div class="no-data" style="width:100%;"><i class="fas fa-flask"></i><h3>Henüz simülasyon kaydı yok</h3><p>Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p><a href="/simulations.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Simülasyonlara Git</a></div>';
+                list.innerHTML = '<div class="no-data w-full rounded-2xl border border-dashed border-slate-200 bg-white px-8 py-12 text-center shadow-sm" id="simulationHistoryEmpty"><i class="fas fa-flask text-slate-300"></i><h3 class="text-lg font-semibold text-slate-900">Henüz simülasyon kaydı yok</h3><p class="mt-2 text-sm text-slate-600">Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p><a href="/simulations.html" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Simülasyonlara git</a></div>';
                 return;
             }
             list.innerHTML = runs.map(function (r, index) {
@@ -1119,25 +1164,26 @@
                 var title = SIM_LABELS[sid] || sid;
                 var statusBadge = '';
                 if (r.status === 'started' || r.completedAt == null) {
-                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(59,130,246,0.15);color:#93c5fd;font-size:0.8rem;">Başlatıldı</span>';
+                    statusBadge = '<span class="inline-flex rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-600/15">Başlatıldı</span>';
                 } else if (r.status === 'success' || r.statusLabel === 'Başarılı') {
-                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(34,197,94,0.15);color:#86efac;font-size:0.8rem;">Başarılı</span>';
+                    statusBadge = '<span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/15">Başarılı</span>';
                 } else {
-                    statusBadge = '<span style="padding:0.25rem 0.6rem;border-radius:0.5rem;background:rgba(239,68,68,0.15);color:#fca5a5;font-size:0.8rem;">Başarısız</span>';
+                    statusBadge = '<span class="inline-flex rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-600/15">Başarısız</span>';
                 }
                 var scoreStr = (r.completedAt != null && r.score != null) ? (r.score + '%') : '—';
                 var cr = (r.correctCount != null) ? r.correctCount : 0;
                 var wr = (r.wrongCount != null) ? r.wrongCount : 0;
                 var showDy = (r.completedAt != null);
-                return '<div class="progress-item" style="width:100%;max-width:100%;animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">' +
-                    '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0.75rem;">' +
-                    '<div><div style="font-weight:600;margin-bottom:0.25rem;">' + escapeHtml(title) + '</div>' +
-                    '<div style="font-size:0.85rem;color:var(--text-muted);">Başlangıç: ' + escapeHtml(formatSimulationDate(r.startedAt)) + '</div>' +
-                    (r.completedAt ? '<div style="font-size:0.85rem;color:var(--text-muted);">Tamamlanma: ' + escapeHtml(formatSimulationDate(r.completedAt)) + '</div>' : '') +
+                return '<article class="contact-channel-card group relative w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">' +
+                    '<div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-indigo-500/[0.07] blur-2xl" aria-hidden="true"></div>' +
+                    '<div class="relative flex flex-wrap items-start justify-between gap-4">' +
+                    '<div class="min-w-0 flex-1"><div class="text-base font-semibold text-slate-900">' + escapeHtml(title) + '</div>' +
+                    '<div class="mt-1 text-sm text-slate-500">Başlangıç: ' + escapeHtml(formatSimulationDate(r.startedAt)) + '</div>' +
+                    (r.completedAt ? '<div class="text-sm text-slate-500">Tamamlanma: ' + escapeHtml(formatSimulationDate(r.completedAt)) + '</div>' : '') +
                     '</div>' +
-                    '<div style="text-align:right;">' + statusBadge + '<div style="margin-top:0.35rem;font-size:0.9rem;">Skor: ' + escapeHtml(String(scoreStr)) + '</div>' +
-                    (showDy ? '<div style="font-size:0.85rem;color:var(--text-muted);">Doğru: ' + cr + ' · Yanlış: ' + wr + '</div>' : '') +
-                    '</div></div></div>';
+                    '<div class="shrink-0 text-right">' + statusBadge + '<div class="mt-2 text-sm font-medium text-slate-800">Skor: ' + escapeHtml(String(scoreStr)) + '</div>' +
+                    (showDy ? '<div class="mt-1 text-xs text-slate-500">Doğru: ' + cr + ' · Yanlış: ' + wr + '</div>' : '') +
+                    '</div></div></article>';
             }).join('');
         }
         
@@ -1147,10 +1193,10 @@
             
             if (modules.length === 0) {
                 progressList.innerHTML =
-                    '<div class="no-data">' +
-                    '<i class="fas fa-book-open"></i>' +
-                    '<h3>Henüz modül başlatmadınız</h3>' +
-                    '<p>Eğitim modüllerine göz atarak başlayın!</p>' +
+                    '<div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">' +
+                    '<i class="fas fa-book-open text-slate-300"></i>' +
+                    '<h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3>' +
+                    '<p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>' +
                     dashboardCrossDeviceHintHtml +
                     '</div>';
                 return;
@@ -1166,40 +1212,41 @@
                         : module.moduleTitle || module.title || module.module?.title || 'Modül';
                 
                 return `
-                <div class="progress-item" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both;">
-                    <div class="progress-item-header">
-                        <div class="progress-icon">
-                            <i class="fas fa-book"></i>
+                <article class="progress-item group relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both; flex: 1 1 min(100%, 300px); max-width: 420px;">
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-500/[0.07] blur-2xl" aria-hidden="true"></div>
+                    <div class="progress-item-header relative flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                            <i class="fas fa-book" aria-hidden="true"></i>
                         </div>
-                        <div class="progress-info" style="flex: 1;">
-                            <div class="progress-name">${displayTitle}</div>
-                            <div class="progress-detail">
-                                ${module.isCompleted ? 'Tamamlandı' : ((module.percentComplete || 0) > 0 ? module.percentComplete + '% tamamlandı • Devam Ediyor' : (module.timeSpentMinutes || 0) + ' dakika • Devam Ediyor')}
+                        <div class="progress-info min-w-0 flex-1">
+                            <div class="progress-name text-lg font-semibold text-slate-900">${displayTitle}</div>
+                            <div class="progress-detail mt-1 text-sm text-slate-600">
+                                ${module.isCompleted ? 'Tamamlandı' : ((module.percentComplete || 0) > 0 ? module.percentComplete + '% tamamlandı • Devam ediyor' : (module.timeSpentMinutes || 0) + ' dakika • Devam ediyor')}
                             </div>
-                            <div class="progress-bar-container" style="margin-top: 1rem;">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
+                            <div class="progress-bar-container mt-4">
+                                <div class="progress-bar h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                    <div class="progress-fill h-full rounded-full bg-gradient-to-r from-blue-700 to-blue-500 transition-all duration-1000" style="width: 0%;"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="progress-circle" style="position: relative;">
+                        <div class="progress-circle relative shrink-0 self-center sm:self-auto">
                             ${createCircleProgress(percent, moduleId)}
                         </div>
                     </div>
                     ${module.isCompleted ? `
-                        <div style="margin-top: 1rem; text-align: center;">
-                            <span class="badge-success" style="padding: 0.5rem 1rem; border-radius: 20px;">
-                                <i class="fas fa-check-circle"></i> Tamamlandı
+                        <div class="relative mt-5 text-center">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-600/15">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> Tamamlandı
                             </span>
                         </div>
                     ` : `
-                        <div style="margin-top: 1rem; text-align: center;">
-                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(displayTitle)}'">
-                                <i class="fas fa-play"></i> Devam Et
+                        <div class="relative mt-5 text-center">
+                            <button type="button" class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" onclick="window.location.href='modules.html?module=${encodeURIComponent(displayTitle)}'">
+                                <i class="fas fa-play" aria-hidden="true"></i> Devam et
                             </button>
                         </div>
                     `}
-                </div>
+                </article>
             `;
             }).join('');
             
@@ -1288,8 +1335,11 @@
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
             }
-            if (placeholder) placeholder.style.display = 'none';
-            if (box) { box.style.display = 'block'; content.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Rapor hazırlanıyor...</p>'; }
+            if (placeholder) placeholder.classList.add('hidden');
+            if (box) {
+                box.classList.remove('hidden');
+                content.innerHTML = '<p class="text-slate-600"><i class="fas fa-spinner fa-spin"></i> Rapor hazırlanıyor...</p>';
+            }
 
             try {
                 const response = await fetch(getApiBaseUrl() + '/evaluation/report', {
@@ -1353,7 +1403,7 @@
             } finally {
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Raporu Yükle';
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Raporu yükle';
                 }
             }
         }
@@ -1437,18 +1487,18 @@
             
             if (certificates.length === 0) {
                 certificatesGrid.innerHTML = `
-                    <div class="no-data" style="grid-column: 1/-1;">
-                        <i class="fas fa-certificate"></i>
-                        <h3>Henüz sertifika kazanmadınız</h3>
-                        <p>Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+                    <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                        <i class="fas fa-certificate text-slate-300"></i>
+                        <h3 class="text-lg font-semibold text-slate-900">Henüz sertifika kazanmadınız</h3>
+                        <p class="mt-2 text-sm text-slate-600">Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
                     </div>
                 `;
                 return;
             }
             
             certificates.forEach((cert, index) => {
-                const card = document.createElement('div');
-                card.className = 'certificate-card';
+                const card = document.createElement('article');
+                card.className = 'contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover';
                 card.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;`;
                 
                 const categoryIcons = {
@@ -1457,32 +1507,43 @@
                     'veri-bilimi': 'fas fa-chart-line'
                 };
                 
-                const iconColors = {
-                    'siber-guvenlik': 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
-                    'bulut-bilisim': 'linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%)',
-                    'veri-bilimi': 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                const iconWrapClass = {
+                    'siber-guvenlik': 'bg-blue-50 text-blue-600 ring-blue-100',
+                    'bulut-bilisim': 'bg-sky-50 text-sky-600 ring-sky-100',
+                    'veri-bilimi': 'bg-emerald-50 text-emerald-600 ring-emerald-100'
                 };
+                const blobClass = {
+                    'siber-guvenlik': 'bg-blue-500/[0.09]',
+                    'bulut-bilisim': 'bg-sky-500/[0.1]',
+                    'veri-bilimi': 'bg-emerald-500/[0.09]'
+                };
+                var cat = cert.category || 'siber-guvenlik';
+                var iw = iconWrapClass[cat] || iconWrapClass['siber-guvenlik'];
+                var bl = blobClass[cat] || blobClass['siber-guvenlik'];
                 
                 var safeUrl = escapeAttr(cert.certificateUrl || '');
                 card.innerHTML = `
-                    <div class="certificate-header-card">
-                        <div class="certificate-icon" style="background: ${iconColors[cert.category] || iconColors['siber-guvenlik']};">
-                            <i class="${categoryIcons[cert.category] || 'fas fa-certificate'}"></i>
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full ${bl} blur-2xl" aria-hidden="true"></div>
+                    <div class="relative flex flex-col gap-4 sm:flex-row sm:items-start">
+                        <div class="contact-channel-icon-wrap shrink-0 ring-1 ${iw}">
+                            <i class="${categoryIcons[cat] || 'fas fa-certificate'}" aria-hidden="true"></i>
                         </div>
-                        <div class="certificate-title">${escapeHtml(cert.title)}</div>
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${escapeHtml(cert.description || '')}</p>
-                    <div class="certificate-meta">
-                        <span><i class="fas fa-clock"></i> ${Math.round((cert.completionTime || 0) / 60)} saat</span>
-                        <span><i class="fas fa-calendar"></i> ${cert.earnedAt ? new Date(cert.earnedAt).toLocaleDateString('tr-TR') : '-'}</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <button class="btn-secondary" onclick="viewCertificate(this.getAttribute('data-url'))" data-url="${safeUrl}">
-                            <i class="fas fa-eye"></i> Görüntüle
-                        </button>
-                        <button class="btn-secondary" onclick="viewAIReport('${escapeAttr(cert.id)}')">
-                            <i class="fas fa-file-alt"></i> Sertifika Özeti
-                        </button>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-lg font-semibold text-slate-900">${escapeHtml(cert.title)}</h3>
+                            <p class="mt-2 text-sm leading-relaxed text-slate-600">${escapeHtml(cert.description || '')}</p>
+                            <div class="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                                <span class="inline-flex items-center gap-2"><i class="fas fa-clock text-slate-400" aria-hidden="true"></i> ${Math.round((cert.completionTime || 0) / 60)} saat</span>
+                                <span class="inline-flex items-center gap-2"><i class="fas fa-calendar text-slate-400" aria-hidden="true"></i> ${cert.earnedAt ? new Date(cert.earnedAt).toLocaleDateString('tr-TR') : '-'}</span>
+                            </div>
+                            <div class="mt-6 flex flex-wrap gap-2">
+                                <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring min-w-[8rem]" onclick="viewCertificate(this.getAttribute('data-url'))" data-url="${safeUrl}">
+                                    <i class="fas fa-eye" aria-hidden="true"></i> Görüntüle
+                                </button>
+                                <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring min-w-[8rem]" onclick="viewAIReport('${escapeAttr(cert.id)}')">
+                                    <i class="fas fa-file-alt" aria-hidden="true"></i> Sertifika özeti
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 `;
                 
@@ -1733,7 +1794,7 @@
 
             if (Object.keys(modules).length === 0) {
                 progressList.innerHTML =
-                    '<div class="no-data"><i class="fas fa-book-reader"></i><h3>Henüz modül başlatmadınız</h3><p>Eğitim modüllerine göz atarak başlayın!</p>' +
+                    '<div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center"><i class="fas fa-book-reader text-slate-300"></i><h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3><p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>' +
                     dashboardCrossDeviceHintHtml +
                     '</div>';
                 return;
@@ -1759,50 +1820,60 @@
                 const timeSpent = progress.timeSpentMinutes || progress.time_spent || 0;
                 const moduleId = `local-module-${index}-${timestamp}`;
 
-                const item = document.createElement('div');
-                item.className = 'progress-item';
-                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0; min-width: 0;`;
+                const item = document.createElement('article');
+                item.className = 'progress-item group relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover';
+                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0; flex: 1 1 min(100%, 300px); max-width: 420px;`;
                 
                 let iconClass = moduleIcons[moduleName] || 'fas fa-book';
-                let statusColor = '#1e40af';
+                let iconWrap = 'bg-blue-50 text-blue-600 ring-blue-100';
+                let blobTint = 'bg-blue-500/[0.07]';
+                let barFrom = 'from-blue-700';
+                let barTo = 'to-blue-500';
                 if (status === 'Tamamlandı') {
                     iconClass = 'fas fa-trophy';
-                    statusColor = '#22c55e';
+                    iconWrap = 'bg-emerald-50 text-emerald-600 ring-emerald-100';
+                    blobTint = 'bg-emerald-500/[0.08]';
+                    barFrom = 'from-emerald-700';
+                    barTo = 'to-emerald-500';
                 } else if (percentage > 0) {
-                    statusColor = '#3b82f6';
+                    iconWrap = 'bg-sky-50 text-sky-600 ring-sky-100';
+                    blobTint = 'bg-sky-500/[0.08]';
+                    barFrom = 'from-sky-700';
+                    barTo = 'to-sky-500';
                 }
 
                 item.innerHTML = `
-                    <div class="progress-item-header">
-                        <div class="progress-icon" style="background: ${statusColor};">
-                            <i class="${iconClass}"></i>
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full ${blobTint} blur-2xl" aria-hidden="true"></div>
+                    <div class="progress-item-header relative flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ${iconWrap}">
+                            <i class="${iconClass}" aria-hidden="true"></i>
                         </div>
-                        <div class="progress-info" style="flex: 1;">
-                            <div class="progress-name">${moduleName}</div>
-                            <div class="progress-detail">
+                        <div class="progress-info min-w-0 flex-1">
+                            <div class="progress-name text-lg font-semibold text-slate-900">${moduleName}</div>
+                            <div class="progress-detail mt-1 text-sm text-slate-600">
                                 ${timeSpent > 0 ? Math.round(timeSpent) + ' dakika' : completedLessons + '/' + totalLessons + ' ders'} • 
                                 ${status}
                             </div>
-                            <div class="progress-bar-container" style="margin-top: 1rem;">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%; background: ${statusColor};"></div>
+                            <div class="progress-bar-container mt-4">
+                                <div class="progress-bar h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                    <div class="progress-fill h-full rounded-full bg-gradient-to-r ${barFrom} ${barTo} transition-all duration-1000" style="width: 0%;"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="progress-circle" style="position: relative;">
+                        <div class="progress-circle relative shrink-0 self-center sm:self-auto">
                             ${createCircleProgress(percentage, moduleId)}
                         </div>
                     </div>
                     ${status === 'Tamamlandı' ? `
-                        <div style="margin-top: 1rem; text-align: center;">
-                            <span class="badge-success" style="padding: 0.5rem 1rem; border-radius: 20px;">
-                                <i class="fas fa-check-circle"></i> Tamamlandı
+                        <div class="relative mt-5 text-center">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-600/15">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> Tamamlandı
                             </span>
                         </div>
                     ` : `
-                        <div style="margin-top: 1rem; text-align: center;">
-                            <button class="btn-primary" onclick="window.location.href='modules.html?module=${encodeURIComponent(moduleName)}'">
-                                <i class="fas fa-play"></i> Devam Et
+                        <div class="relative mt-5 text-center">
+                            <button type="button" class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" onclick="window.location.href='modules.html?module=${encodeURIComponent(moduleName)}'">
+                                <i class="fas fa-play" aria-hidden="true"></i> Devam et
                             </button>
                         </div>
                     `}

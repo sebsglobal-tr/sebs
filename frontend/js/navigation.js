@@ -41,17 +41,15 @@
     // Kullanıcının giriş yapıp yapmadığını kontrol et (Supabase)
     async function isLoggedIn() {
         try {
-            // Supabase session kontrolü
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                 const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
-                return !!(session && session.user && session.user.email_confirmed_at);
+                if (session && session.user) {
+                    return true;
+                }
             }
-            
-            // Fallback: localStorage kontrolü (eski sistem için)
             return localStorage.getItem('isLoggedIn') === 'true';
         } catch (error) {
             console.warn('isLoggedIn check error:', error);
-            // Fallback: localStorage kontrolü
             return localStorage.getItem('isLoggedIn') === 'true';
         }
     }
@@ -127,42 +125,76 @@
         const userName = document.getElementById('userName');
         const userAvatar = document.getElementById('userAvatar');
 
-        if (loggedIn && userData) {
-            // Kullanıcı giriş yapmışsa
-            const userRole = userData.role || localStorage.getItem('userRole') || 'user';
-            const isAdmin = userRole === 'admin'; // Admin kontrolü
-            
-            // Giriş yapılmışsa giriş/üye ol butonlarını gizle, çıkış butonunu göster
+        const mobileGuestLinks = document.getElementById('mobileGuestLinks');
+        const mobileUserLinks = document.getElementById('mobileUserLinks');
+
+        if (loggedIn) {
+            const userRole = (userData && userData.role) || localStorage.getItem('userRole') || 'user';
+            const isAdmin = userRole === 'admin';
+
+            let displayName = 'Kullanıcı';
+            if (userData) {
+                displayName =
+                    userData.fullName ||
+                    userData.firstName ||
+                    (userData.email ? userData.email.split('@')[0] : '') ||
+                    'Kullanıcı';
+            } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                try {
+                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    const u = session && session.user;
+                    if (u) {
+                        const md = u.user_metadata || {};
+                        const fn =
+                            (md.full_name || md.name || [md.first_name, md.last_name].filter(Boolean).join(' ') || '').trim();
+                        displayName = fn || (u.email ? u.email.split('@')[0] : '') || 'Kullanıcı';
+                    }
+                } catch (e) { /* yoksay */ }
+            }
+
             if (loginBtn) loginBtn.style.display = 'none';
             if (signupBtn) signupBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'block';
-            if (dashboardBtn) dashboardBtn.style.display = 'none'; // Panel butonu kaldırıldı, tıklanabilir kullanıcı adı kullanılıyor
-            
+            if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+            if (dashboardBtn) dashboardBtn.style.display = 'none';
+
             if (userProfile) {
+                userProfile.classList.remove('hidden');
                 userProfile.style.display = 'flex';
                 userProfile.style.cursor = 'pointer';
                 userProfile.setAttribute('role', 'link');
                 userProfile.setAttribute('title', 'Panele git');
-                // Tıklanınca dashboard veya admin paneline git
                 if (!userProfile.hasAttribute('data-dashboard-listener')) {
                     userProfile.addEventListener('click', function() {
                         window.location.href = isAdmin ? '/admin.html' : '/dashboard.html';
                     });
+                    userProfile.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            window.location.href = isAdmin ? '/admin.html' : '/dashboard.html';
+                        }
+                    });
                     userProfile.setAttribute('data-dashboard-listener', 'true');
                 }
             }
-            
-            // Sadece kullanıcı adı (ad/soyad); e-posta gösterme
-            const displayName = userData.fullName || userData.firstName || 'Kullanıcı';
+
             if (userName) userName.textContent = displayName;
             if (userAvatar) userAvatar.textContent = (String(displayName).trim() || 'U')[0].toUpperCase();
+
+            if (mobileGuestLinks) mobileGuestLinks.style.display = 'none';
+            if (mobileUserLinks) mobileUserLinks.style.display = 'block';
         } else {
             // Kullanıcı giriş yapmamışsa
-            if (loginBtn) loginBtn.style.display = 'block';
-            if (signupBtn) signupBtn.style.display = 'block';
+            if (loginBtn) loginBtn.style.removeProperty('display');
+            if (signupBtn) signupBtn.style.removeProperty('display');
             if (logoutBtn) logoutBtn.style.display = 'none';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
-            if (userProfile) userProfile.style.display = 'none';
+            if (userProfile) {
+                userProfile.style.display = 'none';
+                userProfile.classList.add('hidden');
+            }
+
+            if (mobileGuestLinks) mobileGuestLinks.style.display = 'block';
+            if (mobileUserLinks) mobileUserLinks.style.display = 'none';
         }
 
         // Ana sayfa vb.: .js-auth-only sadece giriş yapmış (doğrulanmış) kullanıcıya
@@ -429,7 +461,7 @@
     // Giriş durumu değiştiğinde navigasyonu güncelle
     // Başka bir sekmede giriş/çıkış yapıldığında bu sekmede de güncelleme yapılır
     window.addEventListener('storage', async function(e) {
-        if (e.key === 'isLoggedIn' || e.key === 'userData') {
+        if (e.key === 'isLoggedIn' || e.key === 'userData' || e.key === 'authToken') {
             await updateNavigation();
         }
     });

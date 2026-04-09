@@ -195,6 +195,40 @@ html {
   color: #fff;
 }
 
+/* modules.html / simulations.html: .tab-btn.active → styles.css mavi gradient ezmesin */
+.modules-category-tabs .sebs-acc-btn.tab-btn::before,
+.simulations-category-tabs .sebs-acc-btn.tab-btn::before {
+  display: none !important;
+  content: none !important;
+}
+
+.modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn,
+.modules-category-tabs .sebs-acc-btn.tab-btn.active,
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn,
+.simulations-category-tabs .sebs-acc-btn.tab-btn.active {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn:hover,
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn:hover {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+  color: #fff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.modules-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover,
+.simulations-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover {
+  color: #0f172a !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
 .sebs-acc-icon {
   flex-shrink: 0;
   display: flex;

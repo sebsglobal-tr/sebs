@@ -114,12 +114,14 @@ class SupabaseAuthSystem {
         console.warn('Session check error:', error);
         this.isLoggedIn = false;
         this.user = null;
+        try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
         return;
       }
 
       if (session && session.user) {
         this.isLoggedIn = true;
         this.user = session.user;
+        try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
         if (session.access_token) {
           try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
         }
@@ -134,12 +136,14 @@ class SupabaseAuthSystem {
         // Session yok
         this.isLoggedIn = false;
         this.user = null;
+        try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
         console.log('ℹ️ No active session');
       }
     } catch (error) {
       console.error('Session check error:', error);
       this.isLoggedIn = false;
       this.user = null;
+      try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
     }
   }
 
@@ -273,13 +277,21 @@ class SupabaseAuthSystem {
       console.warn('Session check in updateNavigation:', error);
     }
 
+    const mobileGuestLinks = document.getElementById('mobileGuestLinks');
+    const mobileUserLinks = document.getElementById('mobileUserLinks');
+
     if (this.isLoggedIn && this.user) {
       // Kullanıcı giriş yapmışsa
       if (loginBtn) loginBtn.style.display = 'none';
       if (signupBtn) signupBtn.style.display = 'none';
-      if (logoutBtn) logoutBtn.style.display = 'block';
+      if (logoutBtn) logoutBtn.style.display = 'inline-flex';
       if (dashboardBtn) dashboardBtn.style.display = 'block';
-      if (userProfile) userProfile.style.display = 'flex';
+      if (userProfile) {
+        userProfile.classList.remove('hidden');
+        userProfile.style.display = 'flex';
+      }
+      if (mobileGuestLinks) mobileGuestLinks.style.display = 'none';
+      if (mobileUserLinks) mobileUserLinks.style.display = 'block';
       
       try {
         const md = this.user.user_metadata || {};
@@ -296,11 +308,16 @@ class SupabaseAuthSystem {
       }
     } else {
       // Kullanıcı giriş yapmamışsa
-      if (loginBtn) loginBtn.style.display = 'block';
-      if (signupBtn) signupBtn.style.display = 'block';
+      if (loginBtn) loginBtn.style.removeProperty('display');
+      if (signupBtn) signupBtn.style.removeProperty('display');
       if (logoutBtn) logoutBtn.style.display = 'none';
       if (dashboardBtn) dashboardBtn.style.display = 'none';
-      if (userProfile) userProfile.style.display = 'none';
+      if (userProfile) {
+        userProfile.style.display = 'none';
+        userProfile.classList.add('hidden');
+      }
+      if (mobileGuestLinks) mobileGuestLinks.style.display = 'block';
+      if (mobileUserLinks) mobileUserLinks.style.display = 'none';
     }
   }
 
@@ -322,6 +339,7 @@ class SupabaseAuthSystem {
       } catch (e) {}
       try {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('isLoggedIn');
       } catch (e) {}
 
       window.location.href = '/index.html';
@@ -333,6 +351,7 @@ class SupabaseAuthSystem {
           if (k && k.startsWith('sb-')) localStorage.removeItem(k);
         }
         localStorage.removeItem('authToken');
+        localStorage.removeItem('isLoggedIn');
       } catch (e) {}
       window.location.href = '/index.html';
     }
@@ -472,19 +491,11 @@ class SupabaseAuthSystem {
         };
       }
 
-      // Tam erişim e-postası: e-posta doğrulaması atlanır
-      const fullAccessEmail = 'asasferfer4566@gmail.com';
-      const isFullAccess = data.user && data.user.email && data.user.email.toLowerCase().trim() === fullAccessEmail;
-      if (data.user && !data.user.email_confirmed_at && !isFullAccess) {
-        return {
-          success: false,
-          message: 'E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.',
-          requiresEmailVerification: true
-        };
-      }
+      // Oturum Supabase tarafında verildiyse giriş kabul edilir (email_confirmed_at bazı yapılandırmalarda boş kalabilir).
 
       this.isLoggedIn = true;
       this.user = data.user;
+      try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
       if (data.session && data.session.access_token) {
         try { localStorage.setItem('authToken', data.session.access_token); } catch (e) {}
       }

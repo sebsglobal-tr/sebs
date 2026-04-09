@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr" class="scroll-smooth sebs-sim-list">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -93,42 +93,56 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header (same as index.html; anchor links use /# for all pages) -->
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-      <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
-        <img src="/images/SEBS.png" alt="SEBS" width="36" height="36" class="rounded-lg shadow-sm" />
-        <span class="text-lg font-bold tracking-tight text-slate-900">SEBS</span>
-      </a>
-      <nav class="hidden items-center gap-8 lg:flex" aria-label="Ana menü">
-        <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
-        <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
-        <a href="/#simulations" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a>
-        <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
-      </nav>
-      <div class="flex items-center gap-2 sm:gap-3">
-        <a href="/login.html" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
-        <a href="/contact.html" class="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 lg:inline focus-ring">Bize ulaşın</a>
-        <a href="/signup.html" class="rounded-full bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4">Ücretsiz başla</a>
-        <details class="relative lg:hidden">
-          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">
-            Menü
-          </summary>
-          <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-            <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
-            <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
-            <a href="/#simulations" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Simülasyonlar</a>
-            <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
-            <hr class="my-1 border-slate-100" />
-            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
-            <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
-          </div>
-        </details>
+<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
+<header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+    <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
+      <img src="/images/SEBS.png" alt="SEBS" width="36" height="36" class="rounded-lg shadow-sm" />
+      <span class="text-lg font-bold tracking-tight text-slate-900">SEBS</span>
+    </a>
+    <nav class="hidden items-center gap-5 xl:flex" aria-label="Ana menü">
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
+      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
+      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+    </nav>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
+      <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+      <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
       </div>
+      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
+      <details class="relative xl:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          Menü
+        </summary>
+        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <hr class="my-1 border-slate-100" />
+          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <hr class="my-1 border-slate-100" />
+          <div id="mobileGuestLinks">
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+          </div>
+          <div id="mobileUserLinks" style="display: none;">
+            <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Panel</a>
+            <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+          </div>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
+        </div>
+      </details>
     </div>
-  </header>
-
-    <!-- Loading Screen -->
+  </div>
+</header>
+<!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-container">
             <div class="loading-logo">
@@ -169,52 +183,241 @@
             </div>
         </section>
 
-        <!-- Simulations Categories - Görselli kartlar -->
-        <section class="simulation-categories">
-            <div class="container">
-                <div class="category-cards-grid">
-                    <button type="button" class="category-card category-card-btn tab-btn active" data-category="cybersecurity" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Siber Güvenlik</span>
+        <!-- Simülasyon kategorileri — modül sayfası ile aynı accordion + önizleme -->
+        <section id="simulationsCategoriesExplore" class="simulation-categories modules-categories-explore border-b border-slate-100 bg-white py-14 sm:py-20" aria-labelledby="simulations-explore-heading">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl text-center">
+                    <h2 id="simulations-explore-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                        Alan seçin; sağdaki örnek ekran seçiminize göre güncellenir
+                    </h2>
+                    <p class="mt-3 text-base text-slate-600 sm:text-lg">
+                        Senaryo tabanlı simülasyonları kategoriye göre süzün; aşağıdaki liste anında filtrelenir.
+                    </p>
+                </div>
+                <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
+                    <div class="simulations-category-tabs sebs-accordion-stack space-y-2">
+                        <div class="sebs-accordion-item is-open" data-sebs-panel="0" data-category="cybersecurity">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn active" aria-expanded="true" data-sebs-acc data-category="cybersecurity">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">Siber güvenlik</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>Görevler, karar noktaları ve kanıt zinciri</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>IR, ağ, web ve zararlı yazılım gibi alanlarda dallanan senaryolar; süre ve gerekçe kayıt altında.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="Siber güvenlik simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
-                    <button type="button" class="category-card category-card-btn tab-btn" data-category="cloud" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-cloud"></i>
-                            <span>Bulut Bilişim</span>
+                        <div class="sebs-accordion-item" data-sebs-panel="1" data-category="cloud">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn" aria-expanded="false" data-sebs-acc data-category="cloud">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">Bulut bilişim</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>Çoklu bulut ve güvenlik senaryoları</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>IAM, ağ segmentasyonu ve olay müdahalesi gibi buluta özgü görev akışları.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="Bulut simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
-                    <button type="button" class="category-card category-card-btn tab-btn" data-category="data-science" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-database"></i>
-                            <span>Veri Bilimleri</span>
+                        <div class="sebs-accordion-item" data-sebs-panel="2" data-category="data-science">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn" aria-expanded="false" data-sebs-acc data-category="data-science">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">Veri bilimleri</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>Model, metrik ve güvenilirlik kararları</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>Veri kalitesi, yanlılık ve üretim kararları üzerine senaryo tabanlı alıştırmalar.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="Veri bilimleri simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
-                    <button type="button" class="category-card category-card-btn tab-btn" data-category="technology" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-code"></i>
-                            <span>Teknoloji</span>
+                        <div class="sebs-accordion-item" data-sebs-panel="3" data-category="technology">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn" aria-expanded="false" data-sebs-acc data-category="technology">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">Teknoloji</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>API, dağıtım ve güvenli geliştirme</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>Geliştirme ve operasyon süreçlerinde risk ve öncelik seçimleri.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="Teknoloji simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
-                    <button type="button" class="category-card category-card-btn tab-btn" data-category="business" style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-briefcase"></i>
-                            <span>İş Dünyası</span>
+                        <div class="sebs-accordion-item" data-sebs-panel="4" data-category="business">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn" aria-expanded="false" data-sebs-acc data-category="business">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">İş dünyası</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>Proje ve paydaş yönetimi senaryoları</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>Önceliklendirme, iletişim ve teslimat üzerine rol tabanlı görevler.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="İş dünyası simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
-                    <button type="button" class="category-card category-card-btn tab-btn" data-category="personal" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80');">
-                        <div class="category-card-content">
-                            <i class="fas fa-user-graduate"></i>
-                            <span>Kişisel Gelişim</span>
+                        <div class="sebs-accordion-item" data-sebs-panel="5" data-category="personal">
+                            <div class="sebs-acc-block">
+                                <button type="button" class="sebs-acc-btn tab-btn" aria-expanded="false" data-sebs-acc data-category="personal">
+                                    <span class="sebs-acc-icon" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block text-sm font-semibold sm:text-base">Kişisel gelişim</span>
+                                        <span class="mt-0.5 block text-xs font-normal text-slate-500 sm:text-sm" data-sebs-summary>Odak, zaman ve etkili iletişim</span>
+                                    </span>
+                                    <span class="sebs-acc-chevron" aria-hidden="true">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </span>
+                                </button>
+                                <div class="sebs-acc-panel">
+                                    <p>Günlük iş ve öğrenme alışkanlıklarına yönelik hafif senaryolar.</p>
+                                    <a href="#simulations-list" class="sebs-acc-cta" aria-label="Kişisel gelişim simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
+                                </div>
+                            </div>
                         </div>
-                    </button>
+                    </div>
+                    <div class="sebs-visual-stage sebs-feat-grid relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
+                        <div class="sebs-visual-slide is-active" data-sebs-visual="0" aria-hidden="false">
+                            <div class="sebs-visual-card p-4">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-slate-700 to-slate-900 text-sm font-bold text-white ring-2 ring-white shadow" aria-hidden="true">SG</div>
+                                        <div>
+                                            <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Senaryo oturumu</p>
+                                            <p class="text-sm font-semibold text-slate-900">Siber güvenlik · Simülasyon haritası</p>
+                                        </div>
+                                    </div>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-800">Kayıtta</span>
+                                </div>
+                                <div class="mt-4 grid grid-cols-3 gap-2 text-center text-[10px] font-semibold">
+                                    <span class="rounded-lg bg-slate-100 py-2 text-slate-600">IR</span>
+                                    <span class="rounded-lg bg-blue-100 py-2 text-blue-800">Ağ</span>
+                                    <span class="rounded-lg bg-slate-100 py-2 text-slate-500">Web</span>
+                                </div>
+                                <div class="mt-4 flex items-end justify-between rounded-xl bg-slate-50/90 p-3 backdrop-blur-sm">
+                                    <div>
+                                        <p class="text-[10px] font-medium text-slate-500">Ortalama karar süresi</p>
+                                        <p class="text-[10px] text-slate-400">Son koşu</p>
+                                    </div>
+                                    <p class="text-xl font-bold tracking-tight text-slate-900">3 dk 12 sn</p>
+                                </div>
+                                <div class="mt-3 text-xs text-slate-500">Performans kaydı · Kanıt zinciri · Tekrar oynat</div>
+                            </div>
+                        </div>
+                        <div class="sebs-visual-slide" data-sebs-visual="1" aria-hidden="true">
+                            <div class="sebs-visual-card p-4">
+                                <p class="text-[10px] font-semibold uppercase text-slate-400">Bulut lab</p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span class="rounded-full bg-orange-100 px-2 py-1 text-[10px] font-bold text-orange-800">IAM</span>
+                                    <span class="rounded-full bg-sky-100 px-2 py-1 text-[10px] font-bold text-sky-800">VPC</span>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-800">Olay</span>
+                                </div>
+                                <div class="mt-4 h-28 rounded-lg border border-dashed border-slate-200 bg-white/80 p-3">
+                                    <p class="text-xs font-medium text-slate-700">Görev: yanlış yapılandırma tespiti</p>
+                                    <p class="mt-2 text-[10px] text-slate-500">Rubrik: doğruluk · süre · gerekçe</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sebs-visual-slide" data-sebs-visual="2" aria-hidden="true">
+                            <div class="sebs-visual-card p-4">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                                    <span class="text-xs font-semibold text-slate-800">Veri bilimi · Karar günlüğü</span>
+                                    <span class="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-bold text-violet-700">Sırada</span>
+                                </div>
+                                <ul class="mt-3 space-y-2 font-mono text-[10px] text-slate-600">
+                                    <li class="rounded-md bg-slate-50 px-2 py-1">drift_check()</li>
+                                    <li class="rounded-md bg-slate-50 px-2 py-1">threshold: deploy?</li>
+                                    <li class="rounded-md bg-emerald-50 px-2 py-1 text-emerald-800">karar: bekle · SLA 2s</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="sebs-visual-slide" data-sebs-visual="3" aria-hidden="true">
+                            <div class="sebs-visual-card p-4">
+                                <p class="text-[10px] font-semibold uppercase text-slate-400">Teknoloji koşusu</p>
+                                <div class="mt-3 flex gap-2">
+                                    <span class="flex-1 rounded-lg bg-slate-900 py-2 text-center text-[10px] font-medium text-white">PR</span>
+                                    <span class="flex-1 rounded-lg bg-slate-100 py-2 text-center text-[10px] font-medium text-slate-700">API</span>
+                                    <span class="flex-1 rounded-lg bg-slate-100 py-2 text-center text-[10px] font-medium text-slate-700">CI</span>
+                                </div>
+                                <p class="mt-4 text-xs text-slate-600">Güvenli yayın ve olay müdahalesi dallanmaları.</p>
+                            </div>
+                        </div>
+                        <div class="sebs-visual-slide" data-sebs-visual="4" aria-hidden="true">
+                            <div class="sebs-visual-card p-4">
+                                <p class="text-[10px] font-semibold uppercase text-slate-400">Paydaş özeti</p>
+                                <dl class="mt-3 space-y-2 text-xs">
+                                    <div class="flex justify-between border-b border-slate-100 py-1"><dt class="text-slate-500">Sprint hedefi</dt><dd class="font-semibold text-slate-800">%78</dd></div>
+                                    <div class="flex justify-between border-b border-slate-100 py-1"><dt class="text-slate-500">Risk kabul</dt><dd class="font-semibold text-amber-700">Bekliyor</dd></div>
+                                </dl>
+                                <div class="mt-3 rounded-lg bg-amber-50 p-2 text-center text-[10px] font-medium text-amber-900">Yönetici onayı · simülasyon</div>
+                            </div>
+                        </div>
+                        <div class="sebs-visual-slide" data-sebs-visual="5" aria-hidden="true">
+                            <div class="sebs-visual-card p-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-semibold text-slate-800">Haftalık odak</span>
+                                    <span class="text-lg font-bold text-slate-900">5 / 7</span>
+                                </div>
+                                <p class="mt-3 text-[10px] text-slate-500">İletişim · derin çalışma · geri bildirim</p>
+                                <div class="mt-4 flex items-center justify-between text-xs">
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 font-medium text-emerald-800">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                                        Seri devam
+                                    </span>
+                                    <span class="text-slate-400">Özet rapor</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pointer-events-none absolute -right-6 -top-6 h-44 w-44 rounded-full bg-rose-400/10 blur-3xl" aria-hidden="true"></div>
+                        <div class="pointer-events-none absolute -bottom-4 -left-4 h-36 w-36 rounded-full bg-sky-400/10 blur-3xl" aria-hidden="true"></div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Simulations Grid -->
-        <section class="simulations-grid-section">
+        <section class="simulations-grid-section scroll-mt-24" id="simulations-list">
             <div class="container">
                 <h2 class="section-title">Siber Güvenlik Simülasyonları</h2>
                 <p class="section-subtitle">Modüllerle hizalı içerik; zorluk ilerlemesi Başlangıç → Orta → İleri. Her pakette: senaryo, görevler ve ölçülebilir performans çıktısı.</p>
@@ -1111,34 +1314,62 @@
             alert(`${simulationId} simülasyonu detayları yakında eklenecek.`);
         }
 
-        // Category filtering
+        function activateSimulationsAccordion(activeItem) {
+            const root = document.getElementById('simulationsCategoriesExplore');
+            if (!root) return;
+            const items = root.querySelectorAll('.sebs-accordion-item');
+            const activeVid = activeItem.getAttribute('data-sebs-panel');
+            if (!activeVid) return;
+            items.forEach(function (item) {
+                const open = item === activeItem;
+                item.classList.toggle('is-open', open);
+                const btn = item.querySelector('[data-sebs-acc]');
+                if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            root.querySelectorAll('.sebs-visual-slide').forEach(function (slide) {
+                const on = slide.getAttribute('data-sebs-visual') === activeVid;
+                slide.classList.toggle('is-active', on);
+                slide.setAttribute('aria-hidden', on ? 'false' : 'true');
+            });
+        }
+
+        const SIM_CATEGORY_IDS = ['cybersecurity', 'cloud', 'data-science', 'technology', 'business', 'personal'];
+
         function filterSimulations(category) {
-            // Update active tab
-            document.querySelectorAll('.tab-btn').forEach(btn => {
+            const root = document.getElementById('simulationsCategoriesExplore');
+            const categoryTabs = root
+                ? root.querySelectorAll('.simulations-category-tabs .tab-btn')
+                : document.querySelectorAll('.tab-btn');
+
+            categoryTabs.forEach(function (btn) {
                 btn.classList.remove('active');
             });
-            document.querySelector(`[data-category="${category}"]`).classList.add('active');
 
-            // Show/hide simulation cards
-            document.querySelectorAll('.simulation-card-detailed').forEach(card => {
-                if (card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            if (root) {
+                const activeTab = root.querySelector(
+                    '.simulations-category-tabs .tab-btn[data-category="' + category + '"]'
+                );
+                if (activeTab) activeTab.classList.add('active');
+                const accItem = root.querySelector('.sebs-accordion-item[data-category="' + category + '"]');
+                if (accItem) activateSimulationsAccordion(accItem);
+            }
+
+            document.querySelectorAll('.simulation-card-detailed').forEach(function (card) {
+                card.style.display = card.dataset.category === category ? 'block' : 'none';
             });
 
-            // Update section title based on category
-            const sectionTitle = document.querySelector('.section-title');
+            const sectionTitle = document.querySelector('.simulations-grid-section .section-title');
             const categoryNames = {
-                'cybersecurity': 'Siber Güvenlik Simülasyonları',
-                'cloud': 'Bulut Bilişim Simülasyonları',
+                cybersecurity: 'Siber Güvenlik Simülasyonları',
+                cloud: 'Bulut Bilişim Simülasyonları',
                 'data-science': 'Veri Bilimleri Simülasyonları',
-                'technology': 'Teknoloji Simülasyonları',
-                'business': 'İş Dünyası Simülasyonları',
-                'personal': 'Kişisel Gelişim Simülasyonları'
+                technology: 'Teknoloji Simülasyonları',
+                business: 'İş Dünyası Simülasyonları',
+                personal: 'Kişisel Gelişim Simülasyonları'
             };
-            sectionTitle.textContent = categoryNames[category] || 'Simülasyonlar';
+            if (sectionTitle) {
+                sectionTitle.textContent = categoryNames[category] || 'Simülasyonlar';
+            }
         }
 
         // Tam erişim e-postası: bu hesap simülasyonlara her zaman erişir (Supabase doğrulama atlanır)
@@ -1279,15 +1510,37 @@
                 return; // Stop execution if access is denied
             }
             
-            // Add click event listeners to category tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    filterSimulations(category);
+            const explore = document.getElementById('simulationsCategoriesExplore');
+            if (explore) {
+                explore.querySelectorAll('.simulations-category-tabs .tab-btn').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        const category = btn.getAttribute('data-category');
+                        if (!category) return;
+                        filterSimulations(category);
+                        const newUrl = new URL(window.location);
+                        newUrl.searchParams.set('category', category);
+                        window.history.pushState({}, '', newUrl);
+                    });
                 });
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            if (categoryParam && SIM_CATEGORY_IDS.indexOf(categoryParam) !== -1) {
+                filterSimulations(categoryParam);
+            } else {
+                filterSimulations('cybersecurity');
+            }
+
+            window.addEventListener('popstate', function () {
+                const p = new URLSearchParams(window.location.search);
+                const c = p.get('category');
+                if (c && SIM_CATEGORY_IDS.indexOf(c) !== -1) {
+                    filterSimulations(c);
+                } else {
+                    filterSimulations('cybersecurity');
+                }
             });
-            // Sayfa açılışında sadece Siber Güvenlik kartlarını göster (bulut vb. gizle)
-            filterSimulations('cybersecurity');
         });
 
         // Check authentication status
