@@ -94,7 +94,10 @@ async function fetchUserMe() {
         return null;
     }
 
-    const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+    const apiBase =
+        typeof window.getSebsApiBase === 'function'
+            ? window.getSebsApiBase()
+            : (window.location && window.location.origin ? window.location.origin + '/api' : 'http://localhost:8006/api');
     userMePromise = fetch(apiBase + '/users/me', {
         headers: {
             'Authorization': `Bearer ${token}`

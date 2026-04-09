@@ -1,7 +1,14 @@
 // API Client for SEBS Global Backend
 // Handles all backend API calls with proper authentication
-// Canlı ortam: aynı origin kullanılır (dashboard, modül sayfaları vb.)
-const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+function getApiClientBase() {
+    if (typeof window !== 'undefined' && typeof window.getSebsApiBase === 'function') {
+        return window.getSebsApiBase();
+    }
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+        return window.location.origin + '/api';
+    }
+    return 'http://localhost:8006/api';
+}
 
 // Supabase oturumu veya eski authToken
 async function getAuthToken() {
@@ -54,7 +61,7 @@ async function apiCall(endpoint, options = {}) {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        const response = await fetch(`${getApiClientBase()}${endpoint}`, {
             ...options,
             headers: {
                 ...(await getAuthHeaders(options.method !== 'GET')),

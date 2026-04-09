@@ -45,7 +45,7 @@ docker run -p 8006:8006 --env-file backend/.env sebs-api
 ## Ortam değişkenleri (frontend ayrı origin’de)
 
 - **`CORS_ORIGIN`**: Frontend URL’leri (virgülle birden fazla), örn. `https://app.example.com`
-- Frontend’de API tabanı genelde `window.location.origin` + `/api` veya `config` ile `https://api.example.com` olmalıdır.
+- Statik site (Vercel vb.) API’den ayrıysa tarayıcı `https://siteniz.com/api` ile HTML alır; ilerleme kaydı okunmaz. **`frontend/js/supabase-env.js`** içinde `window.SEBS_API_BASE_URL = 'https://api.sunucunuz.com';` verin (veya her sayfada bu dosyadan önce aynı atamayı yapın). Ayrıntı: `frontend/js/api-base.js`.
 
 ## Eski yollar
 

@@ -1,0 +1,643 @@
+/* Landing chrome: fixed header offset + light theme for pages that use the same shell as index.html */
+
+body.landing-site-body {
+  padding-top: 4rem;
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* styles.css body::after koyu noise + gradient — landing sayfalarında tamamen kapat */
+body.landing-site-body::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* ---------- Login ---------- */
+body.landing-site-body .login-container {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, rgba(14, 165, 233, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #fafbfc 0%, #ffffff 55%, #f8fafc 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+body.landing-site-body .login-container::before {
+  display: none;
+}
+
+body.landing-site-body .login-card {
+  width: 100%;
+  max-width: 450px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 3rem 2.5rem;
+  box-shadow:
+    0 1px 3px 0 rgb(15 23 42 / 0.06),
+    0 20px 40px -12px rgb(15 23 42 / 0.1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.landing-site-body .login-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: #0f172a;
+  background-clip: unset;
+  color: #0f172a;
+}
+
+body.landing-site-body .login-header p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+body.landing-site-body .login-card .form-group label {
+  color: #334155;
+}
+
+body.landing-site-body .login-card .form-group input {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  backdrop-filter: none;
+}
+
+body.landing-site-body .login-card .form-group input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+body.landing-site-body .login-card .form-group input:focus {
+  outline: none;
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+body.landing-site-body .login-card .btn-login {
+  width: 100%;
+  background: #0f172a;
+  background-size: 100% 100%;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.75rem;
+  animation: none;
+}
+
+body.landing-site-body .login-card .btn-login:hover {
+  background: #1e293b;
+  box-shadow: 0 10px 25px -5px rgb(15 23 42 / 0.25);
+}
+
+body.landing-site-body .signup-link {
+  border-top-color: #e2e8f0;
+}
+
+body.landing-site-body .signup-link p {
+  color: #64748b;
+}
+
+body.landing-site-body .signup-link a {
+  color: #2563eb;
+}
+
+body.landing-site-body .signup-link a:hover {
+  color: #1d4ed8;
+}
+
+body.landing-site-body .login-status.success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+body.landing-site-body .login-status.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+/* ---------- Signup ---------- */
+body.landing-site-body .signup-container {
+  min-height: calc(100vh - 4rem);
+  padding: 3rem 1rem;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, #fafbfc 0%, #ffffff 55%, #f8fafc 100%);
+}
+
+body.landing-site-body .signup-container::before {
+  display: none;
+}
+
+body.landing-site-body .signup-title {
+  background: none;
+  -webkit-text-fill-color: #0f172a;
+  color: #0f172a;
+}
+
+body.landing-site-body .signup-subtitle {
+  color: #64748b;
+}
+
+body.landing-site-body .signup-form {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow:
+    0 1px 3px 0 rgb(15 23 42 / 0.06),
+    0 20px 40px -12px rgb(15 23 42 / 0.1);
+  backdrop-filter: none;
+}
+
+body.landing-site-body .signup-form .form-label {
+  color: #334155;
+}
+
+body.landing-site-body .signup-form .form-input {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  backdrop-filter: none;
+}
+
+body.landing-site-body .signup-form .form-input:focus {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+}
+
+body.landing-site-body .signup-form .btn-signup {
+  background: #0f172a;
+  animation: none;
+}
+
+body.landing-site-body .signup-form .btn-signup:hover {
+  background: #1e293b;
+}
+
+body.landing-site-body .signup-links p {
+  color: #64748b;
+}
+
+body.landing-site-body .signup-links a {
+  color: #2563eb;
+}
+
+/* ---------- Contact / About-style marketing sections ---------- */
+body.landing-site-body .hero-section {
+  min-height: auto;
+  padding: 6rem 2rem 4rem;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, #fafbfc 0%, #ffffff 50%, #f8fafc 100%);
+}
+
+body.landing-site-body .hero-section::before,
+body.landing-site-body .hero-section::after {
+  display: none !important;
+}
+
+body.landing-site-body .hero-badge {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+}
+
+body.landing-site-body .hero-badge i {
+  color: #2563eb;
+}
+
+body.landing-site-body .hero-title,
+body.landing-site-body .hero-section h1.hero-title {
+  color: #0f172a;
+  text-shadow: none;
+  background: none;
+  -webkit-text-fill-color: #0f172a;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+
+body.landing-site-body .hero-subtitle,
+body.landing-site-body .hero-section .hero-subtitle {
+  color: #475569;
+  text-shadow: none;
+}
+
+body.landing-site-body .hero-buttons .btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+}
+
+body.landing-site-body .hero-buttons .btn-primary:hover {
+  background: #1e293b;
+  filter: none;
+}
+
+body.landing-site-body .hero-buttons .btn-secondary {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+body.landing-site-body .hero-buttons .btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+body.landing-site-body .stats {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-top-color: #e2e8f0;
+  border-bottom-color: #e2e8f0;
+}
+
+body.landing-site-body .stats::before {
+  opacity: 0.4;
+}
+
+body.landing-site-body .stat-card {
+  color: #0f172a;
+}
+
+body.landing-site-body .stats .stat-number,
+body.landing-site-body .stats-grid .stat-number {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+body.landing-site-body .stats .stat-label,
+body.landing-site-body .stats-grid .stat-label {
+  color: #64748b;
+}
+
+body.landing-site-body .section-title {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+body.landing-site-body .section-subtitle {
+  color: #475569;
+}
+
+body.landing-site-body .feature-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06);
+}
+
+body.landing-site-body .feature-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 20px 40px -12px rgb(15 23 42 / 0.12);
+}
+
+body.landing-site-body .feature-card h3 {
+  color: #0f172a;
+}
+
+body.landing-site-body .feature-card p {
+  color: #64748b;
+}
+
+body.landing-site-body .feature-card .btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* Tüm .section blokları açık zemin (nth-of-type(odd) sadece 3./5. <section>’a denk geliyordu; 4. “Mesaj Gönderin” şeffaf kalıp koyu body::after’a düşüyordu) */
+body.landing-site-body .section {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.99) 100%);
+}
+
+/* Contact form */
+body.landing-site-body .form-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 1px 3px 0 rgb(15 23 42 / 0.06),
+    0 20px 40px -12px rgb(15 23 42 / 0.08);
+}
+
+body.landing-site-body .contact-form,
+body.landing-site-body .contact-form-modern {
+  color: #0f172a;
+}
+
+body.landing-site-body .contact-form .form-group label,
+body.landing-site-body .contact-form-modern label {
+  color: #334155;
+}
+
+body.landing-site-body .contact-form .form-group input:not([type="checkbox"]),
+body.landing-site-body .contact-form .form-group select,
+body.landing-site-body .contact-form .form-group textarea {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  backdrop-filter: none;
+}
+
+body.landing-site-body .contact-form .form-group input:not([type="checkbox"]):focus,
+body.landing-site-body .contact-form .form-group select:focus,
+body.landing-site-body .contact-form .form-group textarea:focus {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+body.landing-site-body .contact-form .form-group.checkbox-group input[type="checkbox"] {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+body.landing-site-body .contact-form .form-group.checkbox-group input[type="checkbox"]:hover {
+  border-color: #2563eb;
+  background: #f8fafc;
+}
+
+body.landing-site-body .contact-form .form-group.checkbox-group .checkbox-label {
+  color: #475569;
+}
+
+body.landing-site-body .contact-form .btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+body.landing-site-body .contact-form .btn-primary:hover {
+  background: #1e293b;
+  filter: none;
+}
+
+/* FAQ (contact & anywhere) — styles.css .faq-question h3 uses --text-light; override */
+body.landing-site-body .faq-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.landing-site-body .faq-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px -6px rgba(15, 23, 42, 0.12);
+}
+
+body.landing-site-body .faq-question {
+  color: #0f172a;
+}
+
+body.landing-site-body .faq-question:hover {
+  background: #f8fafc;
+}
+
+body.landing-site-body .faq-question h3 {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a;
+}
+
+body.landing-site-body .faq-question i {
+  color: #64748b;
+}
+
+body.landing-site-body .faq-item.active .faq-question i {
+  color: #2563eb;
+}
+
+body.landing-site-body .faq-answer p {
+  color: #475569 !important;
+}
+
+/* İletişim formu — .form-group label (styles.css) genel koyu tema veriyor */
+body.landing-site-body .contact-form .form-group label,
+body.landing-site-body .form-wrapper .form-group label {
+  color: #334155 !important;
+}
+
+body.landing-site-body .contact-form .form-row .form-group input,
+body.landing-site-body .contact-form .form-row .form-group select,
+body.landing-site-body .contact-form .form-group input:not([type="checkbox"]),
+body.landing-site-body .contact-form .form-group select,
+body.landing-site-body .contact-form .form-group textarea {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body .contact-form .form-group input::placeholder,
+body.landing-site-body .contact-form .form-group textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+/* Çalışma saatleri kartları */
+body.landing-site-body .hours-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+body.landing-site-body .hours-item .day {
+  color: #0f172a !important;
+}
+
+body.landing-site-body .hours-item .time {
+  color: #64748b !important;
+}
+
+/* ---------- Remote-inspired visual richness layer ---------- */
+body.landing-site-body {
+  --rc-ink: #0f172a;
+  --rc-sub: #475569;
+  --rc-line: #e2e8f0;
+  --rc-line-strong: #cbd5e1;
+  --rc-card: #ffffff;
+  --rc-brand: #2563eb;
+  --rc-brand-2: #1d4ed8;
+}
+
+/* Softer overall backdrop depth */
+body.landing-site-body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(60rem 40rem at -10% -10%, rgba(37, 99, 235, 0.07), transparent 60%),
+    radial-gradient(46rem 34rem at 110% 0%, rgba(14, 165, 233, 0.07), transparent 62%),
+    radial-gradient(42rem 32rem at 50% 100%, rgba(99, 102, 241, 0.06), transparent 62%);
+}
+
+/* Header polish */
+body.landing-site-body header.fixed {
+  backdrop-filter: saturate(1.3) blur(12px);
+  -webkit-backdrop-filter: saturate(1.3) blur(12px);
+  border-bottom-color: rgba(148, 163, 184, 0.25);
+  box-shadow: 0 8px 30px -22px rgba(15, 23, 42, 0.55);
+}
+
+body.landing-site-body header.fixed nav a {
+  position: relative;
+}
+
+body.landing-site-body header.fixed nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.35rem;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  background: linear-gradient(90deg, var(--rc-brand), #38bdf8);
+}
+
+body.landing-site-body header.fixed nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Hero depth for marketing pages */
+body.landing-site-body .hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+body.landing-site-body .hero-section::before,
+body.landing-site-body .hero-section::after {
+  display: block !important;
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(40px);
+}
+
+body.landing-site-body .hero-section::before {
+  width: 24rem;
+  height: 24rem;
+  top: -8rem;
+  right: -6rem;
+  background: rgba(37, 99, 235, 0.16);
+}
+
+body.landing-site-body .hero-section::after {
+  width: 20rem;
+  height: 20rem;
+  bottom: -8rem;
+  left: -6rem;
+  background: rgba(14, 165, 233, 0.14);
+}
+
+/* Common section rhythm and subtle alternation */
+body.landing-site-body .section,
+body.landing-site-body .stats {
+  position: relative;
+}
+
+/* Hafif şerit alternansı (isteğe bağlı kontrast; tüm .section zaten açık zeminli) */
+body.landing-site-body .section:nth-of-type(even) {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(248, 250, 252, 0.95) 100%);
+}
+
+/* Shared elevated card style */
+body.landing-site-body .feature-card,
+body.landing-site-body .card,
+body.landing-site-body .simulation-card,
+body.landing-site-body .pricing-card,
+body.landing-site-body .stat-card,
+body.landing-site-body .faq-item,
+body.landing-site-body .form-wrapper,
+body.landing-site-body .login-card,
+body.landing-site-body .signup-form {
+  background: linear-gradient(180deg, #ffffff 0%, #fdfefe 100%);
+  border: 1px solid var(--rc-line);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 14px 30px -18px rgba(15, 23, 42, 0.24);
+}
+
+body.landing-site-body .feature-card:hover,
+body.landing-site-body .card:hover,
+body.landing-site-body .simulation-card:hover,
+body.landing-site-body .pricing-card:hover,
+body.landing-site-body .faq-item:hover {
+  border-color: var(--rc-line-strong);
+  transform: translateY(-4px);
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.08),
+    0 24px 52px -22px rgba(15, 23, 42, 0.3);
+}
+
+/* Buttons: more "Remote-like" rounded, shadowed controls */
+body.landing-site-body .btn-primary,
+body.landing-site-body .btn-login,
+body.landing-site-body .btn-signup {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--rc-ink), #1e293b);
+  box-shadow: 0 10px 24px -14px rgba(15, 23, 42, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+body.landing-site-body .btn-primary:hover,
+body.landing-site-body .btn-login:hover,
+body.landing-site-body .btn-signup:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+  box-shadow: 0 18px 34px -18px rgba(15, 23, 42, 0.62);
+}
+
+body.landing-site-body .btn-secondary {
+  border-radius: 999px;
+  border: 1px solid var(--rc-line);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--rc-ink);
+}
+
+/* Inputs: polished controls */
+body.landing-site-body input,
+body.landing-site-body select,
+body.landing-site-body textarea {
+  border-radius: 0.75rem;
+}
+
+/* Typography consistency boosts */
+body.landing-site-body .section-title,
+body.landing-site-body .hero-title {
+  letter-spacing: -0.02em;
+}
+
+body.landing-site-body .section-subtitle,
+body.landing-site-body .hero-subtitle {
+  color: var(--rc-sub);
+}
+
+/* Genel paragrafları toplu boyamak FAQ/form ile çakışıyordu; sadece içerik blokları */
+body.landing-site-body .section .section-body p,
+body.landing-site-body .feature-card p,
+body.landing-site-body .simulation-content p,
+body.landing-site-body .container > p {
+  color: var(--rc-sub);
+}
+
+/* Footer richness */
+body.landing-site-body footer.border-t {
+  border-top-color: var(--rc-line);
+  background:
+    radial-gradient(52rem 20rem at 0% 0%, rgba(37, 99, 235, 0.06), transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}

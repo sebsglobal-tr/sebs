@@ -34,6 +34,16 @@
     }
 })();
 
+function getProgressApiBase() {
+    if (typeof window.getSebsApiBase === 'function') {
+        return window.getSebsApiBase();
+    }
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+        return window.location.origin + '/api';
+    }
+    return 'http://localhost:8006/api';
+}
+
 // Load API Client
 const script = document.createElement('script');
 script.src = '../utils/api-client.js';
@@ -128,10 +138,7 @@ window.getModuleIdFromName = async function (rawName) {
 
     (async () => {
         try {
-            const apiBase =
-                typeof window !== 'undefined' && window.location && window.location.origin
-                    ? window.location.origin + '/api'
-                    : 'http://localhost:8006/api';
+            const apiBase = getProgressApiBase();
 
             let authHeader = null;
             const supabaseToken = await getSupabaseAccessToken();
@@ -257,7 +264,7 @@ window.ModuleProgressTracker = {
             // Get current progress from database
             let currentProgress = null;
             try {
-                const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+                const apiBase = getProgressApiBase();
                 const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -288,7 +295,7 @@ window.ModuleProgressTracker = {
             const isCompleted = percentage === 100;
 
             // Save to database (direct fetch to /api/progress with Supabase/legacy token)
-            const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+            const apiBase = getProgressApiBase();
             const lastStep = {
                 completedLessons: completedLessons,
                 totalLessons: totalLessons || window.MODULE_TOTAL_LESSONS || 0,
@@ -346,7 +353,7 @@ window.ModuleProgressTracker = {
             // Get current progress from database
             let currentProgress = null;
             try {
-                const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+                const apiBase = getProgressApiBase();
                 const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -371,7 +378,7 @@ window.ModuleProgressTracker = {
             }
 
             // Save to database (direct fetch)
-            const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+            const apiBase = getProgressApiBase();
             const doneLessons = currentProgress?.completedLessons || [];
             const totalL =
                 currentProgress?.totalLessons ||
@@ -433,7 +440,7 @@ window.ModuleProgressTracker = {
 
             // Check if progress exists, if not create it
             try {
-                const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+                const apiBase = getProgressApiBase();
                 const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -554,10 +561,7 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
             return { ok: false, reason: 'no_module' };
         }
 
-        const apiBase =
-            typeof window !== 'undefined' && window.location && window.location.origin
-                ? window.location.origin + '/api'
-                : 'http://localhost:8006/api';
+        const apiBase = getProgressApiBase();
 
         let serverList = [];
         let serverTotal = 0;

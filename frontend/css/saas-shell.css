@@ -1,0 +1,164 @@
+/* SaaS shell — aligns legacy pages with index landing (light, premium bar + footer) */
+
+/* Top bar: light, blur, slate border */
+.navbar.saas-shell-navbar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+}
+
+.navbar.saas-shell-navbar.scrolled {
+  background: rgba(255, 255, 255, 0.97) !important;
+}
+
+.navbar.saas-shell-navbar .nav-logo {
+  background: none !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+}
+
+.navbar.saas-shell-navbar .nav-logo .sebs,
+.navbar.saas-shell-navbar .nav-logo .global {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+.navbar.saas-shell-navbar .nav-link {
+  color: #475569 !important;
+}
+
+.navbar.saas-shell-navbar .nav-link:hover {
+  color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.05) !important;
+}
+
+.navbar.saas-shell-navbar .nav-link.active {
+  color: #0f172a !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+}
+
+.navbar.saas-shell-navbar .nav-link i {
+  color: #64748b !important;
+}
+
+.navbar.saas-shell-navbar .btn-login {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  backdrop-filter: none !important;
+}
+
+.navbar.saas-shell-navbar .btn-signup,
+.navbar.saas-shell-navbar .btn-dashboard {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.navbar.saas-shell-navbar .user-profile {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.navbar.saas-shell-navbar .user-name {
+  color: #0f172a !important;
+}
+
+.navbar.saas-shell-navbar .dark-mode-toggle {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+.navbar.saas-shell-navbar .hamburger {
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+.navbar.saas-shell-navbar .hamburger span {
+  background: #0f172a !important;
+}
+
+/* Hide dashboard link in menu (same as before — profile goes to dashboard) */
+.navbar.saas-shell-navbar .nav-link[data-page="dashboard"],
+.navbar.saas-shell-navbar li:has(.nav-link[data-page="dashboard"]) {
+  display: none !important;
+}
+
+/* Footer shell — slate band like enterprise landing */
+.footer.saas-shell-footer {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+  color: #e2e8f0 !important;
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+
+.footer.saas-shell-footer::before {
+  background: linear-gradient(90deg, #6366f1, #3b82f6) !important;
+  opacity: 1 !important;
+  height: 2px !important;
+}
+
+.footer.saas-shell-footer .footer-section h4 {
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  background: none !important;
+}
+
+.footer.saas-shell-footer .footer-section p,
+.footer.saas-shell-footer .footer-section ul li,
+.footer.saas-shell-footer .footer-section ul li a {
+  color: #94a3b8 !important;
+}
+
+.footer.saas-shell-footer .footer-section ul li a:hover {
+  color: #ffffff !important;
+}
+
+.footer.saas-shell-footer .footer-bottom {
+  border-top-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+.footer.saas-shell-footer .footer-bottom p {
+  color: #94a3b8 !important;
+}
+
+.footer.saas-shell-footer .social-links a {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+/* Mobile drawer — light theme when shell is on */
+@media (max-width: 768px) {
+  .navbar.saas-shell-navbar .nav-panel {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-right: 1px solid #e2e8f0 !important;
+    box-shadow: 8px 0 32px rgba(15, 23, 42, 0.12) !important;
+  }
+
+  .navbar.saas-shell-navbar .nav-drawer-title {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }
+
+  .navbar.saas-shell-navbar .nav-drawer-sub {
+    color: #2563eb !important;
+  }
+
+  .navbar.saas-shell-navbar .nav-link {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }
+
+  .navbar.saas-shell-navbar .nav-panel .nav-link i {
+    color: #2563eb !important;
+  }
+
+  .navbar.saas-shell-navbar .nav-panel .nav-buttons #userProfile .user-name {
+    color: #0f172a !important;
+  }
+}

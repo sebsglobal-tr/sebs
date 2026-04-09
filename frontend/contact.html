@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
-    <title>İletişim - SEBS Global</title>
-    <meta name='description' content="SEBS Global iletişim bilgileri. Eğitim danışmanlığı, teknik destek ve kurumsal iletişim için bize ulaşın.">
+    <title>İletişim — SEBS Global</title>
+    <meta name='description' content="SEBS (Software Education & Business Solutions): Eğitim, işe alım değerlendirmesi, yetenek havuzu, özel simülasyon ve kurumsal lisans için iletişim.">
     <meta name="keywords" content="SEBS Global iletişim, eğitim danışmanlığı, teknoloji eğitimi, iş dünyası eğitimi, kişisel gelişim, profesyonel eğitim">
     <meta name="author" content="SEBS Global">
     <meta name="robots" content="index, follow">
@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/contact.html">
     <meta property="og:title" content="İletişim - SEBS Global">
-    <meta property="og:description" content="SEBS Global ile iletişime geçin. Eğitimlerimiz hakkında bilgi alın, sorularınızı sorun ve kayıt olun.">
+    <meta property="og:description" content="Pilot, kurumsal paket, özel simülasyon üretimi ve teknik destek için SEBS ekibiyle iletişime geçin.">
     <meta property="og:image" content="https://sebsglobal.com/og-contact.jpg">
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
@@ -25,7 +25,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="İletişim - SEBS Global">
-    <meta name="twitter:description" content="SEBS Global ile iletişime geçin. Eğitimlerimiz hakkında bilgi alın, sorularınızı sorun ve kayıt olun.">
+    <meta name="twitter:description" content="Pilot, kurumsal paket, özel simülasyon üretimi ve teknik destek için SEBS ekibiyle iletişime geçin.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-contact.jpg">
 
     <!-- Canonical URL -->
@@ -45,6 +45,8 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="/css/styles.css">
+    
+    
         <style>
         /* Minimal inline styles - only for critical loading overlay */
         /* Main styles are in /css/styles.css */
@@ -62,8 +64,70 @@
             z-index: 9999;
         }
     </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0c1222',
+            surface: '#f4f6fa',
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+            'glow': '0 0 0 1px rgb(15 23 42 / 0.06)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css" />
+  <noscript>
+    <style>.reveal-on-scroll { opacity: 1 !important; transform: none !important; }</style>
+  </noscript>
+
 </head>
-<body>
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
+<!-- Landing chrome header (same as index.html; anchor links use /# for all pages) -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
+        <img src="/images/SEBS.png" alt="SEBS" width="36" height="36" class="rounded-lg shadow-sm" />
+        <span class="text-lg font-bold tracking-tight text-slate-900">SEBS</span>
+      </a>
+      <nav class="hidden items-center gap-8 lg:flex" aria-label="Ana menü">
+        <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+        <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+        <a href="/#simulations" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a>
+        <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+      </nav>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="/login.html" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+        <a href="/contact.html" class="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 lg:inline focus-ring">Bize ulaşın</a>
+        <a href="/signup.html" class="rounded-full bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4">Ücretsiz başla</a>
+        <details class="relative lg:hidden">
+          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">
+            Menü
+          </summary>
+          <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+            <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+            <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+            <a href="/#simulations" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Simülasyonlar</a>
+            <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+            <hr class="my-1 border-slate-100" />
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
+          </div>
+        </details>
+      </div>
+    </div>
+  </header>
+
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
@@ -76,120 +140,169 @@
             </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/index.html" class="nav-logo">
-                <!-- Logo resmi - yüklenemezse SVG fallback -->
-                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
-                     onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
-                <!-- Logo yüklenemezse SVG göster -->
-                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
-                    <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
-                    <defs>
-                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
-                </svg>
-                <span class="sebs">SEBS</span>
-                <span class="global">Global</span>
+  <main id="top">
+    <!-- Hero: ortalanmış metin + metrik çipleri + bento (ana sayfadaki iki sütun mock’tan farklı) -->
+    <section class="hero-mesh relative overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-24 lg:pt-36">
+      <div class="contact-hero-inner mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="animate-in mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-600 shadow-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+            Bireysel · kurumsal · İK ortakları
+          </p>
+          <h1 class="animate-in delay-1 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]">
+            Proje ve kurumsal talepleriniz için iletişim
+          </h1>
+          <p class="animate-in delay-2 mt-6 text-lg leading-relaxed text-slate-600">
+            Eğitim ve simülasyon lisansları, <strong class="font-semibold text-slate-800">işe alım değerlendirmesi ve yetenek havuzu</strong>, şirkete özel senaryo üretimi ve teknik destek için tanımlı süreçler ve ilk yanıt hedefleriyle yanınızdayız.
+          </p>
+          <div class="animate-in delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
+            <span class="contact-metric-chip"><span class="text-emerald-600" aria-hidden="true">●</span> İlk yanıt &lt; 24 saat</span>
+            <span class="contact-metric-chip"><span class="text-blue-600" aria-hidden="true">●</span> Pilot &amp; kurumsal hat</span>
+            <span class="contact-metric-chip"><span class="text-violet-600" aria-hidden="true">●</span> Özel simülasyon talebi</span>
+          </div>
+          <div class="animate-in delay-4 mt-10 flex flex-wrap items-center justify-center gap-4">
+            <a href="#contact-form" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">
+              Mesaj gönder
+              <span aria-hidden="true">→</span>
             </a>
-            <div class="nav-panel" id="navPanel">
+            <a href="/modules.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring">
+              Eğitimlere başla
+            </a>
+          </div>
+        </div>
 
-            <ul class="nav-menu" id="navMenu" role="menubar">
-                <li class="nav-item" role="none">
-                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
-                        <i class="fas fa-home"></i> Ana Sayfa
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
-                        <i class="fas fa-book"></i> Eğitim Modülleri
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
-                        <i class="fas fa-flask"></i> Simülasyonlar
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
-                        <i class="fas fa-info-circle"></i> Hakkımızda
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
-                        <i class="fas fa-envelope"></i> İletişim
-                    </a>
-                </li>
-                <li class="nav-item" role="none">
-                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
-                        <i class="fas fa-tachometer-alt"></i> Panelim
-                    </a>
-                </li>
-            </ul>
-            <div class="nav-buttons">
-                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Gece Modu">
-                    <i class="fas fa-moon" id="darkModeIcon"></i>
-                </button>
-                <div id="userProfile" class="user-profile" style="display: none;">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <span class="user-name" id="userName">Kullanıcı</span>
-                </div>
-                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
-                <a href="/signup.html" class="btn-signup" id="signupBtn">Üye Ol</a>
-                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
-                </a>
+        <div class="mt-14 grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3 lg:grid-rows-2">
+          <div class="contact-bento-card contact-bento-card-muted flex min-h-[220px] flex-col p-5 sm:p-6 lg:col-span-2 lg:row-span-2">
+            <div class="mb-4 flex items-center justify-between border-b border-slate-200/80 pb-3">
+              <div class="flex gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-red-400/90"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-400/90"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/90"></span>
+              </div>
+              <span class="text-xs font-medium text-slate-500">Destek · Canlı özet</span>
             </div>
+            <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Ticket #2841</p>
+            <p class="mt-1 text-base font-semibold text-slate-900">Kurumsal eğitim paketi teklifi</p>
+            <div class="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+              <div class="h-full w-[58%] rounded-full bg-emerald-500"></div>
             </div>
-            <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <p class="mt-3 text-sm text-slate-600">Atanan ekip: <span class="font-medium text-slate-800">danışman</span> · Öncelik: normal</p>
+            <div class="mt-auto flex flex-wrap gap-2 pt-6">
+              <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-slate-600 shadow-sm ring-1 ring-slate-200/80">Durum: İnceleniyor</span>
+              <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-slate-600 shadow-sm ring-1 ring-slate-200/80">Kanal: Form</span>
+            </div>
+          </div>
+          <div class="contact-bento-card p-4 lg:col-start-3 lg:row-start-1">
+            <p class="text-[10px] font-semibold uppercase text-slate-400">SLA</p>
+            <p class="mt-2 text-2xl font-bold text-blue-700">&lt; 24s</p>
+            <p class="mt-1 text-xs text-slate-500">İlk yanıt hedefi (iş günü)</p>
+          </div>
+          <div class="contact-bento-card p-4 lg:col-start-3 lg:row-start-2">
+            <p class="text-[10px] font-semibold uppercase text-slate-400">Kuyruk</p>
+            <p class="mt-2 text-2xl font-bold text-slate-900">3</p>
+            <p class="mt-1 text-xs text-slate-500">Açık talep · öncelikli: 0</p>
+          </div>
+          <div class="contact-bento-card contact-bento-card-muted flex flex-col justify-center gap-3 p-4 sm:flex-row sm:items-center sm:justify-between lg:col-span-3">
+            <p class="text-sm font-semibold text-slate-800">Tercih ettiğiniz kanaldan yazın</p>
+            <div class="flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+              <span class="rounded-lg bg-white/90 px-3 py-1.5 shadow-sm ring-1 ring-slate-200/80">E-posta</span>
+              <span class="rounded-lg bg-white/90 px-3 py-1.5 shadow-sm ring-1 ring-slate-200/80">Telefon</span>
+              <span class="rounded-lg bg-white/90 px-3 py-1.5 shadow-sm ring-1 ring-slate-200/80">Telegram</span>
+            </div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </section>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="floating-elements">
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
+    <!-- Sekmeler + tam genişlik panel (ana sayfadaki sol akordeon yerine) -->
+    <section class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="contact-touch-heading">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 id="contact-touch-heading" class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            İletişim sürecinizi adım adım inceleyin
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Sekmelerden birini seçerek talep, SLA, danışmanlık veya kurumsal kanalı örnek özet ekranıyla görüntüleyin.
+          </p>
         </div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fas fa-headset"></i>
-                    <span>İletişim</span>
+        <div class="contact-tablist mt-10 flex gap-2 overflow-x-auto pb-1 pt-1" role="tablist" aria-label="İletişim adımları">
+          <button type="button" class="contact-tab-btn is-active" role="tab" aria-selected="true" data-contact-tab="0">Talep</button>
+          <button type="button" class="contact-tab-btn" role="tab" aria-selected="false" data-contact-tab="1">SLA</button>
+          <button type="button" class="contact-tab-btn" role="tab" aria-selected="false" data-contact-tab="2">Danışmanlık</button>
+          <button type="button" class="contact-tab-btn" role="tab" aria-selected="false" data-contact-tab="3">Kurumsal</button>
+        </div>
+        <div id="contact-tab-panels" class="sebs-visual-stage sebs-feat-grid relative mt-6 min-h-[300px] overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
+            <div class="sebs-visual-slide is-active" data-sebs-visual="0" aria-hidden="false">
+              <div class="sebs-visual-card p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Ticket</p>
+                    <p class="text-sm font-semibold text-slate-900">#4821 · Teklif talebi</p>
+                  </div>
+                  <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-bold uppercase text-sky-800">İşlemde</span>
                 </div>
-                <h1 class="hero-title">Bizimle İletişime Geçin</h1>
-                <p class="hero-subtitle">Eğitim programları, teknik destek ve kurumsal iş birlikleri hakkında bilgi almak veya geri bildirim iletmek için aşağıdaki kanallar üzerinden bize ulaşabilirsiniz.</p>
-                <div class="hero-buttons">
-                    <a href="/modules.html" class="btn-primary">
-                        <i class="fas fa-play"></i>
-                        <span>Eğitimlere Başla</span>
-                    </a>
-                    <a href="/about.html" class="btn-secondary">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Hakkımızda</span>
-                    </a>
+                <div class="mt-4 rounded-xl bg-slate-50/90 p-3 text-xs text-slate-600 backdrop-blur-sm">
+                  Atanan: <span class="font-medium text-slate-800">Eğitim danışmanı</span> · Son not: 14:02
                 </div>
+                <div class="mt-3 flex items-center justify-between text-xs">
+                  <span class="text-slate-500">Öncelik</span><span class="font-semibold text-slate-800">Normal</span>
+                </div>
+              </div>
             </div>
-        </div>
+            <div class="sebs-visual-slide" data-sebs-visual="1" aria-hidden="true">
+              <div class="sebs-visual-card p-4">
+                <p class="text-[10px] font-semibold uppercase text-slate-400">SLA özeti</p>
+                <div class="mt-4 h-24 rounded-lg bg-gradient-to-t from-emerald-50 to-transparent p-2">
+                  <div class="flex h-full items-end justify-between gap-1 px-1">
+                    <span class="w-1/4 rounded-t bg-emerald-300" style="height: 45%"></span>
+                    <span class="w-1/4 rounded-t bg-emerald-400" style="height: 62%"></span>
+                    <span class="w-1/4 rounded-t bg-emerald-500" style="height: 78%"></span>
+                    <span class="w-1/4 rounded-t bg-emerald-600" style="height: 55%"></span>
+                  </div>
+                </div>
+                <p class="mt-3 text-center text-[10px] text-slate-500">İlk yanıt · haftalık ortalama</p>
+              </div>
+            </div>
+            <div class="sebs-visual-slide" data-sebs-visual="2" aria-hidden="true">
+              <div class="sebs-visual-card p-4">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-sm font-bold text-violet-700">DK</div>
+                  <div>
+                    <p class="text-xs font-semibold text-slate-800">Danışman atandı</p>
+                    <p class="text-[10px] text-slate-500">Kohorte özel yol haritası</p>
+                  </div>
+                </div>
+                <ul class="mt-3 space-y-2 text-xs text-slate-600">
+                  <li class="flex justify-between rounded-md bg-slate-50 px-2 py-1.5"><span>Modül önerisi</span><span class="font-medium text-emerald-600">Gönderildi</span></li>
+                  <li class="flex justify-between rounded-md bg-slate-50 px-2 py-1.5"><span>Takip görüşmesi</span><span class="font-medium text-amber-600">Planlanıyor</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="sebs-visual-slide" data-sebs-visual="3" aria-hidden="true">
+              <div class="sebs-visual-card p-4">
+                <p class="text-[10px] font-semibold uppercase text-slate-400">Kurumsal özet</p>
+                <p class="mt-1 text-lg font-bold text-slate-900">Pilot · Q2</p>
+                <dl class="mt-4 space-y-2 text-xs">
+                  <div class="flex justify-between border-b border-slate-100 py-1"><dt class="text-slate-500">Teklif</dt><dd class="font-semibold text-slate-800">İncelemede</dd></div>
+                  <div class="flex justify-between border-b border-slate-100 py-1"><dt class="text-slate-500">Tek muhatap</dt><dd class="font-semibold text-blue-700">Atandı</dd></div>
+                </dl>
+                <div class="mt-4 flex gap-2">
+                  <span class="flex-1 rounded-lg bg-slate-100 py-2 text-center text-[10px] font-medium text-slate-600">PDF</span>
+                  <span class="flex-1 rounded-lg bg-slate-100 py-2 text-center text-[10px] font-medium text-slate-600">Sözleşme</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
     </section>
 
     <!-- Stats Section -->
-    <section class="stats">
+    <section class="stats reveal-on-scroll">
         <div class="container">
             <div class="stats-content">
                 <div class="section-header">
-                    <h2 class="section-title">Destek ve Hizmet Metrikleri</h2>
-                    <p class="section-subtitle">Katılımcı memnuniyeti ve hızlı geri dönüş ilkelerimiz doğrultusunda hizmet kalitesini sürekli iyileştiriyoruz</p>
+                    <h2 class="section-title">Destek ve hizmet metrikleri</h2>
+                    <p class="section-subtitle">Memnuniyet ve hızlı geri dönüş taahhütlerimiz doğrultusunda hizmet kalitesini sürekli geliştiriyoruz</p>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -213,72 +326,87 @@
         </div>
     </section>
 
-    <!-- Contact Methods Section -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">İletişim Kanalları</h2>
-                <p class="section-subtitle">E-posta, telefon ve dijital kanallar üzerinden resmi taleplerinizi iletebilirsiniz</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h3>E-posta</h3>
-                    <p>Kurumsal talepler, eğitim danışmanlığı ve detaylı sorularınız için e-posta gönderin. Mesajlarınız 24 saat içinde değerlendirilerek size dönüş yapılır.</p>
-                    <a href="mailto:info@sebsglobal.com" class="btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                        <span>E-posta Gönder</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <h3>Telefon</h3>
-                    <p>Acil talepler ve canlı görüşme için aşağıdaki numaradan bize ulaşabilirsiniz. Çalışma saatleri içinde yanıt verilmektedir.</p>
-                    <a href="tel:+905332669087" class="btn-primary">
-                        <i class="fas fa-phone"></i>
-                        <span>+90 533 266 90 87</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fab fa-telegram"></i>
-                    </div>
-                    <h3>Telegram</h3>
-                    <p>Teknik destek ve hızlı bilgi talepleri için Telegram kanalımız üzerinden iletişime geçebilirsiniz.</p>
-                    <a href="https://t.me/sebsglobal" class="btn-primary" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-telegram"></i>
-                        <span>Telegram</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fab fa-linkedin"></i>
-                    </div>
-                    <h3>LinkedIn</h3>
-                    <p>Kurumsal profilde güncel duyuruları takip edebilir ve profesyonel ağ üzerinden iletişim kurabilirsiniz.</p>
-                    <a href="https://www.linkedin.com/in/seb-s-global-19b18038a/" class="btn-primary" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-linkedin"></i>
-                        <span>LinkedIn</span>
-                    </a>
-                </div>
-            </div>
+    <!-- İletişim Kanalları (ana sayfa feature kartlarıyla uyumlu) -->
+    <section id="contact-channels" class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="contact-channels-heading">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 id="contact-channels-heading" class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            İletişim kanalları
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            E-posta, telefon ve dijital kanallar üzerinden kurumsal taleplerinizi iletebilirsiniz.
+          </p>
         </div>
+        <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+            <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/[0.09] blur-2xl transition-opacity group-hover:opacity-100" aria-hidden="true"></div>
+            <div class="contact-channel-icon-wrap bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-semibold text-slate-900">E-posta</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Kurumsal talepler, eğitim danışmanlığı ve ayrıntılı sorularınız için e-posta kullanın. Mesajlarınız 24 saat içinde değerlendirilir ve yanıtlanır.
+            </p>
+            <a href="mailto:info@sebsglobal.com" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto">
+              <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
+              E-posta gönder
+            </a>
+          </article>
+
+          <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+            <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-emerald-500/[0.1] blur-2xl" aria-hidden="true"></div>
+            <div class="contact-channel-icon-wrap bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
+              <i class="fas fa-phone" aria-hidden="true"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-semibold text-slate-900">Telefon</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Acil talepler ve canlı görüşme için aşağıdaki numaradan ulaşabilirsiniz. Yanıtlar resmi çalışma saatleri içindedir.
+            </p>
+            <a href="tel:+905332669087" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto">
+              <i class="fas fa-phone text-xs" aria-hidden="true"></i>
+              +90 533 266 90 87
+            </a>
+          </article>
+
+          <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+            <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sky-500/[0.1] blur-2xl" aria-hidden="true"></div>
+            <div class="contact-channel-icon-wrap bg-sky-50 text-sky-600 ring-1 ring-sky-100">
+              <i class="fab fa-telegram" aria-hidden="true"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-semibold text-slate-900">Telegram</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Teknik destek ve hızlı bilgi talepleri için Telegram kanalımız üzerinden bize yazabilirsiniz.
+            </p>
+            <a href="https://t.me/sebsglobal" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-telegram text-xs" aria-hidden="true"></i>
+              Telegram
+            </a>
+          </article>
+
+          <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+            <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-indigo-500/[0.09] blur-2xl" aria-hidden="true"></div>
+            <div class="contact-channel-icon-wrap bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+              <i class="fab fa-linkedin" aria-hidden="true"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-semibold text-slate-900">LinkedIn</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              Kurumsal hesabımızdan duyuruları takip edebilir ve profesyonel ağ üzerinden iletişim kurabilirsiniz.
+            </p>
+            <a href="https://www.linkedin.com/in/seb-s-global-19b18038a/" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin text-xs" aria-hidden="true"></i>
+              LinkedIn
+            </a>
+          </article>
+        </div>
+      </div>
     </section>
 
     <!-- Contact Form Section -->
-    <section class="section">
+    <section id="contact-form" class="section reveal-on-scroll scroll-mt-24">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Mesaj Gönderin</h2>
-                <p class="section-subtitle">Talep, öneri veya geri bildirimlerinizi aşağıdaki form aracılığıyla iletebilirsiniz. En kısa sürede yanıt verilecektir.</p>
+                <h2 class="section-title">Mesaj gönderin</h2>
+                <p class="section-subtitle">Taleplerinizi, önerilerinizi veya geri bildirimlerinizi aşağıdaki form üzerinden iletebilirsiniz; en kısa sürede yanıtlanır.</p>
             </div>
             
             <div class="form-wrapper">
@@ -338,21 +466,26 @@
         </div>
     </section>
 
-    <!-- Office Hours Section -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Çalışma Saatleri</h2>
-                <p class="section-subtitle">İletişim ve destek hizmetlerinin sunulduğu resmi çalışma saatleri</p>
+    <!-- Çalışma saatleri (iletişim kanalları kartlarıyla aynı dil) -->
+    <section id="office-hours" class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="office-hours-heading">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center">
+                <h2 id="office-hours-heading" class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                    Çalışma Saatleri
+                </h2>
+                <p class="mt-4 text-lg text-slate-600">
+                    İletişim ve destek hizmetlerinin sunulduğu resmi çalışma saatleri
+                </p>
             </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
+
+            <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/[0.09] blur-2xl transition-opacity group-hover:opacity-100" aria-hidden="true"></div>
+                    <div class="contact-channel-icon-wrap bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
                     </div>
-                    <h3>Genel İletişim</h3>
-                    <div class="hours-list">
+                    <h3 class="mt-4 text-lg font-semibold text-slate-900">Genel İletişim</h3>
+                    <div class="hours-list office-hours-rows">
                         <div class="hours-item">
                             <span class="day">Pazartesi - Cuma</span>
                             <span class="time">09:00 - 18:00</span>
@@ -366,14 +499,15 @@
                             <span class="time">Kapalı</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
+                </article>
+
+                <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-emerald-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                    <div class="contact-channel-icon-wrap bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
+                        <i class="fas fa-headset" aria-hidden="true"></i>
                     </div>
-                    <h3>Teknik Destek</h3>
-                    <div class="hours-list">
+                    <h3 class="mt-4 text-lg font-semibold text-slate-900">Teknik Destek</h3>
+                    <div class="hours-list office-hours-rows">
                         <div class="hours-item">
                             <span class="day">Pazartesi - Cuma</span>
                             <span class="time">08:00 - 20:00</span>
@@ -387,14 +521,15 @@
                             <span class="time">10:00 - 16:00</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-tie"></i>
+                </article>
+
+                <article class="contact-channel-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card sm:col-span-2 lg:col-span-1">
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-violet-500/[0.09] blur-2xl" aria-hidden="true"></div>
+                    <div class="contact-channel-icon-wrap bg-violet-50 text-violet-600 ring-1 ring-violet-100">
+                        <i class="fas fa-user-tie" aria-hidden="true"></i>
                     </div>
-                    <h3>Eğitim Danışmanlığı</h3>
-                    <div class="hours-list">
+                    <h3 class="mt-4 text-lg font-semibold text-slate-900">Eğitim Danışmanlığı</h3>
+                    <div class="hours-list office-hours-rows">
                         <div class="hours-item">
                             <span class="day">Pazartesi - Cuma</span>
                             <span class="time">10:00 - 19:00</span>
@@ -408,13 +543,13 @@
                             <span class="time">Kapalı</span>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="section">
+    <section class="section reveal-on-scroll">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Sık Sorulan Sorular</h2>
@@ -475,55 +610,104 @@
         </div>
     </section>
 
+  </main>
+
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>SEBS Global</h4>
-                    <p>Teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitim platformu</p>
-                    <div class="social-links">
-                        <a href="https://t.me/sebsglobal" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
-                        <a href="https://www.linkedin.com/in/seb-s-global-19b18038a/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="mailto:info@sebsglobal.com" aria-label="E-posta"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Eğitim Alanları</h4>
-                    <ul>
-                        <li><a href="#" onclick="redirectToModules(event, 'cybersecurity')">Siber Güvenlik</a></li>
-                        <li><a href="#" onclick="redirectToModules(event, 'cloud')">Bulut Bilişim</a></li>
-                        <li><a href="#" onclick="redirectToModules(event, 'data-science')">Veri Bilimleri</a></li>
-                        <li><a href="#" onclick="redirectToModules(event, 'technology')">Teknoloji</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Kurumsal</h4>
-                    <ul>
-                        <li><a href="/about.html">Hakkımızda</a></li>
-                        <li><a href="/contact.html">İletişim</a></li>
-                        <li><a href="#">Gizlilik Politikası</a></li>
-                        <li><a href="#">Kullanım Şartları</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>İletişim</h4>
-                    <p><i class="fas fa-envelope"></i> info@sebsglobal.com</p>
-                    <p><i class="fas fa-phone"></i> +90 533 266 90 87</p>
-                    <p><i class="fab fa-telegram"></i> @sebsglobal</p>
-                    <p><i class="fab fa-linkedin"></i> SEBS Global</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 SEBS Global. Tüm hakları saklıdır.</p>
-                <div class="footer-links">
-                    <a href="#">KVKK</a>
-                    <a href="#">Çerez Politikası</a>
-                    <a href="#">Gizlilik</a>
-                </div>
-            </div>
+    <!-- Landing chrome footer (same as index.html) -->
+  <footer class="border-t border-slate-200 bg-white py-14">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
+            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
+          </div>
+          <p class="mt-4 max-w-xs text-sm text-slate-500">
+            Simülasyon tabanlı siber güvenlik eğitimi ve mentor desteği—yapmacık ilerleme yerine ölçülebilir sonuç.
+          </p>
         </div>
-    </footer>
+        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
+              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
+              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
+        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p class="text-xs text-slate-400">İstanbul · Türkiye</p>
+      </div>
+    </div>
+  </footer>
+<script>
+    (function () {
+      document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+        el.textContent = String(new Date().getFullYear());
+      });
+    })();
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var reveal = document.querySelectorAll('.reveal-on-scroll');
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+      );
+      reveal.forEach(function (el) { io.observe(el); });
+    } else {
+      document.querySelectorAll('.reveal-on-scroll').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }
+
+    (function () {
+      var stage = document.getElementById('contact-tab-panels');
+      if (!stage) return;
+      var tabs = document.querySelectorAll('[data-contact-tab]');
+      var slides = stage.querySelectorAll('.sebs-visual-slide');
+      function go(id) {
+        tabs.forEach(function (t) {
+          var on = t.getAttribute('data-contact-tab') === id;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        slides.forEach(function (s) {
+          var on = s.getAttribute('data-sebs-visual') === id;
+          s.classList.toggle('is-active', on);
+          s.setAttribute('aria-hidden', on ? 'false' : 'true');
+        });
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          go(tab.getAttribute('data-contact-tab'));
+        });
+      });
+    })();
+  </script>
 
     <!-- JavaScript -->
     <script>
@@ -634,6 +818,9 @@
         });
 
         function getApiBase() {
+            if (typeof window.getSebsApiBase === 'function') {
+                return window.getSebsApiBase();
+            }
             return (window.location && window.location.origin ? window.location.origin : '') + '/api';
         }
 
@@ -980,6 +1167,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
             onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
     <script src="/js/supabase-env.js"></script>
+    <script src="/js/api-base.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js"></script>
     

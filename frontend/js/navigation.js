@@ -29,6 +29,11 @@
                 return 'modules';
             }
         }
+
+        // Simülasyon oyun sayfaları — navigasyonda Simulations aktif
+        if (path.includes('/simulation/')) {
+            return 'simulations';
+        }
         
         return page;
     }
@@ -380,6 +385,9 @@
         
         // Navigasyonu güncelle
         await updateNavigation();
+        document.querySelectorAll('.saas-footer-year').forEach(function(el) {
+            el.textContent = String(new Date().getFullYear());
+        });
         initHamburgerMenu();
         initDarkModeToggle();
         

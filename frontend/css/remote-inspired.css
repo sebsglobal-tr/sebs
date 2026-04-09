@@ -1,0 +1,872 @@
+/* ============================================
+   Remote.com–inspired light theme (SEBS içeriği aynı)
+   Yalnızca html:not([data-theme="dark"]) — gece modu mevcut stilleri korur
+   ============================================ */
+
+html:not([data-theme="dark"]) {
+    --remote-bg: #ffffff;
+    --remote-bg-subtle: #f6f7f9;
+    --remote-bg-muted: #eef0f4;
+    --remote-text: #0f172a;
+    --remote-text-secondary: #475569;
+    --remote-border: #e2e8f0;
+    --remote-accent: #111827;
+    --remote-accent-hover: #1f2937;
+    --remote-blue: #2563eb;
+    --remote-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --remote-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --remote-shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.1);
+    /* Remote benzeri kart gölgesi (yumuşak, yayılı) */
+    --remote-card-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+    --remote-card-shadow-hover: 0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08);
+    --remote-radius: 16px;
+    --remote-radius-pill: 9999px;
+    /* Eski değişken adlarıyla uyum */
+    --bg-primary: #fafbfc;
+    --bg-secondary: #f1f5f9;
+    --bg-card: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-light: #0f172a;
+    --text-muted: #64748b;
+    --glass-bg: rgba(255, 255, 255, 0.92);
+    --glass-bg-strong: #ffffff;
+    --glass-border: #e2e8f0;
+}
+
+html:not([data-theme="dark"]) body {
+    color: var(--remote-text);
+    background: var(--remote-bg) !important;
+}
+
+html:not([data-theme="dark"]) body::before {
+    background:
+        radial-gradient(ellipse 120% 90% at 50% -30%, rgba(99, 102, 241, 0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 100% 20%, rgba(59, 130, 246, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 45%),
+        linear-gradient(180deg, #f8fafc 0%, #ffffff 35%, #f8fafc 100%) !important;
+    z-index: -3;
+}
+
+html:not([data-theme="dark"]) body::after {
+    background: transparent !important;
+    opacity: 0 !important;
+}
+
+/* Üst navigasyon — Remote: beyaz, ince çizgi, gölgeli */
+html:not([data-theme="dark"]) .navbar {
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid var(--remote-border) !important;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+}
+
+html:not([data-theme="dark"]) .navbar.scrolled {
+    background: rgba(255, 255, 255, 0.97) !important;
+    box-shadow: var(--remote-shadow-sm);
+}
+
+html:not([data-theme="dark"]) .nav-logo {
+    background: none !important;
+    -webkit-text-fill-color: var(--remote-text) !important;
+    background-clip: border-box !important;
+    color: var(--remote-text) !important;
+}
+
+html:not([data-theme="dark"]) .nav-logo .sebs,
+html:not([data-theme="dark"]) .nav-logo .global {
+    color: var(--remote-text) !important;
+    -webkit-text-fill-color: var(--remote-text) !important;
+    opacity: 1;
+}
+
+html:not([data-theme="dark"]) .nav-logo:hover .sebs,
+html:not([data-theme="dark"]) .nav-logo:hover .global {
+    filter: none;
+}
+
+html:not([data-theme="dark"]) .nav-link {
+    color: var(--remote-text-secondary) !important;
+}
+
+html:not([data-theme="dark"]) .nav-link:hover {
+    color: var(--remote-text) !important;
+    background: rgba(15, 23, 42, 0.05) !important;
+}
+
+html:not([data-theme="dark"]) .nav-link.active {
+    color: var(--remote-text) !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+}
+
+html:not([data-theme="dark"]) .btn-login {
+    background: #ffffff !important;
+    color: var(--remote-text) !important;
+    border: 1px solid var(--remote-border) !important;
+    backdrop-filter: none;
+}
+
+html:not([data-theme="dark"]) .btn-login:hover {
+    background: var(--remote-bg-subtle) !important;
+    border-color: #cbd5e1 !important;
+}
+
+html:not([data-theme="dark"]) .btn-signup,
+html:not([data-theme="dark"]) .btn-dashboard {
+    background: var(--remote-accent) !important;
+    color: #ffffff !important;
+    box-shadow: var(--remote-shadow-sm);
+}
+
+html:not([data-theme="dark"]) .btn-signup:hover,
+html:not([data-theme="dark"]) .btn-dashboard:hover {
+    background: var(--remote-accent-hover) !important;
+}
+
+html:not([data-theme="dark"]) .user-profile {
+    background: var(--remote-bg-subtle) !important;
+    border: 1px solid var(--remote-border) !important;
+}
+
+html:not([data-theme="dark"]) .user-name {
+    color: var(--remote-text) !important;
+}
+
+html:not([data-theme="dark"]) .dark-mode-toggle {
+    background: var(--remote-bg-subtle) !important;
+    border: 1px solid var(--remote-border) !important;
+    color: var(--remote-text-secondary) !important;
+}
+
+html:not([data-theme="dark"]) .dark-mode-toggle:hover {
+    background: #e2e8f0 !important;
+    color: var(--remote-text) !important;
+}
+
+html:not([data-theme="dark"]) .hamburger {
+    border: 1px solid var(--remote-border);
+    background: var(--remote-bg-subtle);
+}
+
+html:not([data-theme="dark"]) .hamburger span {
+    background: var(--remote-text);
+}
+
+/* Hero — fotoğraf yerine açık mesh + yumuşak geçiş (Remote ana sayfa hissi) */
+html:not([data-theme="dark"]) .hero-section::before,
+html:not([data-theme="dark"]) .hero::before {
+    background:
+        radial-gradient(ellipse 100% 80% at 50% -10%, rgba(79, 70, 229, 0.11) 0%, transparent 52%),
+        radial-gradient(ellipse 70% 60% at 85% 30%, rgba(59, 130, 246, 0.09) 0%, transparent 48%),
+        radial-gradient(ellipse 55% 45% at 15% 70%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%) !important;
+}
+
+html:not([data-theme="dark"]) .hero-section::after,
+html:not([data-theme="dark"]) .hero::after {
+    background: transparent !important;
+}
+
+html:not([data-theme="dark"]) .floating-element {
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.08);
+}
+
+html:not([data-theme="dark"]) .hero-badge {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid var(--remote-border) !important;
+    color: var(--remote-text-secondary) !important;
+    box-shadow: var(--remote-shadow-sm);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 600;
+}
+
+html:not([data-theme="dark"]) .hero-badge i {
+    color: var(--remote-blue);
+}
+
+html:not([data-theme="dark"]) .hero-title,
+html:not([data-theme="dark"]) .hero h1 {
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+    -webkit-text-fill-color: var(--remote-text) !important;
+    background: none !important;
+    background-clip: border-box !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em;
+}
+
+html:not([data-theme="dark"]) .hero-subtitle,
+html:not([data-theme="dark"]) .hero p {
+    color: var(--remote-text-secondary) !important;
+    text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) .hero-logo-wrap img {
+    box-shadow: var(--remote-shadow-md);
+    border: 1px solid var(--remote-border);
+}
+
+/* Butonlar — dolu koyu + outline ikincil */
+html:not([data-theme="dark"]) .btn-primary {
+    background: var(--remote-accent) !important;
+    color: #ffffff !important;
+    border-radius: var(--remote-radius-pill);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    box-shadow: var(--remote-shadow-md);
+    border: none;
+}
+
+html:not([data-theme="dark"]) .btn-primary:hover {
+    background: var(--remote-accent-hover) !important;
+    box-shadow: var(--remote-shadow-lg);
+}
+
+html:not([data-theme="dark"]) .btn-secondary {
+    background: #ffffff !important;
+    color: var(--remote-text) !important;
+    border: 1px solid var(--remote-border) !important;
+    backdrop-filter: none;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    border-radius: var(--remote-radius-pill);
+}
+
+html:not([data-theme="dark"]) .btn-secondary:hover {
+    background: var(--remote-bg-subtle) !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Bölüm başlıkları */
+html:not([data-theme="dark"]) .section-title {
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-weight: 700 !important;
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) .section-subtitle {
+    color: var(--remote-text-secondary) !important;
+}
+
+/* Zemin alternansı */
+html:not([data-theme="dark"]) .education-areas {
+    background: var(--remote-bg) !important;
+}
+
+html:not([data-theme="dark"]) .simulations-preview {
+    background: var(--remote-bg-subtle) !important;
+}
+
+html:not([data-theme="dark"]) .features {
+    background: var(--remote-bg) !important;
+}
+
+html:not([data-theme="dark"]) .stats {
+    background: var(--remote-bg-muted) !important;
+    border-top: 1px solid var(--remote-border);
+    border-bottom: 1px solid var(--remote-border);
+    color: var(--remote-text);
+}
+
+html:not([data-theme="dark"]) .stats::before {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 60%) !important;
+}
+
+html:not([data-theme="dark"]) .stat-number {
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+html:not([data-theme="dark"]) .stat-label {
+    color: var(--remote-text-secondary) !important;
+    text-transform: none;
+    letter-spacing: 0.03em;
+}
+
+/* Kartlar — Remote: beyaz yüzey, 16px radius, üstte renk şeridi yok */
+html:not([data-theme="dark"]) .card::before,
+html:not([data-theme="dark"]) .feature-card::before,
+html:not([data-theme="dark"]) .simulation-card::before {
+    display: none !important;
+}
+
+html:not([data-theme="dark"]) .card,
+html:not([data-theme="dark"]) .feature-card,
+html:not([data-theme="dark"]) .simulation-card {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html:not([data-theme="dark"]) .card:hover,
+html:not([data-theme="dark"]) .feature-card:hover,
+html:not([data-theme="dark"]) .simulation-card:hover {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: var(--remote-card-shadow-hover) !important;
+    transform: translateY(-4px) !important;
+}
+
+html:not([data-theme="dark"]) .card:hover .feature-icon,
+html:not([data-theme="dark"]) .feature-card:hover .feature-icon,
+html:not([data-theme="dark"]) .simulation-card:hover .simulation-icon {
+    transform: none !important;
+}
+
+html:not([data-theme="dark"]) .card h3,
+html:not([data-theme="dark"]) .feature-card h3,
+html:not([data-theme="dark"]) .simulation-title {
+    color: var(--remote-text) !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em;
+}
+
+html:not([data-theme="dark"]) .card p,
+html:not([data-theme="dark"]) .feature-card p,
+html:not([data-theme="dark"]) .simulation-description {
+    color: var(--remote-text-secondary) !important;
+    line-height: 1.65;
+}
+
+/* Remote ürün kartı ikonları: açık gri kutu + koyu ikon */
+html:not([data-theme="dark"]) .feature-icon,
+html:not([data-theme="dark"]) .simulation-icon,
+html:not([data-theme="dark"]) .card-icon {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) .feature-card-image,
+html:not([data-theme="dark"]) .simulation-card-image {
+    border-radius: var(--remote-radius) var(--remote-radius) 0 0 !important;
+}
+
+html:not([data-theme="dark"]) .feature-card:hover .feature-card-image,
+html:not([data-theme="dark"]) .simulation-card:hover .simulation-card-image {
+    transform: scale(1.02) !important;
+}
+
+html:not([data-theme="dark"]) .simulation-meta {
+    border-top-color: var(--remote-border) !important;
+}
+
+html:not([data-theme="dark"]) .simulation-duration {
+    color: var(--remote-text-secondary) !important;
+}
+
+html:not([data-theme="dark"]) .difficulty-intermediate {
+    background: #fffbeb !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+
+html:not([data-theme="dark"]) .difficulty-advanced {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+}
+
+/* Eğitim alanı — Remote ürün döşemesi: çerçeve + altta beyaz metin bandı + ikon kutusu */
+html:not([data-theme="dark"]) .category-cards-grid {
+    gap: 1.5rem;
+}
+
+html:not([data-theme="dark"]) .category-card {
+    border-radius: var(--remote-radius) !important;
+    border: 1px solid var(--remote-border) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+    aspect-ratio: 4 / 3;
+    align-items: flex-end !important;
+    justify-content: stretch !important;
+}
+
+html:not([data-theme="dark"]) .category-card::before {
+    background: linear-gradient(
+        to top,
+        #ffffff 0%,
+        #ffffff 30%,
+        rgba(255, 255, 255, 0.95) 44%,
+        rgba(255, 255, 255, 0.55) 62%,
+        transparent 85%
+    ) !important;
+}
+
+html:not([data-theme="dark"]) .category-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: var(--remote-card-shadow-hover) !important;
+    border-color: #cbd5e1 !important;
+}
+
+html:not([data-theme="dark"]) .category-card:hover::before {
+    background: linear-gradient(
+        to top,
+        #ffffff 0%,
+        #ffffff 32%,
+        rgba(255, 255, 255, 0.97) 46%,
+        rgba(255, 255, 255, 0.6) 65%,
+        transparent 88%
+    ) !important;
+}
+
+html:not([data-theme="dark"]) .category-card.tab-btn.active {
+    border-color: rgba(37, 99, 235, 0.55) !important;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35), var(--remote-card-shadow-hover) !important;
+}
+
+html:not([data-theme="dark"]) .category-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    padding: 1.1rem 1.2rem 1.25rem !important;
+    width: 100% !important;
+}
+
+html:not([data-theme="dark"]) .category-card-content i {
+    width: 44px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 0 !important;
+    color: #2563eb !important;
+    background: #eff6ff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 12px !important;
+}
+
+html:not([data-theme="dark"]) .category-card:hover .category-card-content i {
+    transform: none !important;
+}
+
+html:not([data-theme="dark"]) .category-card-content span {
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-size: 1.0625rem !important;
+    font-weight: 600 !important;
+    color: var(--remote-text) !important;
+}
+
+/* CTA */
+html:not([data-theme="dark"]) .cta-section {
+    background: linear-gradient(180deg, #f1f5f9 0%, #e8ecf2 100%) !important;
+    border-top: 1px solid var(--remote-border);
+    color: var(--remote-text);
+}
+
+html:not([data-theme="dark"]) .cta-section::before {
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 65%) !important;
+}
+
+html:not([data-theme="dark"]) .cta-content h2 {
+    font-family: 'Inter', system-ui, sans-serif !important;
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+    font-weight: 800 !important;
+}
+
+html:not([data-theme="dark"]) .cta-content p {
+    color: var(--remote-text-secondary) !important;
+    text-shadow: none !important;
+}
+
+/* Footer — koyu şerit (Remote alt bilgi) */
+html:not([data-theme="dark"]) .footer {
+    background: #0f172a !important;
+    color: #e2e8f0;
+    margin-top: 0;
+    border-top: none;
+}
+
+html:not([data-theme="dark"]) .footer::before {
+    background: linear-gradient(90deg, #6366f1, #3b82f6) !important;
+    opacity: 1;
+    height: 2px;
+}
+
+html:not([data-theme="dark"]) .footer::after {
+    opacity: 0.15;
+}
+
+html:not([data-theme="dark"]) .footer-section h4 {
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    background: none !important;
+}
+
+html:not([data-theme="dark"]) .footer-section h4::after {
+    background: linear-gradient(90deg, #6366f1, #3b82f6) !important;
+}
+
+html:not([data-theme="dark"]) .footer-section p,
+html:not([data-theme="dark"]) .footer-section ul li {
+    color: #94a3b8 !important;
+}
+
+html:not([data-theme="dark"]) .footer-section ul li a {
+    color: #cbd5e1 !important;
+}
+
+html:not([data-theme="dark"]) .footer-section ul li a:hover {
+    color: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) .footer-bottom {
+    border-top-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+html:not([data-theme="dark"]) .footer-bottom p,
+html:not([data-theme="dark"]) .footer-links a {
+    color: #94a3b8 !important;
+}
+
+html:not([data-theme="dark"]) .social-links a {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #cbd5e1 !important;
+}
+
+html:not([data-theme="dark"]) .social-links a:hover {
+    color: #ffffff !important;
+}
+
+/* Tab butonları — kategori görsel kartları (.category-card) hariç (arka planı ezmesin) */
+html:not([data-theme="dark"]) .tab-btn:not(.category-card) {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    color: var(--remote-text) !important;
+    backdrop-filter: none;
+}
+
+html:not([data-theme="dark"]) .tab-btn:not(.category-card):hover {
+    border-color: #cbd5e1 !important;
+}
+
+html:not([data-theme="dark"]) .tab-btn.active:not(.category-card) {
+    background: var(--remote-accent) !important;
+    color: #ffffff !important;
+}
+
+/* Modül / simülasyon detay kartları (modules.html, simulations.html) — Remote ürün kartı */
+html:not([data-theme="dark"]) .module-card-detailed,
+html:not([data-theme="dark"]) .simulation-card-detailed {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html:not([data-theme="dark"]) .module-card-detailed::before,
+html:not([data-theme="dark"]) .simulation-card-detailed::before {
+    display: none !important;
+}
+
+html:not([data-theme="dark"]) .module-card-detailed:hover,
+html:not([data-theme="dark"]) .simulation-card-detailed:hover {
+    transform: translateY(-4px) !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: var(--remote-card-shadow-hover) !important;
+    background: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) .simulation-card-detailed .card-image-top {
+    border-radius: var(--remote-radius) var(--remote-radius) 0 0 !important;
+}
+
+html:not([data-theme="dark"]) .simulation-card-detailed:hover .card-image-top {
+    transform: scale(1.02) !important;
+}
+
+html:not([data-theme="dark"]) .module-icon {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+}
+
+html:not([data-theme="dark"]) .module-card-detailed:hover .module-icon {
+    transform: none !important;
+}
+
+html:not([data-theme="dark"]) .simulation-card-detailed .simulation-icon {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+}
+
+html:not([data-theme="dark"]) .simulation-card-detailed:hover .simulation-icon {
+    transform: none !important;
+}
+
+html:not([data-theme="dark"]) .level-badge {
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.03em !important;
+}
+
+html:not([data-theme="dark"]) .simulation-info h3,
+html:not([data-theme="dark"]) .simulation-scenarios h4,
+html:not([data-theme="dark"]) .module-info h3 {
+    color: var(--remote-text) !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+html:not([data-theme="dark"]) .simulation-content p,
+html:not([data-theme="dark"]) .simulation-scenarios li,
+html:not([data-theme="dark"]) .module-content p,
+html:not([data-theme="dark"]) .module-topics li {
+    color: var(--remote-text-secondary) !important;
+}
+
+/* Modül sayfası hero — açık mesh (Remote) */
+html:not([data-theme="dark"]) .modules-hero {
+    background:
+        radial-gradient(ellipse 100% 80% at 50% -20%, rgba(79, 70, 229, 0.09) 0%, transparent 50%),
+        linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
+    color: var(--remote-text) !important;
+    border-bottom: 1px solid var(--remote-border);
+}
+
+html:not([data-theme="dark"]) .modules-hero::before,
+html:not([data-theme="dark"]) .modules-hero::after {
+    display: none !important;
+}
+
+html:not([data-theme="dark"]) .modules-hero .hero-title,
+html:not([data-theme="dark"]) .modules-hero .hero-content h1 {
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-weight: 800 !important;
+}
+
+html:not([data-theme="dark"]) .modules-hero .hero-subtitle,
+html:not([data-theme="dark"]) .modules-hero .hero-content p {
+    color: var(--remote-text-secondary) !important;
+    text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) .modules-page .section-title,
+html:not([data-theme="dark"]) .category-title {
+    color: var(--remote-text) !important;
+    text-shadow: none !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+html:not([data-theme="dark"]) .modules-page .section-subtitle {
+    color: var(--remote-text-secondary) !important;
+}
+
+html:not([data-theme="dark"]) .modules-page .simulation-categories {
+    background: var(--remote-bg-subtle) !important;
+    border-bottom-color: var(--remote-border) !important;
+}
+
+/* İstatistik — Remote rakam blokları */
+html:not([data-theme="dark"]) .stat-card {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    padding: 1.5rem 1rem !important;
+    box-shadow: var(--remote-card-shadow) !important;
+}
+
+html:not([data-theme="dark"]) .stats-grid {
+    gap: 1.25rem !important;
+}
+
+html:not([data-theme="dark"]) .features-grid,
+html:not([data-theme="dark"]) .simulations-grid,
+html:not([data-theme="dark"]) .modules-grid {
+    gap: 1.5rem !important;
+}
+
+html:not([data-theme="dark"]) .simulations-grid-section {
+    background: var(--remote-bg) !important;
+}
+
+/* Mobil yan menü — açık tema çekmecesi */
+@media (max-width: 768px) {
+    html:not([data-theme="dark"]) .nav-panel {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        border-right: 1px solid var(--remote-border) !important;
+        box-shadow: 8px 0 32px rgba(15, 23, 42, 0.12) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-drawer-header {
+        border-bottom-color: var(--remote-border) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-drawer-title {
+        color: var(--remote-text) !important;
+        -webkit-text-fill-color: var(--remote-text) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-drawer-sub {
+        color: var(--remote-blue) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-drawer-close {
+        background: var(--remote-bg-subtle) !important;
+        border-color: var(--remote-border) !important;
+        color: var(--remote-text) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-menu::before {
+        color: var(--remote-text-secondary) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-link {
+        color: var(--remote-text) !important;
+        -webkit-text-fill-color: var(--remote-text) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-link i {
+        color: var(--remote-blue) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-link:hover {
+        background: rgba(37, 99, 235, 0.08) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-link.active {
+        background: rgba(37, 99, 235, 0.12) !important;
+        border-left-color: var(--remote-blue) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons {
+        border-top-color: var(--remote-border) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons::before {
+        color: var(--remote-text-secondary) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons .btn-login,
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons .btn-signup,
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons .btn-dashboard {
+        color: var(--remote-text) !important;
+        -webkit-text-fill-color: var(--remote-text) !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons .btn-signup {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+
+    html:not([data-theme="dark"]) .nav-panel .nav-buttons #userProfile .user-name {
+        color: var(--remote-text) !important;
+        -webkit-text-fill-color: var(--remote-text) !important;
+    }
+
+    html:not([data-theme="dark"]) .hamburger.active {
+        background: rgba(37, 99, 235, 0.12) !important;
+        border-color: rgba(37, 99, 235, 0.35) !important;
+    }
+}
+
+/* Formlar — iletişim, giriş, üye (açık yüzey) */
+html:not([data-theme="dark"]) .form-group label {
+    color: var(--remote-text) !important;
+}
+
+html:not([data-theme="dark"]) .form-group input,
+html:not([data-theme="dark"]) .form-group select,
+html:not([data-theme="dark"]) .form-group textarea,
+html:not([data-theme="dark"]) .contact-form .form-group input:not([type="checkbox"]),
+html:not([data-theme="dark"]) .contact-form .form-group select,
+html:not([data-theme="dark"]) .contact-form .form-group textarea {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    color: var(--remote-text) !important;
+    backdrop-filter: none !important;
+}
+
+html:not([data-theme="dark"]) .form-group input:focus,
+html:not([data-theme="dark"]) .form-group select:focus,
+html:not([data-theme="dark"]) .form-group textarea:focus,
+html:not([data-theme="dark"]) .contact-form .form-group input:not([type="checkbox"]):focus,
+html:not([data-theme="dark"]) .contact-form .form-group select:focus,
+html:not([data-theme="dark"]) .contact-form .form-group textarea:focus {
+    background: #ffffff !important;
+    border-color: var(--remote-blue) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+html:not([data-theme="dark"]) .contact-form .form-group.checkbox-group input[type="checkbox"] {
+    background: #ffffff !important;
+    border-color: var(--remote-border) !important;
+}
+
+html:not([data-theme="dark"]) .checkbox-label {
+    color: var(--remote-text-secondary) !important;
+}
+
+/* Sayfa gövdeleri — cam karanlık kartlar yerine açık kart */
+html:not([data-theme="dark"]) .contact-form-modern,
+html:not([data-theme="dark"]) .contact-card-modern,
+html:not([data-theme="dark"]) .faq-item,
+html:not([data-theme="dark"]) .pricing-card {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+}
+
+html:not([data-theme="dark"]) .pricing-card.featured {
+    border-color: rgba(37, 99, 235, 0.35) !important;
+    box-shadow: var(--remote-card-shadow-hover) !important;
+}
+
+html:not([data-theme="dark"]) .contact-title-modern,
+html:not([data-theme="dark"]) .contact-description-modern,
+html:not([data-theme="dark"]) .contact-hero-text h1,
+html:not([data-theme="dark"]) .about-hero-modern h1 {
+    color: var(--remote-text) !important;
+    -webkit-text-fill-color: var(--remote-text) !important;
+}
+
+html:not([data-theme="dark"]) .contact-stat-item-modern {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+}
+
+/* Giriş / üye kartı */
+html:not([data-theme="dark"]) .login-card {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+}
+
+/* Dashboard ve diğer paneller */
+html:not([data-theme="dark"]) .dashboard-card,
+html:not([data-theme="dark"]) .stats-card,
+html:not([data-theme="dark"]) .progress-card,
+html:not([data-theme="dark"]) .onboarding-card,
+html:not([data-theme="dark"]) .certificate-card,
+html:not([data-theme="dark"]) .certificate-header-card {
+    background: #ffffff !important;
+    border: 1px solid var(--remote-border) !important;
+    border-radius: var(--remote-radius) !important;
+    box-shadow: var(--remote-card-shadow) !important;
+}

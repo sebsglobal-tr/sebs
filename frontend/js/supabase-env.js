@@ -11,4 +11,11 @@
         window.VITE_SUPABASE_ANON_KEY ||
         window.SUPABASE_ANON_KEY ||
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFja2ZvYnd0a296dmdzbnVlemN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDYyODEsImV4cCI6MjA4NzE4MjI4MX0.0C5ZrG7tUQxO2rDv3ZiaapCdSSUtvgAtp0CCqMGIWbI';
+    /**
+     * Backend kökü (protokol + host, /api ile bitmez). Boş = sayfa ile aynı origin + /api.
+     * Vercel statik + Render API örneği: window.SEBS_API_BASE_URL = 'https://sebs-api.onrender.com';
+     */
+    if (window.SEBS_API_BASE_URL === undefined) {
+        window.SEBS_API_BASE_URL = '';
+    }
 })();

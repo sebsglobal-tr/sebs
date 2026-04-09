@@ -494,7 +494,10 @@ class SupabaseAuthSystem {
         if (window.APIClient?.logLogin) {
           await window.APIClient.logLogin();
         } else {
-          const apiBase = (window.location?.origin || '') + '/api';
+          const apiBase =
+            typeof window.getSebsApiBase === 'function'
+              ? window.getSebsApiBase()
+              : (window.location?.origin || '') + '/api';
           await fetch(apiBase + '/progress/activity/login', {
             method: 'POST',
             headers: {

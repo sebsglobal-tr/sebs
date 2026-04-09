@@ -16,7 +16,12 @@ async function getUserPurchases() {
             return [];
         }
 
-        const apiBase = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+        const apiBase =
+            typeof window.getSebsApiBase === 'function'
+                ? window.getSebsApiBase()
+                : (typeof window !== 'undefined' && window.location && window.location.origin
+                      ? window.location.origin + '/api'
+                      : 'http://localhost:8006/api');
         const response = await fetch(apiBase + '/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`

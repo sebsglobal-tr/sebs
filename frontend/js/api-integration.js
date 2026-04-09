@@ -1,8 +1,15 @@
 // ============================================
 // API YAPILANDIRMASI
 // ============================================
-// Backend API'nin base URL'i (canlıda aynı origin)
-const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? (window.location.origin + '/api') : 'http://localhost:8006/api';
+function getApiIntegrationBase() {
+    if (typeof window !== 'undefined' && typeof window.getSebsApiBase === 'function') {
+        return window.getSebsApiBase();
+    }
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+        return window.location.origin + '/api';
+    }
+    return 'http://localhost:8006/api';
+}
 
 // ============================================
 // EĞİTİM PLATFORMU API YARDIMCI SINIFI
@@ -35,7 +42,7 @@ class EducationAPI {
     // endpoint: API endpoint yolu (örn: '/auth/login')
     // options: Fetch API seçenekleri (method, body, headers vb.)
     async request(endpoint, options = {}) {
-        const url = `${API_BASE_URL}${endpoint}`; // Tam URL oluştur
+        const url = `${getApiIntegrationBase()}${endpoint}`; // Tam URL oluştur
         const config = {
             headers: {
                 'Content-Type': 'application/json', // JSON formatında veri gönderileceğini belirt

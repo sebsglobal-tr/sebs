@@ -87,7 +87,10 @@ window.TimeTracker = {
                         console.log('✅ Süre veritabanına kaydedildi:', elapsedMinutes, 'dakika');
                     }
                 } else if (moduleId && token) {
-                    const apiBase = (window.location?.origin || '') + '/api';
+                    const apiBase =
+                        typeof window.getSebsApiBase === 'function'
+                            ? window.getSebsApiBase()
+                            : (window.location?.origin || '') + '/api';
                     const res = await fetch(apiBase + '/progress/time', {
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },

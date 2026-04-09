@@ -75,9 +75,11 @@
                 moduleId = await resolveModuleId(data.moduleName);
             }
             const apiBase =
-                typeof window !== 'undefined' && window.location && window.location.origin
-                    ? window.location.origin + '/api'
-                    : 'http://localhost:8006/api';
+                typeof window.getSebsApiBase === 'function'
+                    ? window.getSebsApiBase()
+                    : typeof window !== 'undefined' && window.location && window.location.origin
+                      ? window.location.origin + '/api'
+                      : 'http://localhost:8006/api';
             try {
                 const response = await fetch(apiBase + '/simulations/start', {
                     method: 'POST',
@@ -151,9 +153,11 @@
             try {
                 let result;
                 const apiBase =
-                    typeof window !== 'undefined' && window.location && window.location.origin
-                        ? window.location.origin + '/api'
-                        : 'http://localhost:8006/api';
+                    typeof window.getSebsApiBase === 'function'
+                        ? window.getSebsApiBase()
+                        : typeof window !== 'undefined' && window.location && window.location.origin
+                          ? window.location.origin + '/api'
+                          : 'http://localhost:8006/api';
                 let response = await fetch(apiBase + '/simulations/complete', {
                     method: 'POST',
                     headers: {

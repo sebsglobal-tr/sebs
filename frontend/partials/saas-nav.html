@@ -1,0 +1,80 @@
+    <!-- Navigation (SaaS shell) -->
+    <nav class="navbar saas-shell-navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="nav-logo">
+                <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" id="navLogoImg"
+                     onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
+                <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logoGradientShell)"/>
+                    <defs>
+                        <linearGradient id="logoGradientShell" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="20" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">S</text>
+                </svg>
+                <span class="sebs">SEBS</span>
+                <span class="global">Global</span>
+            </a>
+            <div class="nav-panel" id="navPanel">
+
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li class="nav-item" role="none">
+                    <a href="/index.html" class="nav-link" data-page="index" role="menuitem">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/modules.html" class="nav-link" data-page="modules" role="menuitem">
+                        <i class="fas fa-book"></i> Eğitim Modülleri
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/simulations.html" class="nav-link" data-page="simulations" role="menuitem">
+                        <i class="fas fa-flask"></i> Simülasyonlar
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/pricing.html" class="nav-link" data-page="pricing" role="menuitem">
+                        <i class="fas fa-tag"></i> Paketler
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/about.html" class="nav-link" data-page="about" role="menuitem">
+                        <i class="fas fa-info-circle"></i> Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/contact.html" class="nav-link" data-page="contact" role="menuitem">
+                        <i class="fas fa-envelope"></i> İletişim
+                    </a>
+                </li>
+                <li class="nav-item" role="none">
+                    <a href="/dashboard.html" class="nav-link" data-page="dashboard" role="menuitem">
+                        <i class="fas fa-tachometer-alt"></i> Panel
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-buttons">
+                <button type="button" class="dark-mode-toggle" id="darkModeToggle" aria-label="Tema değiştir">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                </div>
+                <a href="/login.html" class="btn-login" id="loginBtn">Giriş Yap</a>
+                <a href="/signup.html" class="btn-signup" id="signupBtn">Ücretsiz Başla</a>
+                <a href="#" class="btn-logout" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
+                </a>
+            </div>
+            </div>
+            <button type="button" class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
