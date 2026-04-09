@@ -641,3 +641,157 @@ body.landing-site-body footer.border-t {
     radial-gradient(52rem 20rem at 0% 0%, rgba(37, 99, 235, 0.06), transparent 65%),
     linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
+
+/* ---------- Simulations & modules list — açık tema (index ile uyum) ---------- */
+body.landing-site-body .modules-hero {
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #fafbfc 0%, #ffffff 55%, #f8fafc 100%) !important;
+  color: #0f172a !important;
+  min-height: auto !important;
+  padding: 7rem 1.5rem 3rem !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+body.landing-site-body .modules-hero::before,
+body.landing-site-body .modules-hero::after {
+  display: none !important;
+  content: none !important;
+}
+
+body.landing-site-body .modules-hero .hero-title,
+body.landing-site-body .modules-hero .hero-content h1 {
+  color: #0f172a !important;
+  text-shadow: none !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  background: none !important;
+  -webkit-text-fill-color: #0f172a !important;
+  background-clip: border-box !important;
+  animation: none !important;
+}
+
+body.landing-site-body .modules-hero .hero-subtitle,
+body.landing-site-body .modules-hero .hero-content p {
+  color: #475569 !important;
+  text-shadow: none !important;
+  max-width: 42rem;
+}
+
+body.landing-site-body .modules-hero .hero-stats {
+  margin-top: 2rem;
+  gap: 1rem !important;
+}
+
+body.landing-site-body .modules-hero .stat-number {
+  color: #0f172a !important;
+}
+
+body.landing-site-body .modules-hero .stat-label {
+  color: #64748b !important;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+body.landing-site-body .modules-hero .stat-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  min-width: 7.5rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+body.landing-site-body .simulation-categories {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+body.landing-site-body .category-card::before {
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.78) 0%,
+    rgba(15, 23, 42, 0.28) 55%,
+    transparent 100%
+  ) !important;
+}
+
+body.landing-site-body .category-card:hover::before {
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.72) 0%,
+    rgba(37, 99, 235, 0.35) 100%
+  ) !important;
+}
+
+body.landing-site-body .category-card:hover {
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.18) !important;
+}
+
+body.landing-site-body .simulations-grid-section {
+  background: #f8fafc !important;
+  padding-top: 3rem !important;
+  padding-bottom: 4rem !important;
+}
+
+body.landing-site-body .simulations-grid-section .section-title {
+  color: #0f172a !important;
+  font-family: Inter, system-ui, sans-serif !important;
+}
+
+body.landing-site-body .simulations-grid-section .section-subtitle {
+  color: #475569 !important;
+}
+
+body.landing-site-body .simulation-card-detailed {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow:
+    0 1px 3px 0 rgb(15 23 42 / 0.06),
+    0 1px 2px -1px rgb(15 23 42 / 0.04) !important;
+  border-radius: 1rem !important;
+}
+
+body.landing-site-body .simulation-card-detailed:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  box-shadow:
+    0 20px 40px -12px rgb(15 23 42 / 0.12),
+    0 8px 16px -8px rgb(15 23 42 / 0.08) !important;
+  border-color: #cbd5e1 !important;
+  background: #ffffff !important;
+}
+
+body.landing-site-body .simulation-card-detailed::before {
+  height: 3px !important;
+  background: linear-gradient(90deg, #2563eb, #38bdf8) !important;
+}
+
+body.landing-site-body .simulation-info h3 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body .simulation-card-detailed .duration,
+body.landing-site-body .simulation-card-detailed .participants {
+  color: #64748b !important;
+}
+
+body.landing-site-body .simulation-scenarios h4 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body .simulation-scenarios li {
+  color: #475569 !important;
+}
+
+body.landing-site-body .simulation-footer {
+  border-top-color: #e2e8f0 !important;
+}
+
+body.landing-site-body .simulation-content p strong {
+  color: #0f172a;
+}
