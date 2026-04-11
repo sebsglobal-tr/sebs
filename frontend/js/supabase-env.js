@@ -19,3 +19,48 @@
         window.SEBS_API_BASE_URL = '';
     }
 })();
+
+/**
+ * #signupBtn (üst bar): giriş yoksa kayıt, varsa panel.
+ * [data-sebs-primary-cta] (ana sayfa hero/alt CTA): giriş yoksa göster + kayıt; girişte gizle.
+ */
+(function () {
+    if (typeof window === 'undefined') return;
+    window.sebsApplySignupNavCta = function (loggedIn, user) {
+        var md = user && user.user_metadata ? user.user_metadata : {};
+        var isAdmin =
+            md.role === 'admin' || localStorage.getItem('userRole') === 'admin';
+        var panelHref = isAdmin ? '/admin.html' : '/dashboard.html';
+
+        var signupBtn = document.getElementById('signupBtn');
+        if (signupBtn) {
+            if (loggedIn) {
+                signupBtn.setAttribute('href', panelHref);
+                signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
+                signupBtn.setAttribute(
+                    'aria-label',
+                    isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git'
+                );
+                signupBtn.style.display = 'inline-flex';
+            } else {
+                signupBtn.setAttribute('href', '/signup.html');
+                signupBtn.textContent = 'Ücretsiz başla';
+                signupBtn.removeAttribute('aria-label');
+                signupBtn.style.removeProperty('display');
+            }
+        }
+
+        document.querySelectorAll('[data-sebs-primary-cta]').forEach(function (el) {
+            if (loggedIn) {
+                el.style.display = 'none';
+                el.setAttribute('hidden', '');
+                el.setAttribute('aria-hidden', 'true');
+            } else {
+                el.style.removeProperty('display');
+                el.removeAttribute('hidden');
+                el.removeAttribute('aria-hidden');
+                el.setAttribute('href', '/signup.html');
+            }
+        });
+    };
+})();

@@ -4,6 +4,47 @@
 // Tüm sayfalarda tutarlı navigasyon sağlar
 // Aktif sayfa tespiti, giriş durumuna göre menü güncelleme ve hamburger menü yönetimi
 
+(function ensureSignupNavCta() {
+    if (typeof window === 'undefined' || window.sebsApplySignupNavCta) return;
+    window.sebsApplySignupNavCta = function (loggedIn, user) {
+        var md = user && user.user_metadata ? user.user_metadata : {};
+        var isAdmin =
+            md.role === 'admin' || localStorage.getItem('userRole') === 'admin';
+        var panelHref = isAdmin ? '/admin.html' : '/dashboard.html';
+
+        var signupBtn = document.getElementById('signupBtn');
+        if (signupBtn) {
+            if (loggedIn) {
+                signupBtn.setAttribute('href', panelHref);
+                signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
+                signupBtn.setAttribute(
+                    'aria-label',
+                    isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git'
+                );
+                signupBtn.style.display = 'inline-flex';
+            } else {
+                signupBtn.setAttribute('href', '/signup.html');
+                signupBtn.textContent = 'Ücretsiz başla';
+                signupBtn.removeAttribute('aria-label');
+                signupBtn.style.removeProperty('display');
+            }
+        }
+
+        document.querySelectorAll('[data-sebs-primary-cta]').forEach(function (el) {
+            if (loggedIn) {
+                el.style.display = 'none';
+                el.setAttribute('hidden', '');
+                el.setAttribute('aria-hidden', 'true');
+            } else {
+                el.style.removeProperty('display');
+                el.removeAttribute('hidden');
+                el.removeAttribute('aria-hidden');
+                el.setAttribute('href', '/signup.html');
+            }
+        });
+    };
+})();
+
 (function() {
     'use strict';
 
@@ -118,7 +159,6 @@
 
         // Giriş/çıkış butonlarını güncelle
         const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const dashboardBtn = document.getElementById('dashboardBtn');
         const userProfile = document.getElementById('userProfile');
@@ -127,6 +167,14 @@
 
         const mobileGuestLinks = document.getElementById('mobileGuestLinks');
         const mobileUserLinks = document.getElementById('mobileUserLinks');
+
+        let navCtaUser = null;
+        if (loggedIn && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+            try {
+                const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                navCtaUser = session && session.user ? session.user : null;
+            } catch (e) { /* ignore */ }
+        }
 
         if (loggedIn) {
             const userRole = (userData && userData.role) || localStorage.getItem('userRole') || 'user';
@@ -153,13 +201,6 @@
             }
 
             if (loginBtn) loginBtn.style.display = 'none';
-            /* Ücretsiz başla alanı: giriş sonrası panele (kayıt değil) */
-            if (signupBtn) {
-                signupBtn.setAttribute('href', isAdmin ? '/admin.html' : '/dashboard.html');
-                signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
-                signupBtn.setAttribute('aria-label', isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git');
-                signupBtn.style.display = 'inline-flex';
-            }
             if (logoutBtn) logoutBtn.style.display = 'inline-flex';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
 
@@ -191,12 +232,6 @@
         } else {
             // Kullanıcı giriş yapmamışsa
             if (loginBtn) loginBtn.style.removeProperty('display');
-            if (signupBtn) {
-                signupBtn.setAttribute('href', '/signup.html');
-                signupBtn.textContent = 'Ücretsiz başla';
-                signupBtn.removeAttribute('aria-label');
-                signupBtn.style.removeProperty('display');
-            }
             if (logoutBtn) logoutBtn.style.display = 'none';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
             if (userProfile) {
@@ -206,6 +241,10 @@
 
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'block';
             if (mobileUserLinks) mobileUserLinks.style.display = 'none';
+        }
+
+        if (typeof window.sebsApplySignupNavCta === 'function') {
+            window.sebsApplySignupNavCta(loggedIn, navCtaUser);
         }
 
         // Ana sayfa vb.: .js-auth-only sadece giriş yapmış (doğrulanmış) kullanıcıya

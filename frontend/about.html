@@ -489,7 +489,9 @@
                     if (session && session.user && session.user.email_confirmed_at) {
                         // User is logged in and verified
                         document.getElementById('loginBtn').style.display = 'none';
-                        document.getElementById('signupBtn').style.display = 'none';
+                        if (typeof window.sebsApplySignupNavCta === 'function') {
+                            window.sebsApplySignupNavCta(true, session.user);
+                        }
                         document.getElementById('userProfile').style.display = 'flex';
                         document.getElementById('logoutBtn').style.display = 'block';
                         
@@ -518,7 +520,9 @@
                 
                 // User is not logged in
                 document.getElementById('loginBtn').style.display = 'block';
-                document.getElementById('signupBtn').style.display = 'block';
+                if (typeof window.sebsApplySignupNavCta === 'function') {
+                    window.sebsApplySignupNavCta(false, null);
+                }
                 document.getElementById('userProfile').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 
@@ -526,7 +530,9 @@
                 console.error('checkAuthStatus error:', error);
                 // On error, show login buttons
                 document.getElementById('loginBtn').style.display = 'block';
-                document.getElementById('signupBtn').style.display = 'block';
+                if (typeof window.sebsApplySignupNavCta === 'function') {
+                    window.sebsApplySignupNavCta(false, null);
+                }
                 document.getElementById('userProfile').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
             }
