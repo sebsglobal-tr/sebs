@@ -343,9 +343,13 @@ class SupabaseAuthSystem {
       try {
         localStorage.removeItem('authToken');
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('isVerified');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userRole');
       } catch (e) {}
 
-      window.location.href = '/index.html';
+      window.location.reload();
     } catch (error) {
       console.error('Logout error:', error);
       try {
@@ -355,8 +359,12 @@ class SupabaseAuthSystem {
         }
         localStorage.removeItem('authToken');
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('isVerified');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userRole');
       } catch (e) {}
-      window.location.href = '/index.html';
+      window.location.reload();
     }
   }
 

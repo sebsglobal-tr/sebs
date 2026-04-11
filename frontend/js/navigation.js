@@ -395,7 +395,7 @@
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
 
-        window.location.href = '/index.html';
+        window.location.reload();
     };
 
     // Modüller sayfasına yönlendirme fonksiyonu
