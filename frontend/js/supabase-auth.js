@@ -345,7 +345,7 @@ class SupabaseAuthSystem {
         localStorage.removeItem('isLoggedIn');
       } catch (e) {}
 
-      window.location.href = '/index.html?sebs_logout=1';
+      window.location.href = '/index.html';
     } catch (error) {
       console.error('Logout error:', error);
       try {
@@ -356,7 +356,7 @@ class SupabaseAuthSystem {
         localStorage.removeItem('authToken');
         localStorage.removeItem('isLoggedIn');
       } catch (e) {}
-      window.location.href = '/index.html?sebs_logout=1';
+      window.location.href = '/index.html';
     }
   }
 
