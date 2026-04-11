@@ -282,8 +282,20 @@ class SupabaseAuthSystem {
 
     if (this.isLoggedIn && this.user) {
       // Kullanıcı giriş yapmışsa
+      const mdNav = this.user.user_metadata || {};
+      const isAdmin =
+        mdNav.role === 'admin' || localStorage.getItem('userRole') === 'admin';
+
       if (loginBtn) loginBtn.style.display = 'none';
-      if (signupBtn) signupBtn.style.display = 'none';
+      if (signupBtn) {
+        signupBtn.setAttribute('href', isAdmin ? '/admin.html' : '/dashboard.html');
+        signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
+        signupBtn.setAttribute(
+          'aria-label',
+          isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git'
+        );
+        signupBtn.style.display = 'inline-flex';
+      }
       if (logoutBtn) logoutBtn.style.display = 'inline-flex';
       if (dashboardBtn) dashboardBtn.style.display = 'block';
       if (userProfile) {
@@ -294,7 +306,7 @@ class SupabaseAuthSystem {
       if (mobileUserLinks) mobileUserLinks.style.display = 'block';
       
       try {
-        const md = this.user.user_metadata || {};
+        const md = mdNav;
         const displayName =
           (md.full_name || md.name || [md.first_name, md.last_name].filter(Boolean).join(' ') || '').trim() ||
           (this.user.email ? this.user.email.split('@')[0] : '') ||
@@ -309,7 +321,12 @@ class SupabaseAuthSystem {
     } else {
       // Kullanıcı giriş yapmamışsa
       if (loginBtn) loginBtn.style.removeProperty('display');
-      if (signupBtn) signupBtn.style.removeProperty('display');
+      if (signupBtn) {
+        signupBtn.setAttribute('href', '/signup.html');
+        signupBtn.textContent = 'Ücretsiz başla';
+        signupBtn.removeAttribute('aria-label');
+        signupBtn.style.removeProperty('display');
+      }
       if (logoutBtn) logoutBtn.style.display = 'none';
       if (dashboardBtn) dashboardBtn.style.display = 'none';
       if (userProfile) {

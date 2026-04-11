@@ -153,7 +153,13 @@
             }
 
             if (loginBtn) loginBtn.style.display = 'none';
-            if (signupBtn) signupBtn.style.display = 'none';
+            /* Ücretsiz başla alanı: giriş sonrası panele (kayıt değil) */
+            if (signupBtn) {
+                signupBtn.setAttribute('href', isAdmin ? '/admin.html' : '/dashboard.html');
+                signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
+                signupBtn.setAttribute('aria-label', isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git');
+                signupBtn.style.display = 'inline-flex';
+            }
             if (logoutBtn) logoutBtn.style.display = 'inline-flex';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
 
@@ -185,7 +191,12 @@
         } else {
             // Kullanıcı giriş yapmamışsa
             if (loginBtn) loginBtn.style.removeProperty('display');
-            if (signupBtn) signupBtn.style.removeProperty('display');
+            if (signupBtn) {
+                signupBtn.setAttribute('href', '/signup.html');
+                signupBtn.textContent = 'Ücretsiz başla';
+                signupBtn.removeAttribute('aria-label');
+                signupBtn.style.removeProperty('display');
+            }
             if (logoutBtn) logoutBtn.style.display = 'none';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
             if (userProfile) {
