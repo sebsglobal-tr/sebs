@@ -395,7 +395,7 @@
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
 
-        window.location.href = '/index.html';
+        window.location.href = '/index.html?sebs_logout=1';
     };
 
     // Modüller sayfasına yönlendirme fonksiyonu

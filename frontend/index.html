@@ -46,6 +46,20 @@
   <noscript>
     <style>.reveal-on-scroll { opacity: 1 !important; transform: none !important; }</style>
   </noscript>
+  <!-- Çıkış sonrası: temiz URL + tek yenileme (önbellekteki oturum UI’ını sıfırlar) -->
+  <script>
+    (function () {
+      try {
+        if (!window.location.search || window.location.search.indexOf('sebs_logout=1') === -1) return;
+        var path = window.location.pathname || '/index.html';
+        var hash = window.location.hash || '';
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', path + hash);
+        }
+        window.location.reload();
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 
