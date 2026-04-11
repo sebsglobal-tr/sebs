@@ -1,0 +1,961 @@
+/**
+ * Eğitim modülü ders sayfaları (body.landing-site-body): üst header ile uyum,
+ * mavi sidebar kartı → marka bordosu, ana içerikte koyu tema metinlerinin beyaz üzerinde kaybolmasını önler.
+ * Komut/çıktı: CMD benzeri pencereli pre ve .code-block; premium bileşenlerde açık tema.
+ * Sayfada </head> sonunda landing-chrome.css’ten sonra yükleyin.
+ */
+
+body.landing-site-body {
+  --primary-gradient: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
+  --primary-gradient-hover: linear-gradient(135deg, #6b3030 0%, #991b1b 100%);
+  --primary: #7f1d1d;
+  --primary-light: #dc2626;
+  --glow-primary: 0 0 0 1px rgba(127, 29, 29, 0.15);
+  --info-color: #64748b;
+  --info-gradient: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+body.landing-site-body::before,
+body.landing-site-body::after {
+  display: none !important;
+  content: none !important;
+}
+
+body.landing-site-body .module-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(248, 250, 252, 0.25) !important;
+}
+
+body.landing-site-body .module-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 250, 252, 0.38) !important;
+}
+
+body.landing-site-body .module-sidebar {
+  scrollbar-color: rgba(248, 250, 252, 0.3) transparent !important;
+  top: 4rem !important;
+  height: calc(100vh - 4rem) !important;
+}
+
+/* landing-chrome: body padding-top 4rem (sabit header); çift boşluk olmasın */
+body.landing-site-body .module-layout {
+  margin-top: 0 !important;
+  min-height: calc(100vh - 4rem) !important;
+}
+
+body.landing-site-body .mobile-menu-toggle {
+  top: calc(4rem + 0.5rem) !important;
+  z-index: 60;
+}
+
+body.landing-site-body .nav-link-section:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body .nav-link-anchor:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body main {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body.landing-site-body .content-section {
+  background: #ffffff !important;
+}
+
+/* Ders başlığı satırı (section-header) — açık zeminde kontrast */
+body.landing-site-body main .section-header {
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .section-header h2 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .section-header p,
+body.landing-site-body main .lesson-status {
+  color: #64748b !important;
+}
+
+/* --- docx / ders gövdesi (açık zemin, yüksek kontrast) --- */
+body.landing-site-body main .docx-content h1,
+body.landing-site-body main .docx-content h2 {
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .docx-content h1 strong,
+body.landing-site-body main .docx-content h2 strong,
+body.landing-site-body main .docx-content h3 strong,
+body.landing-site-body main .docx-content h4 strong {
+  color: inherit !important;
+}
+
+body.landing-site-body main .docx-content h3,
+body.landing-site-body main .docx-content h4 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .docx-content p,
+body.landing-site-body main .docx-content ul,
+body.landing-site-body main .docx-content ol,
+body.landing-site-body main .docx-content li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .docx-content strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .docx-content thead th {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+  color: #fff !important;
+}
+
+/* Ders görselleri: sayfa içi stillerde .lesson-image max-width:160px + object-fit:cover
+   diyagram/SVG’yi yok edebiliyor; gizli bölümlerde lazy yükleme gecikebiliyor. */
+body.landing-site-body main .lesson-image-wrap {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.landing-site-body main .figure-block .lesson-image-wrap,
+body.landing-site-body main .figure-block--wide .lesson-image-wrap {
+  align-items: center !important;
+}
+
+body.landing-site-body main .lesson-image-caption,
+body.landing-site-body main .figure-caption {
+  color: #64748b !important;
+  max-width: min(42rem, 100%) !important;
+}
+
+body.landing-site-body main .lesson-image {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+  max-width: min(100%, 720px) !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.landing-site-body main .figure-block .lesson-image,
+body.landing-site-body main .figure-block--wide .lesson-image {
+  max-width: min(100%, 720px) !important;
+}
+
+body.landing-site-body main .docx-content img:not(.lesson-image),
+body.landing-site-body main .content-card img.content-image {
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+body.landing-site-body aside .module-hero-image {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover,
+body.landing-site-body main .comparison-table tbody tr:nth-child(even):hover {
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .feature-table thead {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .learning-objectives {
+  background: rgba(127, 29, 29, 0.06) !important;
+  border-left-color: #991b1b !important;
+}
+
+body.landing-site-body main .learning-objectives h3 i {
+  color: #991b1b !important;
+}
+
+body.landing-site-body main .learning-objectives h3 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .learning-objectives li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .highlight-box {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-left-color: #64748b !important;
+}
+
+/* --- Sözlük / tablolar (mavi satır vurgusu + soluk metin) --- */
+body.landing-site-body main .glossary-table {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .glossary-table td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .glossary-table tr:hover {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .glossary-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .glossary-table tbody tr:nth-child(even):hover {
+  background: #e2e8f0 !important;
+}
+
+body.landing-site-body main .glossary-table tr:hover td {
+  color: #0f172a !important;
+}
+
+/* docx içindeki diğer tablolar */
+body.landing-site-body main .docx-content tbody td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .feature-table td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .feature-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+/* --- Quiz (sayfa içi) --- */
+body.landing-site-body main .quiz-container {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.landing-site-body main .quiz-question h3 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .quiz-option {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .quiz-option::before {
+  background: linear-gradient(180deg, #94a3b8, #64748b) !important;
+}
+
+body.landing-site-body main .quiz-option:hover {
+  border-color: #cbd5e1 !important;
+  background: #f1f5f9 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .quiz-option.selected {
+  border-color: #7f1d1d !important;
+  background: rgba(127, 29, 29, 0.07) !important;
+  box-shadow: 0 0 0 2px rgba(127, 29, 29, 0.12) !important;
+}
+
+body.landing-site-body main .quiz-explanation {
+  background: #f8fafc !important;
+  border-left-color: #64748b !important;
+  color: #334155 !important;
+}
+
+/* quiz-exam.js ile eklenen değerlendirme blokları */
+body.landing-site-body main .eval-question-block {
+  margin: 1.25rem 0 !important;
+  padding: 1rem 1.1rem !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+}
+
+body.landing-site-body main .eval-question-text {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .eval-option {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .eval-option:hover {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .eval-submit-btn:hover {
+  background: #991b1b !important;
+}
+
+body.landing-site-body main .eval-result {
+  color: #14532d !important;
+}
+
+/* --- Kutular: info, kavram, premium callout --- */
+body.landing-site-body main .info-box {
+  background: #f8fafc !important;
+  border-left-color: #64748b !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-box p,
+body.landing-site-body main .info-box li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-box i {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .key-concept-card,
+body.landing-site-body main .key-concept-card p {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .key-concept-card h4 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .callout-box.info {
+  background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(148, 163, 184, 0.04)) !important;
+  border-color: #94a3b8 !important;
+}
+
+body.landing-site-body main .callout-box.info .callout-icon {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .callout-box .callout-body p,
+body.landing-site-body main .callout-box .callout-body ul,
+body.landing-site-body main .callout-box .callout-body li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .callout-box .callout-body h5 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .terimler-block {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .terimler-block,
+body.landing-site-body main .terimler-block p {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .key-point-card {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .key-point-card i {
+  color: #7f1d1d !important;
+}
+
+body.landing-site-body main .key-point-card strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .key-point-card span {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .topology-diagram {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .info-table-compact tbody tr:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* İçerik kartları (mavi hover çizgisi) */
+body.landing-site-body main .content-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  backdrop-filter: none !important;
+}
+
+body.landing-site-body main .content-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.landing-site-body main .content-card h2 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-card h2 i {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .content-card:hover h2 i {
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .content-card h3,
+body.landing-site-body main .content-card h4 {
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .content-card p,
+body.landing-site-body main .content-card li,
+body.landing-site-body main .content-card ul,
+body.landing-site-body main .content-card ol {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .content-card strong {
+  color: #0f172a !important;
+}
+
+/* Temel Network vb.: docx-content dışındaki karşılaştırma tabloları */
+body.landing-site-body main .comparison-table {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .comparison-table thead {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .comparison-table thead th {
+  color: #ffffff !important;
+}
+
+body.landing-site-body main .comparison-table td,
+body.landing-site-body main .comparison-table tbody th {
+  color: #334155 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover {
+  transform: none !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover td {
+  color: #0f172a !important;
+}
+
+/* Alt başlık satırı (content-section-header) — açık zeminde */
+body.landing-site-body main .content-section-title {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-section-header {
+  border-bottom-color: #e2e8f0 !important;
+}
+
+/* callout: .content-card p kurallarından sonra gelmeli (yüksek özgüllük) */
+body.landing-site-body main .content-card .callout-box.warning {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+}
+
+body.landing-site-body main .content-card .callout-box.tip {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body p,
+body.landing-site-body main .content-card .callout-box .callout-body li,
+body.landing-site-body main .content-card .callout-box .callout-body ul {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body h5 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .gercek-hayat-ornegi {
+  background: #f8fafc !important;
+  border-left-color: #7f1d1d !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .gercek-hayat-ornegi strong,
+body.landing-site-body main .gercek-hayat-ornegi .ornek-baslik {
+  color: #0f172a !important;
+}
+
+/* Üst bar: oturum açıkken profil daha belirgin */
+body.landing-site-body header #userAvatar {
+  background: rgba(127, 29, 29, 0.12) !important;
+  color: #7f1d1d !important;
+}
+
+body.landing-site-body header #userProfile:not(.hidden) {
+  border-color: rgba(127, 29, 29, 0.28) !important;
+}
+
+body.landing-site-body main .cia-item.confidentiality {
+  border-color: #991b1b !important;
+}
+
+body.landing-site-body main .cia-item.confidentiality h4 {
+  color: #991b1b !important;
+}
+
+/* premium-lesson: tablolar ve kavram kartları */
+body.landing-site-body main .info-table-compact {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+body.landing-site-body main .info-table-compact th {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .info-table-compact td {
+  border-bottom-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-table-compact tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .concept-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .concept-card:hover {
+  border-color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .concept-card p,
+body.landing-site-body main .concept-card li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .concept-card.advantage-card {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+}
+
+body.landing-site-body main .concept-card.disadvantage-card {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+}
+
+body.landing-site-body main .scenario-block {
+  background: #fffbeb !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #334155 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .scenario-block p,
+body.landing-site-body main .scenario-block li {
+  color: #334155 !important;
+}
+
+/* ========== Komut satırı / CMD çıktısı hissi ==========
+   Düz <pre><code> blokları: pencereli koyu konsol; .linux-terminal zaten başlıklı. */
+
+body.landing-site-body main .docx-content pre:not(.term-body),
+body.landing-site-body main .lesson-content pre:not(.term-body),
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body) {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 2.65rem 1.2rem 1.15rem 1.2rem !important;
+  background: linear-gradient(180deg, #2b2b2b 0, #2b2b2b 42px, #0c0c0c 42px) !important;
+  border: 1px solid #1e293b !important;
+  border-left: 3px solid #7f1d1d !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 14px 40px rgba(15, 23, 42, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: #c8cdd3 !important;
+  overflow-x: auto;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body)::before,
+body.landing-site-body main .lesson-content pre:not(.term-body)::before,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body)::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+  z-index: 1;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body)::after,
+body.landing-site-body main .lesson-content pre:not(.term-body)::after,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body)::after {
+  content: "Örnek çıktı — Komut satırı";
+  position: absolute;
+  top: 11px;
+  left: 56px;
+  right: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body) code,
+body.landing-site-body main .lesson-content pre:not(.term-body) code,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body) code {
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* .code-block: başlık çubuğu + konsol gövdesi (içteki pre’de sahte pencere yok) */
+body.landing-site-body main .code-block {
+  background: linear-gradient(180deg, #2b2b2b 0, #2b2b2b 48px, #0c0c0c 48px) !important;
+  border: 1px solid #1e293b !important;
+  border-left: 3px solid #7f1d1d !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  margin: 1.5rem 0 !important;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.2) !important;
+}
+
+/* Sadece metin (pre/h4 yok) — örn. GCP gcloud kutuları */
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4)) {
+  position: relative;
+  padding: 2.65rem 1.2rem 1.15rem 1.2rem !important;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: #c8cdd3 !important;
+}
+
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4))::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+  z-index: 1;
+}
+
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4))::after {
+  content: "Örnek çıktı — Komut satırı";
+  position: absolute;
+  top: 11px;
+  left: 56px;
+  right: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+body.landing-site-body main .code-block h4 {
+  margin: 0 !important;
+  padding: 0.75rem 1rem 0.75rem 3rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #d1d5db !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+body.landing-site-body main .code-block h4::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 14px 0 0 #febc2e, 28px 0 0 #28c840;
+}
+
+body.landing-site-body main .docx-content .code-block pre,
+body.landing-site-body main .lesson-content .code-block pre {
+  margin: 0 !important;
+  padding: 1rem 1.2rem !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #c8cdd3 !important;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+body.landing-site-body main .docx-content .code-block pre::before,
+body.landing-site-body main .docx-content .code-block pre::after,
+body.landing-site-body main .lesson-content .code-block pre::before,
+body.landing-site-body main .lesson-content .code-block pre::after {
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .code-block pre code {
+  color: inherit !important;
+  background: transparent !important;
+}
+
+/* Çerçeveli terminal (Linux başlığı): marka vurgusu + okunaklı komut rengi */
+body.landing-site-body main .linux-terminal {
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  box-shadow:
+    0 16px 48px rgba(15, 23, 42, 0.2),
+    0 0 0 1px rgba(127, 29, 29, 0.12) !important;
+}
+
+body.landing-site-body main .linux-terminal .term-header {
+  background: linear-gradient(90deg, #3f1d1d 0%, #2d2a32 55%, #252530 100%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body main .linux-terminal .term-title {
+  color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-body {
+  background: #0f0f12 !important;
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-prompt {
+  color: #86efac !important;
+}
+
+body.landing-site-body main .linux-terminal .term-cmd {
+  color: #f5d78e !important;
+}
+
+body.landing-site-body main .linux-terminal .term-output {
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-comment {
+  color: #787b84 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-highlight {
+  color: #fca5a5 !important;
+}
+
+/* Satır içi kod: hafif etiket */
+body.landing-site-body main .docx-content p code,
+body.landing-site-body main .docx-content li code,
+body.landing-site-body main .docx-content td code,
+body.landing-site-body main .lesson-content p code,
+body.landing-site-body main .lesson-content li code,
+body.landing-site-body main .lesson-content td code {
+  font-family: "Cascadia Mono", Consolas, Monaco, monospace !important;
+  font-size: 0.88em;
+  color: #7f1d1d !important;
+  background: rgba(127, 29, 29, 0.08) !important;
+  padding: 0.12em 0.4em !important;
+  border-radius: 6px;
+  border: 1px solid rgba(127, 29, 29, 0.12);
+}
+
+/* Bölüm başlıkları: ince marka çizgisi */
+body.landing-site-body main .docx-content > h2,
+body.landing-site-body main .section-inner > h2 {
+  padding-left: 0.85rem !important;
+  border-left: 4px solid #7f1d1d !important;
+  margin-left: 0 !important;
+}
+
+body.landing-site-body main .docx-content > h3 {
+  position: relative;
+  padding-left: 0.65rem !important;
+  margin-top: 1.75rem !important;
+}
+
+body.landing-site-body main .docx-content > h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #d4a853, #7f1d1d);
+}
+
+/* Premium görsel kartlar — açık zemin, altın vurgu */
+body.landing-site-body main .visual-card {
+  background: linear-gradient(145deg, #fffbeb 0%, #ffffff 55%, #f8fafc 100%) !important;
+  border: 1px solid rgba(212, 168, 83, 0.35) !important;
+  border-left-width: 4px !important;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.07) !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .visual-card:hover {
+  border-left-width: 4px !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1) !important;
+}
+
+body.landing-site-body main .sorular-block {
+  background: rgba(127, 29, 29, 0.05) !important;
+  border-color: rgba(127, 29, 29, 0.18) !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .accordion-block {
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .accordion-trigger {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.08), rgba(248, 250, 252, 0.95)) !important;
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .accordion-trigger:hover {
+  background: rgba(127, 29, 29, 0.1) !important;
+}
+
+body.landing-site-body main .accordion-content-inner {
+  border-top-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .tabs-container {
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .tabs-nav {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .tabs-nav button:hover {
+  color: #0f172a !important;
+  background: rgba(127, 29, 29, 0.06) !important;
+}
+
+body.landing-site-body main .tabs-nav button.active {
+  color: #7f1d1d !important;
+  background: #ffffff !important;
+}
+
+body.landing-site-body main .tab-panel {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .flip-card-front {
+  background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .flip-card-front strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .flip-card-back {
+  background: linear-gradient(145deg, #fffbeb, #fef3c7) !important;
+  border: 1px solid rgba(212, 168, 83, 0.4) !important;
+}
+
+body.landing-site-body main .flip-card-back span {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .flip-card:hover .flip-card-front {
+  border-color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .quick-check-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .quick-check-card:hover {
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  background: rgba(127, 29, 29, 0.04) !important;
+}
+
+body.landing-site-body main .process-flow {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+body.landing-site-body main .process-step {
+  background: #ffffff !important;
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .module-hero-image,
+body.landing-site-body main .lesson-hero-image {
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1) !important;
+}

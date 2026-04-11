@@ -7,7 +7,15 @@
     <base href="/">
     <title>Temel Network Eğitimi - SEBS Global</title>
     <meta name="description" content="Temel network eğitimi: Etik ve yasal çerçeve, TCP/IP, OSI modeli, subnetting ve ağ güvenliği temelleri. Kapsamlı başlangıç seviyesi eğitim modülü.">
-    
+    <!--
+      Landing ders sayfası (Siber Güvenliğe Giriş modülü ile aynı hat):
+      1) body.landing-site-body + sabit üst bar + landing footer
+      2) </head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
+      3) premium-lesson + sayfa içi stiller (docx-content, linux-terminal, quiz-exam, interactive-lesson)
+      4) </body> öncesi: Supabase CDN + supabase-env/client/auth + navigation.js (giriş durumu üst menüde)
+      5) module-access-check.js + saas-shell.js
+      6) Kontrast / CMD kutuları: module-lesson-landing.css (layout + sidebar top: 4rem ile header hizası)
+    -->
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -189,8 +197,8 @@
 
         .module-layout {
             display: flex;
-            min-height: 100vh;
-            margin-top: 70px;
+            min-height: calc(100vh - 4rem);
+            margin-top: 0;
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
@@ -205,10 +213,10 @@
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: var(--shadow-lg);
             position: fixed;
-            height: calc(100vh - 70px);
+            height: calc(100vh - 4rem);
             overflow-y: auto;
             z-index: 100;
-            top: 70px;
+            top: 4rem;
             scrollbar-width: thin;
             scrollbar-color: rgba(30, 64, 175, 0.5) transparent;
         }
@@ -787,7 +795,7 @@
             width: 100%;
             max-width: 100%;
             background: transparent;
-            min-height: calc(100vh - 70px);
+            min-height: calc(100vh - 4rem);
             position: relative;
             z-index: 1;
             overflow-x: hidden;
@@ -2273,6 +2281,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css" />
+  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -4861,6 +4870,13 @@
             });
         }
     </script>
+
+    <!-- Oturum + üst menü (index ile aynı zincir; giriş yapınca profil görünür) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+    <script src="/js/supabase-env.js"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <script src="/js/navigation.js?v=2.3"></script>
 
     <script src="module-access-check.js"></script>
 <!-- Landing chrome footer (same as index.html) -->

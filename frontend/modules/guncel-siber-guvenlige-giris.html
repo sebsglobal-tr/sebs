@@ -1947,6 +1947,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css" />
+  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -6291,7 +6292,14 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
         }
 
     </script>
-    
+
+    <!-- Oturum + üst menü (index ile aynı zincir; giriş yapınca profil görünür) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+    <script src="/js/supabase-env.js"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js"></script>
+    <script src="/js/navigation.js?v=2.3"></script>
+
     <!-- Module Access Check -->
     <script src="module-access-check.js"></script>
 <!-- Landing chrome footer (same as index.html) -->
