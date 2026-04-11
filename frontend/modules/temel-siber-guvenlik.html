@@ -4396,7 +4396,13 @@
             localStorage.removeItem('userProgress');
             localStorage.removeItem('recentActivities');
             localStorage.removeItem('achievements');
-            window.location.reload();
+            setTimeout(function () {
+                try {
+                    window.location.reload();
+                } catch (e) {
+                    window.location.href = window.location.href;
+                }
+            }, 0);
         }
 
         // Mobil üst menü: ../js/navigation.js

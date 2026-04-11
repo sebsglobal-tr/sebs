@@ -1624,7 +1624,13 @@
             localStorage.removeItem('achievements');
             localStorage.removeItem('authToken');
 
-            window.location.reload();
+            setTimeout(function () {
+                try {
+                    window.location.reload();
+                } catch (e) {
+                    window.location.href = window.location.href;
+                }
+            }, 0);
         }
 
         // Update logo based on theme

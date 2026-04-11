@@ -325,15 +325,9 @@ class SupabaseAuthSystem {
   }
 
   async logout() {
-    try {
-      if (this.supabase) {
-        const { error } = await this.supabase.auth.signOut({ scope: 'global' });
-        if (error) throw error;
-      }
-
+    const clearClientSession = () => {
       this.isLoggedIn = false;
       this.user = null;
-
       try {
         for (let i = localStorage.length - 1; i >= 0; i--) {
           const k = localStorage.key(i);
@@ -348,24 +342,36 @@ class SupabaseAuthSystem {
         localStorage.removeItem('userData');
         localStorage.removeItem('userRole');
       } catch (e) {}
+    };
 
-      window.location.reload();
+    const hardReload = () => {
+      setTimeout(function () {
+        try {
+          window.location.reload();
+        } catch (e) {
+          window.location.href = window.location.href;
+        }
+      }, 0);
+    };
+
+    try {
+      if (this.supabase) {
+        await Promise.race([
+          (async () => {
+            const { error } = await this.supabase.auth.signOut({ scope: 'global' });
+            if (error) throw error;
+          })(),
+          new Promise(function (resolve) {
+            setTimeout(resolve, 4000);
+          }),
+        ]);
+      }
     } catch (error) {
       console.error('Logout error:', error);
-      try {
-        for (let i = localStorage.length - 1; i >= 0; i--) {
-          const k = localStorage.key(i);
-          if (k && k.startsWith('sb-')) localStorage.removeItem(k);
-        }
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('isVerified');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userData');
-        localStorage.removeItem('userRole');
-      } catch (e) {}
-      window.location.reload();
     }
+
+    clearClientSession();
+    hardReload();
   }
 
   async signUp(email, password, fullName) {

@@ -369,13 +369,28 @@
     // ============================================
     // Kullanıcı çıkış işlemi - Supabase'den çıkış yapar ve localStorage'ı temizler
     window.logout = async function() {
+        function scheduleReload() {
+            setTimeout(function () {
+                try {
+                    window.location.reload();
+                } catch (e) {
+                    window.location.href = window.location.href;
+                }
+            }, 0);
+        }
+
         try {
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
                 await window.supabaseAuthSystem.logout();
                 return;
             }
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-                await window.supabaseAuthSystem.supabase.auth.signOut();
+                await Promise.race([
+                    window.supabaseAuthSystem.supabase.auth.signOut({ scope: 'global' }),
+                    new Promise(function (resolve) {
+                        setTimeout(resolve, 4000);
+                    }),
+                ]);
             }
         } catch (error) {
             console.error('Logout error:', error);
@@ -395,7 +410,7 @@
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
 
-        window.location.reload();
+        scheduleReload();
     };
 
     // Modüller sayfasına yönlendirme fonksiyonu

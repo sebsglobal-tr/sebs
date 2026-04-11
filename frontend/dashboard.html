@@ -1914,7 +1914,13 @@
             localStorage.removeItem('userData');
             localStorage.removeItem('authToken');
 
-            window.location.reload();
+            setTimeout(function () {
+                try {
+                    window.location.reload();
+                } catch (e) {
+                    window.location.href = window.location.href;
+                }
+            }, 0);
         }
 
         // Dark Mode Toggle
