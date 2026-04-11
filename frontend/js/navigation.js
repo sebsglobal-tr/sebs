@@ -369,37 +369,33 @@
     // ============================================
     // Kullanıcı çıkış işlemi - Supabase'den çıkış yapar ve localStorage'ı temizler
     window.logout = async function() {
-        // Kullanıcıdan onay al
-        if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-            try {
-                // Supabase logout
-                if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
-                    await window.supabaseAuthSystem.logout();
-                } else if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-                    await window.supabaseAuthSystem.supabase.auth.signOut();
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
+        try {
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                await window.supabaseAuthSystem.logout();
+                return;
             }
-
-            try {
-                for (let i = localStorage.length - 1; i >= 0; i--) {
-                    const k = localStorage.key(i);
-                    if (k && k.startsWith('sb-')) localStorage.removeItem(k);
-                }
-            } catch (e) {}
-
-            // Tüm kullanıcı verilerini localStorage'dan temizle (eski sistem için)
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('isVerified');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userData');
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userRole');
-
-            // Ana sayfaya yönlendir (root-relative - tüm dizinlerde doğru çalışır)
-            window.location.href = '/index.html';
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                await window.supabaseAuthSystem.supabase.auth.signOut();
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
         }
+
+        try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const k = localStorage.key(i);
+                if (k && k.startsWith('sb-')) localStorage.removeItem(k);
+            }
+        } catch (e) {}
+
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('isVerified');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+
+        window.location.href = '/index.html';
     };
 
     // Modüller sayfasına yönlendirme fonksiyonu
