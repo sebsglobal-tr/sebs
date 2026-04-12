@@ -925,8 +925,12 @@
 
         // SEBS - Abidin Samet Çay
         async function loadProgress() {
+            /** Giriş yapılmışken catch/legacy yolunda userProgress_* kullanılmaması için */
+            var sessionHadApiToken = false;
+            var sessionOverviewOk = false;
             try {
                 var token = await getApiAuthToken();
+                sessionHadApiToken = !!token;
                 var progressData = null;
                 var overviewOk = false;
 
@@ -935,12 +939,20 @@
                         var progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
                             headers: { Authorization: 'Bearer ' + token }
                         });
+                        if (!progressResponse.ok && progressResponse.status >= 500) {
+                            await new Promise(function (r) {
+                                setTimeout(r, 400);
+                            });
+                            progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
+                                headers: { Authorization: 'Bearer ' + token }
+                            });
+                        }
                         if (progressResponse.ok) {
                             progressData = await progressResponse.json();
                             overviewOk = !!(progressData && progressData.success && progressData.data);
                         } else if (progressResponse.status === 401) {
                             console.warn(
-                                'progress/overview 401 — kartlar yerel depolama ile gösterilecek (JWT/backend kontrol edin).'
+                                'progress/overview 401 — oturum yenilenemiyorsa yeniden giriş yapın; giriş yapılmış hesapta yalnızca sunucu verisi gösterilir.'
                             );
                             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                                 window.supabaseAuthSystem.supabase.auth
@@ -966,6 +978,7 @@
                     } catch (fetchErr) {
                         console.warn('progress/overview fetch:', fetchErr);
                     }
+                    sessionOverviewOk = overviewOk;
                 } else {
                     console.warn('API token yok — yalnızca yerel ilerleme gösterilecek');
                 }
@@ -1040,7 +1053,10 @@
                     }
                 }
 
-                modules = mergeDashboardLocalModuleProgress(modules);
+                // Giriş yapılmışken tarayıcıya özel localStorage ile birleştirme yapma (farklı tarayıcıda farklı % üretir).
+                if (!token) {
+                    modules = mergeDashboardLocalModuleProgress(modules);
+                }
 
                 if (!overviewOk && modules.length > 0) {
                     completedModules = modules.filter(function (m) {
@@ -1072,8 +1088,52 @@
                     await loadCertificates();
                     return;
                 }
+
+                // Giriş var ama sunucuda kart yok / istek başarısız: eski userProgress_* yoluna düşme (cihaz başına farklı veri).
+                if (token) {
+                    var zCompleted = document.getElementById('completedModules');
+                    var zHours = document.getElementById('studyHours');
+                    if (zCompleted) {
+                        animateCounter(zCompleted, 0, 0, 500);
+                        zCompleted.classList.add('gradient');
+                    }
+                    if (zHours) {
+                        animateCounter(zHours, 0, 0, 500);
+                        zHours.classList.add('gradient');
+                    }
+                    displayModulesFromBackend([]);
+                    displaySimulationRuns(simulationRuns);
+                    var obZ = document.getElementById('onboardingCard');
+                    if (obZ) obZ.style.display = 'block';
+                    if (!overviewOk) {
+                        showToast(
+                            'İlerleme sunucudan alınamadı; farklı tarayıcılar arasında yalnızca sunucu verisi eşleşir. Bağlantıyı veya oturumu kontrol edip sayfayı yenileyin.',
+                            'error'
+                        );
+                    }
+                    await loadCertificates();
+                    return;
+                }
             } catch (error) {
                 console.error('Error getting session for progress:', error);
+            }
+
+            if (sessionHadApiToken) {
+                var zc = document.getElementById('completedModules');
+                var zh = document.getElementById('studyHours');
+                if (zc) animateCounter(zc, 0, 0, 500);
+                if (zh) animateCounter(zh, 0, 0, 500);
+                displayModulesFromBackend([]);
+                displaySimulationRuns([]);
+                var obE = document.getElementById('onboardingCard');
+                if (obE) obE.style.display = 'block';
+                if (!sessionOverviewOk) {
+                    showToast('İlerleme yüklenirken hata oluştu; sayfayı yenileyin.', 'error');
+                }
+                try {
+                    await loadCertificates();
+                } catch (eCert) {}
+                return;
             }
 
             // API + yerel birleşim boş — eski userProgress_ formatına düş (ayrı blok: üstteki var modules ile const çakışmasın)

@@ -302,6 +302,33 @@ html {
   margin: 0;
 }
 
+/* modules / simulations kategori kartları: özet metin üstte yapışmasın — CTA üstündeki alanda dikey ortalı */
+.modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel,
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  align-items: stretch;
+  justify-items: center;
+  min-height: clamp(7.5rem, 14vw, 11rem);
+  padding-top: 1.1rem;
+  padding-bottom: 1.35rem;
+  gap: 0;
+}
+
+.modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel p,
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel p {
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+}
+
+.modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel .sebs-acc-cta,
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel .sebs-acc-cta {
+  grid-row: 2;
+  margin-top: 0.9rem;
+}
+
 .sebs-acc-cta {
   margin-top: 1rem;
   display: inline-flex;
