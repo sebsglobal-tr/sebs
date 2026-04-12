@@ -388,7 +388,7 @@
                 await Promise.race([
                     window.supabaseAuthSystem.supabase.auth.signOut({ scope: 'global' }),
                     new Promise(function (resolve) {
-                        setTimeout(resolve, 4000);
+                        setTimeout(resolve, 220);
                     }),
                 ]);
             }

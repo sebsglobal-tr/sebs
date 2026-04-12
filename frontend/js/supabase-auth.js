@@ -362,7 +362,7 @@ class SupabaseAuthSystem {
             if (error) throw error;
           })(),
           new Promise(function (resolve) {
-            setTimeout(resolve, 4000);
+            setTimeout(resolve, 220);
           }),
         ]);
       }
