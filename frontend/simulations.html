@@ -317,7 +317,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sebs-visual-stage sebs-feat-grid relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
+                    <div id="simulations-explore-preview" class="sebs-visual-stage sebs-feat-grid relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
                         <div class="sebs-visual-slide is-active" data-sebs-visual="0" aria-hidden="false">
                             <div class="sebs-visual-card p-4">
                                 <div class="flex items-start justify-between gap-3">
@@ -1335,6 +1335,30 @@
 
         const SIM_CATEGORY_IDS = ['cybersecurity', 'cloud', 'data-science', 'technology', 'business', 'personal'];
 
+        function sebsSmoothScrollToEl(el) {
+            if (!el) return;
+            var instant =
+                window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var behavior = instant ? 'auto' : 'smooth';
+            var headerOffset = 80;
+            try {
+                var y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                window.scrollTo({ top: Math.max(0, y), behavior: behavior });
+            } catch (e) {
+                el.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
+            }
+        }
+
+        function scrollSimulationsGridIntoView() {
+            var list = document.getElementById('simulations-list');
+            if (!list) return;
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    sebsSmoothScrollToEl(list);
+                });
+            });
+        }
+
         function filterSimulations(category) {
             const root = document.getElementById('simulationsCategoriesExplore');
             const categoryTabs = root
@@ -1517,6 +1541,7 @@
                         const category = btn.getAttribute('data-category');
                         if (!category) return;
                         filterSimulations(category);
+                        scrollSimulationsGridIntoView();
                         const newUrl = new URL(window.location);
                         newUrl.searchParams.set('category', category);
                         window.history.pushState({}, '', newUrl);

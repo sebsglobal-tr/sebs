@@ -303,7 +303,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sebs-visual-stage sebs-feat-grid relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
+                    <div id="modules-explore-preview" class="sebs-visual-stage sebs-feat-grid relative overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
                         <div class="sebs-visual-slide is-active" data-sebs-visual="0" aria-hidden="false">
                             <div class="sebs-visual-card p-4">
                                 <div class="flex items-start justify-between gap-3">
@@ -1634,6 +1634,31 @@
                 : document.querySelectorAll('.tab-btn');
             const moduleCategories = document.querySelectorAll('.module-category-section');
 
+            function sebsSmoothScrollToEl(el) {
+                if (!el) return;
+                var instant =
+                    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                var behavior = instant ? 'auto' : 'smooth';
+                var headerOffset = 80;
+                try {
+                    var y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: Math.max(0, y), behavior: behavior });
+                } catch (e) {
+                    el.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
+                }
+            }
+
+            function scrollModulesCategoryIntoView(categoryId) {
+                var section = categoryId ? document.getElementById(categoryId + '-modules') : null;
+                var target = section || document.getElementById('modules-list');
+                if (!target) return;
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        sebsSmoothScrollToEl(target);
+                    });
+                });
+            }
+
             function activateModulesAccordion(activeItem) {
                 if (!exploreRoot) return;
                 const items = exploreRoot.querySelectorAll('.sebs-accordion-item');
@@ -1694,6 +1719,7 @@
                 tab.addEventListener('click', function () {
                     const tabCategory = tab.getAttribute('data-category');
                     switchCategory(tabCategory);
+                    scrollModulesCategoryIntoView(tabCategory);
 
                     const newUrl = new URL(window.location);
                     newUrl.searchParams.set('category', tabCategory);
