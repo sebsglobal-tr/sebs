@@ -74,13 +74,39 @@ if (process.env.TRUST_PROXY !== '0') {
 const FULL_ACCESS_EMAIL = (process.env.SUPER_ADMIN_EMAIL ||
     (process.env.NODE_ENV === 'production' ? '' : 'asasferfer4566@gmail.com')).toLowerCase().trim();
 
+/** CORS: CORS_ORIGIN (virgülle çoklu) + PUBLIC_SITE_URL birleştirilir; biri yalnızca Vercel diğeri canlı alan adı olsa bile ikisi de izinli olur. */
 function parseCorsOrigins() {
-    let raw = (process.env.CORS_ORIGIN || '').trim();
-    if (!raw && (process.env.PUBLIC_SITE_URL || '').trim()) {
-        raw = (process.env.PUBLIC_SITE_URL || '').trim();
+    const set = new Set();
+    function addOrigin(raw) {
+        let u = String(raw || '').trim();
+        if (!u) return;
+        u = u.replace(/\/+$/, '');
+        set.add(u);
     }
-    if (!raw) return null;
-    return raw.split(',').map((s) => s.trim()).filter(Boolean);
+    (process.env.CORS_ORIGIN || '')
+        .split(',')
+        .forEach((s) => addOrigin(s));
+
+    const pub = (process.env.PUBLIC_SITE_URL || '').trim();
+    if (pub) {
+        addOrigin(pub);
+        try {
+            const urlStr = /^https?:\/\//i.test(pub) ? pub : `https://${pub}`;
+            const parsed = new URL(urlStr);
+            const proto = parsed.protocol;
+            const host = parsed.hostname.toLowerCase();
+            if (host.startsWith('www.')) {
+                addOrigin(`${proto}//${host.slice(4)}`);
+            } else if (host.split('.').length === 2) {
+                addOrigin(`${proto}//www.${host}`);
+            }
+        } catch (_) {
+            /* geçersiz PUBLIC_SITE_URL */
+        }
+    }
+
+    const out = Array.from(set);
+    return out.length ? out : null;
 }
 
 // Production: JWT_SECRET yoksa ama Supabase JWT secret varsa aynı HS256 anahtarı kullan (Render’da tek secret yeter)
@@ -114,7 +140,7 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
 
     if (!parseCorsOrigins()?.length) {
         logger.error(
-            'CRITICAL: CORS için Render → Environment: CORS_ORIGIN ekleyin (örn. https://xxx.vercel.app) veya PUBLIC_SITE_URL ile aynı kök adresi verin. Birden fazla origin virgülle.'
+            'CRITICAL: CORS için CORS_ORIGIN ve/veya PUBLIC_SITE_URL tanımlayın. İkisi birden kullanılırsa birleştirilir (örn. Vercel + sebsglobal.com). Virgülle çoklu origin: CORS_ORIGIN içinde.'
         );
         process.exit(1);
     }
@@ -169,8 +195,11 @@ const contactFormLimiter = rateLimit({
         });
     }
 });
-// CORS — canlıda CORS_ORIGIN (virgülle çoklu origin)
+// CORS — CORS_ORIGIN (virgülle çoklu) + PUBLIC_SITE_URL birleşimi (parseCorsOrigins)
 const corsOrigins = parseCorsOrigins();
+if (corsOrigins && corsOrigins.length) {
+    logger.info('CORS izinli kökenler: ' + corsOrigins.join(', '));
+}
 app.use(cors({
     origin: corsOrigins && corsOrigins.length
         ? (corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins)
