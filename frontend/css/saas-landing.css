@@ -193,6 +193,17 @@ html {
 .sebs-accordion-item.is-open .sebs-acc-btn {
   background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
   color: #fff;
+  /* Başlık + özet ortada; ikon / chevron sütunlarda — “kaymış” hissi gider */
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 1.75rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.sebs-accordion-item.is-open .sebs-acc-btn .min-w-0.flex-1 {
+  text-align: center;
 }
 
 /* modules.html / simulations.html: .tab-btn.active → styles.css mavi gradient ezmesin */
@@ -245,6 +256,7 @@ html {
 .sebs-accordion-item.is-open .sebs-acc-icon {
   background: rgba(255, 255, 255, 0.15);
   color: #fff;
+  justify-self: center;
 }
 
 .sebs-acc-chevron {
@@ -255,6 +267,8 @@ html {
 }
 
 .sebs-accordion-item.is-open .sebs-acc-chevron {
+  margin-left: 0;
+  justify-self: end;
   transform: rotate(180deg);
   color: rgba(255, 255, 255, 0.85);
 }
@@ -273,10 +287,19 @@ html {
 }
 
 .sebs-accordion-item.is-open .sebs-acc-panel {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.85rem 1.25rem 1.35rem;
   background: linear-gradient(180deg, #5c2a2a 0%, #7f1d1d 100%);
   color: rgba(255, 255, 255, 0.92);
   border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.sebs-accordion-item.is-open .sebs-acc-panel p {
+  max-width: 36rem;
+  margin: 0;
 }
 
 .sebs-acc-cta {
