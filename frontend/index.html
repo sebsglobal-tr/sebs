@@ -726,26 +726,56 @@
           <p class="mt-4 text-base text-slate-600">3 adım: hedef, uygulama, ölçüm.</p>
         </div>
         <div class="sebs-how-premium mt-12">
-          <ol class="sebs-how-track">
-            <li class="sebs-how-card">
-              <span class="sebs-how-step">1</span>
-              <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-bullseye"></i></span>
-              <h3 class="mt-3 text-lg font-semibold text-slate-900">Hedefi Seç</h3>
-              <p class="mt-1 text-sm text-slate-600">Chatbox hedefi, seviyeyi ve zamanı alır.</p>
-            </li>
-            <li class="sebs-how-card">
-              <span class="sebs-how-step">2</span>
-              <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-flask"></i></span>
-              <h3 class="mt-3 text-lg font-semibold text-slate-900">Simülasyonda Uygula</h3>
-              <p class="mt-1 text-sm text-slate-600">Kullanıcı karar verir, sistem tüm adımları kaydeder.</p>
-            </li>
-            <li class="sebs-how-card">
-              <span class="sebs-how-step">3</span>
-              <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
-              <h3 class="mt-3 text-lg font-semibold text-slate-900">Ölç ve Büyüt</h3>
-              <p class="mt-1 text-sm text-slate-600">Skor, rapor ve sonraki adım önerisi otomatik çıkar.</p>
-            </li>
-          </ol>
+          <div class="sebs-how-showcase">
+            <ol class="sebs-how-track">
+              <li class="sebs-how-card is-active" data-how-step="1">
+                <span class="sebs-how-step">1</span>
+                <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-bullseye"></i></span>
+                <h3 class="mt-3 text-lg font-semibold text-slate-900">Hedefi Seç</h3>
+                <p class="mt-1 text-sm text-slate-600">Chatbox hedefi, seviyeyi ve zamanı alır.</p>
+                <ul class="sebs-how-mini-points">
+                  <li>Rol ve süre bilgisi toplanır</li>
+                  <li>Kişisel başlangıç seviyesi hesaplanır</li>
+                </ul>
+              </li>
+              <li class="sebs-how-card" data-how-step="2">
+                <span class="sebs-how-step">2</span>
+                <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-flask"></i></span>
+                <h3 class="mt-3 text-lg font-semibold text-slate-900">Simülasyonda Uygula</h3>
+                <p class="mt-1 text-sm text-slate-600">Kullanıcı karar verir, sistem tüm adımları kaydeder.</p>
+                <ul class="sebs-how-mini-points">
+                  <li>Görev bazlı karar izleri oluşturulur</li>
+                  <li>Hata/başarı sinyalleri işlenir</li>
+                </ul>
+              </li>
+              <li class="sebs-how-card" data-how-step="3">
+                <span class="sebs-how-step">3</span>
+                <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
+                <h3 class="mt-3 text-lg font-semibold text-slate-900">Ölç ve Büyüt</h3>
+                <p class="mt-1 text-sm text-slate-600">Skor, rapor ve sonraki adım önerisi otomatik çıkar.</p>
+                <ul class="sebs-how-mini-points">
+                  <li>İlerleme paneli canlı güncellenir</li>
+                  <li>Bir sonraki durak önerilir</li>
+                </ul>
+              </li>
+            </ol>
+            <aside class="sebs-how-preview" aria-label="Canlı süreç önizleme">
+              <div class="sebs-how-preview-head">
+                <span class="text-xs font-semibold">Canlı Süreç Önizleme</span>
+                <span class="badge" data-how-preview-badge>Aşama 1</span>
+              </div>
+              <div class="sebs-how-preview-title" data-how-preview-title>Hedef toplama oturumu aktif</div>
+              <div class="sebs-how-preview-log" data-how-preview-log>
+                <div><strong>[09:00]</strong> Hedef: SOC analyst</div>
+                <div><strong>[09:02]</strong> Seviye: başlangıç</div>
+                <div><strong>[09:04]</strong> Haftalık zaman: 6 saat</div>
+              </div>
+              <div class="sebs-how-preview-kpi">
+                <div><span>Netlik skoru</span><strong data-how-preview-kpi-a>91%</strong></div>
+                <div><span>Hazır olma</span><strong data-how-preview-kpi-b>Yüksek</strong></div>
+              </div>
+            </aside>
+          </div>
           <div class="sebs-how-metrics">
             <article class="sebs-how-metric">
               <div class="k">Yol Netleşme</div>
@@ -827,27 +857,53 @@
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Kimler için?</h2>
-          <p class="mt-4 text-lg text-slate-600">Aynı platform; bireyde kariyer sinyali, şirkette objektif seçim, akademide ölçülebilir çıktı. Öğrenme ile yetkinlik ölçümü tek veri omurgasında birleşir.</p>
+          <p class="mt-4 text-base text-slate-600">3 persona, 3 net çıktı.</p>
         </div>
-        <div class="mt-16 grid gap-6 md:grid-cols-3">
-          <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-card transition hover:shadow-card-hover">
-            <h3 class="text-lg font-semibold text-slate-900">Bireyler</h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">
-              Gerçek iş görevlerine yakın senaryolarda performansınızı üretin; güçlü yönleriniz ve gelişim alanlarınız veriyle görünür olsun. Sertifika yerine veya sertifikayı tamamlayan <strong class="font-semibold text-slate-800">kanıtlanabilir yetkinlik özeti</strong> ile öne çıkın.
-            </p>
-          </div>
-          <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-card transition hover:shadow-card-hover">
-            <h3 class="text-lg font-semibold text-slate-900">Şirketler ve İK</h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">
-              Adayları yalnızca beyan ve mülakatla değil, <strong class="font-semibold text-slate-800">tanımlı iş senaryolarındaki davranış ve karar performansı</strong> ile sıralayın. Yetenek havuzlarına erişin; rol ve stajyer ihtiyacına özel simülasyonlarla yanlış yerleştirme riskini azaltın, onboarding öncesi görünürlük kazanın.
-            </p>
-          </div>
-          <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-card transition hover:shadow-card-hover">
-            <h3 class="text-lg font-semibold text-slate-900">Kurumlar ve akademiler</h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">
-              Müfredat çıktılarını iş dünyasının beklediği yetkinlik diliyle hizalayın. Rubrikler, projeler ve ölçeklenebilir sonuç raporlarıyla <strong class="font-semibold text-slate-800">işveren raporlamasına hazır</strong> programlar sunun; mezun ve kurumsal ortaklıkları güçlendirin.
-            </p>
-          </div>
+        <div class="sebs-audience-visual mt-12">
+          <article class="sebs-persona-card">
+            <div class="sebs-persona-head">
+              <span class="sebs-persona-icon" aria-hidden="true"><i class="fas fa-user"></i></span>
+              <span class="sebs-persona-label">Birey</span>
+            </div>
+            <h3>Kariyerine hız vermek isteyenler</h3>
+            <p>Öğrenmeyi CV satırına değil, gerçek performans kanıtına çevirir.</p>
+            <ul class="sebs-persona-points">
+              <li>Senaryoda karar kalitesi görünür</li>
+              <li>Güçlü ve gelişim alanları netleşir</li>
+              <li>Kişisel yol önerisi aktif olur</li>
+            </ul>
+            <div class="sebs-persona-outcome">Çıktı: Kanıtlanabilir yetkinlik özeti</div>
+          </article>
+
+          <article class="sebs-persona-card">
+            <div class="sebs-persona-head">
+              <span class="sebs-persona-icon" aria-hidden="true"><i class="fas fa-building"></i></span>
+              <span class="sebs-persona-label">Şirket / İK</span>
+            </div>
+            <h3>Daha doğru aday seçmek isteyen ekipler</h3>
+            <p>Mülakat ötesi objektif sinyalle sıralama yapar.</p>
+            <ul class="sebs-persona-points">
+              <li>Rol bazlı simülasyon performansı</li>
+              <li>Yanlış yerleştirme riskinde düşüş</li>
+              <li>Onboarding öncesi görünürlük</li>
+            </ul>
+            <div class="sebs-persona-outcome">Çıktı: Performans temelli aday kararı</div>
+          </article>
+
+          <article class="sebs-persona-card">
+            <div class="sebs-persona-head">
+              <span class="sebs-persona-icon" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
+              <span class="sebs-persona-label">Akademi / Kurum</span>
+            </div>
+            <h3>Müfredatı iş çıktısına bağlamak isteyenler</h3>
+            <p>Eğitim programlarını ölçülebilir yetkinlik modeline dönüştürür.</p>
+            <ul class="sebs-persona-points">
+              <li>Rubrik tabanlı değerlendirme</li>
+              <li>Ölçeklenebilir raporlama akışı</li>
+              <li>İşveren odaklı çıktı dili</li>
+            </ul>
+            <div class="sebs-persona-outcome">Çıktı: İşe hazır mezun / ekip profili</div>
+          </article>
         </div>
       </div>
     </section>
@@ -1164,6 +1220,69 @@
       }, { threshold: 0.28 });
 
       io.observe(section);
+    })();
+
+    (function () {
+      var cards = document.querySelectorAll('[data-how-step]');
+      var badge = document.querySelector('[data-how-preview-badge]');
+      var title = document.querySelector('[data-how-preview-title]');
+      var log = document.querySelector('[data-how-preview-log]');
+      var kpiA = document.querySelector('[data-how-preview-kpi-a]');
+      var kpiB = document.querySelector('[data-how-preview-kpi-b]');
+      if (!cards.length || !badge || !title || !log || !kpiA || !kpiB) return;
+
+      var states = {
+        '1': {
+          badge: 'Aşama 1',
+          title: 'Hedef toplama oturumu aktif',
+          log: [
+            '<strong>[09:00]</strong> Hedef: SOC analyst',
+            '<strong>[09:02]</strong> Seviye: başlangıç',
+            '<strong>[09:04]</strong> Haftalık zaman: 6 saat'
+          ],
+          a: '91%',
+          b: 'Yüksek'
+        },
+        '2': {
+          badge: 'Aşama 2',
+          title: 'Simülasyon akışı yürütülüyor',
+          log: [
+            '<strong>[10:12]</strong> Görev: ağ anomalisi tespiti',
+            '<strong>[10:15]</strong> Karar: izolasyon önceliklendirildi',
+            '<strong>[10:19]</strong> Kanıt zinciri kaydedildi'
+          ],
+          a: '8.8',
+          b: 'Orta risk'
+        },
+        '3': {
+          badge: 'Aşama 3',
+          title: 'Rapor ve öneri üretildi',
+          log: [
+            '<strong>[11:02]</strong> İlerleme: %74 tamamlandı',
+            '<strong>[11:03]</strong> Sonraki durak: Linux güvenliği',
+            '<strong>[11:05]</strong> Panel özeti paylaşıldı'
+          ],
+          a: '+18%',
+          b: 'Canlı'
+        }
+      };
+
+      function activate(step) {
+        cards.forEach(function (card) {
+          card.classList.toggle('is-active', card.getAttribute('data-how-step') === step);
+        });
+        var st = states[step] || states['1'];
+        badge.textContent = st.badge;
+        title.textContent = st.title;
+        log.innerHTML = st.log.map(function (line) { return '<div>' + line + '</div>'; }).join('');
+        kpiA.textContent = st.a;
+        kpiB.textContent = st.b;
+      }
+
+      cards.forEach(function (card) {
+        card.addEventListener('mouseenter', function () { activate(card.getAttribute('data-how-step')); });
+        card.addEventListener('click', function () { activate(card.getAttribute('data-how-step')); });
+      });
     })();
   </script>
 </body>
