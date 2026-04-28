@@ -953,7 +953,8 @@
 
         .road-stage-heading {
             position: absolute;
-            left: 1.4rem;
+            left: 50%;
+            transform: translateX(-50%);
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
@@ -981,24 +982,74 @@
             pointer-events: none;
         }
 
-        .road-purchase-track path {
+        .road-purchase-track .road-body {
             fill: none;
-            stroke: rgba(148, 197, 255, 0.7);
-            stroke-width: 34;
+            stroke: rgba(203, 213, 225, 0.95);
+            stroke-width: 64;
             stroke-linecap: round;
-            filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.45));
+            filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.2));
             stroke-dasharray: 2600;
             stroke-dashoffset: 2600;
             transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .road-purchase-shell.is-visible .road-purchase-track path {
+        .road-purchase-track .road-shoulder {
+            fill: none;
+            stroke: rgba(148, 163, 184, 0.34);
+            stroke-width: 72;
+            stroke-linecap: round;
+            stroke-dasharray: 2600;
+            stroke-dashoffset: 2600;
+            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .road-purchase-track .road-center-line {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.96);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 16 18;
+            stroke-dashoffset: 2600;
+            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
+        }
+
+        .road-purchase-track .road-highlight {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.32);
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 2600;
+            stroke-dashoffset: 2600;
+            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .road-purchase-track .road-travel-glow {
+            fill: none;
+            stroke: rgba(59, 130, 246, 0.72);
+            stroke-width: 9;
+            stroke-linecap: round;
+            stroke-dasharray: 18 420;
             stroke-dashoffset: 0;
+            opacity: 0;
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.55));
+        }
+
+        .road-purchase-shell.is-visible .road-purchase-track .road-body,
+        .road-purchase-shell.is-visible .road-purchase-track .road-shoulder,
+        .road-purchase-shell.is-visible .road-purchase-track .road-center-line,
+        .road-purchase-shell.is-visible .road-purchase-track .road-highlight {
+            stroke-dashoffset: 0;
+        }
+
+        .road-purchase-shell.is-visible .road-purchase-track .road-travel-glow {
+            opacity: 0.95;
+            animation: roadTravelFlow 4.8s linear infinite;
         }
 
         .road-stop-card {
             position: absolute;
-            width: min(44%, 410px);
+            width: min(40%, 380px);
             padding: 1rem 1.05rem;
             border-radius: 14px;
             border: 1.5px solid rgba(148, 163, 184, 0.34);
@@ -1028,8 +1079,8 @@
             transform: translateY(0);
         }
 
-        .road-stop-card.left { left: 3.5%; }
-        .road-stop-card.right { right: 3.5%; }
+        .road-stop-card.left { left: 4%; }
+        .road-stop-card.right { left: 56%; }
 
         .road-stop-card:hover {
             transform: translateY(-4px) scale(1.01);
@@ -1103,12 +1154,12 @@
 
         .road-stop-action {
             margin-top: 0.58rem;
-            font-size: 0.73rem;
+            font-size: 0.76rem;
             border: 1px solid rgba(96, 165, 250, 0.45);
             border-radius: 999px;
             background: rgba(30, 64, 175, 0.3);
             color: #dbeafe;
-            padding: 0.3rem 0.62rem;
+            padding: 0.38rem 0.72rem;
             font-weight: 600;
         }
 
@@ -1131,6 +1182,7 @@
             background: linear-gradient(135deg, #1d4ed8, #2563eb);
             border-color: rgba(37, 99, 235, 0.7);
             color: #fff;
+            width: 100%;
         }
 
         .road-stop-topics {
@@ -1172,7 +1224,8 @@
 
         .road-stage-summary {
             position: absolute;
-            left: 1.4rem;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 0.72rem;
             font-weight: 600;
             color: rgba(30, 41, 59, 0.78);
@@ -1191,6 +1244,13 @@
             0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62); }
             65% { box-shadow: 0 0 0 14px rgba(96, 165, 250, 0); }
             100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+        }
+
+        @keyframes roadTravelFlow {
+            0% { stroke-dashoffset: 0; opacity: 0; }
+            10% { opacity: 0.95; }
+            90% { opacity: 0.95; }
+            100% { stroke-dashoffset: -880; opacity: 0; }
         }
 
         @media (max-width: 860px) {
@@ -1233,7 +1293,8 @@
             .journey-roadmap-line path,
             .journey-node,
             .journey-reveal,
-            .pricing-card.journey-reveal {
+            .pricing-card.journey-reveal,
+            .road-purchase-track .road-travel-glow {
                 transition: none !important;
                 animation: none !important;
             }
@@ -1717,7 +1778,7 @@
 
         function getStageLayout() {
             const baseTop = 72;
-            const rowGap = 172;
+            const rowGap = 210;
             const counts = {
                 'ilk-adim': moduleRoadData.filter((m) => m.stage === 'ilk-adim').length,
                 yukselis: moduleRoadData.filter((m) => m.stage === 'yukselis').length,
@@ -1749,7 +1810,7 @@
             const stageLayout = getStageLayout();
             const baseTop = stageLayout.baseTop;
             const rowGap = stageLayout.rowGap;
-            const shellHeight = Math.max(3000, baseTop + total * rowGap + 260);
+            const shellHeight = Math.max(3600, baseTop + total * rowGap + 320);
 
             container.innerHTML = `
                 <div class="journey-shop-head">
@@ -1768,7 +1829,11 @@
                 </div>
                 <div class="road-purchase-shell journey-reveal" style="min-height:${shellHeight}px;">
                     <svg class="road-purchase-track" viewBox="0 0 1000 2000" preserveAspectRatio="none" aria-hidden="true">
-                        <path d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
+                        <path class="road-shoulder" d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
+                        <path class="road-body" d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
+                        <path class="road-highlight" d="M504 54 C 344 226, 668 346, 446 536 C 256 704, 674 876, 454 1076 C 246 1256, 686 1446, 464 1656 C 326 1786, 522 1892, 494 1972"></path>
+                        <path class="road-center-line" d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
+                        <path class="road-travel-glow" d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
                     </svg>
                     ${stageLayout.bands.map((band) => `
                         <div class="road-stage-band ${band.id}" style="top:${band.top}px; height:${band.height}px;"></div>
@@ -1825,13 +1890,6 @@
                                         ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
                                     >
                                         ${actionText}
-                                    </button>
-                                    <button
-                                        class="road-stop-action secondary road-mode-btn"
-                                        type="button"
-                                        onclick="setRoadPurchaseMode('${isSingle ? 'subscription' : 'single'}')"
-                                    >
-                                        ${isSingle ? 'Asama Moduna Gec' : 'Tekli 120'}
                                     </button>
                                 </div>
                             </article>
