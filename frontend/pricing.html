@@ -613,17 +613,18 @@
     <!-- Hero Section -->
     <section class="pricing-hero">
         <div class="container">
-            <h1>Eğitim Paketleri</h1>
-            <p>Her seviyeye uygun, kapsamlı eğitim paketleri ile kariyerinizi bir üst seviyeye taşıyın</p>
+            <span class="sebs-yolu-badge"><i class="fas fa-route"></i> SEBS Yolu Gelir Modeli</span>
+            <h1>SEBS Yolunu Gör, Kilitleri Aç, İlerle</h1>
+            <p>Kişisel yol haritanı ücretsiz gör; İçerik, simülasyon ve ilerleme sistemini plan ya da tekli durak erişimiyle aç.</p>
         </div>
     </section>
 
     <!-- Category Tabs -->
     <div class="container">
         <div class="category-tabs" id="categoryTabs">
-            <button class="category-tab active" data-category="cybersecurity">Siber Güvenlik</button>
-            <button class="category-tab" data-category="cloud">Bulut Bilişim</button>
-            <button class="category-tab" data-category="data-science">Veri Bilimleri</button>
+            <button class="category-tab active" data-category="sebs-road">SEBS Yolu Planları</button>
+            <button class="category-tab" data-category="single-stop">Tekli Durak</button>
+            <button class="category-tab" data-category="upgrade">Yükseltme ve Sadakat</button>
         </div>
     </div>
 
@@ -637,7 +638,60 @@
     <!-- Access Level Info -->
     <div class="container">
         <div class="access-info-section">
-            <p><i class="fas fa-info-circle"></i> <strong>Önemli Not:</strong> Her paket sadece kendi seviyesine erişim sağlar. Temel Paket sadece başlangıç seviyesi, Orta Paket sadece orta seviye, Final Paketi sadece ileri seviye modül ve simülasyonlara erişim sağlar.</p>
+            <p><i class="fas fa-info-circle"></i> <strong>Temel Mantık:</strong> Tekli satış içerik verir, abonelik sistem verir. Üst planlar alt planları kapsar; plan yükseltirken kalan süren korunur.</p>
+        </div>
+    </div>
+
+    <div class="container sebs-yolu-compare">
+        <table aria-label="SEBS Yolu plan erişim tablosu">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>İlk Adım</th>
+                    <th>Yükseliş</th>
+                    <th>Zirve</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>İlk Adım Planı</td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                </tr>
+                <tr>
+                    <td>Yükseliş Planı</td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                </tr>
+                <tr>
+                    <td>Zirve Planı</td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <div class="sebs-roadmap-flow">
+            <article class="sebs-roadmap-step">
+                <h4>İlk Adım</h4>
+                <p>Temeller, yön bulma, ilk uygulanabilir kazanımlar.</p>
+                <div class="meta">6 durak · 18 simülasyon</div>
+            </article>
+            <article class="sebs-roadmap-step">
+                <h4>Yükseliş</h4>
+                <p>Derinleşme, daha yoğun görevler, gerçek beceri.</p>
+                <div class="meta">3 durak · 9 simülasyon</div>
+            </article>
+            <article class="sebs-roadmap-step">
+                <h4>Zirve</h4>
+                <p>İleri seviye görevler ve tam yol hakimiyeti.</p>
+                <div class="meta">4 durak · 12 simülasyon</div>
+            </article>
         </div>
     </div>
 
@@ -647,164 +701,131 @@
     <script>
         // Pricing data
         const pricingData = {
-            cybersecurity: {
-                title: 'Siber Güvenlik',
+            'sebs-road': {
+                title: 'SEBS Yolu Planları',
                 packages: [
                     {
-                        level: 'beginner',
-                        title: 'Temel Paket',
-                        price: 149,
+                        level: 'ilk-adim',
+                        title: 'İlk Adım Planı',
+                        price: 199,
+                        period: '/ay',
+                        subtitle: 'SEBS Yoluna başlamak isteyenler için',
                         features: [
-                            'Başlangıç seviyesi modüllere erişim',
-                            'Temel simülasyonlara erişim',
-                            '5 başlangıç seviyesi modül',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim'
-                        ],
-                        disabled: []
+                            'İlk Adım aşamasındaki tüm duraklar',
+                            '18 başlangıç simülasyonuna erişim',
+                            'Temel ilerleme takibi',
+                            'Görev tamamlama ve yol görünümü',
+                            '1 durağı ücretsiz deneme sonrası devam erişimi'
+                        ]
                     },
                     {
-                        level: 'intermediate',
-                        title: 'Orta Paket',
+                        level: 'yukselis',
+                        title: 'Yükseliş Planı',
                         price: 349,
+                        period: '/ay',
+                        subtitle: 'SEBS Yolunda ciddi ilerlemek isteyenler için',
                         features: [
-                            'Orta seviye modüllere erişim',
-                            'Orta seviye simülasyonlara erişim',
-                            '6 orta seviye modül',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek'
-                        ],
-                        disabled: []
+                            'İlk Adım + Yükseliş aşamaları açık',
+                            'Toplam 9 ek simülasyon erişimi',
+                            'Daha güçlü ilerleme analitiği',
+                            'Yol önerileri ve sonraki durak yönlendirmesi',
+                            'En dengeli seçim'
+                        ]
                     },
                     {
-                        level: 'advanced',
-                        title: 'Final Paketi',
-                        price: 599,
+                        level: 'zirve',
+                        title: 'Zirve Planı',
+                        price: 799,
+                        period: '/ay',
+                        subtitle: 'SEBS Yolunun tamamını açmak isteyenler için',
                         features: [
-                            'İleri seviye modüllere erişim',
-                            'İleri seviye simülasyonlara erişim',
-                            '6 ileri seviye modül',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek',
-                            '1-on-1 mentor desteği'
-                        ],
-                        disabled: []
+                            'İlk Adım + Yükseliş + Zirve tam erişim',
+                            'Tüm duraklar ve tüm simülasyonlar',
+                            'Tam yol takibi ve premium sistem erişimi',
+                            'Kişisel öneriler ve yol güncellemeleri',
+                            'İlerleyen kullanıcılar için sadakat geçiş fırsatı'
+                        ]
                     }
                 ]
             },
-            cloud: {
-                title: 'Bulut Bilişim',
+            'single-stop': {
+                title: 'Tekli Durak Satın Alma',
                 packages: [
                     {
-                        level: 'beginner',
-                        title: 'Temel Paket',
-                        price: 149,
+                        level: 'single-stop',
+                        title: 'Tek Durağı Aç',
+                        price: 199,
+                        period: '/tek sefer',
+                        subtitle: 'Sadece tek konuya hızlı odaklanmak isteyenler için',
                         features: [
-                            'Başlangıç seviyesi modüllere erişim',
-                            'Temel simülasyonlara erişim',
-                            'AWS, Azure, GCP temelleri',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim'
-                        ],
-                        disabled: []
-                    },
-                    {
-                        level: 'intermediate',
-                        title: 'Orta Paket',
-                        price: 349,
-                        features: [
-                            'Orta seviye modüllere erişim',
-                            'Orta seviye simülasyonlara erişim',
-                            'İleri bulut mimarileri',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek'
-                        ],
-                        disabled: []
-                    },
-                    {
-                        level: 'advanced',
-                        title: 'Final Paketi',
-                        price: 599,
-                        features: [
-                            'İleri seviye modüllere erişim',
-                            'İleri seviye simülasyonlara erişim',
-                            'Multi-cloud stratejileri',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek',
-                            '1-on-1 mentor desteği'
-                        ],
-                        disabled: []
+                            'Sadece seçtiğin tek durağa erişim',
+                            'Durağa ait simülasyonlara erişim',
+                            'Abonelik olmadan düşük taahhüt',
+                            'İçerik var, sistem avantajları sınırlı',
+                            'Sonradan plana geçiş yapabilirsin'
+                        ]
                     }
                 ]
             },
-            'data-science': {
-                title: 'Veri Bilimleri',
+            upgrade: {
+                title: 'Yükseltme ve Sadakat',
                 packages: [
                     {
-                        level: 'beginner',
-                        title: 'Temel Paket',
-                        price: 149,
-                        features: [
-                            'Başlangıç seviyesi modüllere erişim',
-                            'Temel simülasyonlara erişim',
-                            'Python ve veri analizi temelleri',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim'
-                        ],
-                        disabled: []
-                    },
-                    {
-                        level: 'intermediate',
-                        title: 'Orta Paket',
+                        level: 'upgrade-yukselis',
+                        title: 'Planını Yükselt',
                         price: 349,
+                        period: '/yükseltme',
+                        subtitle: 'Kalan süren korunur ve yeni plana eklenir',
                         features: [
-                            'Orta seviye modüllere erişim',
-                            'Orta seviye simülasyonlara erişim',
-                            'Machine Learning temelleri',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek'
-                        ],
-                        disabled: []
+                            'Alt plan kapanır, üst plan anında açılır',
+                            'Kalan günlerin bonus süre olarak eklenir',
+                            'Kafa karıştıran fark hesabı yok',
+                            '“Yükselt, süren korunsun” modeli',
+                            'Uygun olduğunda in-app bildirim'
+                        ]
                     },
                     {
-                        level: 'advanced',
-                        title: 'Final Paketi',
+                        level: 'upgrade-zirve-loyalty',
+                        title: 'Zirve Geçişi (Sadakat)',
                         price: 599,
+                        period: '/özel fiyat',
+                        subtitle: 'İlerleyen kullanıcılara açılan ödül fiyatı',
                         features: [
-                            'İleri seviye modüllere erişim',
-                            'İleri seviye simülasyonlara erişim',
-                            'Deep Learning ve AI',
-                            'Sertifika alma hakkı',
-                            '7/24 destek',
-                            'Lifetime erişim',
-                            'Öncelikli destek',
-                            '1-on-1 mentor desteği'
-                        ],
-                        disabled: []
+                            'Normal Zirve fiyatı: 799 TL',
+                            'Sadakat geçiş fiyatı: 599 TL',
+                            'Sadece uygun kullanıcıya görünür',
+                            'İlerledikçe açılan ödül hissi',
+                            'Tam yol erişimine premium geçiş'
+                        ]
                     }
                 ]
             }
         };
 
         // Current category
-        let currentCategory = 'cybersecurity';
+        let currentCategory = 'sebs-road';
 
         // Check login status
         function isLoggedIn() {
             return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        function mapLevelForBackend(level) {
+            const map = {
+                'ilk-adim': 'beginner',
+                yukselis: 'intermediate',
+                zirve: 'advanced',
+                'single-stop': 'beginner',
+                'upgrade-yukselis': 'intermediate',
+                'upgrade-zirve-loyalty': 'advanced'
+            };
+            return map[level] || 'beginner';
+        }
+
+        function mapCategoryForBackend(category) {
+            if (category === 'single-stop') return 'cybersecurity';
+            if (category === 'upgrade') return 'cybersecurity';
+            return 'cybersecurity';
         }
 
         // Get user purchases from API
@@ -841,9 +862,11 @@
 
         // Check if user owns a specific package
         function hasPurchasedPackage(category, level) {
+            const normalizedLevel = mapLevelForBackend(level);
+            const normalizedCategory = mapCategoryForBackend(category);
             return userPurchases.some(p => 
-                p.category === category && 
-                p.level === level &&
+                p.category === normalizedCategory && 
+                p.level === normalizedLevel &&
                 (p.expiresAt === null || new Date(p.expiresAt) > new Date())
             );
         }
@@ -859,7 +882,7 @@
             grid.innerHTML = data.packages.map((pkg, index) => {
                 // Gerçek satın alımlara göre kontrol et
                 const isOwned = hasPurchasedPackage(category, pkg.level);
-                const isFeatured = index === 1; // Middle package is featured
+                const isFeatured = category === 'sebs-road' ? index === 1 : index === 0;
 
                 return `
                     <div class="pricing-card ${isFeatured ? 'featured' : ''}">
@@ -867,11 +890,12 @@
                             <div class="pricing-level">${pkg.level === 'beginner' ? 'Başlangıç' : pkg.level === 'intermediate' ? 'Orta' : 'İleri'} Seviye</div>
                             <h3 class="pricing-title">${pkg.title}</h3>
                             <div class="pricing-price">₺${pkg.price}</div>
-                            <div class="pricing-period">Tek seferlik ödeme</div>
+                            <div class="pricing-period">${pkg.period || 'Tek seferlik ödeme'}</div>
+                            <div class="pricing-period" style="margin-top: 0.4rem; color: rgba(255,255,255,0.85);">${pkg.subtitle || ''}</div>
                         </div>
                         <ul class="pricing-features">
                             ${pkg.features.map(feature => `
-                                <li ${pkg.disabled.includes(feature) ? 'class="disabled"' : ''}>
+                                <li ${(pkg.disabled || []).includes(feature) ? 'class="disabled"' : ''}>
                                     <i class="fas fa-check-circle"></i>
                                     <span>${feature}</span>
                                 </li>
@@ -882,10 +906,11 @@
                             data-category="${category}" 
                             data-level="${pkg.level}"
                             data-price="${pkg.price}"
+                            data-title="${pkg.title}"
                             ${isOwned ? 'disabled' : ''}
                             ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
                         >
-                            ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-shopping-cart"></i> Satın Al'}
+                            ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-unlock-alt"></i> Kilidi Aç'}
                         </button>
                         ${isOwned ? '<div class="access-info"><i class="fas fa-check-circle"></i> Bu pakete sahipsiniz</div>' : ''}
                     </div>
@@ -923,13 +948,17 @@
             const category = button.dataset.category;
             const level = button.dataset.level;
             const price = button.dataset.price;
+            const backendCategory = mapCategoryForBackend(category);
+            const backendLevel = mapLevelForBackend(level);
 
             if (button.disabled) {
                 return;
             }
 
             // Confirm purchase
-            const confirmMessage = `${category === 'cybersecurity' ? 'Siber Güvenlik' : category === 'cloud' ? 'Bulut Bilişim' : 'Veri Bilimleri'} alanından ${level === 'beginner' ? 'Temel' : level === 'intermediate' ? 'Orta' : 'Final'} Paketi (₺${price}) satın almak istediğinize emin misiniz?`;
+            const categoryTitle = pricingData[category]?.title || 'SEBS Yolu';
+            const packageTitle = button.dataset.title || 'Plan';
+            const confirmMessage = `${categoryTitle} içinde "${packageTitle}" (₺${price}) kilidini açmak istediğinize emin misiniz?`;
             
             if (!confirm(confirmMessage)) {
                 return;
@@ -953,8 +982,8 @@
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        category,
-                        level,
+                        category: backendCategory,
+                        level: backendLevel,
                         price: parseFloat(price)
                     })
                 });
@@ -986,7 +1015,7 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // Check URL parameters for category and level
             const urlParams = new URLSearchParams(window.location.search);
             const urlCategory = urlParams.get('category');

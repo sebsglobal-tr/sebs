@@ -437,6 +437,17 @@ const createEmailTransporter = () => {
     });
 };
 
+const isSmtpConfigured = () => {
+    const user = (process.env.SMTP_USER || '').trim();
+    const pass = (process.env.SMTP_PASS || '').trim();
+    if (!user || !pass) return false;
+    // Common placeholders that should not be treated as valid credentials.
+    if (user === 'your_email@gmail.com') return false;
+    if (pass === 'your_app_password') return false;
+    if (pass === 'your_gmail_app_password_here') return false;
+    return true;
+};
+
 // Doğrulama e-postası gönder
 // email: Alıcı e-posta adresi
 // verificationCode: Gönderilecek 6 haneli doğrulama kodu
@@ -444,7 +455,7 @@ const createEmailTransporter = () => {
 const sendVerificationEmail = async (email, verificationCode, firstName) => {
     try {
         // SMTP kimlik bilgilerinin yapılandırılıp yapılandırılmadığını kontrol et
-        if (!process.env.SMTP_USER || !process.env.SMTP_PASS || process.env.SMTP_PASS === 'your_gmail_app_password_here') {
+        if (!isSmtpConfigured()) {
             console.log('⚠️ SMTP credentials not configured, skipping email send');
             return { success: false, error: 'SMTP not configured' };
         }
@@ -1097,11 +1108,32 @@ app.post('/api/auth/register', async (req, res) => {
         
         if (!emailResult.success) {
             console.error('Failed to send verification email:', emailResult.error);
-            // Delete user if email fails
-            await pool.query('DELETE FROM users WHERE id = $1', [user.id]);
-            return res.status(500).json({
-                success: false,
-                message: 'E-posta gönderilemedi. Lütfen e-posta adresinizi kontrol edin ve tekrar deneyin.'
+            const allowDevBypass = process.env.NODE_ENV !== 'production';
+            if (!allowDevBypass) {
+                // Production safety: keep strict behavior.
+                await pool.query('DELETE FROM users WHERE id = $1', [user.id]);
+                return res.status(500).json({
+                    success: false,
+                    message: 'E-posta gönderilemedi. Lütfen e-posta adresinizi kontrol edin ve tekrar deneyin.'
+                });
+            }
+
+            // Development fallback: keep the account, return verification code for local testing.
+            return res.json({
+                success: true,
+                message: 'Kayıt başarılı! SMTP yapılandırılmadığı için doğrulama kodu test modunda döndürüldü.',
+                data: {
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                        firstName: user.first_name,
+                        lastName: user.last_name,
+                        isVerified: user.is_verified
+                    },
+                    emailSent: false,
+                    requiresVerification: true,
+                    verificationCode
+                }
             });
         }
 
@@ -1270,9 +1302,17 @@ app.post('/api/auth/resend-code', async (req, res) => {
         const emailResult = await sendVerificationEmail(email, verificationCode, user.first_name);
         
         if (!emailResult.success) {
-            return res.status(500).json({
-                success: false,
-                message: 'E-posta gönderilemedi. Lütfen tekrar deneyin.'
+            const allowDevBypass = process.env.NODE_ENV !== 'production';
+            if (!allowDevBypass) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'E-posta gönderilemedi. Lütfen tekrar deneyin.'
+                });
+            }
+            return res.json({
+                success: true,
+                message: 'SMTP yapılandırılmadı. Yeni doğrulama kodu test modunda döndürüldü.',
+                data: { verificationCode }
             });
         }
 

@@ -1,0 +1,154 @@
+:root {
+  --sebs-premium-ink: #0f172a;
+  --sebs-premium-blue: #1d4ed8;
+  --sebs-premium-violet: #7c3aed;
+  --sebs-premium-emerald: #059669;
+}
+
+body.sebs-premium-page {
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(37, 99, 235, 0.08), transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(124, 58, 237, 0.08), transparent 48%);
+}
+
+body.sebs-premium-page .premium-fx-orb {
+  position: fixed;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 9999px;
+  filter: blur(65px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  transition: transform 0.25s ease-out;
+}
+
+body.sebs-premium-page .premium-fx-orb--a {
+  top: -8rem;
+  left: -7rem;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.42), rgba(37, 99, 235, 0.02));
+}
+
+body.sebs-premium-page .premium-fx-orb--b {
+  right: -8rem;
+  bottom: -7rem;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.36), rgba(124, 58, 237, 0.03));
+}
+
+body.sebs-premium-page main,
+body.sebs-premium-page .main-content,
+body.sebs-premium-page .pricing-container,
+body.sebs-premium-page .simulations-grid-section {
+  position: relative;
+  z-index: 1;
+}
+
+body.sebs-premium-page .pricing-card,
+body.sebs-premium-page .simulation-card-detailed,
+body.sebs-premium-page .sebs-visual-card,
+body.sebs-premium-page .card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+body.sebs-premium-page .pricing-card:hover,
+body.sebs-premium-page .simulation-card-detailed:hover,
+body.sebs-premium-page .sebs-visual-card:hover,
+body.sebs-premium-page .card:hover {
+  box-shadow: 0 22px 45px -24px rgba(15, 23, 42, 0.45);
+}
+
+/* Pricing and roadmap specific helpers */
+.sebs-yolu-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #334155;
+}
+
+.sebs-yolu-compare {
+  margin: 1.5rem auto 0;
+  max-width: 1100px;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.7);
+  overflow: hidden;
+}
+
+.sebs-yolu-compare table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e2e8f0;
+}
+
+.sebs-yolu-compare th,
+.sebs-yolu-compare td {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.sebs-yolu-compare th {
+  background: rgba(37, 99, 235, 0.18);
+  font-weight: 700;
+}
+
+.sebs-yolu-chip-open {
+  color: #86efac;
+  font-weight: 700;
+}
+
+.sebs-yolu-chip-locked {
+  color: #fca5a5;
+  font-weight: 700;
+}
+
+.sebs-roadmap-flow {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.sebs-roadmap-step {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #ffffff;
+  padding: 0.95rem;
+}
+
+.sebs-roadmap-step h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.sebs-roadmap-step p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.sebs-roadmap-step .meta {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .sebs-roadmap-flow {
+    grid-template-columns: 1fr;
+  }
+}

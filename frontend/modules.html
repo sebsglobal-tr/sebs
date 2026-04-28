@@ -169,6 +169,36 @@
             </div>
         </section>
 
+        <section class="mx-auto mt-8 max-w-6xl px-4 sm:px-6 lg:px-8" aria-label="SEBS Yolu özeti">
+            <div class="rounded-3xl border border-slate-200/80 bg-white/90 p-6 shadow-card">
+                <p class="sebs-yolu-badge"><i class="fas fa-map-signs"></i> Kişisel SEBS Yolu</p>
+                <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Yolunu ücretsiz gör, ilerlemek için aşamaları aç</h2>
+                <p class="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                    Durak isimlerini, simülasyon sayısını ve zorluk seviyelerini görebilirsin. Tam içerik, görev adımları ve sistemsel ilerleme takibi plan açıldığında aktif olur.
+                </p>
+                <div class="sebs-roadmap-flow">
+                    <article class="sebs-roadmap-step">
+                        <h4>İlk Adım</h4>
+                        <p>Temel yön, alan mantığı ve başlangıç kazanımları.</p>
+                        <div class="meta">6 durak · 18 simülasyon</div>
+                        <button type="button" class="mt-3 inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white" data-lock-action="ilk-adim">İlk Adım'ı Aç</button>
+                    </article>
+                    <article class="sebs-roadmap-step">
+                        <h4>Yükseliş</h4>
+                        <p>Daha derin öğrenme, beceri üretimi ve hızlanma.</p>
+                        <div class="meta">3 durak · 9 simülasyon</div>
+                        <button type="button" class="mt-3 inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white" data-lock-action="yukselis">Yükseliş'i Aç</button>
+                    </article>
+                    <article class="sebs-roadmap-step">
+                        <h4>Zirve</h4>
+                        <p>İleri görevler, premium simülasyonlar, tam yol erişimi.</p>
+                        <div class="meta">4 durak · 12 simülasyon</div>
+                        <button type="button" class="mt-3 inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white" data-lock-action="zirve">Zirve'ye Ulaş</button>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <!-- Module categories — ana sayfa Özellikler ile aynı accordion + önizleme düzeni -->
         <section id="modulesCategoriesExplore" class="simulation-categories modules-categories-explore border-b border-slate-100 bg-white py-14 sm:py-20" aria-labelledby="modules-explore-heading">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -2247,6 +2277,22 @@
     <script src="/js/animations.js" defer></script>
     
     <script>
+        (function () {
+            const actionMap = {
+                'ilk-adim': '/pricing.html?category=sebs-road&level=ilk-adim',
+                'yukselis': '/pricing.html?category=sebs-road&level=yukselis',
+                'zirve': '/pricing.html?category=sebs-road&level=zirve'
+            };
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('[data-lock-action]');
+                if (!btn) return;
+                const key = btn.getAttribute('data-lock-action');
+                const href = actionMap[key];
+                if (!href) return;
+                window.location.href = href;
+            });
+        })();
+
         // Modülü Başlat - progress kaydı oluştur ve yönlendir
         document.addEventListener('click', async function(e) {
             const btn = e.target.closest('.btn-start-module');

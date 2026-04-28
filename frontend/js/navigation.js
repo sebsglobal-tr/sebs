@@ -48,6 +48,27 @@
 (function() {
     'use strict';
 
+    function ensurePremiumExperienceAssets() {
+        try {
+            if (!document.querySelector('link[data-sebs-premium="css"]')) {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = '/css/sebs-yolu-premium.css';
+                link.setAttribute('data-sebs-premium', 'css');
+                document.head.appendChild(link);
+            }
+            if (!document.querySelector('script[data-sebs-premium="js"]')) {
+                var script = document.createElement('script');
+                script.src = '/js/sebs-yolu-experience.js';
+                script.defer = true;
+                script.setAttribute('data-sebs-premium', 'js');
+                document.head.appendChild(script);
+            }
+        } catch (e) {
+            console.warn('Premium assets load skipped:', e);
+        }
+    }
+
     // ============================================
     // YARDIMCI FONKSİYONLAR
     // ============================================
@@ -458,6 +479,7 @@
     // DOM hazır olduğunda navigasyonu başlat
     // DOM yüklenme durumunu kontrol et
     async function initNavigation() {
+        ensurePremiumExperienceAssets();
         // Supabase yüklenmesini bekle
         if (typeof window.initSupabase !== 'undefined') {
             try {
