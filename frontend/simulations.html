@@ -259,6 +259,29 @@
             line-height: 1.5;
         }
 
+        #simulationsCategoriesExplore .sim-inline-example {
+            margin-top: 0.55rem;
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            border-radius: 0.72rem;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 0.52rem 0.6rem;
+        }
+
+        #simulationsCategoriesExplore .sim-inline-example strong {
+            display: block;
+            color: #1e3a8a;
+            font-size: 0.67rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+        }
+
+        #simulationsCategoriesExplore .sim-inline-example span {
+            color: #334155;
+            font-size: 0.76rem;
+            line-height: 1.35;
+        }
+
         #simulationsCategoriesExplore .sebs-acc-cta {
             border: 1px solid rgba(59, 130, 246, 0.34);
             background: #ffffff;
@@ -468,6 +491,10 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>IR, ağ, web ve zararlı yazılım gibi alanlarda dallanan senaryolar; süre ve gerekçe kayıt altında.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>Phishing alarmı → Öncelik puanı → Kanıt zinciri kaydı</span>
+                                    </div>
                                     <a href="/simulations.html?category=cybersecurity#simulations-list" class="sebs-acc-cta" aria-label="Siber güvenlik simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
@@ -488,6 +515,10 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>IAM, ağ segmentasyonu ve olay müdahalesi gibi buluta özgü görev akışları.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>IAM rol hatası → Etki analizi → Güvenli düzeltme planı</span>
+                                    </div>
                                     <a href="/simulations.html?category=cloud#simulations-list" class="sebs-acc-cta" aria-label="Bulut simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
@@ -508,6 +539,10 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>Veri kalitesi, yanlılık ve üretim kararları üzerine senaryo tabanlı alıştırmalar.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>Model sapması → Metrik yorumu → Üretim kararı</span>
+                                    </div>
                                     <a href="/simulations.html?category=data-science#simulations-list" class="sebs-acc-cta" aria-label="Veri bilimleri simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
@@ -528,6 +563,10 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>Geliştirme ve operasyon süreçlerinde risk ve öncelik seçimleri.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>Release riski → Önceliklendirme → Geri dönüş stratejisi</span>
+                                    </div>
                                     <a href="/simulations.html?category=technology#simulations-list" class="sebs-acc-cta" aria-label="Teknoloji simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
@@ -548,6 +587,10 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>Önceliklendirme, iletişim ve teslimat üzerine rol tabanlı görevler.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>Paydaş çatışması → Karar notu → Teslimat planı</span>
+                                    </div>
                                     <a href="/simulations.html?category=business#simulations-list" class="sebs-acc-cta" aria-label="İş dünyası simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
@@ -568,12 +611,16 @@
                                 </button>
                                 <div class="sebs-acc-panel">
                                     <p>Günlük iş ve öğrenme alışkanlıklarına yönelik hafif senaryolar.</p>
+                                    <div class="sim-inline-example">
+                                        <strong>Örnek Ekran</strong>
+                                        <span>Zaman bloklama → Dikkat dağıtıcılar → Gün sonu değerlendirme</span>
+                                    </div>
                                     <a href="/simulations.html?category=personal#simulations-list" class="sebs-acc-cta" aria-label="Kişisel gelişim simülasyonlarına kaydır"><span aria-hidden="true">→</span></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="simulations-explore-preview" class="sebs-visual-stage sebs-feat-grid relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
+                    <div id="simulations-explore-preview" class="hidden sebs-visual-stage sebs-feat-grid relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-card">
                         <div class="sebs-visual-slide is-active" data-sebs-visual="0" aria-hidden="false">
                             <div class="sebs-visual-card p-4">
                                 <div class="flex items-start justify-between gap-3">
