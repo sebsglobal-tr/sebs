@@ -752,88 +752,58 @@ body.sebs-premium-page .card:hover {
   }
 }
 
-/* Feature cards + impact board */
-.sebs-feature-impact {
-  border-radius: 1rem;
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  background: rgba(15, 23, 42, 0.95);
-  color: #e2e8f0;
-  padding: 1rem;
-  min-height: 100%;
+/* Feature cards self-contained visual interaction */
+.sebs-feature-card {
+  position: relative;
+  overflow: hidden;
 }
 
-.sebs-feature-impact .k {
-  margin: 0;
-  font-size: 0.67rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: #93c5fd;
-  font-weight: 700;
+.sebs-card-reveal {
+  margin-top: 0.75rem;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.28s ease;
 }
 
-.sebs-feature-impact .t {
-  margin: 0.5rem 0 0.25rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #f8fafc;
+.sebs-feature-card:hover .sebs-card-reveal,
+.sebs-feature-card:focus-within .sebs-card-reveal {
+  max-height: 140px;
+  opacity: 1;
 }
 
-.sebs-feature-impact .matrix {
-  margin-top: 0.7rem;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.45rem;
-}
-
-.sebs-feature-impact .cell {
-  border-radius: 0.55rem;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(15, 23, 42, 0.7);
-  padding: 0.45rem;
-}
-
-.sebs-feature-impact .cell span {
-  display: block;
-  font-size: 0.62rem;
-  color: #94a3b8;
-}
-
-.sebs-feature-impact .cell strong {
-  margin-top: 0.18rem;
-  display: block;
-  font-size: 0.9rem;
-  color: #f8fafc;
-}
-
-.sebs-feature-impact .flow {
-  margin-top: 0.7rem;
-  display: grid;
-  gap: 0.4rem;
-}
-
-.sebs-feature-impact .flow div {
+.sebs-card-kpis {
+  border-radius: 0.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: #f8fafc;
+  padding: 0.4rem 0.5rem;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.45rem;
-  border-radius: 0.55rem;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(30, 41, 59, 0.72);
-  padding: 0.38rem 0.45rem;
 }
 
-.sebs-feature-impact .flow strong {
-  display: inline-flex;
-  width: 1rem;
-  height: 1rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: #1d4ed8;
-  color: #fff;
-  font-size: 0.62rem;
+.sebs-card-kpis span {
+  font-size: 0.65rem;
+  color: #64748b;
 }
 
-.sebs-feature-impact .flow span {
-  font-size: 0.7rem;
-  color: #cbd5e1;
+.sebs-card-kpis strong {
+  font-size: 0.74rem;
+  color: #0f172a;
+}
+
+.sebs-card-flow {
+  margin: 0.45rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sebs-card-flow li {
+  list-style: none;
+  border-radius: 0.5rem;
+  border: 1px dashed rgba(59, 130, 246, 0.3);
+  background: rgba(239, 246, 255, 0.72);
+  color: #1e3a8a;
+  font-size: 0.67rem;
+  padding: 0.28rem 0.45rem;
 }
