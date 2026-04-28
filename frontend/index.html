@@ -119,11 +119,35 @@
                 Software Education &amp; Business Solutions
               </p>
               <h1 class="animate-in delay-1 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]">
-                Gerçek iş senaryolarında uygulayarak öğrenin, kararınızı ölçün
+                Hedefini söyle, SEBS Yolunu anında gör, kilitleri açarak ilerle
               </h1>
               <p class="animate-in delay-2 mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
-                SEBS; <strong class="font-semibold text-slate-800">simülasyon tabanlı öğrenme</strong> ile yalnızca bilgiyi değil, düşünme biçiminizi, seçtiğiniz yolu ve karar sürenizi analiz eder. Veri temelli yetkinlik profili ve kariyer yönlendirmesi sunar; kurumlarda ise işe alım ve gelişimi CV ötesi performansa bağlar.
+                Kullanıcı önce chatbox ile hedefini netleştirir, sonra kişisel yol haritasını ücretsiz görür. İçerik ve simülasyonlar, doğru plan açıldıkça adım adım aktif olur.
               </p>
+              <div class="animate-in delay-2" id="hero-sebs-funnel">
+                <div class="sebs-hero-funnel-tabs" role="tablist" aria-label="SEBS Yolu mini akış">
+                  <button class="sebs-hero-funnel-tab is-active" type="button" data-hero-flow-tab="discover" aria-selected="true">1. Keşif</button>
+                  <button class="sebs-hero-funnel-tab" type="button" data-hero-flow-tab="roadmap" aria-selected="false">2. Yol</button>
+                  <button class="sebs-hero-funnel-tab" type="button" data-hero-flow-tab="unlock" aria-selected="false">3. Kilit Aç</button>
+                </div>
+                <div class="sebs-hero-funnel-grid">
+                  <article class="sebs-hero-funnel-card" data-hero-flow-panel="discover">
+                    <strong>Chatbox kullanıcıyı tanır</strong>
+                    <p>Hedef, seviye ve haftalık zaman bilgisi ile kişisel başlangıç noktası çıkarılır.</p>
+                  </article>
+                  <article class="sebs-hero-funnel-card hidden" data-hero-flow-panel="roadmap">
+                    <strong>SEBS Yolu görsel olarak açılır</strong>
+                    <p>İlk Adım, Yükseliş, Zirve aşamaları; durak sayısı ve simülasyon yoğunluğu net görünür.</p>
+                  </article>
+                  <article class="sebs-hero-funnel-card hidden" data-hero-flow-panel="unlock">
+                    <strong>Kilitli durağa tıklayınca seçenek çıkar</strong>
+                    <p>Tekli durak veya planla açma seçenekleri aynı popup'ta karşılaştırmalı gösterilir.</p>
+                  </article>
+                </div>
+                <div class="sebs-hero-funnel-preview" data-hero-flow-preview>
+                  Akış sonucu: “Bu yol bana özel” duygusu oluşur, satın alma kararı metin değil deneyimle gelir.
+                </div>
+              </div>
               <div class="animate-in delay-3 mt-10 flex flex-wrap items-center gap-4">
                 <a href="/signup.html" data-sebs-primary-cta class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">
                   Ücretsiz başla
@@ -165,17 +189,17 @@
                       <span class="h-2.5 w-2.5 rounded-full bg-amber-400/90"></span>
                       <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/90"></span>
                     </div>
-                    <span class="text-xs font-medium text-slate-500">Canlı çalıştırma · Olay müdahalesi</span>
+                    <span class="text-xs font-medium text-slate-500" data-hero-mock-title>Canlı çalıştırma · Olay müdahalesi</span>
                   </div>
                   <div class="grid gap-4 sm:grid-cols-5">
                     <div class="sm:col-span-3 space-y-3">
                       <div class="rounded-lg border border-slate-200/90 bg-white/90 p-3 shadow-sm backdrop-blur-sm">
                         <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Senaryo</p>
-                        <p class="mt-1 text-sm font-semibold text-slate-800">Yatay hareketi test ortamında durdur</p>
+                        <p class="mt-1 text-sm font-semibold text-slate-800" data-hero-mock-scenario>Yatay hareketi test ortamında durdur</p>
                         <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
-                          <div class="h-full w-[72%] rounded-full bg-blue-500 transition-all duration-700"></div>
+                          <div class="h-full w-[72%] rounded-full bg-blue-500 transition-all duration-700" data-hero-mock-progress></div>
                         </div>
-                        <p class="mt-2 text-xs text-slate-500">Kanıt zinciri · 12 kontrol noktası</p>
+                        <p class="mt-2 text-xs text-slate-500" data-hero-mock-footnote>Kanıt zinciri · 12 kontrol noktası</p>
                       </div>
                       <div class="flex gap-2">
                         <div class="flex-1 rounded-lg border border-emerald-200/80 bg-emerald-50/90 p-3 backdrop-blur-sm">
@@ -193,11 +217,11 @@
                     <div class="sm:col-span-2 flex flex-col gap-2 rounded-lg border border-slate-200/70 bg-white/70 p-3 backdrop-blur-sm">
                       <p class="text-[10px] font-semibold uppercase text-slate-400">Aktivite</p>
                       <div class="space-y-2 text-xs">
-                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Karar</span><span class="font-medium text-slate-800">İzole et</span></div>
-                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Risk</span><span class="font-medium text-amber-600">Orta</span></div>
-                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Puan</span><span class="font-medium text-blue-600">8.4</span></div>
+                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Karar</span><span class="font-medium text-slate-800" data-hero-mock-decision>İzole et</span></div>
+                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Risk</span><span class="font-medium text-amber-600" data-hero-mock-risk>Orta</span></div>
+                        <div class="flex justify-between rounded-md bg-white/90 px-2 py-1.5 shadow-sm"><span class="text-slate-500">Puan</span><span class="font-medium text-blue-600" data-hero-mock-score>8.4</span></div>
                       </div>
-                      <div class="mt-auto rounded-md border border-dashed border-slate-200/90 p-2 text-center text-[10px] text-slate-400">
+                      <div class="mt-auto rounded-md border border-dashed border-slate-200/90 p-2 text-center text-[10px] text-slate-400" data-hero-mock-bottom>
                         Tekrar oynat · PDF dışa aktar
                       </div>
                     </div>
@@ -206,6 +230,87 @@
               </div>
               <div class="pointer-events-none absolute -right-6 -top-6 h-44 w-44 rounded-full bg-violet-400/15 blur-3xl" aria-hidden="true"></div>
               <div class="pointer-events-none absolute -bottom-4 -left-4 h-36 w-36 rounded-full bg-sky-400/15 blur-3xl" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sebs-yolu" class="reveal-on-scroll border-t border-slate-100 bg-white py-20 sm:py-24" aria-labelledby="sebs-yolu-heading">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <span class="sebs-yolu-badge">SEBS Yolu Deneyimi</span>
+          <h2 id="sebs-yolu-heading" class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Siteye giren kullanıcı 30 saniyede neyi nasıl alacağını görsün
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Uzun metin yerine etkileşimli kartlarla: chatbox ile yol oluştur, aşamaları gör, kilitleri aç ve hedefe doğru ilerle.
+          </p>
+        </div>
+
+        <div class="sebs-yolu-journey-shell mt-12 grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <div class="flex flex-wrap gap-2" role="tablist" aria-label="SEBS Yolu aşamaları">
+              <button class="sebs-yolu-stage-tab is-active" data-yol-stage-tab="ilk-adim" role="tab" aria-selected="true">İlk Adım</button>
+              <button class="sebs-yolu-stage-tab" data-yol-stage-tab="yukselis" role="tab" aria-selected="false">Yükseliş</button>
+              <button class="sebs-yolu-stage-tab" data-yol-stage-tab="zirve" role="tab" aria-selected="false">Zirve</button>
+            </div>
+
+            <div class="mt-4" data-yol-stage-panel="ilk-adim">
+              <article class="sebs-yolu-stage-card">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Aşama 1</p>
+                <h3 class="mt-1 text-xl font-semibold text-slate-900">İlk Adım: Yönünü bul ve başla</h3>
+                <p class="mt-2 text-sm text-slate-600">Kullanıcı ücretsiz olarak yol haritasını görür; ilk deneyim durağını açıp sistemin değerini hisseder.</p>
+                <ul class="sebs-yolu-stage-list">
+                  <li>6 durak · 18 simülasyon görünür</li>
+                  <li>1 durağı ücretsiz deneme</li>
+                  <li>Buton dili: “İlk Adım'ı Aç”</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="mt-4 hidden" data-yol-stage-panel="yukselis">
+              <article class="sebs-yolu-stage-card">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Aşama 2</p>
+                <h3 class="mt-1 text-xl font-semibold text-slate-900">Yükseliş: Beceriyi derinleştir</h3>
+                <p class="mt-2 text-sm text-slate-600">Kullanıcı artık içerik tüketmekten çıkar, uygulama ve ilerleme takibiyle düzenli bir ritme girer.</p>
+                <ul class="sebs-yolu-stage-list">
+                  <li>İlk Adım + Yükseliş birlikte açılır</li>
+                  <li>3 durak · 9 simülasyon ek erişim</li>
+                  <li>Buton dili: “Yükseliş'i Aç”</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="mt-4 hidden" data-yol-stage-panel="zirve">
+              <article class="sebs-yolu-stage-card">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Aşama 3</p>
+                <h3 class="mt-1 text-xl font-semibold text-slate-900">Zirve: Tam yol erişimi ve ileri görevler</h3>
+                <p class="mt-2 text-sm text-slate-600">Premium seviyede tüm duraklar, tüm simülasyonlar ve kişisel öneri sistemi aktif olur.</p>
+                <ul class="sebs-yolu-stage-list">
+                  <li>İlk Adım + Yükseliş + Zirve açık</li>
+                  <li>4 durak · 12 simülasyon</li>
+                  <li>Buton dili: “Zirve'ye Ulaş”</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="sebs-yolu-flow-node"><strong>1.</strong> Chatbox kullanıcının hedefini, seviyesini ve zamanını sorar.</div>
+            <div class="sebs-yolu-flow-node"><strong>2.</strong> Kişisel SEBS Yolu oluşturulur: aşamalar, duraklar, simülasyon sayıları görünür.</div>
+            <div class="sebs-yolu-flow-node"><strong>3.</strong> Kilitli durağa tıklanınca popup: tekli aç (199 TL) veya planla daha fazlasını aç.</div>
+            <div class="sebs-yolu-flow-node"><strong>4.</strong> Plan yükseltmede kalan süre korunur, kullanıcı ödüllendirilir.</div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card">
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Plan Önerisi Mantığı</p>
+              <p class="mt-2 text-sm text-slate-600">
+                Tekli satış içerik verir; abonelik sistem verir. Bu yüzden kartlarda abonelik görsel olarak daha avantajlı konumlandırılır.
+              </p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <a href="/pricing.html?category=sebs-road" class="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white">Planları Gör</a>
+                <a href="/modules.html" class="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700">Yolu Keşfet</a>
+              </div>
             </div>
           </div>
         </div>
@@ -765,6 +870,113 @@
         btn.addEventListener('click', function () {
           if (item.classList.contains('is-open')) return;
           activate(item);
+        });
+      });
+    })();
+
+    (function () {
+      var tabs = document.querySelectorAll('[data-yol-stage-tab]');
+      var panels = document.querySelectorAll('[data-yol-stage-panel]');
+      if (!tabs.length || !panels.length) return;
+
+      function activate(stage) {
+        tabs.forEach(function (tab) {
+          var active = tab.getAttribute('data-yol-stage-tab') === stage;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (panel) {
+          var show = panel.getAttribute('data-yol-stage-panel') === stage;
+          panel.classList.toggle('hidden', !show);
+        });
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          activate(tab.getAttribute('data-yol-stage-tab'));
+        });
+      });
+    })();
+
+    (function () {
+      var tabs = document.querySelectorAll('[data-hero-flow-tab]');
+      var panels = document.querySelectorAll('[data-hero-flow-panel]');
+      var preview = document.querySelector('[data-hero-flow-preview]');
+      if (!tabs.length || !panels.length || !preview) return;
+
+      var mockTitle = document.querySelector('[data-hero-mock-title]');
+      var mockScenario = document.querySelector('[data-hero-mock-scenario]');
+      var mockProgress = document.querySelector('[data-hero-mock-progress]');
+      var mockFootnote = document.querySelector('[data-hero-mock-footnote]');
+      var mockDecision = document.querySelector('[data-hero-mock-decision]');
+      var mockRisk = document.querySelector('[data-hero-mock-risk]');
+      var mockScore = document.querySelector('[data-hero-mock-score]');
+      var mockBottom = document.querySelector('[data-hero-mock-bottom]');
+
+      var previewText = {
+        discover: 'Akış sonucu: Kullanıcı kendi seviyesinde, kişiselleştirilmiş bir başlangıç gördüğünü hisseder.',
+        roadmap: 'Akış sonucu: “Ne öğreneceğim?” sorusu tek bakışta cevaplanır; güven ve netlik artar.',
+        unlock: 'Akış sonucu: Tekli satın alma ile plan farkı net görünür; kullanıcı mantıklı seçimi hızlı yapar.'
+      };
+
+      var mockState = {
+        discover: {
+          title: 'Canlı keşif · Hedef analizi',
+          scenario: 'Kullanıcı hedefi: 90 günde SOC analyst seviyesine çık',
+          progress: '38%',
+          footnote: 'Hedef, seviye ve zaman sinyali toplandı',
+          decision: 'Yol oluştur',
+          risk: 'Düşük',
+          score: '9.1',
+          bottom: 'Chat tamamla · Yolunu oluştur'
+        },
+        roadmap: {
+          title: 'SEBS Yolu · Aşamalar görünür',
+          scenario: 'İlk Adım, Yükseliş, Zirve haritasını gözden geçir',
+          progress: '72%',
+          footnote: '6 + 3 + 4 durak · toplam simülasyonlar hazır',
+          decision: 'Aşamayı seç',
+          risk: 'Orta',
+          score: '8.7',
+          bottom: 'Durakları karşılaştır · Plan eşleştir'
+        },
+        unlock: {
+          title: 'Kilit aç · Plan karşılaştır',
+          scenario: 'Tekli durak mı, plan mı? Değer karşılaştırması yap',
+          progress: '91%',
+          footnote: 'Ödeme sonrası yol erişimi anında güncellenir',
+          decision: 'Yükseliş planı',
+          risk: 'Düşük',
+          score: '9.4',
+          bottom: 'Kilidi aç · Yoluma devam et'
+        }
+      };
+
+      function activate(key) {
+        tabs.forEach(function (tab) {
+          var active = tab.getAttribute('data-hero-flow-tab') === key;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (panel) {
+          var show = panel.getAttribute('data-hero-flow-panel') === key;
+          panel.classList.toggle('hidden', !show);
+        });
+        preview.textContent = previewText[key] || previewText.discover;
+        var state = mockState[key] || mockState.discover;
+        if (mockTitle) mockTitle.textContent = state.title;
+        if (mockScenario) mockScenario.textContent = state.scenario;
+        if (mockProgress) mockProgress.style.width = state.progress;
+        if (mockFootnote) mockFootnote.textContent = state.footnote;
+        if (mockDecision) mockDecision.textContent = state.decision;
+        if (mockRisk) mockRisk.textContent = state.risk;
+        if (mockScore) mockScore.textContent = state.score;
+        if (mockBottom) mockBottom.textContent = state.bottom;
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          activate(tab.getAttribute('data-hero-flow-tab'));
         });
       });
     })();

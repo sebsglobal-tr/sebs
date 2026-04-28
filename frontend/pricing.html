@@ -410,6 +410,117 @@
         .btn-purchase:hover i:not(:disabled) {
             transform: rotate(360deg) scale(1.2);
         }
+
+        .purchase-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.68);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10010;
+            padding: 1rem;
+        }
+
+        .purchase-modal {
+            width: min(760px, 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: #0f172a;
+            color: #e2e8f0;
+            box-shadow: 0 30px 70px -30px rgba(15, 23, 42, 0.9);
+            overflow: hidden;
+        }
+
+        .purchase-modal-head {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .purchase-modal-head h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #f8fafc;
+        }
+
+        .purchase-modal-close {
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: rgba(15, 23, 42, 0.45);
+            color: #e2e8f0;
+            border-radius: 999px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .purchase-modal-body {
+            padding: 1rem 1.2rem 1.25rem;
+        }
+
+        .purchase-modal-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 0.9rem;
+        }
+
+        .purchase-modal-card {
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.55);
+            padding: 0.9rem;
+        }
+
+        .purchase-modal-card h4 {
+            margin: 0 0 0.25rem;
+            font-size: 0.95rem;
+            color: #f8fafc;
+        }
+
+        .purchase-modal-card p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            line-height: 1.45;
+        }
+
+        .purchase-modal-actions {
+            margin-top: 0.9rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.55rem;
+        }
+
+        .btn-modal-cancel,
+        .btn-modal-confirm {
+            border-radius: 999px;
+            padding: 0.55rem 0.95rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-modal-cancel {
+            background: rgba(15, 23, 42, 0.45);
+            color: #e2e8f0;
+            border-color: rgba(148, 163, 184, 0.35);
+        }
+
+        .btn-modal-confirm {
+            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
+            color: #fff;
+        }
+
+        @media (max-width: 760px) {
+            .purchase-modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         
         /* Access Info */
         .access-info {
@@ -936,6 +1047,49 @@
             window.location.href = 'login.html?redirect=pricing.html&message=Satın alma işlemi için giriş yapmanız veya kayıt olmanız gerekiyor.';
         }
 
+        function openPurchaseModal({ categoryTitle, packageTitle, price, onConfirm }) {
+            const existing = document.getElementById('purchaseModalOverlay');
+            if (existing) existing.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'purchaseModalOverlay';
+            overlay.className = 'purchase-modal-overlay';
+            overlay.innerHTML = `
+                <div class="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
+                    <div class="purchase-modal-head">
+                        <h3 id="purchaseModalTitle">Bu durak SEBS Yolunun bir parçası</h3>
+                        <button type="button" class="purchase-modal-close" data-modal-close aria-label="Kapat">×</button>
+                    </div>
+                    <div class="purchase-modal-body">
+                        <div class="purchase-modal-grid">
+                            <article class="purchase-modal-card">
+                                <h4>Seçtiğin seçenek</h4>
+                                <p><strong>${packageTitle}</strong> · ₺${price}<br>${categoryTitle} içinde bu kilit açılacak.</p>
+                            </article>
+                            <article class="purchase-modal-card">
+                                <h4>Abonelik neden daha avantajlı?</h4>
+                                <p>Tekli satış içerik verir, plan ise sistemi açar: ilerleme takibi, aşamalar arası geçiş ve öneriler birlikte gelir.</p>
+                            </article>
+                        </div>
+                        <div class="purchase-modal-actions">
+                            <button type="button" class="btn-modal-cancel" data-modal-close>Vazgeç</button>
+                            <button type="button" class="btn-modal-confirm" data-modal-confirm>Kilidi Aç</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            function close() { overlay.remove(); }
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay || e.target.closest('[data-modal-close]')) close();
+            });
+            overlay.querySelector('[data-modal-confirm]').addEventListener('click', () => {
+                close();
+                onConfirm();
+            });
+            document.body.appendChild(overlay);
+        }
+
         // Handle purchase
         async function handlePurchase(event) {
             // Giriş kontrolü - giriş yapılmamışsa direkt login sayfasına yönlendir
@@ -958,59 +1112,65 @@
             // Confirm purchase
             const categoryTitle = pricingData[category]?.title || 'SEBS Yolu';
             const packageTitle = button.dataset.title || 'Plan';
-            const confirmMessage = `${categoryTitle} içinde "${packageTitle}" (₺${price}) kilidini açmak istediğinize emin misiniz?`;
-            
-            if (!confirm(confirmMessage)) {
-                return;
-            }
+            let proceed = false;
+            openPurchaseModal({
+                categoryTitle,
+                packageTitle,
+                price,
+                onConfirm: function () { proceed = true; continuePurchase(); }
+            });
+            if (proceed) return;
 
-            // Show loading
-            document.getElementById('loadingOverlay').classList.add('active');
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+            async function continuePurchase() {
 
-            try {
-                const token = localStorage.getItem('authToken');
-                const apiP =
-                    typeof window.getSebsApiBase === 'function'
-                        ? window.getSebsApiBase()
-                        : (window.location.origin || '') + '/api';
-                const response = await fetch(apiP + '/purchase', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        category: backendCategory,
-                        level: backendLevel,
-                        price: parseFloat(price)
-                    })
-                });
+                // Show loading
+                document.getElementById('loadingOverlay').classList.add('active');
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
 
-                const result = await response.json();
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const apiP =
+                        typeof window.getSebsApiBase === 'function'
+                            ? window.getSebsApiBase()
+                            : (window.location.origin || '') + '/api';
+                    const response = await fetch(apiP + '/purchase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            category: backendCategory,
+                            level: backendLevel,
+                            price: parseFloat(price)
+                        })
+                    });
 
-                if (result.success) {
-                    // Purchase saved to database - refresh purchases and re-render cards
-                    console.log('✅ Purchase successful - saved to database');
-                    
-                    // Satın alımları yeniden getir ve kartları güncelle
-                    await fetchUserPurchases();
-                    await renderPricingCards(category);
-                    
-                    alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi.');
-                } else {
-                    alert('❌ Satın alma işlemi başarısız: ' + (result.message || 'Bilinmeyen hata'));
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Purchase saved to database - refresh purchases and re-render cards
+                        console.log('✅ Purchase successful - saved to database');
+
+                        // Satın alımları yeniden getir ve kartları güncelle
+                        await fetchUserPurchases();
+                        await renderPricingCards(category);
+
+                        alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi.');
+                    } else {
+                        alert('❌ Satın alma işlemi başarısız: ' + (result.message || 'Bilinmeyen hata'));
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
+                    }
+                } catch (error) {
+                    console.error('Purchase error:', error);
+                    alert('❌ Satın alma işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.');
                     button.disabled = false;
                     button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
+                } finally {
+                    document.getElementById('loadingOverlay').classList.remove('active');
                 }
-            } catch (error) {
-                console.error('Purchase error:', error);
-                alert('❌ Satın alma işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.');
-                button.disabled = false;
-                button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
-            } finally {
-                document.getElementById('loadingOverlay').classList.remove('active');
             }
         }
 
