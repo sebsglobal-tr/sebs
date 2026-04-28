@@ -866,103 +866,156 @@
             font-size: 0.95rem;
         }
 
-        .module-stage {
-            margin-top: 1.25rem;
-            padding: 0.9rem 0.9rem 1.15rem;
-            border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        .module-stage h4 {
-            margin: 0;
-            color: #eff6ff;
-            font-size: 1.02rem;
-            font-weight: 700;
-        }
-
-        .module-stage-meta {
-            margin-top: 0.25rem;
-            color: rgba(191, 219, 254, 0.9);
-            font-size: 0.82rem;
-        }
-
-        .module-road-grid {
-            margin-top: 0.85rem;
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 0.72rem;
-        }
-
-        .module-stop {
+        .road-purchase-shell {
             position: relative;
-            padding: 0.9rem 0.78rem;
+            margin-top: 1rem;
+            min-height: 1650px;
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(10, 15, 30, 0.9));
+            overflow: hidden;
+        }
+
+        .road-purchase-track {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .road-purchase-track path {
+            fill: none;
+            stroke: rgba(148, 197, 255, 0.7);
+            stroke-width: 34;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.45));
+            stroke-dasharray: 2600;
+            stroke-dashoffset: 2600;
+            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .road-purchase-shell.is-visible .road-purchase-track path {
+            stroke-dashoffset: 0;
+        }
+
+        .road-stop-card {
+            position: absolute;
+            width: min(46%, 420px);
+            padding: 0.85rem 0.95rem;
             border-radius: 14px;
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            background: rgba(12, 19, 36, 0.78);
-            transition: transform 0.26s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(12, 19, 36, 0.84);
+            box-shadow: 0 12px 28px rgba(2, 6, 23, 0.34);
+            cursor: pointer;
+            transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+            opacity: 0;
+            transform: translateY(16px);
         }
 
-        .module-stop:hover {
-            transform: translateY(-3px);
-            border-color: rgba(96, 165, 250, 0.6);
-            box-shadow: 0 16px 34px rgba(30, 64, 175, 0.35);
+        .road-stop-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .module-stop.locked {
-            opacity: 0.62;
+        .road-stop-card.left { left: 3.5%; }
+        .road-stop-card.right { right: 3.5%; }
+
+        .road-stop-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(96, 165, 250, 0.62);
+            box-shadow: 0 16px 30px rgba(30, 64, 175, 0.35);
         }
 
-        .module-stop.open {
-            border-color: rgba(74, 222, 128, 0.5);
+        .road-stop-card.locked {
+            opacity: 0.66;
         }
 
-        .module-stop small {
-            display: block;
-            color: rgba(148, 163, 184, 0.95);
-            font-size: 0.72rem;
-            letter-spacing: 0.02em;
+        .road-stop-card.open {
+            border-color: rgba(74, 222, 128, 0.55);
+            box-shadow: 0 12px 26px rgba(22, 163, 74, 0.22);
         }
 
-        .module-stop h5 {
-            margin: 0.32rem 0 0.18rem;
+        .road-stop-dot {
+            position: absolute;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            background: #60a5fa;
+            transform: translateY(-50%);
+            box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.56);
+            animation: nodePulse 2.8s infinite;
+        }
+
+        .road-stop-card.left .road-stop-dot { right: -26px; }
+        .road-stop-card.right .road-stop-dot { left: -26px; }
+        .road-stop-card.open .road-stop-dot { background: #4ade80; }
+
+        .road-stop-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.34rem;
+        }
+
+        .road-stop-level {
+            font-size: 0.68rem;
+            color: #bfdbfe;
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            border-radius: 999px;
+            padding: 0.1rem 0.45rem;
+            letter-spacing: 0.03em;
+        }
+
+        .road-stop-hours {
+            font-size: 0.68rem;
+            color: rgba(226, 232, 240, 0.85);
+        }
+
+        .road-stop-title {
+            margin: 0.2rem 0;
             color: #f8fafc;
             font-size: 0.92rem;
             font-weight: 600;
             line-height: 1.35;
         }
 
-        .module-stop p {
+        .road-stop-desc {
             margin: 0;
             color: rgba(203, 213, 225, 0.92);
-            font-size: 0.78rem;
-            min-height: 34px;
+            font-size: 0.77rem;
+            line-height: 1.45;
         }
 
-        .module-stop .mini-buy {
-            margin-top: 0.65rem;
-            width: 100%;
-            font-size: 0.76rem;
-            border: 1px solid rgba(96, 165, 250, 0.42);
-            border-radius: 10px;
-            background: rgba(30, 64, 175, 0.28);
+        .road-stop-action {
+            margin-top: 0.58rem;
+            font-size: 0.73rem;
+            border: 1px solid rgba(96, 165, 250, 0.45);
+            border-radius: 999px;
+            background: rgba(30, 64, 175, 0.3);
             color: #dbeafe;
-            padding: 0.46rem 0.5rem;
+            padding: 0.3rem 0.62rem;
             font-weight: 600;
-            transition: all 0.2s ease;
         }
 
-        .module-stop .mini-buy:hover {
-            background: rgba(37, 99, 235, 0.46);
-            transform: translateY(-1px);
-        }
-
-        .module-stop .mini-buy:disabled {
-            cursor: not-allowed;
-            opacity: 0.9;
-            border-color: rgba(74, 222, 128, 0.45);
+        .road-stop-action:disabled {
+            border-color: rgba(74, 222, 128, 0.5);
             background: rgba(22, 163, 74, 0.2);
             color: #bbf7d0;
+            cursor: not-allowed;
+        }
+
+        .road-stage-marker {
+            position: absolute;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: rgba(191, 219, 254, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 999px;
+            padding: 0.16rem 0.52rem;
+            background: rgba(15, 23, 42, 0.66);
         }
 
         @keyframes nodePulse {
@@ -983,14 +1036,27 @@
             .node-ilk { top: 16px; bottom: auto; }
             .node-yukselis { top: 142px; }
             .node-zirve { top: 268px; right: auto; }
-            .module-road-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .road-purchase-shell {
+                min-height: 1780px;
+            }
+            .road-stop-card {
+                width: min(86%, 520px);
+            }
+            .road-stop-card.left,
+            .road-stop-card.right {
+                left: 7%;
+                right: auto;
             }
         }
 
         @media (max-width: 560px) {
-            .module-road-grid {
-                grid-template-columns: 1fr;
+            .road-purchase-shell {
+                min-height: 1860px;
+            }
+            .road-stop-card {
+                width: 90%;
+                left: 5% !important;
+                right: auto !important;
             }
         }
 
@@ -1357,19 +1423,21 @@
         let currentCategory = 'sebs-road';
         const stageRank = { beginner: 1, intermediate: 2, advanced: 3 };
         const moduleRoadData = [
-            { title: 'Siber Guvenlige Giris', stage: 'ilk-adim', desc: 'Temeller ve yol tanitimi' },
-            { title: 'Temel Network Egitimi', stage: 'ilk-adim', desc: 'Aga baglanti mantigi' },
-            { title: 'Isletim Sistemi Guvenligi', stage: 'ilk-adim', desc: 'Host guvenlik katmani' },
-            { title: 'Web Uygulama Guvenligi', stage: 'ilk-adim', desc: 'Uygulama aciklari farkindaligi' },
-            { title: 'Network Guvenligi', stage: 'ilk-adim', desc: 'Trafik izleme ve koruma' },
-            { title: 'SOC Baslangic', stage: 'ilk-adim', desc: 'Izleme ve ilk alarm yonetimi' },
-            { title: 'Malware Analizi', stage: 'yukselis', desc: 'Davranis analizi ve teknik inceleme' },
-            { title: 'Incident Response', stage: 'yukselis', desc: 'Olaya yanit akisi ve karar' },
-            { title: 'Threat Hunting', stage: 'yukselis', desc: 'Proaktif tehdit avciligi' },
-            { title: 'Penetration Testing', stage: 'zirve', desc: 'Saldiri simule et, acik bul' },
-            { title: 'Red Team Senaryolari', stage: 'zirve', desc: 'Gelismis saldiri zinciri' },
-            { title: 'Blue Team Orkestrasyonu', stage: 'zirve', desc: 'Savunma otomasyonu' },
-            { title: 'Capstone Operasyon', stage: 'zirve', desc: 'Uctan uca premium gorev' }
+            { title: 'Siber Guvenlige Giris', stage: 'ilk-adim', hours: '20 saat', desc: 'CIA Uclusu ve temel kavramlar' },
+            { title: 'Temel Network Egitimi', stage: 'ilk-adim', hours: '30 saat', desc: 'TCP/IP, OSI ve subnetting' },
+            { title: 'Isletim Sistemleri Guvenligi', stage: 'ilk-adim', hours: '35 saat', desc: 'Windows ve Linux temel hardening' },
+            { title: 'Temel Kriptografi', stage: 'ilk-adim', hours: '25 saat', desc: 'Sifreleme, hash ve dijital imza' },
+            { title: 'Sosyal Muhendislik Giris', stage: 'ilk-adim', hours: '20 saat', desc: 'Phishing, pretexting ve korunma' },
+            { title: 'Web Uygulama Guvenligi', stage: 'ilk-adim', hours: '42 saat', desc: 'OWASP Top 10 uygulama aciklari' },
+            { title: 'Network Guvenligi', stage: 'yukselis', hours: '35 saat', desc: 'Evil Twin, PCAP analizi, raporlama' },
+            { title: 'Malware Analizi', stage: 'yukselis', hours: '40 saat', desc: 'Static ve dynamic malware analizi' },
+            { title: 'SOC Egitimi', stage: 'yukselis', hours: '48 saat', desc: 'SIEM, log analizi, incident response' },
+            { title: 'Isletim Sistemi Guvenligi Ileri', stage: 'yukselis', hours: '38 saat', desc: 'Gelismis hardening ve izleme' },
+            { title: 'Ileri Malware Reverse Engineering', stage: 'zirve', hours: '55 saat', desc: 'Sandbox ve reverse engineering' },
+            { title: 'Olay Mudahalesi ve Forensics', stage: 'zirve', hours: '50 saat', desc: 'Gercek zamanli mudahale senaryolari' },
+            { title: 'Ileri Kriptografi', stage: 'zirve', hours: '45 saat', desc: 'Post-quantum ve kriptanaliz' },
+            { title: 'Red Team ve Pentest', stage: 'zirve', hours: '60 saat', desc: 'Exploitation ve post-exploitation' },
+            { title: 'Threat Intelligence', stage: 'zirve', hours: '40 saat', desc: 'Tehdit istihbarati toplama ve yorumlama' }
         ];
 
         // Check login status
@@ -1481,51 +1549,67 @@
             if (!container) return;
 
             const userRank = getUserRoadRank();
-            const stageGroups = [
-                { id: 'ilk-adim', title: 'Ilk Adim Duraklari', meta: '6 durak · 199 TL/ay' },
-                { id: 'yukselis', title: 'Yukselis Duraklari', meta: '3 durak · 349 TL/ay' },
-                { id: 'zirve', title: 'Zirve Duraklari', meta: '4 durak · 799 TL/ay' }
-            ];
+            const total = moduleRoadData.length;
+            const baseTop = 48;
+            const rowGap = 98;
+            const shellHeight = Math.max(1500, baseTop + total * rowGap + 120);
 
             container.innerHTML = `
                 <div class="journey-shop-head">
                     <h3>Modul Yolundan Satin Alma</h3>
-                    <p>Her egitim modulu bir durak. Kilitli duraga tikla, ilgili asama planini ac.</p>
+                    <p>Cizimdeki gibi tek bir yol: her modul bir durak. Kilitli duraga tiklayip asama kilidini ac.</p>
                 </div>
-                ${stageGroups.map((stage) => `
-                    <article class="module-stage journey-reveal">
-                        <h4>${stage.title}</h4>
-                        <div class="module-stage-meta">${stage.meta}</div>
-                        <div class="module-road-grid">
-                            ${moduleRoadData
-                                .filter((mod) => mod.stage === stage.id)
-                                .map((mod) => {
-                                    const meta = getStageMeta(mod.stage);
-                                    const requiredRank = stageRank[meta.key] || 1;
-                                    const stageOwned = userRank >= requiredRank;
-                                    return `
-                                        <div class="module-stop ${stageOwned ? 'open' : 'locked'}">
-                                            <small>${getLevelLabel(mod.stage)} · Durak</small>
-                                            <h5>${mod.title}</h5>
-                                            <p>${mod.desc}</p>
-                                            <button
-                                                class="mini-buy btn-purchase"
-                                                data-category="${category}"
-                                                data-level="${mod.stage}"
-                                                data-price="${meta.price}"
-                                                data-title="${mod.title}"
-                                                ${stageOwned ? 'disabled' : ''}
-                                                ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
-                                            >
-                                                ${stageOwned ? 'Erisim Acik' : `${meta.name} Kilidini Ac · ${meta.price} TL`}
-                                            </button>
-                                        </div>
-                                    `;
-                                }).join('')}
-                        </div>
-                    </article>
-                `).join('')}
+                <div class="road-purchase-shell journey-reveal" style="min-height:${shellHeight}px;">
+                    <svg class="road-purchase-track" viewBox="0 0 1000 2000" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M520 40 C 360 210, 680 330, 460 520 C 270 690, 690 860, 470 1060 C 260 1240, 700 1430, 480 1640 C 340 1770, 540 1880, 510 1960"></path>
+                    </svg>
+                    <span class="road-stage-marker" style="top:70px;">Ilk Adim · 199 TL</span>
+                    <span class="road-stage-marker" style="top:760px;">Yukselis · 349 TL</span>
+                    <span class="road-stage-marker" style="top:1360px;">Zirve · 799 TL</span>
+                    ${moduleRoadData.map((mod, index) => {
+                        const meta = getStageMeta(mod.stage);
+                        const requiredRank = stageRank[meta.key] || 1;
+                        const stageOwned = userRank >= requiredRank;
+                        const side = index % 2 === 0 ? 'left' : 'right';
+                        const top = baseTop + (index * rowGap);
+                        return `
+                            <article
+                                class="road-stop-card ${side} ${stageOwned ? 'open' : 'locked'} journey-reveal"
+                                style="top:${top}px;"
+                                onclick="handleRoadStopClick(event)"
+                            >
+                                <span class="road-stop-dot"></span>
+                                <div class="road-stop-head">
+                                    <span class="road-stop-level">${getLevelLabel(mod.stage)}</span>
+                                    <span class="road-stop-hours">${mod.hours}</span>
+                                </div>
+                                <h5 class="road-stop-title">${mod.title}</h5>
+                                <p class="road-stop-desc">${mod.desc}</p>
+                                <button
+                                    class="road-stop-action btn-purchase"
+                                    data-category="${category}"
+                                    data-level="${mod.stage}"
+                                    data-price="${meta.price}"
+                                    data-title="${mod.title}"
+                                    ${stageOwned ? 'disabled' : ''}
+                                    ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
+                                >
+                                    ${stageOwned ? 'Erisim Acik' : `${meta.name} Kilidini Ac · ${meta.price} TL`}
+                                </button>
+                            </article>
+                        `;
+                    }).join('')}
+                </div>
             `;
+        }
+
+        function handleRoadStopClick(event) {
+            const card = event.currentTarget;
+            if (event.target.closest('.btn-purchase')) return;
+            const button = card.querySelector('.btn-purchase');
+            if (button && !button.disabled) {
+                button.click();
+            }
         }
 
         // Render pricing cards
@@ -1780,7 +1864,7 @@
                     if (targetCard) {
                         targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         const pricingCard = targetCard.closest('.pricing-card');
-                        const moduleStop = targetCard.closest('.module-stop');
+                        const moduleStop = targetCard.closest('.road-stop-card');
                         if (pricingCard) {
                             pricingCard.style.border = '3px solid #1e40af';
                             pricingCard.style.boxShadow = '0 0 20px rgba(30, 64, 175, 0.5)';
