@@ -1207,9 +1207,10 @@ body.landing-site-body .dashboard-main .certificate-actions .btn-secondary {
 }
 
 body.landing-site-body .dashboard-main .certificate-actions .btn-secondary:hover {
-  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+  background: #f1f5f9 !important;
   color: #ffffff !important;
-  border-color: transparent !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 body.landing-site-body .dashboard-main .loading {
@@ -1243,11 +1244,92 @@ body.landing-site-body .dashboard-main .evaluation-placeholder i {
   color: #94a3b8 !important;
 }
 
-/* Üst bar: Tailwind text-blue-700 → marka bordo (tüm landing-site-body sayfaları) */
+/* Üst bar: bağlantı rengi marka mavi */
 body.landing-site-body header a.text-blue-700 {
-  color: #7f1d1d !important;
+  color: #1d4ed8 !important;
 }
 
 body.landing-site-body header a.text-blue-700:hover {
-  color: #991b1b !important;
+  color: #1e40af !important;
+}
+
+/* ---------- Premium consistency layer (site-wide for landing shell) ---------- */
+body.landing-site-body {
+  --surface-0: #ffffff;
+  --surface-1: #f8fafc;
+  --surface-2: #eef2ff;
+  --text-strong: #0f172a;
+  --text-soft: #475569;
+  --brand: #2563eb;
+  --brand-strong: #1d4ed8;
+  --line: #e2e8f0;
+}
+
+body.landing-site-body section {
+  color: var(--text-strong);
+}
+
+body.landing-site-body h1,
+body.landing-site-body h2,
+body.landing-site-body h3,
+body.landing-site-body h4 {
+  color: var(--text-strong) !important;
+  letter-spacing: -0.02em;
+}
+
+body.landing-site-body p,
+body.landing-site-body li,
+body.landing-site-body .section-subtitle,
+body.landing-site-body .hero-subtitle {
+  color: var(--text-soft) !important;
+}
+
+body.landing-site-body .feature-card,
+body.landing-site-body .simulation-card,
+body.landing-site-body .simulation-card-detailed,
+body.landing-site-body .module-card-detailed,
+body.landing-site-body .pricing-card,
+body.landing-site-body .card {
+  background: var(--surface-0) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.06), 0 16px 30px -18px rgb(15 23 42 / 0.16) !important;
+  backdrop-filter: none !important;
+}
+
+body.landing-site-body .feature-card:hover,
+body.landing-site-body .simulation-card:hover,
+body.landing-site-body .simulation-card-detailed:hover,
+body.landing-site-body .module-card-detailed:hover,
+body.landing-site-body .pricing-card:hover {
+  border-color: #bfdbfe !important;
+  box-shadow: 0 20px 40px -20px rgb(37 99 235 / 0.3) !important;
+}
+
+body.landing-site-body .btn-primary,
+body.landing-site-body .btn-signup,
+body.landing-site-body .btn-login,
+body.landing-site-body .btn-purchase {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #1e40af !important;
+  box-shadow: 0 10px 24px -14px rgb(37 99 235 / 0.55) !important;
+}
+
+body.landing-site-body .btn-primary:hover,
+body.landing-site-body .btn-signup:hover,
+body.landing-site-body .btn-login:hover,
+body.landing-site-body .btn-purchase:hover {
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+
+body.landing-site-body .btn-secondary {
+  background: #ffffff !important;
+  color: var(--text-strong) !important;
+  border: 1px solid var(--line) !important;
+}
+
+body.landing-site-body .btn-secondary:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
 }

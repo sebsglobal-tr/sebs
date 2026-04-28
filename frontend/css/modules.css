@@ -5,8 +5,8 @@
 
 /* Eğitim modülleri hero - site hero ile aynı görsel dil */
 .modules-hero {
-    background: var(--hero-bg, url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1920&q=85')) center/cover no-repeat;
-    color: white;
+    background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%);
+    color: #0f172a;
     padding: 5rem 2rem 4rem;
     text-align: center;
     position: relative;
@@ -21,7 +21,9 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(5, 5, 12, 0.88) 0%, rgba(15, 23, 42, 0.9) 50%, rgba(5, 5, 12, 0.94) 100%);
+    background:
+        radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.12), transparent 38%),
+        radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.11), transparent 34%);
     pointer-events: none;
     z-index: 0;
 }
@@ -52,14 +54,14 @@
 
 .modules-hero .hero-title,
 .modules-hero .hero-content h1 {
-    font-family: 'Cormorant Garamond', 'Space Grotesk', serif;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
     font-size: clamp(2.25rem, 5vw, 3.25rem);
     font-weight: 600;
     margin-bottom: 0.75rem;
     line-height: 1.2;
-    color: #fff;
+    color: #0f172a;
     letter-spacing: -0.02em;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
 }
 
 .modules-hero .hero-subtitle,
@@ -68,9 +70,9 @@
     max-width: 560px;
     margin: 0 auto;
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.95);
+    color: #475569;
     font-weight: 400;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: none;
 }
 
 @keyframes modulesFadeInUp {

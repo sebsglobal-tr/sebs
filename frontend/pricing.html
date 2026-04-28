@@ -1769,8 +1769,8 @@
 
         function getStageMeta(level) {
             const map = {
-                'ilk-adim': { key: 'beginner', name: 'Ilk Adim', price: 199 },
-                yukselis: { key: 'intermediate', name: 'Yukselis', price: 349 },
+                'ilk-adim': { key: 'beginner', name: 'İlk Adım', price: 199 },
+                yukselis: { key: 'intermediate', name: 'Yükseliş', price: 349 },
                 zirve: { key: 'advanced', name: 'Zirve', price: 799 }
             };
             return map[level] || map['ilk-adim'];
@@ -1794,9 +1794,9 @@
                 baseTop,
                 rowGap,
                 bands: [
-                    { id: 'ilk-adim', title: 'Ilk Adim Asamasi', top: ilkTop, height: ilkHeight, price: '199 TL' },
-                    { id: 'yukselis', title: 'Yukselis Asamasi', top: yukTop, height: yukHeight, price: '349 TL' },
-                    { id: 'zirve', title: 'Zirve Asamasi', top: zirveTop, height: zirveHeight, price: '799 TL' }
+                    { id: 'ilk-adim', title: 'İlk Adım Aşaması', top: ilkTop, height: ilkHeight, price: '199 TL' },
+                    { id: 'yukselis', title: 'Yükseliş Aşaması', top: yukTop, height: yukHeight, price: '349 TL' },
+                    { id: 'zirve', title: 'Zirve Aşaması', top: zirveTop, height: zirveHeight, price: '799 TL' }
                 ]
             };
         }
@@ -1814,17 +1814,17 @@
 
             container.innerHTML = `
                 <div class="journey-shop-head">
-                    <h3>Modul Yolundan Satin Alma</h3>
-                    <p>Cizimdeki gibi tek bir yol: her modul bir durak. Kilitli duraga tiklayip asama kilidini ac.</p>
+                    <h3>Modül Yolundan Satın Alma</h3>
+                    <p>Tek bir yol üzerinde ilerle: her modül bir durak, kilitli durağa tıklayıp aşama erişimini aç.</p>
                     <div class="road-controls">
-                        <button class="road-filter-btn ${activeRoadStage === 'all' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('all')">Tum Duraklar</button>
-                        <button class="road-filter-btn ${activeRoadStage === 'ilk-adim' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('ilk-adim')">Ilk Adim</button>
-                        <button class="road-filter-btn ${activeRoadStage === 'yukselis' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('yukselis')">Yukselis</button>
+                        <button class="road-filter-btn ${activeRoadStage === 'all' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('all')">Tüm Duraklar</button>
+                        <button class="road-filter-btn ${activeRoadStage === 'ilk-adim' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('ilk-adim')">İlk Adım</button>
+                        <button class="road-filter-btn ${activeRoadStage === 'yukselis' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('yukselis')">Yükseliş</button>
                         <button class="road-filter-btn ${activeRoadStage === 'zirve' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('zirve')">Zirve</button>
                     </div>
                     <div class="road-controls">
-                        <button class="road-mode-btn ${roadPurchaseMode === 'subscription' ? 'active' : ''}" type="button" onclick="setRoadPurchaseMode('subscription')">Asama Kilidi Ac</button>
-                        <button class="road-mode-btn ${roadPurchaseMode === 'single' ? 'active' : ''}" type="button" onclick="setRoadPurchaseMode('single')">Tekli Modul 120 TL</button>
+                        <button class="road-mode-btn ${roadPurchaseMode === 'subscription' ? 'active' : ''}" type="button" onclick="setRoadPurchaseMode('subscription')">Aşama Kilidini Aç</button>
+                        <button class="road-mode-btn ${roadPurchaseMode === 'single' ? 'active' : ''}" type="button" onclick="setRoadPurchaseMode('single')">Tekli Modül · 120 TL</button>
                     </div>
                 </div>
                 <div class="road-purchase-shell journey-reveal" style="min-height:${shellHeight}px;">
@@ -1848,7 +1848,7 @@
                         <span class="road-stage-marker" style="top:${band.top + 10}px;">${band.title} · ${band.price}</span>
                     `).join('')}
                     ${stageLayout.bands.map((band) => `
-                        <span class="road-stage-summary" style="top:${band.top + 42}px;">${band.id === 'ilk-adim' ? 'Temel moduller' : band.id === 'yukselis' ? 'Orta seviye uygulama' : 'Ileri seviye uzmanlik'}</span>
+                        <span class="road-stage-summary" style="top:${band.top + 42}px;">${band.id === 'ilk-adim' ? 'Temel modüller' : band.id === 'yukselis' ? 'Orta seviye uygulama' : 'İleri seviye uzmanlık'}</span>
                     `).join('')}
                     ${moduleRoadData.map((mod, index) => {
                         const meta = getStageMeta(mod.stage);
@@ -1863,7 +1863,7 @@
                         const purchasePrice = isSingle ? 120 : meta.price;
                         const actionText = stageOwned && !isSingle
                             ? 'Erisim Acik'
-                            : (isSingle ? 'Tekli Modul Ac · 120 TL' : `${meta.name} Kilidini Ac · ${meta.price} TL`);
+                            : (isSingle ? 'Tekli Modülü Aç · 120 TL' : `${meta.name} Kilidini Aç · ${meta.price} TL`);
                         return `
                             <article
                                 class="road-stop-card stage-${mod.stage} ${side} ${stageOwned ? 'open' : 'locked'} journey-reveal"
