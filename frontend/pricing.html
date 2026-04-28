@@ -914,8 +914,8 @@
             left: 0.9rem;
             right: 0.9rem;
             border-radius: 14px;
-            border: 1px dashed rgba(148, 163, 184, 0.36);
-            background: rgba(255, 255, 255, 0.62);
+            border: 2px solid rgba(148, 163, 184, 0.34);
+            background: rgba(255, 255, 255, 0.82);
             pointer-events: none;
         }
 
@@ -928,6 +928,38 @@
         .road-stage-band.zirve {
             background: linear-gradient(90deg, rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 0.55));
         }
+
+        .road-stage-divider {
+            position: absolute;
+            left: 1rem;
+            right: 1rem;
+            height: 0;
+            border-top: 2px dashed rgba(100, 116, 139, 0.5);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .road-stage-heading {
+            position: absolute;
+            left: 1.4rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.32rem 0.74rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(255, 255, 255, 0.96);
+            color: #0f172a;
+            z-index: 4;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+        }
+
+        .road-stage-heading.ilk-adim { color: #1d4ed8; border-color: rgba(59, 130, 246, 0.42); }
+        .road-stage-heading.yukselis { color: #0f766e; border-color: rgba(20, 184, 166, 0.45); }
+        .road-stage-heading.zirve { color: #7c3aed; border-color: rgba(139, 92, 246, 0.45); }
 
         .road-purchase-track {
             position: absolute;
@@ -1056,15 +1088,15 @@
         .road-stop-title {
             margin: 0.2rem 0;
             color: #0f172a;
-            font-size: 0.92rem;
-            font-weight: 600;
+            font-size: 0.98rem;
+            font-weight: 700;
             line-height: 1.35;
         }
 
         .road-stop-desc {
             margin: 0;
-            color: rgba(51, 65, 85, 0.9);
-            font-size: 0.77rem;
+            color: rgba(30, 41, 59, 0.96);
+            font-size: 0.83rem;
             line-height: 1.45;
         }
 
@@ -1100,12 +1132,12 @@
         }
 
         .road-stop-topics span {
-            font-size: 0.66rem;
-            color: #1e40af;
+            font-size: 0.7rem;
+            color: #1e3a8a;
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 999px;
-            padding: 0.13rem 0.4rem;
-            background: rgba(219, 234, 254, 0.72);
+            padding: 0.16rem 0.44rem;
+            background: rgba(219, 234, 254, 0.86);
         }
 
         .road-stop-action:disabled {
@@ -1717,6 +1749,12 @@
                     </svg>
                     ${stageLayout.bands.map((band) => `
                         <div class="road-stage-band ${band.id}" style="top:${band.top}px; height:${band.height}px;"></div>
+                    `).join('')}
+                    ${stageLayout.bands.slice(1).map((band) => `
+                        <div class="road-stage-divider" style="top:${band.top - 8}px;"></div>
+                    `).join('')}
+                    ${stageLayout.bands.map((band) => `
+                        <span class="road-stage-heading ${band.id}" style="top:${band.top - 12}px;">${band.title.toUpperCase()}</span>
                     `).join('')}
                     ${stageLayout.bands.map((band) => `
                         <span class="road-stage-marker" style="top:${band.top + 10}px;">${band.title} · ${band.price}</span>
