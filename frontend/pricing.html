@@ -630,6 +630,246 @@
                 font-size: 2.25rem;
             }
         }
+
+        /* Journey roadmap + premium dark overrides */
+        .sebs-pricing-journey {
+            background:
+                radial-gradient(circle at 8% 10%, rgba(59, 130, 246, 0.18), transparent 34%),
+                radial-gradient(circle at 92% 5%, rgba(139, 92, 246, 0.16), transparent 30%),
+                linear-gradient(180deg, #070b16 0%, #090f1d 35%, #070b16 100%);
+            color: #d8e3ff;
+        }
+
+        .sebs-pricing-journey::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(140, 154, 196, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(140, 154, 196, 0.08) 1px, transparent 1px);
+            background-size: 46px 46px;
+            opacity: 0.08;
+            z-index: -1;
+        }
+
+        .journey-roadmap-wrap {
+            padding: 1rem 0 0.4rem;
+        }
+
+        .journey-roadmap {
+            position: relative;
+            min-height: 300px;
+            border: 1px solid rgba(147, 197, 253, 0.2);
+            border-radius: 24px;
+            padding: 2.2rem;
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.84), rgba(20, 30, 58, 0.74));
+            box-shadow: 0 24px 80px rgba(17, 24, 39, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .journey-roadmap-line {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.96;
+        }
+
+        .journey-roadmap-line path {
+            fill: none;
+            stroke: #4f8cff;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 1700;
+            stroke-dashoffset: 1700;
+            filter: drop-shadow(0 0 14px rgba(79, 140, 255, 0.65));
+            transition: stroke-dashoffset 2.8s cubic-bezier(0.2, 0.65, 0.2, 1);
+        }
+
+        #journeyRoadmap.is-visible .journey-roadmap-line path {
+            stroke-dashoffset: 0;
+        }
+
+        .journey-node {
+            position: absolute;
+            width: min(250px, 36%);
+            padding: 0.95rem 1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(147, 197, 253, 0.34);
+            background: rgba(9, 15, 34, 0.8);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(26px) scale(0.98);
+            transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.35s ease;
+        }
+
+        #journeyRoadmap.is-visible .journey-node {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        #journeyRoadmap.is-visible .node-yukselis { transition-delay: 0.32s; }
+        #journeyRoadmap.is-visible .node-zirve { transition-delay: 0.6s; }
+
+        .journey-node .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            background: #60a5fa;
+            box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62);
+            animation: nodePulse 2.8s infinite;
+        }
+
+        .node-yukselis .dot { background: #5eead4; box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.55); }
+        .node-zirve .dot { background: #a78bfa; box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.65); }
+
+        .journey-node h3 {
+            color: #f8fbff;
+            font-size: 1.02rem;
+            font-weight: 700;
+            margin-bottom: 0.16rem;
+        }
+
+        .journey-node p {
+            color: rgba(226, 238, 255, 0.9);
+            margin: 0;
+            font-size: 0.88rem;
+        }
+
+        .journey-node small {
+            display: block;
+            margin-top: 0.45rem;
+            color: rgba(190, 212, 255, 0.82);
+            font-size: 0.78rem;
+            letter-spacing: 0.01em;
+        }
+
+        .node-ilk { left: 3%; bottom: 18px; }
+        .node-yukselis { left: 39%; top: 126px; }
+        .node-zirve { right: 3%; top: 18px; }
+
+        .pricing-flow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.45rem;
+            margin-top: 0.95rem;
+        }
+
+        .pricing-flow span {
+            font-size: 0.72rem;
+            padding: 0.28rem 0.56rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.45);
+            color: rgba(226, 238, 255, 0.88);
+        }
+
+        .pricing-card {
+            cursor: pointer;
+        }
+
+        .pricing-card.journey-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.52s ease, transform 0.52s ease;
+        }
+
+        .pricing-card.journey-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pricing-level,
+        .pricing-title,
+        .pricing-period,
+        .pricing-features span {
+            color: #ecf4ff !important;
+        }
+
+        .pricing-features li.disabled {
+            opacity: 0.42;
+            position: relative;
+        }
+
+        .pricing-features li.disabled::after {
+            content: 'Kilidi aç';
+            position: absolute;
+            right: 0.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            border-radius: 999px;
+            padding: 0.14rem 0.48rem;
+            color: #bfdbfe;
+            background: rgba(30, 41, 59, 0.72);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .pricing-features li.disabled:hover::after {
+            opacity: 1;
+        }
+
+        .btn-purchase:active {
+            transform: translateY(1px) scale(0.99);
+        }
+
+        .access-info-section,
+        .sebs-visual-strip,
+        .sebs-yolu-compare,
+        .sebs-roadmap-flow {
+            position: relative;
+            z-index: 1;
+        }
+
+        .journey-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+
+        .journey-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes nodePulse {
+            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62); }
+            65% { box-shadow: 0 0 0 14px rgba(96, 165, 250, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+        }
+
+        @media (max-width: 860px) {
+            .journey-roadmap {
+                min-height: 390px;
+                padding: 1.15rem;
+            }
+            .journey-node {
+                width: 92%;
+                left: 4% !important;
+            }
+            .node-ilk { top: 16px; bottom: auto; }
+            .node-yukselis { top: 142px; }
+            .node-zirve { top: 268px; right: auto; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .journey-roadmap-line path,
+            .journey-node,
+            .journey-reveal,
+            .pricing-card.journey-reveal {
+                transition: none !important;
+                animation: none !important;
+            }
+            .journey-roadmap-line path {
+                stroke-dashoffset: 0;
+            }
+        }
     </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -656,7 +896,7 @@
   <link rel="stylesheet" href="/css/landing-chrome.css" />
 
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body sebs-pricing-journey font-sans text-slate-800 antialiased bg-white">
 <!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
@@ -727,6 +967,34 @@
             <span class="sebs-yolu-badge"><i class="fas fa-route"></i> SEBS Yolu Gelir Modeli</span>
             <h1>SEBS Yolunu Gör, Kilitleri Aç, İlerle</h1>
             <p>Kişisel yol haritanı ücretsiz gör; İçerik, simülasyon ve ilerleme sistemini plan ya da tekli durak erişimiyle aç.</p>
+        </div>
+    </section>
+
+    <section class="journey-roadmap-wrap journey-reveal" id="journeyRoadmap">
+        <div class="container">
+            <div class="journey-roadmap">
+                <svg class="journey-roadmap-line" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M40 220 C 200 210, 260 120, 380 130 C 520 140, 560 60, 700 80 C 820 96, 900 48, 960 34"></path>
+                </svg>
+                <div class="journey-node node-ilk">
+                    <span class="dot"></span>
+                    <h3>İlk Adım</h3>
+                    <p>SEBS Yoluna giriş ve temel yön kazanımı</p>
+                    <small>6 durak · 18 simülasyon · Başlangıç</small>
+                </div>
+                <div class="journey-node node-yukselis">
+                    <span class="dot"></span>
+                    <h3>Yükseliş</h3>
+                    <p>Derin öğrenme ve gerçek beceri kazanımı</p>
+                    <small>3 durak · 9 simülasyon · Orta Seviye</small>
+                </div>
+                <div class="journey-node node-zirve">
+                    <span class="dot"></span>
+                    <h3>Zirve</h3>
+                    <p>Tam erişim ve ileri seviye performans</p>
+                    <small>4 durak · 12 simülasyon · İleri Seviye</small>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -973,6 +1241,28 @@
             return 'cybersecurity';
         }
 
+        function getLevelLabel(level) {
+            const labels = {
+                'ilk-adim': 'İlk Adım',
+                yukselis: 'Yükseliş',
+                zirve: 'Zirve',
+                'single-stop': 'Tekli Durak',
+                'upgrade-yukselis': 'Yükseltme',
+                'upgrade-zirve-loyalty': 'Sadakat'
+            };
+            return labels[level] || 'SEBS Yolu';
+        }
+
+        function getFlowChips(level) {
+            if (level === 'ilk-adim') return ['Keşif', 'Temeller', 'Başla'];
+            if (level === 'yukselis') return ['Derinleş', 'Uygula', 'İlerle'];
+            if (level === 'zirve') return ['Tam Erişim', 'İleri Görev', 'Premium'];
+            if (level === 'single-stop') return ['Tek Konu', 'Hızlı Erişim', 'Kilidi Aç'];
+            if (level === 'upgrade-yukselis') return ['Yol Yükselt', 'Süre Korunur', 'Devam'];
+            if (level === 'upgrade-zirve-loyalty') return ['Sadakat', 'Özel Fiyat', 'Zirve Aç'];
+            return ['SEBS', 'Yol', 'Akış'];
+        }
+
         // Get user purchases from API
         let userPurchases = [];
         async function fetchUserPurchases() {
@@ -1030,13 +1320,16 @@
                 const isFeatured = category === 'sebs-road' ? index === 1 : index === 0;
 
                 return `
-                    <div class="pricing-card ${isFeatured ? 'featured' : ''}">
+                    <div class="pricing-card journey-reveal ${isFeatured ? 'featured' : ''}">
                         <div class="pricing-header">
-                            <div class="pricing-level">${pkg.level === 'beginner' ? 'Başlangıç' : pkg.level === 'intermediate' ? 'Orta' : 'İleri'} Seviye</div>
+                            <div class="pricing-level">${getLevelLabel(pkg.level)}</div>
                             <h3 class="pricing-title">${pkg.title}</h3>
                             <div class="pricing-price">₺${pkg.price}</div>
                             <div class="pricing-period">${pkg.period || 'Tek seferlik ödeme'}</div>
                             <div class="pricing-period" style="margin-top: 0.4rem; color: rgba(255,255,255,0.85);">${pkg.subtitle || ''}</div>
+                            <div class="pricing-flow">
+                                ${getFlowChips(pkg.level).map(chip => `<span>${chip}</span>`).join('')}
+                            </div>
                         </div>
                         <ul class="pricing-features">
                             ${pkg.features.map(feature => `
@@ -1061,6 +1354,20 @@
                     </div>
                 `;
             }).join('');
+
+            setupJourneyReveal();
+        }
+
+        function setupJourneyReveal() {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.18 });
+
+            document.querySelectorAll('.journey-reveal').forEach((el) => io.observe(el));
         }
 
         // Handle category tab click
@@ -1227,6 +1534,7 @@
             }
             
             await renderPricingCards(currentCategory);
+            setupJourneyReveal();
             
             // Scroll to pricing cards if level is specified
             if (urlLevel) {
