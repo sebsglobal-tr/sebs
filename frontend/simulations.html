@@ -66,6 +66,123 @@
             align-items: center;
             z-index: 9999;
         }
+
+        /* Simulations page premium polish */
+        .sim-hero-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: stretch;
+        }
+
+        .sim-hero-content {
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 1.25rem;
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(239, 246, 255, 0.9));
+            padding: 1.5rem;
+            box-shadow: 0 24px 40px -30px rgba(37, 99, 235, 0.32);
+        }
+
+        .sim-kpi-grid {
+            margin-top: 1.05rem;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .sim-kpi-item {
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 0.9rem;
+            background: #ffffff;
+            padding: 0.75rem 0.65rem;
+            text-align: center;
+        }
+
+        .sim-kpi-item strong {
+            display: block;
+            color: #0f172a;
+            font-size: 1.65rem;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .sim-kpi-item span {
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .sim-hero-visual {
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 1.25rem;
+            background: linear-gradient(180deg, #f8fbff, #eef4ff);
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 24px 40px -30px rgba(15, 23, 42, 0.36);
+        }
+
+        .sim-hero-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+              radial-gradient(circle at 15% 12%, rgba(37, 99, 235, 0.18), transparent 35%),
+              radial-gradient(circle at 88% 15%, rgba(124, 58, 237, 0.14), transparent 30%);
+            pointer-events: none;
+        }
+
+        .sim-visual-card {
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 0.85rem;
+            background: rgba(255, 255, 255, 0.94);
+            padding: 0.7rem;
+            margin-bottom: 0.55rem;
+        }
+
+        .sim-visual-card h4 {
+            font-size: 0.78rem;
+            color: #1d4ed8;
+            margin: 0 0 0.25rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .sim-visual-card p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: #334155;
+        }
+
+        .sim-pill-row {
+            margin-top: 0.65rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sim-pill-row span {
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 999px;
+            background: #fff;
+            color: #1e3a8a;
+            font-size: 0.68rem;
+            padding: 0.18rem 0.52rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .sim-hero-wrap {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -161,25 +278,47 @@
     <main class="main-content bg-white">
         <!-- Hero Section -->
         <section class="hero-section modules-hero">
-            <div class="hero-content">
-                <h1 class="hero-title">Siber Güvenlik Simülasyonları</h1>
-                <p class="hero-subtitle">
-                    Teoriyi değil, <strong>kararınızı ve davranışınızı</strong> ölçeriz: görevler, karar noktaları ve kayıt altına alınan performans. Güvenli ortamda gerçek işe yakın senaryolar; bireyde yetkinlik profili, kurumda objektif değerlendirme çıktısı.
-                </p>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">Aktif Senaryo Paketi</span>
+            <div class="hero-content sim-hero-wrap">
+                <article class="sim-hero-content">
+                    <h1 class="hero-title">Siber Güvenlik Simülasyonları</h1>
+                    <p class="hero-subtitle">
+                        Teoriyi değil, <strong>kararını ve davranışını</strong> ölç: görev zincirleri, kritik karar noktaları ve kanıtlanabilir performans çıktıları.
+                    </p>
+                    <div class="sim-kpi-grid">
+                        <div class="sim-kpi-item">
+                            <strong>15+</strong>
+                            <span>Aktif Senaryo Paketi</span>
+                        </div>
+                        <div class="sim-kpi-item">
+                            <strong>500+</strong>
+                            <span>Tamamlanan Koşu</span>
+                        </div>
+                        <div class="sim-kpi-item">
+                            <strong>98%</strong>
+                            <span>Katılımcı Memnuniyeti</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number">500+</span>
-                        <span class="stat-label">Tamamlanan Koşu</span>
+                </article>
+                <aside class="sim-hero-visual" aria-label="Simülasyon akışı örnek paneli">
+                    <div class="sim-visual-card">
+                        <h4>Senaryo</h4>
+                        <p>Kimlik avı alarmı geldi. İlk 5 dakikada hangi veriyi doğrularsın?</p>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number">98%</span>
-                        <span class="stat-label">Katılımcı Memnuniyeti</span>
+                    <div class="sim-visual-card">
+                        <h4>Karar Noktası</h4>
+                        <p>Yanlış öncelik puanı operasyonu yavaşlatır; doğru seçim süre kazandırır.</p>
                     </div>
-                </div>
+                    <div class="sim-visual-card">
+                        <h4>Ölçüm</h4>
+                        <p>Hız, isabet ve raporlama kalitesi aynı oturumda kayıt altına alınır.</p>
+                    </div>
+                    <div class="sim-pill-row">
+                        <span>Canlı Log</span>
+                        <span>Risk Skoru</span>
+                        <span>Mentor Notu</span>
+                        <span>Rapor Çıktısı</span>
+                    </div>
+                </aside>
             </div>
         </section>
 

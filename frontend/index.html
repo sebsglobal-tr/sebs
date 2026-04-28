@@ -144,9 +144,6 @@
                     <p>Tekli durak veya planla açma seçenekleri aynı popup'ta karşılaştırmalı gösterilir.</p>
                   </article>
                 </div>
-                <div class="sebs-hero-funnel-preview" data-hero-flow-preview>
-                  Akış sonucu: “Bu yol bana özel” duygusu oluşur, satın alma kararı metin değil deneyimle gelir.
-                </div>
               </div>
               <div class="animate-in delay-3 mt-10 flex flex-wrap items-center gap-4">
                 <a href="/signup.html" data-sebs-primary-cta class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">
@@ -1123,7 +1120,7 @@
       var tabs = document.querySelectorAll('[data-hero-flow-tab]');
       var panels = document.querySelectorAll('[data-hero-flow-panel]');
       var preview = document.querySelector('[data-hero-flow-preview]');
-      if (!tabs.length || !panels.length || !preview) return;
+      if (!tabs.length || !panels.length) return;
 
       var mockTitle = document.querySelector('[data-hero-mock-title]');
       var mockScenario = document.querySelector('[data-hero-mock-scenario]');
@@ -1133,12 +1130,6 @@
       var mockRisk = document.querySelector('[data-hero-mock-risk]');
       var mockScore = document.querySelector('[data-hero-mock-score]');
       var mockBottom = document.querySelector('[data-hero-mock-bottom]');
-
-      var previewText = {
-        discover: 'Akış sonucu: Kullanıcı kendi seviyesinde, kişiselleştirilmiş bir başlangıç gördüğünü hisseder.',
-        roadmap: 'Akış sonucu: “Ne öğreneceğim?” sorusu tek bakışta cevaplanır; güven ve netlik artar.',
-        unlock: 'Akış sonucu: Tekli satın alma ile plan farkı net görünür; kullanıcı mantıklı seçimi hızlı yapar.'
-      };
 
       var mockState = {
         discover: {
@@ -1183,7 +1174,9 @@
           var show = panel.getAttribute('data-hero-flow-panel') === key;
           panel.classList.toggle('hidden', !show);
         });
-        preview.textContent = previewText[key] || previewText.discover;
+        if (preview) {
+          preview.textContent = '';
+        }
         var state = mockState[key] || mockState.discover;
         if (mockTitle) mockTitle.textContent = state.title;
         if (mockScenario) mockScenario.textContent = state.scenario;
