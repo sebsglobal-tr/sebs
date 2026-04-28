@@ -838,6 +838,133 @@
             transform: translateY(0);
         }
 
+        .journey-module-shop {
+            margin: 1.4rem auto 2.2rem;
+            max-width: 1200px;
+            padding: 1.4rem 1rem;
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: linear-gradient(155deg, rgba(12, 20, 40, 0.88), rgba(17, 28, 52, 0.78));
+            box-shadow: 0 24px 80px rgba(2, 6, 23, 0.45);
+        }
+
+        .journey-shop-head {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .journey-shop-head h3 {
+            margin: 0;
+            color: #f6f9ff;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .journey-shop-head p {
+            margin: 0.45rem 0 0;
+            color: rgba(214, 226, 255, 0.82);
+            font-size: 0.95rem;
+        }
+
+        .module-stage {
+            margin-top: 1.25rem;
+            padding: 0.9rem 0.9rem 1.15rem;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .module-stage h4 {
+            margin: 0;
+            color: #eff6ff;
+            font-size: 1.02rem;
+            font-weight: 700;
+        }
+
+        .module-stage-meta {
+            margin-top: 0.25rem;
+            color: rgba(191, 219, 254, 0.9);
+            font-size: 0.82rem;
+        }
+
+        .module-road-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.72rem;
+        }
+
+        .module-stop {
+            position: relative;
+            padding: 0.9rem 0.78rem;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background: rgba(12, 19, 36, 0.78);
+            transition: transform 0.26s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .module-stop:hover {
+            transform: translateY(-3px);
+            border-color: rgba(96, 165, 250, 0.6);
+            box-shadow: 0 16px 34px rgba(30, 64, 175, 0.35);
+        }
+
+        .module-stop.locked {
+            opacity: 0.62;
+        }
+
+        .module-stop.open {
+            border-color: rgba(74, 222, 128, 0.5);
+        }
+
+        .module-stop small {
+            display: block;
+            color: rgba(148, 163, 184, 0.95);
+            font-size: 0.72rem;
+            letter-spacing: 0.02em;
+        }
+
+        .module-stop h5 {
+            margin: 0.32rem 0 0.18rem;
+            color: #f8fafc;
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .module-stop p {
+            margin: 0;
+            color: rgba(203, 213, 225, 0.92);
+            font-size: 0.78rem;
+            min-height: 34px;
+        }
+
+        .module-stop .mini-buy {
+            margin-top: 0.65rem;
+            width: 100%;
+            font-size: 0.76rem;
+            border: 1px solid rgba(96, 165, 250, 0.42);
+            border-radius: 10px;
+            background: rgba(30, 64, 175, 0.28);
+            color: #dbeafe;
+            padding: 0.46rem 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .module-stop .mini-buy:hover {
+            background: rgba(37, 99, 235, 0.46);
+            transform: translateY(-1px);
+        }
+
+        .module-stop .mini-buy:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+            border-color: rgba(74, 222, 128, 0.45);
+            background: rgba(22, 163, 74, 0.2);
+            color: #bbf7d0;
+        }
+
         @keyframes nodePulse {
             0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62); }
             65% { box-shadow: 0 0 0 14px rgba(96, 165, 250, 0); }
@@ -856,6 +983,15 @@
             .node-ilk { top: 16px; bottom: auto; }
             .node-yukselis { top: 142px; }
             .node-zirve { top: 268px; right: auto; }
+            .module-road-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .module-road-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1041,6 +1177,8 @@
         </div>
     </div>
 
+    <section class="container journey-module-shop journey-reveal" id="moduleRoadContainer" style="display:none;"></section>
+
     <!-- Pricing Cards -->
     <div class="pricing-container">
         <div class="pricing-grid" id="pricingGrid">
@@ -1217,6 +1355,22 @@
 
         // Current category
         let currentCategory = 'sebs-road';
+        const stageRank = { beginner: 1, intermediate: 2, advanced: 3 };
+        const moduleRoadData = [
+            { title: 'Siber Guvenlige Giris', stage: 'ilk-adim', desc: 'Temeller ve yol tanitimi' },
+            { title: 'Temel Network Egitimi', stage: 'ilk-adim', desc: 'Aga baglanti mantigi' },
+            { title: 'Isletim Sistemi Guvenligi', stage: 'ilk-adim', desc: 'Host guvenlik katmani' },
+            { title: 'Web Uygulama Guvenligi', stage: 'ilk-adim', desc: 'Uygulama aciklari farkindaligi' },
+            { title: 'Network Guvenligi', stage: 'ilk-adim', desc: 'Trafik izleme ve koruma' },
+            { title: 'SOC Baslangic', stage: 'ilk-adim', desc: 'Izleme ve ilk alarm yonetimi' },
+            { title: 'Malware Analizi', stage: 'yukselis', desc: 'Davranis analizi ve teknik inceleme' },
+            { title: 'Incident Response', stage: 'yukselis', desc: 'Olaya yanit akisi ve karar' },
+            { title: 'Threat Hunting', stage: 'yukselis', desc: 'Proaktif tehdit avciligi' },
+            { title: 'Penetration Testing', stage: 'zirve', desc: 'Saldiri simule et, acik bul' },
+            { title: 'Red Team Senaryolari', stage: 'zirve', desc: 'Gelismis saldiri zinciri' },
+            { title: 'Blue Team Orkestrasyonu', stage: 'zirve', desc: 'Savunma otomasyonu' },
+            { title: 'Capstone Operasyon', stage: 'zirve', desc: 'Uctan uca premium gorev' }
+        ];
 
         // Check login status
         function isLoggedIn() {
@@ -1306,6 +1460,74 @@
             );
         }
 
+        function getUserRoadRank() {
+            return userPurchases.reduce((max, p) => {
+                const rank = stageRank[p.level] || 0;
+                return rank > max ? rank : max;
+            }, 0);
+        }
+
+        function getStageMeta(level) {
+            const map = {
+                'ilk-adim': { key: 'beginner', name: 'Ilk Adim', price: 199 },
+                yukselis: { key: 'intermediate', name: 'Yukselis', price: 349 },
+                zirve: { key: 'advanced', name: 'Zirve', price: 799 }
+            };
+            return map[level] || map['ilk-adim'];
+        }
+
+        function renderModuleRoad(category) {
+            const container = document.getElementById('moduleRoadContainer');
+            if (!container) return;
+
+            const userRank = getUserRoadRank();
+            const stageGroups = [
+                { id: 'ilk-adim', title: 'Ilk Adim Duraklari', meta: '6 durak · 199 TL/ay' },
+                { id: 'yukselis', title: 'Yukselis Duraklari', meta: '3 durak · 349 TL/ay' },
+                { id: 'zirve', title: 'Zirve Duraklari', meta: '4 durak · 799 TL/ay' }
+            ];
+
+            container.innerHTML = `
+                <div class="journey-shop-head">
+                    <h3>Modul Yolundan Satin Alma</h3>
+                    <p>Her egitim modulu bir durak. Kilitli duraga tikla, ilgili asama planini ac.</p>
+                </div>
+                ${stageGroups.map((stage) => `
+                    <article class="module-stage journey-reveal">
+                        <h4>${stage.title}</h4>
+                        <div class="module-stage-meta">${stage.meta}</div>
+                        <div class="module-road-grid">
+                            ${moduleRoadData
+                                .filter((mod) => mod.stage === stage.id)
+                                .map((mod) => {
+                                    const meta = getStageMeta(mod.stage);
+                                    const requiredRank = stageRank[meta.key] || 1;
+                                    const stageOwned = userRank >= requiredRank;
+                                    return `
+                                        <div class="module-stop ${stageOwned ? 'open' : 'locked'}">
+                                            <small>${getLevelLabel(mod.stage)} · Durak</small>
+                                            <h5>${mod.title}</h5>
+                                            <p>${mod.desc}</p>
+                                            <button
+                                                class="mini-buy btn-purchase"
+                                                data-category="${category}"
+                                                data-level="${mod.stage}"
+                                                data-price="${meta.price}"
+                                                data-title="${mod.title}"
+                                                ${stageOwned ? 'disabled' : ''}
+                                                ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
+                                            >
+                                                ${stageOwned ? 'Erisim Acik' : `${meta.name} Kilidini Ac · ${meta.price} TL`}
+                                            </button>
+                                        </div>
+                                    `;
+                                }).join('')}
+                        </div>
+                    </article>
+                `).join('')}
+            `;
+        }
+
         // Render pricing cards
         async function renderPricingCards(category) {
             // Önce kullanıcı satın alımlarını getir
@@ -1313,6 +1535,21 @@
             
             const grid = document.getElementById('pricingGrid');
             const data = pricingData[category];
+            const moduleRoadContainer = document.getElementById('moduleRoadContainer');
+            const pricingContainer = document.querySelector('.pricing-container');
+
+            if (category === 'sebs-road') {
+                if (pricingContainer) pricingContainer.style.display = 'none';
+                if (moduleRoadContainer) {
+                    moduleRoadContainer.style.display = 'block';
+                    renderModuleRoad(category);
+                }
+                setupJourneyReveal();
+                return;
+            }
+
+            if (pricingContainer) pricingContainer.style.display = '';
+            if (moduleRoadContainer) moduleRoadContainer.style.display = 'none';
 
             grid.innerHTML = data.packages.map((pkg, index) => {
                 // Gerçek satın alımlara göre kontrol et
@@ -1542,9 +1779,16 @@
                     const targetCard = document.querySelector(`[data-level="${urlLevel}"]`);
                     if (targetCard) {
                         targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // Highlight the card
-                        targetCard.closest('.pricing-card').style.border = '3px solid #1e40af';
-                        targetCard.closest('.pricing-card').style.boxShadow = '0 0 20px rgba(30, 64, 175, 0.5)';
+                        const pricingCard = targetCard.closest('.pricing-card');
+                        const moduleStop = targetCard.closest('.module-stop');
+                        if (pricingCard) {
+                            pricingCard.style.border = '3px solid #1e40af';
+                            pricingCard.style.boxShadow = '0 0 20px rgba(30, 64, 175, 0.5)';
+                        }
+                        if (moduleStop) {
+                            moduleStop.style.border = '2px solid #60a5fa';
+                            moduleStop.style.boxShadow = '0 0 20px rgba(96, 165, 250, 0.55)';
+                        }
                     }
                 }, 500);
             }
