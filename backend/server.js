@@ -620,6 +620,29 @@ const handleError = (res, error, customMessage = 'Internal server error') => {
 // (Eski e-posta/şifre kaydı + aynı e-posta ile Supabase → aynı users.id, tek ilerleme)
 const SUPABASE_PASSWORD_PLACEHOLDER = '[SUPABASE]';
 
+async function verifySupabaseAccessTokenViaApi(token) {
+    try {
+        const supabaseUrl = String(process.env.SUPABASE_URL || '').trim().replace(/\/+$/, '');
+        const anonKey = String(process.env.SUPABASE_ANON_KEY || '').trim();
+        const serviceKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+        const apiKey = serviceKey || anonKey;
+        if (!supabaseUrl || !apiKey) return null;
+        const r = await fetch(supabaseUrl + '/auth/v1/user', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                apikey: apiKey
+            }
+        });
+        if (!r.ok) return null;
+        const data = await r.json().catch(() => null);
+        if (!data || !data.id) return null;
+        return data;
+    } catch (e) {
+        return null;
+    }
+}
+
 /**
  * Supabase auth.sub ile senkronize eder; aynı e-posta zaten users’ta varsa o satırın id’sini döner (yeni INSERT yapmaz).
  * @returns {Promise<string>} Veritabanındaki kanonik kullanıcı UUID’si
@@ -717,18 +740,9 @@ const authenticateToken = (req, res, next) => {
             })();
             return;
         }
-        // 2) Supabase JWT ile dene (SUPABASE_JWT_SECRET varsa)
-        if (!process.env.SUPABASE_JWT_SECRET || !String(process.env.SUPABASE_JWT_SECRET).trim()) {
-            logger.warn(
-                'authenticateToken: SUPABASE_JWT_SECRET .env içinde yok — tarayıcı Supabase access_token gönderiyorsa tüm korumalı API 401 döner. ' +
-                    'Supabase Dashboard → Project Settings → API → JWT Secret değerini backend/.env dosyasına ekleyin.'
-            );
-            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
-        }
-        jwt.verify(token, process.env.SUPABASE_JWT_SECRET, async (supaErr, supabaseDecoded) => {
-            if (supaErr || !supabaseDecoded || !supabaseDecoded.sub) {
-                return res.status(401).json({ success: false, message: 'Invalid or expired token' });
-            }
+        // 2) Supabase JWT ile dene (legacy HS256 secret)
+        const supaSecret = String(process.env.SUPABASE_JWT_SECRET || '').trim();
+        const resolveSupabaseUserFromDecoded = async (supabaseDecoded) => {
             try {
                 const supaEmail =
                     supabaseDecoded.email ||
@@ -760,7 +774,39 @@ const authenticateToken = (req, res, next) => {
                 logger.error('Supabase user sync error:', syncErr);
                 res.status(500).json({ success: false, message: 'Kimlik doğrulama sırasında bir hata oluştu.' });
             }
-        });
+        };
+
+        if (supaSecret) {
+            jwt.verify(token, supaSecret, async (supaErr, supabaseDecoded) => {
+                if (!supaErr && supabaseDecoded && supabaseDecoded.sub) {
+                    return resolveSupabaseUserFromDecoded(supabaseDecoded);
+                }
+                // 3) Yeni Supabase JWT Signing Keys (ECC/RSA) için auth API ile doğrula
+                const supaUser = await verifySupabaseAccessTokenViaApi(token);
+                if (!supaUser || !supaUser.id) {
+                    return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+                }
+                return resolveSupabaseUserFromDecoded({
+                    sub: supaUser.id,
+                    email: supaUser.email || '',
+                    user_metadata: supaUser.user_metadata || {}
+                });
+            });
+            return;
+        }
+
+        // 3) Secret yoksa da Supabase auth API ile doğrulamayı dene
+        (async () => {
+            const supaUser = await verifySupabaseAccessTokenViaApi(token);
+            if (!supaUser || !supaUser.id) {
+                return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+            }
+            return resolveSupabaseUserFromDecoded({
+                sub: supaUser.id,
+                email: supaUser.email || '',
+                user_metadata: supaUser.user_metadata || {}
+            });
+        })();
     });
 };
 
@@ -1512,14 +1558,39 @@ app.post('/api/auth/login', async (req, res) => {
 // MODÜL ENDPOINT'LERİ
 // ============================================
 
+let _modulesSchemaCache = null;
+async function getModulesSchemaInfo() {
+    if (_modulesSchemaCache) return _modulesSchemaCache;
+    const r = await pool.query(
+        `SELECT column_name
+         FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = 'modules'`
+    );
+    const cols = new Set(r.rows.map((x) => String(x.column_name || '').toLowerCase()));
+    _modulesSchemaCache = {
+        hasIsActive: cols.has('is_active'),
+        hasCategory: cols.has('category'),
+        hasLevel: cols.has('level'),
+        hasSortOrder: cols.has('sort_order')
+    };
+    return _modulesSchemaCache;
+}
+
 // Kurslar: modüller kategoriye göre gruplanmış (module-progress.js getModuleIdFromName, dashboard senkron)
 app.get('/api/courses', async (req, res) => {
     try {
+        const sch = await getModulesSchemaInfo();
+        const categorySel = sch.hasCategory ? 'category' : `NULL::text AS category`;
+        const levelSel = sch.hasLevel ? 'level' : `'beginner'::text AS level`;
+        const activeWhere = sch.hasIsActive ? 'WHERE is_active = true' : '';
+        const orderBy = sch.hasSortOrder
+            ? `ORDER BY ${sch.hasCategory ? 'category NULLS LAST,' : ''} sort_order NULLS LAST, title`
+            : `ORDER BY ${sch.hasCategory ? 'category NULLS LAST,' : ''} title`;
         const result = await pool.query(
-            `SELECT id, title, description, category, level, sort_order
+            `SELECT id, title, description, ${categorySel}, ${levelSel}
              FROM modules
-             WHERE is_active = true
-             ORDER BY category NULLS LAST, sort_order NULLS LAST, title`
+             ${activeWhere}
+             ${orderBy}`
         );
         const categoryCourseTitles = {
             cybersecurity: 'Siber Güvenlik',
@@ -1570,11 +1641,28 @@ app.get('/api/modules', async (req, res) => {
         // Kullanıcı kimlik doğrulaması yapıldıysa satın alımlarını getir
         if (token) {
             try {
-                if (!process.env.JWT_SECRET) {
-                    throw new Error('JWT_SECRET environment variable is required');
+                let userId = null;
+                if (process.env.JWT_SECRET) {
+                    try {
+                        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                        userId = decoded && decoded.userId ? decoded.userId : null;
+                    } catch (_) {
+                        userId = null;
+                    }
                 }
-                const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                const userId = decoded.userId;
+                if (!userId) {
+                    const supaUser = await verifySupabaseAccessTokenViaApi(token);
+                    if (supaUser && supaUser.email) {
+                        const ur = await pool.query(
+                            `SELECT id FROM users WHERE LOWER(TRIM(email)) = LOWER(TRIM($1)) LIMIT 1`,
+                            [String(supaUser.email).trim()]
+                        );
+                        if (ur.rows.length > 0) userId = ur.rows[0].id;
+                    }
+                }
+                if (!userId) {
+                    throw new Error('unable_to_resolve_user');
+                }
                 
                 // Kullanıcının aktif satın alımlarını getir
                 try {
@@ -1605,9 +1693,10 @@ app.get('/api/modules', async (req, res) => {
         }
         
         // Tüm aktif modülleri getir
-        const result = await pool.query(
-            'SELECT * FROM modules WHERE is_active = true ORDER BY id'
-        );
+        const sch = await getModulesSchemaInfo();
+        const activeWhere = sch.hasIsActive ? 'WHERE is_active = true' : '';
+        const orderBy = sch.hasSortOrder ? 'ORDER BY sort_order NULLS LAST, id' : 'ORDER BY id';
+        const result = await pool.query(`SELECT * FROM modules ${activeWhere} ${orderBy}`);
 
         // Modülleri erişim bilgileriyle birlikte döndür
         // Frontend satın alımlara göre filtrelemeyi yapacak
