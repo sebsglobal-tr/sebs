@@ -794,8 +794,8 @@
         }
 
         /**
-         * API'de satır yokken (veya overview boşken) module_progress_* anahtarlarındaki ilerlemeyi kartlara ekler.
-         * Sunucuda aynı başlık varsa yinelenmez; API verisi önceliklidir.
+         * API'de satır yokken (veya overview boşken) localStorage ilerlemesini kartlara ekler.
+         * API verisi her zaman önceliklidir; local veri yalnızca fallback olarak kullanılır.
          */
         function mergeDashboardLocalModuleProgress(modules) {
             var out = Array.isArray(modules) ? modules.slice() : [];
@@ -804,12 +804,49 @@
                 var t = m.moduleTitle || m.title;
                 if (t) seen[normModuleTitle(t)] = true;
             });
+
+            function pushLocalModule(title, pctMaybe, totalMaybe, completedMaybe) {
+                var safeTitle = String(title || '').trim();
+                if (!safeTitle) return;
+                if (seen[normModuleTitle(safeTitle)]) return;
+
+                var total = Math.max(1, parseInt(String(totalMaybe), 10) || 1);
+                var completed = Math.max(0, parseInt(String(completedMaybe), 10) || 0);
+                var pct = parseInt(String(pctMaybe), 10);
+                if (!Number.isFinite(pct)) {
+                    pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+                }
+                pct = Math.max(0, Math.min(100, pct));
+                if (pct <= 0 && completed <= 0) return;
+
+                out.push({
+                    title: safeTitle,
+                    moduleTitle: safeTitle,
+                    percentComplete: pct,
+                    isCompleted: pct >= 100,
+                    timeSpentMinutes: 0,
+                    lastStep: null
+                });
+                seen[normModuleTitle(safeTitle)] = true;
+            }
+
+            // 1) Çoğu modül sayfasının kullandığı userProgress formatı
+            try {
+                var up = JSON.parse(localStorage.getItem('userProgress') || '{}');
+                Object.keys(up || {}).forEach(function (title) {
+                    var p = up[title] || {};
+                    pushLocalModule(title, p.progress, p.totalSections, p.completedSections);
+                });
+            } catch (e) {
+                /* ignore */
+            }
+
+            // 2) Eski module_progress_* anahtarları
             var extras = [
                 { key: 'module_progress_temel_network', title: 'Temel Network Eğitimi' },
                 { key: 'module_progress_siber_guvenlik_giris', title: 'Siber Güvenliğe Giriş' }
             ];
             extras.forEach(function (x) {
-                if (seen[normModuleTitle(x.title)]) return;
                 var raw = localStorage.getItem(x.key);
                 if (!raw) return;
                 var local;
@@ -820,17 +857,8 @@
                 }
                 var completed = local.completedLessons || [];
                 var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
-                if (completed.length === 0) return;
                 var pct = Math.min(100, Math.round((completed.length / total) * 100));
-                out.push({
-                    title: x.title,
-                    moduleTitle: x.title,
-                    percentComplete: pct,
-                    isCompleted: pct >= 100,
-                    timeSpentMinutes: 0,
-                    lastStep: null
-                });
-                seen[normModuleTitle(x.title)] = true;
+                pushLocalModule(x.title, pct, total, completed.length);
             });
             return out;
         }
@@ -1053,9 +1081,19 @@
                     }
                 }
 
-                // Giriş yapılmışken tarayıcıya özel localStorage ile birleştirme yapma (farklı tarayıcıda farklı % üretir).
-                if (!token) {
-                    modules = mergeDashboardLocalModuleProgress(modules);
+                // Sunucu boş döndüyse aynı cihazdaki local ilerlemeyi "fallback" olarak göster.
+                // Böylece kullanıcı kendi cihazında boş panel görmez; sunucu verisi geldiyse her zaman önceliklidir.
+                if (!token || modules.length === 0) {
+                    var mergedModules = mergeDashboardLocalModuleProgress(modules);
+                    if (Array.isArray(mergedModules) && mergedModules.length > modules.length) {
+                        modules = mergedModules;
+                        if (token && (!overviewOk || modules.length > 0)) {
+                            showToast(
+                                'Sunucu verisi boş/erişilemez olduğu için bu cihazdaki yerel ilerleme gösteriliyor.',
+                                'warning'
+                            );
+                        }
+                    }
                 }
 
                 if (!overviewOk && modules.length > 0) {
@@ -1089,7 +1127,7 @@
                     return;
                 }
 
-                // Giriş var ama sunucuda kart yok / istek başarısız: eski userProgress_* yoluna düşme (cihaz başına farklı veri).
+                // Giriş var ama hem sunucu hem yerel fallback boş.
                 if (token) {
                     var zCompleted = document.getElementById('completedModules');
                     var zHours = document.getElementById('studyHours');

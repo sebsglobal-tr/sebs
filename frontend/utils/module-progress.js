@@ -544,20 +544,98 @@ async function checkCategoryCompletion(moduleName) {
 /** Supabase veya legacy JWT — modül sayfaları ve panel ortak kullanır */
 window.getProgressAuthToken = getSupabaseAccessToken;
 
+const PENDING_PROGRESS_QUEUE_KEY = 'sebs_pending_progress_queue_v1';
+
+function readPendingProgressQueue() {
+    try {
+        const raw = localStorage.getItem(PENDING_PROGRESS_QUEUE_KEY);
+        const data = JSON.parse(raw || '[]');
+        return Array.isArray(data) ? data : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function writePendingProgressQueue(queue) {
+    try {
+        localStorage.setItem(PENDING_PROGRESS_QUEUE_KEY, JSON.stringify(Array.isArray(queue) ? queue : []));
+    } catch (e) {
+        /* ignore */
+    }
+}
+
+function enqueuePendingProgress(moduleTitle, completedLessons, totalLessons, reason) {
+    const title = String(moduleTitle || '').trim();
+    if (!title) return;
+    const done = Array.isArray(completedLessons) ? [...new Set(completedLessons.map(String))] : [];
+    const total = Math.max(1, parseInt(String(totalLessons), 10) || done.length || 1);
+    const queue = readPendingProgressQueue();
+    const key = normModuleTitleStr(title);
+    const now = new Date().toISOString();
+    const idx = queue.findIndex((x) => normModuleTitleStr(x && x.moduleTitle) === key);
+    const item = {
+        moduleTitle: title,
+        completedLessons: done,
+        totalLessons: total,
+        updatedAt: now,
+        retryCount: idx >= 0 ? (queue[idx].retryCount || 0) + 1 : 0,
+        lastReason: String(reason || '')
+    };
+    if (idx >= 0) queue[idx] = item;
+    else queue.push(item);
+    writePendingProgressQueue(queue);
+}
+
+function dequeuePendingProgress(moduleTitle) {
+    const key = normModuleTitleStr(moduleTitle);
+    const queue = readPendingProgressQueue().filter((x) => normModuleTitleStr(x && x.moduleTitle) !== key);
+    writePendingProgressQueue(queue);
+}
+
+window.flushPendingProgressQueue = async function () {
+    const queue = readPendingProgressQueue();
+    if (!queue.length) return { ok: true, flushed: 0 };
+    let flushed = 0;
+    for (const item of queue) {
+        const rs = await window.syncModuleProgressBulk(
+            item.moduleTitle,
+            item.completedLessons || [],
+            item.totalLessons || 1,
+            { fromQueue: true }
+        );
+        if (rs && rs.ok) {
+            dequeuePendingProgress(item.moduleTitle);
+            flushed += 1;
+        }
+    }
+    return { ok: true, flushed };
+};
+
 /**
  * Tamamlanan ders listesini sunucu ile birleştirip POST /api/progress yazar (cihazlar arası tek kaynak).
  * @param {string} moduleTitle - Veritabanındaki modül başlığına yakın isim
  * @param {string[]} clientCompletedLessons - Bu oturumdaki tamamlanan ders kimlikleri/metinleri
  * @param {number} totalLessons - Toplam ders sayısı
  */
-window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLessons, totalLessons) {
+window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLessons, totalLessons, options) {
     try {
+        const opts = options || {};
+        const clientList = Array.isArray(clientCompletedLessons)
+            ? clientCompletedLessons.map((x) => String(x))
+            : [];
+        const normalizedTotal = Math.max(
+            1,
+            parseInt(String(totalLessons), 10) || 0,
+            clientList.length
+        );
         const token = await getSupabaseAccessToken();
         if (!token) {
+            enqueuePendingProgress(moduleTitle, clientList, normalizedTotal, 'no_token');
             return { ok: false, reason: 'no_token' };
         }
         const moduleId = await getModuleIdFromName(moduleTitle);
         if (!moduleId) {
+            enqueuePendingProgress(moduleTitle, clientList, normalizedTotal, 'no_module');
             return { ok: false, reason: 'no_module' };
         }
 
@@ -585,13 +663,10 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
             /* yok say */
         }
 
-        const clientList = Array.isArray(clientCompletedLessons)
-            ? clientCompletedLessons.map((x) => String(x))
-            : [];
         const merged = [...new Set([...serverList.map(String), ...clientList])];
         const total = Math.max(
             1,
-            parseInt(String(totalLessons), 10) || 0,
+            normalizedTotal,
             serverTotal,
             merged.length
         );
@@ -616,9 +691,45 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
             })
         });
         const result = await response.json().catch(() => ({}));
-        return { ok: response.ok && result.success !== false, ...result };
+        const ok = response.ok && result.success !== false;
+        if (ok) {
+            dequeuePendingProgress(moduleTitle);
+            if (!opts.fromQueue) {
+                try {
+                    await window.flushPendingProgressQueue();
+                } catch (e) {
+                    /* ignore */
+                }
+            }
+        } else {
+            enqueuePendingProgress(moduleTitle, merged, total, result && result.message ? result.message : 'http_error');
+        }
+        return { ok, ...result };
     } catch (error) {
         console.warn('syncModuleProgressBulk:', error);
+        try {
+            const safeList = Array.isArray(clientCompletedLessons) ? clientCompletedLessons : [];
+            const safeTotal = Math.max(1, parseInt(String(totalLessons), 10) || safeList.length || 1);
+            enqueuePendingProgress(moduleTitle, safeList, safeTotal, String(error && error.message));
+        } catch (e) {
+            /* ignore */
+        }
         return { ok: false, reason: String(error && error.message) };
     }
 };
+
+window.addEventListener('online', function () {
+    if (typeof window.flushPendingProgressQueue === 'function') {
+        window.flushPendingProgressQueue().catch(function () {});
+    }
+});
+window.addEventListener('focus', function () {
+    if (typeof window.flushPendingProgressQueue === 'function') {
+        window.flushPendingProgressQueue().catch(function () {});
+    }
+});
+setTimeout(function () {
+    if (typeof window.flushPendingProgressQueue === 'function') {
+        window.flushPendingProgressQueue().catch(function () {});
+    }
+}, 1200);
