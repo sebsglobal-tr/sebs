@@ -7395,7 +7395,8 @@ log_status=recorded</pre>
         const sections = document.querySelectorAll('.content-section');
         const navLinks = document.querySelectorAll('.nav-link-section');
         const navSectionList = document.querySelector('.nav-section-list');
-        window.MODULE_TOTAL_LESSONS = navLinks.length;
+        /** Her içerik kartı (H2 dersi) için benzersiz anahtar — MODÜL sonunda tek buton yok */
+        let lessonKeysOrdered = [];
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
 
@@ -7468,16 +7469,48 @@ log_status=recorded</pre>
         }
         buildSubheadingNav();
 
-        // Load progress (API when logged in, else localStorage)
+        function getSectionIdsSet() {
+            return new Set(Array.from(sections).map(function (s) { return s.id; }));
+        }
+
+        /** Eski kayıt: yalnızca bölüm id — yeni: sectionId::h2Id */
+        function normalizeCompletedLessons(rawList) {
+            const raw = Array.isArray(rawList) ? rawList.map(String) : [];
+            const sidSet = getSectionIdsSet();
+            const out = new Set();
+            raw.forEach(function (entry) {
+                if (!entry) return;
+                if (entry.indexOf('::') !== -1) {
+                    out.add(entry);
+                    return;
+                }
+                if (sidSet.has(entry)) {
+                    var expanded = lessonKeysOrdered.filter(function (k) {
+                        return k.indexOf(entry + '::') === 0;
+                    });
+                    if (expanded.length) {
+                        expanded.forEach(function (k) { out.add(k); });
+                    } else {
+                        out.add(entry);
+                    }
+                } else {
+                    out.add(entry);
+                }
+            });
+            return Array.from(out);
+        }
+
+        // Load progress (API when logged in, else localStorage). İlk girişte 404 normaldir (satır yok).
         async function loadProgress() {
             const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            var localDone = normalizeCompletedLessons(local.completedLessons || []);
             const token =
                 (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
                 localStorage.getItem('authToken');
-            if (!token || !window.getModuleIdFromName) return local.completedLessons || [];
+            if (!token || !window.getModuleIdFromName) return localDone;
             try {
                 const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                if (!moduleId) return local.completedLessons || [];
+                if (!moduleId) return localDone;
                 const apiBase =
                     typeof window.getSebsApiBase === 'function'
                         ? window.getSebsApiBase()
@@ -7485,25 +7518,29 @@ log_status=recorded</pre>
                 const r = await fetch(apiBase + '/progress/module/' + moduleId, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
+                if (r.status === 404) {
+                    return localDone;
+                }
                 if (r.ok) {
                     const d = await r.json();
                     const step = typeof d.data?.lastStep === 'string' ? JSON.parse(d.data.lastStep || '{}') : (d.data?.lastStep || {});
                     const lessons = step.completedLessons || [];
-                    if (lessons.length) {
+                    const merged = normalizeCompletedLessons(lessons);
+                    if (merged.length) {
                         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                            completedLessons: lessons,
-                            totalLessons: step.totalLessons || navLinks.length,
+                            completedLessons: merged,
+                            totalLessons: step.totalLessons || lessonKeysOrdered.length || merged.length,
                             lastUpdated: new Date().toISOString()
                         }));
                     }
-                    return lessons;
+                    return merged;
                 }
             } catch (e) { console.warn('Load progress from API failed:', e); }
-            return local.completedLessons || [];
+            return localDone;
         }
 
         function saveProgressLocal(completedLessons) {
-            const total = navLinks.length;
+            const total = lessonKeysOrdered.length || 1;
             const pct = total ? Math.round((completedLessons.length / total) * 100) : 0;
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 completedLessons,
@@ -7514,17 +7551,26 @@ log_status=recorded</pre>
         }
 
         function updateProgressUI(completedCount) {
-            const total = navLinks.length;
+            const total = lessonKeysOrdered.length || 1;
             const pct = total ? Math.round((completedCount / total) * 100) : 0;
             if (progressFill) progressFill.style.width = pct + '%';
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
         }
 
-        // Mark completed sections in sidebar
+        // MODÜL satırı: o bölümdeki tüm ders kartları tamamlanınca işaretlenir
         function markCompletedInSidebar(completedLessons) {
-            navLinks.forEach(link => {
-                const id = link.getAttribute('data-section');
-                link.classList.toggle('completed', completedLessons.includes(id));
+            const done = new Set(completedLessons);
+            navLinks.forEach(function (link) {
+                const sid = link.getAttribute('data-section');
+                const keysInSection = lessonKeysOrdered.filter(function (k) {
+                    return k.indexOf(sid + '::') === 0;
+                });
+                var allDone =
+                    keysInSection.length > 0 &&
+                    keysInSection.every(function (k) {
+                        return done.has(k);
+                    });
+                link.classList.toggle('completed', allDone);
             });
         }
 
@@ -7544,31 +7590,76 @@ log_status=recorded</pre>
             }
         }
 
-        // Dersi Tamamla - save & go to next
-        async function completeLesson(sectionId) {
+        function goToLessonKey(lessonKey) {
+            var sep = lessonKey.indexOf('::');
+            if (sep === -1) return;
+            var sid = lessonKey.slice(0, sep);
+            var h2id = lessonKey.slice(sep + 2);
+            var section = document.getElementById(sid);
+            if (!section) return;
+            sections.forEach(function (sec) {
+                sec.classList.toggle('active', sec.id === sid);
+            });
+            navLinks.forEach(function (l) {
+                l.classList.toggle('active', l.getAttribute('data-section') === sid);
+            });
+            var h2 = document.getElementById(h2id);
+            var card = h2 ? h2.closest('.content-card') : null;
+            var scrollEl = card || section;
+            setTimeout(function () {
+                scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 40);
+            if (window.innerWidth <= 1024) {
+                var sidebar = document.querySelector('.module-sidebar');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+            document.querySelectorAll('.nav-section-item').forEach(function (li) {
+                li.classList.remove('is-open');
+            });
+            var activeNav = Array.from(navLinks).find(function (l) {
+                return l.getAttribute('data-section') === sid;
+            });
+            if (activeNav) {
+                var item = activeNav.closest('.nav-section-item');
+                if (item) item.classList.add('is-open');
+            }
+        }
+
+        // Dersi Tamamla — kart (ders) bazında; bir sonraki derse geçer (aynı veya sonraki MODÜL)
+        async function completeLesson(lessonKey) {
             let completed = await loadProgress();
-            const currentIdx = Array.from(sections).findIndex(sec => sec.id === sectionId);
-            if (completed.includes(sectionId)) {
-                if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
-                    goToSectionByIndex(currentIdx + 1);
+            if (completed.includes(lessonKey)) {
+                var nextIdx = lessonKeysOrdered.indexOf(lessonKey) + 1;
+                if (nextIdx < lessonKeysOrdered.length) {
+                    goToLessonKey(lessonKeysOrdered[nextIdx]);
                 }
                 return;
             }
-            completed.push(sectionId);
+            completed.push(lessonKey);
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
 
-            if (window.ModuleProgressTracker?.saveLessonProgress) {
-                try {
-                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
-                } catch (e) {
-                    console.warn('API save failed, progress saved locally:', e);
+            var totalLessons = lessonKeysOrdered.length || window.MODULE_TOTAL_LESSONS || 1;
+            try {
+                if (window.syncModuleProgressBulk) {
+                    await window.syncModuleProgressBulk(MODULE_NAME, completed, totalLessons);
+                } else if (window.ModuleProgressTracker?.saveLessonProgress) {
+                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, lessonKey);
+                }
+            } catch (e) {
+                console.warn('Sunucuya ilerleme yazılamadı (yerel kayıt korunur):', e);
+                if (window.ModuleProgressTracker?.saveLessonProgress) {
+                    try {
+                        await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, lessonKey);
+                    } catch (e2) {
+                        console.warn('Yedek kayıt da başarısız:', e2);
+                    }
                 }
             }
 
-            // Sonraki derse geç (sections dizisinden)
-            if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
-                goToSectionByIndex(currentIdx + 1);
+            var idx = lessonKeysOrdered.indexOf(lessonKey);
+            if (idx >= 0 && idx + 1 < lessonKeysOrdered.length) {
+                goToLessonKey(lessonKeysOrdered[idx + 1]);
             }
         }
 
@@ -7798,18 +7889,49 @@ log_status=recorded</pre>
             });
         })();
 
-        // Inject "Dersi Tamamla" button at end of each section
-        sections.forEach(sec => {
+        function collectLessonKeysOrdered() {
+            const keys = [];
+            document.querySelectorAll('.content-section').forEach(function (sec) {
+                const inner = sec.querySelector('.section-inner');
+                if (!inner) return;
+                inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
+                    const h2 = card.querySelector(':scope > h2');
+                    if (!h2) return;
+                    if (!h2.id) {
+                        h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
+                    }
+                    keys.push(sec.id + '::' + h2.id);
+                });
+            });
+            return keys;
+        }
+
+        lessonKeysOrdered = collectLessonKeysOrdered();
+        window.MODULE_TOTAL_LESSONS = lessonKeysOrdered.length;
+
+        // Her ders kartı (H2 bloğu) sonunda "Dersi Tamamla" — MODÜL bloğunun tek başına sonunda değil
+        document.querySelectorAll('.content-section').forEach(function (sec) {
             const inner = sec.querySelector('.section-inner');
             if (!inner) return;
-            const footer = document.createElement('div');
-            footer.className = 'lesson-complete-footer';
-            const btn = document.createElement('button');
-            btn.className = 'lesson-complete-btn';
-            btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
-            btn.onclick = () => completeLesson(sec.id);
-            footer.appendChild(btn);
-            inner.appendChild(footer);
+            inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
+                const h2 = card.querySelector(':scope > h2');
+                if (!h2) return;
+                if (!h2.id) {
+                    h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
+                }
+                const lessonKey = sec.id + '::' + h2.id;
+                const footer = document.createElement('div');
+                footer.className = 'lesson-complete-footer';
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'lesson-complete-btn';
+                btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
+                btn.onclick = function () {
+                    completeLesson(lessonKey);
+                };
+                footer.appendChild(btn);
+                card.appendChild(footer);
+            });
         });
 
         (async function initProgress() {
@@ -7823,8 +7945,14 @@ log_status=recorded</pre>
                 (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
                 localStorage.getItem('authToken');
             if (!t) return;
+            if (typeof window.flushPendingProgressQueue === 'function') {
+                window.flushPendingProgressQueue().catch(function () {});
+            }
             if (window.ModuleProgressTracker?.initializeModule) {
-                window.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(() => { });
+                window.ModuleProgressTracker.initializeModule(
+                    MODULE_NAME,
+                    lessonKeysOrdered.length || window.MODULE_TOTAL_LESSONS || 1
+                ).catch(() => { });
             }
             if (window.TimeTracker && window.getModuleIdFromName) {
                 try {
@@ -7891,7 +8019,7 @@ log_status=recorded</pre>
     <script src="/js/navigation.js?v=2.3"></script>
 
     <!-- Module Access Check -->
-    <script src="module-access-check.js"></script>
+    <script src="/modules/module-access-check.js"></script>
     <!-- Landing chrome footer (same as index.html) -->
     <footer class="border-t border-slate-200 bg-white py-14">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
