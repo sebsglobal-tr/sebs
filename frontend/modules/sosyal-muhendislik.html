@@ -1867,6 +1867,24 @@
             animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Her ders ayrı URL (?ders=) — tek kart görünür */
+        body.lesson-route-mode .content-section {
+            display: none !important;
+        }
+
+        body.lesson-route-mode .content-section.lesson-route-current-section {
+            display: block !important;
+        }
+
+        body.lesson-route-mode .section-inner > .content-card {
+            display: none !important;
+        }
+
+        body.lesson-route-mode .section-inner > .content-card.lesson-route-current-card {
+            display: block !important;
+            animation: fadeInUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -7590,48 +7608,13 @@ log_status=recorded</pre>
             }
         }
 
-        function goToLessonKey(lessonKey) {
-            var sep = lessonKey.indexOf('::');
-            if (sep === -1) return;
-            var sid = lessonKey.slice(0, sep);
-            var h2id = lessonKey.slice(sep + 2);
-            var section = document.getElementById(sid);
-            if (!section) return;
-            sections.forEach(function (sec) {
-                sec.classList.toggle('active', sec.id === sid);
-            });
-            navLinks.forEach(function (l) {
-                l.classList.toggle('active', l.getAttribute('data-section') === sid);
-            });
-            var h2 = document.getElementById(h2id);
-            var card = h2 ? h2.closest('.content-card') : null;
-            var scrollEl = card || section;
-            setTimeout(function () {
-                scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 40);
-            if (window.innerWidth <= 1024) {
-                var sidebar = document.querySelector('.module-sidebar');
-                if (sidebar) sidebar.classList.remove('open');
-            }
-            document.querySelectorAll('.nav-section-item').forEach(function (li) {
-                li.classList.remove('is-open');
-            });
-            var activeNav = Array.from(navLinks).find(function (l) {
-                return l.getAttribute('data-section') === sid;
-            });
-            if (activeNav) {
-                var item = activeNav.closest('.nav-section-item');
-                if (item) item.classList.add('is-open');
-            }
-        }
-
         // Dersi Tamamla — kart (ders) bazında; bir sonraki derse geçer (aynı veya sonraki MODÜL)
         async function completeLesson(lessonKey) {
             let completed = await loadProgress();
             if (completed.includes(lessonKey)) {
-                var nextIdx = lessonKeysOrdered.indexOf(lessonKey) + 1;
-                if (nextIdx < lessonKeysOrdered.length) {
-                    goToLessonKey(lessonKeysOrdered[nextIdx]);
+                var nextIdxDone = lessonKeysOrdered.indexOf(lessonKey) + 1;
+                if (nextIdxDone < lessonKeysOrdered.length) {
+                    navigateToLesson(lessonKeysOrdered[nextIdxDone]);
                 }
                 return;
             }
@@ -7659,59 +7642,8 @@ log_status=recorded</pre>
 
             var idx = lessonKeysOrdered.indexOf(lessonKey);
             if (idx >= 0 && idx + 1 < lessonKeysOrdered.length) {
-                goToLessonKey(lessonKeysOrdered[idx + 1]);
+                navigateToLesson(lessonKeysOrdered[idx + 1]);
             }
-        }
-
-        document.querySelectorAll('.nav-link-section').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const sectionId = this.getAttribute('data-section');
-                sections.forEach(sec => sec.classList.toggle('active', sec.id === sectionId));
-                link.parentElement.parentElement.querySelectorAll('.nav-link-section').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.nav-link-sub').forEach(l => l.classList.remove('active'));
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
-                }
-
-                const parentLi = this.closest('.nav-section-item');
-                if (parentLi) {
-                    const shouldOpen = !parentLi.classList.contains('is-open');
-                    document.querySelectorAll('.nav-section-item').forEach(li => li.classList.remove('is-open'));
-                    if (shouldOpen) parentLi.classList.add('is-open');
-                }
-            });
-        });
-
-        document.querySelectorAll('.nav-link-sub').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const sectionId = this.getAttribute('data-section');
-                const anchorId = this.getAttribute('data-anchor');
-                sections.forEach(sec => sec.classList.toggle('active', sec.id === sectionId));
-                navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === sectionId));
-                document.querySelectorAll('.nav-link-sub').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                const parentLi = this.closest('.nav-section-item');
-                if (parentLi) {
-                    document.querySelectorAll('.nav-section-item').forEach(li => li.classList.remove('is-open'));
-                    parentLi.classList.add('is-open');
-                }
-                const anchor = document.getElementById(anchorId);
-                if (anchor) {
-                    setTimeout(() => anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
-                }
-            });
-        });
-
-        if (sections.length) {
-            sections.forEach((s, i) => s.classList.toggle('active', i === 0));
-            const firstLink = document.querySelector('.nav-link-section');
-            if (firstLink) firstLink.classList.add('active');
-            const firstSectionItem = firstLink ? firstLink.closest('.nav-section-item') : null;
-            if (firstSectionItem) firstSectionItem.classList.add('is-open');
         }
 
         // Style "Dikkat:", "Ipucu:", "Unutma:" ve "Örnek:" paragraphs as callouts
@@ -7909,6 +7841,126 @@ log_status=recorded</pre>
         lessonKeysOrdered = collectLessonKeysOrdered();
         window.MODULE_TOTAL_LESSONS = lessonKeysOrdered.length;
 
+        function parseLessonKeyFromUrl() {
+            return new URLSearchParams(window.location.search).get('ders');
+        }
+
+        function applyLessonView(lessonKey) {
+            if (!lessonKey || lessonKeysOrdered.indexOf(lessonKey) === -1) {
+                return false;
+            }
+            document.body.classList.add('lesson-route-mode');
+            document.querySelectorAll('.content-section').forEach(function (sec) {
+                sec.classList.remove('lesson-route-current-section', 'active');
+            });
+            document.querySelectorAll('.content-card').forEach(function (c) {
+                c.classList.remove('lesson-route-current-card');
+            });
+            var sep = lessonKey.indexOf('::');
+            var sid = lessonKey.slice(0, sep);
+            var h2id = lessonKey.slice(sep + 2);
+            var section = document.getElementById(sid);
+            var h2 = document.getElementById(h2id);
+            var card = h2 ? h2.closest('.content-card') : null;
+            if (section) {
+                section.classList.add('lesson-route-current-section', 'active');
+            }
+            if (card) {
+                card.classList.add('lesson-route-current-card');
+                card.setAttribute('data-lesson-key', lessonKey);
+            }
+            navLinks.forEach(function (l) {
+                l.classList.toggle('active', l.getAttribute('data-section') === sid);
+            });
+            document.querySelectorAll('.nav-link-sub').forEach(function (a) {
+                var aid = a.getAttribute('data-anchor');
+                var asec = a.getAttribute('data-section');
+                var lk = asec + '::' + aid;
+                a.classList.toggle('active', lk === lessonKey);
+            });
+            document.querySelectorAll('.nav-section-item').forEach(function (li) {
+                li.classList.remove('is-open');
+            });
+            var activeNav = Array.from(navLinks).find(function (l) {
+                return l.getAttribute('data-section') === sid;
+            });
+            if (activeNav) {
+                var item = activeNav.closest('.nav-section-item');
+                if (item) item.classList.add('is-open');
+            }
+            window.scrollTo(0, 0);
+            var mainScroll = document.querySelector('main');
+            if (mainScroll) mainScroll.scrollTop = 0;
+            if (window.innerWidth <= 1024) {
+                var sidebar = document.querySelector('.module-sidebar');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+            return true;
+        }
+
+        function navigateToLesson(lessonKey, opts) {
+            opts = opts || {};
+            if (!lessonKey || lessonKeysOrdered.indexOf(lessonKey) === -1) {
+                return;
+            }
+            applyLessonView(lessonKey);
+            if (!opts.skipHistory) {
+                var url = new URL(window.location.href);
+                url.searchParams.set('ders', lessonKey);
+                if (opts.replace) {
+                    history.replaceState({ lessonKey: lessonKey }, '', url.toString());
+                } else {
+                    history.pushState({ lessonKey: lessonKey }, '', url.toString());
+                }
+            }
+            try {
+                var s = lessonKey.indexOf('::');
+                var hid = lessonKey.slice(s + 2);
+                var hEl = document.getElementById(hid);
+                var t = hEl ? String(hEl.textContent || '').trim() : '';
+                document.title = t ? t + ' — ' + MODULE_NAME : MODULE_NAME + ' | SEBS';
+            } catch (e2) {
+                /* ignore */
+            }
+        }
+
+        function wireLessonNavigation() {
+            var basePath = window.location.pathname || '/modules/sosyal-muhendislik.html';
+
+            document.querySelectorAll('.nav-link-sub').forEach(function (a) {
+                var secId = a.getAttribute('data-section');
+                var anchorId = a.getAttribute('data-anchor');
+                if (!secId || !anchorId) return;
+                var lk = secId + '::' + anchorId;
+                a.setAttribute('href', basePath + '?ders=' + encodeURIComponent(lk));
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    navigateToLesson(lk);
+                });
+            });
+
+            document.querySelectorAll('.nav-link-section').forEach(function (link) {
+                var sid = link.getAttribute('data-section');
+                var firstKey = lessonKeysOrdered.find(function (k) {
+                    return k.indexOf(sid + '::') === 0;
+                });
+                if (firstKey) {
+                    link.setAttribute('href', basePath + '?ders=' + encodeURIComponent(firstKey));
+                }
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (firstKey) navigateToLesson(firstKey);
+                });
+            });
+        }
+
+        window.addEventListener('popstate', function () {
+            var lk = parseLessonKeyFromUrl();
+            if (lk && lessonKeysOrdered.indexOf(lk) !== -1) {
+                applyLessonView(lk);
+            }
+        });
+
         // Her ders kartı (H2 bloğu) sonunda "Dersi Tamamla" — MODÜL bloğunun tek başına sonunda değil
         document.querySelectorAll('.content-section').forEach(function (sec) {
             const inner = sec.querySelector('.section-inner');
@@ -7920,6 +7972,7 @@ log_status=recorded</pre>
                     h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
                 }
                 const lessonKey = sec.id + '::' + h2.id;
+                card.setAttribute('data-lesson-key', lessonKey);
                 const footer = document.createElement('div');
                 footer.className = 'lesson-complete-footer';
                 const btn = document.createElement('button');
@@ -7933,6 +7986,17 @@ log_status=recorded</pre>
                 card.appendChild(footer);
             });
         });
+
+        wireLessonNavigation();
+
+        (function initLessonRouteFromUrl() {
+            var fromUrl = parseLessonKeyFromUrl();
+            var initial =
+                fromUrl && lessonKeysOrdered.indexOf(fromUrl) !== -1 ? fromUrl : lessonKeysOrdered[0];
+            if (initial) {
+                navigateToLesson(initial, { replace: true });
+            }
+        })();
 
         (async function initProgress() {
             const completed = await loadProgress();
