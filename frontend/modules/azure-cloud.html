@@ -1319,6 +1319,8 @@ az network vnet create \
     })();
   </script>
 
+    <script src="/js/api-base.js"></script>
+    <script src="../utils/module-progress.js"></script>
     <!-- JavaScript -->
     <script>
         // Loading Animation
@@ -1334,21 +1336,99 @@ az network vnet create \
 
         // Mobil üst menü: ../js/navigation.js
 
-        // Lesson navigation
-        document.querySelectorAll('.nav-link[data-lesson]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all links and lessons
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                document.querySelectorAll('.lesson-content').forEach(l => l.classList.remove('active'));
-                
-                // Add active class to clicked link
-                this.classList.add('active');
-                
-                // Show corresponding lesson
-                const lessonId = this.getAttribute('data-lesson');
-                document.getElementById(lessonId).classList.add('active');
+        function getModuleName() {
+            return 'Azure Temelleri';
+        }
+
+        function saveProgress(moduleName, progress) {
+            const userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}');
+            userProgress[moduleName] = {
+                progress: progress.percentage,
+                completedSections: progress.completedSections,
+                totalSections: progress.totalSections,
+                lastAccessed: new Date().toISOString(),
+                status: progress.percentage === 100 ? 'Tamamlandı' : 'Devam Ediyor'
+            };
+            localStorage.setItem('userProgress', JSON.stringify(userProgress));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const moduleName = getModuleName();
+            const navLinks = document.querySelectorAll('.nav-link[data-lesson]');
+            const lessonContents = document.querySelectorAll('.lesson-content');
+            window.MODULE_TOTAL_LESSONS = navLinks.length;
+            let completedSections = 0;
+            const totalSections = navLinks.length;
+
+            function recountCompleted() {
+                completedSections = Array.from(navLinks).filter(function (l) {
+                    return l.classList.contains('completed');
+                }).length;
+            }
+
+            async function hydrateFromApi() {
+                if (!window.getModuleIdFromName || !window.getProgressAuthToken) return;
+                try {
+                    const token = await window.getProgressAuthToken();
+                    if (!token) return;
+                    const moduleId = await window.getModuleIdFromName(moduleName);
+                    if (!moduleId) return;
+                    const apiB = typeof window.getSebsApiBase === 'function'
+                        ? window.getSebsApiBase()
+                        : (window.location.origin || '') + '/api';
+                    const r = await fetch(apiB + '/progress/module/' + moduleId, {
+                        headers: { Authorization: 'Bearer ' + token }
+                    });
+                    if (!r.ok) return;
+                    const j = await r.json();
+                    const raw = j.data && j.data.lastStep;
+                    const step = typeof raw === 'string' ? JSON.parse(raw || '{}') : (raw || {});
+                    const done = step.completedLessons;
+                    if (!Array.isArray(done) || !done.length) return;
+                    navLinks.forEach(function (link) {
+                        const id = link.getAttribute('data-lesson');
+                        if (id && done.indexOf(id) !== -1) link.classList.add('completed');
+                    });
+                    recountCompleted();
+                } catch (e) {
+                    console.warn('Azure modül API yükleme:', e);
+                }
+            }
+
+            function updateProgress() {
+                const percentage = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
+                saveProgress(moduleName, {
+                    percentage: percentage,
+                    completedSections: completedSections,
+                    totalSections: totalSections
+                });
+                if (window.syncModuleProgressBulk) {
+                    const doneIds = Array.from(navLinks)
+                        .filter(function (l) { return l.classList.contains('completed'); })
+                        .map(function (l) { return l.getAttribute('data-lesson'); })
+                        .filter(Boolean);
+                    window.syncModuleProgressBulk(moduleName, doneIds, totalSections).catch(function () {});
+                }
+            }
+
+            navLinks.forEach((link) => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    lessonContents.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const lessonId = this.getAttribute('data-lesson');
+                    document.getElementById(lessonId).classList.add('active');
+                    if (!this.classList.contains('completed')) {
+                        this.classList.add('completed');
+                        recountCompleted();
+                        updateProgress();
+                    }
+                });
+            });
+
+            hydrateFromApi().then(function () {
+                recountCompleted();
             });
         });
 

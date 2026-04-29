@@ -621,7 +621,7 @@
                                 <span class="status-badge available">Mevcut</span>
                             </div>
                             <div class="simulation-actions">
-                                <a href="/modules/sosyal-muhendislik.html" class="btn-simulation" data-module-level="beginner">Modülü Başlat</a>
+                                <a href="/modules/coming-soon.html?module=Temel%20Kriptografi" class="btn-simulation" data-module-level="beginner">Modülü Başlat</a>
                             </div>
                         </div>
                     </div>
@@ -659,7 +659,7 @@
                                 <span class="status-badge available">Mevcut</span>
                             </div>
                             <div class="simulation-actions">
-                                <a href="/modules/sosyal-muhendislik.html" class="btn-simulation" data-module-level="beginner">Modülü Başlat</a>
+                                <a href="/modules/sosyal-muhendislik.html" class="btn-simulation" data-module-name="Sosyal Mühendisliğe Giriş" data-module-level="beginner">Modülü Başlat</a>
                             </div>
                         </div>
                     </div>
@@ -889,7 +889,7 @@
                                 <span class="status-badge available">Mevcut</span>
                             </div>
                             <div class="simulation-actions">
-                                <a href="/modules/ileri-malware-analizi.html" class="btn-simulation">Modülü Başlat</a>
+                                <a href="/modules/ileri-malware-analizi.html" class="btn-simulation" data-module-name="İleri Malware Analizi & Reverse Engineering">Modülü Başlat</a>
                             </div>
                         </div>
                     </div>
@@ -2326,11 +2326,17 @@
 
         // Modülü Başlat - progress kaydı oluştur ve yönlendir
         document.addEventListener('click', async function(e) {
-            const btn = e.target.closest('.btn-start-module');
+            const btn = e.target.closest('.btn-start-module, .btn-simulation');
             if (!btn) return;
-            const moduleName = btn.getAttribute('data-module-name');
             const href = btn.getAttribute('href');
-            if (!moduleName || !href) return;
+            if (!href) return;
+            // coming-soon sayfaları için başlangıç kaydı açma
+            if (href.includes('/modules/coming-soon.html')) return;
+
+            const card = btn.closest('.simulation-card-detailed');
+            const titleEl = card ? card.querySelector('.simulation-info h3') : null;
+            const moduleName = btn.getAttribute('data-module-name') || (titleEl ? titleEl.textContent.trim() : '');
+            if (!moduleName) return;
             e.preventDefault();
             // Supabase session'dan authToken senkronize et (modüller sayfası ilk açılışta)
             try {
