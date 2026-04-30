@@ -3667,6 +3667,23 @@
         #crimson-theme-override .module-2-enhanced .mod2-card h4 {
             color: #111827;
         }
+
+        /* Hikayeleştirme köprüsü: ders başı akış paragrafı */
+        .story-bridge {
+            margin: 0 0 1.1rem;
+            padding: 0.9rem 1rem;
+            border-left: 3px solid rgba(185, 28, 28, 0.35);
+            background: linear-gradient(90deg, rgba(185, 28, 28, 0.06), rgba(245, 158, 11, 0.04));
+            border-radius: 0 10px 10px 0;
+            color: #374151;
+            line-height: 1.75;
+            font-size: 0.99rem;
+        }
+
+        .story-bridge strong {
+            color: #7f1d1d;
+            font-weight: 700;
+        }
     </style>
 
 </head>
@@ -8052,6 +8069,38 @@ log_status=recorded</pre>
             });
         })();
 
+        // İçeriği "tanım/örnek" akışından daha anlatımsal tona yaklaştırır.
+        function addStoryBridgesToCards() {
+            function pickNarrativeLead(lessonTitle) {
+                var t = String(lessonTitle || '').toLowerCase();
+                if (/phishing|vishing|smishing|mesaj|e-posta|telefon/.test(t)) {
+                    return 'Gerçek hayatta bu ders, çoğu zaman sıradan bir mesajla başlar; küçük bir dikkat kayması nasıl riske dönüştüğünü birlikte izleriz.';
+                }
+                if (/kimlik|mfa|oturum|parola|erişim/.test(t)) {
+                    return 'Bu bölümde konuyu teknik terimlerden önce bir karar anı olarak ele alıyoruz: kullanıcı ne görür, ne hisseder ve hangi adım güvenliği belirler?';
+                }
+                if (/fiziksel|ofis|bina|ziyaretçi/.test(t)) {
+                    return 'Buradaki senaryolar kapıdan başlayan küçük etkileşimlerin nasıl güvenlik kararına dönüştüğünü, adım adım bir hikaye gibi açar.';
+                }
+                if (/olay|müdahale|ilk 15/.test(t)) {
+                    return 'Bu kısmı bir olay anı canlandırması gibi okuyun: zaman daralırken hangi kararların hasarı büyüttüğünü ve hangilerinin kontrol sağladığını netleştiriyoruz.';
+                }
+                return 'Bu derste kavramları yalnızca tanım olarak değil, günlük akışta karşılaşacağınız karar anları üzerinden bir senaryo mantığıyla ilerleteceğiz.';
+            }
+
+            document.querySelectorAll('.content-card').forEach(function (card) {
+                if (card.dataset.storyBridge === '1') return;
+                var h2 = card.querySelector(':scope > h2');
+                if (!h2) return;
+
+                var bridge = document.createElement('p');
+                bridge.className = 'story-bridge';
+                bridge.innerHTML = '<strong>Akış:</strong> ' + pickNarrativeLead(h2.textContent || '');
+                h2.insertAdjacentElement('afterend', bridge);
+                card.dataset.storyBridge = '1';
+            });
+        }
+
         // Apply "temel-network" text layout: each H2 block as a content-card
         (function applyTemelCardLayout() {
             document.querySelectorAll('.section-inner').forEach(inner => {
@@ -8075,6 +8124,8 @@ log_status=recorded</pre>
                 });
             });
         })();
+
+        addStoryBridgesToCards();
 
         function collectLessonKeysOrdered() {
             const keys = [];
