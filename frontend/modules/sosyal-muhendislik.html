@@ -8096,49 +8096,6 @@ log_status=recorded</pre>
         lessonKeysOrdered = collectLessonKeysOrdered();
         window.MODULE_TOTAL_LESSONS = lessonKeysOrdered.length;
 
-        var LESSON_ROUTE_HERO_FALLBACK_POOL = [
-            'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1100&q=85',
-            'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1100&q=85',
-            'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1100&q=85',
-            'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1100&q=85',
-            'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1100&q=85',
-            'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1100&q=85',
-            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1100&q=85',
-            'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1100&q=85',
-            'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1100&q=85',
-            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1100&q=85',
-            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1100&q=85',
-            'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1100&q=85',
-            'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1100&q=85',
-            'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1100&q=85',
-            'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1100&q=85',
-            'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1100&q=85'
-        ];
-
-        function hashLessonKey(lessonKey) {
-            var h = 5381;
-            for (var i = 0; i < lessonKey.length; i++) {
-                h = ((h << 5) + h) ^ lessonKey.charCodeAt(i);
-            }
-            return h >>> 0;
-        }
-
-        function findFirstLessonBodyImage(card) {
-            if (!card) return null;
-            var imgs = card.querySelectorAll('img');
-            for (var i = 0; i < imgs.length; i++) {
-                var im = imgs[i];
-                if (/SEBS\.png/i.test(im.src || '')) continue;
-                if (im.classList.contains('lesson-route-hero-img')) continue;
-                var attrW = parseInt(im.getAttribute('width'), 10) || 0;
-                var w = im.naturalWidth || im.width || attrW;
-                if (w > 0 && w < 72) continue;
-                if (im.closest('h2') || im.closest('h3') || im.closest('h4')) continue;
-                return im;
-            }
-            return null;
-        }
-
         function updateLessonRouteHero(lessonKey, section, card, h2) {
             var host = document.getElementById('lesson-route-hero');
             if (!host) return;
@@ -8155,26 +8112,22 @@ log_status=recorded</pre>
             var elMod = host.querySelector('.lesson-route-hero-module');
             var elLes = host.querySelector('.lesson-route-hero-lesson');
             var heroImg = host.querySelector('.lesson-route-hero-img');
+            var heroImgWrap = host.querySelector('.lesson-route-hero-img-wrap');
             if (elMod) elMod.textContent = modTitleEl ? String(modTitleEl.textContent || '').trim() : '';
             if (elLes) elLes.textContent = h2 ? String(h2.textContent || '').trim() : '';
 
-            var inCard = findFirstLessonBodyImage(card);
             var src = '';
             var alt = '';
-            if (inCard) {
-                src = inCard.currentSrc || inCard.src || '';
-                alt = inCard.alt || '';
-            } else if (isFirstLessonInModule && modBannerImg) {
+            if (isFirstLessonInModule && modBannerImg) {
                 src = modBannerImg.currentSrc || modBannerImg.src || '';
                 alt = modBannerImg.alt || '';
-            } else if (LESSON_ROUTE_HERO_FALLBACK_POOL.length) {
-                var pick = hashLessonKey(lessonKey || '') % LESSON_ROUTE_HERO_FALLBACK_POOL.length;
-                src = LESSON_ROUTE_HERO_FALLBACK_POOL[pick];
-                alt = elLes ? elLes.textContent : '';
             }
-            if (heroImg && src) {
-                if (heroImg.src !== src) heroImg.src = src;
-                heroImg.alt = alt || (elLes ? elLes.textContent : '') || '';
+            if (heroImgWrap) {
+                heroImgWrap.style.display = src ? 'block' : 'none';
+            }
+            if (heroImg) {
+                if (src && heroImg.src !== src) heroImg.src = src;
+                heroImg.alt = src ? (alt || (elLes ? elLes.textContent : '') || '') : '';
             }
         }
 
