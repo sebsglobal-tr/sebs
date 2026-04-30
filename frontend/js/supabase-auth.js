@@ -255,6 +255,7 @@ class SupabaseAuthSystem {
     // Nav-buttons içindeki butonları güncelle (HTML'de zaten var)
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const signupBtn = document.getElementById('signupBtn');
     const dashboardBtn = document.getElementById('dashboardBtn');
     const userProfile = document.getElementById('userProfile');
     const userName = document.getElementById('userName');
@@ -285,6 +286,7 @@ class SupabaseAuthSystem {
 
       if (loginBtn) loginBtn.style.display = 'none';
       if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+      if (signupBtn) signupBtn.style.display = 'none';
       if (dashboardBtn) dashboardBtn.style.display = 'block';
       if (userProfile) {
         userProfile.classList.remove('hidden');
@@ -310,6 +312,7 @@ class SupabaseAuthSystem {
       // Kullanıcı giriş yapmamışsa
       if (loginBtn) loginBtn.style.removeProperty('display');
       if (logoutBtn) logoutBtn.style.display = 'none';
+      if (signupBtn) signupBtn.style.removeProperty('display');
       if (dashboardBtn) dashboardBtn.style.display = 'none';
       if (userProfile) {
         userProfile.style.display = 'none';
