@@ -15,13 +15,9 @@
         var signupBtn = document.getElementById('signupBtn');
         if (signupBtn) {
             if (loggedIn) {
-                signupBtn.setAttribute('href', panelHref);
-                signupBtn.textContent = isAdmin ? 'Yönetim' : 'Panel';
-                signupBtn.setAttribute(
-                    'aria-label',
-                    isAdmin ? 'Yönetim paneline git' : 'Kullanıcı paneline git'
-                );
-                signupBtn.style.display = 'inline-flex';
+                // Girisli durumda yonlendirme profil/isim kutusundan yapilir.
+                // "Panel" CTA'sini gizleyerek nav'i sade tutariz.
+                signupBtn.style.display = 'none';
             } else {
                 signupBtn.setAttribute('href', '/signup.html');
                 signupBtn.textContent = 'Ücretsiz başla';
