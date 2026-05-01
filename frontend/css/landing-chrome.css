@@ -201,11 +201,6 @@ body.landing-site-body .hero-section {
     linear-gradient(180deg, #fafbfc 0%, #ffffff 50%, #f8fafc 100%);
 }
 
-body.landing-site-body .hero-section::before,
-body.landing-site-body .hero-section::after {
-  display: none !important;
-}
-
 body.landing-site-body .hero-badge {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -764,6 +759,11 @@ body.landing-site-body .simulation-card-detailed:hover {
     0 8px 16px -8px rgb(15 23 42 / 0.08) !important;
   border-color: #cbd5e1 !important;
   background: #ffffff !important;
+}
+
+/* Modül / simülasyon listesi: tek hover — ölçek atlama kaldırıldı (daha sakin ve tutarlı) */
+html.sebs-sim-list body.landing-site-body .simulation-card-detailed:hover {
+  transform: translateY(-4px) !important;
 }
 
 body.landing-site-body .simulation-card-detailed::before {
