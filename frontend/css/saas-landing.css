@@ -68,10 +68,10 @@ html {
   z-index: 1;
 }
 
-/* Connector lines + floating labels (hero) */
+/* Connector lines + hero mock (ana sayfa sağ sütun) */
 .hero-visual-wrap {
   position: relative;
-  min-height: 320px;
+  min-height: 340px;
 }
 
 .hero-connectors {
@@ -111,31 +111,83 @@ html {
   }
 }
 
-.hero-float-label {
-  position: absolute;
-  z-index: 2;
+/* Üç etiket: kartla birlikte hizalı şerit (mutlak yüzen + kart animasyonu kopması giderildi) */
+.hero-mock-chips {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+}
+
+@media (max-width: 24rem) {
+  .hero-mock-chips {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+}
+
+.hero-chip {
+  flex: 1 1 0;
+  text-align: center;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.35rem 0.65rem;
+  padding: 0.4rem 0.55rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.42);
   color: #475569;
-  box-shadow: 0 4px 14px -4px rgba(15, 23, 42, 0.15);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.hero-mock-panel {
+  overflow: hidden;
+  border-radius: 1.125rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.99) 0%,
+    rgba(248, 250, 252, 0.98) 55%,
+    rgba(255, 255, 255, 0.99) 100%
+  );
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 28px 56px -32px rgba(15, 23, 42, 0.28);
+}
+
+.hero-mock-panel-inner {
+  padding: 1.25rem 1.25rem 1.35rem;
+}
+
+@media (min-width: 640px) {
+  .hero-mock-panel-inner {
+    padding: 1.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes label-drift {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+  @keyframes hero-mock-stack-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
   }
-  .hero-float-label {
-    animation: label-drift 5s ease-in-out infinite;
+  .hero-mock-stack {
+    animation: hero-mock-stack-float 9s ease-in-out infinite;
   }
-  .hero-float-label.delay-b {
-    animation-delay: 1.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mock-stack {
+    animation: none;
   }
 }
 
@@ -403,8 +455,8 @@ html {
   .hero-connectors-contact path.hero-line-anim {
     animation: none;
   }
-  .hero-float-label {
-    animation: none;
+  .hero-mock-stack {
+    animation: none !important;
   }
 }
 
