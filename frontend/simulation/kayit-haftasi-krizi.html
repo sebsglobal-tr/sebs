@@ -43,113 +43,182 @@
         }
 
         /* ═══════════════════════════════════════════════
-           GİRİŞ EKRANI — Premium SOC Simulation
+           GİRİŞ EKRANI — ana site (landing) ile uyumlu açık tema
         ═══════════════════════════════════════════════ */
         .intro-overlay {
             position: fixed;
             inset: 0;
             z-index: 3000;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(15, 23, 42, 0.97) 100%),
-                url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1920&q=80') center/cover no-repeat;
+            background:
+                radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 50% at 85% 20%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+                linear-gradient(180deg, #fafbfc 0%, #ffffff 45%, #f1f5f9 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: clamp(1rem, 4vw, 2rem);
         }
         .intro-overlay::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+            background: radial-gradient(ellipse 60% 40% at 50% 100%, rgba(37, 99, 235, 0.06) 0%, transparent 55%);
             pointer-events: none;
         }
         .intro-overlay.hidden { display: none; }
         @keyframes introFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .intro-card { animation: introFadeIn 0.5s ease-out; }
         .intro-card {
             position: relative;
-            max-width: 640px;
+            animation: introFadeIn 0.45s ease-out;
+            max-width: 680px;
             width: 100%;
-            background: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            padding: clamp(1.75rem, 4vw, 2.5rem);
+            box-shadow:
+                0 1px 3px 0 rgb(15 23 42 / 0.06),
+                0 20px 40px -12px rgb(15 23 42 / 0.12);
+        }
+        .intro-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .intro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #15803d;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+        }
+        .intro-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
         }
         .intro-card h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.6rem;
+            font-size: clamp(1.25rem, 3vw, 1.65rem);
             font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 1rem;
+            color: #0f172a;
+            margin-bottom: 1.125rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
         }
         .intro-card h1 i {
+            flex-shrink: 0;
             width: 48px;
             height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            border-radius: 0.875rem;
             color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            font-size: 1.15rem;
+            box-shadow: 0 4px 14px -4px rgba(37, 99, 235, 0.45);
         }
         .intro-brief {
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: #cbd5e1;
-            margin-bottom: 1.25rem;
+            font-size: 0.9375rem;
+            line-height: 1.75;
+            color: #475569;
+            margin-bottom: 1.35rem;
         }
-        .intro-brief p { margin-bottom: 0.75rem; }
+        .intro-brief p { margin-bottom: 0.875rem; }
+        .intro-brief p:last-child { margin-bottom: 0; }
+        .intro-brief strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
         .intro-goals {
-            background: rgba(30, 64, 175, 0.15);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #3b82f6;
+            background: #f8fafc;
+            border-radius: 0.875rem;
+            padding: 1.125rem 1.25rem 1.125rem 1.125rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
         }
         .intro-goals h3 {
-            font-size: 0.9rem;
-            color: #93c5fd;
-            margin-bottom: 0.6rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #334155;
+            margin-bottom: 0.65rem;
         }
         .intro-goals ul {
             list-style: none;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            color: #475569;
+            font-size: 0.875rem;
+            line-height: 1.65;
         }
-        .intro-goals li::before { content: "→ "; color: #3b82f6; }
+        .intro-goals li {
+            position: relative;
+            padding-left: 1.35rem;
+            margin-bottom: 0.35rem;
+        }
+        .intro-goals li:last-child { margin-bottom: 0; }
+        .intro-goals li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
         .intro-aim {
-            font-size: 0.85rem;
-            color: #64748b;
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            padding: 0.75rem;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #334155;
+            font-style: normal;
+            margin-bottom: 1.35rem;
+            padding: 0.875rem 1rem;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 0.75rem;
+            line-height: 1.55;
         }
         .btn-start {
             width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.875rem 1.25rem;
+            font-size: 0.9375rem;
             font-weight: 600;
-            color: white;
-            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            color: #ffffff;
+            background: #2563eb;
             border: none;
-            border-radius: 12px;
+            border-radius: 0.875rem;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 2px rgb(15 23 42 / 0.06), 0 8px 20px -8px rgba(37, 99, 235, 0.45);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(59, 130, 246, 0.45); }
+        .btn-start:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px -4px rgba(37, 99, 235, 0.5);
+        }
+        .btn-start:active { transform: translateY(0); }
 
         /* ═══════════════════════════════════════════════
            HEADER & ANA PANEL
@@ -872,9 +941,9 @@
          GİRİŞ EKRANI
     ═══════════════════════════════════════════════ -->
     <div class="intro-overlay" id="introOverlay">
-        <div class="intro-card" style="max-width: 680px;">
-            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
-                <span style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-size:0.7rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:6px;letter-spacing:0.5px;">● CANLI SİMÜLASYON</span>
+        <div class="intro-card">
+            <div class="intro-badge-row">
+                <span class="intro-badge">Canlı simülasyon</span>
             </div>
             <h1><i class="fas fa-exclamation-triangle"></i> Kayıt Haftası — Olay Analizi</h1>
             <div class="intro-brief">
