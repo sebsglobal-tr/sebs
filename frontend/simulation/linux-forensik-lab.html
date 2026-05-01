@@ -19,7 +19,7 @@
             --success-color: #00ff88;
             --danger-color: #ff6b6b;
             --terminal-bg: #0a0e14;
-            --terminal-text: #b3b1ad;
+            --terminal-text: #d8dee9;
             --terminal-prompt: #39bae6;
             --terminal-accent: #7fd962;
         }
@@ -155,8 +155,9 @@
         .control-btn.maximize { background: #28ca42; }
         .terminal-title {
             margin-left: 12px;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
+            font-size: 0.78rem;
+            color: rgba(226, 232, 240, 0.82);
+            letter-spacing: 0.02em;
         }
         .terminal-content {
             flex: 1;
@@ -191,12 +192,12 @@
             display: none;
             align-items: flex-start;
             gap: 0.65rem;
-            padding: 0.55rem 1rem 0.65rem;
-            background: rgba(8, 12, 18, 0.92);
-            border-top: 1px solid rgba(45, 212, 191, 0.35);
+            padding: 0.65rem 1rem 0.75rem;
+            background: rgba(15, 23, 42, 0.97);
+            border-top: 1px solid rgba(45, 212, 191, 0.45);
             font-family: 'Inter', system-ui, sans-serif;
-            font-size: 0.8125rem;
-            line-height: 1.45;
+            font-size: 0.875rem;
+            line-height: 1.5;
         }
         .terminal-context-bar.visible {
             display: flex;
@@ -204,14 +205,14 @@
         .terminal-context-bar .terminal-context-label {
             flex-shrink: 0;
             font-weight: 700;
-            color: #2dd4bf;
+            color: #5eead4;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            font-size: 0.65rem;
-            margin-top: 0.15rem;
+            letter-spacing: 0.05em;
+            font-size: 0.7rem;
+            margin-top: 0.12rem;
         }
         .terminal-context-bar .terminal-context-text {
-            color: #f1f5f9;
+            color: #f8fafc;
             font-weight: 500;
         }
 
@@ -247,8 +248,9 @@
             color: white;
             font-size: 1.5rem;
         }
-        .modal-title { font-size: 1.25rem; font-weight: 600; color: #e6e6e6; margin-bottom: 0.75rem; }
-        .modal-description { color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+        .modal-description { color: #cbd5e1; line-height: 1.65; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-description strong { color: #ffffff; font-weight: 600; }
         .modal-buttons { display: flex; gap: 12px; justify-content: center; }
         .btn-primary, .btn-secondary {
             padding: 0.65rem 1.4rem;
@@ -265,11 +267,11 @@
         }
         .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-secondary {
-            background: rgba(255,255,255,0.06);
-            color: #94a3b8;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.35);
         }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.14); color: #f8fafc; }
 
         /* Başlangıç — ana site (landing) ile uyumlu açık tema */
         .intro-overlay {
@@ -572,10 +574,10 @@
     }
     /* Terminal: landing/global gövde rengi ipucu ve çıktıları gömersin — güçlü kontrast */
     body.sebs-linux-forensic-sim .terminal-content .terminal-output {
-      color: #c9d1d9 !important;
+      color: #e2e8f0 !important;
     }
     body.sebs-linux-forensic-sim .terminal-content .terminal-prompt {
-      color: #39bae6 !important;
+      color: #67e8f9 !important;
     }
     body.sebs-linux-forensic-sim .terminal-content .terminal-input {
       color: #e6edf3 !important;
@@ -595,6 +597,25 @@
     body.sebs-linux-forensic-sim .hud .hud-tasks-btn,
     body.sebs-linux-forensic-sim .hud .hud-hint {
       color: #cbd5e1 !important;
+    }
+    /* Modal: landing-chrome h3/p !important koyu metin — koyu kartta görünmez oluyordu */
+    body.sebs-linux-forensic-sim .modal-overlay .modal-content h3.modal-title {
+      color: #f8fafc !important;
+    }
+    body.sebs-linux-forensic-sim .modal-overlay .modal-content .modal-description {
+      color: #cbd5e1 !important;
+    }
+    body.sebs-linux-forensic-sim .modal-overlay .modal-content .modal-description strong {
+      color: #ffffff !important;
+    }
+    body.sebs-linux-forensic-sim .terminal-context-bar .terminal-context-text {
+      color: #f8fafc !important;
+    }
+    body.sebs-linux-forensic-sim .terminal-context-bar .terminal-context-label {
+      color: #5eead4 !important;
+    }
+    body.sebs-linux-forensic-sim .terminal-header .terminal-title {
+      color: rgba(241, 245, 249, 0.88) !important;
     }
   </style>
 
@@ -1062,11 +1083,18 @@
             const oldInput = document.getElementById('terminalInput');
             if (oldInput) oldInput.remove();
 
-            addTerminalLine(`${getPrompt()} ${command}`);
-
             const parts = command.trim().split(/\s+/);
             const cmd = parts[0];
             const args = parts.slice(1);
+
+            /* clear: ekranı boşalt + tek prompt; komut yankısı yok (gerçek terminal davranışına yakın), gereksiz DOM yazımı yok */
+            if (cmd === 'clear') {
+                clearTerminal();
+                addInputLine();
+                return;
+            }
+
+            addTerminalLine(`${getPrompt()} ${command}`);
 
             switch (cmd) {
                 case 'whoami':
@@ -1107,9 +1135,6 @@
                     break;
                 case 'uname':
                     handleUNAME(args);
-                    break;
-                case 'clear':
-                    clearTerminal();
                     break;
                 case 'help':
                     handleHELP();
@@ -1401,10 +1426,9 @@
         }
 
         function clearTerminal() {
-            const terminalContent = document.getElementById('terminalContent');
-            terminalContent.innerHTML = '';
-            addInputLine();
-            setupTerminal();
+            var terminalContent = document.getElementById('terminalContent');
+            if (terminalContent) terminalContent.innerHTML = '';
+            /* Tek prompt satırı executeCommand sonunda addInputLine() ile eklenir — burada ekleme yok (çift prompt önlenir). */
         }
 
         function updatePrompt() {
