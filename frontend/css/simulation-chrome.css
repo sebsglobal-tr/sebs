@@ -6,6 +6,48 @@
   --sebs-landing-chrome-h: 4rem;
 }
 
+/**
+ * Tam ekran simülasyon (örn. kayit-haftasi-krizi): üst marketing header/footer yok,
+ * landing-chrome’un beyaz gövde / padding’i burada sıfırlanır.
+ */
+body[data-sebs-chrome-layout="immersive"] {
+  --sebs-landing-chrome-h: 0px;
+}
+
+body[data-sebs-chrome-layout="immersive"] > header:not(.simulation-header),
+body[data-sebs-chrome-layout="immersive"] > footer {
+  display: none !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] {
+  padding-top: 0 !important;
+  background-color: #0c0f14 !important;
+  background-image:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, transparent 38%),
+    radial-gradient(ellipse 100% 65% at 50% 0%, rgba(30, 41, 59, 0.55) 0%, transparent 52%),
+    url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=40') center/cover no-repeat !important;
+  color: #e2e8f0 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"]::before {
+  content: none !important;
+  display: none !important;
+}
+
+body[data-sebs-chrome-layout="immersive"] .simulation-header.sebs-sim-header-fixed {
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  z-index: 1000 !important;
+}
+
+body[data-sebs-chrome-layout="immersive"] .main-container {
+  padding-top: var(--sebs-sim-pad, 52px) !important;
+  height: calc(100vh - var(--sebs-sim-pad, 52px)) !important;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
 /* ─── Sabit sim toolbar + .main-container (stack) ─── */
 body[data-sebs-chrome-layout="stack"] .simulation-header.sebs-sim-header-fixed {
   top: var(--sebs-landing-chrome-h) !important;
