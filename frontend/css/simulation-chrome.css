@@ -48,6 +48,55 @@ body[data-sebs-chrome-layout="immersive"] .main-container {
   box-sizing: border-box;
 }
 
+/*
+ * landing-chrome global typography (h1–h4, section, li, p !important) immersive sim
+ * panellerinde koyu renk basıyor — başlıklar ve soru etiketleri okunmuyor.
+ */
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container section {
+  color: #e2e8f0 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame h1,
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame h2,
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame h3,
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame h4 {
+  color: #f1f5f9 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .event-title {
+  color: #f8fafc !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .event-content h4 {
+  color: #94a3b8 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .panel-timeline h3,
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .panel-decision h3 {
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .question-label {
+  color: #f1f5f9 !important;
+  font-weight: 600;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame p {
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame .message-item .msg-body {
+  color: inherit !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .timeline-item .title {
+  color: #f1f5f9 !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .window-frame strong {
+  color: inherit !important;
+}
+
 /* ─── Sabit sim toolbar + .main-container (stack) ─── */
 body[data-sebs-chrome-layout="stack"] .simulation-header.sebs-sim-header-fixed {
   top: var(--sebs-landing-chrome-h) !important;
