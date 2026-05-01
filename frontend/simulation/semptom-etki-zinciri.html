@@ -279,9 +279,17 @@
             font-size: 1.25rem;
             margin-bottom: 0.25rem;
         }
-        .taskbar-app span {
-            font-size: 0.7rem;
-            font-weight: 500;
+        .taskbar-app > span:not(.taskbar-badge) {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+        }
+        .taskbar-app:hover > span:not(.taskbar-badge) {
+            color: #ffffff;
+        }
+        .taskbar-app.active > span:not(.taskbar-badge) {
+            color: #ccfbf1;
         }
         .taskbar-app .taskbar-badge {
             position: absolute;
@@ -618,7 +626,7 @@
         }
         @media (max-width: 768px) {
             .taskbar-app { min-width: 56px; padding: 0.4rem 0.6rem; }
-            .taskbar-app span { font-size: 0.65rem; }
+            .taskbar-app > span:not(.taskbar-badge) { font-size: 0.68rem; }
         }
     </style>
     
@@ -848,8 +856,19 @@
     <script>
         const startTime = Date.now();
         let scores = { problemTanimi: 0, kesinYargi: 0, riskOncelik: 0, surecFarkindalik: 0 };
-        let itemsRead = 0;
         const MIN_READS_FOR_DECISION = 2;
+        /** Öğe ilk kez açıldığında (genişletildiğinde) okunmuş sayılır; rozet = okunmamış sayısı */
+        const readIndices = {
+            mail: new Set(),
+            slack: new Set(),
+            ticket: new Set(),
+            security: new Set()
+        };
+        let monitorAlertActive = true;
+
+        function totalItemsRead() {
+            return readIndices.mail.size + readIndices.slack.size + readIndices.ticket.size + readIndices.security.size;
+        }
 
         // ═══ DATA ═══
         const av = (name, bg) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${bg || '3b82f6'}&color=fff&size=80`;
@@ -967,12 +986,13 @@
                 `}).join('');
                 el.querySelectorAll('.app-item').forEach(item => {
                     item.addEventListener('click', () => {
-                        const wasRead = item.classList.contains('read');
+                        const idx = parseInt(item.dataset.idx, 10);
+                        const wasCollapsed = !item.classList.contains('expanded');
                         item.classList.toggle('expanded');
-                        if (!wasRead) {
+                        if (wasCollapsed && !readIndices[id].has(idx)) {
+                            readIndices[id].add(idx);
                             item.classList.add('read');
-                            itemsRead++;
-                            updateBadges();
+                            refreshAllBadges();
                             updateDecisionButton();
                         }
                     });
@@ -980,18 +1000,63 @@
             }
         }
 
-        function updateBadges() {
-            const ids = ['mailBadge','slackBadge','ticketBadge','monitorBadge','securityBadge'];
-            const tbIds = ['tb-mail','tb-slack','tb-ticket','tb-monitor','tb-security'];
-            if (itemsRead >= 5) {
-                ids.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
-                tbIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        function setNumericBadge(badgeEl, tbEl, unread) {
+            if (unread <= 0) {
+                if (badgeEl) badgeEl.classList.add('hidden');
+                if (tbEl) tbEl.style.display = 'none';
+            } else {
+                if (badgeEl) {
+                    badgeEl.classList.remove('hidden');
+                    badgeEl.textContent = String(unread);
+                }
+                if (tbEl) {
+                    tbEl.style.display = '';
+                    tbEl.textContent = String(unread);
+                }
+            }
+        }
+
+        function refreshAllBadges() {
+            setNumericBadge(
+                document.getElementById('mailBadge'),
+                document.getElementById('tb-mail'),
+                MAIL_ITEMS.length - readIndices.mail.size
+            );
+            setNumericBadge(
+                document.getElementById('slackBadge'),
+                document.getElementById('tb-slack'),
+                SLACK_ITEMS.length - readIndices.slack.size
+            );
+            setNumericBadge(
+                document.getElementById('ticketBadge'),
+                document.getElementById('tb-ticket'),
+                TICKET_ITEMS.length - readIndices.ticket.size
+            );
+            setNumericBadge(
+                document.getElementById('securityBadge'),
+                document.getElementById('tb-security'),
+                SECURITY_ITEMS.length - readIndices.security.size
+            );
+            const mBadge = document.getElementById('monitorBadge');
+            const mTb = document.getElementById('tb-monitor');
+            if (monitorAlertActive) {
+                if (mBadge) {
+                    mBadge.classList.remove('hidden');
+                    mBadge.textContent = '!';
+                }
+                if (mTb) {
+                    mTb.style.display = '';
+                    mTb.textContent = '!';
+                }
+            } else {
+                if (mBadge) mBadge.classList.add('hidden');
+                if (mTb) mTb.style.display = 'none';
             }
         }
 
         function updateDecisionButton() {
             let btn = document.getElementById('decisionReadyBtn');
-            if (itemsRead >= MIN_READS_FOR_DECISION && !btn) {
+            if (totalItemsRead() >= MIN_READS_FOR_DECISION && !btn) {
                 btn = document.createElement('button');
                 btn.id = 'decisionReadyBtn';
                 btn.className = 'action-btn';
@@ -1095,6 +1160,10 @@
             const tab = document.querySelector('.taskbar-app[data-app="' + appId + '"]');
             if (win) win.classList.add('active');
             if (tab) tab.classList.add('active');
+            if (appId === 'monitor' && monitorAlertActive) {
+                monitorAlertActive = false;
+                refreshAllBadges();
+            }
         }
 
         document.getElementById('taskbar').addEventListener('click', (e) => {
@@ -1115,6 +1184,7 @@
             renderApp('ticket', TICKET_ITEMS);
             renderApp('monitor', MONITOR_ITEMS, true);
             renderApp('security', SECURITY_ITEMS);
+            refreshAllBadges();
             switchApp('mail');
             setInterval(() => {
                 const t = document.getElementById('desktopTime');
