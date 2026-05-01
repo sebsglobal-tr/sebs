@@ -132,6 +132,26 @@ body[data-sebs-chrome-layout="immersive"] .taskbar {
   margin-bottom: 0 !important;
 }
 
+/* Linux forensik sim + immersive: üst marketing yok — linux layout offset’leri sıfırla */
+body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim .task-cards-panel {
+  top: 0 !important;
+  height: 100vh !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim .hud {
+  top: 1.25rem !important;
+}
+
+body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim .screen-frame {
+  max-height: min(900px, calc(100vh - 2.5rem));
+}
+
+/* Bu sayfada simülasyon arka planı terminal ile uyumlu olsun (genel immersive SOC görseli yerine) */
+body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim {
+  background-color: #050608 !important;
+  background-image: none !important;
+}
+
 /* ─── Sabit sim toolbar + .main-container (stack) ─── */
 body[data-sebs-chrome-layout="stack"] .simulation-header.sebs-sim-header-fixed {
   top: var(--sebs-landing-chrome-h) !important;
