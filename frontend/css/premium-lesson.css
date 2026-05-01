@@ -4,6 +4,17 @@
    Tema bağımsız (light/dark uyumlu)
    ============================================ */
 
+/*
+ * Modül sayfası: sol sabit sidebar (320px) tam genişlikteki footer metninin üstüne binmesin;
+ * içerik ana kolonla hizalı kalsın.
+ */
+@media (min-width: 1025px) {
+  body:has(.module-layout) > footer {
+    padding-left: 320px;
+    box-sizing: border-box;
+  }
+}
+
 /* Premium tablolar */
 .info-table-compact {
     margin: 2rem 0;
