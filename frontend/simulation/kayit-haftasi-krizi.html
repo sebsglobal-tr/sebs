@@ -54,10 +54,19 @@
                 radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
                 radial-gradient(ellipse 70% 50% at 85% 20%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
                 linear-gradient(180deg, #fafbfc 0%, #ffffff 45%, #f1f5f9 100%);
+            /* Uzun içerikte ekran kısaysa dikey kaydırma (flex + align center taşmayı gizler) */
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             padding: clamp(1rem, 4vw, 2rem);
+            padding-top: max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-top, 0px));
+            padding-bottom: max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-bottom, 0px));
+            box-sizing: border-box;
         }
         .intro-overlay::before {
             content: '';
@@ -74,6 +83,9 @@
         .intro-card {
             position: relative;
             animation: introFadeIn 0.45s ease-out;
+            flex-shrink: 0;
+            margin-top: auto;
+            margin-bottom: auto;
             max-width: 680px;
             width: 100%;
             background: #ffffff;
@@ -718,9 +730,16 @@
             z-index: 2000;
             background: linear-gradient(135deg, rgba(10, 14, 26, 0.97) 0%, rgba(15, 23, 42, 0.95) 100%),
                 url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=60') center/cover no-repeat;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            padding-top: max(2rem, env(safe-area-inset-top, 0px));
+            padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+            box-sizing: border-box;
         }
         .screen-overlay::before {
             content: '';
@@ -729,7 +748,17 @@
             background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
             pointer-events: none;
         }
-        .screen-overlay.show { display: flex; }
+        .screen-overlay.show {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .screen-overlay.show .screen-card {
+            margin-top: auto;
+            margin-bottom: auto;
+            flex-shrink: 0;
+        }
         .screen-card {
             position: relative;
             max-width: 740px;
