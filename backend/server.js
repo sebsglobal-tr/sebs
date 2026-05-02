@@ -2006,12 +2006,25 @@ app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
     }
 });
 
+/** İstemciden gelen UUID stringlerini doğrular; geçersizse null (PostgreSQL ::uuid hatası önlenir). */
+function coerceUuidOrNull(val, logLabel) {
+    if (val == null || val === '') return null;
+    const s = String(val).trim();
+    if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)
+    ) {
+        logger.warn(`simulations: geçersiz UUID (${logLabel}), null kullanılıyor`, { raw: String(val).slice(0, 80) });
+        return null;
+    }
+    return s;
+}
+
 // Simülasyon başlatma (started_at; tamamlanınca POST /complete ile güncellenir)
 app.post('/api/simulations/start', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const body = req.body || {};
-        const moduleId = body.moduleId || body.module_id || null;
+        const moduleId = coerceUuidOrNull(body.moduleId || body.module_id, 'module_id:start');
         const simulationId = String(body.simulationId || body.simulation_id || '');
         if (!simulationId.trim()) {
             return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
@@ -2043,9 +2056,9 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const body = req.body || {};
-        const moduleId = body.moduleId || body.module_id || null;
+        const moduleId = coerceUuidOrNull(body.moduleId || body.module_id, 'module_id:complete');
+        let runId = coerceUuidOrNull(body.runId || body.run_id, 'run_id:complete');
         const simulationId = String(body.simulationId || body.simulation_id || '');
-        const runId = body.runId || body.run_id || null;
 
         const maxScoreRaw = body.maxScore ?? body.max_score;
         const maxScore =
@@ -2131,9 +2144,30 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
         } else {
             successRate = null;
         }
+        if (successRate != null && (typeof successRate !== 'number' || Number.isNaN(successRate))) {
+            successRate = null;
+        }
 
         if (!simulationId.trim()) {
             return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
+        }
+
+        let stepForPg = null;
+        if (stepCompletionTimes != null && typeof stepCompletionTimes === 'object') {
+            try {
+                stepForPg = JSON.stringify(stepCompletionTimes);
+            } catch (se) {
+                logger.warn('simulations/complete: step_completion_times JSON atlandı', se.message);
+                stepForPg = null;
+            }
+        } else if (typeof stepCompletionTimes === 'string' && stepCompletionTimes.trim()) {
+            try {
+                JSON.parse(stepCompletionTimes.trim());
+                stepForPg = stepCompletionTimes.trim();
+            } catch (je) {
+                logger.warn('simulations/complete: step_completion_times geçersiz JSON');
+                stepForPg = null;
+            }
         }
 
         const perfTail = [
@@ -2142,7 +2176,7 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
             wrongActionsCount,
             hintUsedCount,
             resetCount,
-            stepCompletionTimes,
+            stepForPg,
             finalGradeLabel
         ];
 
