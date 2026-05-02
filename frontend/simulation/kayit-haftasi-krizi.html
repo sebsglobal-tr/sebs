@@ -769,7 +769,66 @@
             gap: 1rem;
             margin: 1rem 0;
         }
-        .match-column h4 { font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.75rem; }
+        .screen-card .screen-intro {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .match-column h4 {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            margin-bottom: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            line-height: 1.45;
+        }
+        .exploit-payload-row {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 0.65rem;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+        .exploit-payload-row .exploit-payload-label {
+            flex: 1;
+            font-size: 0.92rem;
+            color: #f8fafc;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .screen-card .exploit-payload-row .option-btn {
+            flex-shrink: 0;
+            width: auto;
+            min-width: 6.75rem;
+            margin-bottom: 0;
+            padding: 0.55rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #f8fafc;
+            border: 1px solid rgba(148, 163, 184, 0.55);
+            background: rgba(51, 65, 85, 0.9);
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        .screen-card .exploit-payload-row .option-btn:hover {
+            border-color: rgba(96, 165, 250, 0.95);
+            background: rgba(59, 130, 246, 0.35);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+        }
+        .screen-card .exploit-payload-row .option-btn.selected {
+            border-color: #93c5fd;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.45), rgba(99, 102, 241, 0.35));
+            color: #ffffff;
+            box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.35);
+        }
         .match-item {
             padding: 0.75rem 1rem;
             margin-bottom: 0.5rem;
@@ -792,11 +851,11 @@
         .chain-slot {
             min-height: 56px;
             padding: 0.85rem 1.2rem;
-            border: 2px dashed rgba(71, 85, 105, 0.6);
+            border: 2px dashed rgba(148, 163, 184, 0.45);
             border-radius: 12px;
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(15, 23, 42, 0.55);
             font-size: 0.9rem;
-            color: #64748b;
+            color: #cbd5e1;
             transition: all 0.3s ease;
         }
         .chain-slot:hover { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.05); }
@@ -836,6 +895,17 @@
             outline: none;
             border-color: rgba(59, 130, 246, 0.6);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .report-form .report-field-label {
+            display: block;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+        .report-form textarea::placeholder {
+            color: #94a3b8;
+            opacity: 1;
         }
 
         /* Sonuç Analizi */
@@ -1059,7 +1129,7 @@
     <div class="screen-overlay" id="screenExploitPayload">
         <div class="screen-card">
             <h2><i class="fas fa-puzzle-piece"></i> Exploit vs Payload — Kart Eşleştirme</h2>
-            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Kapıyı açan yöntem → EXPLOIT | İçeride yapılan eylem → PAYLOAD</p>
+            <p class="screen-intro">Kapıyı açan yöntem → EXPLOIT | İçeride yapılan eylem → PAYLOAD</p>
             <div class="match-column">
                 <h4>Her kavramı EXPLOIT veya PAYLOAD olarak sınıflandır</h4>
                 <div id="exploitPayloadConcepts"></div>
@@ -1072,7 +1142,7 @@
     <div class="screen-overlay" id="screenAttackChain">
         <div class="screen-card">
             <h2><i class="fas fa-link"></i> Attack Chain — Sıralama</h2>
-            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Olayları doğru aşamaya sürükle-bırak: Hazırlık | Yerleşme | Eylem</p>
+            <p class="screen-intro">Olayları doğru aşamaya sürükle-bırak: Hazırlık | Yerleşme | Eylem</p>
             <div class="attack-chain-drop" id="attackChainSlots"></div>
             <div class="chain-draggables" id="attackChainChips"></div>
             <button type="button" class="btn-next" id="btnAttackChainNext">Devam</button>
@@ -1083,17 +1153,17 @@
     <div class="screen-overlay" id="screenReport">
         <div class="screen-card">
             <h2><i class="fas fa-file-alt"></i> Final Rapor</h2>
-            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Aşağıdaki taslağı gözden geçirip düzenleyin.</p>
+            <p class="screen-intro">Aşağıdaki taslağı gözden geçirip düzenleyin.</p>
             <form class="report-form" id="reportForm">
-                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Bulgu Özeti</label>
+                <label class="report-field-label" for="reportBulgu">Bulgu Özeti</label>
                 <textarea id="reportBulgu" placeholder="Ana bulguları özetleyin..."></textarea>
-                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Etkilenen Varlıklar</label>
+                <label class="report-field-label" for="reportVarlik">Etkilenen Varlıklar</label>
                 <textarea id="reportVarlik" placeholder="Hizmet, veri, sistem..."></textarea>
-                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">CIA Etkisi</label>
+                <label class="report-field-label" for="reportCIA">CIA Etkisi</label>
                 <textarea id="reportCIA" placeholder="Gizlilik, bütünlük, erişilebilirlik..."></textarea>
-                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Olası Tehdit / Zafiyet</label>
+                <label class="report-field-label" for="reportTehdit">Olası Tehdit / Zafiyet</label>
                 <textarea id="reportTehdit" placeholder="Tehdit ve zafiyet değerlendirmesi..."></textarea>
-                <label style="display:block;color:#94a3b8;font-size:0.85rem;margin-bottom:0.25rem;">Belirsizlikler</label>
+                <label class="report-field-label" for="reportBelirsiz">Belirsizlikler</label>
                 <textarea id="reportBelirsiz" placeholder="Doğrulanmamış iddialar, eksik kanıtlar..."></textarea>
             </form>
             <button type="button" class="btn-next" id="btnReportSubmit">Raporu Gönder</button>
@@ -1107,8 +1177,8 @@
             <div class="result-score" id="resultScore">0/100</div>
             <div class="result-feedback" id="resultFeedback"></div>
             <div style="margin-top:1rem;">
-                <p style="font-size:0.85rem;color:#64748b;margin-bottom:0.5rem;">Puan Dağılımı:</p>
-                <ul style="font-size:0.85rem;color:#94a3b8;line-height:1.8;margin-left:1rem;">
+                <p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:0.5rem;font-weight:600;">Puan Dağılımı:</p>
+                <ul style="font-size:0.85rem;color:#e2e8f0;line-height:1.8;margin-left:1rem;">
                     <li>Varlık tespiti: 20 puan</li>
                     <li>CIA eşleştirme: 20 puan</li>
                     <li>Tehdit/zafiyet ayrımı: 20 puan</li>
@@ -1561,10 +1631,10 @@
             exploitPayloadAnswers = {};
             const concepts = document.getElementById('exploitPayloadConcepts');
             concepts.innerHTML = EXPLOIT_PAYLOAD_ITEMS.map((item, i) => `
-                <div class="exploit-payload-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding:0.5rem;background:rgba(15,23,42,0.5);border-radius:8px;">
-                    <span style="flex:1;font-size:0.9rem;">${item.text}</span>
-                    <button type="button" class="option-btn" style="padding:0.4rem 0.75rem;font-size:0.8rem;" data-idx="${i}" data-choice="exploit">EXPLOIT</button>
-                    <button type="button" class="option-btn" style="padding:0.4rem 0.75rem;font-size:0.8rem;" data-idx="${i}" data-choice="payload">PAYLOAD</button>
+                <div class="exploit-payload-row">
+                    <span class="exploit-payload-label">${item.text}</span>
+                    <button type="button" class="option-btn" data-idx="${i}" data-choice="exploit">EXPLOIT</button>
+                    <button type="button" class="option-btn" data-idx="${i}" data-choice="payload">PAYLOAD</button>
                 </div>
             `).join('');
             concepts.querySelectorAll('.option-btn').forEach(btn => {

@@ -1006,6 +1006,26 @@
             return getSupabaseAccessTokenFromStorage();
         }
 
+        /** progress/overview ile aynı kaynak; modül sorgusu hata verse bile simülasyon listesi için ayrı uç */
+        async function fetchSimulationRunsFromApi(token) {
+            if (!token) return null;
+            try {
+                var epRes = await fetch(getApiBaseUrl() + '/simulations/runs', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (!epRes.ok) return null;
+                var epJson = await epRes.json().catch(function () {
+                    return null;
+                });
+                if (epJson && epJson.success && epJson.data && Array.isArray(epJson.data.simulationRuns)) {
+                    return epJson.data.simulationRuns;
+                }
+            } catch (epErr) {
+                console.warn('simulations/runs:', epErr);
+            }
+            return null;
+        }
+
         // SEBS - Abidin Samet Çay
         async function loadProgress() {
             /** Giriş yapılmışken catch/legacy yolunda userProgress_* kullanılmaması için */
@@ -1136,6 +1156,13 @@
                     }
                 }
 
+                if (token) {
+                    var fromEp = await fetchSimulationRunsFromApi(token);
+                    if (fromEp != null) {
+                        simulationRuns = fromEp;
+                    }
+                }
+
                 // Sunucu boş döndüyse aynı cihazdaki local ilerlemeyi "fallback" olarak göster.
                 // Böylece kullanıcı kendi cihazında boş panel görmez; sunucu verisi geldiyse her zaman önceliklidir.
                 if (!token || modules.length === 0) {
@@ -1174,7 +1201,11 @@
                         animateCounter(hoursEl, 0, Math.round(totalStudyTime / 60), 1500);
                         hoursEl.classList.add('gradient');
                     }
-                    displayModulesFromBackend(modules);
+                    try {
+                        displayModulesFromBackend(modules);
+                    } catch (dispErr) {
+                        console.error('Modül kartları çizilirken hata:', dispErr);
+                    }
                     displaySimulationRuns(simulationRuns);
                     var ob = document.getElementById('onboardingCard');
                     if (ob) ob.style.display = completedModules === 0 ? 'block' : 'none';
@@ -1194,7 +1225,11 @@
                         animateCounter(zHours, 0, 0, 500);
                         zHours.classList.add('gradient');
                     }
-                    displayModulesFromBackend([]);
+                    try {
+                        displayModulesFromBackend([]);
+                    } catch (dispErr2) {
+                        console.error('Modül kartları (boş):', dispErr2);
+                    }
                     displaySimulationRuns(simulationRuns);
                     var obZ = document.getElementById('onboardingCard');
                     if (obZ) obZ.style.display = 'block';
@@ -1216,8 +1251,11 @@
                 var zh = document.getElementById('studyHours');
                 if (zc) animateCounter(zc, 0, 0, 500);
                 if (zh) animateCounter(zh, 0, 0, 500);
-                displayModulesFromBackend([]);
-                displaySimulationRuns([]);
+                try {
+                    displayModulesFromBackend([]);
+                } catch (dispE) {
+                    console.error('Modül kartları (hata sonrası):', dispE);
+                }
                 var obE = document.getElementById('onboardingCard');
                 if (obE) obE.style.display = 'block';
                 if (!sessionOverviewOk) {

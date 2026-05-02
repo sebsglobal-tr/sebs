@@ -2352,6 +2352,152 @@ app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) =>
     }
 });
 
+/**
+ * Kullanıcının simulation_runs kayıtları (dashboard + GET /api/simulations/runs).
+ * Geniş şema sorgusu başarısız olursa eski kolon setiyle yeniden dener.
+ */
+async function loadSimulationRunsRowsForUser(userId) {
+    let simulationRuns = [];
+    const mapFullRow = (r) => {
+        const done = r.completed_at != null;
+        let status = 'started';
+        if (done) {
+            if (r.passed === true) status = 'success';
+            else if (r.passed === false) status = 'failure';
+            else if (r.max_score != null && Number(r.max_score) > 0) {
+                status = Number(r.score) >= Math.ceil(Number(r.max_score) * 0.7) ? 'success' : 'failure';
+            } else {
+                status = Number(r.score) >= 70 ? 'success' : 'failure';
+            }
+        }
+        return {
+            id: r.id,
+            simulationId: r.simulation_id,
+            moduleId: r.module_id,
+            startedAt: r.started_at,
+            completedAt: r.completed_at,
+            score: r.score,
+            maxScore: r.max_score,
+            successRate: r.success_rate != null ? Number(r.success_rate) : null,
+            timeSpent: r.time_spent,
+            timeSpentSeconds: r.time_spent,
+            attempts: r.attempts,
+            attemptsCount: r.attempts,
+            correctCount: r.correct_count,
+            wrongCount: r.wrong_count,
+            wrongActionsCount: r.wrong_actions_count,
+            hintUsedCount: r.hint_used_count,
+            resetCount: r.reset_count,
+            stepCompletionTimes: r.step_completion_times,
+            finalGradeLabel: r.final_grade_label,
+            passed: r.passed,
+            statusLabel: done ? (status === 'success' ? 'Başarılı' : 'Başarısız') : 'Başlatıldı',
+            status
+        };
+    };
+    try {
+        const simRes = await pool.query(
+            `SELECT id, simulation_id, module_id, started_at, completed_at, score, time_spent, attempts,
+                    COALESCE(correct_count, 0) AS correct_count,
+                    COALESCE(wrong_count, 0) AS wrong_count,
+                    passed,
+                    max_score, success_rate,
+                    COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count,
+                    COALESCE(hint_used_count, 0) AS hint_used_count,
+                    COALESCE(reset_count, 0) AS reset_count,
+                    step_completion_times, final_grade_label
+             FROM simulation_runs
+             WHERE user_id = $1
+             ORDER BY COALESCE(completed_at, started_at, created_at) DESC NULLS LAST
+             LIMIT 50`,
+            [userId]
+        );
+        simulationRuns = simRes.rows.map(mapFullRow);
+    } catch (simErr) {
+        logger.warn('simulation_runs list query:', simErr.message);
+        try {
+            const legacy = await pool.query(
+                `SELECT id, simulation_id, score, time_spent, completed_at
+                 FROM simulation_runs
+                 WHERE user_id = $1
+                 ORDER BY completed_at DESC NULLS LAST, id DESC
+                 LIMIT 50`,
+                [userId]
+            );
+            simulationRuns = legacy.rows.map((r) => {
+                const done = r.completed_at != null;
+                if (!done) {
+                    return {
+                        id: r.id,
+                        simulationId: r.simulation_id,
+                        moduleId: null,
+                        startedAt: null,
+                        completedAt: null,
+                        score: r.score,
+                        maxScore: null,
+                        successRate: null,
+                        timeSpent: r.time_spent,
+                        timeSpentSeconds: r.time_spent,
+                        attempts: null,
+                        attemptsCount: null,
+                        correctCount: 0,
+                        wrongCount: 0,
+                        wrongActionsCount: 0,
+                        hintUsedCount: 0,
+                        resetCount: 0,
+                        stepCompletionTimes: null,
+                        finalGradeLabel: null,
+                        passed: null,
+                        statusLabel: 'Başlatıldı',
+                        status: 'started'
+                    };
+                }
+                const sc = Number(r.score);
+                const ok = sc >= 70;
+                return {
+                    id: r.id,
+                    simulationId: r.simulation_id,
+                    moduleId: null,
+                    startedAt: null,
+                    completedAt: r.completed_at,
+                    score: r.score,
+                    maxScore: null,
+                    successRate: null,
+                    timeSpent: r.time_spent,
+                    timeSpentSeconds: r.time_spent,
+                    attempts: null,
+                    attemptsCount: null,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    wrongActionsCount: 0,
+                    hintUsedCount: 0,
+                    resetCount: 0,
+                    stepCompletionTimes: null,
+                    finalGradeLabel: null,
+                    passed: ok,
+                    statusLabel: ok ? 'Başarılı' : 'Başarısız',
+                    status: ok ? 'success' : 'failure'
+                };
+            });
+        } catch (e2) {
+            logger.warn('simulation_runs minimal legacy list:', e2.message);
+            simulationRuns = [];
+        }
+    }
+    return simulationRuns;
+}
+
+// Son simülasyon çalıştırmaları (dashboard doğrudan bu uçtan da okuyabilir)
+app.get('/api/simulations/runs', authenticateToken, async (req, res) => {
+    try {
+        const simulationRuns = await loadSimulationRunsRowsForUser(req.user.userId);
+        res.json({ success: true, data: { simulationRuns } });
+    } catch (err) {
+        logger.error('GET /api/simulations/runs:', err);
+        res.status(500).json({ success: false, message: 'Simülasyon geçmişi alınamadı.' });
+    }
+});
+
 // Dashboard özet bilgilerini getir
 // user_module_progress (ders ilerlemesi) + module_progress (süre/last_step) birlikte kullanılır
 app.get('/api/progress/overview', authenticateToken, async (req, res) => {
@@ -2418,84 +2564,7 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
             }
         });
 
-        let simulationRuns = [];
-        try {
-            const simRes = await pool.query(
-                `SELECT id, simulation_id, module_id, started_at, completed_at, score, time_spent, attempts,
-                        COALESCE(correct_count, 0) AS correct_count,
-                        COALESCE(wrong_count, 0) AS wrong_count,
-                        passed,
-                        max_score, success_rate,
-                        COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count,
-                        COALESCE(hint_used_count, 0) AS hint_used_count,
-                        COALESCE(reset_count, 0) AS reset_count,
-                        step_completion_times, final_grade_label
-                 FROM simulation_runs
-                 WHERE user_id = $1
-                 ORDER BY COALESCE(completed_at, started_at, created_at) DESC NULLS LAST
-                 LIMIT 50`,
-                [userId]
-            );
-            simulationRuns = simRes.rows.map((r) => {
-                const done = r.completed_at != null;
-                let status = 'started';
-                if (done) {
-                    if (r.passed === true) status = 'success';
-                    else if (r.passed === false) status = 'failure';
-                    else if (r.max_score != null && Number(r.max_score) > 0) {
-                        status = Number(r.score) >= Math.ceil(Number(r.max_score) * 0.7) ? 'success' : 'failure';
-                    } else {
-                        status = Number(r.score) >= 70 ? 'success' : 'failure';
-                    }
-                }
-                return {
-                    id: r.id,
-                    simulationId: r.simulation_id,
-                    moduleId: r.module_id,
-                    startedAt: r.started_at,
-                    completedAt: r.completed_at,
-                    score: r.score,
-                    maxScore: r.max_score,
-                    successRate: r.success_rate != null ? Number(r.success_rate) : null,
-                    timeSpent: r.time_spent,
-                    timeSpentSeconds: r.time_spent,
-                    attempts: r.attempts,
-                    attemptsCount: r.attempts,
-                    correctCount: r.correct_count,
-                    wrongCount: r.wrong_count,
-                    wrongActionsCount: r.wrong_actions_count,
-                    hintUsedCount: r.hint_used_count,
-                    resetCount: r.reset_count,
-                    stepCompletionTimes: r.step_completion_times,
-                    finalGradeLabel: r.final_grade_label,
-                    passed: r.passed,
-                    statusLabel: done ? (status === 'success' ? 'Başarılı' : 'Başarısız') : 'Başlatıldı',
-                    status
-                };
-            });
-        } catch (simErr) {
-            logger.warn('Get overview simulation_runs:', simErr.message);
-            try {
-                const legacy = await pool.query(
-                    `SELECT simulation_id, score, time_spent, completed_at
-                     FROM simulation_runs WHERE user_id = $1 ORDER BY completed_at DESC NULLS LAST LIMIT 50`,
-                    [userId]
-                );
-                simulationRuns = legacy.rows.map((r) => ({
-                    simulationId: r.simulation_id,
-                    score: r.score,
-                    timeSpent: r.time_spent,
-                    completedAt: r.completed_at,
-                    correctCount: 0,
-                    wrongCount: 0,
-                    passed: null,
-                    statusLabel: Number(r.score) >= 70 ? 'Başarılı' : 'Başarısız',
-                    status: Number(r.score) >= 70 ? 'success' : 'failure'
-                }));
-            } catch (e2) {
-                simulationRuns = [];
-            }
-        }
+        const simulationRuns = await loadSimulationRunsRowsForUser(userId);
 
         res.json({
             success: true,

@@ -4,6 +4,63 @@
 (function () {
     const RUN_PREFIX = 'sebs_sim_run_';
 
+    /**
+     * Dashboard /api-base.js ile aynı mantık: statik sitede (sebsglobal.com vb.)
+     * location.origin + '/api' yanlış olur; uzak Node API kökü kullanılır.
+     * @see frontend/js/api-base.js
+     */
+    function resolveSimulationApiBase() {
+        if (typeof window.getSebsApiBase === 'function') {
+            try {
+                const b = window.getSebsApiBase();
+                if (b && typeof b === 'string') return b.replace(/\/$/, '');
+            } catch (e) {
+                /* fall through */
+            }
+        }
+        const fromWindow =
+            (typeof window !== 'undefined' &&
+                typeof window.SEBS_API_BASE_URL === 'string' &&
+                window.SEBS_API_BASE_URL.trim()) ||
+            (typeof window !== 'undefined' &&
+                typeof window.VITE_API_BASE_URL === 'string' &&
+                window.VITE_API_BASE_URL.trim()) ||
+            '';
+        const normalize = (raw) => {
+            if (!raw || typeof raw !== 'string') return '';
+            const u = raw.trim().replace(/\/$/, '');
+            if (!u) return '';
+            if (u.endsWith('/api')) return u;
+            return u + '/api';
+        };
+        const n = normalize(fromWindow);
+        if (n) return n;
+
+        const loc = typeof window !== 'undefined' ? window.location : null;
+        if (!loc || !loc.hostname) {
+            return 'http://localhost:8006/api';
+        }
+        const sameOrigin = (loc.origin || '').replace(/\/$/, '') + '/api';
+        if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
+            return sameOrigin;
+        }
+        if (String(loc.hostname).toLowerCase() === 'sebs-z9tr.onrender.com') {
+            return sameOrigin;
+        }
+        const h = String(loc.hostname).toLowerCase();
+        const needsRemote =
+            h === 'sebsglobal.com' ||
+            h === 'www.sebsglobal.com' ||
+            h.endsWith('.vercel.app') ||
+            h.endsWith('.pages.dev') ||
+            h.endsWith('.netlify.app') ||
+            h.endsWith('.cloudflarepages.com');
+        if (needsRemote) {
+            return normalize('https://sebs-z9tr.onrender.com');
+        }
+        return sameOrigin;
+    }
+
     function getRunStorageKey(simulationId) {
         return RUN_PREFIX + simulationId;
     }
@@ -85,12 +142,7 @@
             if (!moduleId && data.moduleName) {
                 moduleId = await resolveModuleId(data.moduleName);
             }
-            const apiBase =
-                typeof window.getSebsApiBase === 'function'
-                    ? window.getSebsApiBase()
-                    : typeof window !== 'undefined' && window.location && window.location.origin
-                      ? window.location.origin + '/api'
-                      : 'http://localhost:8006/api';
+            const apiBase = resolveSimulationApiBase();
             try {
                 const response = await fetch(apiBase + '/simulations/start', {
                     method: 'POST',
@@ -104,10 +156,17 @@
                         simulationName
                     })
                 });
-                const result = await response.json();
+                const result = await response.json().catch(() => ({}));
                 if (result && result.success && result.data && result.data.runId) {
                     sessionStorage.setItem(getRunStorageKey(simulationId), result.data.runId);
                     return result.data.runId;
+                }
+                if (!response.ok || !result.success) {
+                    console.warn(
+                        'Simulation start API:',
+                        response.status,
+                        result.message || result.error || ''
+                    );
                 }
             } catch (e) {
                 console.warn('Simulation start not saved:', e);
@@ -191,12 +250,7 @@
 
             try {
                 let result;
-                const apiBase =
-                    typeof window.getSebsApiBase === 'function'
-                        ? window.getSebsApiBase()
-                        : typeof window !== 'undefined' && window.location && window.location.origin
-                          ? window.location.origin + '/api'
-                          : 'http://localhost:8006/api';
+                const apiBase = resolveSimulationApiBase();
                 let response = await fetch(apiBase + '/simulations/complete', {
                     method: 'POST',
                     headers: {
