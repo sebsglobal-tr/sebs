@@ -18,10 +18,25 @@ export const syncProgressSchema = z.object({
 });
 
 export const simulationRunSchema = z.object({
-  moduleId: z.string().uuid(),
+  moduleId: z.string().uuid().optional(),
+  lessonId: z.string().uuid().optional(),
   simulationId: z.string(),
-  score: z.number().int().optional(),
+  score: z.number().optional(),
   flagsFound: z.array(z.string()).optional(),
-  timeSpent: z.number().int().min(0).optional()
+  timeSpent: z.number().int().min(0).optional(),
+  timeSpentSeconds: z.number().int().min(0).optional(),
+  attempts: z.number().int().min(1).optional(),
+  attemptsCount: z.number().int().min(1).optional(),
+  correctCount: z.number().int().min(0).optional(),
+  wrongCount: z.number().int().min(0).optional(),
+  passed: z.boolean().optional(),
+  maxScore: z.number().int().min(0).optional(),
+  successRate: z.number().min(0).max(100).optional(),
+  wrongActionsCount: z.number().int().min(0).optional(),
+  hintUsedCount: z.number().int().min(0).optional(),
+  resetCount: z.number().int().min(0).optional(),
+  stepCompletionTimes: z.any().optional(),
+  finalGradeLabel: z.string().max(64).optional(),
+  runId: z.string().uuid().optional()
 });
 

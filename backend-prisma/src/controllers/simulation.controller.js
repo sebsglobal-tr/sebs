@@ -4,7 +4,26 @@ import { prisma } from '../server.js';
 // Save simulation completion
 export async function saveSimulationCompletion(req, res, next) {
   try {
-    const { simulationId, simulationName, score, flagsFound, timeSpent, moduleName } = req.body;
+    const body = req.body || {};
+    const {
+      simulationId,
+      simulationName,
+      score,
+      flagsFound,
+      timeSpent,
+      timeSpentSeconds,
+      moduleName,
+      correctCount,
+      wrongCount,
+      passed,
+      maxScore,
+      successRate,
+      wrongActionsCount,
+      hintUsedCount,
+      resetCount,
+      stepCompletionTimes,
+      finalGradeLabel
+    } = body;
     const userId = req.user.id;
 
     if (!simulationId || !simulationName) {
@@ -22,16 +41,28 @@ export async function saveSimulationCompletion(req, res, next) {
       });
     }
 
-    // Save simulation run
+    const seconds = Math.round(timeSpentSeconds ?? timeSpent ?? 0);
+
+    // Save simulation run (lessonId = modül eşlemesi; şema lesson_id kullanır)
     const simulationRun = await prisma.simulationRun.create({
       data: {
         userId,
-        moduleId: module?.id || '00000000-0000-0000-0000-000000000000', // Dummy ID if no module
+        lessonId: module?.id || null,
         simulationId,
-        score: score || null,
+        score: score != null ? Math.round(Number(score)) : null,
         flagsFound: flagsFound || [],
-        timeSpent: Math.round(timeSpent || 0),
-        completedAt: new Date()
+        timeSpent: seconds,
+        completedAt: new Date(),
+        correctCount: correctCount != null ? Math.max(0, parseInt(String(correctCount), 10) || 0) : 0,
+        wrongCount: wrongCount != null ? Math.max(0, parseInt(String(wrongCount), 10) || 0) : 0,
+        passed: typeof passed === 'boolean' ? passed : null,
+        maxScore: maxScore != null ? Math.max(0, parseInt(String(maxScore), 10) || 0) : null,
+        successRate: successRate != null && successRate !== '' ? successRate : undefined,
+        wrongActionsCount: wrongActionsCount != null ? Math.max(0, parseInt(String(wrongActionsCount), 10) || 0) : 0,
+        hintUsedCount: hintUsedCount != null ? Math.max(0, parseInt(String(hintUsedCount), 10) || 0) : 0,
+        resetCount: resetCount != null ? Math.max(0, parseInt(String(resetCount), 10) || 0) : 0,
+        stepCompletionTimes: stepCompletionTimes != null ? stepCompletionTimes : undefined,
+        finalGradeLabel: finalGradeLabel ? String(finalGradeLabel).slice(0, 64) : null
       }
     });
 
@@ -53,7 +84,7 @@ export async function getUserSimulations(req, res, next) {
     const simulations = await prisma.simulationRun.findMany({
       where: { userId },
       include: {
-        module: {
+        lesson: {
           select: {
             id: true,
             title: true

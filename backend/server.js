@@ -2038,7 +2038,7 @@ app.post('/api/simulations/start', authenticateToken, async (req, res) => {
     }
 });
 
-// Simülasyon tamamlama kaydı (simulation_runs)
+// Simülasyon tamamlama kaydı (simulation_runs) — skor, süre, deneme + performans alanları (015)
 app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2046,9 +2046,24 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
         const moduleId = body.moduleId || body.module_id || null;
         const simulationId = String(body.simulationId || body.simulation_id || '');
         const runId = body.runId || body.run_id || null;
-        const score = Math.max(0, Math.min(100, Number(body.score) || 0));
-        const timeSpent = Math.max(0, Number(body.timeSpent) || 0);
-        const attempts = Math.max(1, Number(body.attempts) || 1);
+
+        const maxScoreRaw = body.maxScore ?? body.max_score;
+        const maxScore =
+            maxScoreRaw != null && maxScoreRaw !== ''
+                ? Math.max(0, Math.min(1000000, Number(maxScoreRaw) || 0))
+                : null;
+
+        let score = Number(body.score) || 0;
+        if (maxScore != null && maxScore > 0) {
+            score = Math.max(0, Math.min(maxScore, score));
+        } else {
+            score = Math.max(0, Math.min(100, score));
+        }
+
+        const timeSpentRaw = body.timeSpentSeconds ?? body.time_spent_seconds ?? body.timeSpent ?? body.time_spent;
+        const timeSpent = Math.max(0, Number(timeSpentRaw) || 0);
+        const attemptsRaw = body.attemptsCount ?? body.attempts_count ?? body.attempts;
+        const attempts = Math.max(1, Number(attemptsRaw) || 1);
         const correctRaw = body.correctCount != null ? body.correctCount : body.correct_count;
         const wrongRaw = body.wrongCount != null ? body.wrongCount : body.wrong_count;
         const correctCount = Math.max(0, Math.min(100000, parseInt(String(correctRaw), 10) || 0));
@@ -2058,21 +2073,101 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
             passed = passed === 'true' || passed === '1';
         }
         if (typeof passed !== 'boolean') {
-            passed = score >= 70;
+            if (maxScore != null && maxScore > 0) {
+                passed = score >= Math.ceil(maxScore * 0.7);
+            } else {
+                passed = score >= 70;
+            }
         }
         const startedAtIso = body.startedAt || body.started_at;
+
+        const wrongActionsRaw = body.wrongActionsCount ?? body.wrong_actions_count;
+        const wrongActionsCount =
+            wrongActionsRaw != null && wrongActionsRaw !== ''
+                ? Math.max(0, Math.min(100000, parseInt(String(wrongActionsRaw), 10) || 0))
+                : wrongCount;
+
+        const hintUsedCount = Math.max(
+            0,
+            Math.min(100000, parseInt(String(body.hintUsedCount ?? body.hint_used_count ?? 0), 10) || 0)
+        );
+        const resetCount = Math.max(
+            0,
+            Math.min(100000, parseInt(String(body.resetCount ?? body.reset_count ?? 0), 10) || 0)
+        );
+
+        let finalGradeLabel = body.finalGradeLabel ?? body.final_grade_label;
+        if (typeof finalGradeLabel === 'string') {
+            finalGradeLabel = finalGradeLabel.trim().slice(0, 64);
+            if (!finalGradeLabel) finalGradeLabel = null;
+        } else {
+            finalGradeLabel = null;
+        }
+
+        let stepCompletionTimes = body.stepCompletionTimes ?? body.step_completion_times;
+        if (typeof stepCompletionTimes === 'string') {
+            try {
+                stepCompletionTimes = JSON.parse(stepCompletionTimes);
+            } catch (e) {
+                stepCompletionTimes = null;
+            }
+        }
+        if (stepCompletionTimes != null && typeof stepCompletionTimes === 'object') {
+            if (Array.isArray(stepCompletionTimes) && stepCompletionTimes.length > 500) {
+                stepCompletionTimes = stepCompletionTimes.slice(0, 500);
+            }
+        } else {
+            stepCompletionTimes = null;
+        }
+
+        let successRate = body.successRate ?? body.success_rate;
+        if (successRate != null && successRate !== '') {
+            successRate = Math.round(Math.max(0, Math.min(100, Number(successRate))) * 100) / 100;
+        } else if (maxScore != null && maxScore > 0) {
+            successRate = Math.round((score / maxScore) * 10000) / 100;
+            successRate = Math.max(0, Math.min(100, successRate));
+        } else if (correctCount + wrongCount > 0) {
+            successRate = Math.round((correctCount / (correctCount + wrongCount)) * 10000) / 100;
+        } else {
+            successRate = null;
+        }
+
         if (!simulationId.trim()) {
             return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
         }
+
+        const perfTail = [
+            maxScore,
+            successRate,
+            wrongActionsCount,
+            hintUsedCount,
+            resetCount,
+            stepCompletionTimes,
+            finalGradeLabel
+        ];
+
+        const perfParams = [
+            score,
+            timeSpent,
+            attempts,
+            correctCount,
+            wrongCount,
+            passed,
+            ...perfTail
+        ];
+
         if (runId) {
             const u = await pool.query(
                 `UPDATE simulation_runs
                  SET score = $1, time_spent = $2, attempts = $3,
                      correct_count = $4, wrong_count = $5, passed = $6,
+                     max_score = $7, success_rate = $8,
+                     wrong_actions_count = $9, hint_used_count = $10, reset_count = $11,
+                     step_completion_times = $12::jsonb, final_grade_label = $13,
                      completed_at = NOW()
-                 WHERE id = $7::uuid AND user_id = $8::uuid
+                 WHERE id = $14::uuid AND user_id = $15::uuid
                  RETURNING id`,
-                [score, timeSpent, attempts, correctCount, wrongCount, passed, runId, userId]
+                [...perfParams, runId, userId]
             );
             if (u.rowCount === 0) {
                 logger.warn('simulations/complete: runId güncellenemedi, yeni satır ekleniyor', { runId });
@@ -2084,9 +2179,24 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
                 await pool.query(
                     `INSERT INTO simulation_runs
                      (user_id, module_id, simulation_id, score, time_spent, attempts, completed_at,
-                      started_at, correct_count, wrong_count, passed)
-                     VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10)`,
-                    [userId, moduleId, simulationId.trim(), score, timeSpent, attempts, saParam, correctCount, wrongCount, passed]
+                      started_at, correct_count, wrong_count, passed,
+                      max_score, success_rate, wrong_actions_count, hint_used_count, reset_count,
+                      step_completion_times, final_grade_label)
+                     VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10,
+                             $11, $12, $13, $14, $15, $16::jsonb, $17)`,
+                    [
+                        userId,
+                        moduleId,
+                        simulationId.trim(),
+                        score,
+                        timeSpent,
+                        attempts,
+                        saParam,
+                        correctCount,
+                        wrongCount,
+                        passed,
+                        ...perfTail
+                    ]
                 );
             }
         } else {
@@ -2098,9 +2208,24 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
             await pool.query(
                 `INSERT INTO simulation_runs
                  (user_id, module_id, simulation_id, score, time_spent, attempts, completed_at,
-                  started_at, correct_count, wrong_count, passed)
-                 VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10)`,
-                [userId, moduleId, simulationId.trim(), score, timeSpent, attempts, saParam, correctCount, wrongCount, passed]
+                  started_at, correct_count, wrong_count, passed,
+                  max_score, success_rate, wrong_actions_count, hint_used_count, reset_count,
+                  step_completion_times, final_grade_label)
+                 VALUES ($1, $2, $3, $4, $5, $6, NOW(), COALESCE($7::timestamptz, NOW()), $8, $9, $10,
+                         $11, $12, $13, $14, $15, $16::jsonb, $17)`,
+                [
+                    userId,
+                    moduleId,
+                    simulationId.trim(),
+                    score,
+                    timeSpent,
+                    attempts,
+                    saParam,
+                    correctCount,
+                    wrongCount,
+                    passed,
+                    ...perfTail
+                ]
             );
         }
         res.json({
@@ -2109,19 +2234,33 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
             data: {
                 simulationId: simulationId.trim(),
                 score,
-                timeSpent,
-                attempts,
+                maxScore,
+                successRate,
+                timeSpentSeconds: timeSpent,
+                attemptsCount: attempts,
                 correctCount,
                 wrongCount,
+                wrongActionsCount,
+                hintUsedCount,
+                resetCount,
+                stepCompletionTimes,
+                finalGradeLabel: finalGradeLabel,
                 passed
             }
         });
     } catch (err) {
         logger.error('Simulations complete error:', err);
-        if (err.message && /column.*correct_count|column.*started_at|does not exist/i.test(String(err.message))) {
+        const msg = String(err.message || '');
+        if (
+            /column.*correct_count|column.*started_at|does not exist/i.test(msg) ||
+            /column.*max_score|column.*success_rate|wrong_actions|hint_used|reset_count|step_completion|final_grade/i.test(
+                msg
+            )
+        ) {
             return res.status(501).json({
                 success: false,
-                message: 'Veritabanı güncellemesi gerekli: database/migrations/014_simulation_runs_extended.sql'
+                message:
+                    'Veritabanı güncellemesi gerekli: önce database/migrations/014_simulation_runs_extended.sql, ardından 015_simulation_runs_performance_metrics.sql'
             });
         }
         res.status(500).json({ success: false, message: 'Simülasyon kaydı sırasında bir hata oluştu.' });
@@ -2285,7 +2424,12 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
                 `SELECT id, simulation_id, module_id, started_at, completed_at, score, time_spent, attempts,
                         COALESCE(correct_count, 0) AS correct_count,
                         COALESCE(wrong_count, 0) AS wrong_count,
-                        passed
+                        passed,
+                        max_score, success_rate,
+                        COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count,
+                        COALESCE(hint_used_count, 0) AS hint_used_count,
+                        COALESCE(reset_count, 0) AS reset_count,
+                        step_completion_times, final_grade_label
                  FROM simulation_runs
                  WHERE user_id = $1
                  ORDER BY COALESCE(completed_at, started_at, created_at) DESC NULLS LAST
@@ -2298,7 +2442,11 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
                 if (done) {
                     if (r.passed === true) status = 'success';
                     else if (r.passed === false) status = 'failure';
-                    else status = Number(r.score) >= 70 ? 'success' : 'failure';
+                    else if (r.max_score != null && Number(r.max_score) > 0) {
+                        status = Number(r.score) >= Math.ceil(Number(r.max_score) * 0.7) ? 'success' : 'failure';
+                    } else {
+                        status = Number(r.score) >= 70 ? 'success' : 'failure';
+                    }
                 }
                 return {
                     id: r.id,
@@ -2307,10 +2455,19 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
                     startedAt: r.started_at,
                     completedAt: r.completed_at,
                     score: r.score,
+                    maxScore: r.max_score,
+                    successRate: r.success_rate != null ? Number(r.success_rate) : null,
                     timeSpent: r.time_spent,
+                    timeSpentSeconds: r.time_spent,
                     attempts: r.attempts,
+                    attemptsCount: r.attempts,
                     correctCount: r.correct_count,
                     wrongCount: r.wrong_count,
+                    wrongActionsCount: r.wrong_actions_count,
+                    hintUsedCount: r.hint_used_count,
+                    resetCount: r.reset_count,
+                    stepCompletionTimes: r.step_completion_times,
+                    finalGradeLabel: r.final_grade_label,
                     passed: r.passed,
                     statusLabel: done ? (status === 'success' ? 'Başarılı' : 'Başarısız') : 'Başlatıldı',
                     status

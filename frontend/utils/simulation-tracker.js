@@ -62,6 +62,17 @@
     }
 
     window.SimulationTracker = {
+        /** Skor / maksimum puana göre seviye etiketi (Türkçe, küçük harf) */
+        finalGradeFromScore(score, maxScore) {
+            const max = maxScore != null && Number(maxScore) > 0 ? Number(maxScore) : 100;
+            const s = Math.max(0, Number(score) || 0);
+            const pct = max > 0 ? (s / max) * 100 : s;
+            if (pct >= 90) return 'çok iyi';
+            if (pct >= 75) return 'iyi';
+            if (pct >= 50) return 'orta';
+            return 'zayıf';
+        },
+
         /**
          * Simülasyon başladığında sunucuya kaydet; dönen runId oturumda saklanır.
          */
@@ -117,8 +128,13 @@
             }
 
             const score = data.score != null ? Number(data.score) : 0;
-            const timeSpent = data.timeSpent || 0;
-            const attempts = data.attempts || 1;
+            const timeSpent =
+                data.timeSpentSeconds != null
+                    ? Number(data.timeSpentSeconds)
+                    : data.time_spent_seconds != null
+                      ? Number(data.time_spent_seconds)
+                      : data.timeSpent || 0;
+            const attempts = data.attemptsCount ?? data.attempts_count ?? data.attempts || 1;
             const correctCount =
                 data.correctCount != null ? Math.max(0, parseInt(String(data.correctCount), 10) || 0) : 0;
             const wrongCount =
@@ -135,20 +151,43 @@
                 moduleId = await resolveModuleId(data.moduleName);
             }
 
+            const maxScoreRaw = data.maxScore ?? data.max_score;
+            const maxScoreForGrade =
+                maxScoreRaw != null && maxScoreRaw !== '' && !Number.isNaN(Number(maxScoreRaw))
+                    ? Number(maxScoreRaw)
+                    : 100;
+            const finalGrade =
+                data.finalGradeLabel ??
+                data.final_grade_label ??
+                (window.SimulationTracker.finalGradeFromScore
+                    ? window.SimulationTracker.finalGradeFromScore(score, maxScoreForGrade)
+                    : null);
+
             const payload = {
                 simulationId: simulationId,
                 simulationName: simulationName,
                 score,
                 flagsFound: data.flagsFound || [],
                 timeSpent,
+                timeSpentSeconds: timeSpent,
                 moduleName: data.moduleName || null,
                 moduleId,
                 attempts,
+                attemptsCount: attempts,
                 correctCount,
                 wrongCount,
+                successRate: data.successRate ?? data.success_rate,
+                wrongActionsCount: data.wrongActionsCount ?? data.wrong_actions_count ?? wrongCount,
+                hintUsedCount: data.hintUsedCount ?? data.hint_used_count ?? 0,
+                resetCount: data.resetCount ?? data.reset_count ?? 0,
+                stepCompletionTimes: data.stepCompletionTimes ?? data.step_completion_times,
+                finalGradeLabel: finalGrade,
                 passed,
                 runId
             };
+            if (maxScoreRaw != null && maxScoreRaw !== '' && !Number.isNaN(Number(maxScoreRaw))) {
+                payload.maxScore = Number(maxScoreRaw);
+            }
 
             try {
                 let result;

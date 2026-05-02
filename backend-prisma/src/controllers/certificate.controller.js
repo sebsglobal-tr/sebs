@@ -406,18 +406,24 @@ async function generateMetadata(userId, progress, category) {
     }
   }
 
-  const simulations = await prisma.simulationRun.findMany({
-    where: {
-      userId,
-      moduleId: { in: moduleIds }
-    }
-  });
+  const simulations =
+    moduleIds.length > 0
+      ? await prisma.simulationRun.findMany({
+            where: {
+              userId,
+              lessonId: { in: moduleIds }
+            }
+        })
+      : [];
 
   metadata.simulations = simulations.map(s => ({
     name: s.simulationId,
     score: s.score,
     timeSpent: s.timeSpent,
-    flagsFound: s.flagsFound.length
+    flagsFound: Array.isArray(s.flagsFound) ? s.flagsFound.length : 0,
+    maxScore: s.maxScore,
+    successRate: s.successRate != null ? Number(s.successRate) : null,
+    finalGradeLabel: s.finalGradeLabel
   }));
 
   // Get quiz results from module progress metadata

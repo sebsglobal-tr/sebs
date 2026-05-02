@@ -800,6 +800,10 @@
         let timeLeft = TOTAL_TIME;
         let timerInterval;
         let hintsUsed = 0;
+        let forensicsLabActive = false;
+        let forensicsWrongActions = 0;
+        const forensicsStepTimes = [];
+        let forensicsLastStepAt = 0;
         let currentDirectory = "/root";
         let commandHistory = [];
         let historyIndex = -1;
@@ -942,6 +946,10 @@
         function startSimulation() {
             document.getElementById('introOverlay').classList.add('hidden');
             document.getElementById('hud').style.display = 'flex';
+            forensicsLabActive = true;
+            forensicsWrongActions = 0;
+            forensicsStepTimes.length = 0;
+            forensicsLastStepAt = Date.now();
             updateHudStep();
             startTimer();
             var inp = document.getElementById('terminalInput');
@@ -1011,6 +1019,12 @@
 
         function completeStep(stepNum) {
             if (completedTasks.includes(stepNum)) return;
+            const now = Date.now();
+            forensicsStepTimes.push({
+                step: stepNum,
+                seconds: Math.round((now - forensicsLastStepAt) / 1000)
+            });
+            forensicsLastStepAt = now;
             completedTasks.push(stepNum);
             tasks[stepNum].completed = true;
             addTerminalSuccess("\n✓ Adım " + stepNum + " tamamlandı: " + tasks[stepNum].title);
@@ -1476,6 +1490,7 @@
         }
 
         function addTerminalError(text) {
+            if (forensicsLabActive) forensicsWrongActions += 1;
             const terminalContent = document.getElementById('terminalContent');
             const line = document.createElement('div');
             line.className = 'terminal-line';
@@ -1541,11 +1556,13 @@
             clearInterval(timerInterval);
             const modal = document.getElementById('modalOverlay');
             const description = document.getElementById('modalDescription');
-            const timeSpent = Math.floor((TOTAL_TIME - timeLeft) / 60);
+            const elapsedSec = Math.max(0, TOTAL_TIME - timeLeft);
+            const esM = Math.floor(elapsedSec / 60);
+            const esS = elapsedSec % 60;
             description.innerHTML = `
                 🏆 FORENSİK İNCELEME TAMAMLANDI 🏆<br><br>
                 Tüm 7 adımı doğru sırayla tamamladınız.<br>
-                <strong>Geçen süre:</strong> ${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}<br>
+                <strong>Geçen süre:</strong> ${esM}:${esS.toString().padStart(2, '0')}<br>
                 <strong>Kalan süre:</strong> ${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}<br><br>
                 🎉 Linux komut sırasını başarıyla uyguladınız!
             `;
@@ -1557,11 +1574,16 @@
                     'Linux Sunucu Forensik Lab',
                     {
                         score: Math.round((completedTasks.length / 7) * 100),
+                        maxScore: 100,
                         stepsCompleted: completedTasks.length,
-                        timeSpent: timeSpent * 60,
+                        timeSpent: elapsedSec,
                         moduleName: 'Temel Siber Güvenlik',
                         correctCount: completedTasks.length,
                         wrongCount: Math.max(0, 7 - completedTasks.length),
+                        wrongActionsCount: forensicsWrongActions,
+                        hintUsedCount: hintsUsed,
+                        resetCount: 0,
+                        stepCompletionTimes: forensicsStepTimes,
                         passed: completedTasks.length >= 7
                     }
                 );

@@ -291,7 +291,7 @@ export async function getUserDetails(req, res, next) {
     const simulationRuns = await prisma.simulationRun.findMany({
       where: { userId: user.id },
       include: {
-        module: {
+        lesson: {
           select: {
             title: true
           }
@@ -318,13 +318,17 @@ export async function getUserDetails(req, res, next) {
         recentSimulations: simulationRuns.map(s => ({
           id: s.id,
           simulationId: s.simulationId,
-          moduleTitle: s.module.title,
+          moduleTitle: s.lesson?.title ?? null,
           score: s.score,
+          maxScore: s.maxScore,
           timeSpent: s.timeSpent,
           attempts: s.attempts,
           decisionCount: s.decisionCount || 0,
           errorCount: s.errorCount || 0,
-          successRate: s.successRate ? Math.round(s.successRate * 100 * 10) / 10 : null,
+          wrongActionsCount: s.wrongActionsCount,
+          hintUsedCount: s.hintUsedCount,
+          finalGradeLabel: s.finalGradeLabel,
+          successRate: s.successRate != null ? Math.round(Number(s.successRate) * 10) / 10 : null,
           completedAt: s.completedAt,
           createdAt: s.createdAt
         }))

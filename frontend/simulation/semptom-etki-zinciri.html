@@ -854,8 +854,12 @@
     </div>
 
     <script>
-        const startTime = Date.now();
+        let simRunStartedAt = Date.now();
         let scores = { problemTanimi: 0, kesinYargi: 0, riskOncelik: 0, surecFarkindalik: 0 };
+        let septPhaseStart = Date.now();
+        let septPhaseIdx = 0;
+        let septWrongActions = 0;
+        const septStepTimes = [];
         const MIN_READS_FOR_DECISION = 2;
         /** Öğe ilk kez açıldığında (genişletildiğinde) okunmuş sayılır; rozet = okunmamış sayısı */
         const readIndices = {
@@ -1071,6 +1075,8 @@
         }
 
         function showActionPanel(phaseIndex) {
+            septPhaseIdx = phaseIndex;
+            septPhaseStart = Date.now();
             const phase = PHASES[phaseIndex];
             document.getElementById('actionPrompt').textContent = phase.prompt;
             const btns = document.getElementById('actionButtons');
@@ -1085,6 +1091,11 @@
 
         function handleAction(btn, phase) {
             const correct = btn.dataset.correct === 'true';
+            septStepTimes.push({
+                step: 'phase_' + septPhaseIdx,
+                seconds: Math.round((Date.now() - septPhaseStart) / 1000)
+            });
+            if (!correct) septWrongActions += 1;
             scores[phase.scoreKey] = correct ? 25 : 0;
 
             document.getElementById('actionPanel').classList.remove('show');
@@ -1143,11 +1154,16 @@
                 const wrongPhases = 4 - correctPhases;
                 window.SimulationTracker.saveCompletion('semptom-etki-zinciri', '6 Bilgi — Semptom-Etki Zinciri', {
                     score: total,
+                    maxScore: 100,
                     flagsFound: [],
-                    timeSpent: Math.round((Date.now() - startTime) / 1000),
+                    timeSpent: Math.round((Date.now() - simRunStartedAt) / 1000),
                     moduleName: 'Siber Güvenliğe Giriş',
                     correctCount: correctPhases,
                     wrongCount: wrongPhases,
+                    wrongActionsCount: septWrongActions,
+                    hintUsedCount: 0,
+                    resetCount: 0,
+                    stepCompletionTimes: septStepTimes,
                     passed: total >= 75
                 });
             }
@@ -1174,6 +1190,9 @@
         document.getElementById('btnStart').addEventListener('click', async () => {
             document.getElementById('introOverlay').classList.add('hidden');
             document.getElementById('desktop').classList.add('show');
+            simRunStartedAt = Date.now();
+            septWrongActions = 0;
+            septStepTimes.length = 0;
             if (window.SimulationTracker && window.SimulationTracker.recordStart) {
                 await window.SimulationTracker.recordStart('semptom-etki-zinciri', 'Semptom–Etki Zinciri', {
                     moduleName: 'Siber Güvenliğe Giriş'

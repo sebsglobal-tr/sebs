@@ -152,10 +152,20 @@ async function getSimulationResults(userId, category = null) {
 
     return simulations.map(sim => ({
       simulationId: sim.simulationId,
-      simulationName: sim.simulationName || sim.simulationId,
+      simulationName: sim.simulationId,
       score: sim.score || 0,
-      flagsFound: sim.flagsFound || 0,
+      maxScore: sim.maxScore,
+      successRate: sim.successRate != null ? Number(sim.successRate) : null,
+      flagsFound: sim.flagsFound || [],
       timeSpent: sim.timeSpent || 0,
+      correctCount: sim.correctCount,
+      wrongCount: sim.wrongCount,
+      wrongActionsCount: sim.wrongActionsCount,
+      hintUsedCount: sim.hintUsedCount,
+      resetCount: sim.resetCount,
+      stepCompletionTimes: sim.stepCompletionTimes,
+      finalGradeLabel: sim.finalGradeLabel,
+      passed: sim.passed,
       completedAt: sim.completedAt
     }));
   } catch (error) {

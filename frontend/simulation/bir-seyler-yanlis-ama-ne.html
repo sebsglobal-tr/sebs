@@ -554,6 +554,10 @@
         let historyIndex = -1;
         let startTime = Date.now();
         var simCompletionSaved = false;
+        var wrongCmdCount = 0;
+        var lastDecisionChoice = null;
+        var stageLegTimes = [];
+        var stageLegStart = Date.now();
 
         document.addEventListener('DOMContentLoaded', function () {
             if (window.SimulationTracker && window.SimulationTracker.recordStart) {
@@ -765,6 +769,11 @@ support  401  0.0  0.0  234  89 ?  S    10:25  0:00 sshd: support@pts/0`
 
         function completeStage(stageNum) {
             if (completedStages.includes(stageNum)) return;
+            stageLegTimes.push({
+                step: 'terminal_stage_' + stageNum,
+                seconds: Math.round((Date.now() - stageLegStart) / 1000)
+            });
+            stageLegStart = Date.now();
             completedStages.push(stageNum);
             updateTaskUI();
             updateProgress();
@@ -852,6 +861,7 @@ support  401  0.0  0.0  234  89 ?  S    10:25  0:00 sshd: support@pts/0`
         }
 
         function appendError(text) {
+            wrongCmdCount += 1;
             var content = document.getElementById('terminalContent');
             var line = document.createElement('div');
             line.className = 'terminal-line';
@@ -940,6 +950,7 @@ support  401  0.0  0.0  234  89 ?  S    10:25  0:00 sshd: support@pts/0`
             if (!btn) return;
             var choice = parseInt(btn.getAttribute('data-choice'), 10);
             if (!outcomes[choice]) return;
+            lastDecisionChoice = choice;
 
             document.getElementById('decisionModal').classList.remove('show');
             completedStages.push(5);
@@ -972,17 +983,23 @@ support  401  0.0  0.0  234  89 ?  S    10:25  0:00 sshd: support@pts/0`
             if (simCompletionSaved) return;
             var timeSpent = Math.round((Date.now() - startTime) / 1000);
             var uniqueDone = new Set(completedStages).size;
+            var wrongActions = wrongCmdCount + (lastDecisionChoice != null && lastDecisionChoice !== 2 ? 1 : 0);
             if (window.SimulationTracker) {
                 await window.SimulationTracker.saveCompletion(
                     'bir-seyler-yanlis-ama-ne',
                     'Bir Şeyler Yanlış Ama Ne?',
                     {
-                        score: Math.round((completedStages.length / TOTAL_STAGES) * 100),
+                        score: Math.round((uniqueDone / TOTAL_STAGES) * 100),
+                        maxScore: 100,
                         flagsFound: [],
                         timeSpent: timeSpent,
                         moduleName: 'Siber Güvenliğe Giriş',
                         correctCount: uniqueDone,
                         wrongCount: Math.max(0, TOTAL_STAGES - uniqueDone),
+                        wrongActionsCount: wrongActions,
+                        hintUsedCount: 0,
+                        resetCount: 0,
+                        stepCompletionTimes: stageLegTimes,
                         passed: uniqueDone >= TOTAL_STAGES
                     }
                 );

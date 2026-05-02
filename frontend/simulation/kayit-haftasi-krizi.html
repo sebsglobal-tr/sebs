@@ -1139,6 +1139,12 @@
         let decisions = []; // { event_id, question_id, selected_option }
         let scores = { varlik: 0, cia: 0, tehdit: 0, risk: 0, attackChain: 0, rapor: 0 };
         let startTime = Date.now();
+        let kayitPerf = { stepTimes: [], wrongActions: 0, phaseStarted: Date.now() };
+        function recordKayitStep(stepId) {
+            const sec = Math.round((Date.now() - kayitPerf.phaseStarted) / 1000);
+            kayitPerf.stepTimes.push({ step: stepId, seconds: sec });
+            kayitPerf.phaseStarted = Date.now();
+        }
 
         const TOTAL_EVENTS = 6;
 
@@ -1483,6 +1489,7 @@
 
         function goToEvent(id) {
             currentEventId = id;
+            kayitPerf.phaseStarted = Date.now();
             renderTimeline();
             renderEvent();
             renderQuestions();
@@ -1514,6 +1521,7 @@
                         eventScore += 5;
                         showFeedback(q.id, ev.feedbackCorrect || 'Doğru!', 'success');
                     } else {
+                        kayitPerf.wrongActions += 1;
                         showFeedback(q.id, 'Eksik veya yanlış seçim.', 'error');
                     }
                 } else if (q.type === 'free') {
@@ -1524,10 +1532,12 @@
                         scores.risk += 5;
                         showFeedback(q.id, ev.feedbackCorrect || 'Kabul edilebilir cevap.', 'success');
                     } else {
+                        kayitPerf.wrongActions += 1;
                         scores.risk += 2;
                         showFeedback(q.id, 'Admin erişimi = yüksek etki gibi bir ifade bekleniyordu.', 'partial');
                     }
                 } else if (q.type === 'single') {
+                    kayitPerf.wrongActions += 1;
                     showFeedback(q.id, 'Yanlış seçim. Doğrusu: ' + q.correct, 'error');
                 }
             });
@@ -1580,6 +1590,7 @@
             EXPLOIT_PAYLOAD_ITEMS.forEach((item, i) => {
                 if (exploitPayloadAnswers[i] === item.type) correct++;
             });
+            kayitPerf.wrongActions += Math.max(0, EXPLOIT_PAYLOAD_ITEMS.length - correct);
             scores.attackChain += Math.round((correct / EXPLOIT_PAYLOAD_ITEMS.length) * 5);
         }
 
@@ -1627,11 +1638,13 @@
             ATTACK_CHAIN_SLOTS.forEach((s, i) => {
                 if (attackChainAnswers[i] === s.correct) correct++;
             });
+            kayitPerf.wrongActions += Math.max(0, ATTACK_CHAIN_SLOTS.length - correct);
             scores.attackChain += Math.round((correct / ATTACK_CHAIN_SLOTS.length) * 10);
         }
 
         // Report & Result
         function showReport() {
+            kayitPerf.phaseStarted = Date.now();
             document.getElementById('screenReport').classList.add('show');
             document.getElementById('reportBulgu').value = 'Kayıt haftasında çoklu olay: form timeout, rapor karışıklığı, gece admin oturumu, zero-day iddiası, e-posta trafiği artışı, API rate limit aşımları.';
             document.getElementById('reportVarlik').value = 'Hizmet (başvuru formu, login API), Veri (raporlar, kimlik bilgileri), Sistem (admin panel)';
@@ -1674,6 +1687,8 @@
         document.getElementById('btnStartSimulation').addEventListener('click', async () => {
             document.getElementById('introOverlay').classList.add('hidden');
             currentState = STATE.EVENT;
+            startTime = Date.now();
+            kayitPerf = { stepTimes: [], wrongActions: 0, phaseStarted: Date.now() };
             goToEvent(1);
             setInterval(updateLiveTime, 1000);
             if (window.SimulationTracker && window.SimulationTracker.recordStart) {
@@ -1684,6 +1699,7 @@
         });
 
         document.getElementById('btnNext').addEventListener('click', () => {
+            recordKayitStep('event_' + currentEventId);
             gradeEvent();
 
             if (currentEventId < TOTAL_EVENTS) {
@@ -1691,13 +1707,17 @@
             } else {
                 document.getElementById('mainContainer').style.display = 'none';
                 document.getElementById('screenExploitPayload').classList.add('show');
+                kayitPerf.phaseStarted = Date.now();
+                showExploitPayload();
             }
         });
 
         document.getElementById('btnExploitPayloadNext').addEventListener('click', () => {
+            recordKayitStep('exploit_payload');
             gradeExploitPayload();
             document.getElementById('screenExploitPayload').classList.remove('show');
             document.getElementById('screenAttackChain').classList.add('show');
+            kayitPerf.phaseStarted = Date.now();
             showAttackChain();
         });
 
@@ -1707,6 +1727,7 @@
                 alert('Lütfen tüm aşamalara bir olay atayın. (Chip\'e tıklayın, sonra slot\'a tıklayın)');
                 return;
             }
+            recordKayitStep('attack_chain');
             gradeAttackChain();
             document.getElementById('screenAttackChain').classList.remove('show');
             showReport();
@@ -1714,6 +1735,7 @@
         });
 
         document.getElementById('btnReportSubmit').addEventListener('click', () => {
+            recordKayitStep('report');
             document.getElementById('screenReport').classList.remove('show');
             showResult();
         });
@@ -1733,11 +1755,16 @@
                     'Kayıt Haftası Krizi — Olay Analizi',
                     {
                         score: total,
+                        maxScore: 100,
                         flagsFound: [],
                         timeSpent: timeSpent,
                         moduleName: 'Siber Güvenliğe Giriş',
                         correctCount: bucket,
                         wrongCount: 10 - bucket,
+                        wrongActionsCount: kayitPerf.wrongActions,
+                        hintUsedCount: 0,
+                        resetCount: 0,
+                        stepCompletionTimes: kayitPerf.stepTimes,
                         passed: total >= 70
                     }
                 );

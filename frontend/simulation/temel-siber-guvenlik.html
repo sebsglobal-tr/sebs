@@ -784,9 +784,14 @@
         // Game State
         let currentTask = 1;
         let completedTasks = [];
-        let timeLeft = 30 * 60; // 30 minutes in seconds
+        const TOTAL_TIME = 30 * 60; // 30 minutes in seconds
+        let timeLeft = TOTAL_TIME;
         let timerInterval;
         let hintsUsed = 0;
+        let ctfLabActive = false;
+        let ctfWrongActions = 0;
+        let ctfT0 = 0;
+        const flagStepTimes = [];
         let foundFlags = [];
         let currentDirectory = "/root";
         let commandHistory = [];
@@ -1043,6 +1048,10 @@
 
         // Timer
         function startTimer() {
+            ctfLabActive = true;
+            ctfWrongActions = 0;
+            flagStepTimes.length = 0;
+            ctfT0 = Date.now();
             if (window.SimulationTracker && window.SimulationTracker.recordStart) {
                 window.SimulationTracker.recordStart('temel-siber-guvenlik-lab', 'Temel Siber Güvenlik Lab', {
                     moduleName: 'Temel Siber Güvenlik'
@@ -1248,7 +1257,10 @@
                 const flagMatch = file.content.match(/SEBS\{[^}]+\}/);
                 if (flagMatch && !foundFlags.includes(flagMatch[0])) {
                     const isFourthFlag = foundFlags.length === 3; // Before pushing new flag
-                    
+                    flagStepTimes.push({
+                        step: 'flag_' + (foundFlags.length + 1),
+                        seconds: Math.round((Date.now() - ctfT0) / 1000)
+                    });
                     foundFlags.push(flagMatch[0]);
                     checkFlag(flagMatch[0]);
                     
@@ -1256,6 +1268,10 @@
                     if (isFourthFlag && tasks[5] && !tasks[5].completed) {
                         // Award final flag
                         const finalFlag = 'SEBS{final-password-2024}';
+                        flagStepTimes.push({
+                            step: 'flag_' + (foundFlags.length + 1),
+                            seconds: Math.round((Date.now() - ctfT0) / 1000)
+                        });
                         foundFlags.push(finalFlag);
                         addTerminalSuccess(`\n🎉 Final flag bulundu: ${finalFlag}`);
                         // Complete final task
@@ -1350,7 +1366,10 @@
                         const flagMatch = decoded.match(/SEBS\{[^}]+\}/);
                         if (flagMatch && !foundFlags.includes(flagMatch[0])) {
                             const isFourthFlag = foundFlags.length === 3; // Before pushing new flag
-                            
+                            flagStepTimes.push({
+                                step: 'flag_' + (foundFlags.length + 1),
+                                seconds: Math.round((Date.now() - ctfT0) / 1000)
+                            });
                             foundFlags.push(flagMatch[0]);
                             checkFlag(flagMatch[0]);
                             
@@ -1358,6 +1377,10 @@
                             if (isFourthFlag && tasks[5] && !tasks[5].completed) {
                                 // Award final flag
                                 const finalFlag = 'SEBS{final-password-2024}';
+                                flagStepTimes.push({
+                                    step: 'flag_' + (foundFlags.length + 1),
+                                    seconds: Math.round((Date.now() - ctfT0) / 1000)
+                                });
                                 foundFlags.push(finalFlag);
                                 addTerminalSuccess(`\n🎉 Final flag bulundu: ${finalFlag}`);
                                 // Complete final task
@@ -1455,6 +1478,7 @@
         }
 
         function addTerminalError(text) {
+            if (ctfLabActive) ctfWrongActions += 1;
             const terminalContent = document.getElementById('terminalContent');
             const line = document.createElement('div');
             line.className = 'terminal-line';
@@ -1611,7 +1635,9 @@
             const modal = document.getElementById('modalOverlay');
             const description = document.getElementById('modalDescription');
             
-            const timeSpent = Math.floor((TOTAL_TIME - timeLeft) / 60); // minutes
+            const elapsedSec = Math.max(0, TOTAL_TIME - timeLeft);
+            const timeSpentMin = Math.floor(elapsedSec / 60);
+            const timeSpentSecRem = elapsedSec % 60;
             const score = Math.round((foundFlags.length / 5) * 100);
             
             description.innerHTML = `
@@ -1621,7 +1647,7 @@
                 <strong>Tamamlanan Görevler:</strong> 5/5<br>
                 <strong>Kullanılan İpuçları:</strong> ${hintsUsed}<br>
                 <strong>Kalan Süre:</strong> ${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}<br>
-                <strong>Geçen Süre:</strong> ${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}<br><br>
+                <strong>Geçen Süre:</strong> ${timeSpentMin}:${timeSpentSecRem.toString().padStart(2, '0')}<br><br>
                 🎉 Gerçek bir Linux expert'siniz!
             `;
             modal.style.display = 'flex';
@@ -1633,11 +1659,16 @@
                     'Temel Siber Güvenlik Lab',
                     {
                         score: score,
+                        maxScore: 100,
                         flagsFound: foundFlags,
-                        timeSpent: timeSpent * 60, // seconds
+                        timeSpent: elapsedSec,
                         moduleName: 'Temel Siber Güvenlik',
                         correctCount: foundFlags.length,
                         wrongCount: Math.max(0, 5 - foundFlags.length),
+                        wrongActionsCount: ctfWrongActions,
+                        hintUsedCount: hintsUsed,
+                        resetCount: 0,
+                        stepCompletionTimes: flagStepTimes,
                         passed: foundFlags.length >= 5
                     }
                 );
