@@ -173,9 +173,17 @@
                         <p class="mt-1 text-sm text-slate-600">Tamamladıkça ilerleme ve sertifika kayıtlarınız burada görünür.</p>
                     </div>
                 </div>
-                <a href="/modules.html" class="inline-flex shrink-0 items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:ml-auto">
-                    Eğitim modülleri
-                </a>
+                <div class="flex shrink-0 flex-wrap gap-2 sm:ml-auto">
+                    <a href="/modules.html" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">
+                        Eğitim modülleri
+                    </a>
+                    <a href="/simulations.html" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring">
+                        Simülasyonlar
+                    </a>
+                    <a href="#simulationHistorySection" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus-ring">
+                        Simülasyon geçmişi
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -438,6 +446,7 @@
                 return userMePromise;
             }
 
+            userMePromise = (async function fetchUserMeOnce() {
             // Önce Supabase'den kullanıcı bilgilerini al
             try {
                 if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
@@ -515,6 +524,11 @@
             } catch (error) {
                 console.error('getUserMe error:', error);
                 return null;
+            }
+            })();
+
+            try {
+                return await userMePromise;
             } finally {
                 userMePromise = null;
             }
@@ -593,14 +607,9 @@
                     loadingOverlay.style.display = 'none';
                 }
                 
-                // Load user info
                 await loadUserInfo();
-                
-                // Load purchases
-                await loadPurchases();
-                
-                // Load progress
-                await loadProgress();
+                // Paketler ve ilerleme birbirini beklemesin; /users/me yavaşsa simülasyon listesi gecikmesin
+                await Promise.all([loadPurchases(), loadProgress()]);
 
                 document.addEventListener('visibilitychange', function onVis() {
                     if (document.visibilityState !== 'visible') return;
@@ -1013,15 +1022,19 @@
                 var epRes = await fetch(getApiBaseUrl() + '/simulations/runs', {
                     headers: { Authorization: 'Bearer ' + token }
                 });
-                if (!epRes.ok) return null;
+                if (!epRes.ok) {
+                    console.warn('[SEBS] GET /simulations/runs HTTP', epRes.status, '(backend deploy veya oturum kontrolü)');
+                    return null;
+                }
                 var epJson = await epRes.json().catch(function () {
                     return null;
                 });
                 if (epJson && epJson.success && epJson.data && Array.isArray(epJson.data.simulationRuns)) {
                     return epJson.data.simulationRuns;
                 }
+                console.warn('[SEBS] /simulations/runs beklenmeyen gövde');
             } catch (epErr) {
-                console.warn('simulations/runs:', epErr);
+                console.warn('[SEBS] simulations/runs ağı:', epErr);
             }
             return null;
         }
@@ -1055,7 +1068,7 @@
                             overviewOk = !!(progressData && progressData.success && progressData.data);
                         } else if (progressResponse.status === 401) {
                             console.warn(
-                                'progress/overview 401 — oturum yenilenemiyorsa yeniden giriş yapın; giriş yapılmış hesapta yalnızca sunucu verisi gösterilir.'
+                                '[SEBS] progress/overview 401 — oturum yenilenemiyorsa yeniden giriş yapın; giriş yapılmış hesapta yalnızca sunucu verisi gösterilir.'
                             );
                             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                                 window.supabaseAuthSystem.supabase.auth
@@ -1070,6 +1083,7 @@
                                     .catch(function () {});
                             }
                         } else {
+                            console.warn('[SEBS] GET /progress/overview HTTP', progressResponse.status);
                             var errorData = await progressResponse.json().catch(function () {
                                 return {};
                             });
@@ -1162,6 +1176,17 @@
                         simulationRuns = fromEp;
                     }
                 }
+
+                console.info('[SEBS] İlerleme yüklendi', {
+                    api: getApiBaseUrl(),
+                    overviewOk: overviewOk,
+                    modülSayısı: modules.length,
+                    simülasyonKaydı: simulationRuns.length,
+                    ipucu:
+                        token && overviewOk && modules.length === 0 && simulationRuns.length === 0
+                            ? 'Sunucu bu hesap için kayıt döndürmedi; simülasyonu giriş yapılmış sekmede bitirip kaydetmeyi deneyin veya Ağ sekmesinde simulations/start ve complete yanıtlarına bakın.'
+                            : ''
+                });
 
                 // Sunucu boş döndüyse aynı cihazdaki local ilerlemeyi "fallback" olarak göster.
                 // Böylece kullanıcı kendi cihazında boş panel görmez; sunucu verisi geldiyse her zaman önceliklidir.
