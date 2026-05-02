@@ -193,7 +193,7 @@
                     : data.time_spent_seconds != null
                       ? Number(data.time_spent_seconds)
                       : data.timeSpent || 0;
-            const attempts = data.attemptsCount ?? data.attempts_count ?? data.attempts || 1;
+            const attempts = (data.attemptsCount ?? data.attempts_count ?? data.attempts) || 1;
             const correctCount =
                 data.correctCount != null ? Math.max(0, parseInt(String(data.correctCount), 10) || 0) : 0;
             const wrongCount =
