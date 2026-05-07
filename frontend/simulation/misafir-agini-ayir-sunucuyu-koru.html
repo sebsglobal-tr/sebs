@@ -132,6 +132,24 @@
     function say(t, m="warn"){ msgEl.textContent=t; msgEl.className=`msg show ${m}`; clearTimeout(say.t); say.t=setTimeout(()=>msgEl.className="msg",2200); }
     function ip(type, z){ c[type]++; if(type==="router") return z==="employee"?"192.168.10.1":"192.168.20.1"; if(type==="pc") return `192.168.10.${10+c[type]}`; if(type==="server") return "192.168.10.100"; if(type==="switch") return "192.168.10.2"; if(type==="ap") return "192.168.20.2"; if(type==="laptop") return "192.168.20.10"; return "0.0.0.0"; }
     function connected(a,b){ return links.some(l=>(l.a===a&&l.b===b)||(l.a===b&&l.b===a)); }
+    function handleConnectPick(id){
+      if (!src) {
+        src = id;
+        say("İlk cihaz seçildi. Şimdi hedef cihaza tıkla.", "ok");
+        render();
+        return;
+      }
+      if (src !== id && !connected(src, id)) {
+        links.push({ a: src, b: id });
+        say("Bağlantı eklendi.", "ok");
+      } else if (src === id) {
+        say("Aynı cihaz seçildi, farklı bir hedef seç.", "warn");
+      } else {
+        say("Bu iki cihaz zaten bağlı.", "warn");
+      }
+      src = null;
+      update();
+    }
     function mark(n,ok){ const t=document.querySelector(`[data-task="${n}"]`); if(ok)t.classList.add("ok"); else t.classList.remove("ok"); }
     function render(){
       workspace.querySelectorAll(".node").forEach(n=>n.remove());
@@ -140,7 +158,7 @@
         const e=document.createElement("div"); e.className=`node ${d.zone==="employee"?"emp":"guest"}`; if(src===d.id)e.classList.add("sel");
         e.style.left=`${d.x}px`; e.style.top=`${d.y}px`; e.dataset.id=d.id;
         e.innerHTML=`<div class="ico">${icon[d.type]}</div><div class="nt">${label[d.type]}</div><div class="ip">${d.ip}</div>`;
-        e.addEventListener("mousedown",(ev)=>{ if(connectMode){ if(!src) src=d.id; else if(src!==d.id && !connected(src,d.id)) links.push({a:src,b:d.id}); src=null; update(); return; } moving={id:d.id,ox:ev.offsetX,oy:ev.offsetY}; });
+        e.addEventListener("mousedown",(ev)=>{ if(connectMode){ handleConnectPick(d.id); return; } moving={id:d.id,ox:ev.offsetX,oy:ev.offsetY}; });
         workspace.appendChild(e);
       });
       links.forEach(l=>{ const a=devices.find(d=>d.id===l.a), b=devices.find(d=>d.id===l.b); if(!a||!b)return; const line=document.createElementNS("http://www.w3.org/2000/svg","line"); line.setAttribute("x1",a.x+44); line.setAttribute("y1",a.y+24); line.setAttribute("x2",b.x+44); line.setAttribute("y2",b.y+24); line.setAttribute("stroke","#22c55e"); line.setAttribute("stroke-width","3"); linksSvg.appendChild(line);});
