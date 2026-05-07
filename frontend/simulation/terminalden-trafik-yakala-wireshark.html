@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="/" />
+  <title>SEBS Network Lab 3 - Trafik Yakala ve Wireshark ile İncele</title>
+  <meta name="description" content="SEBS Network Lab 3: terminalde tcpdump ile pcap kaydet, Wireshark filtreleriyle analiz et." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .top { height: 68px; background: #111827; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+    .title { font-size: 18px; font-weight: 800; color: #fff; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .badge { border: 1px solid #475569; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #bfdbfe; }
+    .btn { border: 1px solid #475569; border-radius: 8px; background: #1e293b; color: #fff; padding: 8px 12px; font-weight: 600; cursor: pointer; }
+    .layout { height: calc(100vh - 68px); display: grid; grid-template-columns: 1.2fr 1fr 360px; }
+    .panel { background: #111827; border-right: 1px solid #334155; padding: 12px; overflow: auto; }
+    .panel.right { border-right: none; border-left: 1px solid #334155; }
+    .group { color: #93c5fd; font-size: 12px; text-transform: uppercase; margin: 8px 0; }
+    .terminal { background: #020617; border: 1px solid #334155; border-radius: 12px; padding: 10px; min-height: 340px; max-height: 55vh; overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.55; }
+    .line { color: #cbd5e1; white-space: pre-wrap; }
+    .line.cmd { color: #86efac; }
+    .cmdrow { display: flex; gap: 8px; margin-top: 10px; }
+    .input { flex: 1; background: #0b1220; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; padding: 10px; font-family: "JetBrains Mono", monospace; }
+    .hint { color: #94a3b8; font-size: 12px; margin-top: 8px; line-height: 1.5; }
+    .wbox { background: #0b1220; border: 1px solid #334155; border-radius: 12px; padding: 12px; }
+    .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .chip { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 12px; color: #cbd5e1; }
+    .task { border: 1px solid #334155; border-radius: 10px; padding: 9px; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
+    .task.ok { border-color: #16a34a; background: rgba(22,163,74,.15); color: #dcfce7; }
+    .msg { position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px; z-index: 30; min-width: 420px; max-width: 84vw; border-radius: 10px; border: 1px solid #334155; padding: 10px 12px; background: #0b1220; opacity: 0; transition: opacity .2s; pointer-events: none; }
+    .msg.show { opacity: 1; }
+    .msg.ok { border-color: #16a34a; color: #dcfce7; }
+    .msg.warn { border-color: #f59e0b; color: #fef3c7; }
+    .intro { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,23,.9); display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .intro-card { max-width: 900px; width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 20px; }
+    .intro-card h1 { margin: 0 0 10px; font-size: 28px; color: #fff; }
+    .intro-card p { color: #94a3b8; line-height: 1.6; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="title">SEBS Network Lab 3 · Terminalden Trafik Yakala ve Wireshark ile İncele</div>
+    <div class="actions">
+      <span class="badge" id="stageBadge">Aşama 1/3 · Kurulum</span>
+      <button class="btn" id="testBtn">Test Et</button>
+      <button class="btn" id="resetBtn">Sıfırla</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="panel">
+      <div class="group">Terminal (tcpdump)</div>
+      <div class="terminal" id="terminalOut"></div>
+      <div class="cmdrow">
+        <input id="terminalInput" class="input" placeholder="Komut gir (ör: sudo apt update)" />
+        <button class="btn" id="runBtn">Çalıştır</button>
+      </div>
+      <div class="hint">
+        Örnek akış: <code>sudo apt update</code> → <code>sudo apt install -y wireshark tcpdump</code> → <code>ip addr</code> →
+        <code>sudo tcpdump -i eth0 -w sebs_lab3_capture.pcap</code> → ping/nslookup/curl → <code>CTRL + C</code>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="group">Wireshark Analiz Ekranı</div>
+      <div class="wbox">
+        <div style="font-weight:700;color:#fff;">PCAP Dosyası</div>
+        <div id="pcapState" style="font-size:13px;color:#94a3b8;margin-top:4px;">Henüz dosya yok.</div>
+        <div class="kpi">
+          <div class="chip">ICMP: <strong id="icmpCount">0</strong></div>
+          <div class="chip">DNS: <strong id="dnsCount">0</strong></div>
+          <div class="chip">HTTP: <strong id="httpCount">0</strong></div>
+          <div class="chip">TCP: <strong id="tcpCount">0</strong></div>
+        </div>
+        <div style="margin-top:10px;">
+          <input id="filterInput" class="input" placeholder="Filtre yaz (icmp / dns / http / ip.addr == 192.168.10.100)" />
+          <button class="btn" id="applyFilterBtn" style="margin-top:8px;">Filtreyi Uygula</button>
+        </div>
+        <div id="filterResult" style="margin-top:8px;font-size:12px;color:#94a3b8;">Filtre sonucu burada görünür.</div>
+      </div>
+    </section>
+
+    <aside class="panel right">
+      <div class="group">Görevler</div>
+      <div class="task" data-task="1">1) Paket listesini güncelle (`apt update`)</div>
+      <div class="task" data-task="2">2) Wireshark + tcpdump kur</div>
+      <div class="task" data-task="3">3) Sürüm kontrollerini yap</div>
+      <div class="task" data-task="4">4) Ağ arayüzlerini görüntüle</div>
+      <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat</div>
+      <div class="task" data-task="6">6) ping / nslookup / curl trafiği üret</div>
+      <div class="task" data-task="7">7) Yakalamayı CTRL + C ile durdur</div>
+      <div class="task" data-task="8">8) pcap dosyasını doğrula</div>
+      <div class="task" data-task="9">9) Wireshark filtrelerini uygula (icmp,dns,http,ip.addr)</div>
+      <div class="task" data-task="10">10) Testi başarıyla geç</div>
+    </aside>
+  </div>
+
+  <div class="msg" id="msg"></div>
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <h1>SEBS Network Lab 3: Terminalden Trafik Yakala ve Wireshark ile İncele</h1>
+      <p>Bu labda kendi eğitim ortamındaki trafiği terminalde `tcpdump` ile yakalayacak, `.pcap` dosyasına kaydedecek ve Wireshark filtreleriyle analiz edeceksin.</p>
+      <p><strong style="color:#bfdbfe;">Aşama 1:</strong> Kurulum ve arayüz keşfi. <strong style="color:#bfdbfe;">Aşama 2:</strong> Trafik yakalama + test trafiği üretme. <strong style="color:#bfdbfe;">Aşama 3:</strong> PCAP dosyasını filtrelerle analiz etme.</p>
+      <button class="btn" id="startBtn" style="background:#2563eb;border-color:#2563eb;">Simülasyonu Başlat</button>
+      <a href="/simulations.html" class="btn" style="text-decoration:none;margin-left:6px;display:inline-block;">Simülasyonlara Dön</a>
+    </div>
+  </div>
+
+  <script>
+    const out = document.getElementById("terminalOut");
+    const input = document.getElementById("terminalInput");
+    const runBtn = document.getElementById("runBtn");
+    const stageBadge = document.getElementById("stageBadge");
+    const pcapState = document.getElementById("pcapState");
+    const msg = document.getElementById("msg");
+    const intro = document.getElementById("intro");
+    const filterInput = document.getElementById("filterInput");
+    const filterResult = document.getElementById("filterResult");
+    const applyFilterBtn = document.getElementById("applyFilterBtn");
+    const testBtn = document.getElementById("testBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const counts = {
+      icmp: document.getElementById("icmpCount"),
+      dns: document.getElementById("dnsCount"),
+      http: document.getElementById("httpCount"),
+      tcp: document.getElementById("tcpCount")
+    };
+
+    const state = {
+      updated: false, installed: false, wsVer: false, tdVer: false, iface: false,
+      captureStarted: false, captureStopped: false, pcapCreated: false,
+      captureIface: "", wrongIface: false,
+      ping: false, dns: false, http: false, lsPcap: false, filePcap: false,
+      filters: { icmp: false, dns: false, http: false, ip: false },
+      packets: { icmp: 0, dns: 0, http: 0, tcp: 0 },
+      stage: 1
+    };
+
+    function say(text, mode = "warn") {
+      msg.textContent = text;
+      msg.className = `msg show ${mode}`;
+      clearTimeout(say.t);
+      say.t = setTimeout(() => msg.className = "msg", 2200);
+    }
+    function line(text, cls = "") {
+      const d = document.createElement("div");
+      d.className = `line ${cls}`;
+      d.textContent = text;
+      out.appendChild(d);
+      out.scrollTop = out.scrollHeight;
+    }
+    function markTask(n, ok) {
+      const t = document.querySelector(`[data-task="${n}"]`);
+      if (ok) t.classList.add("ok");
+      else t.classList.remove("ok");
+    }
+    function refreshTasks() {
+      markTask(1, state.updated);
+      markTask(2, state.installed);
+      markTask(3, state.wsVer && state.tdVer);
+      markTask(4, state.iface);
+      markTask(5, state.captureStarted);
+      markTask(6, state.ping && state.dns && state.http);
+      markTask(7, state.captureStopped);
+      markTask(8, state.pcapCreated && state.lsPcap);
+      markTask(9, state.filters.icmp && state.filters.dns && state.filters.http && state.filters.ip);
+      counts.icmp.textContent = String(state.packets.icmp);
+      counts.dns.textContent = String(state.packets.dns);
+      counts.http.textContent = String(state.packets.http);
+      counts.tcp.textContent = String(state.packets.tcp);
+      if ([1,2,3,4].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"))) {
+        state.stage = Math.max(state.stage, 2);
+        stageBadge.textContent = "Aşama 2/3 · Trafik Yakalama";
+      }
+      if ([5,6,7,8].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"))) {
+        state.stage = Math.max(state.stage, 3);
+        stageBadge.textContent = "Aşama 3/3 · Wireshark Analizi";
+      }
+    }
+    function runCommand(raw) {
+      const cmd = raw.trim();
+      if (!cmd) return;
+      line(`$ ${cmd}`, "cmd");
+
+      if (cmd === "CTRL + C" || cmd.toLowerCase() === "ctrl+c") {
+        if (!state.captureStarted) {
+          line("tcpdump aktif değil.");
+        } else {
+          state.captureStarted = false;
+          state.captureStopped = true;
+          state.pcapCreated = (state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp) > 0;
+          line("^C");
+          line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets captured`);
+          pcapState.textContent = state.pcapCreated ? "sebs_lab3_capture.pcap oluşturuldu." : "Dosya oluştu ancak paket yok.";
+        }
+        refreshTasks();
+        return;
+      }
+
+      if (cmd.includes("apt update")) {
+        state.updated = true;
+        line("Get:1 sebs-lab package index updated");
+      } else if (cmd.includes("apt install") && cmd.includes("wireshark") && cmd.includes("tcpdump")) {
+        state.installed = true;
+        line("wireshark and tcpdump installed successfully.");
+      } else if (cmd === "wireshark --version") {
+        state.wsVer = true;
+        line("Wireshark 4.0.2");
+      } else if (cmd === "tcpdump --version") {
+        state.tdVer = true;
+        line("tcpdump version 4.99.3");
+      } else if (cmd === "ip addr" || cmd === "ip link show") {
+        state.iface = true;
+        line("1: lo: ...");
+        line("2: eth0: inet 192.168.10.15/24");
+      } else if (cmd.startsWith("sudo tcpdump -i") && cmd.includes("-w sebs_lab3_capture.pcap")) {
+        if (!state.installed) {
+          line("tcpdump: command not found");
+        } else {
+          const m = cmd.match(/-i\s+([a-zA-Z0-9._-]+)/);
+          state.captureIface = m ? m[1] : "";
+          state.wrongIface = state.captureIface !== "eth0";
+          state.captureStarted = true;
+          state.captureStopped = false;
+          line(`tcpdump: listening on ${state.captureIface || "unknown"}, link-type EN10MB...`);
+          if (state.wrongIface) {
+            line("UYARI: Bu lab için beklenen arayüz eth0.");
+            say("Yanlış arayüz seçildi. eth0 dinlemen gerekiyor.", "warn");
+          }
+        }
+      } else if (cmd.startsWith("ping -c 4")) {
+        state.ping = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.icmp += 8; state.packets.tcp += 0; }
+        line("4 packets transmitted, 4 received");
+      } else if (cmd.startsWith("nslookup")) {
+        state.dns = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.dns += 2; state.packets.tcp += 1; }
+        line("Name: sebs.local");
+        line("Address: 192.168.10.100");
+      } else if (cmd.startsWith("curl ")) {
+        state.http = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.http += 2; state.packets.tcp += 6; }
+        line("HTTP/1.1 200 OK");
+      } else if (cmd === "ls -lh sebs_lab3_capture.pcap") {
+        state.lsPcap = state.pcapCreated;
+        line(state.pcapCreated ? "-rw-r--r-- 1 student student 28K sebs_lab3_capture.pcap" : "ls: cannot access 'sebs_lab3_capture.pcap': No such file");
+      } else if (cmd === "file sebs_lab3_capture.pcap") {
+        state.filePcap = state.pcapCreated;
+        line(state.pcapCreated ? "sebs_lab3_capture.pcap: tcpdump capture file" : "cannot open");
+      } else if (cmd === "wireshark sebs_lab3_capture.pcap") {
+        line(state.pcapCreated ? "Wireshark GUI opened with sebs_lab3_capture.pcap" : "File not found.");
+      } else {
+        line("Komut tanınmadı veya bu lab için beklenen akış dışında.");
+      }
+
+      if (state.pcapCreated) {
+        pcapState.textContent = state.wrongIface
+          ? `sebs_lab3_capture.pcap oluştu fakat ${state.captureIface} arayüzünde trafik yetersiz.`
+          : "sebs_lab3_capture.pcap hazır. Wireshark ile analiz edebilirsin.";
+      }
+      refreshTasks();
+    }
+    function applyFilter() {
+      const f = filterInput.value.trim();
+      if (!state.pcapCreated) {
+        filterResult.textContent = "Önce pcap dosyası oluşturulmalı.";
+        say("Önce tcpdump ile pcap dosyası üret.", "warn");
+        return;
+      }
+      if (f === "icmp") {
+        state.filters.icmp = state.packets.icmp > 0;
+        filterResult.textContent = `icmp filtre sonucu: ${state.packets.icmp} paket`;
+      } else if (f === "dns") {
+        state.filters.dns = state.packets.dns > 0;
+        filterResult.textContent = `dns filtre sonucu: ${state.packets.dns} paket`;
+      } else if (f === "http") {
+        state.filters.http = state.packets.http > 0;
+        filterResult.textContent = `http filtre sonucu: ${state.packets.http} paket`;
+      } else if (f === "ip.addr == 192.168.10.100") {
+        state.filters.ip = (state.packets.http + state.packets.icmp + state.packets.tcp) > 0;
+        filterResult.textContent = "Sunucuya ait trafik filtrelendi.";
+      } else {
+        filterResult.textContent = "Bu filter bu labda değerlendirme dışı.";
+      }
+      refreshTasks();
+    }
+
+    runBtn.addEventListener("click", () => { runCommand(input.value); input.value = ""; input.focus(); });
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") { runBtn.click(); } });
+    applyFilterBtn.addEventListener("click", applyFilter);
+    testBtn.addEventListener("click", () => {
+      if (state.wrongIface) {
+        say("Test başarısız: yanlış arayüz dinlenmiş. eth0 ile tekrar yakala.", "warn");
+        return;
+      }
+      const ok = [1,2,3,4,5,6,7,8,9].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"));
+      if (!ok) {
+        say("Test başarısız: görevlerde eksik var.");
+        return;
+      }
+      markTask(10, true);
+      say("Lab 3 başarıyla tamamlandı.", "ok");
+    });
+    resetBtn.addEventListener("click", () => location.reload());
+    document.getElementById("startBtn").addEventListener("click", () => {
+      intro.style.display = "none";
+      line("SEBS Lab 3 ortamına hoş geldiniz.");
+      line("İlk adım: sudo apt update");
+    });
+  </script>
+</body>
+</html>
