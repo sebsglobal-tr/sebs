@@ -173,6 +173,7 @@
     const progressText = document.getElementById("progressText");
     let history = [];
     let historyIndex = -1;
+    let commandRunning = false;
     const counts = {
       icmp: document.getElementById("icmpCount"),
       dns: document.getElementById("dnsCount"),
@@ -214,6 +215,50 @@
       if (active) out.insertBefore(d, active);
       else out.appendChild(d);
       out.scrollTop = out.scrollHeight;
+    }
+    function runCommandWithAnimation(cmd) {
+      if (commandRunning) {
+        say("Önceki komut halen çalışıyor.", "warn");
+        return;
+      }
+      commandRunning = true;
+      const terminalInput = document.getElementById("terminalInput");
+      terminalInput.contentEditable = "false";
+
+      if (cmd.includes("apt update")) {
+        line("Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease");
+        line("Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]");
+        line("Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]");
+        line("Reading package lists... Done");
+      }
+      if (cmd.includes("apt install") && cmd.includes("wireshark") && cmd.includes("tcpdump")) {
+        line("Reading package lists... Done");
+        line("Building dependency tree... Done");
+        line("Reading state information... Done");
+        line("The following NEW packages will be installed:");
+        line("  tcpdump wireshark wireshark-common libwireshark16");
+        line("0 upgraded, 4 newly installed, 0 to remove and 12 not upgraded.");
+        line("Need to get 14.2 MB of archives.");
+        line("After this operation, 58.1 MB of additional disk space will be used.");
+        line("Get:1 http://archive.ubuntu.com/ubuntu jammy/main tcpdump amd64 4.99.1-1 [467 kB]");
+        line("Get:2 http://archive.ubuntu.com/ubuntu jammy/universe wireshark amd64 4.0.6 [13.6 MB]");
+        line("Fetched 14.2 MB in 2s (7,610 kB/s)");
+        line("Selecting previously unselected package tcpdump...");
+        line("Selecting previously unselected package wireshark...");
+        line("Unpacking tcpdump...");
+        line("Unpacking wireshark...");
+        line("Setting up tcpdump...");
+        line("Setting up wireshark...");
+        line("Processing triggers for man-db...");
+      }
+
+      const delay = cmd.includes("apt install") ? 500 : cmd.includes("apt update") ? 350 : 220;
+      window.setTimeout(() => {
+        runCommand(cmd, false);
+        commandRunning = false;
+        terminalInput.contentEditable = "true";
+        focusInput();
+      }, delay);
     }
     function focusInput() {
       const el = document.getElementById("terminalInput");
@@ -382,22 +427,24 @@
     terminalInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
+        if (commandRunning) return;
         const cmd = terminalInput.textContent.trim();
         if (!cmd) return;
         history.push(cmd);
         historyIndex = history.length;
         commandLine("analyst@sebs-lab3:~$", cmd);
         terminalInput.textContent = "";
-        runCommand(cmd, false);
-        focusInput();
+        runCommandWithAnimation(cmd);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
+        if (commandRunning) return;
         if (!history.length) return;
         historyIndex = Math.max(0, historyIndex - 1);
         terminalInput.textContent = history[historyIndex] || "";
         focusInput();
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
+        if (commandRunning) return;
         if (!history.length) return;
         historyIndex = Math.min(history.length, historyIndex + 1);
         terminalInput.textContent = history[historyIndex] || "";
