@@ -3069,6 +3069,14 @@ app.get('*', (req, res, next) => {
     if (fs.existsSync(filePath) && filePath.endsWith('.html')) {
         return res.sendFile(filePath);
     }
+    const htmlFallbackPath = `${filePath}.html`;
+    if (fs.existsSync(htmlFallbackPath)) {
+        return res.sendFile(htmlFallbackPath);
+    }
+    const indexFallbackPath = path.join(filePath, 'index.html');
+    if (fs.existsSync(indexFallbackPath)) {
+        return res.sendFile(indexFallbackPath);
+    }
     res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 

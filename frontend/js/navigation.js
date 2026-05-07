@@ -75,6 +75,9 @@
         if (path.includes('/simulation/')) {
             return 'simulations';
         }
+        if (path === '/blog' || path.startsWith('/blog/')) {
+            return 'blog';
+        }
         
         return page;
     }
