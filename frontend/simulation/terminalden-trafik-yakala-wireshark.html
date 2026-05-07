@@ -34,10 +34,20 @@
     .dots { display: flex; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot.r { background: #ef4444; } .dot.y { background: #f59e0b; } .dot.g { background: #22c55e; }
-    .terminal { border: none; border-radius: 0; padding: 12px; height: calc(100% - 96px); overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.55; background: transparent; }
+    .terminal { border: none; border-radius: 0; padding: 12px; height: calc(100% - 52px); overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.55; background: transparent; }
     .line { color: #cbd5e1; white-space: pre-wrap; }
     .line.cmd { color: #67e8f9; }
-    .cmdrow { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #1e293b; background: #06101d; }
+    .terminal-line { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 2px; }
+    .terminal-prompt { color: #22d3ee; font-weight: 600; flex-shrink: 0; }
+    .terminal-input {
+      min-width: 260px;
+      outline: none;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1;
+    }
+    .terminal-input:empty::before { content: ""; }
     .input { flex: 1; background: #020617; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; padding: 10px; font-family: "JetBrains Mono", monospace; }
     .hint { color: #64748b; font-size: 11px; padding: 0 12px 8px; line-height: 1.4; }
     .task-float {
@@ -85,10 +95,11 @@
         <div>SSH — analyst@sebs-lab3-terminal:/bin/bash</div>
         <div></div>
       </div>
-      <div class="terminal" id="terminalOut"></div>
-      <div class="cmdrow">
-        <input id="terminalInput" class="input" placeholder="Komut gir (ör: sudo apt update)" />
-        <button class="btn" id="runBtn">Çalıştır</button>
+      <div class="terminal" id="terminalOut">
+        <div class="terminal-line" id="activeLine">
+          <span class="terminal-prompt" id="currentPrompt">analyst@sebs-lab3:~$</span>
+          <span class="terminal-input" id="terminalInput" contenteditable="true"></span>
+        </div>
       </div>
       <div class="hint">
         Örnek akış: <code>sudo apt update</code> → <code>sudo apt install -y wireshark tcpdump</code> → <code>ip addr</code> →
@@ -148,8 +159,6 @@
 
   <script>
     const out = document.getElementById("terminalOut");
-    const input = document.getElementById("terminalInput");
-    const runBtn = document.getElementById("runBtn");
     const stageBadge = document.getElementById("stageBadge");
     const pcapState = document.getElementById("pcapState");
     const wiresharkPanel = document.getElementById("wiresharkPanel");
@@ -162,6 +171,8 @@
     const testBtn = document.getElementById("testBtn");
     const resetBtn = document.getElementById("resetBtn");
     const progressText = document.getElementById("progressText");
+    let history = [];
+    let historyIndex = -1;
     const counts = {
       icmp: document.getElementById("icmpCount"),
       dns: document.getElementById("dnsCount"),
@@ -190,8 +201,30 @@
       const d = document.createElement("div");
       d.className = `line ${cls}`;
       d.textContent = text;
-      out.appendChild(d);
+      const active = document.getElementById("activeLine");
+      if (active) out.insertBefore(d, active);
+      else out.appendChild(d);
       out.scrollTop = out.scrollHeight;
+    }
+    function commandLine(prompt, command) {
+      const d = document.createElement("div");
+      d.className = "terminal-line";
+      d.innerHTML = `<span class="terminal-prompt">${prompt}</span><span class="line cmd">${command}</span>`;
+      const active = document.getElementById("activeLine");
+      if (active) out.insertBefore(d, active);
+      else out.appendChild(d);
+      out.scrollTop = out.scrollHeight;
+    }
+    function focusInput() {
+      const el = document.getElementById("terminalInput");
+      if (!el) return;
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
     function markTask(n, ok) {
       const t = document.querySelector(`[data-task="${n}"]`);
@@ -223,10 +256,10 @@
         stageBadge.textContent = "Aşama 3/3 · Wireshark Analizi";
       }
     }
-    function runCommand(raw) {
+    function runCommand(raw, echo = true) {
       const cmd = raw.trim();
       if (!cmd) return;
-      line(`$ ${cmd}`, "cmd");
+      if (echo) line(`$ ${cmd}`, "cmd");
 
       if (cmd === "CTRL + C" || cmd.toLowerCase() === "ctrl+c") {
         if (!state.captureStarted) {
@@ -345,8 +378,32 @@
       refreshTasks();
     }
 
-    runBtn.addEventListener("click", () => { runCommand(input.value); input.value = ""; input.focus(); });
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") { runBtn.click(); } });
+    const terminalInput = document.getElementById("terminalInput");
+    terminalInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const cmd = terminalInput.textContent.trim();
+        if (!cmd) return;
+        history.push(cmd);
+        historyIndex = history.length;
+        commandLine("analyst@sebs-lab3:~$", cmd);
+        terminalInput.textContent = "";
+        runCommand(cmd, false);
+        focusInput();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!history.length) return;
+        historyIndex = Math.max(0, historyIndex - 1);
+        terminalInput.textContent = history[historyIndex] || "";
+        focusInput();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (!history.length) return;
+        historyIndex = Math.min(history.length, historyIndex + 1);
+        terminalInput.textContent = history[historyIndex] || "";
+        focusInput();
+      }
+    });
     applyFilterBtn.addEventListener("click", applyFilter);
     testBtn.addEventListener("click", () => {
       if (state.wrongIface) {
@@ -366,6 +423,7 @@
       intro.style.display = "none";
       line("SEBS Lab 3 ortamına hoş geldiniz.");
       line("İlk adım: sudo apt update");
+      focusInput();
     });
   </script>
 </body>
