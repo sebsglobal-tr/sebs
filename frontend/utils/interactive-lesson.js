@@ -1,6 +1,3 @@
-/**
- * Interaktif ders öğeleri: Accordion, flip kartlar, reveal, sekmeler
- */
 (function() {
   'use strict';
 
@@ -19,7 +16,6 @@
     initTabs();
   }
 
-  /** Terimler tablosunu flip kartlara çevir */
   function initFlipCardsFromGlossary() {
     const blocks = document.querySelectorAll('.terimler-block');
     blocks.forEach(block => {
@@ -58,7 +54,6 @@
     });
   }
 
-  /** .accordion-block öğelerini etkinleştir */
   function initAccordions() {
     document.querySelectorAll('.accordion-block').forEach(block => {
       const trigger = block.querySelector('.accordion-trigger');
@@ -69,7 +64,6 @@
     });
   }
 
-  /** .reveal-card öğelerini etkinleştir */
   function initRevealCards() {
     document.querySelectorAll('.reveal-card').forEach(card => {
       const btn = card.querySelector('.reveal-trigger');
@@ -81,7 +75,6 @@
     });
   }
 
-  /** .tabs-container sekmelerini etkinleştir */
   function initTabs() {
     document.querySelectorAll('.tabs-container').forEach(container => {
       const nav = container.querySelector('.tabs-nav');

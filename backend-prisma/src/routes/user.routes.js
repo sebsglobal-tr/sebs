@@ -1,4 +1,3 @@
-// User Routes
 import express from 'express';
 import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 import { prisma } from '../server.js';

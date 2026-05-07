@@ -1,12 +1,7 @@
-// Certificate Generator
-// Generates beautiful HTML/PDF certificates
 
 export async function generateCertificate(certificate, user) {
-  // Generate beautiful HTML certificate
   const html = generateCertificateHTML(certificate, user);
   
-  // For now, return HTML. Later can convert to PDF using puppeteer
-  // Save to public/certificates folder
   const filename = `certificate-${certificate.id}.html`;
   const url = `/certificates/${filename}`;
   

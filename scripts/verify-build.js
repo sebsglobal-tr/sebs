@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-/**
- * Production build doğrulama — sunucu modülü yüklenebilmeli (listen başlamaz).
- */
 process.env.SKIP_ENV_VALIDATION = '1';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

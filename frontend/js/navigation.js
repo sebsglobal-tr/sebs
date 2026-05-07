@@ -1,8 +1,3 @@
-// ============================================
-// STANDART NAVİGASYON BİLEŞENİ
-// ============================================
-// Tüm sayfalarda tutarlı navigasyon sağlar
-// Aktif sayfa tespiti, giriş durumuna göre menü güncelleme ve hamburger menü yönetimi
 
 (function ensureSignupNavCta() {
     if (typeof window === 'undefined' || window.sebsApplySignupNavCta) return;
@@ -15,8 +10,6 @@
         var signupBtn = document.getElementById('signupBtn');
         if (signupBtn) {
             if (loggedIn) {
-                // Girisli durumda yonlendirme profil/isim kutusundan yapilir.
-                // "Panel" CTA'sini gizleyerek nav'i sade tutariz.
                 signupBtn.style.display = 'none';
             } else {
                 signupBtn.setAttribute('href', '/signup.html');
@@ -65,30 +58,20 @@
         }
     }
 
-    // ============================================
-    // YARDIMCI FONKSİYONLAR
-    // ============================================
     
-    // URL'den mevcut sayfa adını al
-    // Hangi sayfada olduğumuzu tespit eder
     function getCurrentPage() {
         const path = window.location.pathname;
         let page = path.split('/').pop().replace('.html', '') || 'index'; // URL'den sayfa adını çıkar
         
-        // Modül sayfalarını işle - modules/ alt klasöründe bulunurlar
         if (path.includes('/modules/')) {
-            // Modül sayfaları için navigasyonda 'modules' olarak gösterilmesi gerekir
-            // Ancak gerçek sayfa adı başka amaçlar için saklanır
             const isModuleContentPage = path.includes('/modules/') && 
                                        !path.endsWith('modules.html') &&
                                        !path.endsWith('modules/');
             if (isModuleContentPage) {
-                // Bu bir modül içerik sayfası, navigasyonda 'modules' aktif gösterilmeli
                 return 'modules';
             }
         }
 
-        // Simülasyon oyun sayfaları — navigasyonda Simulations aktif
         if (path.includes('/simulation/')) {
             return 'simulations';
         }
@@ -96,7 +79,6 @@
         return page;
     }
 
-    // Kullanıcının giriş yapıp yapmadığını kontrol et (Supabase)
     async function isLoggedIn() {
         try {
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
@@ -112,10 +94,8 @@
         }
     }
 
-    // Kullanıcı verilerini getir (Supabase)
     async function getUserData() {
         try {
-            // Supabase'den kullanıcı bilgilerini al
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                 const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
                 
@@ -138,33 +118,24 @@
                 }
             }
             
-            // Fallback: localStorage'dan al (eski sistem için)
             const userData = localStorage.getItem('userData');
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
             console.warn('getUserData error:', error);
-            // Fallback: localStorage'dan al
             const userData = localStorage.getItem('userData');
             return userData ? JSON.parse(userData) : null;
         }
     }
 
-    // ============================================
-    // NAVİGASYON GÜNCELLEME FONKSİYONU
-    // ============================================
-    // Mevcut sayfa ve giriş durumuna göre navigasyonu günceller
-    // Aktif link, giriş/çıkış butonları, kullanıcı profil bilgilerini günceller
     async function updateNavigation() {
         const currentPage = getCurrentPage();
         const loggedIn = await isLoggedIn();
         const userData = await getUserData();
         
-        // Aktif link'i güncelle (mevcut sayfaya göre)
         document.querySelectorAll('.nav-link').forEach(link => {
             const href = link.getAttribute('href') || '';
             const linkPage = link.getAttribute('data-page') || 
                            href.replace(/\.html$/, '').replace(/^\.\.\//, '').replace(/^\//, '') || '';
-            // Link mevcut sayfa ile eşleşiyorsa 'active' class'ı ekle
             if (linkPage === currentPage || 
                 (currentPage === 'index' && linkPage === '') ||
                 (currentPage === 'index' && link.getAttribute('href') === 'index.html')) {
@@ -174,7 +145,6 @@
             }
         });
 
-        // Giriş/çıkış butonlarını güncelle
         const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const dashboardBtn = document.getElementById('dashboardBtn');
@@ -247,7 +217,6 @@
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'none';
             if (mobileUserLinks) mobileUserLinks.style.display = 'block';
         } else {
-            // Kullanıcı giriş yapmamışsa
             if (loginBtn) loginBtn.style.removeProperty('display');
             if (logoutBtn) logoutBtn.style.display = 'none';
             if (dashboardBtn) dashboardBtn.style.display = 'none';
@@ -264,19 +233,12 @@
             window.sebsApplySignupNavCta(loggedIn, navCtaUser);
         }
 
-        // Ana sayfa vb.: .js-auth-only sadece giriş yapmış (doğrulanmış) kullanıcıya
         document.querySelectorAll('.js-auth-only').forEach(function(el) {
             el.style.display = loggedIn ? '' : 'none';
         });
 
-        // Tüm navigasyon linkleri root-relative (/index.html, /modules.html) kullanmalı;
-        // alt dizinlerde (modules/, auth/, simulation/) doğru çalışır.
     }
 
-    // ============================================
-    // HAMBURGER MENÜ YÖNETİMİ
-    // ============================================
-    // Mobil cihazlar için hamburger menü açma/kapatma işlevselliği
     function initHamburgerMenu() {
         const hamburger = document.querySelector('.hamburger');
         const navPanel = document.querySelector('#navPanel') || document.querySelector('.nav-panel');
@@ -381,10 +343,6 @@
         }
     }
 
-    // ============================================
-    // ÇIKIŞ FONKSİYONU
-    // ============================================
-    // Kullanıcı çıkış işlemi - Supabase'den çıkış yapar ve localStorage'ı temizler
     window.logout = async function() {
         function scheduleReload() {
             setTimeout(function () {
@@ -430,16 +388,11 @@
         scheduleReload();
     };
 
-    // Modüller sayfasına yönlendirme fonksiyonu
     window.redirectToModules = function(event) {
         if (event) event.preventDefault(); // Varsayılan link davranışını engelle
         window.location.href = '/modules.html';
     };
 
-    // ============================================
-    // DARK MODE DESTEĞİ
-    // ============================================
-    // Dark mode toggle fonksiyonu
     function initDarkModeToggle() {
         const darkModeToggle = document.getElementById('darkModeToggle');
         const darkModeIcon = document.getElementById('darkModeIcon');
@@ -447,14 +400,12 @@
         
         if (!darkModeToggle) return;
         
-        // Kaydedilmiş tema kontrolü
         const savedTheme = localStorage.getItem('theme') || 'light';
         if (savedTheme === 'dark') {
             html.setAttribute('data-theme', 'dark');
             if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
         }
         
-        // Toggle event listener
         darkModeToggle.addEventListener('click', function() {
             const currentTheme = html.getAttribute('data-theme');
             if (currentTheme === 'dark') {
@@ -469,32 +420,23 @@
         });
     }
 
-    // ============================================
-    // BAŞLATMA
-    // ============================================
-    // DOM hazır olduğunda navigasyonu başlat
-    // DOM yüklenme durumunu kontrol et
     async function initNavigation() {
         ensurePremiumExperienceAssets();
-        // Supabase yüklenmesini bekle
         if (typeof window.initSupabase !== 'undefined') {
             try {
                 await window.initSupabase();
-                // SupabaseAuthSystem'in yüklenmesini bekle
                 let attempts = 0;
                 while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                     attempts++;
                 }
                 
-                // Auth state listener'ı kur
                 setupAuthStateListener();
             } catch (error) {
                 console.warn('Supabase init error in navigation:', error);
             }
         }
         
-        // Navigasyonu güncelle
         await updateNavigation();
         document.querySelectorAll('.saas-footer-year').forEach(function(el) {
             el.textContent = String(new Date().getFullYear());
@@ -502,18 +444,12 @@
         initHamburgerMenu();
         initDarkModeToggle();
         
-        // Logout button event listener'larını ekle
         setupLogoutButtons();
     }
     
-    // ============================================
-    // LOGOUT BUTTON SETUP
-    // ============================================
-    // Tüm logout butonlarına event listener ekler
     function setupLogoutButtons() {
         const logoutButtons = document.querySelectorAll('.btn-logout, #logoutBtn');
         logoutButtons.forEach(btn => {
-            // Eğer zaten listener eklenmişse tekrar ekleme
             if (!btn.hasAttribute('data-logout-listener')) {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -528,24 +464,19 @@
     }
     
     if (document.readyState === 'loading') {
-        // DOM henüz yükleniyorsa, yüklendiğinde başlat
         document.addEventListener('DOMContentLoaded', function() {
             initNavigation();
         });
     } else {
-        // DOM zaten yüklenmişse hemen başlat
         initNavigation();
     }
 
-    // Giriş durumu değiştiğinde navigasyonu güncelle
-    // Başka bir sekmede giriş/çıkış yapıldığında bu sekmede de güncelleme yapılır
     window.addEventListener('storage', async function(e) {
         if (e.key === 'isLoggedIn' || e.key === 'userData' || e.key === 'authToken') {
             await updateNavigation();
         }
     });
     
-    // Sayfa focus olduğunda session'ı kontrol et (sayfa değişikliklerinde)
     window.addEventListener('focus', async function() {
         if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
             try {
@@ -557,7 +488,6 @@
         }
     });
     
-    // Visibility change event (tab değişikliklerinde)
     document.addEventListener('visibilitychange', async function() {
         if (!document.hidden && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
             try {
@@ -569,11 +499,8 @@
         }
     });
     
-    // Supabase auth state değişikliklerini dinle
-    // Bu listener'ı initNavigation içinde de ekleyeceğiz
     function setupAuthStateListener() {
         if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-            // Eğer zaten listener varsa tekrar ekleme
             if (!window.supabaseAuthSystem._navListenerAdded) {
                 window.supabaseAuthSystem.supabase.auth.onAuthStateChange(async (event, session) => {
                     console.log('🔔 Navigation: Auth state changed:', event);
@@ -582,7 +509,6 @@
                 window.supabaseAuthSystem._navListenerAdded = true;
             }
         } else {
-            // SupabaseAuthSystem henüz yüklenmediyse, yüklendiğinde dinle
             const checkSupabase = setInterval(() => {
                 if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                     clearInterval(checkSupabase);
@@ -596,18 +522,12 @@
                 }
             }, 500);
             
-            // 10 saniye sonra timeout
             setTimeout(() => clearInterval(checkSupabase), 10000);
         }
     }
     
-    // Auth state listener'ı kur
     setupAuthStateListener();
     
-    // ============================================
-    // NAVBAR SCROLL EFFECT
-    // ============================================
-    // Scroll yapıldığında navbar'ın görünümünü günceller
     let scrollTicking = false;
     let lastScrollY = window.pageYOffset || window.scrollY;
     
@@ -634,7 +554,6 @@
         }
     }, { passive: true });
     
-    // İlk yüklemede kontrol et
     updateNavbarOnScroll();
 
 })();

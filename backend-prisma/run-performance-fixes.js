@@ -1,22 +1,3 @@
-/**
- * Run Performance Fixes Migration
- * 
- * This script runs the performance fixes migration to:
- * 1. Add missing index for foreign key
- * 2. Optionally remove unused indexes (review remove_unused_indexes.sql first)
- * 
- * Usage:
- *   node backend/run-performance-fixes.js
- * 
- * Environment variables required:
- *   - DATABASE_URL or DIRECT_URL (connection string)
- * 
- * Note: This script requires the 'pg' package. Install it with:
- *   npm install pg
- * 
- * Alternatively, you can run the SQL files directly in Supabase SQL Editor
- * or using psql command line tool.
- */
 
 import { Pool } from 'pg';
 import fs from 'fs';
@@ -28,7 +9,6 @@ import dotenv from 'dotenv';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load environment variables
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const pool = new Pool({
@@ -44,7 +24,6 @@ async function runMigration() {
   try {
     console.log('🚀 Starting performance fixes migration...\n');
     
-    // Read the comprehensive migration file
     const migrationPath = path.join(__dirname, 'migrations', 'fix_all_performance_issues.sql');
     const migrationSQL = fs.readFileSync(migrationPath, 'utf8');
     
@@ -56,7 +35,6 @@ async function runMigration() {
     
     console.log('✅ Migration completed successfully!\n');
     
-    // Verify the index was created
     console.log('🔍 Verifying index creation...');
     const indexCheck = await client.query(`
       SELECT indexname, indexdef 
@@ -74,7 +52,6 @@ async function runMigration() {
       console.log('   This might mean the table or foreign key doesn\'t exist yet.\n');
     }
     
-    // Get statistics on unused indexes
     console.log('📊 Checking for unused indexes...');
     const unusedIndexes = await client.query(`
       SELECT 
@@ -101,7 +78,6 @@ async function runMigration() {
       console.log('✅ No unused indexes found (or statistics need updating - run ANALYZE)');
     }
     
-    // Update statistics
     console.log('\n📊 Updating PostgreSQL statistics...');
     await client.query('ANALYZE;');
     console.log('✅ Statistics updated\n');
@@ -125,7 +101,6 @@ async function runMigration() {
   }
 }
 
-// Run the migration
 runMigration().catch(error => {
   console.error('❌ Fatal error:', error);
   process.exit(1);

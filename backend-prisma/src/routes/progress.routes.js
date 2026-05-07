@@ -1,4 +1,3 @@
-// Progress Routes
 import express from 'express';
 import { saveProgress, getProgress, getModuleProgress, updateTimeSpent, saveQuizResult, getProgressOverview, syncProgress, logLogin } from '../controllers/progress.controller.js';
 import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';

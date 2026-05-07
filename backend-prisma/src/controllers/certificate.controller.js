@@ -1,10 +1,8 @@
-// Certificate Controller
 import { prisma } from '../server.js';
 import { generateCertificate } from '../utils/certificate-generator.js';
 import { generateAdvancedAIReport } from '../utils/ai-reporter.js';
 import { generateAIReport } from '../utils/real-ai-service.js';
 
-// Get user certificates
 export async function getUserCertificates(req, res, next) {
   try {
     const { publicId } = req.user;
@@ -28,7 +26,6 @@ export async function getUserCertificates(req, res, next) {
   }
 }
 
-// Generate certificate for completed category
 export async function generateCategoryCertificate(req, res, next) {
   try {
     const { publicId } = req.user;
@@ -39,7 +36,6 @@ export async function generateCategoryCertificate(req, res, next) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Check if certificate already exists
     const existingCertificate = await prisma.certificate.findFirst({
       where: {
         userId: user.id,
@@ -55,11 +51,9 @@ export async function generateCategoryCertificate(req, res, next) {
       });
     }
 
-    // Get user progress for this category
     const categoryModules = await getCategoryModules(category);
     const userProgress = await getUserProgressForCategory(user.id, categoryModules);
     
-    // Check if all required modules/simulations are completed
     const isComplete = checkCategoryCompletion(userProgress, category);
 
     if (!isComplete.complete) {
@@ -73,13 +67,10 @@ export async function generateCategoryCertificate(req, res, next) {
       });
     }
 
-    // Calculate total completion time
     const completionTime = calculateCompletionTime(userProgress);
 
-    // Generate metadata (for AI reporting)
     const metadata = generateMetadata(userProgress);
 
-    // Create certificate
     const certificate = await prisma.certificate.create({
       data: {
         userId: user.id,
@@ -92,10 +83,8 @@ export async function generateCategoryCertificate(req, res, next) {
       }
     });
 
-    // Generate PDF certificate
     const pdfUrl = await generateCertificate(certificate, user);
 
-    // Update certificate with PDF URL
     const updatedCertificate = await prisma.certificate.update({
       where: { id: certificate.id },
       data: { certificateUrl: pdfUrl }
@@ -111,7 +100,6 @@ export async function generateCategoryCertificate(req, res, next) {
   }
 }
 
-// Check and auto-generate certificate if category completed
 export async function checkCategoryCompletion(req, res, next) {
   try {
     const { publicId } = req.user;
@@ -122,18 +110,13 @@ export async function checkCategoryCompletion(req, res, next) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Get category modules
     const modules = await getCategoryModules(category);
     
-    // Get user progress
     const progress = await getUserProgressForCategory(user.id, modules);
     
-    // Check completion
     const completion = checkCategoryCompletionStatus(progress, category);
 
-    // If complete, generate certificate
     if (completion.complete) {
-      // Check if certificate already exists
       const existing = await prisma.certificate.findFirst({
         where: {
           userId: user.id,
@@ -142,7 +125,6 @@ export async function checkCategoryCompletion(req, res, next) {
       });
 
       if (!existing) {
-        // Generate certificate
         const completionTime = calculateCompletionTime(progress);
         const metadata = await generateMetadata(user.id, progress, category);
 
@@ -158,7 +140,6 @@ export async function checkCategoryCompletion(req, res, next) {
           }
         });
 
-        // Generate PDF
         const pdfUrl = await generateCertificate(certificate, user);
         await prisma.certificate.update({
           where: { id: certificate.id },
@@ -195,7 +176,6 @@ export async function checkCategoryCompletion(req, res, next) {
   }
 }
 
-// Get AI report for certificate
 export async function getCertificateReport(req, res, next) {
   try {
     const { publicId } = req.user;
@@ -217,13 +197,11 @@ export async function getCertificateReport(req, res, next) {
       return res.status(404).json({ success: false, message: 'Certificate not found' });
     }
 
-    // Generate advanced AI report
     const metadata = JSON.parse(certificate.metadata || '{}');
     
     console.log('📊 Generating AI report for certificate:', certificateId);
     console.log('📋 Metadata:', JSON.stringify(metadata, null, 2));
     
-    // Get additional user progress data
     const userProgress = await prisma.moduleProgress.findMany({
       where: { userId: user.id },
       include: {
@@ -240,7 +218,6 @@ export async function getCertificateReport(req, res, next) {
     
     console.log('📈 User progress:', userProgress.length, 'modules');
     
-    // Prepare user data for AI analysis
     const userData = {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
@@ -248,21 +225,17 @@ export async function getCertificateReport(req, res, next) {
       accessLevel: user.accessLevel || 'beginner'
     };
     
-    // Try to generate real AI report first, fallback to pattern-based
     let report;
     try {
-      // Try real AI service (OpenAI if configured)
       report = await generateAIReport(userData, certificate, metadata);
       console.log('✅ AI report generated successfully');
     } catch (aiError) {
       console.error('❌ AI report error, using fallback:', aiError.message);
-      // Fallback to pattern-based analysis
     try {
       report = generateAdvancedAIReport(certificate, metadata, userProgress);
         console.log('✅ Fallback report generated successfully');
     } catch (reportError) {
         console.error('❌ Fallback report error:', reportError);
-        // Final fallback
       report = {
         summary: 'Rapor oluşturulurken bir hata oluştu.',
         strengths: [],
@@ -282,7 +255,6 @@ export async function getCertificateReport(req, res, next) {
   }
 }
 
-// Helper functions
 async function getCategoryModules(category) {
   const categoryMap = {
     'siber-guvenlik': [
@@ -308,11 +280,9 @@ async function getCategoryModules(category) {
 }
 
 async function getUserProgressForCategory(userId, modules) {
-  // Get progress from database (ModuleProgress table)
   const progress = [];
   
   for (const moduleName of modules) {
-    // Find module by title in courses
     const module = await prisma.module.findFirst({
       where: {
         title: moduleName
@@ -374,7 +344,6 @@ function checkCategoryCompletionStatus(progress, category) {
 }
 
 function calculateCompletionTime(progress) {
-  // Sum all time spent in minutes
   return progress.reduce((total, p) => total + (p.timeSpentMinutes || 0), 0);
 }
 
@@ -393,7 +362,6 @@ async function generateMetadata(userId, progress, category) {
     totalTime: calculateCompletionTime(progress)
   };
 
-  // Get simulation runs for this category
   const modules = await getCategoryModules(category);
   const moduleIds = [];
   
@@ -426,7 +394,6 @@ async function generateMetadata(userId, progress, category) {
     finalGradeLabel: s.finalGradeLabel
   }));
 
-  // Get quiz results from module progress metadata
   for (const moduleProgress of progress) {
     if (moduleProgress.moduleId) {
       const mp = await prisma.moduleProgress.findFirst({
@@ -443,13 +410,11 @@ async function generateMetadata(userId, progress, category) {
             metadata.quizResults.push(...moduleMetadata.quizResults);
           }
         } catch (e) {
-          // Ignore parse errors
         }
       }
     }
   }
 
-  // Calculate average score
   const allScores = [
     ...metadata.simulations.map(s => s.score || 0),
     ...metadata.quizResults.map(q => q.score || 0)
@@ -461,7 +426,6 @@ async function generateMetadata(userId, progress, category) {
     );
   }
 
-  // Extract errors from wrong answers
   metadata.errors = metadata.quizResults
     .flatMap(q => q.wrongAnswers || [])
     .filter((v, i, a) => a.indexOf(v) === i); // unique

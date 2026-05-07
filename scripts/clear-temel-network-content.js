@@ -1,8 +1,3 @@
-/**
- * Clears all lesson content from Temel Network module.
- * Keeps: layout, sidebar, section headers, lesson controls.
- * Replaces content with placeholder.
- */
 const fs = require('fs');
 const path = require('path');
 
@@ -69,13 +64,10 @@ function replaceSorularBlock(html) {
   );
 }
 
-// First handle terimler-block (glossary) - replace entire block content
 html = replaceTerimlerBlock(html);
 
-// Then replace section-inner content
 html = replaceSectionInnerContent(html);
 
-// Handle sorular-block (quiz sections)
 html = replaceSorularBlock(html);
 
 fs.writeFileSync(filePath, html, 'utf8');

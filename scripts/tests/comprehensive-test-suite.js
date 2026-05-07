@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-/**
- * SEBS Global - Comprehensive Test Suite
- * Proje Test Uzmanı Raporu
- * Tüm sistem bileşenlerini test eder ve raporlar
- */
 
 const http = require('http');
 const https = require('https');
@@ -15,7 +10,6 @@ require('dotenv').config();
 const API_BASE = process.env.API_BASE || 'http://localhost:8006';
 const TEST_TIMEOUT = 10000;
 
-// Test Results
 const testResults = {
     passed: [],
     failed: [],
@@ -30,7 +24,6 @@ const testResults = {
     }
 };
 
-// Colors
 const colors = {
     reset: '\x1b[0m',
     green: '\x1b[32m',
@@ -74,7 +67,6 @@ function addResult(category, test, status, message = '') {
     }
 }
 
-// HTTP Request Helper
 function makeRequest(url, options = {}) {
     return new Promise((resolve, reject) => {
         const urlObj = new URL(url);
@@ -114,20 +106,15 @@ function makeRequest(url, options = {}) {
     });
 }
 
-// ============================================
-// 1. ENVIRONMENT & CONFIGURATION TESTS
-// ============================================
 function testEnvironment() {
     logSection('1. ENVIRONMENT & CONFIGURATION TESTS');
     
-    // .env file
     if (fs.existsSync('.env')) {
         addResult('Environment', '.env file exists', 'passed');
     } else {
         addResult('Environment', '.env file exists', 'failed', 'File not found');
     }
     
-    // Critical environment variables
     const requiredVars = ['JWT_SECRET', 'DATABASE_URL'];
     requiredVars.forEach(varName => {
         if (process.env[varName]) {
@@ -137,7 +124,6 @@ function testEnvironment() {
         }
     });
     
-    // Node version
     const nodeVersion = process.version;
     const majorVersion = parseInt(nodeVersion.split('.')[0].substring(1));
     if (majorVersion >= 14) {
@@ -147,9 +133,6 @@ function testEnvironment() {
     }
 }
 
-// ============================================
-// 2. FILE STRUCTURE TESTS
-// ============================================
 function testFileStructure() {
     logSection('2. FILE STRUCTURE TESTS');
     
@@ -180,9 +163,6 @@ function testFileStructure() {
     });
 }
 
-// ============================================
-// 3. DATABASE CONNECTION TESTS
-// ============================================
 async function testDatabase() {
     logSection('3. DATABASE CONNECTION TESTS');
     
@@ -193,13 +173,11 @@ async function testDatabase() {
             max: 1
         });
         
-        // Test connection
         const result = await pool.query('SELECT NOW(), version(), current_database()');
         addResult('Database', 'Connection', 'passed', 'Connected successfully');
         addResult('Database', 'PostgreSQL version', 'passed', result.rows[0].version.split(' ')[0] + ' ' + result.rows[0].version.split(' ')[1]);
         addResult('Database', 'Database name', 'passed', result.rows[0].current_database);
         
-        // Test tables
         const tablesResult = await pool.query(`
             SELECT COUNT(*) as count 
             FROM information_schema.tables 
@@ -208,7 +186,6 @@ async function testDatabase() {
         const tableCount = parseInt(tablesResult.rows[0].count);
         addResult('Database', 'Tables count', 'passed', `${tableCount} tables`);
         
-        // Test critical tables
         const criticalTables = ['users', 'modules', 'courses', 'enrollments', 'certificates'];
         for (const table of criticalTables) {
             try {
@@ -235,9 +212,6 @@ async function testDatabase() {
     }
 }
 
-// ============================================
-// 4. API ENDPOINT TESTS
-// ============================================
 async function testAPIEndpoints() {
     logSection('4. API ENDPOINT TESTS');
     
@@ -322,9 +296,6 @@ async function testAPIEndpoints() {
     }
 }
 
-// ============================================
-// 5. SERVER HEALTH TESTS
-// ============================================
 async function testServerHealth() {
     logSection('5. SERVER HEALTH TESTS');
     
@@ -358,13 +329,9 @@ async function testServerHealth() {
     }
 }
 
-// ============================================
-// 6. SECURITY TESTS
-// ============================================
 function testSecurity() {
     logSection('6. SECURITY TESTS');
     
-    // Check for hardcoded secrets
     const filesToCheck = ['backend/server.js', 'frontend/utils/api-client.js'];
     let foundSecrets = false;
     
@@ -390,7 +357,6 @@ function testSecurity() {
         addResult('Security', 'No hardcoded secrets', 'passed');
     }
     
-    // Check .gitignore
     if (fs.existsSync('.gitignore')) {
         const gitignore = fs.readFileSync('.gitignore', 'utf8');
         if (gitignore.includes('.env')) {
@@ -400,7 +366,6 @@ function testSecurity() {
         }
     }
     
-    // Check JWT_SECRET strength
     if (process.env.JWT_SECRET) {
         if (process.env.JWT_SECRET.length >= 32) {
             addResult('Security', 'JWT_SECRET strength', 'passed', 'Strong enough');
@@ -410,9 +375,6 @@ function testSecurity() {
     }
 }
 
-// ============================================
-// 7. PERFORMANCE TESTS
-// ============================================
 async function testPerformance() {
     logSection('7. PERFORMANCE TESTS');
     
@@ -437,13 +399,9 @@ async function testPerformance() {
     }
 }
 
-// ============================================
-// 8. ERROR HANDLING TESTS
-// ============================================
 async function testErrorHandling() {
     logSection('8. ERROR HANDLING TESTS');
     
-    // Test 404
     try {
         const response = await makeRequest(`${API_BASE}/api/nonexistent`);
         if (response.status === 404) {
@@ -455,7 +413,6 @@ async function testErrorHandling() {
         addResult('Error Handling', '404 handling', 'error', error.message);
     }
     
-    // Test invalid JSON
     try {
         const response = await makeRequest(`${API_BASE}/api/auth/register`, {
             method: 'POST',
@@ -472,9 +429,6 @@ async function testErrorHandling() {
     }
 }
 
-// ============================================
-// 9. FRONTEND FILES TESTS
-// ============================================
 function testFrontendFiles() {
     logSection('9. FRONTEND FILES TESTS');
     
@@ -493,7 +447,6 @@ function testFrontendFiles() {
         if (fs.existsSync(file)) {
             const content = fs.readFileSync(file, 'utf8');
             
-            // Check for basic HTML structure
             if (content.includes('<!DOCTYPE html') || content.includes('<html')) {
                 addResult('Frontend', file, 'passed');
             } else {
@@ -505,13 +458,9 @@ function testFrontendFiles() {
     });
 }
 
-// ============================================
-// 10. MODULES & SIMULATIONS TESTS
-// ============================================
 function testModulesAndSimulations() {
     logSection('10. MODULES & SIMULATIONS TESTS');
     
-    // Check modules directory
     if (fs.existsSync('modules')) {
         const modules = fs.readdirSync('modules').filter(f => f.endsWith('.html'));
         addResult('Modules', 'Modules directory', 'passed', `${modules.length} files`);
@@ -519,7 +468,6 @@ function testModulesAndSimulations() {
         addResult('Modules', 'Modules directory', 'failed', 'Not found');
     }
     
-    // Check simulations directory
     if (fs.existsSync('simulation')) {
         const sims = fs.readdirSync('simulation').filter(f => f.endsWith('.html'));
         addResult('Simulations', 'Simulations directory', 'passed', `${sims.length} files`);
@@ -528,9 +476,6 @@ function testModulesAndSimulations() {
     }
 }
 
-// ============================================
-// MAIN EXECUTION
-// ============================================
 async function runAllTests() {
     console.log('\n');
     log('╔═══════════════════════════════════════════════════════════════╗', 'cyan');
@@ -550,7 +495,6 @@ async function runAllTests() {
     testFrontendFiles();
     testModulesAndSimulations();
     
-    // Summary
     logSection('TEST SUMMARY');
     
     log(`Toplam Test: ${testResults.summary.total}`, 'cyan');
@@ -562,7 +506,6 @@ async function runAllTests() {
     const successRate = ((testResults.summary.passed / testResults.summary.total) * 100).toFixed(1);
     log(`\nBaşarı Oranı: ${successRate}%`, successRate >= 80 ? 'green' : 'yellow');
     
-    // Save report
     const report = {
         timestamp: new Date().toISOString(),
         summary: testResults.summary,
@@ -577,11 +520,9 @@ async function runAllTests() {
     fs.writeFileSync('test-report.json', JSON.stringify(report, null, 2));
     log('\n📄 Test raporu kaydedildi: test-report.json', 'blue');
     
-    // Exit code
     process.exit(testResults.summary.failed > 0 || testResults.summary.errors > 0 ? 1 : 0);
 }
 
-// Run tests
 runAllTests().catch(error => {
     log(`\n❌ Test suite error: ${error.message}`, 'red');
     console.error(error);

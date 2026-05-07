@@ -1,8 +1,3 @@
-/**
- * Prisma Client Singleton
- * Connection leak önlemek için tek instance kullanılır.
- * Supabase pooler shutdown sonrası otomatik yeniden bağlanır.
- */
 import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis;

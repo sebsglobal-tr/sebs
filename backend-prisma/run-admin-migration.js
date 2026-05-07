@@ -1,4 +1,3 @@
-// Run admin tables migration
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import fs from 'fs';

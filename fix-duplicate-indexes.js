@@ -1,12 +1,3 @@
-/**
- * Duplicate Index Düzeltmeleri
- * Supabase Linter Uyarılarını Düzelt
- * 
- * Bu script duplicate index'leri tespit eder ve temizler:
- * 1. users tablosundaki duplicate email index'lerini düzeltir
- * 2. Gereksiz index'leri siler
- * 3. Performans iyileştirmeleri yapar
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
@@ -28,15 +19,12 @@ async function fixDuplicateIndexes() {
         console.log('\n🔍 DUPLICATE INDEX DÜZELTMELERİ BAŞLATILIYOR...\n');
         console.log('='.repeat(70));
         
-        // 1. DUPLICATE INDEX'LERI TESPIT ET
         console.log('\n📋 1. DUPLICATE INDEX\'LERI TESPIT ETME\n');
         await detectDuplicateIndexes(client);
         
-        // 2. USERS TABLOSUNDAKI DUPLICATE INDEX'LERI DÜZELT
         console.log('\n📋 2. USERS TABLOSUNDAKI DUPLICATE INDEX\'LERI DÜZELTME\n');
         await fixUsersEmailIndexes(client);
         
-        // 3. RAPOR
         console.log('\n📊 DUPLICATE INDEX DÜZELTME RAPORU\n');
         generateReport();
         
@@ -51,7 +39,6 @@ async function fixDuplicateIndexes() {
 
 async function detectDuplicateIndexes(client) {
     try {
-        // Email kolonu üzerindeki tüm index'leri bul
         const indexes = await client.query(`
             SELECT 
                 indexname,
@@ -76,7 +63,6 @@ async function detectDuplicateIndexes(client) {
             console.log(`      ${row.indexdef.substring(0, 80)}...`);
         });
         
-        // Duplicate'leri tespit et
         const uniqueIndexes = indexes.rows.filter(r => r.index_type === 'UNIQUE');
         if (uniqueIndexes.length > 1) {
             console.log(`\n   ⚠️  ${uniqueIndexes.length} UNIQUE index bulundu - duplicate!`);
@@ -89,7 +75,6 @@ async function detectDuplicateIndexes(client) {
 
 async function fixUsersEmailIndexes(client) {
     try {
-        // Önce constraint'leri kontrol et
         const constraints = await client.query(`
             SELECT 
                 conname,
@@ -107,10 +92,7 @@ async function fixUsersEmailIndexes(client) {
             console.log(`        ${row.definition}`);
         });
         
-        // UNIQUE constraint zaten var: users_email_unique
-        // users_email_key index'i duplicate ve silinebilir
         
-        // users_email_key index'inin var olup olmadigini kontrol et
         const emailKeyIndex = await client.query(`
             SELECT indexname, indexdef
             FROM pg_indexes
@@ -123,8 +105,6 @@ async function fixUsersEmailIndexes(client) {
             console.log(`\n   🔍 users_email_key index bulundu:`);
             console.log(`      ${emailKeyIndex.rows[0].indexdef}`);
             
-            // Index constraint tarafindan kullanilmiyorsa sil
-            // Önce constraint var mı kontrol et
             const keyConstraint = await client.query(`
                 SELECT conname, contype
                 FROM pg_constraint
@@ -133,7 +113,6 @@ async function fixUsersEmailIndexes(client) {
             `);
             
             if (keyConstraint.rows.length === 0) {
-                // Constraint yoksa index'i güvenle silebiliriz
                 await client.query(`
                     DROP INDEX IF EXISTS public.users_email_key;
                 `);
@@ -148,8 +127,6 @@ async function fixUsersEmailIndexes(client) {
             console.log(`\n   ℹ️  users_email_key index zaten yok`);
         }
         
-        // idx_users_email normal index'ini kontrol et
-        // UNIQUE index zaten oldugu için bu gereksiz olabilir
         const idxUsersEmail = await client.query(`
             SELECT indexname, indexdef
             FROM pg_indexes
@@ -162,15 +139,11 @@ async function fixUsersEmailIndexes(client) {
             console.log(`\n   🔍 idx_users_email normal index bulundu:`);
             console.log(`      ${idxUsersEmail.rows[0].indexdef}`);
             
-            // UNIQUE index zaten oldugu için normal index gereksiz
-            // Ancak bazı durumlarda normal index'ler UNIQUE index'lerden daha hizli olabilir
-            // Bu yüzden bu index'i silmeyelim, sadece bilgilendirelim
             console.log(`   ℹ️  idx_users_email index UNIQUE index ile çakisiyor`);
             console.log(`      Ancak normal index'ler bazi sorgularda daha hizli olabilir`);
             console.log(`      Bu index korunacak - sadece duplicate UNIQUE index'ler silindi`);
         }
         
-        // users_email_unique constraint'inin index'ini kontrol et
         const emailUniqueIndex = await client.query(`
             SELECT indexname, indexdef
             FROM pg_indexes
@@ -222,7 +195,6 @@ function generateReport() {
     console.log('   Gereksiz duplicate index\'ler silindi, gerekli index\'ler korundu.\n');
 }
 
-// Run fixes
 if (require.main === module) {
     fixDuplicateIndexes()
         .then(() => {

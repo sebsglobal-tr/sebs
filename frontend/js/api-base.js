@@ -1,13 +1,4 @@
-/**
- * Backend API kökü (…/api).
- *
- * 1) Öncelik: window.SEBS_API_BASE_URL veya VITE_API_BASE_URL (supabase-env.js vb.)
- * 2) Aynı Render kökü (sebs-z9tr…): sayfa origin + /api
- * 3) sebsglobal.com / Vercel / Netlify vb. statik kök: ortak API → Render (aşağıdaki sabit)
- * 4) Diğer: sayfa origin + /api
- */
 (function (global) {
-    /** API’nin host kısmı (statik site başka domaindeyken). Değiştirmek için SEBS_API_BASE_URL kullanın. */
     var DEFAULT_REMOTE_API_ORIGIN = 'https://sebs-z9tr.onrender.com';
 
     function normalizeApiBase(raw) {

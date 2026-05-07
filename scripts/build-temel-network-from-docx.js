@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-/**
- * Parses Temel Network DOCX into Lesson 1..N.
- * LESSON RULE: New lesson only on MODÜL (main topic).
- * SECTION RULE: Subtopics (1.1, 1.2, Mini Senaryo, Terimler, Kendini Değerlendir) stay inside the lesson.
- * SIDEBAR: Lesson Title with subtopics as anchor links.
- */
 const fs = require('fs');
 const path = require('path');
 
@@ -32,7 +26,6 @@ function toAnchorId(s) {
 const raw = fs.readFileSync(INPUT, 'utf8');
 const lines = raw.split(/\r?\n/);
 
-// Find MODÜL boundaries only (main topics)
 const MODUL_MATCH = /^[\u200f]?MODÜL\s+\d+[\s–-]/;
 const moduleStarts = [];
 for (let i = 0; i < lines.length; i++) {
@@ -41,7 +34,6 @@ for (let i = 0; i < lines.length; i++) {
   }
 }
 
-// Each MODÜL = one Lesson
 const lessons = [];
 for (let k = 0; k < moduleStarts.length; k++) {
   const start = moduleStarts[k];
@@ -61,7 +53,6 @@ for (let k = 0; k < moduleStarts.length; k++) {
   });
 }
 
-// Detect subsections within content for sidebar (in document order, no duplicates)
 function detectSubsections(content) {
   const lns = content.split('\n');
   const subs = [];
@@ -91,7 +82,6 @@ function detectSubsections(content) {
   return subs;
 }
 
-// Convert content to HTML with subsection anchors
 function convertContentToHtml(text, lessonId) {
   const lns = text.split('\n');
   let out = [];
@@ -378,7 +368,6 @@ fs.mkdirSync(path.dirname(OUT_JSON), { recursive: true });
 fs.writeFileSync(OUT_JSON, JSON.stringify({ lessons: lessons.map(l => ({ ...l, subsections: detectSubsections(l.content) })) }, null, 2), 'utf8');
 console.log('Wrote', OUT_JSON, '-', lessons.length, 'lessons');
 
-// Build HTML and sidebar
 let htmlSections = '';
 let navItems = '';
 

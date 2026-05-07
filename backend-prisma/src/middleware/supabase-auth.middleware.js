@@ -1,5 +1,3 @@
-// Supabase JWT Authentication Middleware
-// Verifies Supabase JWT tokens from frontend
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -11,13 +9,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-// Create Supabase client for JWT verification
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-/**
- * Middleware to authenticate requests using Supabase JWT
- * Extracts user info from JWT and attaches to req.user
- */
 export async function authenticateSupabase(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
@@ -31,7 +24,6 @@ export async function authenticateSupabase(req, res, next) {
 
     const token = authHeader.substring(7);
 
-    // Verify JWT with Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error || !user) {
@@ -41,7 +33,6 @@ export async function authenticateSupabase(req, res, next) {
       });
     }
 
-    // Get user profile from database
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, role, access_level')
@@ -55,7 +46,6 @@ export async function authenticateSupabase(req, res, next) {
       });
     }
 
-    // Get user entitlements
     const { data: entitlements } = await supabase
       .from('entitlements')
       .select('category, level')
@@ -63,7 +53,6 @@ export async function authenticateSupabase(req, res, next) {
       .eq('is_active', true)
       .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString());
 
-    // Tam erişim e-postası: her zaman admin ve tüm içeriğe erişir
     const fullAccessEmail = (process.env.SUPER_ADMIN_EMAIL || 'asasferfer4566@gmail.com').toLowerCase().trim();
     const isFullAccessEmail = user.email && user.email.toLowerCase().trim() === fullAccessEmail;
 
@@ -87,9 +76,6 @@ export async function authenticateSupabase(req, res, next) {
   }
 }
 
-/**
- * Middleware to require specific role(s)
- */
 export function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.user) {
@@ -110,10 +96,6 @@ export function requireRole(...roles) {
   };
 }
 
-/**
- * Helper function to check if user has entitlement
- * Uses Supabase function: has_entitlement(user_id, category, level)
- */
 export async function checkEntitlement(userId, category, level) {
   try {
     const { data, error } = await supabase.rpc('has_entitlement', {
@@ -134,9 +116,6 @@ export async function checkEntitlement(userId, category, level) {
   }
 }
 
-/**
- * Middleware to check entitlement for specific category/level
- */
 export function requireEntitlement(category, level) {
   return async (req, res, next) => {
     if (!req.user) {

@@ -1,7 +1,3 @@
-/**
- * Migration 013: quiz_attempts, user_login_logs, user_module_sessions tabloları
- * node run-migration-013.js
- */
 require('dotenv').config();
 const { Pool } = require('pg');
 const fs = require('fs');

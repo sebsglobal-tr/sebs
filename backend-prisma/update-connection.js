@@ -1,4 +1,3 @@
-// Script to update Supabase connection strings
 import readline from 'readline';
 import fs from 'fs';
 import path from 'path';
@@ -30,17 +29,14 @@ async function main() {
   console.log('2. Settings → Database bölümüne gidin');
   console.log('3. Connection string\'leri kopyalayın\n');
 
-  // Get DATABASE_URL (Connection Pooling)
   console.log('📊 DATABASE_URL (Connection Pooling - Runtime için):');
   console.log('   Settings → Database → Connection pooling → Transaction mode\n');
   const databaseUrl = await question('DATABASE_URL\'yi yapıştırın: ');
   
-  // Get DIRECT_URL (Direct Connection)
   console.log('\n🔗 DIRECT_URL (Direct Connection - Migration için):');
   console.log('   Settings → Database → Connection string → URI\n');
   const directUrl = await question('DIRECT_URL\'yi yapıştırın: ');
 
-  // Parse passwords and encode if needed
   let dbPassword = '';
   let directPassword = '';
   
@@ -55,7 +51,6 @@ async function main() {
     directUrlObj.password = encodePassword(directPassword);
     const encodedDirectUrl = directUrlObj.toString();
 
-    // Read current .env file
     const envPath = path.join(__dirname, '.env');
     let envContent = '';
     
@@ -63,7 +58,6 @@ async function main() {
       envContent = fs.readFileSync(envPath, 'utf-8');
     }
 
-    // Update or add DATABASE_URL
     if (envContent.includes('DATABASE_URL=')) {
       envContent = envContent.replace(
         /DATABASE_URL=".*?"/,
@@ -73,7 +67,6 @@ async function main() {
       envContent += `\nDATABASE_URL="${encodedDatabaseUrl}"\n`;
     }
 
-    // Update or add DIRECT_URL
     if (envContent.includes('DIRECT_URL=')) {
       envContent = envContent.replace(
         /DIRECT_URL=".*?"/,
@@ -83,7 +76,6 @@ async function main() {
       envContent += `DIRECT_URL="${encodedDirectUrl}"\n`;
     }
 
-    // Write updated .env file
     fs.writeFileSync(envPath, envContent, 'utf-8');
     
     console.log('\n✅ .env dosyası güncellendi!');

@@ -1,9 +1,4 @@
-/**
- * Database Helper Utilities
- * Provides connection retry, error handling, and query wrappers
- */
 
-// Lazy load pool to avoid circular dependency
 let pool = null;
 const getPool = () => {
     if (!pool) {
@@ -17,13 +12,6 @@ const getPool = () => {
     return pool;
 };
 
-/**
- * Execute a query with automatic retry on connection errors
- * @param {string} text - SQL query text
- * @param {Array} params - Query parameters
- * @param {number} maxRetries - Maximum number of retries (default: 3)
- * @returns {Promise} Query result
- */
 async function queryWithRetry(text, params = [], maxRetries = 3) {
     const poolInstance = getPool();
     if (!poolInstance) {
@@ -38,7 +26,6 @@ async function queryWithRetry(text, params = [], maxRetries = 3) {
         } catch (error) {
             lastError = error;
             
-            // Check if it's a connection error that should be retried
             const isConnectionError = 
                 error.code === 'ECONNREFUSED' ||
                 error.code === 'ETIMEDOUT' ||
@@ -54,7 +41,6 @@ async function queryWithRetry(text, params = [], maxRetries = 3) {
                 continue;
             }
             
-            // If not a connection error or max retries reached, throw
             throw error;
         }
     }
@@ -62,11 +48,6 @@ async function queryWithRetry(text, params = [], maxRetries = 3) {
     throw lastError;
 }
 
-/**
- * Get a client from the pool with automatic retry
- * @param {number} maxRetries - Maximum number of retries
- * @returns {Promise} Database client
- */
 async function getClient(maxRetries = 3) {
     const poolInstance = getPool();
     if (!poolInstance) {
@@ -100,10 +81,6 @@ async function getClient(maxRetries = 3) {
     throw lastError;
 }
 
-/**
- * Check database connection health
- * @returns {Promise<boolean>} True if connection is healthy
- */
 async function checkHealth() {
     try {
         await queryWithRetry('SELECT 1', [], 1);

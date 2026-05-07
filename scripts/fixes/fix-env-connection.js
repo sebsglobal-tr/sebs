@@ -1,4 +1,3 @@
-// .env dosyasındaki DATABASE_URL'i düzeltme script'i
 const fs = require('fs');
 const path = require('path');
 
@@ -13,17 +12,14 @@ let envContent = fs.readFileSync(envPath, 'utf8');
 
 console.log('🔍 .env dosyası kontrol ediliyor...\n');
 
-// aws-1- kontrolü
 if (envContent.includes('aws-1-eu-north-1')) {
     console.log('⚠️  Host adresi düzeltiliyor: aws-1 → aws-0');
     envContent = envContent.replace(/aws-1-eu-north-1/g, 'aws-0-eu-north-1');
     
-    // Yedek oluştur
     const backupPath = envPath + '.backup.' + Date.now();
     fs.writeFileSync(backupPath, fs.readFileSync(envPath));
     console.log('💾 Yedek oluşturuldu:', backupPath);
     
-    // Güncelle
     fs.writeFileSync(envPath, envContent);
     console.log('✅ .env dosyası güncellendi!\n');
     console.log('🔄 Lütfen şunları kontrol edin:');

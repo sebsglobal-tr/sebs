@@ -4,26 +4,26 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Network Güvenliği | SEBS Academy</title>
     <meta name="description" content="Siber güvenliğin temelleri, CIA Üçlüsü, temel kavramlar ve tehdit aktörleri. Kapsamlı başlangıç seviyesi eğitim modülü.">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Course","name":"Network Guvenligi Egitimi","description":"Ag guvenligi prensipleri, segmentasyon, izleme ve savunma yaklasimlari.","provider":{"@type":"Organization","name":"SEBS Global","sameAs":"https://sebsglobal.com/"}}
+    </script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Egitimler","item":"https://sebsglobal.com/egitimler"},{"@type":"ListItem","position":3,"name":"Network Guvenligi","item":"https://sebsglobal.com/modules/network-guvenligi.html"}]}
+    </script>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/premium-lesson.css">
     
     <script src="/js/api-base.js"></script>
-    <!-- Module Progress Tracker -->
     <script src="../utils/module-progress.js"></script>
-    <!-- Time Tracker -->
     <script src="../utils/time-tracker.js"></script>
-    <!-- Quiz Exam - değerlendirme soruları test formatı, doğru cevaplar gizli -->
     <script src="../utils/quiz-exam.js"></script>
     
     <style>
@@ -3858,7 +3858,6 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -3905,17 +3904,13 @@
     </div>
   </div>
 </header>
-<!-- Mobile Menu Toggle -->
     <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü Aç/Kapat">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Navigation -->
     
 
-    <!-- Module Layout -->
     <div class="module-layout">
-        <!-- Sidebar -->
         <aside class="module-sidebar">
             <div class="sidebar-header">
                 <h1>NETWORK GÜVENLİĞİ</h1>
@@ -3949,7 +3944,6 @@
             </nav>
         </aside>
 
-        <!-- Content Sections -->
         <main style="margin-left: 320px; width: calc(100% - 320px); max-width: calc(100vw - 320px); overflow-x: hidden; overflow-y: visible; box-sizing: border-box; position: relative;">
 <section class="content-section docx-content active" id="modul-0-etik-ve-yasal-cerceve" data-section="modul-0-etik-ve-yasal-cerceve">
 <div class="section-inner module-2-enhanced">
@@ -4479,21 +4473,17 @@
 </defs>
 <rect width="800" height="384" rx="14" fill="url(#mod1svg-bg)"/>
 <text x="400" y="34" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">RİSK ÇERÇEVESİ · SALDIRI YÜZESİ · SAVUNMA MİMARİSİ</text>
-<!-- Tehdit → zafiyet → risk (soyut şekiller) -->
 <text x="400" y="56" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="600">TEHDİT – ZAFİYET – RİSK ZİNCİRİ</text>
-<!-- Hex tehdit -->
 <polygon points="120,108 145,94 170,108 170,136 145,150 120,136" fill="rgba(239,68,68,0.12)" stroke="#f87171" stroke-width="1.8"/>
 <text x="145" y="118" text-anchor="middle" fill="#fecaca" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="700">Tehdit</text>
 <text x="145" y="132" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="8.5">niyet · yetenek</text>
 <path d="M 178 120 L 212 120" stroke="#475569" stroke-width="2"/>
 <path d="M 204 114 L 212 120 L 204 126" fill="#64748b"/>
-<!-- Trapez zafiyet -->
 <polygon points="222,98 318,98 328,142 212,142" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" stroke-width="1.6"/>
 <text x="272" y="124" text-anchor="middle" fill="#fef9c3" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="700">Zafiyet</text>
 <text x="272" y="138" text-anchor="middle" fill="#fde047" font-family="system-ui,Segoe UI,sans-serif" font-size="8.5">boşluk · misconfig</text>
 <path d="M 336 120 L 370 120" stroke="#475569" stroke-width="2"/>
 <path d="M 362 114 L 370 120 L 362 126" fill="#64748b"/>
-<!-- Büyük yuvarlatılmış risk bloğu -->
 <rect x="382" y="92" width="168" height="56" rx="14" fill="rgba(236,72,153,0.1)" stroke="#ec4899" stroke-width="2"/>
 <text x="466" y="118" text-anchor="middle" fill="#fbcfe8" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">Risk</text>
 <text x="466" y="136" text-anchor="middle" fill="#f9a8d4" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">olasılık × etki</text>
@@ -4502,7 +4492,6 @@
 <rect x="626" y="96" width="126" height="48" rx="10" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="1.4"/>
 <text x="689" y="118" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="10" font-weight="700">Öncelik</text>
 <text x="689" y="134" text-anchor="middle" fill="#93c5fd" font-family="system-ui,Segoe UI,sans-serif" font-size="8.5">risk register</text>
-<!-- Saldırı yüzeyi: organik kontur + giriş noktaları -->
 <text x="400" y="178" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="600">SALDIRI YÜZESİ (soyut envanter)</text>
 <path d="M 140 246 C 120 200 200 180 400 188 C 580 196 660 210 680 246 C 695 280 640 318 400 310 C 220 304 155 290 140 246 Z" fill="rgba(15,23,42,0.45)" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="8 6"/>
 <text x="400" y="240" text-anchor="middle" fill="#e0f2fe" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">varlık + akış + yapılandırma</text>
@@ -4510,7 +4499,6 @@
 <circle cx="220" cy="210" r="5" fill="#22d3ee" opacity="0.9"/><circle cx="580" cy="218" r="5" fill="#22d3ee" opacity="0.9"/>
 <circle cx="300" cy="290" r="5" fill="#f472b6" opacity="0.85"/><circle cx="520" cy="285" r="5" fill="#f472b6" opacity="0.85"/>
 <circle cx="180" cy="260" r="4" fill="#a78bfa" opacity="0.9"/><circle cx="640" cy="268" r="4" fill="#a78bfa" opacity="0.9"/>
-<!-- Derinlemesine savunma: üç paralelkenar katman -->
 <text x="400" y="336" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="600">DERİNLEMESİNE SAVUNMA (katmanlar)</text>
 <polygon points="88,348 712,348 700,372 100,372" fill="url(#mod1svg-layer1)"/>
 <polygon points="108,354 692,354 684,368 116,368" fill="url(#mod1svg-layer2)"/>
@@ -5369,29 +5357,23 @@
 </filter>
 </defs>
 <rect width="800" height="300" rx="14" fill="url(#mod2svg-bg)"/>
-<!-- Üst başlık bandı -->
 <text x="400" y="38" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="600">TEHDİT ANALİZİ — KAVRAMSAL AKIŞ</text>
-<!-- Sol: uçlar -->
 <circle cx="92" cy="118" r="36" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2"/>
 <circle cx="92" cy="118" r="8" fill="#60a5fa"/>
 <text x="92" y="122" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">A</text>
 <path d="M 128 118 L 205 118" stroke="#334155" stroke-width="2" fill="none"/>
 <path d="M 190 112 L 205 118 L 190 124" fill="#64748b"/>
-<!-- Orta: araya girme / mekanizma (soyut) -->
 <rect x="205" y="78" width="200" height="80" rx="12" fill="rgba(251,191,36,0.08)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6 4"/>
 <text x="305" y="108" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">Mekanizma</text>
 <text x="305" y="128" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">(ağda iz bırakır)</text>
 <path d="M 405 118 L 480 118" stroke="#334155" stroke-width="2" fill="none"/>
 <path d="M 465 112 L 480 118 L 465 124" fill="#64748b"/>
-<!-- Sağ uç -->
 <circle cx="536" cy="118" r="36" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2"/>
 <circle cx="536" cy="118" r="8" fill="#60a5fa"/>
 <text x="536" y="122" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">B</text>
-<!-- Sinyal dalgaları -->
 <path d="M 240 175 Q 280 155 320 175 T 400 175" stroke="url(#mod2svg-pulse)" stroke-width="2" fill="none" filter="url(#mod2svg-glow)" opacity="0.85"/>
 <path d="M 260 188 Q 305 168 350 188 T 440 188" stroke="#475569" stroke-width="1.5" fill="none" opacity="0.7"/>
 <text x="400" y="200" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="10">sinyal / log / PCAP / DNS …</text>
-<!-- Alt: triage döngüsü -->
 <rect x="48" y="220" width="140" height="56" rx="10" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="118" y="244" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">Belirti</text>
 <text x="118" y="260" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">gözlem</text>
@@ -6215,13 +6197,10 @@
 </defs>
 <rect width="800" height="340" rx="14" fill="url(#mod3svg-bg)"/>
 <text x="400" y="38" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="600">GÜVENLİK KONTROLLERİ I — KAVRAMSAL KATMANLAR</text>
-<!-- SASE / SSE: üst kenar bulutu -->
 <ellipse cx="400" cy="78" rx="118" ry="36" fill="url(#mod3svg-edge)" stroke="#5eead4" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.95"/>
 <text x="400" y="74" text-anchor="middle" fill="#ccfbf1" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">SASE / SSE</text>
 <text x="400" y="92" text-anchor="middle" fill="#99f6e4" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">policy · CASB · ZTNA (kenar)</text>
 <path d="M 370 114 L 370 128 M 400 114 L 400 132 M 430 114 L 430 128" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.9"/>
-<!-- Ana trafik hattı y=178 -->
-<!-- Dış bölge -->
 <circle cx="78" cy="178" r="32" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="2"/>
 <circle cx="66" cy="172" r="5" fill="#60a5fa" opacity="0.9"/>
 <circle cx="86" cy="168" r="4" fill="#38bdf8" opacity="0.85"/>
@@ -6229,7 +6208,6 @@
 <text x="78" y="182" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="700">Dış</text>
 <path d="M 110 178 L 128 178" stroke="#475569" stroke-width="2"/>
 <path d="M 118 172 L 128 178 L 118 184" fill="#64748b"/>
-<!-- Firewall: dikey bariyer çizgileri -->
 <rect x="128" y="138" width="92" height="80" rx="10" fill="rgba(234,179,8,0.1)" stroke="#eab308" stroke-width="1.5"/>
 <line x1="145" y1="148" x2="145" y2="208" stroke="#fbbf24" stroke-width="2.5" opacity="0.85"/>
 <line x1="162" y1="152" x2="162" y2="204" stroke="#fbbf24" stroke-width="2.5" opacity="0.75"/>
@@ -6238,7 +6216,6 @@
 <text x="174" y="130" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">Firewall</text>
 <path d="M 220 178 L 242 178" stroke="#475569" stroke-width="2"/>
 <path d="M 232 172 L 242 178 L 232 184" fill="#64748b"/>
-<!-- ACL: kural şeritleri -->
 <rect x="242" y="142" width="88" height="72" rx="9" fill="rgba(139,92,246,0.1)" stroke="#a78bfa" stroke-width="1.5"/>
 <rect x="252" y="154" width="68" height="6" rx="2" fill="rgba(167,139,250,0.45)"/>
 <rect x="252" y="166" width="52" height="6" rx="2" fill="rgba(167,139,250,0.35)"/>
@@ -6248,7 +6225,6 @@
 <text x="286" y="222" text-anchor="middle" fill="#c4b5fd" font-family="system-ui,Segoe UI,sans-serif" font-size="9">allow / deny</text>
 <path d="M 330 178 L 352 178" stroke="#475569" stroke-width="2"/>
 <path d="M 342 172 L 352 178 L 342 184" fill="#64748b"/>
-<!-- Proxy: çift kutu + ok -->
 <rect x="352" y="148" width="40" height="60" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1.5"/>
 <rect x="400" y="148" width="40" height="60" rx="8" fill="rgba(59,130,246,0.12)" stroke="#60a5fa" stroke-width="1.5"/>
 <path d="M 392 178 L 400 178" stroke="#93c5fd" stroke-width="2"/>
@@ -6256,7 +6232,6 @@
 <text x="396" y="138" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">Proxy</text>
 <path d="M 440 178 L 462 178" stroke="#475569" stroke-width="2"/>
 <path d="M 452 172 L 462 178 L 452 184" fill="#64748b"/>
-<!-- IDS/IPS: ana hat + paralel sensör -->
 <rect x="462" y="142" width="96" height="72" rx="9" fill="rgba(244,63,94,0.08)" stroke="#fb7185" stroke-width="1.5"/>
 <path d="M 475 178 L 545 178" stroke="#f87171" stroke-width="2.5" filter="url(#mod3svg-soft)"/>
 <circle cx="488" cy="178" r="5" fill="#fca5a5"/>
@@ -6268,11 +6243,9 @@
 <text x="510" y="226" text-anchor="middle" fill="#fda4af" font-family="system-ui,Segoe UI,sans-serif" font-size="9">izle · engelle</text>
 <path d="M 558 178 L 582 178" stroke="#475569" stroke-width="2"/>
 <path d="M 572 172 L 582 178 L 572 184" fill="#64748b"/>
-<!-- İç ağ -->
 <rect x="582" y="148" width="100" height="60" rx="12" fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="2"/>
 <text x="632" y="185" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">İç ağ</text>
 <text x="632" y="202" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">segment</text>
-<!-- Alt not -->
 <text x="400" y="298" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">sıra: önce politikaya yakın sınır (FW/ACL), uygulama yolu (Proxy), davranışsal izleme (IDS/IPS); SASE/SSE aynı ilkeleri kenara taşır.</text>
 </svg>
 <p class="lesson-image-caption">Kavramsal şema: dış trafiğin firewall ve ACL ile süzülmesi, proxy üzerinden uygulama yolu, IDS/IPS ile izleme veya engelleme; SASE/SSE ise aynı kontrol düzenini buluta/kenara yayar.</p>
@@ -6942,25 +6915,20 @@
 </defs>
 <rect width="800" height="378" rx="14" fill="url(#mod4svg-bg)"/>
 <text x="400" y="34" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">SEGMENTASYON &amp; DMZ — VLAN · TRUNK · ZERO TRUST</text>
-<!-- Üst: Internet → DMZ → iç VLAN'lar -->
 <circle cx="72" cy="120" r="30" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="2"/>
 <circle cx="64" cy="112" r="4" fill="#60a5fa"/><circle cx="82" cy="110" r="3.5" fill="#38bdf8"/>
 <text x="72" y="126" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">Dış</text>
 <path d="M 102 120 L 120 120" stroke="#475569" stroke-width="2"/><path d="M 110 114 L 120 120 L 110 126" fill="#64748b"/>
-<!-- Sınır 1 -->
 <rect x="120" y="96" width="14" height="48" rx="3" fill="rgba(148,163,184,0.25)" stroke="#94a3b8" stroke-width="1.2"/>
 <text x="127" y="90" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="9">FW</text>
-<!-- DMZ -->
 <rect x="140" y="78" width="138" height="92" rx="11" fill="url(#mod4svg-dmz)" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>
 <text x="209" y="102" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">DMZ</text>
 <text x="209" y="122" text-anchor="middle" fill="#fcd34d" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">web / mail / proxy</text>
 <rect x="160" y="134" width="98" height="26" rx="5" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="1"/>
 <text x="209" y="150" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="10">halka açık yüz</text>
 <path d="M 278 120 L 294 120" stroke="#475569" stroke-width="2"/><path d="M 284 114 L 294 120 L 284 126" fill="#64748b"/>
-<!-- Sınır 2 -->
 <rect x="294" y="96" width="14" height="48" rx="3" fill="rgba(148,163,184,0.25)" stroke="#94a3b8" stroke-width="1.2"/>
 <text x="301" y="90" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="9">FW</text>
-<!-- İç: iki VLAN -->
 <rect x="314" y="72" width="446" height="100" rx="12" fill="rgba(34,197,94,0.06)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="322" y="90" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">İç ağ — segmentler</text>
 <rect x="326" y="98" width="200" height="66" rx="9" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="1.5"/>
@@ -6974,7 +6942,6 @@
 <rect x="510" y="110" width="44" height="42" rx="6" fill="rgba(148,163,184,0.2)" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4 3"/>
 <text x="532" y="129" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5" font-weight="700">L3</text>
 <text x="532" y="144" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="9">router</text>
-<!-- Trunk: 802.1Q soyut -->
 <rect x="376" y="188" width="48" height="58" rx="8" fill="rgba(15,23,42,0.9)" stroke="#475569" stroke-width="1.5"/>
 <rect x="383" y="194" width="11" height="46" rx="2" fill="#3b82f6" opacity="0.55"/>
 <rect x="395" y="194" width="11" height="46" rx="2" fill="#a78bfa" opacity="0.55"/>
@@ -6982,7 +6949,6 @@
 <text x="400" y="182" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="600">802.1Q trunk</text>
 <text x="400" y="260" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="10">etiketli çerçeveler (soyut)</text>
 <text x="400" y="280" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="10">geri besleme · her oturumda yeniden</text>
-<!-- Zero Trust döngüsü -->
 <text x="400" y="308" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">Zero Trust — sürekli doğrulama</text>
 <circle cx="278" cy="338" r="23" fill="rgba(236,72,153,0.12)" stroke="#f472b6" stroke-width="1.5"/>
 <text x="278" y="334" text-anchor="middle" fill="#fbcfe8" font-family="system-ui,Segoe UI,sans-serif" font-size="10" font-weight="700">Kimlik</text>
@@ -7413,7 +7379,6 @@
 </defs>
 <rect width="800" height="388" rx="14" fill="url(#mod5svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">GÜVENLİ PROTOKOLLER — TLS · VPN · 802.1X / NAC</text>
-<!-- 1: TLS -->
 <text x="48" y="58" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">TLS (katmanlı sarma)</text>
 <rect x="48" y="68" width="704" height="88" rx="10" fill="rgba(15,23,42,0.6)" stroke="#334155" stroke-width="1"/>
 <rect x="60" y="86" width="76" height="52" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1.5"/>
@@ -7429,19 +7394,15 @@
 <rect x="608" y="88" width="136" height="52" rx="8" fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="676" y="114" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">Sunucu</text>
 <text x="676" y="130" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10">HTTP/S, SMTP/S…</text>
-<!-- küçük kilit (soyut) -->
 <path d="M 528 96 L 528 92 A 8 8 0 0 1 544 92 L 544 96" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round"/>
 <rect x="524" y="96" width="24" height="18" rx="3" fill="#fbbf24" opacity="0.88" filter="url(#mod5svg-soft)"/>
-<!-- 2: VPN tüneli -->
 <text x="48" y="176" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">VPN (tünel · güvensiz üzerinde gizli iç hat)</text>
 <rect x="48" y="190" width="704" height="96" rx="10" fill="rgba(15,23,42,0.5)" stroke="#475569" stroke-width="1" stroke-dasharray="5 4"/>
 <ellipse cx="200" cy="236" rx="50" ry="24" fill="rgba(71,85,105,0.35)" stroke="#64748b" stroke-width="1"/>
 <text x="200" y="242" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">uç / şube</text>
 <path d="M 250 236 L 270 236" stroke="#64748b" stroke-width="1.5"/>
-<!-- dış omurga -->
 <rect x="272" y="214" width="220" height="40" rx="6" fill="rgba(239,68,68,0.06)" stroke="#f87171" stroke-dasharray="4 3"/>
 <text x="382" y="238" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="11">güvensiz omurga (İnternet)</text>
-<!-- tünel içi (hat üzerinde; açıklama kırmızı kutu altına) -->
 <path d="M 292 236 L 472 236" stroke="#22c55e" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
 <path d="M 292 236 L 472 236" stroke="#4ade80" stroke-width="3" stroke-linecap="round"/>
 <text x="382" y="268" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">şifreli tünel · özel adresleme</text>
@@ -7449,7 +7410,6 @@
 <ellipse cx="566" cy="236" rx="54" ry="26" fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="566" y="240" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">kurum içi</text>
 <text x="566" y="256" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10">hedef subnet</text>
-<!-- 3: 802.1X / NAC -->
 <text x="48" y="302" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">802.1X / NAC (portta kimlik · politika)</text>
 <rect x="48" y="314" width="704" height="58" rx="10" fill="rgba(15,23,42,0.55)" stroke="#334155" stroke-width="1"/>
 <rect x="56" y="326" width="92" height="38" rx="7" fill="rgba(236,72,153,0.1)" stroke="#f472b6" stroke-width="1.3"/>
@@ -8310,7 +8270,6 @@
 </defs>
 <rect width="800" height="384" rx="14" fill="url(#mod6svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">BULUT AĞI — VPC · VNet / NSG · HİBRİT</text>
-<!-- AWS VPC (sol) -->
 <rect x="40" y="50" width="360" height="148" rx="12" fill="url(#mod6svg-aws)" stroke="#f59e0b" stroke-width="1.8"/>
 <text x="220" y="74" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="13.5" font-weight="700">AWS — VPC (soyut)</text>
 <text x="56" y="94" fill="#fcd34d" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">NACL ↔ alt ağ sınırı</text>
@@ -8328,7 +8287,6 @@
 <rect x="292" y="134" width="84" height="26" rx="5" fill="rgba(15,23,42,0.5)" stroke="#64748b"/>
 <text x="334" y="150" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="9">iş yükü</text>
 <text x="220" y="196" text-anchor="middle" fill="#fcd34d" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">yönlendirme tablosu · rota hedefleri · eşleme</text>
-<!-- Azure VNet (sağ) -->
 <rect x="416" y="50" width="344" height="148" rx="12" fill="url(#mod6svg-azure)" stroke="#38bdf8" stroke-width="1.8"/>
 <text x="588" y="74" text-anchor="middle" fill="#bae6fd" font-family="system-ui,Segoe UI,sans-serif" font-size="13.5" font-weight="700">Azure — VNet</text>
 <rect x="432" y="100" width="300" height="40" rx="7" fill="rgba(0,120,212,0.12)" stroke="#0ea5e9" stroke-width="1.2"/>
@@ -8340,7 +8298,6 @@
 <rect x="622" y="158" width="54" height="24" rx="4" fill="rgba(251,191,36,0.18)" stroke="#fbbf24"/>
 <text x="649" y="174" text-anchor="middle" fill="#fef9c3" font-family="system-ui,Segoe UI,sans-serif" font-size="9" font-weight="700">NSG</text>
 <text x="588" y="198" text-anchor="middle" fill="#7dd3fc" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">UDR ile özel rota · NSG öncelik sırası</text>
-<!-- Hibrit şerit -->
 <text x="48" y="236" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">Hibrit (DC ↔ bulut kenarı)</text>
 <rect x="40" y="246" width="720" height="96" rx="12" fill="rgba(15,23,42,0.45)" stroke="#475569" stroke-width="1" stroke-dasharray="6 4"/>
 <ellipse cx="120" cy="296" rx="68" ry="30" fill="rgba(148,163,184,0.15)" stroke="#94a3b8" stroke-width="1.5"/>
@@ -9167,14 +9124,12 @@
 </defs>
 <rect width="800" height="378" rx="14" fill="url(#mod7svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">SDN &amp; MODERN AĞ — KONTROL · VERİ · API</text>
-<!-- Kuzey bağlantısı -->
 <rect x="48" y="52" width="160" height="56" rx="10" fill="rgba(139,92,246,0.12)" stroke="#a78bfa" stroke-width="1.4"/>
 <text x="128" y="76" text-anchor="middle" fill="#ddd6fe" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">Otomasyon / BSS</text>
 <text x="128" y="96" text-anchor="middle" fill="#c4b5fd" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">orkestrasyon · intent</text>
 <path d="M 208 80 L 248 80" stroke="#38bdf8" stroke-width="2"/>
 <path d="M 240 74 L 248 80 L 240 86" fill="#38bdf8"/>
 <text x="228" y="74" text-anchor="middle" fill="#7dd3fc" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">REST / gRPC</text>
-<!-- Kontrol düzlemi -->
 <rect x="248" y="48" width="504" height="116" rx="12" fill="url(#mod7svg-ctl)" stroke="#0ea5e9" stroke-width="1.8"/>
 <text x="500" y="74" text-anchor="middle" fill="#e0f2fe" font-family="system-ui,Segoe UI,sans-serif" font-size="13.5" font-weight="700">Kontrol düzlemi · SDN controller / NOS</text>
 <rect x="268" y="88" width="200" height="64" rx="9" fill="rgba(14,165,233,0.15)" stroke="#38bdf8" stroke-width="1.3"/>
@@ -9183,7 +9138,6 @@
 <rect x="484" y="88" width="248" height="64" rx="9" fill="rgba(99,102,241,0.12)" stroke="#818cf8" stroke-width="1.3"/>
 <text x="608" y="112" text-anchor="middle" fill="#c7d2fe" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">güneye komut / durum</text>
 <text x="608" y="134" text-anchor="middle" fill="#a5b4fc" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">OpenFlow / NETCONF / P4Runtime · özet</text>
-<!-- Veri düzlemine inen çizgiler -->
 <text x="500" y="192" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="11">ayırmak: yönetim (kontrol) ile veri yolu — farklı görev (kavramsal)</text>
 <path d="M 320 164 L 320 208" stroke="#475569" stroke-width="1.5" stroke-dasharray="5 4"/>
 <path d="M 314 200 L 320 208 L 326 200" fill="#475569"/>
@@ -9191,7 +9145,6 @@
 <path d="M 494 200 L 500 208 L 506 200" fill="#475569"/>
 <path d="M 680 164 L 680 208" stroke="#475569" stroke-width="1.5" stroke-dasharray="5 4"/>
 <path d="M 674 200 L 680 208 L 686 200" fill="#475569"/>
-<!-- Veri düzlemi (özet not bu kutunun dışında) -->
 <rect x="48" y="208" width="704" height="112" rx="12" fill="rgba(34,197,94,0.06)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="400" y="232" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">Veri düzlemi — hızlı iletim (ASIC / pipeline)</text>
 <rect x="88" y="250" width="112" height="64" rx="10" fill="rgba(15,23,42,0.55)" stroke="#4ade80" stroke-width="2"/>
@@ -9640,7 +9593,6 @@
 </defs>
 <rect width="800" height="392" rx="14" fill="url(#mod8svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">İZLEME &amp; LOG — TOPLAMA · NORMALİZASYON · SIEM / KORELASYON</text>
-<!-- Kaynaklar -->
 <text x="48" y="56" fill="#fda4af" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="700">veri kaynakları</text>
 <rect x="48" y="64" width="704" height="68" rx="10" fill="rgba(244,63,94,0.08)" stroke="#f43f5e" stroke-width="1.2"/>
 <rect x="60" y="78" width="100" height="44" rx="7" fill="rgba(59,130,246,0.2)" stroke="#60a5fa"/>
@@ -9658,29 +9610,23 @@
 <rect x="616" y="78" width="124" height="44" rx="7" fill="rgba(236,72,153,0.12)" stroke="#f472b6"/>
 <text x="678" y="98" text-anchor="middle" fill="#fbcfe8" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="700">kimlik · AV</text>
 <text x="678" y="114" text-anchor="middle" fill="#f9a8d4" font-family="system-ui,Segoe UI,sans-serif" font-size="9"> syslog CEF</text>
-<!-- Ok aşağı -->
 <path d="M 400 132 L 400 148" stroke="#64748b" stroke-width="2"/>
 <path d="M 396 140 L 400 148 L 404 140" fill="#64748b"/>
-<!-- Toplayıcı -->
 <rect x="48" y="152" width="704" height="56" rx="10" fill="rgba(15,23,42,0.65)" stroke="#475569" stroke-width="1.2"/>
 <text x="400" y="180" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">toplama · tampon · iletim (agent / forwarder / broker soyut)</text>
 <text x="400" y="200" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="11">bütünlük · sıra · basınç kontrolü (back-pressure)</text>
 <path d="M 400 208 L 400 226" stroke="#64748b" stroke-width="2"/>
 <path d="M 396 218 L 400 226 L 404 218" fill="#64748b"/>
-<!-- Normalizasyon -->
 <rect x="48" y="230" width="360" height="84" rx="10" fill="rgba(14,165,233,0.1)" stroke="#0ea5e9" stroke-width="1.4"/>
 <text x="228" y="258" text-anchor="middle" fill="#bae6fd" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">normalizasyon · şema</text>
 <text x="228" y="282" text-anchor="middle" fill="#7dd3fc" font-family="system-ui,Segoe UI,sans-serif" font-size="11">zaman damgası (NTP) · alan eşlemesi · IOC zenginleştirme</text>
 <text x="228" y="300" text-anchor="middle" fill="#38bdf8" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">tek biçim = korelasyona hazır</text>
-<!-- SIEM -->
 <rect x="424" y="230" width="328" height="84" rx="10" fill="url(#mod8svg-flow)" stroke="#f43f5e" stroke-width="1.6"/>
 <text x="588" y="258" text-anchor="middle" fill="#fecdd3" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">SIEM · korelasyon motoru</text>
 <text x="588" y="282" text-anchor="middle" fill="#fda4af" font-family="system-ui,Segoe UI,sans-serif" font-size="11">kurallar · anomali · zincir (kill chain)</text>
 <text x="588" y="300" text-anchor="middle" fill="#fb7185" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">çoğu kaynak → tek olay görünümü</text>
-<!-- Ok aşağı -->
 <path d="M 400 314 L 400 334" stroke="#64748b" stroke-width="2"/>
 <path d="M 396 326 L 400 334 L 404 326" fill="#64748b"/>
-<!-- Çıktı -->
 <rect x="48" y="334" width="704" height="54" rx="10" fill="rgba(34,197,94,0.08)" stroke="#22c55e" stroke-width="1.3"/>
 <text x="400" y="356" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">olay · uyarı · pano · saklama politikası · kanıt paketi (triage’e hazır)</text>
 <text x="400" y="374" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">izlenebilirlik: kim üretti, ne zaman, hangi kural tetiklendi</text>
@@ -10681,18 +10627,15 @@
 </defs>
 <rect width="800" height="384" rx="14" fill="url(#mod9svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">KABLOSUZ GÜVENLİK — AP · KİMLİK · SPEKTRUM · TEHDİT MODELİ</text>
-<!-- Üst kontrol şeridi (tam genişlik, yazılar taşmasın) -->
 <rect x="48" y="48" width="704" height="46" rx="10" fill="rgba(234,179,8,0.08)" stroke="#eab308" stroke-width="1.2"/>
 <text x="400" y="72" text-anchor="middle" fill="#fef9c3" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">kurumsal politika: PSK yönetimi · misafir ağı · WIPS/WIDS iz sinyali</text>
 <text x="400" y="88" text-anchor="middle" fill="#fde047" font-family="system-ui,Segoe UI,sans-serif" font-size="10">fizik katmanı görünür; kimlik ve envanter kanıt ister</text>
-<!-- Sol: istemciler -->
 <rect x="48" y="112" width="128" height="50" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1.3"/>
 <text x="112" y="136" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">istemci</text>
 <text x="112" y="152" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">cihaz kimliği</text>
 <rect x="48" y="174" width="128" height="50" rx="8" fill="rgba(59,130,246,0.12)" stroke="#60a5fa" stroke-width="1.2"/>
 <text x="112" y="198" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">istemci</text>
 <text x="112" y="214" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">kullanıcı / sertifika</text>
-<!-- Orta: spektrum (dalga) + daha geniş AP kutusu (SSID çerçeveye vurmasın) -->
 <path d="M 400 252 C 400 168 360 124 400 102 C 440 124 400 168 400 252" fill="url(#mod9svg-wave)" opacity="0.9"/>
 <path d="M 400 230 C 400 186 375 158 400 132 C 425 158 400 186 400 230" fill="none" stroke="#6ee7b7" stroke-width="2" opacity="0.6"/>
 <path d="M 400 218 C 400 192 382 170 400 152 C 418 170 400 192 400 218" fill="none" stroke="#34d399" stroke-width="2.5" opacity="0.85"/>
@@ -10701,13 +10644,11 @@
 <text x="400" y="258" text-anchor="middle" fill="#a7f3d0" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">kurumsal AP</text>
 <text x="400" y="282" text-anchor="middle" fill="#6ee7b7" font-family="system-ui,Segoe UI,sans-serif" font-size="11">WPA3 / 802.1X</text>
 <text x="400" y="302" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">SSID · kanal · güç</text>
-<!-- Ok istemciden AP -->
 <path d="M 176 136 L 318 256" stroke="#475569" stroke-width="2"/>
 <path d="M 308 246 L 318 256 L 310 266" fill="#64748b"/>
 <path d="M 176 198 L 324 268" stroke="#475569" stroke-width="2"/>
 <path d="M 314 258 L 324 268 L 314 276" fill="#64748b"/>
 <text x="238" y="198" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">EAP / PSK</text>
-<!-- Sağ: şüpheli / evil twin soyut -->
 <rect x="592" y="108" width="160" height="112" rx="12" fill="rgba(239,68,68,0.08)" stroke="#f87171" stroke-width="2" stroke-dasharray="8 5"/>
 <text x="672" y="138" text-anchor="middle" fill="#fecaca" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">şüpheli yüzey</text>
 <text x="672" y="160" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="10">evil twin ?</text>
@@ -10715,7 +10656,6 @@
 <text x="672" y="204" text-anchor="middle" fill="#f87171" font-family="system-ui,Segoe UI,sans-serif" font-size="9">izinsiz AP / jam</text>
 <path d="M 520 168 L 588 168" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>
 <text x="554" y="160" text-anchor="middle" fill="#64748b" font-family="system-ui,Segoe UI,sans-serif" font-size="9">yan kanal</text>
-<!-- Alt not (tüm çerçevelerin altında, okunur renk) -->
 <text x="400" y="360" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">Havayı çizmek: doğru AP’ye bağlan + doğrulanmış kimlik + spektrum/otomasyonda iz (rogue tespiti için veri disiplini).</text>
 </svg>
 <p class="lesson-image-caption">Kavramsal şema: istemcilerin kurumsal AP ile güvenli ilişkilendirmesi; yayın alanı ve politika katmanı; aynı SSID ile kopya yüzey (evil twin) ve kablosuz tehdit izinin NAC/MDM/WIDS ile bağlanması.</p>
@@ -11361,12 +11301,10 @@
 </defs>
 <rect width="800" height="388" rx="14" fill="url(#mod10svg-bg)"/>
 <text x="400" y="32" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">IoT / OT — UÇ CİHAZ · SEGMENTASYON · GÜVENLİ KÖPRÜ</text>
-<!-- IT / kurumsal -->
 <rect x="48" y="50" width="704" height="76" rx="10" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.4"/>
 <text x="400" y="76" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">kurumsal IT / yönetim</text>
 <text x="400" y="98" text-anchor="middle" fill="#93c5fd" font-family="system-ui,Segoe UI,sans-serif" font-size="11">kimlik · patch · SIEM · bulut konektörler (soyut)</text>
 <text x="400" y="116" text-anchor="middle" fill="#7dd3fc" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">Üst katman: hızlı değişim — alta doğru politikayı daralt</text>
-<!-- IoT sürüsü (sol) -->
 <text x="120" y="152" text-anchor="middle" fill="#fcd34d" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">IoT uçları</text>
 <circle cx="72" cy="182" r="7" fill="rgba(250,204,21,0.4)" stroke="#eab308"/>
 <circle cx="96" cy="172" r="6" fill="rgba(250,204,21,0.35)" stroke="#eab308"/>
@@ -11376,14 +11314,12 @@
 <text x="120" y="214" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="10">firmware · zayıf parola</text>
 <path d="M 176 182 L 230 182" stroke="#64748b" stroke-width="2"/>
 <path d="M 220 176 L 230 182 L 220 188" fill="#64748b"/>
-<!-- Köprü / ICS güvenliği -->
 <rect x="230" y="152" width="340" height="76" rx="11" fill="rgba(234,179,8,0.12)" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4"/>
 <text x="400" y="178" text-anchor="middle" fill="#fde68a" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">güvenli köprü · DMZ · jump / bastion</text>
 <text x="400" y="200" text-anchor="middle" fill="#fcd34d" font-family="system-ui,Segoe UI,sans-serif" font-size="11">protokol ağ geçidi · sadece gerekli porta izin</text>
 <text x="400" y="218" text-anchor="middle" fill="#fbbf24" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">okuma ağırlıklı izleme · değişiklik penceresi</text>
 <path d="M 570 190 L 624 190" stroke="#64748b" stroke-width="2"/>
 <path d="M 614 184 L 624 190 L 614 196" fill="#64748b"/>
-<!-- OT saha -->
 <rect x="48" y="244" width="704" height="96" rx="12" fill="url(#mod10svg-ot)" stroke="#f97316" stroke-width="1.8"/>
 <text x="400" y="270" text-anchor="middle" fill="#fdba74" font-family="system-ui,Segoe UI,sans-serif" font-size="13.5" font-weight="700">OT segmenti (üretim / süreç)</text>
 <rect x="72" y="286" width="104" height="44" rx="7" fill="rgba(249,115,22,0.18)" stroke="#fb923c"/>
@@ -11398,7 +11334,6 @@
 <rect x="600" y="286" width="136" height="44" rx="7" fill="rgba(239,68,68,0.1)" stroke="#f87171" stroke-dasharray="5 3"/>
 <text x="668" y="306" text-anchor="middle" fill="#fecaca" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="700">sızıntı riski</text>
 <text x="668" y="324" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="9">east-west sınırı</text>
-<!-- OT alt not (kutunun dışında, çizgiyle çakışmaz) -->
 <text x="400" y="364" text-anchor="middle" fill="#cbd5e1" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">Purdue benzeri: OT’yu IT ile aynı “düz ağ”a sürüklemeyin; varlık envanteri ve deterministik erişim kanıtı zorunlu.</text>
 </svg>
 <p class="lesson-image-caption">Kavramsal şema: çok sayıda IoT ucundan gelen risk; güvenli köprü ve sınır; OT sahasında PLC/HMI ve izleme; segmentler arası lateral hareketin sınırlandırılması.</p>
@@ -12101,12 +12036,10 @@
 </defs>
 <rect width="800" height="384" rx="14" fill="url(#mod11svg-bg)"/>
 <text x="400" y="30" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="600">NETWORK OLAYI — MÜDAHALE AKIŞI · KAYIT / KANIT ZİNCİRİ</text>
-<!-- Ana hat: olay boru hattı -->
 <rect x="48" y="50" width="704" height="74" rx="10" fill="url(#mod11svg-ir)" stroke="#6366f1" stroke-width="1.4"/>
 <text x="400" y="76" text-anchor="middle" fill="#e0e7ff" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">üst süreç (özet): sinyal → triage → sınırlama</text>
 <text x="400" y="98" text-anchor="middle" fill="#c7d2fe" font-family="system-ui,Segoe UI,sans-serif" font-size="11">her adımda karar: kapsam, yetki, üretim etkisi, geri alınabilirlik</text>
 <text x="400" y="116" text-anchor="middle" fill="#a5b4fc" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5">önce hayat güvenliği / süreklilik, sonra kök neden</text>
-<!-- Adımlar -->
 <rect x="48" y="138" width="118" height="96" rx="9" fill="rgba(239,68,68,0.12)" stroke="#f87171" stroke-width="1.5"/>
 <text x="107" y="164" text-anchor="middle" fill="#fecaca" font-family="system-ui,Segoe UI,sans-serif" font-size="11.5" font-weight="700">1 tespit</text>
 <text x="107" y="184" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="10">alarm · PCAP</text>
@@ -12140,7 +12073,6 @@
 <text x="668" y="184" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10">PIR · kontrol</text>
 <text x="668" y="202" text-anchor="middle" fill="#4ade80" font-family="system-ui,Segoe UI,sans-serif" font-size="10">tuning listesi</text>
 <text x="668" y="220" text-anchor="middle" fill="#22c55e" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">runbook güncelle</text>
-<!-- Kayıt disiplini şeridi (alt çizgi ile çakışmayacak şekilde içerik bitirilir) -->
 <rect x="48" y="248" width="704" height="92" rx="10" fill="rgba(15,23,42,0.55)" stroke="#475569" stroke-width="1.2" stroke-dasharray="6 4"/>
 <text x="400" y="276" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="13" font-weight="700">kayıt disiplini (aynı olay için tek gerçek)</text>
 <rect x="72" y="290" width="200" height="40" rx="7" fill="rgba(148,163,184,0.15)" stroke="#94a3b8"/>
@@ -12815,11 +12747,9 @@
 </defs>
 <rect width="800" height="360" rx="14" fill="url(#mod12svg-bg)"/>
 <text x="400" y="28" text-anchor="middle" fill="#94a3b8" font-family="system-ui,Segoe UI,sans-serif" font-size="12.5" font-weight="600">YETKİLİ KEŞİF · GÜVENLİ DOĞRULAMA · PURPLE TEAM · RAPOR OMURGASI</text>
-<!-- Yetki / kapsam -->
 <rect x="48" y="44" width="704" height="52" rx="10" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.4"/>
 <text x="400" y="68" text-anchor="middle" fill="#bbf7d0" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">yazılı yetki · kapsam · stop / kill koşulları</text>
 <text x="400" y="86" text-anchor="middle" fill="#86efac" font-family="system-ui,Segoe UI,sans-serif" font-size="10">ROE · hedef listesi · zaman penceresi · kanıt zinciri · hukuki / sözleşme uyumu</text>
-<!-- Purple Team: kesişen daireler -->
 <circle cx="300" cy="185" r="78" fill="rgba(239,68,68,0.18)" stroke="#f87171" stroke-width="2"/>
 <text x="260" y="172" text-anchor="middle" fill="#fecaca" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">kırmızı</text>
 <text x="260" y="188" text-anchor="middle" fill="#fca5a5" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">senaryo · sim.</text>
@@ -12828,20 +12758,17 @@
 <text x="460" y="172" text-anchor="middle" fill="#bfdbfe" font-family="system-ui,Segoe UI,sans-serif" font-size="11" font-weight="700">mavi</text>
 <text x="460" y="188" text-anchor="middle" fill="#93c5fd" font-family="system-ui,Segoe UI,sans-serif" font-size="9.5">SIEM · alarm</text>
 <text x="460" y="204" text-anchor="middle" fill="#60a5fa" font-family="system-ui,Segoe UI,sans-serif" font-size="9">hunt · log</text>
-<!-- Kesişim (mor) -->
 <ellipse cx="360" cy="185" rx="52" ry="46" fill="rgba(168,85,247,0.35)" stroke="#c084fc" stroke-width="2"/>
 <text x="360" y="178" text-anchor="middle" fill="#f3e8ff" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">mor</text>
 <text x="360" y="196" text-anchor="middle" fill="#e9d5ff" font-family="system-ui,Segoe UI,sans-serif" font-size="10">purple team</text>
 <text x="360" y="212" text-anchor="middle" fill="#d8b4fe" font-family="system-ui,Segoe UI,sans-serif" font-size="9">ortak öğrenme</text>
 <text x="400" y="118" text-anchor="middle" fill="#c084fc" font-family="system-ui,Segoe UI,sans-serif" font-size="10.5" font-weight="600">güvenli doğrulama: üretim dışı / sınırlı patlama yarıçapı</text>
-<!-- Güvenli doğrulama notu -->
 <rect x="48" y="118" width="200" height="40" rx="7" fill="rgba(234,179,8,0.1)" stroke="#eab308" stroke-dasharray="5 3"/>
 <text x="148" y="136" text-anchor="middle" fill="#fef9c3" font-family="system-ui,Segoe UI,sans-serif" font-size="10" font-weight="700">lab · kopya ortam</text>
 <text x="148" y="150" text-anchor="middle" fill="#fde047" font-family="system-ui,Segoe UI,sans-serif" font-size="8.5">iz bırak · rollback</text>
 <rect x="552" y="118" width="200" height="40" rx="7" fill="rgba(234,179,8,0.1)" stroke="#eab308" stroke-dasharray="5 3"/>
 <text x="652" y="136" text-anchor="middle" fill="#fef9c3" font-family="system-ui,Segoe UI,sans-serif" font-size="10" font-weight="700">kanıt paketi</text>
 <text x="652" y="150" text-anchor="middle" fill="#fde047" font-family="system-ui,Segoe UI,sans-serif" font-size="8.5">hash · süre · sorumlu</text>
-<!-- Alt: operasyonel omurga -->
 <rect x="48" y="274" width="704" height="68" rx="10" fill="rgba(71,85,105,0.25)" stroke="#64748b" stroke-width="1.2"/>
 <text x="400" y="298" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,Segoe UI,sans-serif" font-size="12" font-weight="700">operasyonel omurga: rapor → risk diline çevir → iş sahibi → takvim · tekrar test</text>
 <rect x="72" y="308" width="192" height="26" rx="5" fill="rgba(148,163,184,0.2)"/>
@@ -14114,16 +14041,13 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
 
     </script>
 
-    <!-- Oturum + üst menü (index ile aynı zincir; giriş yapınca profil görünür) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
     <script src="/js/supabase-env.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js?v=2.1"></script>
     <script src="/js/navigation.js?v=2.3"></script>
 
-    <!-- Module Access Check -->
     <script src="module-access-check.js"></script>
-<!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

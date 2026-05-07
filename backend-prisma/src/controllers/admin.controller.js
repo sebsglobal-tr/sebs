@@ -1,15 +1,10 @@
 atabilermiyimmmmmhihihihih// Admin Controller
 import { prisma } from '../server.js';
 
-/**
- * Get dashboard statistics
- */
 export async function getDashboardStats(req, res, next) {
   try {
-    // Total Users
     const totalUsers = await prisma.user.count();
     
-    // Active Users (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const activeUsers7d = await prisma.user.count({
@@ -18,7 +13,6 @@ export async function getDashboardStats(req, res, next) {
       }
     });
     
-    // Active Users (last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const activeUsers30d = await prisma.user.count({
@@ -27,20 +21,17 @@ export async function getDashboardStats(req, res, next) {
       }
     });
     
-    // Completed Simulations
     const completedSimulations = await prisma.simulationRun.count({
       where: {
         completedAt: { not: null }
       }
     });
     
-    // Average Skill Score
     const avgSkillScoreResult = await prisma.skillScore.aggregate({
       _avg: { score: true }
     });
     const avgSkillScore = avgSkillScoreResult._avg.score || 0;
     
-    // Risk/Weak Area Count
     const riskUsers = await prisma.aiAnalysis.count({
       where: {
         riskLevel: { in: ['medium', 'high'] },
@@ -48,7 +39,6 @@ export async function getDashboardStats(req, res, next) {
       }
     });
     
-    // Simulation Success vs Failure
     const successCount = await prisma.simulationRun.count({
       where: {
         completedAt: { not: null },
@@ -63,7 +53,6 @@ export async function getDashboardStats(req, res, next) {
       }
     });
     
-    // Recent AI Alerts
     const aiAlerts = await prisma.aiAnalysis.findMany({
       where: {
         riskLevel: { in: ['medium', 'high'] },
@@ -82,7 +71,6 @@ export async function getDashboardStats(req, res, next) {
       take: 10
     });
     
-    // Skill Distribution
     const skillDistribution = await prisma.skillScore.groupBy({
       by: ['skillName'],
       _avg: { score: true },
@@ -126,9 +114,6 @@ export async function getDashboardStats(req, res, next) {
   }
 }
 
-/**
- * Get users list with filters
- */
 export async function getUsers(req, res, next) {
   try {
     const { page = 1, limit = 50, role, search } = req.query;
@@ -167,7 +152,6 @@ export async function getUsers(req, res, next) {
       prisma.user.count({ where })
     ]);
     
-    // Get additional data for each user
     const usersWithStats = await Promise.all(
       users.map(async (user) => {
         const [enrollments, avgSkillScore, recentAIAnalysis] = await Promise.all([
@@ -211,9 +195,6 @@ export async function getUsers(req, res, next) {
   }
 }
 
-/**
- * Get user details
- */
 export async function getUserDetails(req, res, next) {
   try {
     const { userId } = req.params;
@@ -243,7 +224,6 @@ export async function getUserDetails(req, res, next) {
       });
     }
     
-    // Get enrollments
     const enrollments = await prisma.enrollment.findMany({
       where: { userId: user.id },
       include: {
@@ -258,13 +238,11 @@ export async function getUserDetails(req, res, next) {
       }
     });
     
-    // Get skill scores
     const skillScores = await prisma.skillScore.findMany({
       where: { userId: user.id },
       orderBy: { lastUpdated: 'desc' }
     });
     
-    // Get behavior data summary
     const behaviorSummary = await prisma.behaviorData.aggregate({
       where: { userId: user.id },
       _avg: {
@@ -280,14 +258,12 @@ export async function getUserDetails(req, res, next) {
       }
     });
     
-    // Get AI analysis
     const aiAnalyses = await prisma.aiAnalysis.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
       take: 5
     });
     
-    // Get simulation runs
     const simulationRuns = await prisma.simulationRun.findMany({
       where: { userId: user.id },
       include: {
@@ -339,9 +315,6 @@ export async function getUserDetails(req, res, next) {
   }
 }
 
-/**
- * Get simulations list
- */
 export async function getSimulations(req, res, next) {
   try {
     const simulationRuns = await prisma.simulationRun.groupBy({
@@ -354,7 +327,6 @@ export async function getSimulations(req, res, next) {
       }
     });
     
-    // Get most common errors
     const simulationsWithErrors = await Promise.all(
       simulationRuns.map(async (sim) => {
         const failedRuns = await prisma.simulationRun.findMany({
@@ -388,16 +360,12 @@ export async function getSimulations(req, res, next) {
   }
 }
 
-/**
- * Get performance analytics
- */
 export async function getPerformanceAnalytics(req, res, next) {
   try {
     const { period = '30' } = req.query;
     const daysAgo = new Date();
     daysAgo.setDate(daysAgo.getDate() - parseInt(period));
     
-    // Skill-based distribution
     const skillDistribution = await prisma.skillScore.groupBy({
       by: ['skillName'],
       _avg: { score: true },
@@ -407,7 +375,6 @@ export async function getPerformanceAnalytics(req, res, next) {
       }
     });
     
-    // Time series data for improvement tracking
     const skillTrends = await prisma.skillScore.findMany({
       where: {
         lastUpdated: { gte: daysAgo }
@@ -431,9 +398,6 @@ export async function getPerformanceAnalytics(req, res, next) {
   }
 }
 
-/**
- * Get behavior analysis
- */
 export async function getBehaviorAnalysis(req, res, next) {
   try {
     const { userId } = req.query;
@@ -462,7 +426,6 @@ export async function getBehaviorAnalysis(req, res, next) {
       take: 100
     });
     
-    // Aggregate statistics
     const stats = await prisma.behaviorData.aggregate({
       where,
       _avg: {
@@ -490,9 +453,6 @@ export async function getBehaviorAnalysis(req, res, next) {
   }
 }
 
-/**
- * Get AI insights
- */
 export async function getAIInsights(req, res, next) {
   try {
     const { userId, riskLevel } = req.query;
@@ -540,9 +500,6 @@ export async function getAIInsights(req, res, next) {
   }
 }
 
-/**
- * Get security logs
- */
 export async function getSecurityLogs(req, res, next) {
   try {
     const { page = 1, limit = 100, action, adminId } = req.query;
@@ -609,9 +566,6 @@ export async function getSecurityLogs(req, res, next) {
   }
 }
 
-/**
- * Log security event (helper function for other controllers)
- */
 export async function logSecurityEvent(adminId, action, resource, resourceId, ipAddress, userAgent, success = true, details = null) {
   try {
     await prisma.securityLog.create({
@@ -628,6 +582,5 @@ export async function logSecurityEvent(adminId, action, resource, resourceId, ip
     });
   } catch (error) {
     console.error('Failed to log security event:', error);
-    // Don't throw - logging failure shouldn't break the main operation
   }
 }

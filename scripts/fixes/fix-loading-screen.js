@@ -1,5 +1,3 @@
-// Yükleme ekranı sorunlarını test etme script'i
-// Tarayıcı console'unda çalıştırılabilir
 
 console.log('🔍 Yükleme Ekranı Kontrolü...');
 
@@ -28,13 +26,11 @@ if (!loadingOverlay) {
         console.warn('⚠️  Logo img elementi bulunamadı!');
     }
     
-    // Manuel olarak gizlemek için
     console.log('\n💡 Yükleme ekranını manuel gizlemek için:');
     console.log('   hideLoadingScreen() fonksiyonunu çağırın veya:');
     console.log('   document.getElementById("loadingOverlay").classList.add("hidden");');
 }
 
-// Manuel gizleme fonksiyonu
 window.hideLoadingScreen = function() {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) {

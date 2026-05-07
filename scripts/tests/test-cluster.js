@@ -1,7 +1,3 @@
-/**
- * Cluster Mode Test Script
- * Tests cluster mode functionality and worker processes
- */
 
 const cluster = require('cluster');
 const http = require('http');
@@ -15,7 +11,6 @@ if (cluster.isMaster) {
     let workersReady = 0;
     let workersTested = 0;
 
-    // Fork workers
     for (let i = 0; i < numCPUs; i++) {
         const worker = cluster.fork();
         
@@ -38,7 +33,6 @@ if (cluster.isMaster) {
                     console.log(`   • Health Check: ✅ Başarılı`);
                     console.log(`\n💡 Cluster mode hazır! Şimdi 'npm run start:cluster' ile başlatabilirsiniz.`);
                     
-                    // Cleanup
                     setTimeout(() => {
                         for (const id in cluster.workers) {
                             cluster.workers[id].kill();
@@ -51,7 +45,6 @@ if (cluster.isMaster) {
     }
 
     function runTests() {
-        // Test each worker
         for (const id in cluster.workers) {
             const worker = cluster.workers[id];
             testWorker(worker);
@@ -59,12 +52,9 @@ if (cluster.isMaster) {
     }
 
     function testWorker(worker) {
-        // Simple HTTP test
         const testPort = 8006 + parseInt(worker.id);
         const testUrl = `http://localhost:${testPort}/api/health`;
         
-        // Note: In real scenario, workers share the same port
-        // This is just a simulation
         worker.send({ type: 'test', port: 8006 });
     }
 
@@ -73,12 +63,10 @@ if (cluster.isMaster) {
     });
 
 } else {
-    // Worker process
     process.send('ready');
 
     process.on('message', (msg) => {
         if (msg.type === 'test') {
-            // Simulate health check
             setTimeout(() => {
                 process.send('tested');
             }, 500);

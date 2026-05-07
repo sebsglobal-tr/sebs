@@ -1,13 +1,4 @@
-/* ============================================
-   SEBS GLOBAL - PREMIUM LESSON STYLES
-   Tüm modüllerde kullanılan callout, kart, tablo stilleri
-   Tema bağımsız (light/dark uyumlu)
-   ============================================ */
 
-/*
- * Modül sayfası: sol sabit sidebar (320px) tam genişlikteki footer metninin üstüne binmesin;
- * içerik ana kolonla hizalı kalsın.
- */
 @media (min-width: 1025px) {
   body:has(.module-layout) > footer {
     padding-left: 320px;
@@ -15,7 +6,6 @@
   }
 }
 
-/* Premium tablolar */
 .info-table-compact {
     margin: 2rem 0;
     border-radius: 16px;
@@ -43,7 +33,6 @@
 .info-table-compact tbody tr:hover { background: rgba(59, 130, 246, 0.08); }
 .info-table-compact tbody tr:last-child td { border-bottom: none; }
 
-/* Concept kartlar */
 .concept-card {
     margin: 1.5rem 0;
     padding: 1.5rem;
@@ -83,7 +72,6 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
 
-/* Premium callout kutuları */
 .callout-box {
     margin: 1.25rem 0;
     padding: 1.25rem 1.5rem;
@@ -127,7 +115,6 @@
 }
 .callout-box.success .callout-icon { color: var(--success-color, #22c55e); }
 
-/* Key-point kartları */
 .key-points-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
@@ -165,7 +152,6 @@
     line-height: 1.4;
 }
 
-/* Topoloji diyagramları - premium görseller */
 .topology-diagram {
     margin: 1.5rem 0;
     border-radius: 16px;
@@ -192,7 +178,6 @@
     height: auto;
 }
 
-/* Sayfa sayfa görünüm: aynı anda tek subsection görünür */
 .content-section .lesson-subsection {
     display: none;
 }
@@ -200,7 +185,6 @@
     display: block;
 }
 
-/* Terimler/Sorular blokları (tema uyumlu) */
 .terimler-block {
     margin: 2.5rem 0;
     padding: 1.5rem 1.75rem;
@@ -216,7 +200,6 @@
     border-radius: 14px;
 }
 
-/* ScenarioBlock - Troubleshooting mini senaryosu */
 .scenario-block {
     margin: 2rem 0;
     padding: 1.5rem 1.75rem;
@@ -238,7 +221,6 @@
 .scenario-block .scenario-body p { margin: 0 0 0.75rem; line-height: 1.6; }
 .scenario-block .scenario-body p:last-child { margin-bottom: 0; }
 
-/* Module/Lesson image placeholders - responsive, lazy-loaded */
 .module-hero-image,
 .lesson-hero-image {
     width: 100%;
@@ -252,9 +234,7 @@
 .lesson-hero-image { max-height: 240px; }
 .module-hero-image { max-height: 180px; }
 
-/* ========== INTERAKTİF ÖĞELER ========== */
 
-/* Accordion - Katlanabilir bölümler */
 .accordion-block {
     margin: 1.5rem 0;
     border-radius: 14px;
@@ -302,7 +282,6 @@
     border-top: 1px solid rgba(59, 130, 246, 0.15);
 }
 
-/* Flip kartlar - Terimler (ön: terim, arka: açıklama) */
 .flip-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
@@ -360,7 +339,6 @@
     border-color: rgba(59, 130, 246, 0.5);
 }
 
-/* Reveal kart - Tıkla cevabı göster */
 .reveal-card {
     margin: 1rem 0;
     border-radius: 12px;
@@ -403,7 +381,6 @@
     border-top: 1px solid rgba(34, 197, 94, 0.2);
 }
 
-/* Sekmeli karşılaştırma */
 .tabs-container {
     margin: 1.5rem 0;
     border-radius: 14px;
@@ -443,7 +420,6 @@
     display: block;
 }
 
-/* Hızlı kontrol kartları - Doğru/Yanlış */
 .quick-check-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));

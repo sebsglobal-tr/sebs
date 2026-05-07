@@ -1,7 +1,3 @@
-/**
- * Comprehensive Database Security & Structure Audit
- * Veritabanı güvenlik ve yapı denetimi
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
@@ -34,31 +30,24 @@ async function auditDatabase() {
         console.log('\n🔍 VERİTABANI KAPSAMLI DENETİM BAŞLATILIYOR...\n');
         console.log('='.repeat(70));
         
-        // 1. TABLO YAPISI KONTROLÜ
         console.log('\n📊 1. TABLO YAPISI KONTROLÜ\n');
         await checkTableStructures(client);
         
-        // 2. GÜVENLİK KONTROLÜ
         console.log('\n🔒 2. GÜVENLİK KONTROLÜ\n');
         await checkSecurityIssues(client);
         
-        // 3. FOREIGN KEY KONTROLÜ
         console.log('\n🔗 3. FOREIGN KEY İLİŞKİLERİ\n');
         await checkForeignKeys(client);
         
-        // 4. INDEX KONTROLÜ
         console.log('\n📇 4. INDEX KONTROLÜ\n');
         await checkIndexes(client);
         
-        // 5. VERİ BÜTÜNLÜĞÜ
         console.log('\n✅ 5. VERİ BÜTÜNLÜĞÜ KONTROLÜ\n');
         await checkDataIntegrity(client);
         
-        // 6. PERFORMANS KONTROLÜ
         console.log('\n⚡ 6. PERFORMANS KONTROLÜ\n');
         await checkPerformance(client);
         
-        // 7. RAPOR
         console.log('\n📋 DENETİM RAPORU\n');
         generateReport();
         
@@ -70,7 +59,6 @@ async function auditDatabase() {
 }
 
 async function checkTableStructures(client) {
-    // Check critical tables
     const criticalTables = ['users', 'purchases', 'module_progress', 'enrollments', 'certificates', 'courses', 'modules'];
     
     for (const table of criticalTables) {
@@ -85,7 +73,6 @@ async function checkTableStructures(client) {
         if (exists.rows[0].exists) {
             console.log(`   ✅ ${table} tablosu mevcut`);
             
-            // Check columns
             const columns = await client.query(
                 `SELECT column_name, data_type, is_nullable, column_default
                  FROM information_schema.columns
@@ -94,7 +81,6 @@ async function checkTableStructures(client) {
                 [table]
             );
             
-            // Check for missing critical columns
             if (table === 'users') {
                 const hasAccessLevel = columns.rows.some(c => c.column_name === 'access_level');
                 if (!hasAccessLevel) {
@@ -118,7 +104,6 @@ async function checkTableStructures(client) {
 }
 
 async function checkSecurityIssues(client) {
-    // 1. Password hashing check
     const passwordCheck = await client.query(
         `SELECT column_name, data_type 
          FROM information_schema.columns 
@@ -136,7 +121,6 @@ async function checkSecurityIssues(client) {
         console.log(`   ✅ Password kolonu: ${col.column_name} (${col.data_type})`);
     }
     
-    // 2. Check for plain text sensitive data
     const sensitiveColumns = await client.query(
         `SELECT table_name, column_name, data_type
          FROM information_schema.columns
@@ -155,7 +139,6 @@ async function checkSecurityIssues(client) {
         console.log(`      - ${col.table_name}.${col.column_name}`);
     });
     
-    // 3. Check for missing constraints on sensitive tables
     const usersConstraints = await client.query(
         `SELECT constraint_name, constraint_type
          FROM information_schema.table_constraints
@@ -197,7 +180,6 @@ async function checkForeignKeys(client) {
     
     console.log(`   📋 Toplam ${fks.rows.length} foreign key constraint`);
     
-    // Check for missing FKs on critical relationships
     const criticalFKs = [
         { table: 'purchases', column: 'user_id', refTable: 'users' },
         { table: 'module_progress', column: 'user_id', refTable: 'users' },
@@ -221,7 +203,6 @@ async function checkForeignKeys(client) {
         }
     }
     
-    // Check CASCADE rules
     const cascadeIssues = fks.rows.filter(row => row.delete_rule !== 'CASCADE' && row.delete_rule !== 'NO ACTION');
     if (cascadeIssues.length > 0) {
         console.log(`   ⚠️  ${cascadeIssues.length} foreign key'de CASCADE kuralı kontrol edilmeli`);
@@ -238,7 +219,6 @@ async function checkIndexes(client) {
     
     console.log(`   📋 Toplam ${indexes.rows.length} index`);
     
-    // Check for missing indexes on foreign keys
     const fkColumns = await client.query(
         `SELECT DISTINCT kcu.table_name, kcu.column_name
          FROM information_schema.table_constraints AS tc
@@ -260,7 +240,6 @@ async function checkIndexes(client) {
         }
     }
     
-    // Check for indexes on frequently queried columns
     const criticalIndexes = [
         { table: 'purchases', columns: ['user_id', 'category', 'level', 'is_active'] },
         { table: 'module_progress', columns: ['user_id', 'module_id', 'is_completed'] },
@@ -284,7 +263,6 @@ async function checkIndexes(client) {
 }
 
 async function checkDataIntegrity(client) {
-    // Check for orphaned records
     const orphanedProgress = await client.query(
         `SELECT COUNT(*) as count
          FROM module_progress mp
@@ -299,7 +277,6 @@ async function checkDataIntegrity(client) {
         console.log('   ✅ Orphaned module_progress kaydı yok');
     }
     
-    // Check for duplicate purchases
     const duplicatePurchases = await client.query(
         `SELECT user_id, category, level, COUNT(*) as count
          FROM purchases
@@ -317,7 +294,6 @@ async function checkDataIntegrity(client) {
 }
 
 async function checkPerformance(client) {
-    // Check table sizes
     const tableSizes = await client.query(
         `SELECT 
             schemaname,
@@ -334,7 +310,6 @@ async function checkPerformance(client) {
         console.log(`      - ${row.tablename}: ${row.size}`);
     });
     
-    // Check for missing statistics
     try {
         const statsCheck = await client.query(
             `SELECT schemaname, tablename, n_tup_ins, n_tup_upd, n_tup_del, last_vacuum, last_analyze
@@ -402,7 +377,6 @@ function generateReport() {
     console.log(`\n📊 TOPLAM: ${totalIssues} sorun tespit edildi\n`);
 }
 
-// Run audit
 if (require.main === module) {
     auditDatabase()
         .then(() => pool.end())

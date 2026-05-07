@@ -1,4 +1,3 @@
-// Progress Controller - Supabase/Profile uyumlu, modül ilerlemesi veritabanına kaydedilir
 import { prisma } from '../server.js';
 
 export async function saveProgress(req, res, next) {
@@ -6,7 +5,6 @@ export async function saveProgress(req, res, next) {
     const { moduleId, percentComplete, lastStep, isCompleted } = req.body;
     const userId = req.user.id; // Supabase auth user id = profiles.id
 
-    // Profile kontrolü (Supabase)
     const profile = await prisma.profile.findUnique({
       where: { id: userId },
       select: { accessLevel: true }
@@ -19,7 +17,6 @@ export async function saveProgress(req, res, next) {
       });
     }
 
-    // Modül var mı
     const module = await prisma.module.findUnique({
       where: { id: moduleId },
       include: { course: true }
@@ -32,7 +29,6 @@ export async function saveProgress(req, res, next) {
       });
     }
 
-    // Erişim seviyesi (kurs varsa)
     const levelHierarchy = { beginner: 1, intermediate: 2, advanced: 3 };
     const userLevel = levelHierarchy[profile.accessLevel] || 0;
     const courseLevel = module.course ? (levelHierarchy[module.course.level] || 0) : 0;
@@ -156,7 +152,6 @@ export async function updateTimeSpent(req, res, next) {
       }
     });
 
-    // Günlük modül süresi (UserModuleSession) - bugünün tarihi
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     try {
@@ -177,7 +172,6 @@ export async function updateTimeSpent(req, res, next) {
         update: { minutesSpent: { increment: toAdd } }
       });
     } catch (e) {
-      // Tablo yoksa veya unique constraint farklıysa sessizce devam et
     }
 
     res.json({ success: true, data: progress });
@@ -203,7 +197,6 @@ export async function saveQuizResult(req, res, next) {
       });
     }
 
-    // QuizAttempt tablosuna kaydet (analitik için)
     await prisma.quizAttempt.create({
       data: {
         userId,
@@ -264,7 +257,6 @@ export async function saveQuizResult(req, res, next) {
   }
 }
 
-// Dashboard overview - tüm modül ilerlemeleri veritabanından
 export async function getProgressOverview(req, res, next) {
   try {
     const userId = req.user.id;
@@ -311,7 +303,6 @@ export async function getProgressOverview(req, res, next) {
   }
 }
 
-// Sync progress from localStorage (login sonrası)
 export async function syncProgress(req, res, next) {
   try {
     const userId = req.user.id;
@@ -390,7 +381,6 @@ export async function syncProgress(req, res, next) {
   }
 }
 
-// Giriş kaydı - kullanıcının her gün girip girmediği takibi
 export async function logLogin(req, res, next) {
   try {
     const userId = req.user.id;

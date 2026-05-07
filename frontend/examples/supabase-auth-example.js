@@ -1,5 +1,3 @@
-// Frontend Supabase Auth Integration Example
-// This shows how frontend should interact with Supabase Auth
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -8,14 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'YOUR_ANON_
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ============================================
-// AUTHENTICATION FUNCTIONS
-// ============================================
 
-/**
- * Sign up new user
- * Supabase automatically sends verification email
- */
 export async function signUp(email, password, fullName) {
   try {
     const { data, error } = await supabase.auth.signUp({
@@ -44,9 +35,6 @@ export async function signUp(email, password, fullName) {
   }
 }
 
-/**
- * Sign in existing user
- */
 export async function signIn(email, password) {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -69,9 +57,6 @@ export async function signIn(email, password) {
   }
 }
 
-/**
- * Sign out current user
- */
 export async function signOut() {
   try {
     const { error } = await supabase.auth.signOut();
@@ -82,9 +67,6 @@ export async function signOut() {
   }
 }
 
-/**
- * Get current session
- */
 export async function getSession() {
   try {
     const { data: { session }, error } = await supabase.auth.getSession();
@@ -95,9 +77,6 @@ export async function getSession() {
   }
 }
 
-/**
- * Get current user
- */
 export async function getCurrentUser() {
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -108,22 +87,13 @@ export async function getCurrentUser() {
   }
 }
 
-/**
- * Listen to auth state changes
- */
 export function onAuthStateChange(callback) {
   return supabase.auth.onAuthStateChange((event, session) => {
     callback(event, session);
   });
 }
 
-// ============================================
-// PROFILE FUNCTIONS
-// ============================================
 
-/**
- * Get user profile
- */
 export async function getProfile(userId) {
   try {
     const { data, error } = await supabase
@@ -139,9 +109,6 @@ export async function getProfile(userId) {
   }
 }
 
-/**
- * Update user profile
- */
 export async function updateProfile(userId, updates) {
   try {
     const { data, error } = await supabase
@@ -158,13 +125,7 @@ export async function updateProfile(userId, updates) {
   }
 }
 
-// ============================================
-// ENTITLEMENT FUNCTIONS
-// ============================================
 
-/**
- * Get user entitlements
- */
 export async function getUserEntitlements(userId) {
   try {
     const { data, error } = await supabase
@@ -181,9 +142,6 @@ export async function getUserEntitlements(userId) {
   }
 }
 
-/**
- * Check if user has entitlement (using RPC function)
- */
 export async function checkEntitlement(userId, category, level) {
   try {
     const { data, error } = await supabase.rpc('has_entitlement', {
@@ -199,13 +157,7 @@ export async function checkEntitlement(userId, category, level) {
   }
 }
 
-// ============================================
-// COURSE & LESSON FUNCTIONS
-// ============================================
 
-/**
- * Get published courses
- */
 export async function getCourses(category, level) {
   try {
     let query = supabase
@@ -226,12 +178,8 @@ export async function getCourses(category, level) {
   }
 }
 
-/**
- * Get course details (requires entitlement check)
- */
 export async function getCourseDetails(courseId, userId) {
   try {
-    // Get course
     const { data: course, error: courseError } = await supabase
       .from('courses')
       .select('*')
@@ -240,7 +188,6 @@ export async function getCourseDetails(courseId, userId) {
 
     if (courseError) throw courseError;
 
-    // Check entitlement
     const { data: hasAccess } = await supabase.rpc('has_entitlement', {
       p_user_id: userId,
       p_category: course.category,
@@ -254,7 +201,6 @@ export async function getCourseDetails(courseId, userId) {
       };
     }
 
-    // Get lessons
     const { data: lessons, error: lessonsError } = await supabase
       .from('lessons')
       .select('*')
@@ -273,13 +219,7 @@ export async function getCourseDetails(courseId, userId) {
   }
 }
 
-// ============================================
-// PROGRESS FUNCTIONS
-// ============================================
 
-/**
- * Get user progress
- */
 export async function getUserProgress(userId) {
   try {
     const { data, error } = await supabase
@@ -295,9 +235,6 @@ export async function getUserProgress(userId) {
   }
 }
 
-/**
- * Update lesson progress
- */
 export async function updateProgress(userId, lessonId, progressData) {
   try {
     const { data, error } = await supabase
@@ -320,13 +257,7 @@ export async function updateProgress(userId, lessonId, progressData) {
   }
 }
 
-// ============================================
-// API CALLS WITH AUTH TOKEN
-// ============================================
 
-/**
- * Make authenticated API call to Express backend
- */
 export async function apiCall(endpoint, options = {}) {
   try {
     const { data: { session } } = await supabase.auth.getSession();
@@ -351,39 +282,4 @@ export async function apiCall(endpoint, options = {}) {
   }
 }
 
-// ============================================
-// USAGE EXAMPLES
-// ============================================
 
-/*
-// Sign up
-const signUpResult = await signUp('user@example.com', 'password123', 'John Doe');
-if (signUpResult.success) {
-  console.log('Verification email sent!');
-}
-
-// Sign in
-const signInResult = await signIn('user@example.com', 'password123');
-if (signInResult.success) {
-  console.log('Logged in:', signInResult.user);
-  localStorage.setItem('session', JSON.stringify(signInResult.session));
-}
-
-// Listen to auth changes
-onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN') {
-    console.log('User signed in');
-  } else if (event === 'SIGNED_OUT') {
-    console.log('User signed out');
-  }
-});
-
-// Check entitlement
-const { hasAccess } = await checkEntitlement(userId, 'cybersecurity', 'beginner');
-if (hasAccess) {
-  // Show course content
-}
-
-// Make authenticated API call
-const result = await apiCall('/api/admin/users', { method: 'GET' });
-*/

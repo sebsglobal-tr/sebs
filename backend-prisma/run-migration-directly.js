@@ -1,4 +1,3 @@
-// Run migration SQL directly using Prisma
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import fs from 'fs';
@@ -16,11 +15,9 @@ async function runMigration() {
   try {
     console.log('🔄 Running entitlements table migration...\n');
     
-    // Read SQL file
     const sqlPath = path.join(__dirname, 'migrations', 'create_entitlements_table.sql');
     const sql = fs.readFileSync(sqlPath, 'utf-8');
     
-    // Split SQL into individual statements (handle multi-line statements)
     const lines = sql.split('\n');
     let statements = [];
     let currentStatement = '';
@@ -28,14 +25,12 @@ async function runMigration() {
     for (const line of lines) {
       const trimmedLine = line.trim();
       
-      // Skip comments and empty lines
       if (trimmedLine.startsWith('--') || trimmedLine.length === 0) {
         continue;
       }
       
       currentStatement += ' ' + trimmedLine;
       
-      // If line ends with semicolon, it's a complete statement
       if (trimmedLine.endsWith(';')) {
         statements.push(currentStatement.trim().slice(0, -1)); // Remove trailing semicolon
         currentStatement = '';
@@ -48,7 +43,6 @@ async function runMigration() {
     
     console.log(`Found ${statements.length} SQL statements to execute\n`);
     
-    // Execute each statement in order
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
       if (statement.trim()) {
@@ -57,7 +51,6 @@ async function runMigration() {
           await prisma.$executeRawUnsafe(statement);
           console.log(`✅ Statement ${i + 1} executed successfully\n`);
         } catch (error) {
-          // Ignore "already exists" errors
           if (error.code === '42P07' || error.code === '42P16' || 
               error.message.includes('already exists') || 
               error.message.includes('duplicate') ||
@@ -72,7 +65,6 @@ async function runMigration() {
       }
     }
     
-    // Verify table was created
     const tables = await prisma.$queryRaw`
       SELECT table_name 
       FROM information_schema.tables 
@@ -84,7 +76,6 @@ async function runMigration() {
       console.log('✅ Migration completed successfully!');
       console.log('✅ Entitlements table exists');
       
-      // Check columns
       const columns = await prisma.$queryRaw`
         SELECT column_name, data_type 
         FROM information_schema.columns 

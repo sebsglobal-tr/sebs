@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-/**
- * Integrates generated Temel Network content into temel-network-egitimi.html
- */
 const fs = require('fs');
 const path = require('path');
 
@@ -11,29 +8,24 @@ const GENERATED_FILE = path.join(__dirname, '..', 'modules', 'temel-network-cont
 let html = fs.readFileSync(MODULE_FILE, 'utf8');
 const generated = fs.readFileSync(GENERATED_FILE, 'utf8');
 
-// Extract nav items (between <!-- Sidebar/Nav --> and <!-- Content sections -->)
 const navMatch = generated.match(/<!-- Sidebar: Lesson titles[\s\S]*?-->\s*([\s\S]*?)\n\n<!-- Content:/)
   || generated.match(/<!-- Nav items for sidebar -->\s*([\s\S]*?)\n\n<!-- Content sections/m);
 const navItems = navMatch ? navMatch[1].trim() : (generated.match(/<!-- (?:Sidebar|Nav)[\s\S]*?-->\s*([\s\S]*?)(?=\n\n<!-- Content)/) || [])[1]?.trim() || '';
 
-// Extract content sections (from <!-- Content sections --> or similar to end)
 const contentMatch = generated.match(/<!-- Content:[\s\S]*?-->\s*([\s\S]+)/)
   || generated.match(/<!-- Content sections for main -->\s*([\s\S]+)/);
 const contentSections = contentMatch ? contentMatch[1].trim() : '';
 
-// Replace sidebar nav: from <ul class="nav-list nav-section-list"> content to </ul>
 html = html.replace(
   /(<ul class="nav-list nav-section-list">)\s*[\s\S]*?(\s*<\/ul>)/,
   `$1\n${navItems}\n$2`
 );
 
-// Replace main content: from <main...> to </main>
 html = html.replace(
   /(<main[^>]*>)\s*[\s\S]*?(\s*<\/main>)/,
   `$1\n${contentSections}\n$2`
 );
 
-// Update script: use sections/navLinks from DOM, remove lessonOrder and sectionGroups, align with guncel-siber
 const newScript = `
     <script>
         const MODULE_NAME = 'Temel Network Eğitimi';
@@ -201,13 +193,11 @@ const newScript = `
     </script>
 `;
 
-// Replace the old script block (from const MODULE_NAME to the closing </script> before module-access-check)
 html = html.replace(
   /<script>\s*const MODULE_NAME = 'Temel Network Eğitimi';[\s\S]*?<\/script>\s*\n\s*<script src="module-access-check.js">/,
   newScript + '\n    <script src="module-access-check.js">'
 );
 
-// Add quiz-exam.js if not present
 if (!html.includes('quiz-exam.js')) {
   html = html.replace(
     /<script src="\.\.\/utils\/time-tracker\.js"><\/script>/,

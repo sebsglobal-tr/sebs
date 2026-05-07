@@ -4,7 +4,6 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Temel Siber Güvenlik - CyberGuard Academy</title>
     <meta name="description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
@@ -13,7 +12,6 @@
     <meta name="robots" content="index, follow">
     <meta name="language" content="Turkish">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/modules/temel-siber-guvenlik.html">
     <meta property="og:title" content="Temel Siber Güvenlik - CyberGuard Academy">
@@ -22,16 +20,13 @@
     <meta property="og:site_name" content="CyberGuard Academy">
     <meta property="og:locale" content="tr_TR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Temel Siber Güvenlik - CyberGuard Academy">
     <meta name="twitter:description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-temel-siber-guvenlik.jpg">
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://sebsglobal.com/modules/temel-siber-guvenlik.html">
     
-    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -59,11 +54,20 @@
         }
     }
     </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://sebsglobal.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Egitimler", "item": "https://sebsglobal.com/egitimler" },
+            { "@type": "ListItem", "position": 3, "name": "Temel Siber Guvenlik", "item": "https://sebsglobal.com/modules/temel-siber-guvenlik.html" }
+        ]
+    }
+    </script>
     
     <script src="/js/api-base.js"></script>
-    <!-- Module Progress Tracker -->
     <script src="../utils/module-progress.js"></script>
-    <!-- Time Tracker -->
     <script src="../utils/time-tracker.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1823,7 +1827,6 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -1870,7 +1873,6 @@
     </div>
   </div>
 </header>
-<!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo">
             <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -1915,12 +1917,9 @@
             <div class="loading-progress-bar"></div>
         </div>
     </div>
-        <!-- Navigation -->
     
 
-    <!-- Module Layout -->
     <div class="module-layout">
-        <!-- Sidebar -->
         <aside class="module-sidebar">
             <div class="sidebar-header">
                 <h3>Modül İçeriği</h3>
@@ -2008,9 +2007,7 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="module-content">
-            <!-- Introduction Section -->
             <section class="content-section active" id="intro">
                 <div class="section-header">
                     <h2><i class="fas fa-info-circle"></i> Giriş ve Tanıtım</h2>
@@ -2058,7 +2055,6 @@
                                 </div>
             </section>
 
-            <!-- Lesson 1 Section -->
             <section class="content-section" id="lesson1">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> 1. Siber Güvenlik Temelleri</h2>
@@ -2073,7 +2069,6 @@
                     </div>
 
                 <div class="content-body">
-                    <!-- Siber Güvenlik Temelleri -->
                     <div class="lesson-content">
                         <h3><i class="fas fa-info-circle"></i> Siber Güvenlik Nedir?</h3>
                         <p>Siber güvenlik, bilgisayar sistemlerini, ağları ve verileri dijital saldırılardan koruma uygulamalarıdır. Modern dünyada siber güvenlik, kritik altyapıların korunması için hayati öneme sahiptir ve sürekli gelişen tehdit ortamında dinamik bir alan olarak karşımıza çıkar.</p>
@@ -2718,7 +2713,6 @@
                                                 </div>
                                                 </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -2772,7 +2766,6 @@
                                         </div>
                                     </div>
                                     
-                        <!-- Siber Güvenlik İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Siber Güvenlik İstatistikleri</h4>
                                         <div class="stats-grid">
@@ -2849,7 +2842,6 @@
                             </div>
             </section>
 
-            <!-- Lesson 2 Section -->
             <section class="content-section" id="lesson2">
                 <div class="section-header">
                     <h2><i class="fas fa-bug"></i> 2. Tehdit Türleri</h2>
@@ -2951,7 +2943,6 @@
                                                     </div>
                                                 </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -3005,7 +2996,6 @@
                                 </div>
                             </div>
 
-                                    <!-- Tehdit İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Tehdit İstatistikleri</h4>
                                         <div class="stats-grid">
@@ -3082,7 +3072,6 @@
                 </div>
             </section>
 
-            <!-- Lesson 3 Section -->
             <section class="content-section" id="lesson3">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> 3. Güvenlik Prensipleri</h2>
@@ -3186,7 +3175,6 @@
                                 </div>
                             </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -3240,7 +3228,6 @@
                                 </div>
                             </div>
 
-                        <!-- Güvenlik Prensipleri İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Güvenlik Prensipleri İstatistikleri</h4>
                             <div class="stats-grid">
@@ -3317,7 +3304,6 @@
                 </div>
             </section>
 
-            <!-- Lesson 4 Section -->
             <section class="content-section" id="lesson4">
                 <div class="section-header">
                     <h2><i class="fas fa-chart-line"></i> 4. Risk Değerlendirmesi</h2>
@@ -3421,7 +3407,6 @@
                                                 </div>
                                                 </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -3475,7 +3460,6 @@
                                         </div>
                                                 </div>
 
-                        <!-- Risk Değerlendirmesi İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Risk Değerlendirmesi İstatistikleri</h4>
                             <div class="stats-grid">
@@ -3552,7 +3536,6 @@
                             </div>
             </section>
 
-            <!-- Lesson 5 Section -->
             <section class="content-section" id="lesson5">
                 <div class="section-header">
                     <h2><i class="fas fa-file-shield"></i> 5. Güvenlik Politikaları</h2>
@@ -3656,7 +3639,6 @@
                             </div>
                         </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -3710,7 +3692,6 @@
                                         </div>
                                     </div>
 
-                        <!-- Güvenlik Politikaları İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Güvenlik Politikaları İstatistikleri</h4>
                             <div class="stats-grid">
@@ -3787,7 +3768,6 @@
                                                     </div>
             </section>
 
-            <!-- Lesson 6 Section -->
             <section class="content-section" id="lesson6">
                 <div class="section-header">
                     <h2><i class="fas fa-exclamation-triangle"></i> 6. Incident Response</h2>
@@ -3892,7 +3872,6 @@
                                 </div>
                             </div>
 
-                        <!-- Gerçek Dünya Örnekleri -->
                         <div class="real-world-cases">
                             <h4><i class="fas fa-newspaper"></i> Gerçek Dünya Örnekleri</h4>
                             <div class="case-studies">
@@ -3946,7 +3925,6 @@
                                 </div>
                             </div>
 
-                        <!-- Incident Response İstatistikleri -->
                         <div class="cybersecurity-stats">
                             <h4><i class="fas fa-chart-bar"></i> Incident Response İstatistikleri</h4>
                             <div class="stats-grid">
@@ -4507,12 +4485,9 @@
             document.body.appendChild(message);
         }
     </script>
-    <!-- Navigation Script -->
     <script src="../js/navigation.js">    </script>
-    <!-- Access Control -->
     <script src="../utils/access-control.js"></script>
     <script src="module-access-check.js"></script>
-<!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

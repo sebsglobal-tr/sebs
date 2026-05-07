@@ -9,11 +9,9 @@ const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
 const logger = require('./utils/logger');
-/** Statik site (ayrı deploy edilirse API sunucusunda klasör olmayabilir) */
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: false });
-// Boş SUPABASE_ANON_KEY= satırı dotenv'de "set" sayılır ve backend'den gelen anahtarı ezmez; temizleyip tekrar yükle
 ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'].forEach((k) => {
     if (process.env[k] !== undefined && String(process.env[k]).trim() === '') {
         delete process.env[k];
@@ -29,7 +27,6 @@ if (process.env.NODE_ENV !== 'production' && !(process.env.SUPABASE_ANON_KEY || 
 
 function supabaseRefFromDatabaseUrl(databaseUrl) {
     if (!databaseUrl || typeof databaseUrl !== 'string') return null;
-    // Pooler: postgresql://postgres.PROJECT_REF:password@host
     const pooler = databaseUrl.match(/postgres\.([a-z0-9]+)[:@]/i);
     if (pooler) return pooler[1];
     const direct = databaseUrl.match(/@db\.([a-z0-9]+)\.supabase\.co/i);
@@ -58,23 +55,19 @@ if (_dbRef && _suRef && _dbRef !== _suRef) {
     logger.warn(_supabaseProjectMismatchMsg);
 }
 
-// Supabase self-signed sertifika uyumluluğu
 if (process.env.DATABASE_URL?.includes('supabase') || process.env.DB_PASSWORD) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
 const app = express();
 
-// Reverse proxy (Render, nginx) arkasında doğru istemci IP’si ve rate limit için
 if (process.env.TRUST_PROXY !== '0') {
     app.set('trust proxy', 1);
 }
 
-// Tam erişim (super admin) e-posta — canlıda SUPER_ADMIN_EMAIL ile tanımlayın
 const FULL_ACCESS_EMAIL = (process.env.SUPER_ADMIN_EMAIL ||
     (process.env.NODE_ENV === 'production' ? '' : 'asasferfer4566@gmail.com')).toLowerCase().trim();
 
-/** CORS: CORS_ORIGIN (virgülle çoklu) + PUBLIC_SITE_URL birleştirilir; biri yalnızca Vercel diğeri canlı alan adı olsa bile ikisi de izinli olur. */
 function parseCorsOrigins() {
     const set = new Set();
     function addOrigin(raw) {
@@ -101,7 +94,6 @@ function parseCorsOrigins() {
                 addOrigin(`${proto}//www.${host}`);
             }
         } catch (_) {
-            /* geçersiz PUBLIC_SITE_URL */
         }
     }
 
@@ -109,7 +101,6 @@ function parseCorsOrigins() {
     return out.length ? out : null;
 }
 
-// Production: JWT_SECRET yoksa ama Supabase JWT secret varsa aynı HS256 anahtarı kullan (Render’da tek secret yeter)
 if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
     const j0 = (process.env.JWT_SECRET || '').trim();
     const supaJwt = (process.env.SUPABASE_JWT_SECRET || '').trim();
@@ -121,7 +112,6 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
     }
 }
 
-// Validate critical environment variables in production (npm run build / verify-build için SKIP_ENV_VALIDATION=1)
 if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !== '1') {
     const jwtSecretTrim = (process.env.JWT_SECRET || '').trim();
     if (!jwtSecretTrim || jwtSecretTrim === 'your_super_secret_jwt_key_here') {
@@ -167,12 +157,7 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
     logger.info('Environment validation passed');
 }
 
-// ============================================
-// MIDDLEWARE (ARA KATMAN YAPILANDIRMALARI)
-// ============================================
 
-// Hız sınırlama — sadece /api/auth/* (giriş/kayıt brute-force). Tüm /api/ üzerinde limit,
-// modül listesi ve ilerleme uçlarında 429 üretiyordu (express-rate-limit + mount path uyumu).
 const authLimiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
     max: parseInt(process.env.RATE_LIMIT_AUTH_MAX, 10) || 80,
@@ -182,7 +167,6 @@ const authLimiter = rateLimit({
 });
 app.use('/api/auth', authLimiter);
 
-// İletişim formu — IP başına sınırlı (spam önleme)
 const contactFormLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: parseInt(process.env.RATE_LIMIT_CONTACT_MAX, 10) || 5,
@@ -195,7 +179,6 @@ const contactFormLimiter = rateLimit({
         });
     }
 });
-// CORS — CORS_ORIGIN (virgülle çoklu) + PUBLIC_SITE_URL birleşimi (parseCorsOrigins)
 const corsOrigins = parseCorsOrigins();
 if (corsOrigins && corsOrigins.length) {
     logger.info('CORS izinli kökenler: ' + corsOrigins.join(', '));
@@ -210,7 +193,6 @@ app.use(cors({
     maxAge: 86400
 }));
 
-// Helmet güvenlik başlıkları - XSS, clickjacking ve diğer saldırıları önlemek için
 app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: false, // Varsayılan ayarları kullanma, tam kontrol için
@@ -271,13 +253,10 @@ app.use(helmet({
     }
 }));
 
-// JSON formatındaki request body'lerini parse et (maksimum 10MB)
 app.use(express.json({ limit: '10mb' }));
 
-// URL-encoded formatındaki request body'lerini parse et (maksimum 10MB)
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Statik dosyalar (frontend/); yalnızca klasör varsa — üretimde site ayrı origin'de olabilir
 if (fs.existsSync(FRONTEND_DIR)) {
     app.use(express.static(FRONTEND_DIR, {
         extensions: ['html', 'htm'],
@@ -291,10 +270,6 @@ if (fs.existsSync(FRONTEND_DIR)) {
     app.use('/assets', express.static(path.join(FRONTEND_DIR, 'assets')));
 }
 
-// ============================================
-// VERİTABANI BAĞLANTI POOL YAPILANDIRMASI
-// ============================================
-// Supabase: DB_PASSWORD ile otomatik URL oluşturma desteklenir
 const SUPABASE_POOLER = process.env.SUPABASE_POOLER || 'aws-1-eu-central-1.pooler.supabase.com';
 
 function getDatabaseUrl() {
@@ -302,7 +277,6 @@ function getDatabaseUrl() {
     const dbPass = process.env.DB_PASSWORD;
     const projectRef = (process.env.SUPABASE_PROJECT_REF || '').trim();
 
-    // DB_PASSWORD varsa şifreyi URL'de güncelle veya sıfırdan oluştur
     if (dbPass && projectRef) {
         const enc = encodeURIComponent(String(dbPass));
         if (!url || url.includes('[YOUR-PASSWORD]') || url.includes('YOUR-PASSWORD')) {
@@ -319,7 +293,6 @@ function getDatabaseUrl() {
 const createPool = () => {
     const dbUrl = getDatabaseUrl();
 
-    // Supabase pooler limiti: max düşük tut (exhaustion önleme)
     const baseConfig = {
         max: parseInt(process.env.DB_POOL_MAX) || 5,
         min: parseInt(process.env.DB_POOL_MIN) || 1,
@@ -362,28 +335,15 @@ const createPool = () => {
     }
 };
 
-// Veritabanı bağlantı pool'unu oluştur
 const pool = createPool();
 
-// ============================================
-// VERİTABANI POOL OLAY İZLEYİCİLERİ (İZLEME İÇİN)
-// ============================================
-// Boşta kalan client'ta hata (Supabase shutdown vb.) - sessizce logla
 pool.on('error', (err) => {
     logger.warn('DB pool error (reconnecting):', err.message);
 });
 
-// ============================================
-// VERİTABANI BAĞLANTI SAĞLIK KONTROLÜ
-// ============================================
-// Yeniden deneme mekanizması ile bağlantı sağlık kontrolü
-// Veritabanı bağlantısını test et - Başarısız olursa yeniden dene
-// retries: Maksimum deneme sayısı (varsayılan: 3)
-// delay: Denemeler arasındaki bekleme süresi - milisaniye (varsayılan: 2000ms)
 const testConnection = async (retries = 3, delay = 2000) => {
     for (let i = 0; i < retries; i++) {
         try {
-            // Veritabanına basit bir sorgu gönder (sunucu zamanı ve versiyonu al)
             const result = await pool.query('SELECT NOW(), version()');
             console.log('✅ Database connection successful');
             console.log(`📅 Server time: ${result.rows[0].now}`);
@@ -405,26 +365,17 @@ const testConnection = async (retries = 3, delay = 2000) => {
     return false;
 };
 
-// Uygulama başlatıldığında bağlantıyı test et
 testConnection();
 
-// Periyodik sağlık kontrolü - Her 5 dakikada bir çalışır
-// Veritabanı bağlantısının canlı olduğundan emin olur
 setInterval(async () => {
     try {
-        // Basit bir test sorgusu gönder
         await pool.query('SELECT 1');
     } catch (err) {
         console.error('⚠️  Database health check failed:', err.message);
-        // Bağlantı başarısızsa, yeniden bağlanmayı dene
         await testConnection(1, 1000);
     }
 }, 5 * 60 * 1000); // 5 dakika (milisaniye cinsinden)
 
-// ============================================
-// E-POSTA YAPILANDIRMASI
-// ============================================
-// E-posta gönderimi için SMTP transporter oluştur
 const createEmailTransporter = () => {
     return nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.gmail.com', // SMTP sunucu adresi
@@ -441,29 +392,21 @@ const isSmtpConfigured = () => {
     const user = (process.env.SMTP_USER || '').trim();
     const pass = (process.env.SMTP_PASS || '').trim();
     if (!user || !pass) return false;
-    // Common placeholders that should not be treated as valid credentials.
     if (user === 'your_email@gmail.com') return false;
     if (pass === 'your_app_password') return false;
     if (pass === 'your_gmail_app_password_here') return false;
     return true;
 };
 
-// Doğrulama e-postası gönder
-// email: Alıcı e-posta adresi
-// verificationCode: Gönderilecek 6 haneli doğrulama kodu
-// firstName: Alıcının adı (e-postada kullanılır)
 const sendVerificationEmail = async (email, verificationCode, firstName) => {
     try {
-        // SMTP kimlik bilgilerinin yapılandırılıp yapılandırılmadığını kontrol et
         if (!isSmtpConfigured()) {
             console.log('⚠️ SMTP credentials not configured, skipping email send');
             return { success: false, error: 'SMTP not configured' };
         }
 
-        // E-posta transporter'ı oluştur
         const transporter = createEmailTransporter();
         
-        // SMTP bağlantısını test et
         await transporter.verify();
         console.log('✅ SMTP connection verified');
         
@@ -521,7 +464,6 @@ const sendVerificationEmail = async (email, verificationCode, firstName) => {
     }
 };
 
-/** İletişim formu mesajlarının gideceği gelen kutusu (SMTP ile aynı hesap olmak zorunda değil) */
 const CONTACT_INBOX_EMAIL = (process.env.CONTACT_INBOX_EMAIL || 'sebsglobal@gmail.com').trim();
 
 async function sendContactFormNotification({ firstName, lastName, email, phone, subjectKey, message }) {
@@ -579,16 +521,9 @@ async function sendContactFormNotification({ firstName, lastName, email, phone, 
 }
 
 
-// ============================================
-// GÜVENLİK YARDIMCI FONKSİYONLARI
-// ============================================
 
-// Girdi temizleme (Input Sanitization) yardımcı fonksiyonu
-// XSS (Cross-Site Scripting) saldırılarını önlemek için kullanıcı girdilerini temizler
-// input: Temizlenecek girdi değeri
 const sanitizeInput = (input) => {
     if (typeof input === 'string') {
-        // Potansiyel olarak tehlikeli karakterleri ve HTML etiketlerini kaldır
         return input
             .replace(/<script[^>]*>.*?<\/script>/gi, '') // Script etiketlerini kaldır
             .replace(/<[^>]+>/g, '') // Tüm HTML etiketlerini kaldır
@@ -597,27 +532,16 @@ const sanitizeInput = (input) => {
     return input;
 };
 
-// Güvenli hata yönetimi - Bilgi sızıntısını önler
-// Production ortamında detaylı hata mesajları kullanıcıya gösterilmez
-// res: Express response nesnesi
-// error: Oluşan hata nesnesi
-// customMessage: Kullanıcıya gösterilecek özel hata mesajı
 const handleError = (res, error, customMessage = 'Internal server error') => {
     const isDevelopment = process.env.NODE_ENV === 'development';
     console.error('Error:', error);
     res.status(500).json({
         success: false,
         message: customMessage,
-        // Geliştirme ortamında detaylı hata bilgilerini göster, production'da gösterme
         ...(isDevelopment && { error: error.message, stack: error.stack })
     });
 };
 
-// ============================================
-// JWT KİMLİK DOĞRULAMA MIDDLEWARE'İ
-// ============================================
-// Supabase ile giriş: ilerleme tek satırda toplansın diye e-posta ile mevcut users.id kullanılır
-// (Eski e-posta/şifre kaydı + aynı e-posta ile Supabase → aynı users.id, tek ilerleme)
 const SUPABASE_PASSWORD_PLACEHOLDER = '[SUPABASE]';
 
 async function verifySupabaseAccessTokenViaApi(token) {
@@ -643,10 +567,6 @@ async function verifySupabaseAccessTokenViaApi(token) {
     }
 }
 
-/**
- * Supabase auth.sub ile senkronize eder; aynı e-posta zaten users’ta varsa o satırın id’sini döner (yeni INSERT yapmaz).
- * @returns {Promise<string>} Veritabanındaki kanonik kullanıcı UUID’si
- */
 async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) {
     const em = String(email || '').trim();
     if (!em) {
@@ -686,8 +606,6 @@ async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) 
     return supabaseUserId;
 }
 
-// JWT veya Supabase access token kabul eder; req.user = { userId, email, role? }
-// userId her zaman public.users.id (e-posta ile tek kayıt)
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -701,7 +619,6 @@ const authenticateToken = (req, res, next) => {
         return res.status(500).json({ success: false, message: 'Server configuration error' });
     }
 
-    // 1) Kendi JWT'imiz ile dene
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (!err && decoded && decoded.userId) {
             (async () => {
@@ -740,7 +657,6 @@ const authenticateToken = (req, res, next) => {
             })();
             return;
         }
-        // 2) Supabase JWT ile dene (legacy HS256 secret)
         const supaSecret = String(process.env.SUPABASE_JWT_SECRET || '').trim();
         const resolveSupabaseUserFromDecoded = async (supabaseDecoded) => {
             try {
@@ -781,7 +697,6 @@ const authenticateToken = (req, res, next) => {
                 if (!supaErr && supabaseDecoded && supabaseDecoded.sub) {
                     return resolveSupabaseUserFromDecoded(supabaseDecoded);
                 }
-                // 3) Yeni Supabase JWT Signing Keys (ECC/RSA) için auth API ile doğrula
                 const supaUser = await verifySupabaseAccessTokenViaApi(token);
                 if (!supaUser || !supaUser.id) {
                     return res.status(401).json({ success: false, message: 'Invalid or expired token' });
@@ -795,7 +710,6 @@ const authenticateToken = (req, res, next) => {
             return;
         }
 
-        // 3) Secret yoksa da Supabase auth API ile doğrulamayı dene
         (async () => {
             const supaUser = await verifySupabaseAccessTokenViaApi(token);
             if (!supaUser || !supaUser.id) {
@@ -810,12 +724,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// ============================================
-// KULLANICI ENDPOINT'LERİ
-// ============================================
 
-// Mevcut kullanıcı bilgilerini getir (satın alımlarla birlikte)
-// Kullanıcının kendi bilgilerini ve aktif satın alımlarını döndürür
 app.get('/api/users/me', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -834,18 +743,14 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
 
         const user = result.rows[0];
 
-        // Super admin: bu e-posta her zaman admin + tam erişim
         const isFullAccessEmail = !!(FULL_ACCESS_EMAIL && user.email && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL);
         if (isFullAccessEmail) {
             user.role = 'admin';
             user.access_level = 'advanced';
         }
         
-        // Kullanıcının aktif satın alımlarını veritabanından getir (her iki tabloyu da kontrol et)
-        // Hem 'purchases' hem de 'user_package_purchases' tablolarından veri çekilir
         let purchases = [];
         
-        // Önce 'purchases' tablosunu dene
         try {
             const purchasesResult = await pool.query(
                 `SELECT id, category, level, price, purchased_at, expires_at 
@@ -855,7 +760,6 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
                  ORDER BY purchased_at DESC`,
                 [userId]
             );
-            // Satın alım verilerini frontend formatına dönüştür
             purchases = purchasesResult.rows.map(p => ({
                 id: p.id,
                 category: p.category,
@@ -865,11 +769,9 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
                 expiresAt: p.expires_at
             }));
         } catch (err) {
-            // 'purchases' tablosu henüz yoksa sorun değil (geçiş dönemi için)
             console.log('Could not fetch from purchases table (table may not exist):', err.message);
         }
         
-        // Ayrıca 'user_package_purchases' tablosunu da dene
         try {
             const userPackagePurchasesResult = await pool.query(
                 `SELECT id, category, level, price, purchased_at, expires_at 
@@ -887,7 +789,6 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
                 purchasedAt: p.purchased_at,
                 expiresAt: p.expires_at
             }));
-            // Satın alımları birleştir (duplikasyonları önle - aynı kategori ve seviyeye sahip satın alımlar)
             purchases = [...purchases, ...userPackagePurchases.filter(up => 
                 !purchases.some(p => p.category === up.category && p.level === up.level)
             )];
@@ -895,7 +796,6 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
             console.log('Could not fetch from user_package_purchases table:', err.message);
         }
 
-        // Super admin için tüm kategorilerde erişim sağla
         if (isFullAccessEmail) {
             const allCategories = ['cybersecurity', 'cloud', 'data-science'];
             for (const cat of allCategories) {
@@ -929,10 +829,6 @@ app.get('/api/users/me', authenticateToken, async (req, res) => {
     }
 });
 
-// ============================================
-// CSP TEST ENDPOINT'İ (Sadece development için)
-// ============================================
-// CSP header'ını test etmek için
 if (process.env.NODE_ENV === 'development') {
     app.get('/api/test-csp', (req, res) => {
         res.json({
@@ -943,15 +839,10 @@ if (process.env.NODE_ENV === 'development') {
     });
 }
 
-// ============================================
-// SAĞLIK KONTROLÜ (Railway / Render / load balancer)
-// ============================================
-// Her zaman 200 — süreç ayakta mı (DB kapalı olsa bile deploy sağlık kontrolü geçsin)
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-// Veritabanı + pool detayı (izleme; DB yoksa 503)
 app.get('/api/health/ready', async (req, res) => {
     try {
         const dbResult = await pool.query('SELECT NOW(), version()');
@@ -986,9 +877,6 @@ app.get('/api/health/ready', async (req, res) => {
     }
 });
 
-// ============================================
-// İLETİŞİM FORMU (SMTP → CONTACT_INBOX_EMAIL)
-// ============================================
 app.post('/api/contact', contactFormLimiter, async (req, res) => {
     try {
         const { firstName, lastName, email, phone, subject, message, privacyAccepted } = req.body || {};
@@ -1062,18 +950,11 @@ app.post('/api/contact', contactFormLimiter, async (req, res) => {
     }
 });
 
-// ============================================
-// KİMLİK DOĞRULAMA ENDPOINT'LERİ
-// ============================================
 
-// Kullanıcı kaydı (register)
-// Yeni kullanıcı hesabı oluşturur ve doğrulama e-postası gönderir
 app.post('/api/auth/register', async (req, res) => {
     try {
-        // Request body'den kullanıcı bilgilerini al
         const { email, password, firstName, lastName } = req.body;
 
-        // Girdi doğrulaması - Tüm alanların doldurulup doldurulmadığını kontrol et
         if (!email || !password || !firstName || !lastName) {
             return res.status(400).json({
                 success: false,
@@ -1081,7 +962,6 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        // E-posta formatı doğrulaması - Geçerli bir e-posta formatı olup olmadığını kontrol et
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({
@@ -1090,7 +970,6 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        // Şifre doğrulaması - Şifre en az 6 karakter olmalı
         if (password.length < 6) {
             return res.status(400).json({
                 success: false,
@@ -1098,7 +977,6 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        // Kullanıcının zaten kayıtlı olup olmadığını kontrol et
         const existingUser = await pool.query(
             'SELECT id, is_verified FROM users WHERE email = $1',
             [email]
@@ -1119,18 +997,12 @@ app.post('/api/auth/register', async (req, res) => {
             }
         }
 
-        // Şifreyi hash'le (bcrypt ile güvenli şifreleme)
-        // Salt rounds: Hash işleminde kullanılan güvenlik katmanı (12 = güvenli ve dengeli)
         const saltRounds = 12;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        // 6 haneli doğrulama kodu oluştur (100000-999999 arası rastgele sayı)
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        // Doğrulama kodunun geçerlilik süresi: 15 dakika
         const verificationExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika
 
-        // Kullanıcıyı veritabanına ekle
-        // UUID generate et (crypto.randomUUID kullan)
         const { randomUUID } = require('crypto');
         const userId = randomUUID();
         const publicId = randomUUID();
@@ -1149,14 +1021,12 @@ app.post('/api/auth/register', async (req, res) => {
             name: `${user.first_name} ${user.last_name}`
         });
 
-        // Send verification email
         const emailResult = await sendVerificationEmail(email, verificationCode, firstName);
         
         if (!emailResult.success) {
             console.error('Failed to send verification email:', emailResult.error);
             const allowDevBypass = process.env.NODE_ENV !== 'production';
             if (!allowDevBypass) {
-                // Production safety: keep strict behavior.
                 await pool.query('DELETE FROM users WHERE id = $1', [user.id]);
                 return res.status(500).json({
                     success: false,
@@ -1164,7 +1034,6 @@ app.post('/api/auth/register', async (req, res) => {
                 });
             }
 
-            // Development fallback: keep the account, return verification code for local testing.
             return res.json({
                 success: true,
                 message: 'Kayıt başarılı! SMTP yapılandırılmadığı için doğrulama kodu test modunda döndürüldü.',
@@ -1183,7 +1052,6 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        // Don't generate JWT token until email is verified
         res.json({
             success: true,
             message: 'Kayıt başarılı! E-posta adresinize gönderilen güvenlik kodunu girin.',
@@ -1209,13 +1077,10 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-// E-posta doğrulama
-// Kullanıcının e-posta adresine gönderilen doğrulama kodunu kontrol eder ve hesabı aktifleştirir
 app.post('/api/auth/verify', async (req, res) => {
     try {
         const { email, verificationCode } = req.body;
 
-        // Girdi doğrulaması
         if (!email || !verificationCode) {
             return res.status(400).json({
                 success: false,
@@ -1223,7 +1088,6 @@ app.post('/api/auth/verify', async (req, res) => {
             });
         }
 
-        // Kullanıcıyı ve doğrulama kodunu kontrol et
         const userResult = await pool.query(
             'SELECT id, verification_code, verification_code_expires FROM users WHERE email = $1',
             [email]
@@ -1252,26 +1116,22 @@ app.post('/api/auth/verify', async (req, res) => {
             });
         }
 
-        // Update user as verified
         await pool.query(
             'UPDATE users SET is_verified = true, verification_code = NULL, verification_code_expires = NULL WHERE id = $1',
             [user.id]
         );
 
-        // Generate JWT token after successful verification
         const token = jwt.sign(
             { userId: user.id, email: email },
             process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET environment variable is required'); })(),
             { expiresIn: '24h' }
         );
 
-        // Güncellenmiş kullanıcı verilerini getir
         const updatedUser = await pool.query(
             'SELECT id, email, first_name, last_name, is_verified FROM users WHERE id = $1',
             [user.id]
         );
 
-        // Başarılı yanıt döndür (JWT token ile birlikte)
         res.json({
             success: true,
             message: 'E-posta başarıyla doğrulandı! Hesabınız aktif edildi.',
@@ -1297,8 +1157,6 @@ app.post('/api/auth/verify', async (req, res) => {
     }
 });
 
-// Doğrulama kodunu yeniden gönder
-// Kullanıcı doğrulama kodunu almadıysa veya süresi dolduysa yeni kod gönderir
 app.post('/api/auth/resend-code', async (req, res) => {
     try {
         const { email } = req.body;
@@ -1310,7 +1168,6 @@ app.post('/api/auth/resend-code', async (req, res) => {
             });
         }
 
-        // Kullanıcının var olup olmadığını ve doğrulanmamış olduğunu kontrol et
         const userResult = await pool.query(
             'SELECT id, first_name, is_verified FROM users WHERE email = $1',
             [email]
@@ -1325,7 +1182,6 @@ app.post('/api/auth/resend-code', async (req, res) => {
 
         const user = userResult.rows[0];
 
-        // Kullanıcı zaten doğrulanmışsa hata döndür
         if (user.is_verified) {
             return res.status(400).json({
                 success: false,
@@ -1333,18 +1189,14 @@ app.post('/api/auth/resend-code', async (req, res) => {
             });
         }
 
-        // Yeni doğrulama kodu oluştur (6 haneli rastgele sayı)
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        // Yeni kodun geçerlilik süresi: 15 dakika
         const verificationExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika
 
-        // Veritabanındaki doğrulama kodunu güncelle
         await pool.query(
             'UPDATE users SET verification_code = $1, verification_code_expires = $2 WHERE id = $3',
             [verificationCode, verificationExpires, user.id]
         );
 
-        // Send verification email
         const emailResult = await sendVerificationEmail(email, verificationCode, user.first_name);
         
         if (!emailResult.success) {
@@ -1376,13 +1228,10 @@ app.post('/api/auth/resend-code', async (req, res) => {
     }
 });
 
-// Kullanıcı girişi (login)
-// E-posta ve şifre ile kullanıcı kimlik doğrulaması yapar ve JWT token döndürür
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Girdi doğrulaması
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -1390,13 +1239,11 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Kullanıcıyı bul - rol ve erişim seviyesi bilgilerini de dahil et
         const userResult = await pool.query(
             'SELECT id, email, password_hash, first_name, last_name, is_verified, role, is_active, access_level FROM users WHERE email = $1',
             [email]
         );
 
-        // Kullanıcı bulunamazsa hata döndür (güvenlik için aynı mesaj)
         if (userResult.rows.length === 0) {
             return res.status(400).json({
                 success: false,
@@ -1406,7 +1253,6 @@ app.post('/api/auth/login', async (req, res) => {
 
         const user = userResult.rows[0];
 
-        // Supabase ile kayıtlı kullanıcılar şifre ile giriş yapamaz
         if (user.password_hash === SUPABASE_PASSWORD_PLACEHOLDER) {
             return res.status(400).json({
                 success: false,
@@ -1414,7 +1260,6 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Şifreyi kontrol et (bcrypt ile hash'lenmiş şifreyi karşılaştır)
         const isValidPassword = await bcrypt.compare(password, user.password_hash);
         if (!isValidPassword) {
             return res.status(400).json({
@@ -1423,7 +1268,6 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Kullanıcı hesabının aktif olup olmadığını kontrol et
         if (!user.is_active) {
             return res.status(400).json({
                 success: false,
@@ -1431,7 +1275,6 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Kullanıcının e-posta adresini doğrulayıp doğrulamadığını kontrol et (super admin hariç)
         if (!user.is_verified && (!FULL_ACCESS_EMAIL || user.email.toLowerCase().trim() !== FULL_ACCESS_EMAIL)) {
             return res.status(400).json({
                 success: false,
@@ -1439,14 +1282,12 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Super admin: bu e-posta her zaman admin + tam erişim alır
         const isFullAccessEmail = !!(FULL_ACCESS_EMAIL && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL);
         if (isFullAccessEmail) {
             user.role = 'admin';
             user.access_level = 'advanced';
         }
 
-        // JWT token oluştur - kullanıcı rolünü de dahil et
         if (!process.env.JWT_SECRET) {
             return res.status(500).json({
                 success: false,
@@ -1460,7 +1301,6 @@ app.post('/api/auth/login', async (req, res) => {
             { expiresIn: '24h' }
         );
 
-        // Kullanıcının aktif satın alımlarını veritabanından getir
         let purchases = [];
         try {
             const purchasesResult = await pool.query(
@@ -1480,11 +1320,9 @@ app.post('/api/auth/login', async (req, res) => {
                 expiresAt: p.expires_at
             }));
         } catch (err) {
-            // 'purchases' tablosu henüz yoksa sorun değil (geçiş dönemi için)
             console.log('Could not fetch purchases during login (table may not exist):', err.message);
         }
 
-        // Ayrıca 'user_package_purchases' tablosunu da dene
         try {
             const userPackagePurchasesResult = await pool.query(
                 `SELECT id, category, level, price, purchased_at, expires_at 
@@ -1502,16 +1340,13 @@ app.post('/api/auth/login', async (req, res) => {
                 purchasedAt: p.purchased_at,
                 expiresAt: p.expires_at
             }));
-            // Satın alımları birleştir (duplikasyonları önle - aynı kategori ve seviyeye sahip satın alımlar)
             purchases = [...purchases, ...userPackagePurchases.filter(up => 
                 !purchases.some(p => p.category === up.category && p.level === up.level)
             )];
         } catch (err) {
-            // Tablo henüz yoksa sorun değil
             console.log('Could not fetch user_package_purchases during login:', err.message);
         }
 
-        // Super admin için tüm kategorilerde advanced satın alım doldur (tam erişim)
         if (isFullAccessEmail && (!purchases || purchases.length === 0)) {
             purchases = [
                 { id: 'super', category: 'cybersecurity', level: 'advanced', price: 0, purchasedAt: null, expiresAt: null },
@@ -1554,9 +1389,6 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// ============================================
-// MODÜL ENDPOINT'LERİ
-// ============================================
 
 let _modulesSchemaCache = null;
 async function getModulesSchemaInfo() {
@@ -1576,7 +1408,6 @@ async function getModulesSchemaInfo() {
     return _modulesSchemaCache;
 }
 
-// Kurslar: modüller kategoriye göre gruplanmış (module-progress.js getModuleIdFromName, dashboard senkron)
 app.get('/api/courses', async (req, res) => {
     try {
         const sch = await getModulesSchemaInfo();
@@ -1628,8 +1459,6 @@ app.get('/api/courses', async (req, res) => {
     }
 });
 
-// Tüm modülleri getir (kullanıcı kimlik doğrulaması yapıldıysa erişim kontrolü ile)
-// Kullanıcı giriş yapmışsa satın aldığı paketlere göre erişim bilgisi döndürür
 app.get('/api/modules', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
@@ -1638,7 +1467,6 @@ app.get('/api/modules', async (req, res) => {
         let userPurchases = [];
         let userAccessLevel = 'beginner';
         
-        // Kullanıcı kimlik doğrulaması yapıldıysa satın alımlarını getir
         if (token) {
             try {
                 let userId = null;
@@ -1664,7 +1492,6 @@ app.get('/api/modules', async (req, res) => {
                     throw new Error('unable_to_resolve_user');
                 }
                 
-                // Kullanıcının aktif satın alımlarını getir
                 try {
                     const purchasesResult = await pool.query(
                         `SELECT category, level FROM purchases 
@@ -1674,11 +1501,9 @@ app.get('/api/modules', async (req, res) => {
                     );
                     userPurchases = purchasesResult.rows;
                 } catch (err) {
-                    // 'purchases' tablosu henüz yoksa sorun değil
                     console.log('Could not fetch purchases:', err.message);
                 }
                 
-                // Kullanıcının erişim seviyesini getir
                 const userResult = await pool.query(
                     'SELECT access_level FROM users WHERE id = $1',
                     [userId]
@@ -1687,25 +1512,19 @@ app.get('/api/modules', async (req, res) => {
                     userAccessLevel = userResult.rows[0].access_level || 'beginner';
                 }
             } catch (err) {
-                // Geçersiz token, misafir olarak devam et
                 console.log('Token verification failed, serving as guest');
             }
         }
         
-        // Tüm aktif modülleri getir
         const sch = await getModulesSchemaInfo();
         const activeWhere = sch.hasIsActive ? 'WHERE is_active = true' : '';
         const orderBy = sch.hasSortOrder ? 'ORDER BY sort_order NULLS LAST, id' : 'ORDER BY id';
         const result = await pool.query(`SELECT * FROM modules ${activeWhere} ${orderBy}`);
 
-        // Modülleri erişim bilgileriyle birlikte döndür
-        // Frontend satın alımlara göre filtrelemeyi yapacak
         const modules = result.rows.map(module => {
-            // Modül seviyesini belirle (modules tablosuna level alanı eklemeniz gerekebilir)
             const moduleLevel = module.level || 'beginner';
             const moduleCategory = module.category || 'cybersecurity';
             
-            // Kullanıcının bu kategori ve seviyeye erişimi olup olmadığını kontrol et
             const hasAccess = !token || userPurchases.some(p => 
                 p.category === moduleCategory && p.level === moduleLevel
             );
@@ -1732,8 +1551,6 @@ app.get('/api/modules', async (req, res) => {
     }
 });
 
-// ID'ye göre modül getir
-// Belirli bir modülün detaylarını döndürür
 app.get('/api/modules/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -1762,7 +1579,6 @@ app.get('/api/modules/:id', async (req, res) => {
     }
 });
 
-// Genel modül ilerlemesi (HTML modülleri — frontend/utils/module-progress.js → POST /api/progress)
 app.post('/api/progress', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1823,8 +1639,6 @@ app.post('/api/progress', authenticateToken, async (req, res) => {
     }
 });
 
-// Ders ilerlemesini güncelle
-// Kullanıcının bir ders üzerindeki ilerlemesini kaydeder ve modül ilerlemesini günceller
 app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -1832,7 +1646,6 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
         const progressPct = progressPercentage;
         const userId = req.user.userId;
 
-        // Dersin var olup olmadığını kontrol et
         const lessonResult = await pool.query(
             'SELECT id, module_id FROM lessons WHERE id = $1',
             [id]
@@ -1847,8 +1660,6 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
 
         const lesson = lessonResult.rows[0];
 
-        // Ders ilerlemesini ekle veya güncelle (upsert)
-        // Eğer kayıt varsa güncelle, yoksa yeni kayıt oluştur
         await pool.query(
             `INSERT INTO user_lesson_progress (user_id, lesson_id, status, progress_percentage, last_position_seconds)
              VALUES ($1, $2, $3, $4, $5)
@@ -1861,7 +1672,6 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
             [userId, id, status, (progressPct != null ? progressPct : 0), lastPositionSeconds || 0]
         );
 
-        // Modül ilerlemesini güncelle (tamamlanan ders sayısına göre)
         const moduleProgressResult = await pool.query(
             `SELECT 
                  COUNT(*) as total_lessons,
@@ -1903,7 +1713,6 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// Giriş kaydı (günlük giriş takibi)
 app.post('/api/progress/activity/login', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1917,7 +1726,6 @@ app.post('/api/progress/activity/login', authenticateToken, async (req, res) => 
     }
 });
 
-// Modül süresi güncelle (time-tracker, dashboard süre toplamı)
 app.post('/api/progress/time', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1936,7 +1744,6 @@ app.post('/api/progress/time', authenticateToken, async (req, res) => {
                  updated_at = NOW()`,
             [userId, moduleId, mins]
         );
-        // Günlük modül süresi (user_module_sessions)
         const today = new Date().toISOString().slice(0, 10);
         await pool.query(
             `INSERT INTO user_module_sessions (user_id, module_id, session_date, minutes_spent, last_updated_at)
@@ -1952,7 +1759,6 @@ app.post('/api/progress/time', authenticateToken, async (req, res) => {
     }
 });
 
-// Quiz sonucu kaydet (module_progress.last_step içinde quizResults)
 app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1989,7 +1795,6 @@ app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
              DO UPDATE SET last_step = $3::jsonb, last_accessed_at = NOW(), updated_at = NOW()`,
             [userId, moduleId, JSON.stringify(newLastStep)]
         );
-        // quiz_attempts tablosuna kaydet (kaç doğru, kaç yanlış)
         const total = Math.max(0, (entry.correctAnswers || 0) + (entry.wrongAnswers || 0)) || 1;
         await pool.query(
             `INSERT INTO quiz_attempts (user_id, module_id, quiz_section_id, total_questions, correct_count, wrong_count, score_percent)
@@ -2006,7 +1811,6 @@ app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
     }
 });
 
-/** İstemciden gelen UUID stringlerini doğrular; geçersizse null (PostgreSQL ::uuid hatası önlenir). */
 function coerceUuidOrNull(val, logLabel) {
     if (val == null || val === '') return null;
     const s = String(val).trim();
@@ -2019,7 +1823,6 @@ function coerceUuidOrNull(val, logLabel) {
     return s;
 }
 
-// Simülasyon başlatma (started_at; tamamlanınca POST /complete ile güncellenir)
 app.post('/api/simulations/start', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2051,7 +1854,6 @@ app.post('/api/simulations/start', authenticateToken, async (req, res) => {
     }
 });
 
-// Simülasyon tamamlama kaydı (simulation_runs) — skor, süre, deneme + performans alanları (015)
 app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2301,8 +2103,6 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
     }
 });
 
-// Modül ilerlemesini getir (module-progress.js: GET /api/progress/:moduleId ile uyumlu)
-// Kullanıcının belirli bir modül üzerindeki ilerleme bilgilerini döndürür
 app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) => {
     try {
         const { moduleId } = req.params;
@@ -2386,10 +2186,6 @@ app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) =>
     }
 });
 
-/**
- * Kullanıcının simulation_runs kayıtları (dashboard + GET /api/simulations/runs).
- * Geniş şema sorgusu başarısız olursa eski kolon setiyle yeniden dener.
- */
 async function loadSimulationRunsRowsForUser(userId) {
     let simulationRuns = [];
     const mapFullRow = (r) => {
@@ -2521,7 +2317,6 @@ async function loadSimulationRunsRowsForUser(userId) {
     return simulationRuns;
 }
 
-// Son simülasyon çalıştırmaları (dashboard doğrudan bu uçtan da okuyabilir)
 app.get('/api/simulations/runs', authenticateToken, async (req, res) => {
     try {
         const simulationRuns = await loadSimulationRunsRowsForUser(req.user.userId);
@@ -2532,13 +2327,10 @@ app.get('/api/simulations/runs', authenticateToken, async (req, res) => {
     }
 });
 
-// Dashboard özet bilgilerini getir
-// user_module_progress (ders ilerlemesi) + module_progress (süre/last_step) birlikte kullanılır
 app.get('/api/progress/overview', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        // Önce user_module_progress (POST /progress/lesson ile doldurulur), varsa module_progress ile süre bilgisi
         const progressResult = await pool.query(
             `SELECT 
                  ump.module_id,
@@ -2556,7 +2348,6 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
             [userId]
         );
 
-        // module_progress'ta olup user_module_progress'ta olmayan kayıtlar (eski veri)
         const onlyMpResult = await pool.query(
             `SELECT mp.module_id, mp.percent_complete, mp.is_completed, mp.time_spent_minutes, mp.updated_at,
                     m.title AS module_title, m.description AS module_description
@@ -2620,8 +2411,6 @@ app.get('/api/progress/overview', authenticateToken, async (req, res) => {
     }
 });
 
-// Kullanıcı istatistiklerini getir
-// Kullanıcının tamamladığı modül ve ders sayılarını döndürür
 app.get('/api/user-stats', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2650,8 +2439,6 @@ app.get('/api/user-stats', authenticateToken, async (req, res) => {
     }
 });
 
-// Kullanıcı aktivitelerini getir
-// Kullanıcının son aktivitelerini (ders tamamlama, modül başlatma vb.) döndürür
 app.get('/api/user-activities', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2678,8 +2465,6 @@ app.get('/api/user-activities', authenticateToken, async (req, res) => {
     }
 });
 
-// Kullanıcı başarımlarını getir
-// Kullanıcının kazandığı rozet ve başarımları döndürür
 app.get('/api/user-achievements', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2704,18 +2489,12 @@ app.get('/api/user-achievements', authenticateToken, async (req, res) => {
     }
 });
 
-// ============================================
-// SATIN ALMA ENDPOINT'LERİ
-// ============================================
 
-// Paket satın alma
-// Kullanıcının eğitim paketi satın almasını işler ve erişim seviyesini günceller
 app.post('/api/purchase', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const { category, level, price } = req.body;
 
-        // Girdi doğrulaması - Tüm gerekli alanların doldurulup doldurulmadığını kontrol et
         if (!category || !level || price == null || price === '') {
             return res.status(400).json({
                 success: false,
@@ -2730,7 +2509,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             });
         }
 
-        // Geçerli seviye değerlerini kontrol et
         const validLevels = ['beginner', 'intermediate', 'advanced'];
         if (!validLevels.includes(level)) {
             return res.status(400).json({
@@ -2739,7 +2517,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             });
         }
 
-        // Mevcut kullanıcı bilgilerini getir
         const userResult = await pool.query(
             'SELECT id, email, access_level FROM users WHERE id = $1',
             [userId]
@@ -2754,7 +2531,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
 
         const user = userResult.rows[0];
 
-        // Kullanıcının bu pakete zaten sahip olup olmadığını kontrol et
         try {
             const existingPurchase = await pool.query(
                 `SELECT id FROM purchases 
@@ -2774,14 +2550,11 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                 });
             }
         } catch (err) {
-            // 'purchases' tablosu henüz yoksa devam et (geçiş dönemi için)
             console.log('Could not check existing purchases:', err.message);
         }
 
-        // Satın alımı veritabanına kaydet (her iki tabloyu da dene)
         let purchaseId;
         
-        // Önce 'user_package_purchases' tablosunu dene (mevcut tablo)
         try {
             const userPackagePurchaseResult = await pool.query(
                 `INSERT INTO user_package_purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
@@ -2802,7 +2575,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             console.log('Could not insert into user_package_purchases:', err.message);
         }
         
-        // Ayrıca 'purchases' tablosunu da dene (yeni tablo)
         try {
             const purchaseResult = await pool.query(
                 `INSERT INTO purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
@@ -2822,7 +2594,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             }
             console.log('✅ Purchase recorded in purchases table');
         } catch (err) {
-            // Eğer 'purchases' tablosu yoksa, oluşturmayı dene
             if (err.code === '42P01') { // Tablo mevcut değil hatası
                 console.log('Purchases table not found, attempting to create...');
                 try {
@@ -2831,7 +2602,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                         'utf8'
                     );
                     await pool.query(migrationSQL);
-                    // Tablo oluşturulduktan sonra tekrar ekleme işlemini dene
                     const purchaseResult = await pool.query(
                         `INSERT INTO purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
                          VALUES ($1, $2, $3, $4, 'completed', CURRENT_TIMESTAMP, TRUE)
@@ -2851,16 +2621,12 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                     console.log('✅ Purchases table created and purchase recorded');
                 } catch (createErr) {
                     console.error('Failed to create purchases table:', createErr);
-                    // 'purchases' tablosunda kayıt olmadan devam et (user_package_purchases'de kayıt olabilir)
                 }
             } else {
                 console.log('Purchase record error (purchases table):', err.message);
-                // Devam et - user_package_purchases tablosunda kayıt yapılmış olabilir
             }
         }
 
-        // Kullanıcının erişim seviyesini bu kategori için satın aldığı en yüksek seviyeye güncelle
-        // Bu kullanıcının bu kategorideki tüm aktif satın alımlarını getir
         try {
             const userPurchasesResult = await pool.query(
                 `SELECT level FROM purchases 
@@ -2878,7 +2644,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
 
             if (userPurchasesResult.rows.length > 0) {
                 const highestLevel = userPurchasesResult.rows[0].level;
-                // Kullanıcının erişim seviyesini sadece bu en yüksek seviye ise güncelle
                 await pool.query(
                     'UPDATE users SET access_level = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
                     [highestLevel, userId]
@@ -2886,14 +2651,12 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             }
         } catch (err) {
             console.error('Error updating user access level:', err);
-            // Yedek çözüm: satın alınan seviyeye güncelle
             await pool.query(
                 'UPDATE users SET access_level = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
                 [level, userId]
             );
         }
 
-        // Güncellenmiş kullanıcı verilerini satın alımlarla birlikte getir
         const updatedUserResult = await pool.query(
             'SELECT id, email, first_name, last_name, role, access_level, is_verified, created_at, last_login FROM users WHERE id = $1',
             [userId]
@@ -2901,7 +2664,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
 
         const updatedUser = updatedUserResult.rows[0];
 
-        // Get all active purchases for this user
         let purchases = [];
         try {
             const purchasesResult = await pool.query(
@@ -2924,7 +2686,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             console.log('Could not fetch purchases after purchase:', err.message);
         }
 
-        // Also try user_package_purchases table
         try {
             const userPackagePurchasesResult = await pool.query(
                 `SELECT id, category, level, price, purchased_at, expires_at 
@@ -2942,7 +2703,6 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                 purchasedAt: p.purchased_at,
                 expiresAt: p.expires_at
             }));
-            // Merge with purchases (avoid duplicates)
             purchases = [...purchases, ...userPackagePurchases.filter(up => 
                 !purchases.some(p => p.category === up.category && p.level === up.level)
             )];
@@ -2983,15 +2743,10 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
     }
 });
 
-// ============================================
-// DEĞERLENDİRME RAPORU (AI için gerekli veriler - kanıta dayalı)
-// ============================================
-// Quiz, simülasyon ve süre verilerinden skor hesaplar; yorumlama metni döndürür
 app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        // 1. Kullanıcı bilgisi
         const userResult = await pool.query(
             'SELECT id, email, first_name, last_name FROM users WHERE id = $1',
             [userId]
@@ -3001,7 +2756,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
         }
         const user = userResult.rows[0];
 
-        // 2. Modül ilerlemesi (süre: time_spent_minutes; last_step varsa quiz sonuçları)
         let progressResult;
         try {
             progressResult = await pool.query(
@@ -3019,7 +2773,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             const mins = row.time_spent_minutes || 0;
             totalTimeMinutes += mins;
         }
-        // last_step kolonu varsa quiz verisi al (opsiyonel)
         try {
             const stepResult = await pool.query(
                 `SELECT module_id, last_step FROM module_progress WHERE user_id = $1`,
@@ -3043,7 +2796,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             }
         } catch (e) { /* last_step kolonu yoksa görmezden gel */ }
 
-        // 3. Simülasyon sonuçları (yalnızca tamamlananlar — ortalamaya dahil)
         const simResult = await pool.query(
             `SELECT simulation_id, score, time_spent, completed_at
              FROM simulation_runs
@@ -3057,7 +2809,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             timeSpent: r.time_spent || 0
         }));
 
-        // 4. Skor hesaplama (deterministik - ağırlıklı ortalama)
         const quizScores = quizResults.map(q => q.score).filter(s => typeof s === 'number');
         const simScores = simulationResults.map(s => s.score).filter(s => typeof s === 'number');
         const allScores = [...quizScores, ...simScores];
@@ -3071,7 +2822,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
         const quizAvg = quizScores.length ? quizScores.reduce((a, b) => a + b, 0) / quizScores.length : 0;
         const simAvg = simScores.length ? simScores.reduce((a, b) => a + b, 0) / simScores.length : 0;
 
-        // 5. Yorumlama metni (skor aralığına göre - AI yoksa fallback)
         let overallText = '';
         if (overallScore >= 90) {
             overallText = `Mükemmel bir performans (${overallScore}%). Tüm konularda güçlü bir temel oluşturmuşsunuz.`;
@@ -3123,9 +2873,6 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
     }
 });
 
-// ============================================
-// SERTİFİKALAR API (Dashboard uyumlu)
-// ============================================
 function isDbUnavailableError(err) {
     return err && (err.code === '42P01' || err.code === '42P07' || /does not exist|relation.*does not exist/i.test(String(err.message)));
 }
@@ -3157,10 +2904,8 @@ app.get('/api/certificates', authenticateToken, async (req, res) => {
     }
 });
 
-// İzin verilen sertifika kategorileri (normalize edilmiş: backend’te kullanılan değerler)
 const CERTIFICATE_CATEGORIES = new Set(['cybersecurity', 'cloud', 'data_science']);
 
-// Sertifika kazanma kontrolü (daha spesifik route önce tanımlanmalı)
 app.get('/api/certificates/check/:category', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -3299,7 +3044,6 @@ app.get('/api/certificates/:certificateId/report', authenticateToken, async (req
     }
 });
 
-// E-posta doğrulama (frontend/public)
 app.get('/verify-email.html', (req, res) => {
     if (!fs.existsSync(FRONTEND_DIR)) {
         return res.status(404).send('Frontend klasörü yok (ayrı deploy).');
@@ -3307,7 +3051,6 @@ app.get('/verify-email.html', (req, res) => {
     res.sendFile(path.join(FRONTEND_DIR, 'public', 'verify-email.html'));
 });
 
-// Ana route — statik site (frontend mevcutsa)
 app.get('/', (req, res) => {
     if (!fs.existsSync(FRONTEND_DIR)) {
         return res.status(404).json({ message: 'API only — frontend ayrı origin.' });
@@ -3315,7 +3058,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
-// HTML catch-all (frontend mevcutsa)
 app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api/')) {
         return next();
@@ -3330,21 +3072,14 @@ app.get('*', (req, res, next) => {
     res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
-// Pool'u diğer modüller için export et
 const getPool = () => pool;
 
-// ============================================
-// KULLANICI İLERLEME SIFIRLAMA ENDPOINT'İ
-// ============================================
 
-// Kullanıcı ilerlemesini sıfırla (sadece admin veya kendi ilerlemesini sıfırlama)
-// Kullanıcının tüm modül ilerlemelerini, satın alımlarını ve ilerleme kayıtlarını siler
 app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const { targetUserId, confirm } = req.body;
         
-        // Kullanıcının kendi ilerlemesini mi sıfırladığını veya admin olup olmadığını kontrol et
         const userResult = await pool.query(
             'SELECT id, role FROM users WHERE id = $1',
             [userId]
@@ -3360,7 +3095,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
         const user = userResult.rows[0];
         const targetId = targetUserId || userId; // Varsayılan olarak kendi ID'si
         
-        // Sadece admin başka kullanıcıların ilerlemesini sıfırlayabilir
         if (targetId !== userId && user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
@@ -3368,7 +3102,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
             });
         }
         
-        // Onay gerektir (güvenlik için - geri alınamaz işlem)
         if (confirm !== true && confirm !== 'true') {
             return res.status(400).json({
                 success: false,
@@ -3376,14 +3109,11 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
             });
         }
         
-        // Veritabanı transaction'ı başlat (tüm işlemlerin atomik olması için)
         const client = await pool.connect();
         
         try {
             await client.query('BEGIN'); // Transaction başlat
             
-            // Tüm ilerleme verilerini sil
-            // İlerleme kayıtlarını, satın alımları ve sertifikaları temizler
             const operations = [
                 { name: 'module_progress', query: 'DELETE FROM module_progress WHERE user_id = $1' },
                 { name: 'enrollments', query: 'DELETE FROM enrollments WHERE user_id = $1' },
@@ -3396,7 +3126,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
             const results = {};
             let totalDeleted = 0;
             
-            // Her bir tablodan silme işlemini gerçekleştir
             for (const op of operations) {
                 try {
                     const result = await client.query(op.query, [targetId]);
@@ -3404,7 +3133,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
                     results[op.name] = count;
                     totalDeleted += count;
                 } catch (err) {
-                    // Tablo mevcut olmayabilir, sorun değil (geçiş dönemi için)
                     if (err.code !== '42P01') {
                         console.error(`Error deleting from ${op.name}:`, err);
                     }
@@ -3412,7 +3140,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
                 }
             }
             
-            // Eski tablodan da silmeyi dene (varsa)
             try {
                 const oldResult = await client.query(
                     'DELETE FROM user_module_progress WHERE user_id = $1',
@@ -3421,11 +3148,9 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
                 results['user_module_progress'] = oldResult.rowCount || 0;
                 totalDeleted += results['user_module_progress'];
             } catch (err) {
-                // Tablo mevcut olmayabilir
                 results['user_module_progress'] = 0;
             }
             
-            // Erişim seviyesini başlangıç seviyesine sıfırla (satın alımlar silindiği için)
             await client.query(
                 'UPDATE users SET access_level = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
                 ['beginner', targetId]
@@ -3433,7 +3158,6 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
             
             await client.query('COMMIT'); // Transaction'ı commit et (tüm değişiklikleri kalıcı hale getir)
             
-            // Başarılı yanıt döndür
             res.json({
                 success: true,
                 message: 'Kullanıcı ilerlemesi başarıyla sıfırlandı',
@@ -3445,11 +3169,9 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
             });
             
         } catch (error) {
-            // Hata oluşursa transaction'ı geri al (rollback)
             await client.query('ROLLBACK');
             throw error;
         } finally {
-            // Client bağlantısını pool'a geri ver
             client.release();
         }
         
@@ -3463,12 +3185,10 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
     }
 });
 
-// Diğer modüller için export et
 module.exports = { app, pool, getPool };
 
 if (require.main === module) {
     const port = Number(process.env.PORT) || 3000;
-    // Railway / Render / Docker: dışarıdan gelen trafik için tüm arayüzlere bağlan (yalnızca 127.0.0.1 değil)
     const host = process.env.HOST || '0.0.0.0';
     const server = app.listen(port, host, () => {
         console.log(`Server running on http://${host}:${port}`);

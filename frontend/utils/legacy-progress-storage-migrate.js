@@ -1,7 +1,3 @@
-/**
- * Eski tarayıcı ilerlemesi (localStorage) tek sefer temizlenir; kanon kaynak API olur.
- * Sürüm yükseltmek için SEBS_PROGRESS_STORAGE_VER değerini değiştirin (tüm kullanıcılar tekrar temizlenir).
- */
 (function (global) {
     var SEBS_PROGRESS_STORAGE_VER = '3';
     var KEY = 'sebs_progress_storage_version';
@@ -35,7 +31,6 @@
                 global.invalidateModuleIdCache();
             }
         } catch (e) {
-            /* ignore */
         }
     }
 

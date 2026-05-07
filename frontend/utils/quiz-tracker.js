@@ -1,14 +1,10 @@
-// Quiz Result Tracker
-// Tracks quiz results and saves to backend
 
 window.QuizTracker = {
-    // Save quiz result
     async saveResult(moduleId, quizId, resultData) {
         const token = localStorage.getItem('authToken');
         
         if (!token) {
             console.log('No auth token for quiz tracking');
-            // Save to localStorage as fallback
             this.saveToLocalStorage(quizId, resultData);
             return;
         }
@@ -26,7 +22,6 @@ window.QuizTracker = {
         try {
             let result;
             
-            // Use APIClient if available
             if (window.APIClient && moduleId) {
                 result = await window.APIClient.saveQuizResult(
                     moduleId,
@@ -38,7 +33,6 @@ window.QuizTracker = {
                     payload.timeSpent
                 );
             } else {
-                // Fallback: Direct API call
                 const apiBase =
                     typeof window.getSebsApiBase === 'function'
                         ? window.getSebsApiBase()
@@ -60,24 +54,20 @@ window.QuizTracker = {
             if (result && result.success) {
                 console.log('✅ Quiz result saved:', result.data);
                 
-                // Also save to localStorage
                 this.saveToLocalStorage(quizId, resultData);
             } else {
                 console.warn('⚠️ Quiz result not saved:', result?.message);
-                // Fallback to localStorage
                 this.saveToLocalStorage(quizId, resultData);
             }
             
             return result;
         } catch (error) {
             console.error('❌ Failed to save quiz result:', error);
-            // Fallback to localStorage
             this.saveToLocalStorage(quizId, resultData);
             return { success: false, error: error.message };
         }
     },
     
-    // Save to localStorage as backup
     saveToLocalStorage(quizId, resultData) {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const isVerified = localStorage.getItem('isVerified');
@@ -98,7 +88,6 @@ window.QuizTracker = {
         }
     },
     
-    // Calculate score from answers
     calculateScore(correctAnswers, totalQuestions) {
         return Math.round((correctAnswers / totalQuestions) * 100);
     }

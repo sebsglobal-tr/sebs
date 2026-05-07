@@ -6,7 +6,6 @@ let totalTests = 0;
 let passedTests = 0;
 let failedTests = 0;
 
-// Test user bilgileri
 const testUser = {
     email: `test_${Date.now()}@sebsglobal.com`,
     password: 'Test1234!',
@@ -21,7 +20,6 @@ let verificationCode = null;
 let testModuleId = null;
 let testCertificateId = null;
 
-// Helper fonksiyonlar
 function log(message, type = 'info') {
     const icons = {
         info: '📋',
@@ -53,7 +51,6 @@ function test(name, testFn) {
 
 function apiCall(endpoint, options = {}) {
     return new Promise((resolve, reject) => {
-        // endpoint zaten /api ile başlamalı veya başlamamalı kontrolü
         const fullPath = endpoint.startsWith('/api') ? endpoint : `${API_BASE}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
         const url = new URL(fullPath);
         const requestOptions = {
@@ -102,13 +99,11 @@ function apiCall(endpoint, options = {}) {
     });
 }
 
-// Test başlangıcı
 console.log('\n╔═══════════════════════════════════════════════════════════════╗');
 console.log('║          🧪 KAPSAMLI SİSTEM TESTİ BAŞLATILIYOR                ║');
 console.log('╚═══════════════════════════════════════════════════════════════╝\n');
 
 async function runTests() {
-    // 1. BACKEND HEALTH CHECK
     log('1. BACKEND SAĞLIK KONTROLÜ', 'step');
     await test('Backend Health Check', async () => {
         const response = await apiCall('/health');
@@ -117,7 +112,6 @@ async function runTests() {
         }
     });
 
-    // 2. KULLANICI KAYDI
     log('\n2. KULLANICI KAYDI', 'step');
     await test('Kullanıcı Kaydı', async () => {
         const response = await apiCall('/auth/register', {
@@ -131,7 +125,6 @@ async function runTests() {
         }
     });
 
-    // 3. EMAIL DOĞRULAMA (Code varsa)
     if (verificationCode) {
         await test('Email Doğrulama', async () => {
             const response = await apiCall('/auth/verify', {
@@ -147,7 +140,6 @@ async function runTests() {
         log('⚠️  Verification code yok, email doğrulama atlandı', 'warning');
     }
 
-    // 4. GİRİŞ YAPMA
     log('\n3. GİRİŞ İŞLEMİ', 'step');
     await test('Kullanıcı Girişi', async () => {
         const response = await apiCall('/auth/login', {
@@ -169,7 +161,6 @@ async function runTests() {
         userId = response.data.data?.user?.publicId || response.data.data?.user?.id;
     });
 
-    // 5. KURSLARI LİSTELE
     log('\n4. KURSLAR VE MODÜLLER', 'step');
     await test('Kursları Listele', async () => {
         const response = await apiCall('/courses');
@@ -181,7 +172,6 @@ async function runTests() {
         }
     });
 
-    // 6. KURSA KAYIT OL
     await test('Kursa Kayıt Ol', async () => {
         const response = await apiCall('/courses');
         const courses = response.data.data?.courses;
@@ -197,7 +187,6 @@ async function runTests() {
         }
     });
 
-    // 7. MODÜL İLERLEMESİ KAYDET
     log('\n5. İLERLEME TAKİBİ', 'step');
     await test('Modül İlerlemesi Kaydet', async () => {
         if (!testModuleId) {
@@ -224,7 +213,6 @@ async function runTests() {
         }
     });
 
-    // 8. İLERLEMEYİ GETİR
     await test('İlerlemeyi Getir', async () => {
         const response = await apiCall('/progress/overview');
         if (!response.data.success || !response.data.data) {
@@ -232,7 +220,6 @@ async function runTests() {
         }
     });
 
-    // 9. ZAMAN TAKİBİ
     await test('Zaman Takibi Kaydet', async () => {
         if (!testModuleId) {
             const coursesResponse = await apiCall('/courses');
@@ -256,7 +243,6 @@ async function runTests() {
         }
     });
 
-    // 10. MODÜLÜ TAMAMLA
     await test('Modülü Tamamla', async () => {
         if (!testModuleId) {
             const coursesResponse = await apiCall('/courses');
@@ -282,7 +268,6 @@ async function runTests() {
         }
     });
 
-    // 11. SERTİFİKA KONTROLÜ
     log('\n6. SERTİFİKA SİSTEMİ', 'step');
     await test('Sertifika Kontrolü ve Oluşturma', async () => {
         const coursesResponse = await apiCall('/courses');
@@ -291,15 +276,12 @@ async function runTests() {
             throw new Error('Kurs bulunamadı');
         }
         
-        // İlk kursun kategori bilgisini al
         const category = courses[0].category || 'siber-guvenlik';
         
-        // Category completion kontrolü
         const checkResponse = await apiCall(`/certificates/check/${category}`, {
             method: 'POST'
         });
         
-        // Sertifika kontrolü başarılı veya hata olsun, test devam etsin
         if (checkResponse.data.success && checkResponse.data.data?.certificate) {
             testCertificateId = checkResponse.data.data.certificate.id;
             log(`✅ Sertifika oluşturuldu: ${testCertificateId}`, 'success');
@@ -308,7 +290,6 @@ async function runTests() {
         }
     });
 
-    // 12. SERTİFİKALARI LİSTELE
     await test('Kullanıcı Sertifikalarını Listele', async () => {
         const response = await apiCall('/certificates');
         if (!response.data.success) {
@@ -320,7 +301,6 @@ async function runTests() {
         }
     });
 
-    // 13. AI RAPOR ALMA
     log('\n7. AI RAPORLAMA SİSTEMİ', 'step');
     await test('AI Rapor Alma', async () => {
         if (!testCertificateId) {
@@ -345,7 +325,6 @@ async function runTests() {
         }
     });
 
-    // 14. SİMÜLASYON KAYDI
     log('\n8. SİMÜLASYON SİSTEMİ', 'step');
     await test('Simülasyon Tamamlama Kaydet', async () => {
         if (!testModuleId) {
@@ -374,7 +353,6 @@ async function runTests() {
         }
     });
 
-    // 15. SİMÜLASYON GEÇMİŞİ
     await test('Simülasyon Geçmişini Getir', async () => {
         const response = await apiCall('/simulations');
         if (!response.data.success) {
@@ -382,7 +360,6 @@ async function runTests() {
         }
     });
 
-    // 16. KULLANICI PROFİLİ
     log('\n9. KULLANICI İŞLEMLERİ', 'step');
     await test('Kullanıcı Profili Getir', async () => {
         const response = await apiCall('/users/profile');
@@ -391,7 +368,6 @@ async function runTests() {
         }
     });
 
-    // 17. REFRESH TOKEN
     await test('Token Yenileme', async () => {
         if (!refreshToken) {
             throw new Error('Refresh token yok');
@@ -406,7 +382,6 @@ async function runTests() {
         authToken = response.data.data.accessToken;
     });
 
-    // Özet
     console.log('\n╔═══════════════════════════════════════════════════════════════╗');
     console.log('║                   📊 TEST ÖZETİ                              ║');
     console.log('╚═══════════════════════════════════════════════════════════════╝\n');
@@ -440,7 +415,6 @@ async function runTests() {
     process.exit(failedTests > 0 ? 1 : 0);
 }
 
-// Testi başlat
 runTests().catch(error => {
     console.error('\n❌ Test suite hatası:', error);
     process.exit(1);

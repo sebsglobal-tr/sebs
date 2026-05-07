@@ -4,7 +4,6 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>İletişim — SEBS Global</title>
     <meta name='description' content="SEBS (Software Education & Business Solutions): Eğitim, işe alım değerlendirmesi, yetenek havuzu, özel simülasyon ve kurumsal lisans için iletişim.">
@@ -14,37 +13,33 @@
     <meta name="language" content="Turkish">
     <meta name="revisit-after" content="7 days">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sebsglobal.com/contact.html">
+    <meta property="og:url" content="https://sebsglobal.com/iletisim">
     <meta property="og:title" content="İletişim - SEBS Global">
     <meta property="og:description" content="Pilot, kurumsal paket, özel simülasyon üretimi ve teknik destek için SEBS ekibiyle iletişime geçin.">
     <meta property="og:image" content="https://sebsglobal.com/og-contact.jpg">
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="İletişim - SEBS Global">
     <meta name="twitter:description" content="Pilot, kurumsal paket, özel simülasyon üretimi ve teknik destek için SEBS ekibiyle iletişime geçin.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-contact.jpg">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Iletisim","item":"https://sebsglobal.com/iletisim"}]}
+    </script>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://sebsglobal.com/contact.html">
+    <link rel="canonical" href="https://sebsglobal.com/iletisim">
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/SEBS.png">
     <link rel="apple-touch-icon" href="/images/SEBS.png">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Styles -->
     <link rel="stylesheet" href="/css/styles.css">
     
     
@@ -94,7 +89,6 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -141,7 +135,6 @@
     </div>
   </div>
 </header>
-<!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
@@ -154,7 +147,6 @@
     </div>
 
   <main id="top">
-    <!-- Hero: ortalanmış metin + metrik çipleri + bento (ana sayfadaki iki sütun mock’tan farklı) -->
     <section class="hero-mesh relative overflow-hidden pt-28 pb-20 sm:pt-32 sm:pb-24 lg:pt-36">
       <div class="contact-hero-inner mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-3xl text-center">
@@ -227,7 +219,6 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
     <section class="stats reveal-on-scroll">
         <div class="container">
             <div class="stats-content">
@@ -257,7 +248,6 @@
         </div>
     </section>
 
-    <!-- İletişim Kanalları (ana sayfa feature kartlarıyla uyumlu) -->
     <section id="contact-channels" class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="contact-channels-heading">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
@@ -332,7 +322,6 @@
       </div>
     </section>
 
-    <!-- Contact Form Section -->
     <section id="contact-form" class="section reveal-on-scroll scroll-mt-24">
         <div class="container">
             <div class="section-header">
@@ -397,7 +386,6 @@
         </div>
     </section>
 
-    <!-- Çalışma saatleri (iletişim kanalları kartlarıyla aynı dil) -->
     <section id="office-hours" class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="office-hours-heading">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="mx-auto max-w-2xl text-center">
@@ -479,7 +467,6 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
     <section class="section reveal-on-scroll">
         <div class="container">
             <div class="section-header">
@@ -543,8 +530,6 @@
 
   </main>
 
-    <!-- Footer -->
-    <!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
@@ -640,7 +625,6 @@
     })();
   </script>
 
-    <!-- JavaScript -->
     <script>
         // Loading Animation
         window.addEventListener('load', function() {
@@ -1102,9 +1086,7 @@
             }
         });
     </script>
-    <!-- Navigation Script -->
     <script src="/js/navigation.js" defer></script>
-    <!-- 1. Supabase UMD SDK  2. env  3. client  4. auth -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
             onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
     <script src="/js/supabase-env.js"></script>

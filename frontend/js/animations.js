@@ -1,9 +1,4 @@
-// ============================================
-// SEBS GLOBAL - ANIMATED PARTICLE SYSTEM
-// Canlı, Dikkat Çekici Animasyonlar
-// ============================================
 
-// Particle System
 class ParticleSystem {
     constructor(container) {
         this.container = container || document.body;
@@ -13,12 +8,10 @@ class ParticleSystem {
     }
 
     init() {
-        // Create particles container
         this.particlesContainer = document.createElement('div');
         this.particlesContainer.className = 'particles';
         this.container.appendChild(this.particlesContainer);
 
-        // Create particles
         for (let i = 0; i < this.particleCount; i++) {
             this.createParticle();
         }
@@ -28,20 +21,16 @@ class ParticleSystem {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random size
         const size = Math.random() * 4 + 2;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         
-        // Random position
         particle.style.left = Math.random() * 100 + '%';
         particle.style.top = Math.random() * 100 + '%';
         
-        // Random animation delay
         particle.style.animationDelay = Math.random() * 20 + 's';
         particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
         
-        // Navy & Gold palet
         const gradients = [
             'rgba(30, 64, 175, 0.2)',
             'rgba(59, 130, 246, 0.15)',
@@ -55,7 +44,6 @@ class ParticleSystem {
     }
 }
 
-// Scroll Animations
 class ScrollAnimations {
     constructor() {
         this.elements = document.querySelectorAll('.fade-in, .reveal, .card, .feature-card, .simulation-card, .stat-card, .category-card');
@@ -63,7 +51,6 @@ class ScrollAnimations {
     }
 
     init() {
-        // Create Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -76,14 +63,12 @@ class ScrollAnimations {
             rootMargin: '0px 0px -50px 0px'
         });
 
-        // Observe all elements
         this.elements.forEach(el => {
             observer.observe(el);
         });
     }
 }
 
-// Parallax Effect
 class ParallaxEffect {
     constructor() {
         this.elements = document.querySelectorAll('[data-parallax]');
@@ -120,7 +105,6 @@ class ParallaxEffect {
     }
 }
 
-// Cursor Glow Effect
 class CursorGlow {
     constructor() {
         this.cursor = document.createElement('div');
@@ -135,7 +119,6 @@ class CursorGlow {
             this.cursor.style.top = e.clientY + 'px';
         });
 
-        // Add glow on interactive elements
         const interactiveElements = document.querySelectorAll('a, button, .card, .btn');
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -148,7 +131,6 @@ class CursorGlow {
     }
 }
 
-// Gradient Animation - sadece .gradient-text için (hero başlık sabit kalsın)
 class GradientAnimation {
     constructor() {
         this.elements = document.querySelectorAll('.gradient-text');
@@ -177,24 +159,16 @@ class GradientAnimation {
     }
 }
 
-// Initialize all animations when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Particle System
     new ParticleSystem();
     
-    // Scroll Animations
     new ScrollAnimations();
     
-    // Parallax Effect
     new ParallaxEffect();
     
-    // Cursor Glow (optional - can be disabled for performance)
-    // new CursorGlow();
     
-    // Gradient Animation
     new GradientAnimation();
     
-    // Header scroll effect (requestAnimationFrame throttling)
     const header = document.querySelector('header');
     let headerTicking = false;
     let headerScrollY = window.pageYOffset;
@@ -217,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
     updateHeader();
     
-    // Hafif 3D tilt - feature ve simulation kartları
     const cards = document.querySelectorAll('.feature-card, .simulation-card');
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {

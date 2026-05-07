@@ -1,7 +1,3 @@
-/**
- * Apply Performance Fixes Based on Test Results
- * Test sonuçlarına göre performans düzeltmelerini uygula
- */
 
 import 'dotenv/config';
 import dotenv from 'dotenv';
@@ -25,7 +21,6 @@ async function applyFixes() {
     console.log('='.repeat(70));
     console.log('');
 
-    // 1. Kullanılmayan index'leri temizle (sadece güvenli olanlar)
     console.log('📇 1. KULLANILMAYAN INDEX\'LERİ TEMİZLE\n');
     const unusedIndexesToDrop = [
       'idx_modules_course_id',
@@ -41,7 +36,6 @@ async function applyFixes() {
       }
     }
 
-    // 2. Eksik foreign key index'lerini ekle
     console.log('\n🔗 2. EKSİK FOREIGN KEY İNDEX\'LERİNİ EKLE\n');
     const fkIndexes = [
       {
@@ -72,7 +66,6 @@ async function applyFixes() {
       }
     }
 
-    // 3. Query performansı için yeni index'ler ekle
     console.log('\n📊 3. PERFORMANS İNDEX\'LERİ EKLE\n');
     const performanceIndexes = [
       {
@@ -115,7 +108,6 @@ async function applyFixes() {
       }
     }
 
-    // 4. Dead rows temizle (VACUUM)
     console.log('\n🧹 4. DEAD ROWS TEMİZLE (VACUUM)\n');
     const tablesWithDeadRows = ['users', 'refresh_tokens', '_prisma_migrations', 'modules', 'courses'];
     
@@ -128,7 +120,6 @@ async function applyFixes() {
       }
     }
 
-    // 5. Tüm tablolar için ANALYZE
     console.log('\n📈 5. İSTATİSTİKLERİ GÜNCELLE (ANALYZE)\n');
     try {
       await client.query('ANALYZE');
@@ -137,11 +128,9 @@ async function applyFixes() {
       console.log(`   ❌ ANALYZE hatası: ${error.message}`);
     }
 
-    // 6. Sonuç kontrolü
     console.log('\n🔍 6. SONUÇ KONTROLÜ\n');
     console.log('-'.repeat(70));
 
-    // Dead rows kontrolü
     const deadRowsCheck = await client.query(`
       SELECT 
         relname as tablename,
@@ -169,7 +158,6 @@ async function applyFixes() {
       console.log('   ✅ Dead row bulunamadı!');
     }
 
-    // Kullanılmayan index kontrolü
     const unusedIndexCheck = await client.query(`
       SELECT 
         relname as tablename,

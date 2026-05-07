@@ -1,18 +1,7 @@
-/**
- * Reset User Progress Script
- * Kullanıcının tüm ilerlemesini veritabanından sıfırlar
- * 
- * Kullanım:
- * node reset-user-progress.js <user_email>
- * 
- * Örnek:
- * node reset-user-progress.js user@example.com
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
 
-// Database connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: (process.env.DATABASE_URL && (
@@ -34,7 +23,6 @@ async function resetUserProgress(userEmail) {
         
         console.log(`\n🔄 Kullanıcı ilerlemesi sıfırlanıyor: ${userEmail}\n`);
         
-        // 1. Kullanıcıyı bul
         const userResult = await client.query(
             'SELECT id, email, first_name, last_name FROM users WHERE email = $1',
             [userEmail]
@@ -48,7 +36,6 @@ async function resetUserProgress(userEmail) {
         console.log(`✅ Kullanıcı bulundu: ${user.first_name} ${user.last_name} (${user.email})`);
         console.log(`   User ID: ${user.id}\n`);
         
-        // 2. Sıfırlanacak tablolar ve işlemler
         const resetOperations = [
             {
                 name: 'Modül İlerlemesi',
@@ -87,7 +74,6 @@ async function resetUserProgress(userEmail) {
             }
         ];
         
-        // 3. Her tabloyu sıfırla
         let totalDeleted = 0;
         for (const operation of resetOperations) {
             try {
@@ -101,22 +87,18 @@ async function resetUserProgress(userEmail) {
                     console.log(`   ℹ️  ${operation.name}: Silinecek kayıt yok`);
                 }
             } catch (err) {
-                // Tablo yoksa veya hata varsa devam et - transaction'ı abort etme
                 if (err.code === '42P01') {
                     console.log(`   ⚠️  ${operation.name}: Tablo bulunamadı (${operation.table})`);
-                    // Transaction'ı sıfırla
                     await client.query('ROLLBACK');
                     await client.query('BEGIN');
                 } else {
                     console.log(`   ⚠️  ${operation.name}: Hata - ${err.message}`);
-                    // Transaction'ı sıfırla
                     await client.query('ROLLBACK');
                     await client.query('BEGIN');
                 }
             }
         }
         
-        // 4. Kullanıcının access_level'ını beginner'a sıfırla (satın alımlar silindiği için)
         try {
             await client.query(
                 'UPDATE users SET access_level = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
@@ -125,12 +107,10 @@ async function resetUserProgress(userEmail) {
             console.log(`   ✅ Erişim seviyesi 'beginner' olarak sıfırlandı (satın alımlar silindiği için)`);
         } catch (err) {
             console.log(`   ⚠️  Erişim seviyesi güncellenemedi: ${err.message}`);
-            // Transaction'ı sıfırla
             await client.query('ROLLBACK');
             await client.query('BEGIN');
         }
         
-        // 5. Commit
         await client.query('COMMIT');
         
         console.log(`\n✅ İşlem tamamlandı!`);
@@ -147,7 +127,6 @@ async function resetUserProgress(userEmail) {
     }
 }
 
-// Main execution
 async function main() {
     const args = process.argv.slice(2);
     const userEmail = args.find(arg => !arg.startsWith('--'));
@@ -163,7 +142,6 @@ async function main() {
         process.exit(1);
     }
     
-    // Onay iste (eğer --yes parametresi yoksa)
     if (!autoConfirm) {
         const readline = require('readline');
         const rl = readline.createInterface({
@@ -186,7 +164,6 @@ async function main() {
             await pool.end();
         });
     } else {
-        // Otomatik onay
         try {
             await resetUserProgress(userEmail);
             await pool.end();
@@ -198,7 +175,6 @@ async function main() {
     }
 }
 
-// Run script
 if (require.main === module) {
     main().catch(error => {
         console.error('Fatal error:', error);

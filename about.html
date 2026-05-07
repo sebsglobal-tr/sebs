@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Hakkımızda - SEBS Global</title>
     <meta name="description" content="SEBS Global hakkında bilgi edinin. Teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitim platformumuzun misyonu, vizyonu ve uzman ekibimizi tanıyın.">
@@ -13,7 +12,6 @@
     <meta name="language" content="Turkish">
     <meta name="revisit-after" content="7 days">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/about.html">
     <meta property="og:title" content="Hakkımızda - SEBS Global">
@@ -22,36 +20,26 @@
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hakkımızda - SEBS Global">
     <meta name="twitter:description" content="SEBS Global hakkında bilgi edinin. Teknoloji, iş dünyası ve kişisel gelişim alanlarında profesyonel eğitim platformumuzun misyonu, vizyonu ve uzman ekibimizi tanıyın.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-about.jpg">
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://sebsglobal.com/about.html">
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/SEBS.png">
     <link rel="apple-touch-icon" href="/images/SEBS.png">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Styles -->
     <link rel="stylesheet" href="/css/styles.css">
     
     <link rel="stylesheet" href="/css/remote-inspired.css">
         <style>
-        /* Minimal inline styles - only for critical loading overlay */
-        /* Main styles are in /css/styles.css */
-        
-        /* Loading overlay - minimal inline style for immediate display */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -66,14 +54,11 @@
     </style>
 </head>
 <body class="page-about">
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="/index.html" class="nav-logo">
-                <!-- Logo resmi - yüklenemezse SVG fallback -->
                 <img src="/images/SEBS.png" alt="" class="nav-logo-img" role="presentation" 
                      onerror="if(this.nextElementSibling) { this.style.display='none'; this.nextElementSibling.style.display='inline-flex'; }"/>
-                <!-- Logo yüklenemezse SVG göster -->
                 <svg width="40" height="40" viewBox="0 0 40 40" style="display:none; margin-right: 8px;" class="nav-logo-svg">
                     <rect width="40" height="40" rx="8" fill="url(#logoGradient)"/>
                     <defs>
@@ -144,7 +129,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="floating-elements">
             <div class="floating-element"></div>
@@ -173,7 +157,6 @@
         </div>
     </section>
 
-    <!-- Story Section -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -223,7 +206,6 @@
         </div>
     </section>
 
-    <!-- Mission Vision Section -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -232,7 +214,6 @@
             </div>
             
             <div class="features-grid">
-                <!-- Vision Card -->
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-eye"></i>
@@ -255,7 +236,6 @@
                     </div>
                 </div>
 
-                <!-- Mission Card -->
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-bullseye"></i>
@@ -282,7 +262,6 @@
     </section>
 
 
-    <!-- Team Section -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -320,7 +299,6 @@
         </div>
     </section>
 
-    <!-- Values Section -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -360,7 +338,6 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
             <div class="cta-content">
@@ -380,7 +357,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -428,7 +404,6 @@
     </footer>
 
     <script>
-        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -438,11 +413,6 @@
             });
         });
 
-        // Mobile menu toggle - navigation.js tarafından yönetiliyor
-
-        // Navbar scroll: navigation.js tarafından yönetiliyor (koyu arka plan, okunaklı yazı)
-
-        // Animate stats on scroll
         const observerOptions = {
             threshold: 0.5,
             rootMargin: '0px 0px -100px 0px'
@@ -474,15 +444,12 @@
         document.querySelectorAll('.stats').forEach(section => {
             observer.observe(section);
         });
-        // Check authentication status (Supabase)
         async function checkAuthStatus() {
             try {
-                // Supabase session kontrolü
                 if (typeof window.initSupabase !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                     const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
                     
                     if (session && session.user && session.user.email_confirmed_at) {
-                        // User is logged in and verified
                         document.getElementById('loginBtn').style.display = 'none';
                         if (typeof window.sebsApplySignupNavCta === 'function') {
                             window.sebsApplySignupNavCta(true, session.user);
@@ -490,7 +457,6 @@
                         document.getElementById('userProfile').style.display = 'flex';
                         document.getElementById('logoutBtn').style.display = 'block';
                         
-                        // Update user info - sadece kullanıcı adı (e-posta değil)
                         const userNameEl = document.getElementById('userName');
                         const userAvatarEl = document.getElementById('userAvatar');
                         let displayName = 'Kullanıcı';
@@ -501,7 +467,6 @@
                         if (userNameEl) userNameEl.textContent = displayName;
                         if (userAvatarEl) userAvatarEl.textContent = (displayName.trim() || 'K').charAt(0).toUpperCase();
                         
-                        // Make user profile clickable to go to dashboard
                         const userProfileEl = document.getElementById('userProfile');
                         if (userProfileEl) {
                             userProfileEl.onclick = function() {
@@ -513,7 +478,6 @@
                     }
                 }
                 
-                // User is not logged in
                 document.getElementById('loginBtn').style.display = 'block';
                 if (typeof window.sebsApplySignupNavCta === 'function') {
                     window.sebsApplySignupNavCta(false, null);
@@ -523,7 +487,6 @@
                 
             } catch (error) {
                 console.error('checkAuthStatus error:', error);
-                // On error, show login buttons
                 document.getElementById('loginBtn').style.display = 'block';
                 if (typeof window.sebsApplySignupNavCta === 'function') {
                     window.sebsApplySignupNavCta(false, null);
@@ -533,7 +496,6 @@
             }
         }
 
-        // Logout function (Supabase)
         async function logout() {
             try {
                 if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
@@ -564,7 +526,6 @@
             }, 0);
         }
 
-        // Update logo based on theme
         function updateLogo() {
             const navLogoImg = document.querySelector('.nav-logo-img');
             const html = document.documentElement;
@@ -579,7 +540,6 @@
             }
         }
 
-        // Dark Mode Toggle
         function initDarkMode() {
             const darkModeToggle = document.getElementById('darkModeToggle');
             const darkModeIcon = document.getElementById('darkModeIcon');
@@ -591,7 +551,6 @@
                 if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
             }
             
-            // Update logo on page load
             updateLogo();
             
             if (darkModeToggle) {
@@ -606,21 +565,17 @@
                         localStorage.setItem('theme', 'dark');
                         if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
                     }
-                    // Update logo when theme changes
                     updateLogo();
                 });
             }
         }
 
-        // Initialize auth status when page loads
         document.addEventListener('DOMContentLoaded', async function() {
             initDarkMode();
             
-            // Supabase yüklenmesini bekle
             if (typeof window.initSupabase !== 'undefined') {
                 try {
                     await window.initSupabase();
-                    // SupabaseAuthSystem'in yüklenmesini bekle
                     let attempts = 0;
                     while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
                         await new Promise(resolve => setTimeout(resolve, 100));
@@ -631,7 +586,6 @@
                     console.error('Auth status check error:', error);
                 }
             } else {
-                // initSupabase henüz yüklenmedi, biraz bekle
                 setTimeout(async () => {
                     if (typeof window.initSupabase !== 'undefined') {
                         await checkAuthStatus();
@@ -640,17 +594,14 @@
             }
         });
     </script>
-    <!-- 1. Supabase UMD SDK  2. env  3. client  4. auth -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
             onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
     <script src="/js/supabase-env.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js"></script>
-    <!-- Navigation Script -->
     <script src="js/navigation.js"></script>
     
     <script>
-        // Logout button handler
         document.addEventListener('DOMContentLoaded', function() {
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) {

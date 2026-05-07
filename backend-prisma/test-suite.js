@@ -1,8 +1,5 @@
-// Comprehensive Test Suite for SEBS Global
-// Production Pre-Release Testing
 
 import { PrismaClient } from '@prisma/client';
-// Use global fetch if available (Node 18+), otherwise use node-fetch
 const fetch = globalThis.fetch || (await import('node-fetch')).default;
 
 const prisma = new PrismaClient();
@@ -16,7 +13,6 @@ const results = {
   total: 0
 };
 
-// Test Helper Functions
 async function test(name, testFn) {
   results.total++;
   try {
@@ -37,17 +33,11 @@ function expect(condition, message) {
   }
 }
 
-// ============================================
-// TEST SUITE
-// ============================================
 
 async function runTests() {
   console.log('🧪 SEBS Global - Production Test Suite');
   console.log('=====================================\n');
 
-  // ============================================
-  // 1. DATABASE TESTS
-  // ============================================
   console.log('📊 1. DATABASE TESTS\n');
 
   await test('Database connection', async () => {
@@ -69,9 +59,6 @@ async function runTests() {
     expect(count >= 0, 'Modules table should be accessible');
   });
 
-  // ============================================
-  // 2. AUTHENTICATION TESTS
-  // ============================================
   console.log('\n🔐 2. AUTHENTICATION TESTS\n');
 
   let authToken = null;
@@ -132,9 +119,6 @@ async function runTests() {
     expect(data.data.email === TEST_EMAIL, 'Email should match');
   });
 
-  // ============================================
-  // 3. API ENDPOINT TESTS
-  // ============================================
   console.log('\n🔌 3. API ENDPOINT TESTS\n');
 
   await test('Health check endpoint', async () => {
@@ -180,12 +164,8 @@ async function runTests() {
     expect(data.success, 'Should get packages');
   });
 
-  // ============================================
-  // 4. ADMIN PANEL TESTS
-  // ============================================
   console.log('\n👑 4. ADMIN PANEL TESTS\n');
 
-  // Create admin user first
   let adminToken = null;
   try {
     const adminUser = await prisma.user.findUnique({
@@ -235,9 +215,6 @@ async function runTests() {
     console.log('⚠️ Skipping admin tests - admin token not available');
   }
 
-  // ============================================
-  // 5. SECURITY TESTS
-  // ============================================
   console.log('\n🔒 5. SECURITY TESTS\n');
 
   await test('Unauthorized access prevention', async () => {
@@ -254,9 +231,6 @@ async function runTests() {
     expect(response.status === 401 || response.status === 403, 'Should reject invalid token');
   });
 
-  // ============================================
-  // 6. ERROR HANDLING TESTS
-  // ============================================
   console.log('\n⚠️ 6. ERROR HANDLING TESTS\n');
 
   await test('404 for non-existent endpoint', async () => {
@@ -273,9 +247,6 @@ async function runTests() {
     expect(response.status >= 400, 'Should handle malformed JSON');
   });
 
-  // ============================================
-  // TEST SUMMARY
-  // ============================================
   console.log('\n=====================================');
   console.log('📊 TEST SUMMARY');
   console.log('=====================================');
@@ -291,13 +262,11 @@ async function runTests() {
     });
   }
 
-  // Cleanup
   try {
     await prisma.user.deleteMany({
       where: { email: { startsWith: 'test_' } }
     });
   } catch (error) {
-    // Ignore cleanup errors
   }
 
   await prisma.$disconnect();
@@ -305,7 +274,6 @@ async function runTests() {
   process.exit(results.failed.length > 0 ? 1 : 0);
 }
 
-// Run tests
 runTests().catch(error => {
   console.error('Test suite error:', error);
   process.exit(1);

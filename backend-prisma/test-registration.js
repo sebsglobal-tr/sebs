@@ -1,4 +1,3 @@
-// Test User Registration Flow
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 
@@ -20,11 +19,9 @@ async function testRegistration() {
   };
 
   try {
-    // 1. Kayıt öncesi kullanıcı sayısı
     const beforeCount = await prisma.user.count();
     console.log(`📊 Kayıt öncesi kullanıcı sayısı: ${beforeCount}`);
 
-    // 2. API'ye kayıt isteği
     console.log(`\n📝 API'ye kayıt isteği gönderiliyor...`);
     const response = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
@@ -43,12 +40,10 @@ async function testRegistration() {
     console.log(`   Email: ${result.data.user.email}`);
     console.log(`   Verification Code: ${result.data.verificationCode} (test için)`);
 
-    // 3. Veritabanında kontrol
     console.log(`\n🔍 Veritabanında kontrol ediliyor...`);
     const afterCount = await prisma.user.count();
     console.log(`📊 Kayıt sonrası kullanıcı sayısı: ${afterCount}`);
 
-    // 4. Kullanıcıyı veritabanından bul
     const dbUser = await prisma.user.findUnique({
       where: { email: testEmail },
       select: {
@@ -84,7 +79,6 @@ async function testRegistration() {
     console.log(`   Kayıt Tarihi: ${dbUser.createdAt.toLocaleString('tr-TR')}`);
     console.log(`   Doğrulama Kodu: ${dbUser.verificationCode ? 'Var' : 'Yok'}`);
 
-    // 5. Veri doğrulama
     console.log(`\n🔍 Veri Doğrulama:`);
     
     const checks = [
@@ -107,7 +101,6 @@ async function testRegistration() {
       if (!check.pass) allPassed = false;
     });
 
-    // 6. Refresh token kontrolü
     const refreshToken = await prisma.refreshToken.findFirst({
       where: { userId: dbUser.id },
       orderBy: { createdAt: 'desc' }
@@ -130,7 +123,6 @@ async function testRegistration() {
     }
     console.log(`${'='.repeat(50)}\n`);
 
-    // Temizlik
     console.log('🧹 Test kullanıcısı temizleniyor...');
     await prisma.refreshToken.deleteMany({ where: { userId: dbUser.id } });
     await prisma.user.delete({ where: { id: dbUser.id } });

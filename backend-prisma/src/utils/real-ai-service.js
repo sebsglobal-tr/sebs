@@ -1,11 +1,8 @@
-// Real AI Service Integration
-// Uses OpenAI API for intelligent analysis and report generation
 
 let OpenAI = null;
 let openaiClient = null;
 let openaiLoaded = false;
 
-// Lazy load OpenAI (optional dependency)
 async function loadOpenAI() {
     if (openaiLoaded) {
         return OpenAI;
@@ -23,7 +20,6 @@ async function loadOpenAI() {
     }
 }
 
-// Initialize OpenAI client
 async function getOpenAIClient() {
     const OpenAI = await loadOpenAI();
     if (!OpenAI) {
@@ -48,23 +44,14 @@ async function getOpenAIClient() {
     return openaiClient;
 }
 
-/**
- * Generate AI-powered analysis report from user progress data
- * @param {Object} userData - Complete user progress data
- * @param {Object} certificate - Certificate information
- * @param {Object} metadata - Metadata from certificate
- * @returns {Promise<Object>} AI-generated report
- */
 export async function generateAIReport(userData, certificate, metadata) {
     const client = await getOpenAIClient();
     
-    // If OpenAI is not configured, use fallback
     if (!client) {
         return generateFallbackReport(certificate, metadata);
     }
 
     try {
-        // Prepare comprehensive user data for AI analysis
         const analysisPrompt = buildAnalysisPrompt(userData, certificate, metadata);
         
         const completion = await client.chat.completions.create({
@@ -87,19 +74,14 @@ export async function generateAIReport(userData, certificate, metadata) {
 
         const aiResponse = completion.choices[0].message.content;
         
-        // Parse AI response into structured report
         return parseAIResponse(aiResponse, certificate, metadata);
         
     } catch (error) {
         console.error('❌ OpenAI API Error:', error.message);
-        // Fallback to pattern-based analysis
         return generateFallbackReport(certificate, metadata);
     }
 }
 
-/**
- * Build comprehensive prompt for AI analysis
- */
 function buildAnalysisPrompt(userData, certificate, metadata) {
     const hours = Math.round(certificate.completionTime / 60);
     const modulesCompleted = metadata.modules?.filter(m => m.status === 'Tamamlandı').length || 0;
@@ -164,12 +146,7 @@ function buildAnalysisPrompt(userData, certificate, metadata) {
     return prompt;
 }
 
-/**
- * Parse AI response into structured report format
- */
 function parseAIResponse(aiResponse, certificate, metadata) {
-    // Try to extract structured information from AI response
-    // If AI returns structured JSON, parse it; otherwise use the text as summary
     
     const report = {
         summary: '',
@@ -182,7 +159,6 @@ function parseAIResponse(aiResponse, certificate, metadata) {
         rawResponse: aiResponse
     };
     
-    // Simple parsing - extract sections
     const sections = aiResponse.split(/\*\*/).filter(s => s.trim());
     
     sections.forEach(section => {
@@ -206,7 +182,6 @@ function parseAIResponse(aiResponse, certificate, metadata) {
         }
     });
     
-    // If parsing failed, use the whole response as summary
     if (!report.summary && aiResponse) {
         report.summary = aiResponse.substring(0, 500);
         report.fullAnalysis = aiResponse;
@@ -215,18 +190,11 @@ function parseAIResponse(aiResponse, certificate, metadata) {
     return report;
 }
 
-/**
- * Fallback report when AI is not available
- */
 function generateFallbackReport(certificate, metadata) {
-    // Use existing pattern-based analysis
     const { generateAdvancedAIReport } = require('./ai-reporter.js');
     return generateAdvancedAIReport(certificate, metadata);
 }
 
-/**
- * Analyze user learning patterns with AI
- */
 export async function analyzeLearningPattern(userData, progressData) {
     const client = await getOpenAIClient();
     if (!client) {

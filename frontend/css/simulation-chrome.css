@@ -1,15 +1,7 @@
-/**
- * Simülasyon içi düzen: üstte sabit landing header (h-16 = 4rem) ile
- * çakışmayı önler — toolbar, main-container, tam ekran masaüstü vb.
- */
 :root {
   --sebs-landing-chrome-h: 4rem;
 }
 
-/**
- * Tam ekran simülasyon (örn. kayit-haftasi-krizi): üst marketing header/footer yok,
- * landing-chrome’un beyaz gövde / padding’i burada sıfırlanır.
- */
 body[data-sebs-chrome-layout="immersive"] {
   --sebs-landing-chrome-h: 0px;
 }
@@ -48,10 +40,6 @@ body[data-sebs-chrome-layout="immersive"] .main-container {
   box-sizing: border-box;
 }
 
-/*
- * landing-chrome global typography (h1–h4, section, li, p !important) immersive sim
- * panellerinde koyu renk basıyor — başlıklar ve soru etiketleri okunmuyor.
- */
 body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container section {
   color: #e2e8f0 !important;
 }
@@ -97,7 +85,6 @@ body.landing-site-body[data-sebs-chrome-layout="immersive"] .main-container .win
   color: inherit !important;
 }
 
-/* Immersive + masaüstü sim (semptom-etki-zinciri): tam viewport; desktop layout Chrome kuralları max-width kısıtını kaldırır */
 body[data-sebs-chrome-layout="immersive"] .desktop.show {
   display: flex !important;
   position: fixed !important;
@@ -132,7 +119,6 @@ body[data-sebs-chrome-layout="immersive"] .taskbar {
   margin-bottom: 0 !important;
 }
 
-/* Linux forensik sim + immersive: üst marketing yok — linux layout offset’leri sıfırla */
 body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim .task-cards-panel {
   top: 0 !important;
   height: 100vh !important;
@@ -142,13 +128,11 @@ body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-
   max-height: min(900px, calc(100vh - 2.5rem));
 }
 
-/* Bu sayfada simülasyon arka planı terminal ile uyumlu olsun (genel immersive SOC görseli yerine) */
 body.landing-site-body[data-sebs-chrome-layout="immersive"].sebs-linux-forensic-sim {
   background-color: #050608 !important;
   background-image: none !important;
 }
 
-/* ─── Sabit sim toolbar + .main-container (stack) ─── */
 body[data-sebs-chrome-layout="stack"] .simulation-header.sebs-sim-header-fixed {
   top: var(--sebs-landing-chrome-h) !important;
   left: 0;
@@ -163,7 +147,6 @@ body[data-sebs-chrome-layout="stack"] .main-container {
   box-sizing: border-box;
 }
 
-/* ─── Akışta (fixed olmayan) sim başlığı + ana alan ─── */
 body[data-sebs-chrome-layout="flow"] .simulation-header {
   margin-top: var(--sebs-landing-chrome-h);
 }
@@ -176,11 +159,9 @@ body[data-sebs-chrome-layout="flow"] .main-container {
   box-sizing: border-box;
 }
 
-/* ─── Semptom / masaüstü sim: site header altında, ortalanmış çalışma alanı ─── */
 body[data-sebs-chrome-layout="desktop"] .desktop.show {
   display: flex !important;
   position: fixed !important;
-  /* inline stillerdeki inset:0 ile çakışmayı kır */
   inset: unset !important;
   top: var(--sebs-landing-chrome-h) !important;
   left: 0 !important;
@@ -221,14 +202,12 @@ body[data-sebs-chrome-layout="desktop"] .taskbar {
   margin-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* ─── Pentest: terminal tam yükseklik ─── */
 body[data-sebs-chrome-layout="terminal"] .terminal-container {
   margin-top: var(--sebs-landing-chrome-h);
   height: calc(100vh - var(--sebs-landing-chrome-h)) !important;
   box-sizing: border-box;
 }
 
-/* ─── Linux forensik: HUD, yan panel, monitör ─── */
 body[data-sebs-chrome-layout="linux"] .task-cards-panel {
   top: var(--sebs-landing-chrome-h) !important;
   height: calc(100vh - var(--sebs-landing-chrome-h)) !important;
@@ -242,7 +221,17 @@ body[data-sebs-chrome-layout="linux"] .screen-frame {
   max-height: min(900px, calc(100vh - var(--sebs-landing-chrome-h) - 2.5rem));
 }
 
-/* ─── Yakında / merkezi içerik (üst barın altında kalmaması için) ─── */
+body[data-sebs-chrome-layout="linux"] .intro-overlay {
+  top: var(--sebs-landing-chrome-h) !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  align-items: flex-start !important;
+  overflow-y: auto !important;
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
 body[data-sebs-chrome-layout="coming"] .coming-soon-container {
   padding-top: calc(var(--sebs-landing-chrome-h) + 2rem);
   padding-bottom: 3rem;

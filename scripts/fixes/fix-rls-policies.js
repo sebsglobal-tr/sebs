@@ -1,12 +1,3 @@
-/**
- * RLS Policy Düzeltmeleri
- * Supabase Linter Uyarılarını Düzelt
- * 
- * Bu script "Service role full access" policy'lerini güvenli hale getirir:
- * 1. Service role policy'lerinin sadece service_role için geçerli olduğundan emin olur
- * 2. Public/authenticated rollere erişim engellenir
- * 3. Kritik tablolar için daha güvenli policy'ler oluşturur
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
@@ -19,7 +10,6 @@ const pool = new Pool({
     }
 });
 
-// Kritik tablolar (kullanıcı verilerini içeren)
 const CRITICAL_TABLES = [
     'users',
     'module_progress',
@@ -32,7 +22,6 @@ const CRITICAL_TABLES = [
     'security_logs'
 ];
 
-// Sistem tabloları (service_role için tam erişim gerekli)
 const SYSTEM_TABLES = [
     '_prisma_migrations',
     'ai_analysis',
@@ -70,19 +59,15 @@ async function fixRLSPolicies() {
         console.log('\n🔒 RLS POLICY DÜZELTMELERİ BAŞLATILIYOR...\n');
         console.log('='.repeat(70));
         
-        // 1. KRİTİK TABLOLAR İÇİN GÜVENLİ POLICY'LER
         console.log('\n📋 1. KRİTİK TABLOLAR İÇİN GÜVENLİ POLICY\'LER\n');
         await fixCriticalTablePolicies(client);
         
-        // 2. SİSTEM TABLOLARI İÇİN SERVICE ROLE POLICY'LERİ
         console.log('\n📋 2. SİSTEM TABLOLARI İÇİN SERVICE ROLE POLICY\'LERİ\n');
         await fixSystemTablePolicies(client);
         
-        // 3. ANON VE AUTHENTICATED ERİŞİMİ ENGELLE
         console.log('\n📋 3. ANON VE AUTHENTICATED ERİŞİMİ ENGELLE\n');
         await blockPublicAccess(client);
         
-        // 4. RAPOR
         console.log('\n📊 RLS POLICY DÜZELTME RAPORU\n');
         generateReport();
         
@@ -98,7 +83,6 @@ async function fixRLSPolicies() {
 async function fixCriticalTablePolicies(client) {
     for (const table of CRITICAL_TABLES) {
         try {
-            // Mevcut policy'yi kontrol et
             const existingPolicy = await client.query(`
                 SELECT policyname, roles, cmd, qual, with_check
                 FROM pg_policies
@@ -111,14 +95,11 @@ async function fixCriticalTablePolicies(client) {
                 const policy = existingPolicy.rows[0];
                 const roles = policy.roles || [];
                 
-                // Eğer policy public, anon veya authenticated rolüne uygulanıyorsa düzelt
                 if (roles.includes('public') || roles.includes('anon') || roles.includes('authenticated') || roles.length === 0) {
-                    // Mevcut policy'yi sil
                     await client.query(`
                         DROP POLICY IF EXISTS "Service role full access" ON ${table};
                     `);
                     
-                    // Sadece service_role için yeni policy oluştur
                     await client.query(`
                         CREATE POLICY "Service role full access"
                         ON ${table}
@@ -134,7 +115,6 @@ async function fixCriticalTablePolicies(client) {
                     console.log(`   ✅ ${table}: Policy zaten service_role için yapılandırılmış`);
                 }
             } else {
-                // Policy yoksa oluştur
                 await client.query(`
                     CREATE POLICY "Service role full access"
                     ON ${table}
@@ -160,10 +140,7 @@ async function fixCriticalTablePolicies(client) {
 async function fixSystemTablePolicies(client) {
     for (const table of SYSTEM_TABLES) {
         try {
-            // Sistem tabloları için service_role'a tam erişim ver (bu normal)
-            // Ancak public, anon ve authenticated erişimini engelle
             
-            // Mevcut policy'yi kontrol et
             const existingPolicy = await client.query(`
                 SELECT policyname, roles, cmd, qual, with_check
                 FROM pg_policies
@@ -176,14 +153,11 @@ async function fixSystemTablePolicies(client) {
                 const policy = existingPolicy.rows[0];
                 const roles = policy.roles || [];
                 
-                // Eğer policy public, anon veya authenticated rolüne uygulanıyorsa düzelt
                 if (roles.includes('public') || roles.includes('anon') || roles.includes('authenticated') || roles.length === 0) {
-                    // Mevcut policy'yi sil
                     await client.query(`
                         DROP POLICY IF EXISTS "Service role full access" ON ${table};
                     `);
                     
-                    // Sadece service_role için yeni policy oluştur
                     await client.query(`
                         CREATE POLICY "Service role full access"
                         ON ${table}
@@ -199,7 +173,6 @@ async function fixSystemTablePolicies(client) {
                     console.log(`   ✅ ${table}: Sistem tablosu - service_role erişimi normal`);
                 }
             } else {
-                // Policy yoksa oluştur (sadece service_role için)
                 await client.query(`
                     CREATE POLICY "Service role full access"
                     ON ${table}
@@ -224,12 +197,10 @@ async function fixSystemTablePolicies(client) {
 }
 
 async function blockPublicAccess(client) {
-    // Kritik tablolar için anon ve authenticated erişimini engelle
     const allTables = [...CRITICAL_TABLES, ...SYSTEM_TABLES];
     
     for (const table of allTables) {
         try {
-            // Tablonun var olup olmadığını kontrol et
             const tableExists = await client.query(`
                 SELECT EXISTS (
                     SELECT FROM information_schema.tables 
@@ -242,22 +213,18 @@ async function blockPublicAccess(client) {
                 continue;
             }
             
-            // RLS'i aktif et (eğer değilse)
             await client.query(`
                 ALTER TABLE ${table} ENABLE ROW LEVEL SECURITY;
             `);
             
-            // anon rolüne tüm izinleri kaldır (eğer varsa)
             try {
                 await client.query(`
                     REVOKE ALL ON TABLE ${table} FROM anon;
                 `);
             } catch (e) {
-                // anon rolü yoksa sorun değil
                 if (e.code !== '42704') throw e;
             }
             
-            // authenticated rolüne kritik tablolarda izin verme
             if (CRITICAL_TABLES.includes(table)) {
                 try {
                     await client.query(`
@@ -271,7 +238,6 @@ async function blockPublicAccess(client) {
             
         } catch (error) {
             if (error.code === '42P01') {
-                // Tablo yoksa devam et
                 continue;
             } else {
                 console.error(`   ❌ ${table}: Public access engelleme hatası - ${error.message}`);
@@ -303,7 +269,6 @@ function generateReport() {
     console.log('   Service role policy\'leri artık sadece service_role için geçerlidir.\n');
 }
 
-// Run fixes
 if (require.main === module) {
     fixRLSPolicies()
         .then(() => {

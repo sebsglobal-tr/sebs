@@ -4,7 +4,6 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Yakında Yüklenecek - SEBS Global</title>
     <meta name='description' content="Bu modül yakında yüklenecek. SEBS Global eğitim platformunda daha fazla içerik için bizi takip edin.">
@@ -14,7 +13,6 @@
     <meta name="language" content="Turkish">
     <meta name="revisit-after" content="7 days">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/modules/coming-soon.html">
     <meta property="og:title" content="Yakında Yüklenecek - SEBS Global">
@@ -23,24 +21,19 @@
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Yakında Yüklenecek - SEBS Global">
     <meta name="twitter:description" content="Bu modül yakında yüklenecek. SEBS Global eğitim platformunda daha fazla içerik için bizi takip edin.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-coming-soon.jpg">
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://sebsglobal.com/modules/coming-soon.html">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Styles -->
     <link rel="stylesheet" href="/css/styles.css">
     
     
@@ -378,7 +371,6 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -425,7 +417,6 @@
     </div>
   </div>
 </header>
-<!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
@@ -436,10 +427,8 @@
         </div>
     </div>
 
-        <!-- Navigation -->
     
 
-    <!-- Coming Soon Content -->
     <div class="coming-soon-container">
         <div class="coming-soon-card">
             <div class="coming-soon-icon">
@@ -507,8 +496,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
@@ -580,9 +567,7 @@
                 `${moduleName} modülü şu anda geliştirilme aşamasında`;
         }
     </script>
-    <!-- Navigation Script -->
     <script src="../js/navigation.js"></script>
-    <!-- Access Control -->
     <script src="../utils/access-control.js"></script>
     <script src="module-access-check.js"></script>
 </body>

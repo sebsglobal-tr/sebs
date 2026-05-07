@@ -1,7 +1,4 @@
-// Module Progress Tracker
-// Saves lesson completion to database and localStorage
 
-// Tarayıcıdaki eski modül ilerlemesi (v3) — SEBS_PROGRESS_STORAGE_VER: legacy-progress-storage-migrate.js ile aynı tutun
 (function runSebsLegacyProgressStorageMigrationOnceModules() {
     var SEBS_PROGRESS_STORAGE_VER = '3';
     var KEY = 'sebs_progress_storage_version';
@@ -30,7 +27,6 @@
             }
         }, 0);
     } catch (e) {
-        /* ignore */
     }
 })();
 
@@ -44,16 +40,13 @@ function getProgressApiBase() {
     return 'http://localhost:8006/api';
 }
 
-// Load API Client
 const script = document.createElement('script');
 script.src = '../utils/api-client.js';
 document.head.appendChild(script);
 
-// Module name to ID cache
 let moduleNameCache = null;
 let moduleCacheExpiry = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-/** Aynı modül adı için eşzamanlı tek ağ isteği (429 önleme) */
 const moduleIdInflight = new Map();
 
 function normModuleTitleStr(s) {
@@ -63,7 +56,6 @@ function normModuleTitleStr(s) {
         .toLowerCase();
 }
 
-/** Eski/yanlış önbelleği temizler; oturum değişince çağrılmalı */
 window.invalidateModuleIdCache = function () {
     moduleNameCache = null;
     moduleCacheExpiry = 0;
@@ -71,7 +63,6 @@ window.invalidateModuleIdCache = function () {
         localStorage.removeItem('moduleNameCache');
         localStorage.removeItem('moduleNameCacheTime');
     } catch (e) {
-        /* ignore */
     }
 };
 
@@ -92,12 +83,10 @@ function getSupabaseAccessTokenFromStorage() {
             }
         }
     } catch (e) {
-        /* ignore */
     }
     return null;
 }
 
-// Helper: get Supabase access token if available (Supabase Auth)
 async function getSupabaseAccessToken() {
     try {
         if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
@@ -114,7 +103,6 @@ async function getSupabaseAccessToken() {
     return getSupabaseAccessTokenFromStorage();
 }
 
-// Get module ID from module name (exposed globally for other trackers)
 window.getModuleIdFromName = async function (rawName) {
     const moduleName = String(rawName || '')
         .trim()
@@ -161,7 +149,6 @@ window.getModuleIdFromName = async function (rawName) {
                 return na.includes(nb) || nb.includes(na);
             }
 
-            /** Önce tam başlık eşleşmesi; yoksa tek anlamlı “içerir” eşleşmesi (cihazlar arası aynı modül id) */
             function pickModuleIdFromFlatList(list) {
                 if (!list || !list.length) return null;
                 const want = normModuleTitleStr(moduleName);
@@ -240,10 +227,8 @@ window.getModuleIdFromName = async function (rawName) {
 };
 
 window.ModuleProgressTracker = {
-    // Save lesson completion - DIRECTLY TO DATABASE ONLY
     saveLessonProgress: async function(moduleName, lessonName) {
         try {
-            // Prefer Supabase session token, fallback to legacy authToken
             let token = await getSupabaseAccessToken();
             if (!token) {
                 token = localStorage.getItem('authToken');
@@ -253,7 +238,6 @@ window.ModuleProgressTracker = {
                 return;
             }
 
-            // Get module ID from name
             const moduleId = await getModuleIdFromName(moduleName);
             
             if (!moduleId) {
@@ -261,7 +245,6 @@ window.ModuleProgressTracker = {
                 return;
             }
 
-            // Get current progress from database
             let currentProgress = null;
             try {
                 const apiBase = getProgressApiBase();
@@ -282,7 +265,6 @@ window.ModuleProgressTracker = {
                 console.log('No existing progress found, creating new');
             }
 
-            // Calculate new progress (lastStep may have completedLessons, totalLessons)
             const completedLessons = currentProgress?.completedLessons || [];
             if (!completedLessons.includes(lessonName)) {
                 completedLessons.push(lessonName);
@@ -294,7 +276,6 @@ window.ModuleProgressTracker = {
                 : 0;
             const isCompleted = percentage === 100;
 
-            // Save to database (direct fetch to /api/progress with Supabase/legacy token)
             const apiBase = getProgressApiBase();
             const lastStep = {
                 completedLessons: completedLessons,
@@ -330,10 +311,8 @@ window.ModuleProgressTracker = {
         }
     },
 
-    // Mark module as complete - DIRECTLY TO DATABASE ONLY
     completeModule: async function(moduleName) {
         try {
-            // Prefer Supabase session token, fallback to legacy authToken
             let token = await getSupabaseAccessToken();
             if (!token) {
                 token = localStorage.getItem('authToken');
@@ -350,7 +329,6 @@ window.ModuleProgressTracker = {
                 return;
             }
 
-            // Get current progress from database
             let currentProgress = null;
             try {
                 const apiBase = getProgressApiBase();
@@ -377,7 +355,6 @@ window.ModuleProgressTracker = {
                 console.log('No existing progress found');
             }
 
-            // Save to database (direct fetch)
             const apiBase = getProgressApiBase();
             const doneLessons = currentProgress?.completedLessons || [];
             const totalL =
@@ -411,7 +388,6 @@ window.ModuleProgressTracker = {
             }
 
             console.log('✅ Module completed in database:', result);
-            // Check category completion and generate certificate if needed
             checkCategoryCompletion(moduleName);
         } catch (error) {
             console.error('❌ Failed to complete module:', error);
@@ -419,10 +395,8 @@ window.ModuleProgressTracker = {
         }
     },
 
-    // Initialize module with total lessons count - DATABASE ONLY
     initializeModule: async function(moduleName, totalLessons) {
         try {
-            // Prefer Supabase session token, fallback to legacy authToken
             let token = await getSupabaseAccessToken();
             if (!token) {
                 token = localStorage.getItem('authToken');
@@ -438,7 +412,6 @@ window.ModuleProgressTracker = {
                 return;
             }
 
-            // Check if progress exists, if not create it
             try {
                 const apiBase = getProgressApiBase();
                 const progressResponse = await fetch(`${apiBase}/progress/module/${moduleId}`, {
@@ -448,7 +421,6 @@ window.ModuleProgressTracker = {
                 });
                 
                 if (!progressResponse.ok || progressResponse.status === 404) {
-                    // Create new progress entry directly
                     const response = await fetch(apiBase + '/progress', {
                         method: 'POST',
                         headers: {
@@ -477,7 +449,6 @@ window.ModuleProgressTracker = {
     }
 };
 
-// Helper function to get category from module name
 function getCategoryFromModule(moduleName) {
     const siberGuvenlikModules = [
         'Temel Siber Güvenlik',
@@ -511,7 +482,6 @@ function getCategoryFromModule(moduleName) {
     return null;
 }
 
-// Check category completion and generate certificate
 async function checkCategoryCompletion(moduleName) {
     const category = getCategoryFromModule(moduleName);
     
@@ -527,7 +497,6 @@ async function checkCategoryCompletion(moduleName) {
             if (result && result.success) {
                 if (result.data.certificate) {
                     console.log('✅ Certificate generated!', result.data.certificate);
-                    // Show notification
                     if (window.showNotification) {
                         window.showNotification('🎓 Tebrikler! Sertifika kazandınız!', 'success');
                     }
@@ -541,7 +510,6 @@ async function checkCategoryCompletion(moduleName) {
     }
 }
 
-/** Supabase veya legacy JWT — modül sayfaları ve panel ortak kullanır */
 window.getProgressAuthToken = getSupabaseAccessToken;
 
 const PENDING_PROGRESS_QUEUE_KEY = 'sebs_pending_progress_queue_v1';
@@ -560,7 +528,6 @@ function writePendingProgressQueue(queue) {
     try {
         localStorage.setItem(PENDING_PROGRESS_QUEUE_KEY, JSON.stringify(Array.isArray(queue) ? queue : []));
     } catch (e) {
-        /* ignore */
     }
 }
 
@@ -611,12 +578,6 @@ window.flushPendingProgressQueue = async function () {
     return { ok: true, flushed };
 };
 
-/**
- * Tamamlanan ders listesini sunucu ile birleştirip POST /api/progress yazar (cihazlar arası tek kaynak).
- * @param {string} moduleTitle - Veritabanındaki modül başlığına yakın isim
- * @param {string[]} clientCompletedLessons - Bu oturumdaki tamamlanan ders kimlikleri/metinleri
- * @param {number} totalLessons - Toplam ders sayısı
- */
 window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLessons, totalLessons, options) {
     try {
         const opts = options || {};
@@ -660,7 +621,6 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
                 }
             }
         } catch (e) {
-            /* yok say */
         }
 
         const merged = [...new Set([...serverList.map(String), ...clientList])];
@@ -698,7 +658,6 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
                 try {
                     await window.flushPendingProgressQueue();
                 } catch (e) {
-                    /* ignore */
                 }
             }
         } else {
@@ -712,7 +671,6 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
             const safeTotal = Math.max(1, parseInt(String(totalLessons), 10) || safeList.length || 1);
             enqueuePendingProgress(moduleTitle, safeList, safeTotal, String(error && error.message));
         } catch (e) {
-            /* ignore */
         }
         return { ok: false, reason: String(error && error.message) };
     }

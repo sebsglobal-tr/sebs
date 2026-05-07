@@ -1,4 +1,3 @@
-// Course Routes
 import express from 'express';
 import { prisma } from '../server.js';
 import { authenticateSupabase } from '../middleware/supabase-auth.middleware.js';
@@ -6,7 +5,6 @@ import { filterCoursesByEntitlement, hasAccess } from '../utils/entitlement.js';
 
 const router = express.Router();
 
-// Optional authentication - check if token exists
 const optionalAuth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -16,7 +14,6 @@ const optionalAuth = async (req, res, next) => {
       return next();
     }
 
-    // Try to authenticate with Supabase, but don't fail if invalid
     try {
       await authenticateSupabase(req, res, () => {
         next();
@@ -31,7 +28,6 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
-// Get all courses (with entitlement filtering)
 router.get('/', optionalAuth, async (req, res, next) => {
   try {
     const courses = await prisma.course.findMany({
@@ -48,7 +44,6 @@ router.get('/', optionalAuth, async (req, res, next) => {
       orderBy: { sortOrder: 'asc' }
     });
 
-    // Filter courses based on user entitlements
     const filteredCourses = filterCoursesByEntitlement(courses, req.user || null);
 
     res.json({
@@ -60,7 +55,6 @@ router.get('/', optionalAuth, async (req, res, next) => {
   }
 });
 
-// Get single course (with entitlement filtering)
 router.get('/:id', optionalAuth, async (req, res, next) => {
   try {
     const course = await prisma.course.findUnique({
@@ -80,7 +74,6 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
       });
     }
 
-    // Check if user has access
     const hasAccessToCourse = hasAccess(req.user || null, course.category, course.level);
 
     const filteredCourse = {
@@ -97,7 +90,6 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
             duration: module.duration,
             isActive: module.isActive,
             isLocked: true,
-            // Don't send content for locked modules
             content: null
           })),
       isLocked: !hasAccessToCourse

@@ -1,10 +1,8 @@
-// Seed Database with Courses and Modules
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const courses = [
-    // BAŞLANGIÇ SEVİYESİ
   {
     title: 'Siber Güvenliğe Giriş',
     category: 'cybersecurity',
@@ -69,7 +67,6 @@ const courses = [
       { title: 'Korunma Stratejileri', description: 'Sosyal mühendislikten korunma', order: 3, type: 'lesson' },
     ]
   },
-  // ORTA SEVİYE
   {
     title: 'Network Güvenliği',
     category: 'cybersecurity',
@@ -144,7 +141,6 @@ const courses = [
       { title: 'Temel Cloud Compliance', description: 'Cloud uyumluluk', order: 3, type: 'lesson' },
     ]
   },
-  // İLERİ SEVİYE
   {
     title: 'İleri Malware Analizi & Reverse Engineering',
     category: 'cybersecurity',
@@ -225,7 +221,6 @@ async function main() {
   for (const courseData of courses) {
     const { modules, ...courseFields } = courseData;
     
-    // Check if course exists
     const existingCourse = await prisma.course.findFirst({
       where: { 
         title: courseFields.title,
@@ -237,7 +232,6 @@ async function main() {
     if (existingCourse) {
       console.log(`ℹ️  Course already exists: ${courseFields.title}`);
       
-      // Update course if needed
       const updatedCourse = await prisma.course.update({
         where: { id: existingCourse.id },
         data: {
@@ -251,7 +245,6 @@ async function main() {
       
       console.log(`✅ Updated course: ${updatedCourse.title} with ${modules.length} modules`);
     } else {
-      // Create new course
       const course = await prisma.course.create({
         data: {
           ...courseFields,

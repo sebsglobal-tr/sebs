@@ -1,4 +1,3 @@
-// Test database connection
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 
@@ -16,7 +15,6 @@ async function testConnection() {
     console.log('\n✅ Database connection successful!');
     console.log('PostgreSQL version:', result[0]?.version || 'Unknown');
     
-    // Check if entitlements table exists
     const tables = await prisma.$queryRaw`
       SELECT table_name 
       FROM information_schema.tables 

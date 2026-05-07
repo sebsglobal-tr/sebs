@@ -1,7 +1,3 @@
-/**
- * Final Performance Fixes
- * Tüm performans sorunlarını ve önerileri uygula
- */
 
 import 'dotenv/config';
 import dotenv from 'dotenv';
@@ -27,10 +23,8 @@ async function fixAllIssues() {
     let fixedCount = 0;
     let warningCount = 0;
 
-    // 1. Kullanılmayan index'leri temizle (PRIMARY KEY ve UNIQUE constraint'leri hariç)
     console.log('📇 1. KULLANILMAYAN INDEX\'LERİ TEMİZLE\n');
     
-    // Önce hangi index'lerin primary key veya unique constraint olduğunu kontrol et
     const constraintIndexes = await client.query(`
       SELECT 
         i.relname as indexname,
@@ -53,7 +47,6 @@ async function fixAllIssues() {
       }
     });
 
-    // Kullanılmayan ve güvenli index'leri bul
     const unusedSafeIndexes = await client.query(`
       SELECT 
         relname as tablename,
@@ -70,7 +63,6 @@ async function fixAllIssues() {
     console.log(`   Tespit edilen güvenli kullanılmayan index: ${unusedSafeIndexes.rows.length} adet\n`);
 
     for (const idx of unusedSafeIndexes.rows) {
-      // Primary key veya unique constraint değilse sil
       if (!pkOrUniqueIndexes.has(idx.indexname)) {
         try {
           await client.query(`DROP INDEX IF EXISTS public.${idx.indexname}`);
@@ -84,7 +76,6 @@ async function fixAllIssues() {
       }
     }
 
-    // 2. Eksik foreign key index'lerini ekle
     console.log('\n🔗 2. EKSİK FOREIGN KEY İNDEX\'LERİNİ EKLE\n');
     
     const missingFKIndexes = await client.query(`
@@ -126,7 +117,6 @@ async function fixAllIssues() {
       console.log('   ✅ Tüm foreign key\'lerde index mevcut');
     }
 
-    // 3. Query performansı için index'ler
     console.log('\n📊 3. QUERY PERFORMANS İNDEX\'LERİ EKLE\n');
     
     const perfIndexes = [
@@ -168,7 +158,6 @@ async function fixAllIssues() {
       }
     }
 
-    // 4. Dead rows temizle
     console.log('\n🧹 4. DEAD ROWS TEMİZLE (VACUUM)\n');
     
     const tablesWithDeadRows = await client.query(`
@@ -195,7 +184,6 @@ async function fixAllIssues() {
       console.log('   ✅ Dead row bulunamadı - tablolar temiz');
     }
 
-    // 5. İstatistikleri güncelle
     console.log('\n📈 5. İSTATİSTİKLERİ GÜNCELLE (ANALYZE)\n');
     try {
       await client.query('ANALYZE');
@@ -205,7 +193,6 @@ async function fixAllIssues() {
       console.log(`   ❌ ANALYZE hatası: ${error.message}`);
     }
 
-    // 6. Özet
     console.log('\n' + '='.repeat(70));
     console.log('📊 DÜZELTME ÖZETİ');
     console.log('='.repeat(70));

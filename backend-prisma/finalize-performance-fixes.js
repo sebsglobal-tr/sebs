@@ -1,7 +1,3 @@
-/**
- * Finalize Performance Fixes
- * Son performans düzeltmelerini uygula
- */
 
 import 'dotenv/config';
 import dotenv from 'dotenv';
@@ -24,10 +20,8 @@ async function finalizeFixes() {
     console.log('='.repeat(70));
     console.log('');
 
-    // 1. Gerçekten kullanılmayan ve güvenli index'leri temizle
     console.log('📇 1. KULLANILMAYAN NORMAL INDEX\'LERİ TEMİZLE\n');
     
-    // PRIMARY KEY ve UNIQUE constraint olmayan kullanılmayan index'leri bul
     const unusedSafeIndexes = await client.query(`
       SELECT 
         relname as tablename,
@@ -59,7 +53,6 @@ async function finalizeFixes() {
       console.log('   ✅ Kaldırılacak güvenli kullanılmayan index bulunamadı');
     }
 
-    // 2. Query performansı için composite index'ler ekle (zaten eklendi ama kontrol et)
     console.log('\n📊 2. PERFORMANS İNDEX\'LERİNİ DOĞRULA\n');
     
     const perfIndexes = [
@@ -85,7 +78,6 @@ async function finalizeFixes() {
       }
     }
 
-    // 3. VACUUM ve ANALYZE
     console.log('\n🧹 3. VACUUM ANALYZE\n');
     try {
       await client.query('VACUUM ANALYZE');
@@ -94,11 +86,9 @@ async function finalizeFixes() {
       console.log(`   ⚠️  VACUUM ANALYZE hatası: ${error.message}`);
     }
 
-    // 4. Son durum kontrolü
     console.log('\n🔍 4. SON DURUM KONTROLÜ\n');
     console.log('-'.repeat(70));
 
-    // Dead rows kontrolü
     const deadRows = await client.query(`
       SELECT 
         relname as tablename,
@@ -124,7 +114,6 @@ async function finalizeFixes() {
       });
     }
 
-    // Kullanılmayan index kontrolü (sadece normal index'ler)
     const unusedCount = await client.query(`
       SELECT COUNT(*) as count
       FROM pg_stat_user_indexes

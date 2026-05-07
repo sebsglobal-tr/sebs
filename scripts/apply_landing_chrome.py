@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Replace legacy saas-shell navbar/footer with index.html–style landing header/footer
 and inject Tailwind + saas-landing.css + landing-chrome.css across frontend HTML.
@@ -155,14 +154,12 @@ def process_file(path: Path, header: str, footer_html: str) -> bool:
     text = FOOTER_RE.sub(footer_block, text)
 
     if not had_saas_footer and "landing-footer-year" not in text:
-        # Fallback: no old footer (already migrated?) — append before </body>
         if "</body>" in text and "border-t border-slate-200 bg-white py-14" not in text:
             text = text.replace("</body>", footer_block + "\n</body>", 1)
 
     text = REMOTE_RE.sub("\n", text)
     text = SAAS_SHELL_RE.sub("\n", text)
     text = SAAS_SHELL_JS_RE.sub("\n", text)
-    # Plain fallbacks (regex can miss whitespace variants)
     for line in (
         '<link rel="stylesheet" href="/css/remote-inspired.css">',
         '<link rel="stylesheet" href="/css/saas-shell.css">',

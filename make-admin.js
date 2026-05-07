@@ -1,7 +1,3 @@
-/**
- * Make user admin script
- * Belirtilen e-posta adresine sahip kullanıcıya admin yetkisi verir
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
@@ -34,7 +30,6 @@ async function makeUserAdmin(email) {
         
         console.log(`\n🔍 Kullanıcı aranıyor: ${email}\n`);
         
-        // Kullanıcıyı bul
         const userResult = await client.query(
             'SELECT id, email, first_name, last_name, role, access_level, is_verified, is_active FROM users WHERE email = $1',
             [email]
@@ -57,7 +52,6 @@ async function makeUserAdmin(email) {
         console.log(`   Doğrulanmış: ${user.is_verified ? 'Evet' : 'Hayır'}`);
         console.log(`   Aktif: ${user.is_active ? 'Evet' : 'Hayır'}`);
         
-        // Admin yetkilerini ver
         await client.query(
             `UPDATE users 
              SET role = 'admin',
@@ -69,7 +63,6 @@ async function makeUserAdmin(email) {
             [email]
         );
         
-        // Tüm kategorilerde advanced seviyesinde paketler ekle
         const categories = ['cybersecurity', 'cloud', 'data-science'];
         const level = 'advanced';
         const price = 0.00; // Admin için ücretsiz
@@ -78,7 +71,6 @@ async function makeUserAdmin(email) {
         
         for (const category of categories) {
             try {
-                // Önce purchases tablosunu dene
                 await client.query(
                     `INSERT INTO purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
                      VALUES ($1, $2, $3, $4, 'completed', CURRENT_TIMESTAMP, TRUE)
@@ -93,7 +85,6 @@ async function makeUserAdmin(email) {
                 );
                 console.log(`   ✅ ${category} - advanced paketi eklendi`);
             } catch (err) {
-                // purchases tablosu yoksa user_package_purchases tablosunu dene
                 try {
                     await client.query(
                         `INSERT INTO user_package_purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
@@ -114,7 +105,6 @@ async function makeUserAdmin(email) {
             }
         }
         
-        // Güncellenmiş kullanıcı bilgilerini getir
         const updatedResult = await client.query(
             'SELECT id, email, first_name, last_name, role, access_level, is_verified, is_active FROM users WHERE email = $1',
             [email]
@@ -122,7 +112,6 @@ async function makeUserAdmin(email) {
         
         const updatedUser = updatedResult.rows[0];
         
-        // Eklenen paketleri göster
         let purchasesResult = { rows: [] };
         try {
             purchasesResult = await client.query(
@@ -131,7 +120,6 @@ async function makeUserAdmin(email) {
                 [user.id]
             );
         } catch (err) {
-            // purchases tablosu yoksa user_package_purchases'den al
             try {
                 purchasesResult = await client.query(
                     `SELECT category, level FROM user_package_purchases 
@@ -139,7 +127,6 @@ async function makeUserAdmin(email) {
                     [user.id]
                 );
             } catch (err2) {
-                // Her iki tablo da yoksa boş bırak
                 purchasesResult = { rows: [] };
             }
         }
@@ -182,7 +169,6 @@ async function makeUserAdmin(email) {
     }
 }
 
-// Main execution
 async function main() {
     const email = process.argv[2] || 'asasferfer4566@gmail.com';
     
@@ -197,7 +183,6 @@ async function main() {
     }
 }
 
-// Run script
 if (require.main === module) {
     main();
 }

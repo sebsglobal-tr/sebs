@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Modül 2-15 için alt başlıkları tespit edip ayrı section'lara böl."""
 
 import re
@@ -20,7 +19,6 @@ def main():
 
     SKIP = {'Hedefler', 'Modül Amaçları', 'Ana içerik'}
 
-    # Modül config: section_id -> [(h4_text, slug), ...]
     modules = {
         'ders-2-topolojiler': [('2.1 Network Topolojileri', '2-1-topolojileri')],
         'ders-3-soho': [
@@ -115,7 +113,6 @@ def main():
         base_num = re.match(r'\d+', base)
         base_num = base_num.group(0) if base_num else base
 
-        # Find section content - from section start to sozluk
         sect_start = content.find(f'id="{mod_id}"')
         if sect_start == -1:
             continue
@@ -146,21 +143,17 @@ def main():
             inner_start = section_html.find('>', content_body_start) + 1
         inner_content = section_html[inner_start:]
 
-        # Find first subsection position
         first_title, first_slug = subsections[0]
         first_search = first_title.replace('&', '&amp;')[:50]
         first_pos = inner_content.find(first_title)
         if first_pos == -1:
             first_pos = inner_content.find(first_search)
         if first_pos == -1:
-            # Try h4 content
             first_pos = inner_content.find(f'>{first_title[:30]}')
         if first_pos == -1:
             print(f"Skip {mod_id}: first subsection not found")
             continue
 
-        # Giriş: content before first subsection
-        # Find the content-section-header that contains first_title
         header_pattern = re.compile(
             r'<div class="content-section-header">.*?<h4 class="content-section-title"[^>]*>([^<]+)</h4>',
             re.DOTALL
@@ -177,9 +170,7 @@ def main():
 
         intro_html = inner_content[:intro_end].strip()
 
-        # Build new sections
         new_sections = []
-        # 1. Trim original section to intro only
         header_div = re.search(r'<div class="section-header">.*?</div>\s*<div class="content-body', section_html, re.DOTALL)
         header_div = header_div.group(0).replace('<div class="content-body', '').strip() if header_div else ''
 
@@ -197,10 +188,8 @@ def main():
 </div>
             </section>''')
 
-        # 2. Add subsection sections
         for i, (title, sslug) in enumerate(subsections):
             next_title = subsections[i+1][0] if i+1 < len(subsections) else None
-            # Find content from this subsection to next
             start_marker = title.replace('&', '&amp;')
             end_marker = next_title.replace('&', '&amp;') if next_title else None
 
@@ -238,7 +227,6 @@ def main():
 
             sidebar_items[mod_id] = sidebar_items.get(mod_id, []) + [(sect_id, title[:45])]
 
-        # Replace section
         new_full = '\n'.join(new_sections)
         content = content[:section_tag_start] + new_full + content[sect_end:]
         print(f"Split {mod_id}: {len(subsections)} subsections")

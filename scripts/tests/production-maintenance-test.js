@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-/**
- * SEBS Global - Production Maintenance & Test Suite
- * Comprehensive testing and maintenance for production deployment
- */
 
 const http = require('http');
 const https = require('https');
@@ -12,7 +8,6 @@ const path = require('path');
 const API_BASE = process.env.API_BASE || 'http://localhost:8006';
 const TEST_TIMEOUT = 5000;
 
-// Test results
 const results = {
     passed: [],
     failed: [],
@@ -20,7 +15,6 @@ const results = {
     skipped: []
 };
 
-// Colors for terminal output
 const colors = {
     reset: '\x1b[0m',
     green: '\x1b[32m',
@@ -40,18 +34,13 @@ function logSection(title) {
     console.log('='.repeat(70));
 }
 
-// ============================================
-// 1. ENVIRONMENT & CONFIGURATION TESTS
-// ============================================
 function testEnvironment() {
     logSection('1. ENVIRONMENT & CONFIGURATION TESTS');
     
-    // Check .env file
     if (fs.existsSync('.env')) {
         results.passed.push('✅ .env file exists');
         log('✅ .env file exists', 'green');
         
-        // Check critical env variables
         require('dotenv').config();
         const requiredVars = ['JWT_SECRET', 'DATABASE_URL'];
         const missing = requiredVars.filter(v => !process.env[v]);
@@ -68,7 +57,6 @@ function testEnvironment() {
         log('❌ .env file not found', 'red');
     }
     
-    // Check .gitignore
     if (fs.existsSync('.gitignore')) {
         const gitignore = fs.readFileSync('.gitignore', 'utf8');
         if (gitignore.includes('.env')) {
@@ -81,9 +69,6 @@ function testEnvironment() {
     }
 }
 
-// ============================================
-// 2. FILE STRUCTURE TESTS
-// ============================================
 function testFileStructure() {
     logSection('2. FILE STRUCTURE TESTS');
     
@@ -112,13 +97,9 @@ function testFileStructure() {
     });
 }
 
-// ============================================
-// 3. SECURITY TESTS
-// ============================================
 function testSecurity() {
     logSection('3. SECURITY TESTS');
     
-    // Check for console.log in production files
     const filesToCheck = [
         'frontend/utils/api-client.js',
         'frontend/utils/module-progress.js',
@@ -147,7 +128,6 @@ function testSecurity() {
         log(`⚠️  Total: ${totalLogs} console.log statements`, 'yellow');
     }
     
-    // Check for hardcoded secrets
     const secretPatterns = [
         /password\s*=\s*['"][^'"]+['"]/i,
         /secret\s*=\s*['"][^'"]+['"]/i,
@@ -174,9 +154,6 @@ function testSecurity() {
     }
 }
 
-// ============================================
-// 4. API ENDPOINT TESTS
-// ============================================
 function makeRequest(url, options = {}) {
     return new Promise((resolve, reject) => {
         const urlObj = new URL(url);
@@ -260,9 +237,6 @@ async function testAPIEndpoints() {
     }
 }
 
-// ============================================
-// 5. DATABASE CONNECTION TEST
-// ============================================
 async function testDatabase() {
     logSection('5. DATABASE CONNECTION TEST');
     
@@ -287,9 +261,6 @@ async function testDatabase() {
     }
 }
 
-// ============================================
-// 6. PERFORMANCE TESTS
-// ============================================
 async function testPerformance() {
     logSection('6. PERFORMANCE TESTS');
     
@@ -318,13 +289,9 @@ async function testPerformance() {
     }
 }
 
-// ============================================
-// 7. ERROR HANDLING TESTS
-// ============================================
 async function testErrorHandling() {
     logSection('7. ERROR HANDLING TESTS');
     
-    // Test invalid endpoint
     try {
         const response = await makeRequest(`${API_BASE}/api/nonexistent`);
         if (response.status === 404) {
@@ -340,9 +307,6 @@ async function testErrorHandling() {
     }
 }
 
-// ============================================
-// MAIN EXECUTION
-// ============================================
 async function runAllTests() {
     console.log('\n');
     log('╔═══════════════════════════════════════════════════════════════╗', 'cyan');
@@ -358,7 +322,6 @@ async function runAllTests() {
     await testPerformance();
     await testErrorHandling();
     
-    // Summary
     logSection('TEST SUMMARY');
     
     log(`✅ Passed: ${results.passed.length}`, 'green');
@@ -390,7 +353,6 @@ async function runAllTests() {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
     console.log('\n');
     
-    // Save report
     const report = {
         timestamp: new Date().toISOString(),
         summary: {
@@ -408,7 +370,6 @@ async function runAllTests() {
     process.exit(results.failed.length > 0 ? 1 : 0);
 }
 
-// Run tests
 runAllTests().catch(error => {
     log(`\n❌ Test suite error: ${error.message}`, 'red');
     console.error(error);

@@ -1,4 +1,3 @@
-// Validation Middleware using Zod
 import { ZodError } from 'zod';
 
 export function validateSchema(schema) {

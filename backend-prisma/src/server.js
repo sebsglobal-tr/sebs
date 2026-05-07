@@ -26,10 +26,8 @@ const app = express();
 const PORT = process.env.PORT || 8006;
 export { prisma };
 
-// Get root directory (two levels up from backend/src)
 const rootDir = path.resolve(__dirname, '../..');
 
-// Middleware
 app.use(helmet({
   contentSecurityPolicy: false // Allow inline scripts for frontend
 }));
@@ -41,13 +39,11 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files (HTML, CSS, JS, images, etc.) from root directory
 app.use(express.static(rootDir, {
   extensions: ['html', 'htm'],
   index: ['index.html', 'index.htm']
 }));
 
-// Rate Limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000,
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
@@ -56,7 +52,6 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Health Check
 app.get('/api/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -75,8 +70,6 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// API Routes
-// Note: Auth is now handled by Supabase Auth
 app.use('/api/users', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
@@ -87,9 +80,7 @@ app.use('/api/purchases', purchaseRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/evaluation', evaluationRoutes);
 
-// 404 Handler - Check if it's an API route or static file
 app.use('*', (req, res) => {
-  // If it's an API route, return JSON
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ 
       success: false, 
@@ -97,11 +88,9 @@ app.use('*', (req, res) => {
     });
   }
   
-  // Otherwise, try to serve index.html for SPA routing
   res.sendFile(path.join(rootDir, 'index.html'));
 });
 
-// Error Handler
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status || 500).json({
@@ -111,13 +100,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server
 const server = app.listen(PORT, () => {
   console.log(`✅ SEBS Global Backend API running on port ${PORT}`);
   console.log(`📊 Health: http://localhost:${PORT}/api/health`);
 });
 
-// Graceful Shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM signal received: closing HTTP server');
   server.close(() => {

@@ -1,4 +1,3 @@
-/* Landing chrome: fixed header offset + light theme for pages that use the same shell as index.html */
 
 body.landing-site-body {
   padding-top: 4rem;
@@ -6,13 +5,11 @@ body.landing-site-body {
   color: #0f172a !important;
 }
 
-/* styles.css body::after koyu noise + gradient — landing sayfalarında tamamen kapat */
 body.landing-site-body::after {
   content: none !important;
   display: none !important;
 }
 
-/* ---------- Login ---------- */
 body.landing-site-body .login-container {
   min-height: calc(100vh - 4rem);
   display: flex;
@@ -127,7 +124,6 @@ body.landing-site-body .login-status.error {
   color: #b91c1c;
 }
 
-/* ---------- Signup ---------- */
 body.landing-site-body .signup-container {
   min-height: calc(100vh - 4rem);
   padding: 3rem 1rem;
@@ -192,7 +188,6 @@ body.landing-site-body .signup-links a {
   color: #2563eb;
 }
 
-/* ---------- Contact / About-style marketing sections ---------- */
 body.landing-site-body .hero-section {
   min-height: auto;
   padding: 6rem 2rem 4rem;
@@ -310,12 +305,10 @@ body.landing-site-body .feature-card .btn-primary {
   color: #ffffff;
 }
 
-/* Tüm .section blokları açık zemin (nth-of-type(odd) sadece 3./5. <section>’a denk geliyordu; 4. “Mesaj Gönderin” şeffaf kalıp koyu body::after’a düşüyordu) */
 body.landing-site-body .section {
   background: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.99) 100%);
 }
 
-/* Contact form */
 body.landing-site-body .form-wrapper {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -377,7 +370,6 @@ body.landing-site-body .contact-form .btn-primary:hover {
   filter: none;
 }
 
-/* FAQ (contact & anywhere) — styles.css .faq-question h3 uses --text-light; override */
 body.landing-site-body .faq-item {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -415,7 +407,6 @@ body.landing-site-body .faq-answer p {
   color: #475569 !important;
 }
 
-/* İletişim formu — .form-group label (styles.css) genel koyu tema veriyor */
 body.landing-site-body .contact-form .form-group label,
 body.landing-site-body .form-wrapper .form-group label {
   color: #334155 !important;
@@ -437,7 +428,6 @@ body.landing-site-body .contact-form .form-group textarea::placeholder {
   opacity: 1 !important;
 }
 
-/* Çalışma saatleri kartları */
 body.landing-site-body .hours-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -451,7 +441,6 @@ body.landing-site-body .hours-item .time {
   color: #64748b !important;
 }
 
-/* ---------- Remote-inspired visual richness layer ---------- */
 body.landing-site-body {
   --rc-ink: #0f172a;
   --rc-sub: #475569;
@@ -462,7 +451,6 @@ body.landing-site-body {
   --rc-brand-2: #1d4ed8;
 }
 
-/* Softer overall backdrop depth */
 body.landing-site-body::before {
   content: "";
   position: fixed;
@@ -475,7 +463,6 @@ body.landing-site-body::before {
     radial-gradient(42rem 32rem at 50% 100%, rgba(99, 102, 241, 0.06), transparent 62%);
 }
 
-/* Header polish */
 body.landing-site-body header.fixed {
   backdrop-filter: saturate(1.3) blur(12px);
   -webkit-backdrop-filter: saturate(1.3) blur(12px);
@@ -505,7 +492,6 @@ body.landing-site-body header.fixed nav a:hover::after {
   transform: scaleX(1);
 }
 
-/* Hero depth for marketing pages */
 body.landing-site-body .hero-section {
   position: relative;
   overflow: hidden;
@@ -537,18 +523,15 @@ body.landing-site-body .hero-section::after {
   background: rgba(14, 165, 233, 0.14);
 }
 
-/* Common section rhythm and subtle alternation */
 body.landing-site-body .section,
 body.landing-site-body .stats {
   position: relative;
 }
 
-/* Hafif şerit alternansı (isteğe bağlı kontrast; tüm .section zaten açık zeminli) */
 body.landing-site-body .section:nth-of-type(even) {
   background: linear-gradient(180deg, #ffffff 0%, rgba(248, 250, 252, 0.95) 100%);
 }
 
-/* Shared elevated card style */
 body.landing-site-body .feature-card,
 body.landing-site-body .card,
 body.landing-site-body .simulation-card,
@@ -577,7 +560,6 @@ body.landing-site-body .faq-item:hover {
     0 24px 52px -22px rgba(15, 23, 42, 0.3);
 }
 
-/* Buttons: more "Remote-like" rounded, shadowed controls */
 body.landing-site-body .btn-primary,
 body.landing-site-body .btn-login,
 body.landing-site-body .btn-signup {
@@ -603,14 +585,12 @@ body.landing-site-body .btn-secondary {
   color: var(--rc-ink);
 }
 
-/* Inputs: polished controls */
 body.landing-site-body input,
 body.landing-site-body select,
 body.landing-site-body textarea {
   border-radius: 0.75rem;
 }
 
-/* Typography consistency boosts */
 body.landing-site-body .section-title,
 body.landing-site-body .hero-title {
   letter-spacing: -0.02em;
@@ -621,7 +601,6 @@ body.landing-site-body .hero-subtitle {
   color: var(--rc-sub);
 }
 
-/* Genel paragrafları toplu boyamak FAQ/form ile çakışıyordu; sadece içerik blokları */
 body.landing-site-body .section .section-body p,
 body.landing-site-body .feature-card p,
 body.landing-site-body .simulation-content p,
@@ -629,7 +608,6 @@ body.landing-site-body .container > p {
   color: var(--rc-sub);
 }
 
-/* Footer richness */
 body.landing-site-body footer.border-t {
   border-top-color: var(--rc-line);
   background:
@@ -637,7 +615,6 @@ body.landing-site-body footer.border-t {
     linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 
-/* ---------- Simulations & modules list — açık tema (index ile uyum) ---------- */
 body.landing-site-body .modules-hero {
   background:
     radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
@@ -761,7 +738,6 @@ body.landing-site-body .simulation-card-detailed:hover {
   background: #ffffff !important;
 }
 
-/* Modül / simülasyon listesi: tek hover — ölçek atlama kaldırıldı (daha sakin ve tutarlı) */
 html.sebs-sim-list body.landing-site-body .simulation-card-detailed:hover {
   transform: translateY(-4px) !important;
 }
@@ -796,7 +772,6 @@ body.landing-site-body .simulation-content p strong {
   color: #0f172a;
 }
 
-/* ---------- Modül + simülasyon listeleri — SaaS kartlar (html.sebs-sim-list: modules.html + simulations.html) ---------- */
 html.sebs-sim-list .section-title {
   color: #0f172a !important;
   text-shadow: none !important;
@@ -834,7 +809,6 @@ html.sebs-sim-list .simulation-card-detailed:hover::before {
   opacity: 0.55;
 }
 
-/* Üst fotoğraflar yerine Özellikler bölümüne yakın pastel şerit + ızgara */
 html.sebs-sim-list .simulation-card-detailed .card-image-top {
   height: 4.5rem !important;
   min-height: 4.5rem !important;
@@ -1090,12 +1064,10 @@ html.sebs-sim-list .simulations-grid-section .container {
   max-width: 72rem !important;
 }
 
-/* modules + simülasyon listesi — Tailwind max-w-6xl sarmalayıcı (container yerine) */
 html.sebs-sim-list .simulations-grid-section > .mx-auto.max-w-6xl {
   max-width: 72rem !important;
 }
 
-/* ---------- Dashboard (landing-site-body + pastel hero) ---------- */
 body.landing-site-body .dashboard-main {
   padding: 0 0 4rem !important;
   background:
@@ -1115,7 +1087,6 @@ body.landing-site-body .dashboard-main .welcome-subtitle {
   text-shadow: none !important;
 }
 
-/* Özet metrikler artık yalnızca contact-channel-card + Tailwind (stat-card kaldırıldı) */
 body.landing-site-body .dashboard-main .stat-number:not(.gradient) {
   color: #0f172a !important;
   -webkit-text-fill-color: #0f172a !important;
@@ -1229,7 +1200,6 @@ body.landing-site-body .dashboard-main .btn-secondary:hover {
   color: #0f172a !important;
 }
 
-/* Değerlendirme kutusu (inline stiller kaldırıldığında) */
 body.landing-site-body .dashboard-main .evaluation-report-box {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
@@ -1244,7 +1214,6 @@ body.landing-site-body .dashboard-main .evaluation-placeholder i {
   color: #94a3b8 !important;
 }
 
-/* Üst bar: bağlantı rengi marka mavi */
 body.landing-site-body header a.text-blue-700 {
   color: #1d4ed8 !important;
 }
@@ -1253,7 +1222,6 @@ body.landing-site-body header a.text-blue-700:hover {
   color: #1e40af !important;
 }
 
-/* ---------- Premium consistency layer (site-wide for landing shell) ---------- */
 body.landing-site-body {
   --surface-0: #ffffff;
   --surface-1: #f8fafc;

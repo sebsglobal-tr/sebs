@@ -1,7 +1,3 @@
-/**
- * Değerlendirme sorularını test sınavı formatına çevirir.
- * Doğru cevapları gizler; kullanıcı seçim yapar, sadece skor gösterilir.
- */
 (function() {
   'use strict';
 
@@ -15,7 +11,6 @@
   function processSection(section) {
     const inner = section.querySelector('.section-inner') || section;
 
-    // 1) Gizle: "Doğru cevap", "Doğru:", "Açıklama" içeren paragraflar
     inner.querySelectorAll('p').forEach(p => {
       const t = (p.textContent || '').trim();
       if (t && (t.match(CORRECT_REGEX) || /^Açıklama\s*:/.test(t)) && t.length < 300) {
@@ -23,8 +18,6 @@
       }
     });
 
-    // 2) h3 + p formatı (Değerlendirme Testi 10 Soru)
-    // Doğru cevap aynı p'de veya hemen sonraki p'de olabilir
     inner.querySelectorAll('h3').forEach(h3 => {
       let p = h3.nextElementSibling;
       if (!p || p.tagName !== 'P') return;
@@ -91,7 +84,6 @@
       if (answerP) answerP.style.display = 'none';
     });
 
-    // 3) <p><strong>1) ...</strong> ... A) B) C) D) <strong>Doğru: X</strong> formatı
     inner.querySelectorAll('p').forEach(p => {
       if (p.style.display === 'none' || p.closest('.eval-question-block')) return;
       const text = p.textContent || '';
@@ -136,7 +128,6 @@
       p.style.display = 'none';
     });
 
-    // 4) <ol><li><p>... A) B) C) D) Doğru Cevap: X ...</p></li></ol>
     inner.querySelectorAll('ol li, ul li').forEach(li => {
       const p = li.querySelector('p') || li;
       if (p.style.display === 'none' || p.querySelector('.eval-options-wrap')) return;
@@ -213,7 +204,6 @@
       res.innerHTML = '<strong>Sonuç: ' + n + '/' + total + ' doğru</strong>';
       res.style.display = 'block';
 
-      // Veritabanına kaydet (giriş yapılmışsa)
       const section = inner.closest('.eval-quiz-section');
       const quizId = section?.id || section?.getAttribute('data-section') || 'quiz';
       const moduleName = typeof window.MODULE_NAME !== 'undefined' ? window.MODULE_NAME : null;

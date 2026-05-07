@@ -1,4 +1,3 @@
-// Test Expert Weights Parser
 import { parseExpertCSV, calculateExpertWeights, loadExpertWeights, normalizeScore } from '../expert-weights-parser.js';
 import fs from 'fs';
 import path from 'path';
@@ -9,7 +8,6 @@ const __dirname = path.dirname(__filename);
 
 console.log('🧪 Testing Expert Weights Parser...\n');
 
-// Test 1: normalizeScore function
 console.log('Test 1: normalizeScore function');
 const testCases = [
   { input: '7', expected: 0.35 }, // 7/20 = 0.35
@@ -29,7 +27,6 @@ testCases.forEach(({ input, expected }) => {
 
 console.log('\n');
 
-// Test 2: Load CSV file
 console.log('Test 2: Load CSV file');
 try {
   const weights = loadExpertWeights();
@@ -39,7 +36,6 @@ try {
     console.log(`   Topic ${i}: ${(weights[i] * 100).toFixed(2)}%`);
   }
   
-  // Check if weights sum to ~1.0
   const total = Object.values(weights).reduce((a, b) => a + b, 0);
   console.log(`\n   Total weight: ${total.toFixed(4)} (should be ~1.0)`);
   if (Math.abs(total - 1.0) < 0.01) {
@@ -53,7 +49,6 @@ try {
 
 console.log('\n');
 
-// Test 3: Parse CSV directly
 console.log('Test 3: Parse CSV directly');
 const csvPath = path.join(__dirname, '../../expert-survey.csv');
 if (fs.existsSync(csvPath)) {
@@ -68,14 +63,12 @@ if (fs.existsSync(csvPath)) {
       console.log(`   - Experience: ${firstExpert.experience}`);
       console.log(`   - Topic scores: ${Object.keys(firstExpert.scores).length} topics`);
       
-      // Show first 3 topic scores
       for (let i = 1; i <= 3; i++) {
         const score = firstExpert.scores[i];
         console.log(`     Topic ${i}: ${score !== null ? score.toFixed(2) : 'N/A'}`);
       }
     }
     
-    // Calculate weights
     const weights = calculateExpertWeights(experts);
     console.log('\n   Calculated weights:');
     for (let i = 1; i <= 5; i++) {

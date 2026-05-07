@@ -1,7 +1,3 @@
-/**
- * Redis Connection Test Script
- * Tests Redis connection and caching functionality
- */
 
 const cache = require('./utils/cache');
 
@@ -9,11 +5,9 @@ async function testRedis() {
     console.log('🧪 Redis Test Başlatılıyor...\n');
 
     try {
-        // Initialize Redis
         console.log('1️⃣  Redis bağlantısı test ediliyor...');
         cache.initRedis();
         
-        // Wait a bit for connection
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         if (!cache.isCacheEnabled()) {
@@ -26,13 +20,11 @@ async function testRedis() {
 
         console.log('✅ Redis bağlantısı başarılı\n');
 
-        // Test cache operations
         console.log('2️⃣  Cache işlemleri test ediliyor...');
         
         const testKey = 'test:connection';
         const testValue = { message: 'Redis çalışıyor!', timestamp: new Date().toISOString() };
 
-        // Set cache
         const setResult = await cache.setCache(testKey, testValue, 60);
         if (setResult) {
             console.log('✅ Cache yazma başarılı');
@@ -41,7 +33,6 @@ async function testRedis() {
             return;
         }
 
-        // Get cache
         const getResult = await cache.getCache(testKey);
         if (getResult && getResult.message === testValue.message) {
             console.log('✅ Cache okuma başarılı');
@@ -50,7 +41,6 @@ async function testRedis() {
             return;
         }
 
-        // Delete cache
         const deleteResult = await cache.deleteCache(testKey);
         if (deleteResult) {
             console.log('✅ Cache silme başarılı');

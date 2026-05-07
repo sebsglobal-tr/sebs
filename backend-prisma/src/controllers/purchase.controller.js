@@ -1,16 +1,10 @@
-// Purchase/Entitlement Controller
 import { prisma } from '../server.js';
 
-/**
- * Purchase a package (create entitlement)
- * This simulates a purchase - in production, integrate with payment gateway
- */
 export async function purchasePackage(req, res, next) {
   try {
     const { category, level } = req.body;
     const userId = req.user.id;
 
-    // Validate inputs
     if (!category || !level) {
       return res.status(400).json({
         success: false,
@@ -35,7 +29,6 @@ export async function purchasePackage(req, res, next) {
       });
     }
 
-    // Check if entitlement already exists
     const existingEntitlement = await prisma.entitlement.findUnique({
       where: {
         userId_category_level: {
@@ -46,11 +39,8 @@ export async function purchasePackage(req, res, next) {
       }
     });
 
-    // If exists and is active, return it
     if (existingEntitlement && existingEntitlement.isActive) {
-      // Check if expired
       if (existingEntitlement.expiresAt && existingEntitlement.expiresAt < new Date()) {
-        // Reactivate if expired
         const updated = await prisma.entitlement.update({
           where: { id: existingEntitlement.id },
           data: { isActive: true, expiresAt: null } // Lifetime access
@@ -70,7 +60,6 @@ export async function purchasePackage(req, res, next) {
       });
     }
 
-    // Create new entitlement
     const entitlement = await prisma.entitlement.create({
       data: {
         userId,
@@ -82,7 +71,6 @@ export async function purchasePackage(req, res, next) {
       }
     });
 
-    // Update user's accessLevel if this is a higher level for cybersecurity
     if (category === 'cybersecurity') {
       const levelHierarchy = { beginner: 1, intermediate: 2, advanced: 3 };
       const currentLevel = levelHierarchy[req.user.accessLevel] || 0;
@@ -106,9 +94,6 @@ export async function purchasePackage(req, res, next) {
   }
 }
 
-/**
- * Get user's entitlements
- */
 export async function getUserEntitlements(req, res, next) {
   try {
     const userId = req.user.id;
@@ -137,14 +122,10 @@ export async function getUserEntitlements(req, res, next) {
   }
 }
 
-/**
- * Get available packages for purchase
- */
 export async function getAvailablePackages(req, res, next) {
   try {
     const userId = req.user?.id;
 
-    // Get user's current entitlements if authenticated
     let userEntitlements = [];
     if (userId) {
       userEntitlements = await prisma.entitlement.findMany({
@@ -159,7 +140,6 @@ export async function getAvailablePackages(req, res, next) {
       });
     }
 
-    // Define available packages
     const packages = [
       {
         id: 'cybersecurity-beginner',

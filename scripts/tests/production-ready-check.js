@@ -13,7 +13,6 @@ let passed = [];
 
 const API_BASE = 'http://localhost:8006';
 
-// 1. Backend Kontrolü
 console.log('📋 1. BACKEND KONTROLÜ\n');
 async function checkBackend() {
     return new Promise((resolve) => {
@@ -45,7 +44,6 @@ async function checkBackend() {
     });
 }
 
-// 2. Kritik Dosya Kontrolü
 console.log('\n📋 2. KRİTİK DOSYA KONTROLÜ\n');
 function checkCriticalFiles() {
     const criticalFiles = [
@@ -77,7 +75,6 @@ function checkCriticalFiles() {
     });
 }
 
-// 3. Console.log Kontrolü
 console.log('\n📋 3. GÜVENLİK KONTROLÜ (Console.log)\n');
 function checkConsoleLogs() {
     const filesToCheck = [
@@ -111,7 +108,6 @@ function checkConsoleLogs() {
     }
 }
 
-// 4. Environment Variables Kontrolü
 console.log('\n📋 4. YAPILANDIRMA KONTROLÜ\n');
 function checkConfig() {
     if (fs.existsSync('backend/.env')) {
@@ -134,7 +130,6 @@ function checkConfig() {
     }
 }
 
-// 5. Database Schema Kontrolü
 console.log('\n📋 5. DATABASE KONTROLÜ\n');
 function checkDatabase() {
     if (fs.existsSync('backend/prisma/schema.prisma')) {
@@ -148,7 +143,6 @@ function checkDatabase() {
     }
 }
 
-// 6. Modül ve Simülasyon Kontrolü
 console.log('\n📋 6. İÇERİK KONTROLÜ\n');
 function checkContent() {
     if (fs.existsSync('modules')) {
@@ -173,7 +167,6 @@ function checkContent() {
     }
 }
 
-// 7. API Endpoint Kontrolü
 console.log('\n📋 7. API ENDPOINT KONTROLÜ\n');
 async function checkAPIEndpoints() {
     const endpoints = [
@@ -204,7 +197,6 @@ async function checkAPIEndpoints() {
             });
             req.on('error', () => {
                 if (endpoint.auth) {
-                    // Auth gerekli, 401 beklenir
                     passed.push(`API ${endpoint.path}: Auth gerekli (beklenen)`);
                 }
             });
@@ -212,12 +204,10 @@ async function checkAPIEndpoints() {
             req.end();
             await new Promise(resolve => setTimeout(resolve, 300));
         } catch (e) {
-            // Hata durumunda devam et
         }
     }
 }
 
-// Tüm kontrolleri çalıştır
 async function runAllChecks() {
     await checkBackend();
     checkCriticalFiles();
@@ -227,7 +217,6 @@ async function runAllChecks() {
     checkContent();
     await checkAPIEndpoints();
 
-    // Özet
     console.log('\n╔═══════════════════════════════════════════════════════════════╗');
     console.log('║                   📊 KONTROL ÖZETİ                            ║');
     console.log('╚═══════════════════════════════════════════════════════════════╝\n');

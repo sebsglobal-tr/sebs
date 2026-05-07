@@ -1,5 +1,3 @@
-// Advanced AI Report Generator
-// Uses intelligent analysis patterns to generate detailed reports
 
 export function generateAdvancedAIReport(certificate, metadata, userProgress = {}) {
   const report = {
@@ -18,7 +16,6 @@ export function generateAdvancedAIReport(certificate, metadata, userProgress = {
     resources: []
   };
 
-  // 1. DETAILED SUMMARY
   const hours = Math.round(certificate.completionTime / 60);
   const modulesCompleted = metadata.modules?.filter(m => m.status === 'Tamamlandı').length || 0;
   const totalModules = metadata.modules?.length || 0;
@@ -34,38 +31,30 @@ export function generateAdvancedAIReport(certificate, metadata, userProgress = {
     errors: metadata.errors?.length || 0
   });
 
-  // 2. PERFORMANCE ANALYSIS
   report.performanceAnalysis.overall = analyzeOverallPerformance(metadata);
   report.performanceAnalysis.modules = analyzeModulePerformance(metadata.modules || []);
   report.performanceAnalysis.simulations = analyzeSimulationPerformance(metadata.simulations || []);
   report.performanceAnalysis.quizzes = analyzeQuizPerformance(metadata.quizResults || []);
 
-  // 3. LEARNING PATTERN ANALYSIS
   report.learningPattern = analyzeLearningPattern(metadata, certificate);
 
-  // 4. STRENGTHS (Detailed)
   report.strengths = generateDetailedStrengths(metadata, report.performanceAnalysis, report.learningPattern);
 
-  // 5. AREAS FOR IMPROVEMENT (Detailed with specific topics)
   report.areasForImprovement = generateDetailedImprovements(metadata, report.performanceAnalysis);
 
-  // 6. DETAILED RECOMMENDATIONS (Topic-specific)
   report.detailedRecommendations = generateDetailedRecommendations(
     metadata,
     report.performanceAnalysis,
     report.learningPattern
   );
 
-  // 7. NEXT STEPS (Actionable items)
   report.nextSteps = generateNextSteps(metadata, report.performanceAnalysis);
 
-  // 8. RESOURCE RECOMMENDATIONS
   report.resources = generateResourceRecommendations(metadata, report.performanceAnalysis);
 
   return report;
 }
 
-// Detailed Summary Generator
 function generateDetailedSummary(data) {
   const { hours, modulesCompleted, totalModules, simulationsCompleted, avgScore, errors } = data;
   
@@ -96,7 +85,6 @@ function generateDetailedSummary(data) {
   return summary;
 }
 
-// Overall Performance Analysis
 function analyzeOverallPerformance(metadata) {
   const analysis = {
     score: metadata.avgScore || 0,
@@ -105,7 +93,6 @@ function analyzeOverallPerformance(metadata) {
     consistency: ''
   };
 
-  // Level determination
   if (analysis.score >= 90) {
     analysis.level = 'Mükemmel';
     analysis.description = 'Üst düzey performans gösterdiniz. Profesyonel seviyede bilgiye sahipsiniz.';
@@ -123,7 +110,6 @@ function analyzeOverallPerformance(metadata) {
     analysis.description = 'Temel kavramları tekrar öğrenmeniz gerekiyor. Adım adım ilerlemeniz önerilir.';
   }
 
-  // Trend analysis (if we have quiz history)
   if (metadata.quizResults && metadata.quizResults.length > 1) {
     const scores = metadata.quizResults.map(q => q.score || 0);
     const firstHalf = scores.slice(0, Math.ceil(scores.length / 2));
@@ -143,7 +129,6 @@ function analyzeOverallPerformance(metadata) {
     }
   }
 
-  // Consistency analysis
   if (metadata.quizResults && metadata.quizResults.length > 2) {
     const scores = metadata.quizResults.map(q => q.score || 0);
     const variance = calculateVariance(scores);
@@ -159,7 +144,6 @@ function analyzeOverallPerformance(metadata) {
   return analysis;
 }
 
-// Module Performance Analysis
 function analyzeModulePerformance(modules) {
   return modules.map(module => ({
     name: module.name,
@@ -172,7 +156,6 @@ function analyzeModulePerformance(modules) {
   }));
 }
 
-// Simulation Performance Analysis
 function analyzeSimulationPerformance(simulations) {
   if (simulations.length === 0) return [];
   
@@ -190,7 +173,6 @@ function analyzeSimulationPerformance(simulations) {
   };
 }
 
-// Quiz Performance Analysis
 function analyzeQuizPerformance(quizzes) {
   if (quizzes.length === 0) return null;
   
@@ -208,7 +190,6 @@ function analyzeQuizPerformance(quizzes) {
   };
 }
 
-// Learning Pattern Analysis
 function analyzeLearningPattern(metadata, certificate) {
   const pattern = {
     learningStyle: '',
@@ -217,7 +198,6 @@ function analyzeLearningPattern(metadata, certificate) {
     recommendations: []
   };
 
-  // Learning pace
   const hours = Math.round(certificate.completionTime / 60);
   const avgModuleTime = metadata.modules?.reduce((sum, m) => sum + (m.completionTime || 0), 0) / (metadata.modules?.length || 1);
   
@@ -232,7 +212,6 @@ function analyzeLearningPattern(metadata, certificate) {
     pattern.paceDescription = 'Öğrenme hızınız dengeli. Mevcut hızınızı koruyabilirsiniz.';
   }
 
-  // Learning focus (theory vs practice)
   const theoryModules = metadata.modules?.filter(m => m.type === 'lesson').length || 0;
   const practiceSims = metadata.simulations?.length || 0;
   
@@ -247,7 +226,6 @@ function analyzeLearningPattern(metadata, certificate) {
     pattern.focusDescription = 'Teori ve pratik arasında iyi bir denge kurmuşsunuz.';
   }
 
-  // Learning style inference
   const errorRate = (metadata.errors?.length || 0) / (metadata.quizResults?.length || 1);
   if (errorRate < 0.2 && metadata.avgScore >= 80) {
     pattern.learningStyle = 'Yüksek Öğrenme Kapasitesi';
@@ -263,11 +241,9 @@ function analyzeLearningPattern(metadata, certificate) {
   return pattern;
 }
 
-// Generate Detailed Strengths
 function generateDetailedStrengths(metadata, performance, learningPattern) {
   const strengths = [];
 
-  // Score-based strengths
   if (performance.overall.score >= 90) {
     strengths.push({
       title: 'Mükemmel Başarı Oranı',
@@ -282,7 +258,6 @@ function generateDetailedStrengths(metadata, performance, learningPattern) {
     });
   }
 
-  // Time-based strengths
   const hours = Math.round(certificate.completionTime / 60);
   if (hours < 10 && metadata.avgScore >= 75) {
     strengths.push({
@@ -292,7 +267,6 @@ function generateDetailedStrengths(metadata, performance, learningPattern) {
     });
   }
 
-  // Consistency strengths
   if (performance.overall.consistency === 'Tutarlı') {
     strengths.push({
       title: 'Tutarlı Performans',
@@ -301,7 +275,6 @@ function generateDetailedStrengths(metadata, performance, learningPattern) {
     });
   }
 
-  // Learning pattern strengths
   if (learningPattern.focus === 'Dengeli') {
     strengths.push({
       title: 'Dengeli Öğrenme Yaklaşımı',
@@ -310,7 +283,6 @@ function generateDetailedStrengths(metadata, performance, learningPattern) {
     });
   }
 
-  // Module completion strengths
   const completedModules = metadata.modules?.filter(m => m.status === 'Tamamlandı').length || 0;
   if (completedModules === metadata.modules?.length) {
     strengths.push({
@@ -323,11 +295,9 @@ function generateDetailedStrengths(metadata, performance, learningPattern) {
   return strengths;
 }
 
-// Generate Detailed Improvements
 function generateDetailedImprovements(metadata, performance) {
   const improvements = [];
 
-  // Score-based improvements
   if (performance.overall.score < 70) {
     improvements.push({
       title: 'Başarı Oranını Artırma',
@@ -342,7 +312,6 @@ function generateDetailedImprovements(metadata, performance) {
     });
   }
 
-  // Error-based improvements
   if (metadata.errors && metadata.errors.length > 0) {
     improvements.push({
       title: 'Hata Kategorilerinde Gelişim',
@@ -353,7 +322,6 @@ function generateDetailedImprovements(metadata, performance) {
     });
   }
 
-  // Simulation improvements
   if (performance.simulations.averageScore < 80) {
     improvements.push({
       title: 'Simülasyon Performansını Artırma',
@@ -367,7 +335,6 @@ function generateDetailedImprovements(metadata, performance) {
     });
   }
 
-  // Time management improvements
   const avgTimePerModule = certificate.completionTime / (metadata.modules?.length || 1);
   if (avgTimePerModule > 120 && performance.overall.score < 75) {
     improvements.push({
@@ -385,11 +352,9 @@ function generateDetailedImprovements(metadata, performance) {
   return improvements;
 }
 
-// Generate Detailed Recommendations
 function generateDetailedRecommendations(metadata, performance, learningPattern) {
   const recommendations = [];
 
-  // Based on score
   if (performance.overall.score < 70) {
     recommendations.push({
       category: 'Temel Geliştirme',
@@ -414,7 +379,6 @@ function generateDetailedRecommendations(metadata, performance, learningPattern)
     });
   }
 
-  // Based on errors
   if (metadata.errors && metadata.errors.length > 0) {
     recommendations.push({
       category: 'Hata Odaklı Geliştirme',
@@ -427,7 +391,6 @@ function generateDetailedRecommendations(metadata, performance, learningPattern)
     });
   }
 
-  // Based on learning pattern
   if (learningPattern.focus === 'Teorik Odaklı') {
     recommendations.push({
       category: 'Öğrenme Yöntemi Geliştirme',
@@ -446,7 +409,6 @@ function generateDetailedRecommendations(metadata, performance, learningPattern)
     });
   }
 
-  // General recommendations
   recommendations.push({
     category: 'Genel Öneriler',
     items: [
@@ -468,7 +430,6 @@ function generateDetailedRecommendations(metadata, performance, learningPattern)
   return recommendations;
 }
 
-// Generate Next Steps
 function generateNextSteps(metadata, performance) {
   const steps = [];
 
@@ -501,11 +462,9 @@ function generateNextSteps(metadata, performance) {
   return steps;
 }
 
-// Generate Resource Recommendations
 function generateResourceRecommendations(metadata, performance) {
   const resources = [];
 
-  // Based on weak topics
   if (metadata.errors && metadata.errors.length > 0) {
     metadata.errors.forEach(topic => {
       resources.push({
@@ -528,7 +487,6 @@ function generateResourceRecommendations(metadata, performance) {
     });
   }
 
-  // General resources
   resources.push({
     topic: 'Genel',
     type: 'Makale',
@@ -541,7 +499,6 @@ function generateResourceRecommendations(metadata, performance) {
   return resources;
 }
 
-// Helper Functions
 
 function calculateVariance(numbers) {
   const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
@@ -618,12 +575,10 @@ function generateTopicRecommendations(topics) {
 function identifyWeakTopics(metadata) {
   const weakTopics = [];
   
-  // From errors
   if (metadata.errors) {
     weakTopics.push(...metadata.errors);
   }
   
-  // From quiz results
   if (metadata.quizResults) {
     metadata.quizResults.forEach(quiz => {
       if (quiz.score < 70 && quiz.wrongAnswers) {
@@ -632,7 +587,6 @@ function identifyWeakTopics(metadata) {
     });
   }
   
-  // From low-scoring modules
   if (metadata.modules) {
     metadata.modules.forEach(module => {
       if ((module.percentage || 0) < 70) {
@@ -641,7 +595,6 @@ function identifyWeakTopics(metadata) {
     });
   }
   
-  // Remove duplicates
   return [...new Set(weakTopics)];
 }
 

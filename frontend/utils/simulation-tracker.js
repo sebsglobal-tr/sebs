@@ -1,21 +1,13 @@
-// Simulation Completion Tracker
-// Başlatma + tamamlama kaydı (simulation_runs), dashboard ile uyumlu
 
 (function () {
     const RUN_PREFIX = 'sebs_sim_run_';
 
-    /**
-     * Dashboard /api-base.js ile aynı mantık: statik sitede (sebsglobal.com vb.)
-     * location.origin + '/api' yanlış olur; uzak Node API kökü kullanılır.
-     * @see frontend/js/api-base.js
-     */
     function resolveSimulationApiBase() {
         if (typeof window.getSebsApiBase === 'function') {
             try {
                 const b = window.getSebsApiBase();
                 if (b && typeof b === 'string') return b.replace(/\/$/, '');
             } catch (e) {
-                /* fall through */
             }
         }
         const fromWindow =
@@ -65,7 +57,6 @@
         return RUN_PREFIX + simulationId;
     }
 
-    /** Simülasyon sayfalarında supabase-auth.js yok; Supabase session sb-*-auth-token içinde */
     function getSupabaseAccessTokenFromStorage() {
         try {
             for (let i = 0; i < localStorage.length; i++) {
@@ -83,7 +74,6 @@
                 }
             }
         } catch (e) {
-            /* ignore */
         }
         return null;
     }
@@ -99,7 +89,6 @@
                 }
             }
         } catch (e) {
-            /* ignore */
         }
         const legacy = localStorage.getItem('authToken');
         if (legacy) return legacy;
@@ -119,7 +108,6 @@
     }
 
     window.SimulationTracker = {
-        /** Skor / maksimum puana göre seviye etiketi (Türkçe, küçük harf) */
         finalGradeFromScore(score, maxScore) {
             const max = maxScore != null && Number(maxScore) > 0 ? Number(maxScore) : 100;
             const s = Math.max(0, Number(score) || 0);
@@ -130,9 +118,6 @@
             return 'zayıf';
         },
 
-        /**
-         * Simülasyon başladığında sunucuya kaydet; dönen runId oturumda saklanır.
-         */
         async recordStart(simulationId, simulationName, data = {}) {
             const token = await getAuthBearer();
             if (!token || !simulationId) {

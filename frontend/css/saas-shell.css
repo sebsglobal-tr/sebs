@@ -1,6 +1,4 @@
-/* SaaS shell — aligns legacy pages with index landing (light, premium bar + footer) */
 
-/* Top bar: light, blur, slate border */
 .navbar.saas-shell-navbar {
   background: rgba(255, 255, 255, 0.92) !important;
   backdrop-filter: blur(16px) saturate(1.2);
@@ -82,13 +80,11 @@
   background: #0f172a !important;
 }
 
-/* Hide dashboard link in menu (same as before — profile goes to dashboard) */
 .navbar.saas-shell-navbar .nav-link[data-page="dashboard"],
 .navbar.saas-shell-navbar li:has(.nav-link[data-page="dashboard"]) {
   display: none !important;
 }
 
-/* Footer shell — slate band like enterprise landing */
 .footer.saas-shell-footer {
   background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
   color: #e2e8f0 !important;
@@ -132,7 +128,6 @@
   color: #cbd5e1 !important;
 }
 
-/* Mobile drawer — light theme when shell is on */
 @media (max-width: 768px) {
   .navbar.saas-shell-navbar .nav-panel {
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;

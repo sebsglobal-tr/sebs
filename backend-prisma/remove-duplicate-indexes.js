@@ -4,17 +4,14 @@ const { Client } = pg;
 const prisma = new PrismaClient();
 
 async function removeDuplicateIndexes() {
-  // DATABASE_URL'den connection bilgilerini al
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     console.error('❌ DATABASE_URL environment variable is not set');
     process.exit(1);
   }
 
-  // DIRECT_URL varsa onu kullan, yoksa DATABASE_URL'i kullan
   const directUrl = process.env.DIRECT_URL || databaseUrl;
   
-  // PostgreSQL connection string'ini parse et
   const url = new URL(directUrl);
   const client = new Client({
     host: url.hostname,
@@ -41,7 +38,6 @@ async function removeDuplicateIndexes() {
 
     console.log('\n📋 Checking existing duplicate indexes...');
     
-    // Önce mevcut index'leri kontrol et
     for (const indexName of indexesToDrop) {
       const checkQuery = `
         SELECT EXISTS (
@@ -61,7 +57,6 @@ async function removeDuplicateIndexes() {
 
     console.log('\n🗑️  Removing duplicate indexes...');
 
-    // Her index'i sil
     for (const indexName of indexesToDrop) {
       try {
         const dropQuery = `DROP INDEX IF EXISTS public.${indexName}`;
@@ -72,12 +67,10 @@ async function removeDuplicateIndexes() {
       }
     }
 
-    // ANALYZE çalıştır
     console.log('\n📊 Updating statistics...');
     await client.query('ANALYZE');
     console.log('  ✅ Statistics updated');
 
-    // Sonucu kontrol et
     console.log('\n🔍 Verifying removal...');
     let remainingCount = 0;
     for (const indexName of indexesToDrop) {

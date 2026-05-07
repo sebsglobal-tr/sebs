@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Inject SaaS nav/footer partials and saas-shell.css across frontend HTML (one-time batch)."""
 from __future__ import annotations
 
@@ -64,11 +63,9 @@ def pricing_nav_container(html: str, nav: str) -> tuple[str, bool]:
 def append_footer_if_missing(html: str, footer: str) -> tuple[str, bool]:
     if re.search(r"<footer\b", html, re.IGNORECASE):
         return html, False
-    # Insert before last closing body — prefer before Supabase block
     anchor = "<!-- 1. Supabase UMD SDK"
     if anchor in html:
         return html.replace(anchor, footer.strip() + "\n\n    " + anchor, 1), True
-    # Fallback: before </body>
     if "</body>" in html:
         return html.replace("</body>", footer.strip() + "\n</body>", 1), True
     return html, False

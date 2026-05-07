@@ -4,47 +4,42 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
-    <title>Eğitim Modülleri - SEBS Global</title>
-    <meta name='description' content="SEBS Global'nin kapsamlı eğitim modülleri. Siber güvenlik, bulut bilişim, veri bilimleri ve daha fazla alanda uzmanlaşın.">
+    <title>SEBS Egitim Modulleri | Siber Guvenlik, SOC ve Web Guvenligi Egitimleri</title>
+    <meta name='description' content="SEBS egitim modulleriyle siber guvenlik, SOC, web uygulama guvenligi, cloud security ve malware analizi alanlarinda yapilandirilmis ogrenme yolculuguna baslayin.">
     <meta name="keywords" content="eğitim modülleri, siber güvenlik, bulut bilişim, veri bilimleri, teknoloji, iş dünyası, kişisel gelişim, SEBS Global">
     <meta name="author" content="SEBS Global">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Turkish">
     <meta name="revisit-after" content="7 days">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sebsglobal.com/modules.html">
-    <meta property="og:title" content="Eğitim Modülleri - SEBS Global">
-    <meta property="og:description" content="SEBS Global'nin kapsamlı eğitim modülleri. Siber güvenlik, bulut bilişim, veri bilimleri ve daha fazla alanda uzmanlaşın.">
+    <meta property="og:url" content="https://sebsglobal.com/egitimler">
+    <meta property="og:title" content="SEBS Egitim Modulleri | Siber Guvenlik, SOC ve Web Guvenligi">
+    <meta property="og:description" content="Siber guvenlikten web guvenligine, SOC'tan cloud security'e uzanan SEBS egitim modullerini kesfedin.">
     <meta property="og:image" content="https://sebsglobal.com/og-modules.jpg">
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Eğitim Modülleri - SEBS Global">
     <meta name="twitter:description" content="SEBS Global'nin kapsamlı eğitim modülleri. Siber güvenlik, bulut bilişim, veri bilimleri ve daha fazla alanda uzmanlaşın.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-modules.jpg">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Egitimler","item":"https://sebsglobal.com/egitimler"}]}
+    </script>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://sebsglobal.com/modules.html">
+    <link rel="canonical" href="https://sebsglobal.com/egitimler">
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/SEBS.png">
     <link rel="apple-touch-icon" href="/images/SEBS.png">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Styles (Simülasyon sayfası ile aynı - styles.css) -->
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/modules.css">
     <link rel="stylesheet" href="/css/enhancements.css">
@@ -95,7 +90,6 @@
 
 </head>
 <body class="modules-page landing-site-body font-sans text-slate-800 antialiased bg-white">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -142,7 +136,6 @@
     </div>
   </div>
 </header>
-<!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-container">
             <div class="loading-logo">
@@ -154,12 +147,9 @@
             </div>
     </div>
 
-    <!-- Navigation -->
     
 
-    <!-- Main Content (Simülasyon sayfası ile aynı yapı) -->
     <main class="main-content bg-white">
-        <!-- Hero Section -->
         <section class="hero-section modules-hero">
             <div class="hero-content">
                 <h1 class="hero-title">Eğitim Modülleri</h1>
@@ -230,7 +220,6 @@
             </div>
         </section>
 
-        <!-- Module categories — ana sayfa Özellikler ile aynı accordion + önizleme düzeni -->
         <section id="modulesCategoriesExplore" class="simulation-categories modules-categories-explore border-b border-slate-100 bg-white py-14 sm:py-20" aria-labelledby="modules-explore-heading">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="mx-auto max-w-2xl text-center">
@@ -463,15 +452,12 @@
             </div>
         </section>
 
-        <!-- Modules Grid — içerik genişliği üstteki keşif ile aynı (max-w-6xl) -->
         <section class="simulations-grid-section scroll-mt-24 border-t border-slate-100" id="modules-list" aria-label="Modül listesi">
             <div class="mx-auto max-w-6xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8">
-            <!-- Siber Güvenlik Modülleri -->
             <div class="module-category-section scroll-mt-24" id="cybersecurity-modules">
                 <h2 class="section-title">Siber Güvenlik Modülleri</h2>
                 <p class="section-subtitle">Siber güvenlik alanında kapsamlı eğitim modüllerimizi keşfedin (kolaydan zora sıralı)</p>
                 <div class="simulations-grid">
-                    <!-- 1. Siber Güvenliğe Giriş (Başlangıç) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="cyber-intro">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -512,7 +498,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Temel Network Eğitimi (Başlangıç) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="network">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -550,7 +535,6 @@
                         </div>
                     </div>
 
-                    <!-- İşletim Sistemleri Güvenliği (Temel) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="os-security">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -588,7 +572,6 @@
                         </div>
                     </div>
 
-                    <!-- 4. Temel Kriptografi -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="crypto">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -626,7 +609,6 @@
                         </div>
                     </div>
 
-                    <!-- 5. Sosyal Mühendisliğe Giriş (Başlangıç) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="social-eng">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -664,7 +646,6 @@
                         </div>
                     </div>
 
-                    <!-- 6. Web Uygulama Güvenliği (Başlangıç - kolaydan zora) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="web-security">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -702,8 +683,6 @@
                         </div>
                     </div>
 
-                    <!-- ORTA SEVİYE -->
-                    <!-- 7. Network Güvenliği -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="network">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -741,7 +720,6 @@
                         </div>
                     </div>
 
-                    <!-- 8. Malware Analizi (Orta Seviye) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="malware">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -779,7 +757,6 @@
                         </div>
                     </div>
 
-                    <!-- 9. SOC (Security Operations Center) Eğitimi -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="soc">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -817,7 +794,6 @@
                         </div>
                     </div>
 
-                    <!-- 10. İşletim Sistemi Güvenliği (İleri Temel) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="os-security">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -855,8 +831,6 @@
                         </div>
                     </div>
 
-                    <!-- İLERİ SEVİYE -->
-                    <!-- 12. İleri Malware Analizi & Reverse Engineering -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="malware">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -894,7 +868,6 @@
                         </div>
                     </div>
 
-                    <!-- 13. Olay Müdahalesi & Digital Forensics -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="forensics">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -932,7 +905,6 @@
                         </div>
                     </div>
 
-                    <!-- 14. İleri Kriptografi -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="crypto">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -970,7 +942,6 @@
                         </div>
                     </div>
 
-                    <!-- 15. Red Team & Pentest (İleri) -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="pentest">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1008,7 +979,6 @@
                         </div>
                     </div>
 
-                    <!-- 16. Threat Intelligence -->
                     <div class="simulation-card-detailed reveal" data-category="cybersecurity" data-image="threat-intel">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1048,12 +1018,10 @@
                 </div>
             </div>
 
-            <!-- Bulut Bilişim Modülleri -->
             <div class="module-category-section scroll-mt-24" id="cloud-modules" style="display: none;">
                 <h2 class="section-title">Bulut Bilişim Modülleri</h2>
                 <p class="section-subtitle">Bulut platformları ve servisleri eğitimleri</p>
                 <div class="simulations-grid">
-                    <!-- AWS Temelleri -->
                     <div class="simulation-card-detailed reveal" data-category="cloud" data-image="aws">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1091,7 +1059,6 @@
                         </div>
                     </div>
 
-                    <!-- Azure Cloud -->
                     <div class="simulation-card-detailed reveal" data-category="cloud" data-image="azure">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1129,7 +1096,6 @@
                         </div>
                     </div>
 
-                    <!-- Google Cloud Platform -->
                     <div class="simulation-card-detailed reveal" data-category="cloud" data-image="gcp">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1167,7 +1133,6 @@
                         </div>
                     </div>
 
-                    <!-- Temel Cloud Security (bulut başlığı altında) -->
                     <div class="simulation-card-detailed reveal" data-category="cloud" data-image="cloud-security">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1205,7 +1170,6 @@
                         </div>
                     </div>
 
-                    <!-- Cloud Security (İleri) (bulut başlığı altında) -->
                     <div class="simulation-card-detailed reveal" data-category="cloud" data-image="cloud-security">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1245,12 +1209,10 @@
                 </div>
             </div>
 
-            <!-- Veri Bilimleri Modülleri -->
             <div class="module-category-section scroll-mt-24" id="data-science-modules" style="display: none;">
                 <h2 class="section-title">Veri Bilimleri Modülleri</h2>
                 <p class="section-subtitle">Veri analizi ve makine öğrenmesi eğitimleri</p>
                 <div class="simulations-grid">
-                    <!-- Python ile Veri Analizi -->
                     <div class="simulation-card-detailed reveal" data-category="data-science" data-image="python-data">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1288,7 +1250,6 @@
                         </div>
                     </div>
 
-                    <!-- Makine Öğrenmesi -->
                     <div class="simulation-card-detailed reveal" data-category="data-science" data-image="ml">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1326,7 +1287,6 @@
                         </div>
                     </div>
 
-                    <!-- Derin Öğrenme -->
                     <div class="simulation-card-detailed reveal" data-category="data-science" data-image="deep-learning">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1366,12 +1326,10 @@
                 </div>
             </div>
 
-            <!-- Teknoloji Modülleri -->
             <div class="module-category-section scroll-mt-24" id="technology-modules" style="display: none;">
                 <h2 class="section-title">Teknoloji Modülleri</h2>
                 <p class="section-subtitle">Yazılım ve uygulama geliştirme eğitimleri</p>
                 <div class="simulations-grid">
-                    <!-- Web Geliştirme -->
                     <div class="simulation-card-detailed reveal" data-category="technology" data-image="web-dev">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1409,7 +1367,6 @@
                         </div>
                     </div>
 
-                    <!-- Mobil Uygulama -->
                     <div class="simulation-card-detailed reveal" data-category="technology" data-image="mobile">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1449,12 +1406,10 @@
                 </div>
             </div>
 
-            <!-- İş Dünyası Modülleri -->
             <div class="module-category-section scroll-mt-24" id="business-modules" style="display: none;">
                 <h2 class="section-title">İş Dünyası Modülleri</h2>
                 <p class="section-subtitle">Proje yönetimi ve dijital beceriler</p>
                 <div class="simulations-grid">
-                    <!-- Proje Yönetimi -->
                     <div class="simulation-card-detailed reveal" data-category="business" data-image="project-mgmt">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1492,7 +1447,6 @@
                         </div>
                     </div>
 
-                    <!-- Dijital Pazarlama -->
                     <div class="simulation-card-detailed reveal" data-category="business" data-image="digital-mkt">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1531,12 +1485,10 @@
                     </div>
                 </div>
                 
-            <!-- Kişisel Gelişim Modülleri -->
             <div class="module-category-section scroll-mt-24" id="personal-modules" style="display: none;">
                 <h2 class="section-title">Kişisel Gelişim Modülleri</h2>
                 <p class="section-subtitle">İletişim ve kişisel verimlilik eğitimleri</p>
                 <div class="simulations-grid">
-                    <!-- İletişim Becerileri -->
                     <div class="simulation-card-detailed reveal" data-category="personal" data-image="communication">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1574,7 +1526,6 @@
                         </div>
                     </div>
 
-                    <!-- Zaman Yönetimi -->
                     <div class="simulation-card-detailed reveal" data-category="personal" data-image="time-mgmt">
                         <div class="card-image-top"></div>
                         <div class="simulation-header">
@@ -1617,8 +1568,6 @@
     </section>
     </main>
 
-    <!-- Footer -->
-    <!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
@@ -1670,7 +1619,6 @@
     })();
   </script>
 
-    <!-- modules.js removed - not needed -->
     <script>
         // Loading Animation
         window.addEventListener('load', function() {
@@ -2121,7 +2069,6 @@
             }
         });
     </script>
-    <!-- Access Control -->
     <script src="utils/access-control.js" defer></script>
     
     <script>
@@ -2294,7 +2241,6 @@
             }
         });
     </script>
-    <!-- 1. Supabase UMD SDK  2. env  3. client  4. auth -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
             onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
     <script src="/js/supabase-env.js"></script>
@@ -2303,7 +2249,6 @@
     <script src="/js/supabase-auth.js?v=2.1"></script>
     <script src="/utils/api-client.js"></script>
     <script src="/utils/module-progress.js"></script>
-    <!-- Navigation Script -->
     <script src="js/navigation.js?v=2.3" defer></script>
     <script src="/js/animations.js" defer></script>
     

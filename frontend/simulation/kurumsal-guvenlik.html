@@ -4,16 +4,13 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Kurumsal Güvenlik CTF - SEBS Global</title>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -600,7 +597,6 @@
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white" data-sebs-chrome-layout="stack" style="--sebs-sim-pad:80px">
-<!-- Landing chrome header: içerik + oturum (navigation.js / supabase-auth ile güncellenir) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -647,7 +643,6 @@
     </div>
   </div>
 </header>
-<!-- Header -->
     <header class="simulation-header sebs-sim-header-fixed">
         <div class="header-content">
             <div class="simulation-title">
@@ -666,9 +661,7 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="main-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <h2 class="sidebar-title">
                 <i class="fas fa-flag-checkered"></i>
@@ -765,7 +758,6 @@
             </button>
         </aside>
 
-        <!-- Terminal -->
         <div class="terminal-container">
             <div class="terminal-header">
                 <div class="terminal-controls">
@@ -811,7 +803,6 @@
         </div>
     </div>
 
-    <!-- Task Completion Modal -->
     <div class="modal-overlay" id="modalOverlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-icon">
@@ -1602,7 +1593,6 @@
             }
         });
     </script>
-<!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
@@ -1655,7 +1645,6 @@
   </script>
     <script src="/js/saas-shell.js"></script>
 </body>
-    <!-- Configuration & API Integration -->
     <script src="../config.js?v=1.0.2"></script>
     <script src="../js/api-integration.js?v=1.0.2"></script>
 </html>

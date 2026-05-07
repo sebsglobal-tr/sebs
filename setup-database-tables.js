@@ -1,17 +1,9 @@
-/**
- * Database Tables Setup Script
- * Veritabanında eksik tabloları oluşturur ve mevcut tabloları günceller
- * 
- * Kullanım:
- * node setup-database-tables.js
- */
 
 require('dotenv').config();
 const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
-// Database connection (server.js ile uyumlu: DATABASE_URL veya DB_*)
 const createPool = () => {
     const url = (process.env.DATABASE_URL || '').trim();
     if (url && !url.includes('YOUR-PASSWORD')) {
@@ -39,7 +31,6 @@ async function setupDatabaseTables() {
         
         console.log('\n🔄 Veritabanı tabloları kontrol ediliyor ve oluşturuluyor...\n');
         
-        // 1) Ana migration: Eksiksiz şema (010) - tablolar, indexler, güvenlik
         const mainMigrationPath = path.join(__dirname, 'database/migrations/010_complete_schema_secure.sql');
         if (fs.existsSync(mainMigrationPath)) {
             const mainSQL = fs.readFileSync(mainMigrationPath, 'utf8');
@@ -53,21 +44,18 @@ async function setupDatabaseTables() {
             }
         }
 
-        // 2) Eksik kolonlar (009 - last_step vb.)
         const lastStepPath = path.join(__dirname, 'database/migrations/009_module_progress_last_step.sql');
         if (fs.existsSync(lastStepPath)) {
             await client.query(fs.readFileSync(lastStepPath, 'utf8'));
             console.log('✅ 009_module_progress_last_step.sql çalıştırıldı');
         }
 
-        // 3) RLS (Row Level Security) - Supabase güvenlik
         const rlsPath = path.join(__dirname, 'database/migrations/011_enable_rls_all_tables.sql');
         if (fs.existsSync(rlsPath)) {
             await client.query(fs.readFileSync(rlsPath, 'utf8'));
             console.log('✅ 011_enable_rls_all_tables.sql çalıştırıldı');
         }
         
-        // Doğrulama: server.js tarafından kullanılan tablolar
         const requiredTables = [
             'users',
             'modules',
@@ -105,10 +93,8 @@ async function setupDatabaseTables() {
             }
         }
         
-        // Check columns for critical tables
         console.log('\n📊 Kritik Tabloların Kolon Kontrolü:\n');
         
-        // Check users table (Supabase kullanıyorsanız sadece profiles olabilir)
         if (existingTables.includes('users')) {
             const usersColumns = await client.query(
                 `SELECT column_name FROM information_schema.columns 
@@ -120,7 +106,6 @@ async function setupDatabaseTables() {
             console.log('   users: (yok – Supabase kullanıyorsanız profiles tablosu kullanılıyor olabilir)');
         }
         
-        // Check purchases table
         if (existingTables.includes('purchases')) {
             const purchasesColumns = await client.query(
                 `SELECT column_name FROM information_schema.columns 
@@ -130,7 +115,6 @@ async function setupDatabaseTables() {
             console.log(`   purchases: ${purchasesColNames.length} kolon`);
         }
         
-        // Check module_progress table
         if (existingTables.includes('module_progress')) {
             const progressColumns = await client.query(
                 `SELECT column_name FROM information_schema.columns 
@@ -160,7 +144,6 @@ async function setupDatabaseTables() {
     }
 }
 
-// Main execution
 async function main() {
     try {
         await setupDatabaseTables();
@@ -172,7 +155,6 @@ async function main() {
     }
 }
 
-// Run script
 if (require.main === module) {
     main();
 }

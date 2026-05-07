@@ -1,5 +1,3 @@
-// API Client for SEBS Global Backend
-// Handles all backend API calls with proper authentication
 function getApiClientBase() {
     if (typeof window !== 'undefined' && typeof window.getSebsApiBase === 'function') {
         return window.getSebsApiBase();
@@ -10,7 +8,6 @@ function getApiClientBase() {
     return 'http://localhost:8006/api';
 }
 
-// Supabase oturumu veya eski authToken
 async function getAuthToken() {
     try {
         if (typeof window !== 'undefined' && window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
@@ -22,7 +19,6 @@ async function getAuthToken() {
             }
         }
     } catch (e) {
-        /* ignore */
     }
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -31,7 +27,6 @@ async function getAuthToken() {
     return token;
 }
 
-// Get auth headers
 async function getAuthHeaders(includeContentType = true) {
     const headers = {};
     
@@ -47,7 +42,6 @@ async function getAuthHeaders(includeContentType = true) {
     return headers;
 }
 
-// Generic API call helper
 async function apiCall(endpoint, options = {}) {
     const token = await getAuthToken();
     
@@ -92,19 +86,8 @@ async function apiCall(endpoint, options = {}) {
 }
 
 window.APIClient = {
-    // ============================================
-    // PROGRESS TRACKING
-    // ============================================
     
-    /**
-     * Save module progress
-     * @param {string} moduleId - Module ID from database
-     * @param {number} percentComplete - Completion percentage (0-100)
-     * @param {object} lastStep - Last step information (optional)
-     * @param {boolean} isCompleted - Whether module is completed
-     */
     saveModuleProgress: async function(moduleId, percentComplete, lastStep = null, isCompleted = false) {
-        // If lastStep is a string, parse it; if it's an object, use it directly
         let lastStepValue = lastStep;
         if (typeof lastStep === 'object' && lastStep !== null) {
             lastStepValue = JSON.stringify(lastStep);
@@ -121,10 +104,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Sync progress from localStorage to database
-     * @param {array} progressData - Array of progress objects
-     */
     syncProgress: async function(progressData) {
         return await apiCall('/progress/sync', {
             method: 'POST',
@@ -134,9 +113,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Get progress overview for dashboard
-     */
     getProgressOverview: async function() {
         return await apiCall('/progress/overview', {
             method: 'GET',
@@ -144,9 +120,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Get all user progress
-     */
     getUserProgress: async function() {
         return await apiCall('/progress', {
             method: 'GET',
@@ -154,10 +127,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Get specific module progress
-     * @param {string} moduleId - Module ID
-     */
     getModuleProgress: async function(moduleId) {
         return await apiCall(`/progress/module/${moduleId}`, {
             method: 'GET',
@@ -165,11 +134,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Update time spent on module
-     * @param {string} moduleId - Module ID
-     * @param {number} minutes - Minutes spent
-     */
     updateTimeSpent: async function(moduleId, minutes) {
         return await apiCall('/progress/time', {
             method: 'POST',
@@ -181,16 +145,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Save quiz result
-     * @param {string} moduleId - Module ID
-     * @param {string} quizId - Quiz section ID (e.g. "değerlendirme-testi-10-soru")
-     * @param {number} score - Score percentage (0-100)
-     * @param {number} correctAnswers - Number of correct answers
-     * @param {number} wrongAnswers - Number of wrong answers
-     * @param {array} answers - Array of answers
-     * @param {number} timeSpent - Time spent in seconds
-     */
     saveQuizResult: async function(moduleId, quizId, score, correctAnswers, wrongAnswers, answers = [], timeSpent = 0) {
         return await apiCall('/progress/quiz', {
             method: 'POST',
@@ -206,9 +160,6 @@ window.APIClient = {
         });
     },
 
-    /**
-     * Log user login (günlük giriş takibi)
-     */
     logLogin: async function() {
         return await apiCall('/progress/activity/login', {
             method: 'POST',
@@ -216,13 +167,7 @@ window.APIClient = {
         });
     },
     
-    // ============================================
-    // CERTIFICATES
-    // ============================================
     
-    /**
-     * Get user certificates
-     */
     getUserCertificates: async function() {
         return await apiCall('/certificates', {
             method: 'GET',
@@ -230,10 +175,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Get AI report for certificate
-     * @param {string} certificateId - Certificate ID
-     */
     getCertificateReport: async function(certificateId) {
         return await apiCall(`/certificates/${certificateId}/report`, {
             method: 'GET',
@@ -241,10 +182,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Check category completion and generate certificate
-     * @param {string} category - Category name (e.g., 'siber-guvenlik')
-     */
     checkCategoryCompletion: async function(category) {
         return await apiCall(`/certificates/check/${category}`, {
             method: 'GET',
@@ -252,19 +189,7 @@ window.APIClient = {
         });
     },
     
-    // ============================================
-    // SIMULATIONS
-    // ============================================
     
-    /**
-     * Save simulation completion
-     * @param {string} moduleId - Module ID
-     * @param {string} simulationId - Simulation ID
-     * @param {number} score - Score percentage (0-100)
-     * @param {array} flagsFound - Array of flags found
-     * @param {number} timeSpent - Time spent in seconds
-     * @param {number} attempts - Number of attempts
-     */
     saveSimulationCompletion: async function(
         moduleId,
         simulationId,
@@ -294,9 +219,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Get user simulations
-     */
     getUserSimulations: async function() {
         return await apiCall('/simulations', {
             method: 'GET',
@@ -304,13 +226,7 @@ window.APIClient = {
         });
     },
     
-    // ============================================
-    // AUTHENTICATION (Legacy support - may not be needed)
-    // ============================================
     
-    /**
-     * Health check (no auth required)
-     */
     checkHealth: async function() {
         return await apiCall('/health', {
             method: 'GET',
@@ -318,16 +234,9 @@ window.APIClient = {
         });
     },
     
-    // ============================================
-    // LEGACY METHODS (for backward compatibility)
-    // ============================================
     
-    /**
-     * Legacy: Save activity (may not be implemented in backend)
-     */
     saveActivity: async function(userId, activityType, activityDetails) {
         console.warn('⚠️ saveActivity is deprecated. Use specific tracking methods instead.');
-        // Try legacy endpoint if exists
         return await apiCall('/activity', {
             method: 'POST',
             body: JSON.stringify({
@@ -339,9 +248,6 @@ window.APIClient = {
         });
     },
     
-    /**
-     * Legacy: Get user stats (may not be implemented in backend)
-     */
     getUserStats: async function(userId) {
         console.warn('⚠️ getUserStats is deprecated. Use getProgressOverview instead.');
         return await apiCall(`/stats?user_id=${userId}`, {
@@ -351,7 +257,6 @@ window.APIClient = {
     }
 };
 
-// Export for ES modules if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = window.APIClient;
 }

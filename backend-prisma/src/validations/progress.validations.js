@@ -1,4 +1,3 @@
-// Progress Validation Schemas
 import { z } from 'zod';
 
 export const saveProgressSchema = z.object({

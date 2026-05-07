@@ -1,4 +1,3 @@
-// Create or update admin user script
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from './src/utils/password.js';
 import { generateULID } from './src/utils/ulid.js';
@@ -12,7 +11,6 @@ async function createAdminUser() {
     const adminEmail = 'admin@sebs.com';
     const adminPassword = 'Admin123!';
     
-    // Check if admin user exists
     let adminUser = await prisma.user.findUnique({
       where: { email: adminEmail }
     });
@@ -20,10 +18,8 @@ async function createAdminUser() {
     if (adminUser) {
       console.log('ℹ️ Admin user already exists, updating password and role...');
       
-      // Hash new password
       const passwordHash = await hashPassword(adminPassword);
       
-      // Update user to admin
       adminUser = await prisma.user.update({
         where: { email: adminEmail },
         data: {
@@ -38,11 +34,9 @@ async function createAdminUser() {
     } else {
       console.log('📝 Creating new admin user...');
       
-      // Hash password
       const passwordHash = await hashPassword(adminPassword);
       const publicId = generateULID();
       
-      // Create admin user
       adminUser = await prisma.user.create({
         data: {
           publicId: publicId,
@@ -69,7 +63,6 @@ async function createAdminUser() {
     console.log(`   PublicID: ${adminUser.publicId}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
-    // Also check for admin email from environment and make it admin if it exists
     const adminEmailFromEnv = process.env.ADMIN_EMAIL;
     if (adminEmailFromEnv) {
       const existingUser = await prisma.user.findUnique({

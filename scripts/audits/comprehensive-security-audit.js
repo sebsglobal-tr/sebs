@@ -1,7 +1,3 @@
-/**
- * Comprehensive Security Audit
- * Kapsamlı Güvenlik Denetimi
- */
 
 const fs = require('fs');
 const path = require('path');
@@ -40,7 +36,6 @@ function scanFile(filePath, content) {
     const fileName = path.basename(filePath);
     const lines = content.split('\n');
     
-    // SQL Injection risks
     if (content.includes('pool.query') || content.includes('db.query')) {
         const sqlQueries = content.match(/pool\.query\([^)]+\)/g) || [];
         sqlQueries.forEach((query, idx) => {
@@ -53,7 +48,6 @@ function scanFile(filePath, content) {
         });
     }
     
-    // XSS vulnerabilities
     if (content.includes('innerHTML') || content.includes('dangerouslySetInnerHTML')) {
         lines.forEach((line, idx) => {
             if (line.includes('innerHTML') || line.includes('dangerouslySetInnerHTML')) {
@@ -66,7 +60,6 @@ function scanFile(filePath, content) {
         });
     }
     
-    // Hardcoded secrets
     const secretPatterns = [
         /password\s*[:=]\s*['"][^'"]+['"]/i,
         /secret\s*[:=]\s*['"][^'"]+['"]/i,
@@ -87,7 +80,6 @@ function scanFile(filePath, content) {
         }
     });
     
-    // Console.log in production
     if (content.includes('console.log') || content.includes('console.error')) {
         lines.forEach((line, idx) => {
             if (line.includes('console.log') || line.includes('console.error')) {
@@ -100,7 +92,6 @@ function scanFile(filePath, content) {
         });
     }
     
-    // eval() usage
     if (content.includes('eval(')) {
         lines.forEach((line, idx) => {
             if (line.includes('eval(')) {
@@ -111,7 +102,6 @@ function scanFile(filePath, content) {
         });
     }
     
-    // Weak password hashing
     if (content.includes('bcrypt.hash') || content.includes('bcryptjs.hash')) {
         const hashMatches = content.match(/bcrypt(js)?\.hash\([^,]+,\s*(\d+)\)/);
         if (hashMatches && parseInt(hashMatches[2]) < 10) {
@@ -122,7 +112,6 @@ function scanFile(filePath, content) {
         }
     }
     
-    // Missing input validation
     if (content.includes('req.body') || content.includes('req.query') || content.includes('req.params')) {
         if (!content.includes('validate') && !content.includes('sanitize') && 
             !content.includes('zod') && !content.includes('joi') && 
@@ -133,14 +122,12 @@ function scanFile(filePath, content) {
         }
     }
     
-    // CORS misconfiguration
     if (content.includes('cors()') && !content.includes('cors({')) {
         logIssue('medium', 'CORS', 
             'CORS configured without options - may allow all origins', 
             filePath);
     }
     
-    // Missing rate limiting
     if (content.includes('app.post') || content.includes('app.get') || content.includes('app.put')) {
         if (!content.includes('rateLimit') && !content.includes('rate-limit') && 
             fileName.includes('server.js')) {
@@ -150,14 +137,12 @@ function scanFile(filePath, content) {
         }
     }
     
-    // Missing Helmet
     if (fileName.includes('server.js') && !content.includes('helmet')) {
         logIssue('high', 'Security Headers', 
             'Missing Helmet.js for security headers', 
             filePath);
     }
     
-    // JWT secret weak
     if (content.includes('jwt.sign') || content.includes('jwt.verify')) {
         if (content.includes('secret') && content.includes("'") && 
             (content.includes('your-secret') || content.includes('change-in-production'))) {
@@ -167,7 +152,6 @@ function scanFile(filePath, content) {
         }
     }
     
-    // Missing CSRF protection
     if (content.includes('app.post') && !content.includes('csurf') && 
         !content.includes('csrf') && fileName.includes('server.js')) {
         logIssue('medium', 'CSRF', 
@@ -175,7 +159,6 @@ function scanFile(filePath, content) {
             filePath);
     }
     
-    // Error information leakage
     if (content.includes('res.status(500)') || content.includes('res.status(400)')) {
         lines.forEach((line, idx) => {
             if (line.includes('error.message') || line.includes('error.stack')) {
@@ -195,7 +178,6 @@ function scanDirectory(dir, extensions = ['.js', '.html', '.jsx', '.ts', '.tsx']
     files.forEach(file => {
         const fullPath = path.join(dir, file.name);
         
-        // Skip node_modules and other directories
         if (file.isDirectory()) {
             if (file.name !== 'node_modules' && file.name !== '.git' && 
                 file.name !== 'dist' && file.name !== 'build') {
@@ -208,7 +190,6 @@ function scanDirectory(dir, extensions = ['.js', '.html', '.jsx', '.ts', '.tsx']
                     const content = fs.readFileSync(fullPath, 'utf8');
                     scanFile(fullPath, content);
                 } catch (err) {
-                    // Skip binary files
                 }
             }
         }
@@ -235,7 +216,6 @@ function generateReport() {
         return;
     }
     
-    // Group by category
     const byCategory = {};
     Object.values(issues).flat().forEach(issue => {
         if (!byCategory[issue.category]) {
@@ -263,18 +243,14 @@ function generateReport() {
     };
 }
 
-// Main execution
 console.log('🔍 Kapsamlı güvenlik denetimi başlatılıyor...\n');
 console.log('='.repeat(70));
 
-// Scan current directory
 const rootDir = process.cwd();
 scanDirectory(rootDir);
 
-// Generate report
 const report = generateReport();
 
-// Save report
 if (report && report.total > 0) {
     fs.writeFileSync('SECURITY_AUDIT_REPORT.json', JSON.stringify(report, null, 2));
     console.log('\n📄 Detaylı rapor SECURITY_AUDIT_REPORT.json dosyasına kaydedildi.\n');

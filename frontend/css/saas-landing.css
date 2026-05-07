@@ -1,4 +1,3 @@
-/* SEBS enterprise landing — scoped extras (Tailwind handles layout) */
 
 :root {
   --sebs-ink: #0c1222;
@@ -22,7 +21,6 @@ html {
   }
 }
 
-/* Hero mesh — page backdrop */
 .hero-mesh {
   background:
     radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.09) 0%, transparent 55%),
@@ -31,7 +29,6 @@ html {
     linear-gradient(180deg, #fafbfc 0%, #ffffff 45%, #f8fafc 100%);
 }
 
-/* Remote-style inset hero: pastel wash + rounded shell */
 .hero-remote-shell {
   position: relative;
   border-radius: 1.75rem;
@@ -68,7 +65,6 @@ html {
   z-index: 1;
 }
 
-/* Connector lines + hero mock (ana sayfa sağ sütun) */
 .hero-visual-wrap {
   position: relative;
   min-height: 340px;
@@ -111,7 +107,6 @@ html {
   }
 }
 
-/* Üç etiket: kartla birlikte hizalı şerit (mutlak yüzen + kart animasyonu kopması giderildi) */
 .hero-mock-chips {
   display: flex;
   align-items: center;
@@ -191,7 +186,6 @@ html {
   }
 }
 
-/* Glass mock layers */
 .mock-glass {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(12px);
@@ -199,9 +193,7 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.95);
 }
 
-/* İç kartlarda ek float yok — dış mock-float yeterli; çift hareket titremesini önler */
 
-/* ---------- Interactive features (accordion + panel) ---------- */
 .sebs-feat-grid {
   background-color: #f1f5f9;
   background-image:
@@ -245,7 +237,6 @@ html {
 .sebs-accordion-item.is-open .sebs-acc-btn {
   background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
   color: #fff;
-  /* Başlık + özet ortada; ikon / chevron sütunlarda — “kaymış” hissi gider */
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr) 1.75rem;
   align-items: center;
@@ -258,7 +249,6 @@ html {
   text-align: center;
 }
 
-/* modules.html / simulations.html: .tab-btn.active → styles.css mavi gradient ezmesin */
 .modules-category-tabs .sebs-acc-btn.tab-btn::before,
 .simulations-category-tabs .sebs-acc-btn.tab-btn::before {
   display: none !important;
@@ -354,7 +344,6 @@ html {
   margin: 0;
 }
 
-/* modules / simulations kategori kartları: özet metin üstte yapışmasın — CTA üstündeki alanda dikey ortalı */
 .modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel {
   display: grid;
@@ -399,7 +388,6 @@ html {
   transform: scale(1.05);
 }
 
-/* Visual stage */
 .sebs-visual-stage {
   position: relative;
   min-height: 340px;
@@ -460,7 +448,6 @@ html {
   }
 }
 
-/* ---------- İletişim sayfası (ana sayfadan farklı yerleşim, aynı dil) ---------- */
 .contact-hero-inner {
   max-width: 72rem;
 }
@@ -528,7 +515,6 @@ html {
   }
 }
 
-/* İletişim kanalları kartları — ikon yüzeyi + hafif hareket */
 @keyframes contact-channel-icon-float {
   0%,
   100% {
@@ -592,7 +578,6 @@ html {
   }
 }
 
-/* Çalışma saatleri satırları (contact-channel kartları içinde) */
 .contact-channel-card .office-hours-rows {
   margin-top: 1.25rem;
   gap: 0.5rem;
@@ -620,7 +605,6 @@ html {
 .delay-4 { animation-delay: 0.32s; }
 .delay-5 { animation-delay: 0.4s; }
 
-/* Mock dashboard — subtle float */
 @keyframes float-soft {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
@@ -636,7 +620,6 @@ html {
   }
 }
 
-/* Logo strip grayscale */
 .logo-strip img,
 .logo-strip span {
   filter: grayscale(1);
@@ -650,19 +633,16 @@ html {
   filter: grayscale(0.3);
 }
 
-/* Focus rings — accessibility */
 .focus-ring:focus-visible {
   outline: 2px solid var(--sebs-accent);
   outline-offset: 2px;
 }
 
-/* Mobil «Menü» (details/summary) — klavye odağı görünür */
 header.fixed details > summary:focus-visible {
   outline: 2px solid var(--sebs-accent);
   outline-offset: 2px;
 }
 
-/* Scroll reveal (progressive enhancement) */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(16px);

@@ -1,5 +1,3 @@
-// Supabase Auth Integration
-// Mevcut auth.js'in yerine Supabase Auth kullanır
 
 class SupabaseAuthSystem {
   constructor() {
@@ -10,18 +8,15 @@ class SupabaseAuthSystem {
   }
 
   async init() {
-    // Supabase client'ı yükle
     try {
       if (typeof window.initSupabase === 'undefined') {
         console.warn('⚠️ initSupabase fonksiyonu henüz yüklenmedi, bekleniyor...');
-        // Fonksiyon yüklenene kadar bekle (maksimum 10 saniye)
         let attempts = 0;
         const maxAttempts = 100; // 10 saniye
         while (typeof window.initSupabase === 'undefined' && attempts < maxAttempts) {
           await new Promise(resolve => setTimeout(resolve, 100));
           attempts++;
           
-          // Her 2 saniyede bir durum yazdır
           if (attempts % 20 === 0) {
             console.log(`⏳ Supabase client yüklenmesi bekleniyor... (${attempts * 100 / 1000}s)`);
           }
@@ -31,7 +26,6 @@ class SupabaseAuthSystem {
         }
       }
       
-      // Supabase client'ı başlat
       this.supabase = await window.initSupabase();
       
       if (!this.supabase) {
@@ -41,7 +35,6 @@ class SupabaseAuthSystem {
       console.log('✅ Supabase Auth System initialized');
     } catch (error) {
       console.error('Supabase init hatası:', error);
-      // Hata durumunda tekrar dene (maksimum 3 kez)
       if (!this.initAttempts) {
         this.initAttempts = 0;
       }
@@ -56,10 +49,8 @@ class SupabaseAuthSystem {
       return;
     }
 
-    // Mevcut session'ı kontrol et
     await this.checkSession();
 
-    // Auth state değişikliklerini dinle
     this.supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('🔔 Auth state changed:', event);
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT') {
@@ -81,7 +72,6 @@ class SupabaseAuthSystem {
         this.user = null;
         await this.updateNavigation();
       } else if (event === 'USER_UPDATED') {
-        // Kullanıcı bilgileri güncellendi
         if (session?.user) {
           this.user = session.user;
           await this.updateNavigation();
@@ -89,12 +79,10 @@ class SupabaseAuthSystem {
       }
     });
 
-    // Modül sayfalarında erişim kontrolü
     if (this.isModulePage()) {
       this.protectModuleAccess();
     }
 
-    // Navigation güncelle (async olduğu için await kullanmıyoruz, background'da çalışsın)
     this.updateNavigation().catch(err => console.warn('updateNavigation error:', err));
   }
 
@@ -108,7 +96,6 @@ class SupabaseAuthSystem {
         }
       }
 
-      // getSession() otomatik olarak localStorage'dan session'ı yükler
       const { data: { session }, error } = await this.supabase.auth.getSession();
       if (error) {
         console.warn('Session check error:', error);
@@ -131,9 +118,7 @@ class SupabaseAuthSystem {
           expiresAt: session.expires_at
         });
         
-        // public.profiles bu şemada yok; rol backend /api/users/me + public.users
       } else {
-        // Session yok
         this.isLoggedIn = false;
         this.user = null;
         try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
@@ -252,7 +237,6 @@ class SupabaseAuthSystem {
   }
 
   async updateNavigation() {
-    // Nav-buttons içindeki butonları güncelle (HTML'de zaten var)
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const signupBtn = document.getElementById('signupBtn');
@@ -261,7 +245,6 @@ class SupabaseAuthSystem {
     const userName = document.getElementById('userName');
     const userAvatar = document.getElementById('userAvatar');
 
-    // Session'ı tekrar kontrol et (sayfa değişikliklerinde önemli)
     try {
       if (this.supabase) {
         const { data: { session } } = await this.supabase.auth.getSession();
@@ -281,7 +264,6 @@ class SupabaseAuthSystem {
     const mobileUserLinks = document.getElementById('mobileUserLinks');
 
     if (this.isLoggedIn && this.user) {
-      // Kullanıcı giriş yapmışsa
       const mdNav = this.user.user_metadata || {};
 
       if (loginBtn) loginBtn.style.display = 'none';
@@ -309,7 +291,6 @@ class SupabaseAuthSystem {
         if (userAvatar) userAvatar.textContent = 'K';
       }
     } else {
-      // Kullanıcı giriş yapmamışsa
       if (loginBtn) loginBtn.style.removeProperty('display');
       if (logoutBtn) logoutBtn.style.display = 'none';
       if (signupBtn) signupBtn.style.removeProperty('display');
@@ -379,7 +360,6 @@ class SupabaseAuthSystem {
 
   async signUp(email, password, fullName) {
     try {
-      // Email formatını kontrol et
       if (!this.validateEmail(email)) {
         return {
           success: false,
@@ -387,7 +367,6 @@ class SupabaseAuthSystem {
         };
       }
 
-      // Şifre gücünü kontrol et
       if (password.length < 8) {
         return {
           success: false,
@@ -407,7 +386,6 @@ class SupabaseAuthSystem {
       });
 
       if (error) {
-        // Supabase hata mesajlarını Türkçeleştir
         let errorMessage = error.message;
         
         if (error.message.includes('already registered') || error.message.includes('already exists')) {
@@ -423,7 +401,6 @@ class SupabaseAuthSystem {
         throw new Error(errorMessage);
       }
 
-      // Kullanıcı oluşturuldu ama email doğrulanmadıysa
       if (data.user && !data.session) {
         return {
           success: true,
@@ -433,7 +410,6 @@ class SupabaseAuthSystem {
         };
       }
 
-      // Email doğrulama gerekmiyorsa (development modunda olabilir)
       if (data.user && data.session) {
         this.isLoggedIn = true;
         this.user = data.user;
@@ -461,7 +437,6 @@ class SupabaseAuthSystem {
 
   async signIn(email, password) {
     try {
-      // Email formatını kontrol et
       if (!this.validateEmail(email)) {
         return {
           success: false,
@@ -469,7 +444,6 @@ class SupabaseAuthSystem {
         };
       }
 
-      // Şifre kontrolü
       if (!password || password.length === 0) {
         return {
           success: false,
@@ -483,7 +457,6 @@ class SupabaseAuthSystem {
       });
 
       if (error) {
-        // Supabase hata mesajlarını Türkçeleştir
         let errorMessage = error.message;
         
         if (error.message.includes('Invalid login credentials') || 
@@ -503,7 +476,6 @@ class SupabaseAuthSystem {
         throw new Error(errorMessage);
       }
 
-      // Session kontrolü
       if (!data.session) {
         return {
           success: false,
@@ -511,7 +483,6 @@ class SupabaseAuthSystem {
         };
       }
 
-      // Oturum Supabase tarafında verildiyse giriş kabul edilir (email_confirmed_at bazı yapılandırmalarda boş kalabilir).
 
       this.isLoggedIn = true;
       this.user = data.user;
@@ -520,7 +491,6 @@ class SupabaseAuthSystem {
         try { localStorage.setItem('authToken', data.session.access_token); } catch (e) {}
       }
 
-      // Giriş kaydı (veritabanına - günlük takip)
       try {
         if (window.APIClient?.logLogin) {
           await window.APIClient.logLogin();
@@ -590,22 +560,17 @@ class SupabaseAuthSystem {
   }
 }
 
-// Global instance
 let supabaseAuthSystem = null;
 
-// Sayfa yüklendiğinde başlat
 document.addEventListener('DOMContentLoaded', async function() {
   try {
-    // Supabase client'ı önce başlat
     if (typeof window.initSupabase !== 'undefined') {
       await window.initSupabase();
     }
     
-    // SupabaseAuthSystem oluştur
     supabaseAuthSystem = new SupabaseAuthSystem();
     window.supabaseAuthSystem = supabaseAuthSystem;
     
-    // Session'ı kontrol et ve navigation'ı güncelle
     await supabaseAuthSystem.checkSession();
     await supabaseAuthSystem.updateNavigation();
     
@@ -615,7 +580,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       console.log('   User:', supabaseAuthSystem.user.email);
     }
     
-    // Sayfa değişikliklerinde session'ı kontrol et
     window.addEventListener('focus', async () => {
       if (supabaseAuthSystem && supabaseAuthSystem.supabase) {
         await supabaseAuthSystem.checkSession();

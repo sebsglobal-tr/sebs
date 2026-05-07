@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <base href="/" />
-  <title>SEBS Global — Gerçek iş senaryolarında yetkinlik ölçümü ve değerlendirme</title>
-  <meta name="description" content="SEBS (Software Education & Business Solutions): Gerçek iş senaryolarına dayalı simülasyonlar, karar verme analizi ve veri temelli yetkinlik profili. Bireyler ve kurumlar için; işe alım, yetenek havuzu ve özel senaryo seçenekleri." />
+  <title>SEBS Global | Simulasyon Destekli Siber Guvenlik Egitim Platformu</title>
+  <meta name="description" content="SEBS Global; ogrenciler ve yeni baslayanlar icin moduler egitimler, uygulamali simulasyonlar ve gelisim takibi sunan siber guvenlik egitim platformudur." />
   <meta name="theme-color" content="#0f172a" />
   <link rel="canonical" href="https://sebsglobal.com/" />
   <meta property="og:type" content="website" />
@@ -15,6 +15,38 @@
   <meta property="og:description" content="Bilgiyi değil, karar vermeyi ölçen simülasyon platformu. Eğitim, işe alım değerlendirmesi ve kurumsal yetenek keşfi tek ekosistemde." />
   <meta property="og:image" content="https://sebsglobal.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SEBS Global",
+      "url": "https://sebsglobal.com/",
+      "logo": "https://sebsglobal.com/images/SEBS.png",
+      "sameAs": []
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SEBS Global",
+      "url": "https://sebsglobal.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://sebsglobal.com/blog?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://sebsglobal.com/" }
+      ]
+    }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,7 +72,7 @@
         },
       },
     };
-  </script>
+    </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css" data-sebs-premium="css" />
@@ -51,7 +83,6 @@
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 
-  <!-- Nav (oturum: navigation.js + supabase-auth) -->
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
     <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
       <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -71,7 +102,7 @@
         <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
           <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
           <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
-        </div>
+            </div>
         <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
         <details class="relative xl:hidden">
           <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
@@ -88,10 +119,10 @@
             <div id="mobileGuestLinks">
               <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
               <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
-            </div>
+        </div>
             <div id="mobileUserLinks" style="display: none;">
                             <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
-            </div>
+    </div>
             <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
           </div>
         </details>
@@ -100,16 +131,15 @@
   </header>
 
   <main id="top">
-    <!-- Hero (Remote-style pastel shell + glass mock + connectors) -->
     <section class="hero-mesh relative overflow-x-hidden pt-28 pb-20 sm:pt-32 sm:pb-28 lg:pt-36">
       <svg class="absolute h-0 w-0 overflow-hidden" aria-hidden="true" focusable="false">
-        <defs>
+                    <defs>
           <linearGradient id="sebs-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#6366f1" stop-opacity="0.55" />
             <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.55" />
-          </linearGradient>
-        </defs>
-      </svg>
+                        </linearGradient>
+                    </defs>
+                </svg>
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div>
           <div class="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-14 py-2 sm:py-4 lg:py-6">
@@ -119,10 +149,10 @@
                 Software Education &amp; Business Solutions
               </p>
               <h1 class="animate-in delay-1 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]">
-                Hedefini söyle, SEBS Yolunu anında gör, kilitleri açarak ilerle
+                Simulasyon destekli siber guvenlik egitim platformu
               </h1>
               <p class="animate-in delay-2 mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
-                Kullanıcı önce chatbox ile hedefini netleştirir, sonra kişisel yol haritasını ücretsiz görür. İçerik ve simülasyonlar, doğru plan açıldıkça adım adım aktif olur.
+                SEBS ile egitim modullerini adim adim tamamla, gercek senaryo simulasyonlarinda pratik yap ve gelisimini olculebilir bir sekilde takip et.
               </p>
               <div class="animate-in delay-2" id="hero-sebs-funnel">
                 <div class="sebs-hero-funnel-tabs" role="tablist" aria-label="SEBS Yolu mini akış">
@@ -163,7 +193,7 @@
                   Simülasyonlar
                   <span aria-hidden="true">→</span>
                 </a>
-              </div>
+                </div>
               <p class="animate-in delay-4 mt-6 text-sm text-slate-500">
                 Denemede kredi kartı gerekmez · Kurumsal SSO: talep üzerine
               </p>
@@ -180,7 +210,7 @@
                   <span class="hero-chip">Yetkinlik</span>
                   <span class="hero-chip">Mentor</span>
                   <span class="hero-chip">Simülasyon</span>
-                </div>
+            </div>
                 <div class="hero-mock-panel">
                   <div class="hero-mock-panel-inner">
                   <div class="mb-4 flex min-h-[2.75rem] items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
@@ -188,9 +218,9 @@
                       <span class="h-2.5 w-2.5 rounded-full bg-red-400/90"></span>
                       <span class="h-2.5 w-2.5 rounded-full bg-amber-400/90"></span>
                       <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/90"></span>
-                    </div>
+        </div>
                     <span class="min-w-0 truncate text-right text-xs font-medium text-slate-500" data-hero-mock-title>Canlı çalıştırma · Olay müdahalesi</span>
-                  </div>
+        </div>
                   <div class="grid gap-4 sm:grid-cols-5">
                     <div class="min-w-0 sm:col-span-3 space-y-3">
                       <div class="rounded-xl border border-slate-200/90 bg-white p-3 shadow-sm">
@@ -198,43 +228,43 @@
                         <p class="mt-1 text-sm font-semibold leading-snug text-slate-800" data-hero-mock-scenario>Yatay hareketi test ortamında durdur</p>
                         <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
                           <div class="h-full w-[72%] rounded-full bg-blue-500 transition-all duration-700" data-hero-mock-progress></div>
-                        </div>
+                </div>
                         <p class="mt-2 text-xs text-slate-500" data-hero-mock-footnote>Kanıt zinciri · 12 kontrol noktası</p>
-                      </div>
+                </div>
                       <div class="flex min-w-0 gap-2">
                         <div class="min-w-0 flex-1 rounded-xl border border-emerald-200/80 bg-emerald-50/90 p-3">
                           <p class="text-[10px] font-semibold text-emerald-700">Sinyal</p>
                           <p class="text-lg font-bold tabular-nums text-emerald-900">+18%</p>
                           <p class="text-[10px] text-emerald-700/80">karar doğruluğu</p>
-                        </div>
+            </div>
                         <div class="min-w-0 flex-1 rounded-xl border border-slate-200/80 bg-slate-50 p-3">
                           <p class="text-[10px] font-semibold text-slate-500">Mentor notu</p>
                           <p class="truncate text-sm font-semibold text-slate-800">İnceleme sırada</p>
                           <p class="text-[10px] text-slate-500">~4 saat</p>
-                        </div>
-                      </div>
-                    </div>
+            </div>
+        </div>
+            </div>
                     <div class="flex min-w-0 flex-col gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 sm:col-span-2">
                       <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Aktivite</p>
                       <div class="space-y-2 text-xs">
                         <div class="flex min-w-0 items-center justify-between gap-2 rounded-lg bg-white px-2 py-1.5 shadow-sm"><span class="shrink-0 text-slate-500">Karar</span><span class="min-w-0 truncate text-right font-medium text-slate-800" data-hero-mock-decision>İzole et</span></div>
                         <div class="flex min-w-0 items-center justify-between gap-2 rounded-lg bg-white px-2 py-1.5 shadow-sm"><span class="shrink-0 text-slate-500">Risk</span><span class="min-w-0 font-medium text-amber-600" data-hero-mock-risk>Orta</span></div>
                         <div class="flex min-w-0 items-center justify-between gap-2 rounded-lg bg-white px-2 py-1.5 shadow-sm"><span class="shrink-0 text-slate-500">Puan</span><span class="min-w-0 font-medium tabular-nums text-blue-600" data-hero-mock-score>8.4</span></div>
-                      </div>
+                    </div>
                       <div class="mt-auto rounded-lg border border-dashed border-slate-200/90 p-2 text-center text-[10px] leading-snug text-slate-400" data-hero-mock-bottom>
                         Tekrar oynat · PDF dışa aktar
-                      </div>
                     </div>
-                  </div>
-                  </div>
-                </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
               </div>
               <div class="pointer-events-none absolute -right-6 -top-6 z-0 h-44 w-44 rounded-full bg-violet-400/15 blur-3xl" aria-hidden="true"></div>
               <div class="pointer-events-none absolute -bottom-4 -left-4 z-0 h-36 w-36 rounded-full bg-sky-400/15 blur-3xl" aria-hidden="true"></div>
             </div>
           </div>
+            </div>
         </div>
-      </div>
     </section>
 
     <section id="sebs-yolu" class="reveal-on-scroll border-t border-slate-100 bg-white py-20 sm:py-24" aria-labelledby="sebs-yolu-heading">
@@ -247,15 +277,15 @@
           <p class="mt-4 text-base text-slate-600">
             Chatbox → Yol → Kilit Aç akışı.
           </p>
-        </div>
-
+            </div>
+            
         <div class="sebs-yolu-journey-shell mt-12 grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.1fr_1fr]">
           <div>
             <div class="flex flex-wrap gap-2" role="tablist" aria-label="SEBS Yolu aşamaları">
               <button class="sebs-yolu-stage-tab is-active" data-yol-stage-tab="ilk-adim" role="tab" aria-selected="true">İlk Adım</button>
               <button class="sebs-yolu-stage-tab" data-yol-stage-tab="yukselis" role="tab" aria-selected="false">Yükseliş</button>
               <button class="sebs-yolu-stage-tab" data-yol-stage-tab="zirve" role="tab" aria-selected="false">Zirve</button>
-            </div>
+                    </div>
 
             <div class="mt-4" data-yol-stage-panel="ilk-adim">
               <article class="sebs-yolu-stage-card">
@@ -268,7 +298,7 @@
                   <li>İlk Adımı Aç</li>
                 </ul>
               </article>
-            </div>
+                </div>
 
             <div class="mt-4 hidden" data-yol-stage-panel="yukselis">
               <article class="sebs-yolu-stage-card">
@@ -281,8 +311,8 @@
                   <li>Yükselişi Aç</li>
                 </ul>
               </article>
-            </div>
-
+                </div>
+                
             <div class="mt-4 hidden" data-yol-stage-panel="zirve">
               <article class="sebs-yolu-stage-card">
                 <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Aşama 3</p>
@@ -294,9 +324,9 @@
                   <li>Zirveyi Aç</li>
                 </ul>
               </article>
-            </div>
-          </div>
-
+                    </div>
+                </div>
+                
           <div class="space-y-3">
             <div class="sebs-yolu-flow-node"><strong>1.</strong> Hedefi al</div>
             <div class="sebs-yolu-flow-node"><strong>2.</strong> Yolu göster</div>
@@ -309,11 +339,11 @@
               <div class="mt-3 flex flex-wrap gap-2">
                 <a href="/pricing.html?category=sebs-road" class="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white">Planları Gör</a>
                 <a href="/modules.html" class="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700">Yolu Keşfet</a>
-              </div>
+                    </div>
+                </div>
+                    </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
 
     <section id="sebs-yolu-roadmap" class="reveal-on-scroll border-t border-slate-100 bg-slate-50/70 py-16 sm:py-20" aria-labelledby="sebs-roadmap-heading">
@@ -324,13 +354,13 @@
             Görsel yol haritası ve aylık paketler tek ekranda
           </h2>
           <p class="mt-4 text-base text-slate-600">Aşamayı gör, paketi seç, ilerlemeye başla.</p>
-        </div>
-
+            </div>
+            
         <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div class="rounded-xl border border-slate-200 bg-white p-3 text-center shadow-sm">
             <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-700"><i class="fas fa-comments"></i></div>
             <p class="mt-2 text-xs font-semibold text-slate-700">Chatbox Analizi</p>
-          </div>
+                    </div>
           <div class="rounded-xl border border-slate-200 bg-white p-3 text-center shadow-sm">
             <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-700"><i class="fas fa-route"></i></div>
             <p class="mt-2 text-xs font-semibold text-slate-700">Kişisel Yol Haritası</p>
@@ -343,8 +373,8 @@
             <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"><i class="fas fa-chart-line"></i></div>
             <p class="mt-2 text-xs font-semibold text-slate-700">İlerleme Takibi</p>
           </div>
-        </div>
-
+                </div>
+                
         <div class="sebs-roadmap-visual mt-10 p-5 sm:p-7">
           <div class="sebs-roadmap-track">
             <article class="sebs-roadmap-node">
@@ -365,7 +395,7 @@
               <p class="mt-1 text-sm text-slate-600">Tam erişim.</p>
               <p class="mt-2 text-xs font-semibold text-violet-700">4 durak · 12 simülasyon</p>
             </article>
-          </div>
+                    </div>
 
           <div class="sebs-membership-grid">
             <article class="sebs-membership-card">
@@ -398,13 +428,13 @@
                 <li>✓ Tam yol takibi</li>
               </ul>
             </article>
-          </div>
-
+                </div>
+                
           <div class="mt-4 flex flex-wrap gap-2">
             <a href="/pricing.html?category=sebs-road" class="inline-flex items-center rounded-full bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white">Aylık Planları İncele</a>
             <a href="/modules.html" class="inline-flex items-center rounded-full border border-slate-300 px-5 py-2.5 text-xs font-semibold text-slate-700">Roadmap'i Keşfet</a>
-          </div>
-        </div>
+                    </div>
+                </div>
       </div>
     </section>
 
@@ -413,7 +443,7 @@
         <div class="mx-auto max-w-3xl text-center">
           <span class="sebs-yolu-badge">Gerçek Akış Örneği</span>
           <h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Bir gün içinde kullanıcı ne görür?</h2>
-        </div>
+                    </div>
         <div class="sebs-visual-strip mt-8">
           <div class="sebs-visual-strip-grid">
             <article class="sebs-visual-mini">
@@ -443,12 +473,11 @@
                 <li><strong>11:40</strong> Premium öneriler görünür.</li>
               </ul>
             </article>
-          </div>
+        </div>
         </div>
       </div>
     </section>
 
-    <!-- Trust -->
     <section class="reveal-on-scroll border-y border-slate-100 bg-white py-12" aria-labelledby="trust-heading">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p id="trust-heading" class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -460,11 +489,10 @@
           <span class="text-lg font-bold text-slate-400">Yazılım &amp; veri</span>
           <span class="text-lg font-bold text-slate-400">Siber güvenlik · bulut</span>
           <span class="text-lg font-bold text-slate-400 hidden sm:inline">Üniversite iş birlikleri</span>
-        </div>
-      </div>
+                    </div>
+            </div>
     </section>
 
-    <!-- Features (cards) -->
     <section id="features" class="reveal-on-scroll scroll-mt-24 py-20 sm:py-28">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
@@ -474,12 +502,12 @@
           <p class="mt-4 text-lg text-slate-600">
             Gerçek işe yakın senaryolarda karar kalitesi ve davranış ölçümü; bireyler için kariyer rehberliği, kurumlar için savunulabilir İK ve eğitim metrikleri.
           </p>
-        </div>
+                    </div>
         <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <article class="sebs-feature-card group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
             <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-100">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
+                        </div>
             <h3 class="mt-4 text-lg font-semibold text-slate-900">Simülasyon ortamları</h3>
             <p class="mt-2 text-sm leading-relaxed text-slate-600">
               Ağ, siber güvenlik, yazılım, veri ve bulut gibi alanlarda dallanan senaryolar; riski kontrollü ortamda, gerçek iş öncesinde görün.
@@ -554,17 +582,16 @@
               <ul class="sebs-card-flow"><li>Aday</li><li>Sinyal</li><li>Eşleştir</li></ul>
             </div>
           </article>
-        </div>
-      </div>
+                        </div>
+                    </div>
     </section>
 
-    <!-- How it works -->
     <section id="how" class="reveal-on-scroll border-t border-slate-100 bg-slate-50/80 py-20 sm:py-28">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Nasıl çalışır</h2>
           <p class="mt-4 text-base text-slate-600">3 adım: hedef, uygulama, ölçüm.</p>
-        </div>
+                </div>
         <div class="sebs-how-premium mt-12">
           <div class="sebs-how-showcase">
             <ol class="sebs-how-track">
@@ -634,7 +661,6 @@
       </div>
     </section>
 
-    <!-- Simulations / product -->
     <section id="simulations" class="reveal-on-scroll py-20 sm:py-28">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="grid items-center gap-14 lg:grid-cols-2">
@@ -663,20 +689,20 @@
               Simülasyon kataloğuna git
               <span aria-hidden="true">→</span>
             </a>
-          </div>
+                    </div>
           <div class="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-6 shadow-card-hover">
             <div class="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
               <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Çalıştırma denetçisi</span>
                 <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">v2.4</span>
-              </div>
+                        </div>
               <div class="mt-4 space-y-3 font-mono text-[11px] leading-relaxed text-slate-600">
                 <p><span class="text-emerald-600">[12:04:02]</span> Politika kontrolü: çıkış kuralı değişti</p>
                 <p><span class="text-amber-600">[12:04:18]</span> Paydaş bildirimi: hukuk incelemesi istendi</p>
                 <p><span class="text-blue-600">[12:05:01]</span> Katılımcı eylemi: yükü izole et (staging)</p>
                 <p class="rounded border border-dashed border-slate-200 bg-slate-50 p-2 text-slate-500">Koçluk notu eklendi · rubrik 4/7</p>
-              </div>
-            </div>
+                        </div>
+                    </div>
             <div class="mt-4 grid grid-cols-2 gap-3">
               <div class="rounded-lg border border-slate-100 bg-white p-3 text-center shadow-sm">
                 <p class="text-[10px] font-semibold uppercase text-slate-400">Karara kadar süre</p>
@@ -687,12 +713,11 @@
                 <p class="mt-1 text-2xl font-bold text-slate-900">Yüksek</p>
               </div>
             </div>
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- Audience -->
     <section id="audience" class="reveal-on-scroll border-t border-slate-100 bg-slate-50/80 py-20 sm:py-28">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
@@ -748,7 +773,6 @@
       </div>
     </section>
 
-    <!-- CTA -->
     <section id="cta" class="reveal-on-scroll scroll-mt-24 border-t border-slate-100 bg-white py-20 sm:py-28" aria-labelledby="cta-heading">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 px-6 py-14 shadow-card sm:px-12">
@@ -770,13 +794,12 @@
                 Tanışma görüşmesi
               </a>
             </div>
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
-  </main>
+    </main>
 
-  <!-- Footer -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
@@ -784,12 +807,12 @@
           <div class="flex items-center gap-2">
             <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
             <span class="text-lg font-bold text-slate-900">SEBS Global</span>
-          </div>
+                    </div>
           <p class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">Software Education &amp; Business Solutions</p>
           <p class="mt-3 max-w-sm text-sm text-slate-500">
             Simülasyonlar, karar analizi ve veri temelli profille bireylerin ve kurumların yetkinliği deneyimleyerek keşfetmesini; işe alım ve kariyer kararlarını objektifleştirmesini sağlayan platform.
           </p>
-        </div>
+                </div>
         <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
@@ -797,30 +820,30 @@
               <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
               <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
               <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
-            </ul>
-          </div>
+                    </ul>
+                </div>
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
             <ul class="mt-4 space-y-2 text-sm">
               <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
               <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
-            </ul>
-          </div>
+                    </ul>
+                </div>
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
             <ul class="mt-4 space-y-2 text-sm">
               <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
               <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+                    </ul>
+                </div>
+            </div>
+                </div>
       <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
         <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
         <p class="text-xs text-slate-400">İstanbul · Türkiye</p>
-      </div>
-    </div>
-  </footer>
+            </div>
+        </div>
+    </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <script src="/js/supabase-env.js?v=2"></script>
@@ -828,7 +851,7 @@
   <script src="/js/supabase-auth.js?v=2.1"></script>
   <script src="/js/navigation.js?v=2.3" defer></script>
 
-  <script>
+    <script>
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {
       el.textContent = String(new Date().getFullYear());
     });
@@ -847,7 +870,7 @@
         { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
       );
       reveal.forEach(function (el) { io.observe(el); });
-    } else {
+        } else {
       document.querySelectorAll('.reveal-on-scroll').forEach(function (el) {
         el.classList.add('is-visible');
       });
@@ -1018,7 +1041,7 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             start();
-          } else {
+                } else {
             stop();
             nodes.forEach(function (n) { n.classList.remove('is-glow'); });
           }
@@ -1091,6 +1114,6 @@
       });
     })();
 
-  </script>
+    </script>
 </body>
 </html>

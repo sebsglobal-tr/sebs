@@ -1,4 +1,3 @@
-// Test OpenAI Connection
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -11,7 +10,6 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 async function testOpenAI() {
   console.log('🧪 Testing OpenAI Connection...\n');
   
-  // Check API key
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     console.log('❌ OPENAI_API_KEY not found in .env');
@@ -21,23 +19,19 @@ async function testOpenAI() {
   console.log('✅ OPENAI_API_KEY found');
   console.log(`   Key prefix: ${apiKey.substring(0, 10)}...`);
   
-  // Check model
   const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
   console.log(`✅ Model: ${model}\n`);
   
-  // Try to import OpenAI
   try {
     const { default: OpenAI } = await import('openai');
     console.log('✅ OpenAI package imported successfully');
     
-    // Initialize client
     const client = new OpenAI({
       apiKey: apiKey
     });
     
     console.log('✅ OpenAI client initialized\n');
     
-    // Test API call
     console.log('📡 Testing API call...');
     try {
       const completion = await client.chat.completions.create({

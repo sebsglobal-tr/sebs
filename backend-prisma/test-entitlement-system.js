@@ -1,9 +1,6 @@
-// Test Entitlement System
-// Using built-in fetch (Node 18+)
 
 const API_BASE = 'http://localhost:8006/api';
 
-// Test colors
 const green = '\x1b[32m';
 const red = '\x1b[31m';
 const yellow = '\x1b[33m';
@@ -33,7 +30,6 @@ async function test(name, testFn) {
 async function main() {
   log('\n🚀 Starting Entitlement System Tests\n', blue);
 
-  // Test 1: Health Check
   await test('Health Check', async () => {
     const response = await fetch(`${API_BASE}/health`);
     const data = await response.json();
@@ -43,7 +39,6 @@ async function main() {
     log(`   Database: ${data.database}`);
   });
 
-  // Test 2: Get Available Packages (Public)
   await test('Get Available Packages (Public)', async () => {
     const response = await fetch(`${API_BASE}/purchases/packages`);
     const data = await response.json();
@@ -59,7 +54,6 @@ async function main() {
     });
   });
 
-  // Test 3: Get Courses (No Auth - should work)
   await test('Get Courses (No Auth)', async () => {
     const response = await fetch(`${API_BASE}/courses`);
     const data = await response.json();
@@ -71,7 +65,6 @@ async function main() {
     }
     log(`   Found ${data.data.length} courses`);
     
-    // Check if courses have isLocked property
     const hasLockedProperty = data.data.every(course => 'isLocked' in course);
     if (!hasLockedProperty) {
       throw new Error('Expected all courses to have isLocked property');
@@ -79,7 +72,6 @@ async function main() {
     log(`   All courses have isLocked property: ✅`);
   });
 
-  // Test 4: Register a test user
   let testUserToken = null;
   let testUserId = null;
   
@@ -106,7 +98,6 @@ async function main() {
     log(`   Token received: ${testUserToken ? 'Yes' : 'No'}`);
   });
 
-  // Test 5: Get Courses with Auth (should show locked status)
   await test('Get Courses (With Auth - Beginner User)', async () => {
     if (!testUserToken) {
       throw new Error('No token available');
@@ -121,7 +112,6 @@ async function main() {
       throw new Error(`Expected success, got ${data.success}`);
     }
     
-    // Check cybersecurity courses
     const cyberCourses = data.data.filter(c => c.category === 'cybersecurity');
     log(`   Found ${cyberCourses.length} cybersecurity courses`);
     
@@ -131,7 +121,6 @@ async function main() {
     });
   });
 
-  // Test 6: Purchase a package
   await test('Purchase Beginner Package', async () => {
     if (!testUserToken) {
       throw new Error('No token available');
@@ -155,7 +144,6 @@ async function main() {
     log(`   Transaction ID: ${data.data.transactionId}`);
   });
 
-  // Test 7: Get User Entitlements
   await test('Get User Entitlements', async () => {
     if (!testUserToken) {
       throw new Error('No token available');
@@ -178,7 +166,6 @@ async function main() {
     });
   });
 
-  // Test 8: Get Courses After Purchase (should show unlocked)
   await test('Get Courses After Purchase', async () => {
     if (!testUserToken) {
       throw new Error('No token available');
@@ -204,7 +191,6 @@ async function main() {
     }
   });
 
-  // Test 9: Check if modules have locked status
   await test('Check Module Lock Status', async () => {
     if (!testUserToken) {
       throw new Error('No token available');
@@ -238,7 +224,6 @@ async function main() {
     }
   });
 
-  // Summary
   log('\n' + '='.repeat(50), blue);
   log('📊 TEST SUMMARY', blue);
   log('='.repeat(50), blue);

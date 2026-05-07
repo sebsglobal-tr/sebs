@@ -1,10 +1,7 @@
-// Time Tracker Utility
-// Tracks time spent on modules and simulations
 
 window.TimeTracker = {
     trackers: {}, // Active trackers
     
-    // Start tracking time for a module
     start: function(moduleName, moduleId = null) {
         const trackerId = moduleId || moduleName;
         
@@ -16,7 +13,6 @@ window.TimeTracker = {
                 intervalId: null
             };
             
-            // Update every minute
             this.trackers[trackerId].intervalId = setInterval(() => {
                 this.saveTime(trackerId);
             }, 60000); // Every minute
@@ -25,29 +21,24 @@ window.TimeTracker = {
         }
     },
     
-    // Stop tracking time
     stop: function(moduleName, moduleId = null) {
         const trackerId = moduleId || moduleName;
         
         if (this.trackers[trackerId]) {
             const tracker = this.trackers[trackerId];
             
-            // Clear interval
             if (tracker.intervalId) {
                 clearInterval(tracker.intervalId);
             }
             
-            // Final save
             this.saveTime(trackerId, true);
             
-            // Remove tracker
             delete this.trackers[trackerId];
             
             console.log(`⏱️ Stopped tracking: ${moduleName}`);
         }
     },
     
-    // Save time to backend and localStorage
     saveTime: async function(trackerId, isFinal = false) {
         const tracker = this.trackers[trackerId];
         if (!tracker) return;
@@ -72,9 +63,7 @@ window.TimeTracker = {
             savedProgress.modules[tracker.moduleName].lastUpdated = new Date().toISOString();
             localStorage.setItem(storageKey, JSON.stringify(savedProgress));
             
-            // Save to backend
             try {
-                // Get moduleId from moduleName if not available
                 let moduleId = tracker.moduleId;
                 
                 if (!moduleId && window.getModuleIdFromName) {
@@ -102,14 +91,12 @@ window.TimeTracker = {
                 console.error('❌ Failed to save time to backend:', error);
             }
             
-            // Reset start time for next interval
             if (!isFinal) {
                 tracker.startTime = Date.now();
             }
         }
     },
     
-    // Get total time for a module
     getTotalTime: function(moduleName) {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const isVerified = localStorage.getItem('isVerified');
@@ -129,26 +116,20 @@ window.TimeTracker = {
     }
 };
 
-// Auto-start tracking when page loads (if module detected)
 window.addEventListener('load', function() {
-    // Check if we're on a module page
     const moduleTitle = document.querySelector('h1')?.textContent || 
                         document.querySelector('.module-title')?.textContent;
     
     if (moduleTitle && moduleTitle !== 'Ana Sayfa') {
-        // Try to extract module name
         const moduleName = moduleTitle.trim();
         
-        // Start tracking
         if (window.TimeTracker) {
             window.TimeTracker.start(moduleName);
         }
     }
 });
 
-// Auto-stop tracking when page unloads
 window.addEventListener('beforeunload', function() {
-    // Stop all active trackers
     if (window.TimeTracker) {
         Object.keys(window.TimeTracker.trackers).forEach(trackerId => {
             const tracker = window.TimeTracker.trackers[trackerId];

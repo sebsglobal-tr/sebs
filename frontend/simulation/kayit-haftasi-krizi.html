@@ -4,7 +4,6 @@
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <!-- Kök URL: root-relative yollar (/css/..., /js/...) her ortamda site köküne çözülür (SPA / Vercel). -->
     <base href="/">
     <title>Kayıt Haftası Krizi — Olay Analizi - SEBS Global</title>
     <meta name="description" content="SEBS platformunda kayıt haftasında güvenlik analisti olarak olayları doğru sınıflandırma simülasyonu.">
@@ -999,7 +998,6 @@
 
 </head>
 <body class="landing-site-body font-sans antialiased sebs-sim-immersive-body" data-sebs-chrome-layout="immersive" style="--sebs-sim-pad:52px">
-<!-- Marketing header bu sayfada gizli (simulation-chrome immersive); DOM’da tutulur (isteğe bağlı script uyumu) -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
@@ -1089,7 +1087,6 @@
     </header>
 
     <div class="main-container" id="mainContainer">
-        <!-- Sol Pencere: Olay Akışı -->
         <div class="window-frame timeline-frame">
             <div class="window-titlebar">
                 <div class="window-titlebar-left">
@@ -1111,7 +1108,6 @@
             </aside>
         </div>
 
-        <!-- Orta Pencere: Olay Detayı -->
         <div class="window-frame event-frame">
             <div class="window-titlebar">
                 <div class="window-titlebar-left">
@@ -1132,7 +1128,6 @@
             </section>
         </div>
 
-        <!-- Sağ Pencere: Karar Panel -->
         <div class="window-frame decision-frame">
             <div class="window-titlebar">
                 <div class="window-titlebar-left">
@@ -1155,7 +1150,6 @@
         </div>
     </div>
 
-    <!-- Exploit vs Payload Ekranı -->
     <div class="screen-overlay" id="screenExploitPayload">
         <div class="screen-card">
             <h2><i class="fas fa-puzzle-piece"></i> Exploit vs Payload — Kart Eşleştirme</h2>
@@ -1168,7 +1162,6 @@
         </div>
     </div>
 
-    <!-- Attack Chain Ekranı -->
     <div class="screen-overlay" id="screenAttackChain">
         <div class="screen-card">
             <h2><i class="fas fa-link"></i> Attack Chain — Sıralama</h2>
@@ -1179,7 +1172,6 @@
         </div>
     </div>
 
-    <!-- Final Rapor Ekranı -->
     <div class="screen-overlay" id="screenReport">
         <div class="screen-card">
             <h2><i class="fas fa-file-alt"></i> Final Rapor</h2>
@@ -1200,7 +1192,6 @@
         </div>
     </div>
 
-    <!-- Sonuç Analizi -->
     <div class="screen-overlay" id="screenResult">
         <div class="screen-card result-screen">
             <h2><i class="fas fa-chart-line"></i> Simülasyon Sonuç Analizi</h2>
@@ -1880,7 +1871,6 @@
             }
         });
     </script>
-<!-- Landing chrome footer (same as index.html) -->
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

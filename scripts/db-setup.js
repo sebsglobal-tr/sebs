@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-/**
- * SEBS Veritabanı Bağlantı Kurulum ve Test Scripti
- * Kullanım: DB_PASSWORD="sifreniz" node scripts/db-setup.js
- *   veya: node scripts/db-setup.js "postgresql://postgres.xxx:sifre@host:6543/postgres"
- */
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 require('dotenv').config({ path: require('path').resolve(__dirname, '../backend/.env') });

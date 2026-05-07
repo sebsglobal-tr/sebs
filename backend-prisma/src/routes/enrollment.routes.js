@@ -1,4 +1,3 @@
-// Enrollment Routes
 import express from 'express';
 import { authenticateSupabase as authenticate } from '../middleware/supabase-auth.middleware.js';
 import { prisma } from '../server.js';
@@ -36,7 +35,6 @@ router.post('/:courseId', async (req, res, next) => {
     const { courseId } = req.params;
     const userId = req.user.id;
 
-    // Get user with access level
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { accessLevel: true }
@@ -49,7 +47,6 @@ router.post('/:courseId', async (req, res, next) => {
       });
     }
 
-    // Get course to check level
     const course = await prisma.course.findUnique({
       where: { id: courseId }
     });
@@ -61,7 +58,6 @@ router.post('/:courseId', async (req, res, next) => {
       });
     }
 
-    // Check access level
     const levelHierarchy = { beginner: 1, intermediate: 2, advanced: 3 };
     const userLevel = levelHierarchy[user.accessLevel] || 0;
     const courseLevel = levelHierarchy[course.level] || 0;
@@ -73,7 +69,6 @@ router.post('/:courseId', async (req, res, next) => {
       });
     }
 
-    // Check if already enrolled
     const existing = await prisma.enrollment.findUnique({
       where: {
         userId_courseId: { userId, courseId }
@@ -87,7 +82,6 @@ router.post('/:courseId', async (req, res, next) => {
       });
     }
 
-    // Create enrollment
     const enrollment = await prisma.enrollment.create({
       data: { userId, courseId },
       include: {

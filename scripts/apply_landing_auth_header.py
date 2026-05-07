@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Replace legacy landing chrome header with auth-aware header (partial content)."""
 from __future__ import annotations
 

@@ -1,15 +1,12 @@
-// Veritabanı bağlantısını düzeltme ve test script'i
 require('dotenv').config();
 
 console.log('🔍 Veritabanı Bağlantı Bilgileri Kontrol Ediliyor...\n');
 
-// DATABASE_URL kontrolü
 if (process.env.DATABASE_URL) {
     const url = process.env.DATABASE_URL;
     console.log('✅ DATABASE_URL mevcut');
     console.log('📋 URL Formatı:', url.substring(0, 60) + '...');
     
-    // URL'i parse et
     try {
         const urlPattern = /postgresql:\/\/([^:]+):([^@]+)@([^\/]+)\/(.+)(\?.*)?/;
         const match = url.match(urlPattern);
@@ -23,7 +20,6 @@ if (process.env.DATABASE_URL) {
             console.log('   Veritabanı:', database.split('?')[0]);
             console.log('   Şifre URL Encoded:', password.includes('%') ? 'Evet ✅' : 'Hayır ⚠️');
             
-            // Şifrede özel karakterler varsa encoding gerekebilir
             const decodedPassword = decodeURIComponent(password);
             if (decodedPassword !== password) {
                 console.log('   Şifre decode edildi, uzunluk:', decodedPassword.length);
@@ -41,7 +37,6 @@ if (process.env.DATABASE_URL) {
 
 console.log('\n🔧 Bağlantı Testi Yapılıyor...\n');
 
-// Pool oluştur ve test et
 const { Pool } = require('pg');
 
 const createPool = () => {
@@ -97,7 +92,6 @@ async function testConnection() {
         console.log('📅 Sunucu Zamanı:', result.rows[0].now);
         console.log('🗄️  PostgreSQL:', result.rows[0].version.split(' ')[0], result.rows[0].version.split(' ')[1]);
         
-        // Tabloları kontrol et
         const tablesResult = await pool.query(`
             SELECT table_name 
             FROM information_schema.tables 

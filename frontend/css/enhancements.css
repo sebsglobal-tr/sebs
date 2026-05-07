@@ -1,9 +1,4 @@
-/* ============================================
-   SEBS GLOBAL - FRONTEND ENHANCEMENTS
-   Kurumsal, Interaktif, Göz Alıcı
-   ============================================ */
 
-/* Scroll Reveal - Görünürlük Animasyonları */
 .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -18,7 +13,6 @@
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 
-/* Hero Logo - SEBS logosu vurgusu */
 .hero-logo-wrap {
     margin-bottom: 1.5rem;
     animation: fadeInUp 0.8s ease 0.2s both;
@@ -38,7 +32,6 @@
     box-shadow: 0 12px 40px rgba(30, 64, 175, 0.25);
 }
 
-/* category-card button versiyonu (modules/simulations sayfaları) */
 .category-card-btn {
     cursor: pointer;
     border: none;
@@ -49,7 +42,6 @@
     outline: none;
 }
 
-/* Eğitim Alanları - Görselli Kartlar Grid */
 .category-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
@@ -108,7 +100,6 @@
     display: block;
 }
 
-/* Feature Card - Görselli */
 .feature-card-image {
     height: 140px;
     background-size: cover;
@@ -121,7 +112,6 @@
     transform: scale(1.08);
 }
 
-/* Simulation Card - Görselli */
 .simulation-card-image {
     height: 160px;
     background-size: cover;
@@ -134,7 +124,6 @@
     transform: scale(1.05);
 }
 
-/* Buton Ripple Etkisi */
 .btn-primary, .btn-signup, .tab-btn, .category-card {
     position: relative;
     overflow: hidden;
@@ -151,7 +140,6 @@
     to { transform: scale(2); opacity: 0; }
 }
 
-/* Tab Hover - Daha Belirgin */
 .tab-btn, .category-card {
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -159,7 +147,6 @@
     transform: scale(0.98);
 }
 
-/* CTA Section - Daha Etkileyici */
 .cta-content h2 {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(2rem, 4vw, 3rem);
@@ -173,7 +160,6 @@
     margin-bottom: 2rem;
 }
 
-/* Stat Card - Hover Pulse */
 .stat-card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -181,19 +167,16 @@
     color: #fff;
 }
 
-/* Smooth Scroll Link */
 a[href^="#"] {
     scroll-behavior: smooth;
 }
 
-/* Focus Visible - Erişilebilirlik */
 button:focus-visible,
 a:focus-visible {
     outline: 2px solid rgba(212, 168, 83, 0.8);
     outline-offset: 2px;
 }
 
-/* Loading State */
 .btn-primary.loading,
 .btn-signup.loading {
     pointer-events: none;
@@ -217,7 +200,6 @@ a:focus-visible {
     to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* Responsive - Eğitim kartları mobil */
 @media (max-width: 640px) {
     .category-cards-grid {
         grid-template-columns: 1fr;
@@ -242,7 +224,6 @@ a:focus-visible {
         margin-left: auto;
         margin-right: auto;
     }
-    /* Kart padding mobilde 1.5rem — üst görsel negatif marjin eşleşmeli (yatay taşma önleme) */
     .feature-card-image {
         margin: -1.5rem -1.5rem 1.25rem -1.5rem;
         height: 130px;
@@ -256,11 +237,7 @@ a:focus-visible {
     }
 }
 
-/* ============================================
-   MODULES & SIMULATIONS - Görselli Kartlar
-   ============================================ */
 
-/* simulation-card-detailed üst görsel */
 .simulation-card-detailed .card-image-top {
     height: 140px;
     background-size: cover;
@@ -273,14 +250,12 @@ a:focus-visible {
     transform: scale(1.05);
 }
 
-/* Kategori fallback - sadece data-image yoksa uygulanır */
 .simulation-card-detailed[data-category="cybersecurity"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80'); }
 .simulation-card-detailed[data-category="cloud"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80'); }
 .simulation-card-detailed[data-category="data-science"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80'); }
 .simulation-card-detailed[data-category="technology"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80'); }
 .simulation-card-detailed[data-category="business"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80'); }
 .simulation-card-detailed[data-category="personal"]:not([data-image]) .card-image-top { background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80'); }
-/* Başlıkla alakalı görseller - data-image ile (önce gelen fallback’i geçersiz kılar) */
 .simulation-card-detailed[data-image="cyber-intro"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80'); }
 .simulation-card-detailed[data-image="network"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80'); }
 .simulation-card-detailed[data-image="os-security"] .card-image-top { background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80'); }

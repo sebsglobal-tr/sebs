@@ -1,4 +1,3 @@
-// Test Supabase Database Connection
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import pg from 'pg';
@@ -9,7 +8,6 @@ dotenv.config();
 async function testConnection() {
   console.log('🔍 Testing Supabase Database Connection...\n');
 
-  // Test 1: Check environment variables
   console.log('1️⃣ Checking environment variables...');
   const hasDatabaseUrl = !!process.env.DATABASE_URL;
   const hasDirectUrl = !!process.env.DIRECT_URL;
@@ -22,7 +20,6 @@ async function testConnection() {
     return;
   }
 
-  // Test 2: Parse connection strings
   console.log('2️⃣ Parsing connection strings...');
   try {
     const directUrl = new URL(process.env.DIRECT_URL);
@@ -35,7 +32,6 @@ async function testConnection() {
     console.log(`   ❌ Error parsing DIRECT_URL: ${e.message}\n`);
   }
 
-  // Test 3: Test direct connection with pg
   console.log('3️⃣ Testing direct connection with pg library...');
   const pgClient = new Client({
     connectionString: process.env.DIRECT_URL,
@@ -62,7 +58,6 @@ async function testConnection() {
   }
   console.log('');
 
-  // Test 4: Test Prisma connection
   console.log('4️⃣ Testing Prisma connection...');
   const prisma = new PrismaClient({
     log: ['error'],

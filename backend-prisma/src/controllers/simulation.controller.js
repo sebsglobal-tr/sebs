@@ -1,7 +1,5 @@
-// Simulation Controller
 import { prisma } from '../server.js';
 
-// Save simulation completion
 export async function saveSimulationCompletion(req, res, next) {
   try {
     const body = req.body || {};
@@ -33,7 +31,6 @@ export async function saveSimulationCompletion(req, res, next) {
       });
     }
 
-    // Find or create module for this simulation
     let module = null;
     if (moduleName) {
       module = await prisma.module.findFirst({
@@ -43,7 +40,6 @@ export async function saveSimulationCompletion(req, res, next) {
 
     const seconds = Math.round(timeSpentSeconds ?? timeSpent ?? 0);
 
-    // Save simulation run (lessonId = modül eşlemesi; şema lesson_id kullanır)
     const simulationRun = await prisma.simulationRun.create({
       data: {
         userId,
@@ -76,7 +72,6 @@ export async function saveSimulationCompletion(req, res, next) {
   }
 }
 
-// Get user simulation progress
 export async function getUserSimulations(req, res, next) {
   try {
     const userId = req.user.id;

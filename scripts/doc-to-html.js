@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-/**
- * Converts Temel Network docx-extracted text to HTML
- * Reads from stdin or file, outputs HTML body content
- */
 const fs = require('fs');
 const path = process.argv[2] || '/tmp/temel-network-extracted.txt';
 

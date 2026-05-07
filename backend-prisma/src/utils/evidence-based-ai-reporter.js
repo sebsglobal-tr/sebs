@@ -1,33 +1,18 @@
-// Evidence-Based AI Reporter
-// Uses AI to interpret scores and provide recommendations
-// IMPORTANT: AI NEVER generates scores - only interprets existing scores
 
 import { generateAIReport } from './real-ai-service.js';
 
-/**
- * Generate evidence-based AI report
- * @param {Object} scoreData - Calculated scores from score-calculator
- * @param {Object} userData - User information
- * @param {Object} metadata - Additional metadata (modules, simulations, etc.)
- * @returns {Promise<Object>} AI-generated interpretation and recommendations
- */
 export async function generateEvidenceBasedReport(scoreData, userData, metadata = {}) {
-  // Prepare data for AI interpretation
   const interpretationData = prepareInterpretationData(scoreData, metadata);
   
-  // Generate AI interpretation (AI only interprets, never scores)
   const aiInterpretation = await generateAIInterpretation(interpretationData, userData);
   
-  // Structure the report
   const report = {
-    // Deterministic scores (from score-calculator)
     scores: {
       overall: scoreData.overallScore,
       breakdown: scoreData.topicBreakdown,
       summary: scoreData.summary
     },
     
-    // AI interpretation (only interpretation, no scoring)
     interpretation: {
       overall: aiInterpretation.overall || '',
       strengths: aiInterpretation.strengths || [],
@@ -36,7 +21,6 @@ export async function generateEvidenceBasedReport(scoreData, userData, metadata 
       recommendations: aiInterpretation.recommendations || []
     },
     
-    // Evidence-based analysis
     evidence: {
       quizCount: metadata.quizResults?.length || 0,
       simulationCount: metadata.simulations?.length || 0,
@@ -44,7 +28,6 @@ export async function generateEvidenceBasedReport(scoreData, userData, metadata 
       expertWeightsUsed: scoreData.expertWeights
     },
     
-    // Metadata
     generatedAt: new Date().toISOString(),
     version: '1.0.0'
   };
@@ -52,13 +35,9 @@ export async function generateEvidenceBasedReport(scoreData, userData, metadata 
   return report;
 }
 
-/**
- * Prepare data for AI interpretation
- */
 function prepareInterpretationData(scoreData, metadata) {
   const topics = Object.values(scoreData.topicBreakdown);
   
-  // Strong topics (score >= 80)
   const strongTopics = topics
     .filter(t => t.combinedScore >= 80)
     .map(t => ({
@@ -68,7 +47,6 @@ function prepareInterpretationData(scoreData, metadata) {
       simulationScore: t.simulationScore
     }));
   
-  // Weak topics (score < 60)
   const weakTopics = topics
     .filter(t => t.combinedScore < 60)
     .map(t => ({
@@ -79,7 +57,6 @@ function prepareInterpretationData(scoreData, metadata) {
       weight: t.weight // Expert importance
     }));
   
-  // Moderate topics (60-80)
   const moderateTopics = topics
     .filter(t => t.combinedScore >= 60 && t.combinedScore < 80)
     .map(t => ({
@@ -100,32 +77,22 @@ function prepareInterpretationData(scoreData, metadata) {
   };
 }
 
-/**
- * Generate AI interpretation of scores
- * AI only interprets, never generates scores
- */
 async function generateAIInterpretation(data, userData) {
   const prompt = buildInterpretationPrompt(data, userData);
   
   try {
-    // Use OpenAI if available, otherwise use fallback
     const aiResponse = await generateAIReport(userData, null, {
       scores: data,
       interpretationRequest: true
     });
     
-    // Parse AI response
     return parseAIInterpretation(aiResponse, data);
   } catch (error) {
     console.error('❌ AI Interpretation Error:', error.message);
-    // Fallback to rule-based interpretation
     return generateFallbackInterpretation(data);
   }
 }
 
-/**
- * Build prompt for AI interpretation
- */
 function buildInterpretationPrompt(data, userData) {
   let prompt = `Sen bir siber güvenlik eğitim analiz uzmanısın. Aşağıdaki KANITA DAYALI skorları yorumla ve öneriler sun.\n\n`;
   
@@ -183,12 +150,7 @@ function buildInterpretationPrompt(data, userData) {
   return prompt;
 }
 
-/**
- * Parse AI interpretation response
- */
 function parseAIInterpretation(aiResponse, data) {
-  // If AI response is structured, parse it
-  // Otherwise use fallback
   
   if (typeof aiResponse === 'string') {
     return {
@@ -200,7 +162,6 @@ function parseAIInterpretation(aiResponse, data) {
     };
   }
   
-  // If structured response
   return {
     overall: aiResponse.summary || '',
     strengths: aiResponse.strengths || [],
@@ -210,9 +171,6 @@ function parseAIInterpretation(aiResponse, data) {
   };
 }
 
-/**
- * Extract list items from text
- */
 function extractListItems(text, ...keywords) {
   const items = [];
   const lines = text.split('\n');
@@ -230,7 +188,6 @@ function extractListItems(text, ...keywords) {
         const item = line.replace(/^[-•\d.]+\s*/, '').trim();
         if (item) items.push(item);
       } else if (line.trim() === '') {
-        // End of section
         break;
       }
     }
@@ -239,9 +196,6 @@ function extractListItems(text, ...keywords) {
   return items.length > 0 ? items : ['Analiz tamamlandı.'];
 }
 
-/**
- * Extract section text
- */
 function extractSection(text, ...keywords) {
   const lines = text.split('\n');
   let inSection = false;
@@ -265,9 +219,6 @@ function extractSection(text, ...keywords) {
   return sectionLines.join(' ') || 'Öğrenme stili analizi tamamlandı.';
 }
 
-/**
- * Generate fallback interpretation (rule-based)
- */
 function generateFallbackInterpretation(data) {
   const overallScore = Math.round(data.overallScore * 100);
   
@@ -307,18 +258,12 @@ function generateFallbackInterpretation(data) {
   };
 }
 
-/**
- * Calculate average quiz score
- */
 function calculateAverageQuizScore(quizResults) {
   if (!quizResults || quizResults.length === 0) return 0;
   const sum = quizResults.reduce((acc, q) => acc + (q.score || 0), 0);
   return Math.round(sum / quizResults.length);
 }
 
-/**
- * Calculate average simulation score
- */
 function calculateAverageSimulationScore(simulations) {
   if (!simulations || simulations.length === 0) return 0;
   const sum = simulations.reduce((acc, s) => acc + (s.score || 0), 0);

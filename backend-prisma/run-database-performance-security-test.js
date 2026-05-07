@@ -1,7 +1,3 @@
-/**
- * Kapsamlı Veritabanı Performans ve Güvenlik Testi
- * Database Performance & Security Test Suite
- */
 
 import 'dotenv/config';
 import dotenv from 'dotenv';
@@ -12,7 +8,6 @@ import path from 'path';
 
 dotenv.config();
 
-// Test sonuçları
 const testResults = {
   performance: {
     queryTimes: [],
@@ -42,7 +37,6 @@ const testResults = {
 
 let dbClient;
 
-// Helper function to execute raw SQL queries
 async function executeQuery(query, params = []) {
   if (!dbClient) {
     throw new Error('Database client not connected');
@@ -53,7 +47,6 @@ async function executeQuery(query, params = []) {
 
 async function connectDatabase() {
   try {
-    // Prioritize DIRECT_URL for raw queries
     const databaseUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
     
     if (!databaseUrl) {
@@ -65,7 +58,6 @@ async function connectDatabase() {
     console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? '✅ Mevcut' : '❌ Yok'}`);
     console.log(`   Using: ${process.env.DIRECT_URL ? 'DIRECT_URL (recommended)' : 'DATABASE_URL'}`);
 
-    // Use pg Client directly with connection string
     dbClient = new Client({
       connectionString: databaseUrl,
       ssl: {
@@ -76,12 +68,10 @@ async function connectDatabase() {
     await dbClient.connect();
     console.log('✅ Database connection established');
     
-    // Extract host for display
     try {
       const url = new URL(databaseUrl);
       console.log(`   Host: ${url.hostname}:${url.port}`);
     } catch (e) {
-      // URL parsing failed, that's OK
     }
   } catch (error) {
     console.error('\n❌ VERİTABANI BAĞLANTI HATASI!');
@@ -110,9 +100,6 @@ async function disconnectDatabase() {
   }
 }
 
-// ============================================
-// PERFORMANS TESTLERİ
-// ============================================
 
 async function testQueryPerformance() {
   console.log('\n📊 PERFORMANS TESTLERİ BAŞLATILIYOR...\n');
@@ -203,7 +190,6 @@ async function testQueryPerformance() {
         status: executionTime < 100 ? 'PASS' : executionTime < 500 ? 'WARNING' : 'FAIL'
       });
 
-      // İlk sorgu daha yavaş olabilir (cold start), bu yüzden threshold'ları ayarlıyoruz
       const statusIcon = executionTime < 200 ? '✅' : executionTime < 500 ? '⚠️' : '❌';
       console.log(`${statusIcon} ${test.name}: ${executionTime}ms (${rowCount} rows)`);
 
@@ -220,7 +206,6 @@ async function testQueryPerformance() {
           recommendation: 'Query performansı kabul edilebilir seviyede - gerektiğinde optimize edilebilir'
         });
       } else {
-        // 200ms altındaki sorgular başarılı kabul ediliyor
         testResults.summary.passed++;
       }
 
@@ -240,7 +225,6 @@ async function testIndexUsage() {
   console.log('-'.repeat(70));
 
   try {
-    // Unused indexes (PRIMARY KEY ve UNIQUE constraint'leri hariç)
     const unusedIndexes = await executeQuery(`
       SELECT 
         schemaname,
@@ -291,7 +275,6 @@ async function testIndexUsage() {
       console.log('   ℹ️  PRIMARY KEY ve UNIQUE constraint index\'leri korunuyor (normal)');
     }
 
-    // Most used indexes
     const usedIndexes = await executeQuery(`
       SELECT 
         schemaname,
@@ -321,7 +304,6 @@ async function testIndexUsage() {
       });
     });
 
-    // Missing indexes on foreign keys
     const missingFKIndexes = await executeQuery(`
       SELECT 
         tc.table_name,
@@ -367,7 +349,6 @@ async function testTableStatistics() {
   console.log('-'.repeat(70));
 
   try {
-    // Table sizes and row counts
     const tableStats = await executeQuery(`
       SELECT 
         schemaname,
@@ -435,9 +416,6 @@ async function testTableStatistics() {
   }
 }
 
-// ============================================
-// GÜVENLİK TESTLERİ
-// ============================================
 
 async function testRLSPolicies() {
   console.log('\n🔒 GÜVENLİK TESTLERİ BAŞLATILIYOR...\n');
@@ -446,7 +424,6 @@ async function testRLSPolicies() {
   console.log('-'.repeat(70));
 
   try {
-    // Check which tables have RLS enabled
     const rlsTables = await executeQuery(`
       SELECT 
         schemaname,
@@ -484,7 +461,6 @@ async function testRLSPolicies() {
           });
         }
 
-        // Check if policies exist
         if (tableInfo.rls_enabled) {
           const policies = await executeQuery(`
             SELECT 
@@ -527,7 +503,6 @@ async function testPasswordSecurity() {
   console.log('-'.repeat(70));
 
   try {
-    // Check password column type and constraints
     const passwordColumn = await executeQuery(`
       SELECT 
         column_name,
@@ -544,7 +519,6 @@ async function testPasswordSecurity() {
       const col = passwordColumn[0];
       console.log(`✅ Password kolonu bulundu: ${col.column_name} (${col.data_type})`);
 
-      // Check if it's properly named (should be password_hash, not password)
       if (col.column_name === 'password') {
         testResults.security.issues.push({
           severity: 'HIGH',
@@ -553,7 +527,6 @@ async function testPasswordSecurity() {
         });
       }
 
-      // Sample password hashes to check format
       const sampleHashes = await executeQuery(`
         SELECT password_hash
         FROM users
@@ -564,7 +537,6 @@ async function testPasswordSecurity() {
       let validBcryptCount = 0;
       sampleHashes.forEach(row => {
         const hash = row.password_hash;
-        // Bcrypt hashes start with $2a$, $2b$, or $2y$
         if (hash && /^\$2[aby]\$/.test(hash)) {
           validBcryptCount++;
         }
@@ -609,9 +581,7 @@ async function testSQLInjectionProtection() {
   console.log('\n🛡️  SQL INJECTION KORUMASI\n');
   console.log('-'.repeat(70));
 
-  // This is a code-level check, but we can verify database functions
   try {
-    // Check for functions with potential SQL injection risks
     const functions = await executeQuery(`
       SELECT 
         routine_name,
@@ -627,9 +597,7 @@ async function testSQLInjectionProtection() {
     let vulnerableFunctions = 0;
     functions.forEach(func => {
       const definition = func.routine_definition || '';
-      // Check for dynamic SQL without proper escaping
       if (definition.includes('EXECUTE') && definition.includes('format')) {
-        // format() with %I is safe, but let's check
         if (!definition.includes('%I') && !definition.includes('%L')) {
           vulnerableFunctions++;
           console.log(`   ⚠️  ${func.routine_name}: Dynamic SQL kullanıyor`);
@@ -664,7 +632,6 @@ async function testAccessControl() {
   console.log('-'.repeat(70));
 
   try {
-    // Check for overly permissive policies
     const policies = await executeQuery(`
       SELECT 
         schemaname,
@@ -684,7 +651,6 @@ async function testAccessControl() {
 
     let permissiveCount = 0;
     policies.forEach(policy => {
-      // Check for policies that allow all (qual = 'true' or with_check = 'true')
       if (policy.qual === '(true)' || policy.with_check === '(true)') {
         permissiveCount++;
         console.log(`   ⚠️  ${policy.tablename}.${policy.policyname}: Çok izin verici (qual: ${policy.qual})`);
@@ -714,15 +680,11 @@ async function testAccessControl() {
   }
 }
 
-// ============================================
-// RAPOR OLUŞTURMA
-// ============================================
 
 function generateRecommendations() {
   console.log('\n💡 ÖNERİLER\n');
   console.log('-'.repeat(70));
 
-  // Performance recommendations
   const slowQueries = testResults.performance.queryTimes.filter(q => q.executionTime >= 500);
   if (slowQueries.length > 0) {
     testResults.performance.recommendations.push({
@@ -739,7 +701,6 @@ function generateRecommendations() {
     });
   }
 
-  // Security recommendations
   const disabledRLS = testResults.security.rlsPolicies.filter(p => !p.enabled);
   if (disabledRLS.length > 0) {
     testResults.security.recommendations.push({
@@ -748,7 +709,6 @@ function generateRecommendations() {
     });
   }
 
-  // Print recommendations
   [...testResults.performance.recommendations, ...testResults.security.recommendations]
     .sort((a, b) => {
       const priorityOrder = { HIGH: 0, MEDIUM: 1, LOW: 2 };
@@ -764,7 +724,6 @@ function generateReport() {
   testResults.summary.endTime = new Date();
   testResults.summary.duration = testResults.summary.endTime - testResults.summary.startTime;
 
-  // Count tests
   testResults.summary.totalTests = 
     testResults.performance.queryTimes.length +
     testResults.performance.indexUsage.length +
@@ -774,7 +733,6 @@ function generateReport() {
     testResults.security.sqlInjection.length +
     testResults.security.accessControl.length;
 
-  // Count results
   testResults.performance.queryTimes.forEach(q => {
     if (q.status === 'PASS') testResults.summary.passed++;
     else if (q.status === 'FAIL') testResults.summary.failed++;
@@ -823,15 +781,11 @@ function generateReport() {
     console.log(`\n✅ Hiç sorun tespit edilmedi!`);
   }
 
-  // Save JSON report
   const reportPath = path.join(process.cwd(), 'database-test-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(testResults, null, 2));
   console.log(`\n📄 Detaylı rapor kaydedildi: ${reportPath}`);
 }
 
-// ============================================
-// ANA FONKSİYON
-// ============================================
 
 async function runTests() {
   try {
@@ -840,18 +794,15 @@ async function runTests() {
 
     await connectDatabase();
 
-    // Performance tests
     await testQueryPerformance();
     await testIndexUsage();
     await testTableStatistics();
 
-    // Security tests
     await testRLSPolicies();
     await testPasswordSecurity();
     await testSQLInjectionProtection();
     await testAccessControl();
 
-    // Generate recommendations and report
     generateRecommendations();
     generateReport();
 
@@ -865,5 +816,4 @@ async function runTests() {
   }
 }
 
-// Run tests
 runTests();

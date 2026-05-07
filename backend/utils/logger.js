@@ -1,10 +1,7 @@
-// Production-safe Backend Logger
-// Environment-aware logging for Node.js backend
 
 const path = require('path');
 const fs = require('fs');
 
-// Ensure logs directory exists
 const logsDir = path.join(__dirname, '../logs');
 if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true });
@@ -13,7 +10,6 @@ if (!fs.existsSync(logsDir)) {
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Log levels
 const LEVELS = {
     ERROR: 0,
     WARN: 1,
@@ -21,10 +17,8 @@ const LEVELS = {
     DEBUG: 3
 };
 
-// Current log level (production: INFO, development: DEBUG)
 const currentLogLevel = isProduction ? LEVELS.INFO : LEVELS.DEBUG;
 
-// Format log message
 function formatMessage(level, message, ...args) {
     const timestamp = new Date().toISOString();
     const levelStr = level.toUpperCase().padEnd(5);
@@ -32,7 +26,6 @@ function formatMessage(level, message, ...args) {
     return `[${timestamp}] [${levelStr}] ${message}${formattedArgs}`;
 }
 
-// Write to log file (production only)
 function writeToFile(level, message, ...args) {
     if (!isProduction) return;
     
@@ -41,12 +34,10 @@ function writeToFile(level, message, ...args) {
         const logMessage = formatMessage(level, message, ...args) + '\n';
         fs.appendFileSync(logFile, logMessage, { encoding: 'utf8' });
     } catch (error) {
-        // Silently fail if log file write fails
         console.error('[LOGGER ERROR]', error.message);
     }
 }
 
-// Logger object
 const logger = {
     error: function(message, ...args) {
         if (currentLogLevel >= LEVELS.ERROR) {
@@ -76,11 +67,9 @@ const logger = {
         if (currentLogLevel >= LEVELS.DEBUG && isDevelopment) {
             const formatted = formatMessage('debug', message, ...args);
             console.debug(formatted);
-            // Don't write debug logs to file in production
         }
     },
     
-    // Database query logger (separate for better tracking)
     db: {
         query: function(sql, params) {
             if (isDevelopment) {
@@ -92,7 +81,6 @@ const logger = {
         }
     },
     
-    // HTTP request logger
     http: {
         request: function(method, path, ip) {
             logger.info(`HTTP ${method} ${path}`, ip ? `from ${ip}` : '');

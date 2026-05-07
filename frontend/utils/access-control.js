@@ -1,13 +1,7 @@
-/**
- * Access Control Utility
- * Controls module and simulation access based on user's purchased access level from database
- */
 
-// Prevent multiple script loads
 if (typeof window.AccessControlLoaded === 'undefined') {
     window.AccessControlLoaded = true;
 
-// Cache for user purchases
 let userPurchasesCache = null;
 let purchasesCacheTime = 0;
 let userMeCache = null;
@@ -15,7 +9,6 @@ let userMeCacheTime = 0;
 let userMePromise = null;
 const PURCHASES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-/** Supabase oturumu bazen yalnızca sb-*-auth-token içinde; API ile uyum için */
 function getBearerTokenFromStorage() {
     let token = localStorage.getItem('authToken');
     if (token) return token;
@@ -35,7 +28,6 @@ function getBearerTokenFromStorage() {
             }
         }
     } catch (e) {
-        /* ignore */
     }
     return null;
 }
@@ -46,15 +38,10 @@ function levelRank(level) {
     return order[k] != null ? order[k] : 0;
 }
 
-/** Kullanıcı erişim seviyesi, gereken seviyeyi karşılıyor mu (beginner < intermediate < advanced) */
 function userMeetsRequiredLevel(userLevel, requiredLevel) {
     return levelRank(userLevel) >= levelRank(requiredLevel);
 }
 
-/**
- * Get user purchases from API (with caching)
- * @returns {Promise<Array>} Array of purchases
- */
 async function fetchUserPurchases() {
     const now = Date.now();
     if (userPurchasesCache && (now - purchasesCacheTime) < PURCHASES_CACHE_DURATION) {
@@ -76,10 +63,6 @@ async function fetchUserPurchases() {
     }
 }
 
-/**
- * Get user data from API (with caching)
- * @returns {Promise<object|null>} User data
- */
 async function fetchUserMe() {
     const now = Date.now();
     if (userMeCache && (now - userMeCacheTime) < PURCHASES_CACHE_DURATION) {
@@ -128,10 +111,6 @@ async function fetchUserMe() {
     return userMePromise;
 }
 
-/**
- * Get user access level from database (NO localStorage fallback)
- * @returns {Promise<string>} Access level: 'beginner', 'intermediate', or 'advanced'
- */
 async function getUserAccessLevel() {
     try {
         const user = await fetchUserMe();
@@ -145,13 +124,6 @@ async function getUserAccessLevel() {
     return 'beginner';
 }
 
-/**
- * Check if user has access to a specific level in a category
- * @param {string} requiredLevel - Required level: 'beginner', 'intermediate', or 'advanced'
- * @param {string} category - Category: 'cybersecurity', 'cloud', 'data-science' (optional)
- * @returns {Promise<boolean>} True if user has access
- */
-// Tam erişim e-postası: bu hesap her zaman tüm modül/simülasyona erişir
 const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
 
 async function hasAccess(requiredLevel, category = null) {
@@ -167,13 +139,11 @@ async function hasAccess(requiredLevel, category = null) {
 
     const purchases = await fetchUserPurchases();
 
-    // Satın alma yok: ücretsiz/varsayılan erişim seviyesi (API'den veya 'beginner')
     if (purchases.length === 0) {
         const userLevel = await getUserAccessLevel();
         return userMeetsRequiredLevel(userLevel, requiredLevel);
     }
 
-    // If category is specified, check purchases for that category
     if (category) {
         const categoryPurchase = purchases.find(p => 
             p.category === category && p.level === requiredLevel
@@ -181,7 +151,6 @@ async function hasAccess(requiredLevel, category = null) {
         if (categoryPurchase) {
             return true;
         }
-        // Paket tam eşleşmezse profil seviyesi ile dene (ör. yükseltilmiş erişim)
         const userLevel = await getUserAccessLevel();
         return userMeetsRequiredLevel(userLevel, requiredLevel);
     }
@@ -198,15 +167,8 @@ async function hasAccess(requiredLevel, category = null) {
     return userMeetsRequiredLevel(userLevel, requiredLevel);
 }
 
-/**
- * Get module level from module data or URL
- * @param {string} moduleName - Module name or identifier
- * @returns {string} Module level
- */
 function getModuleLevel(moduleName) {
-    // Map module names to levels (cybersecurity modules)
     const moduleLevels = {
-        // Beginner
         'guncel-siber-guvenlige-giris': 'beginner',
         'temel-siber-guvenlik': 'beginner',
         'temel-network-egitimi': 'beginner',
@@ -215,7 +177,6 @@ function getModuleLevel(moduleName) {
         'temel-kriptografi': 'beginner',
         'sosyal-muhendislik-giris': 'beginner',
         
-        // Intermediate
         'network-guvenligi': 'intermediate',
         'web-uygulama-guvenligi': 'intermediate',
         'malware-analizi': 'intermediate',
@@ -223,7 +184,6 @@ function getModuleLevel(moduleName) {
         'isletim-sistemi-guvenligi-ileri': 'intermediate',
         'temel-cloud-security': 'intermediate',
         
-        // Advanced
         'ileri-malware-analizi': 'advanced',
         'incident-response': 'advanced',
         'ileri-kriptografi': 'advanced',
@@ -232,25 +192,16 @@ function getModuleLevel(moduleName) {
         'threat-hunting': 'advanced'
     };
 
-    // Try to find in map
     for (const [key, level] of Object.entries(moduleLevels)) {
         if (moduleName.toLowerCase().includes(key)) {
             return level;
         }
     }
 
-    // Default to beginner if not found
     return 'beginner';
 }
 
-/**
- * Check if user can access a module
- * @param {string} moduleNameOrLevel - Module name or level ('beginner', 'intermediate', 'advanced')
- * @param {string} category - Category (optional, defaults to 'cybersecurity')
- * @returns {Promise<object>} { hasAccess: boolean, message: string }
- */
 async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') {
-    // If moduleNameOrLevel is already a level, use it directly
     let moduleLevel = moduleNameOrLevel;
     if (!['beginner', 'intermediate', 'advanced'].includes(moduleNameOrLevel)) {
         moduleLevel = getModuleLevel(moduleNameOrLevel);
@@ -283,14 +234,7 @@ async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') 
     };
 }
 
-/**
- * Check if user can access a simulation
- * @param {string} simulationName - Simulation name or identifier
- * @param {string} category - Category (optional, defaults to 'cybersecurity')
- * @returns {Promise<object>} { hasAccess: boolean, message: string }
- */
 async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersecurity') {
-    // Kartlardan gelen 'beginner' | 'intermediate' | 'advanced' doğrudan kullanılır; aksi halde isimden seviye çıkarılır
     let simulationLevel;
     const raw = String(simulationNameOrLevel || '').toLowerCase();
     if (['beginner', 'intermediate', 'advanced'].includes(raw)) {
@@ -319,10 +263,6 @@ async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersec
     };
 }
 
-/**
- * Show access denied modal
- * @param {string} message - Custom message
- */
 function showAccessDeniedModal(message = '') {
     const modalHTML = `
         <div id="accessDeniedModal" style="
@@ -410,7 +350,6 @@ function showAccessDeniedModal(message = '') {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
-// Export for use in modules
 window.AccessControl = {
     getUserAccessLevel,
     hasAccess,

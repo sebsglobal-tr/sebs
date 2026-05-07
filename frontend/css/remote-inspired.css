@@ -1,7 +1,3 @@
-/* ============================================
-   Remote.com–inspired light theme (SEBS içeriği aynı)
-   Yalnızca html:not([data-theme="dark"]) — gece modu mevcut stilleri korur
-   ============================================ */
 
 html:not([data-theme="dark"]) {
     --remote-bg: #ffffff;
@@ -16,12 +12,10 @@ html:not([data-theme="dark"]) {
     --remote-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
     --remote-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
     --remote-shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.1);
-    /* Remote benzeri kart gölgesi (yumuşak, yayılı) */
     --remote-card-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
     --remote-card-shadow-hover: 0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08);
     --remote-radius: 16px;
     --remote-radius-pill: 9999px;
-    /* Eski değişken adlarıyla uyum */
     --bg-primary: #fafbfc;
     --bg-secondary: #f1f5f9;
     --bg-card: #ffffff;
@@ -53,7 +47,6 @@ html:not([data-theme="dark"]) body::after {
     opacity: 0 !important;
 }
 
-/* Üst navigasyon — Remote: beyaz, ince çizgi, gölgeli */
 html:not([data-theme="dark"]) .navbar {
     background: rgba(255, 255, 255, 0.92) !important;
     backdrop-filter: blur(16px) saturate(1.2);
@@ -153,7 +146,6 @@ html:not([data-theme="dark"]) .hamburger span {
     background: var(--remote-text);
 }
 
-/* Hero — fotoğraf yerine açık mesh + yumuşak geçiş (Remote ana sayfa hissi) */
 html:not([data-theme="dark"]) .hero-section::before,
 html:not([data-theme="dark"]) .hero::before {
     background:
@@ -210,7 +202,6 @@ html:not([data-theme="dark"]) .hero-logo-wrap img {
     border: 1px solid var(--remote-border);
 }
 
-/* Butonlar — dolu koyu + outline ikincil */
 html:not([data-theme="dark"]) .btn-primary {
     background: var(--remote-accent) !important;
     color: #ffffff !important;
@@ -241,7 +232,6 @@ html:not([data-theme="dark"]) .btn-secondary:hover {
     border-color: #cbd5e1 !important;
 }
 
-/* Bölüm başlıkları */
 html:not([data-theme="dark"]) .section-title {
     font-family: 'Inter', system-ui, sans-serif !important;
     font-weight: 700 !important;
@@ -253,7 +243,6 @@ html:not([data-theme="dark"]) .section-subtitle {
     color: var(--remote-text-secondary) !important;
 }
 
-/* Zemin alternansı */
 html:not([data-theme="dark"]) .education-areas {
     background: var(--remote-bg) !important;
 }
@@ -289,7 +278,6 @@ html:not([data-theme="dark"]) .stat-label {
     letter-spacing: 0.03em;
 }
 
-/* Kartlar — Remote: beyaz yüzey, 16px radius, üstte renk şeridi yok */
 html:not([data-theme="dark"]) .card::before,
 html:not([data-theme="dark"]) .feature-card::before,
 html:not([data-theme="dark"]) .simulation-card::before {
@@ -338,7 +326,6 @@ html:not([data-theme="dark"]) .simulation-description {
     line-height: 1.65;
 }
 
-/* Remote ürün kartı ikonları: açık gri kutu + koyu ikon */
 html:not([data-theme="dark"]) .feature-icon,
 html:not([data-theme="dark"]) .simulation-icon,
 html:not([data-theme="dark"]) .card-icon {
@@ -379,7 +366,6 @@ html:not([data-theme="dark"]) .difficulty-advanced {
     border: 1px solid #fecaca !important;
 }
 
-/* Eğitim alanı — Remote ürün döşemesi: çerçeve + altta beyaz metin bandı + ikon kutusu */
 html:not([data-theme="dark"]) .category-cards-grid {
     gap: 1.5rem;
 }
@@ -460,7 +446,6 @@ html:not([data-theme="dark"]) .category-card-content span {
     color: var(--remote-text) !important;
 }
 
-/* CTA */
 html:not([data-theme="dark"]) .cta-section {
     background: linear-gradient(180deg, #f1f5f9 0%, #e8ecf2 100%) !important;
     border-top: 1px solid var(--remote-border);
@@ -483,7 +468,6 @@ html:not([data-theme="dark"]) .cta-content p {
     text-shadow: none !important;
 }
 
-/* Footer — koyu şerit (Remote alt bilgi) */
 html:not([data-theme="dark"]) .footer {
     background: #0f172a !important;
     color: #e2e8f0;
@@ -543,7 +527,6 @@ html:not([data-theme="dark"]) .social-links a:hover {
     color: #ffffff !important;
 }
 
-/* Tab butonları — kategori görsel kartları (.category-card) hariç (arka planı ezmesin) */
 html:not([data-theme="dark"]) .tab-btn:not(.category-card) {
     background: #ffffff !important;
     border: 1px solid var(--remote-border) !important;
@@ -560,7 +543,6 @@ html:not([data-theme="dark"]) .tab-btn.active:not(.category-card) {
     color: #ffffff !important;
 }
 
-/* Modül / simülasyon detay kartları (modules.html, simulations.html) — Remote ürün kartı */
 html:not([data-theme="dark"]) .module-card-detailed,
 html:not([data-theme="dark"]) .simulation-card-detailed {
     background: #ffffff !important;
@@ -637,7 +619,6 @@ html:not([data-theme="dark"]) .module-topics li {
     color: var(--remote-text-secondary) !important;
 }
 
-/* Modül sayfası hero — açık mesh (Remote) */
 html:not([data-theme="dark"]) .modules-hero {
     background:
         radial-gradient(ellipse 100% 80% at 50% -20%, rgba(79, 70, 229, 0.09) 0%, transparent 50%),
@@ -681,7 +662,6 @@ html:not([data-theme="dark"]) .modules-page .simulation-categories {
     border-bottom-color: var(--remote-border) !important;
 }
 
-/* İstatistik — Remote rakam blokları */
 html:not([data-theme="dark"]) .stat-card {
     background: #ffffff !important;
     border: 1px solid var(--remote-border) !important;
@@ -704,7 +684,6 @@ html:not([data-theme="dark"]) .simulations-grid-section {
     background: var(--remote-bg) !important;
 }
 
-/* Mobil yan menü — açık tema çekmecesi */
 @media (max-width: 768px) {
     html:not([data-theme="dark"]) .nav-panel {
         background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
@@ -784,7 +763,6 @@ html:not([data-theme="dark"]) .simulations-grid-section {
     }
 }
 
-/* Formlar — iletişim, giriş, üye (açık yüzey) */
 html:not([data-theme="dark"]) .form-group label {
     color: var(--remote-text) !important;
 }
@@ -821,7 +799,6 @@ html:not([data-theme="dark"]) .checkbox-label {
     color: var(--remote-text-secondary) !important;
 }
 
-/* Sayfa gövdeleri — cam karanlık kartlar yerine açık kart */
 html:not([data-theme="dark"]) .contact-form-modern,
 html:not([data-theme="dark"]) .contact-card-modern,
 html:not([data-theme="dark"]) .faq-item,
@@ -850,7 +827,6 @@ html:not([data-theme="dark"]) .contact-stat-item-modern {
     border: 1px solid var(--remote-border) !important;
 }
 
-/* Giriş / üye kartı */
 html:not([data-theme="dark"]) .login-card {
     background: #ffffff !important;
     border: 1px solid var(--remote-border) !important;
@@ -858,7 +834,6 @@ html:not([data-theme="dark"]) .login-card {
     box-shadow: var(--remote-card-shadow) !important;
 }
 
-/* Dashboard ve diğer paneller */
 html:not([data-theme="dark"]) .dashboard-card,
 html:not([data-theme="dark"]) .stats-card,
 html:not([data-theme="dark"]) .progress-card,

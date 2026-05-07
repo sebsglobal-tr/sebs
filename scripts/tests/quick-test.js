@@ -52,7 +52,6 @@ async function runQuickTest() {
     
     let passed = 0, failed = 0;
 
-    // 1. Health Check
     try {
         const res = await apiCall('/api/health');
         if (res.status === 200 && res.data.status === 'healthy') {
@@ -65,7 +64,6 @@ async function runQuickTest() {
         return;
     }
 
-    // 2. Kayıt
     try {
         const res = await apiCall('/api/auth/register', 'POST', testUser);
         if (res.status === 201 && res.data.success) {
@@ -79,7 +77,6 @@ async function runQuickTest() {
         return;
     }
 
-    // 3. Email Doğrulama
     let emailVerified = false;
     if (verificationCode) {
         try {
@@ -99,10 +96,8 @@ async function runQuickTest() {
         }
     }
     
-    // Kısa bekleme (veritabanı güncellemesi için)
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // 4. Giriş
     try {
         const res = await apiCall('/api/auth/login', 'POST', {
             email: testUser.email,
@@ -122,7 +117,6 @@ async function runQuickTest() {
         return;
     }
 
-    // 5. Kurslar
     try {
         const res = await apiCall('/api/courses', 'GET', null, authToken);
         if (res.status === 200 && res.data.success) {
@@ -136,7 +130,6 @@ async function runQuickTest() {
         failed++;
     }
 
-    // 6. İlerleme
     try {
         const res = await apiCall('/api/progress/overview', 'GET', null, authToken);
         if (res.status === 200 && res.data.success) {
@@ -148,7 +141,6 @@ async function runQuickTest() {
         failed++;
     }
 
-    // 7. Sertifikalar
     let certificateId = null;
     try {
         const res = await apiCall('/api/certificates', 'GET', null, authToken);
@@ -165,7 +157,6 @@ async function runQuickTest() {
         failed++;
     }
 
-    // 8. Kursa Kayıt ve Modül Tamamlama (Sertifika için)
     try {
         const coursesRes = await apiCall('/api/courses', 'GET', null, authToken);
         if (coursesRes.status === 200 && coursesRes.data.success) {
@@ -173,14 +164,12 @@ async function runQuickTest() {
             if (courses.length > 0) {
                 const courseId = courses[0].id;
                 
-                // Kursa kayıt ol
                 const enrollRes = await apiCall(`/api/enrollments/${courseId}`, 'POST', {}, authToken);
                 if (enrollRes.status === 200 || enrollRes.status === 201) {
                     console.log('✅ Kursa Kayıt Ol');
                     passed++;
                 }
 
-                // Modül tamamla
                 if (courses[0].modules && courses[0].modules.length > 0) {
                     const moduleId = courses[0].modules[0].id;
                     const progressRes = await apiCall('/api/progress', 'POST', {
@@ -200,19 +189,16 @@ async function runQuickTest() {
         console.log('⚠️  Modül tamamlama atlandı');
     }
 
-    // 9. Sertifika Oluşturma Kontrolü
     try {
         const coursesRes = await apiCall('/api/courses', 'GET', null, authToken);
         if (coursesRes.status === 200 && coursesRes.data.success) {
             const courses = Array.isArray(coursesRes.data.data) ? coursesRes.data.data : (coursesRes.data.data?.courses || []);
             
-            // "Temel Siber Güvenlik" ve "Network Güvenliği" modüllerini tamamla
             const targetCourses = courses.filter(c => 
                 c.title === 'Temel Siber Güvenlik' || c.title === 'Network Güvenliği'
             );
             
             if (targetCourses.length > 0) {
-                // Tüm modülleri tamamla
                 for (const course of targetCourses) {
                     if (course.modules && course.modules.length > 0) {
                         for (const module of course.modules) {
@@ -226,10 +212,8 @@ async function runQuickTest() {
                     }
                 }
                 
-                // Kısa bekleme
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
-                // Category completion kontrolü (siber-guvenlik)
                 const checkRes = await apiCall('/api/certificates/check/siber-guvenlik', 'GET', null, authToken);
                 if (checkRes.status === 200 && checkRes.data.success) {
                     if (checkRes.data.data?.certificate) {
@@ -255,7 +239,6 @@ async function runQuickTest() {
         console.log('⚠️  Sertifika oluşturma testi atlandı: ' + e.message);
     }
 
-    // 10. AI Rapor Alma
     try {
         if (!certificateId) {
             const certRes = await apiCall('/api/certificates', 'GET', null, authToken);
@@ -286,7 +269,6 @@ async function runQuickTest() {
         console.log('⚠️  AI Rapor testi atlandı: ' + e.message);
     }
 
-    // 11. Simülasyon
     try {
         const simRes = await apiCall('/api/simulations', 'GET', null, authToken);
         if (simRes.status === 200 && simRes.data.success) {

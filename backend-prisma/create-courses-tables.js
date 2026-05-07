@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-/**
- * courses ve modules tablolarını oluşturur (yoksa)
- * Prisma schema ile uyumlu
- */
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

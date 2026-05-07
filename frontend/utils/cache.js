@@ -1,13 +1,7 @@
-/**
- * Redis Cache Utility
- * Provides caching for frequently accessed data
- * Reduces database load by 2-3x
- */
 
 let redisClient = null;
 let cacheEnabled = false;
 
-// Initialize Redis client (lazy loading)
 const initRedis = () => {
     if (redisClient) return redisClient;
     
@@ -43,7 +37,6 @@ const initRedis = () => {
             cacheEnabled = true;
         });
 
-        // Connect to Redis
         redisClient.connect().catch(err => {
             console.warn('⚠️  Redis connection failed, caching disabled:', err.message);
             cacheEnabled = false;
@@ -57,11 +50,6 @@ const initRedis = () => {
     }
 };
 
-/**
- * Get cached value
- * @param {string} key - Cache key
- * @returns {Promise<any|null>} Cached value or null
- */
 async function getCache(key) {
     if (!cacheEnabled) {
         try {
@@ -78,13 +66,6 @@ async function getCache(key) {
     return null;
 }
 
-/**
- * Set cache value
- * @param {string} key - Cache key
- * @param {any} value - Value to cache
- * @param {number} ttl - Time to live in seconds (default: 3600)
- * @returns {Promise<boolean>} Success status
- */
 async function setCache(key, value, ttl = 3600) {
     if (!cacheEnabled) {
         try {
@@ -101,11 +82,6 @@ async function setCache(key, value, ttl = 3600) {
     return false;
 }
 
-/**
- * Delete cache key
- * @param {string} key - Cache key
- * @returns {Promise<boolean>} Success status
- */
 async function deleteCache(key) {
     if (!cacheEnabled) {
         try {
@@ -122,10 +98,6 @@ async function deleteCache(key) {
     return false;
 }
 
-/**
- * Clear all cache (use with caution)
- * @returns {Promise<boolean>} Success status
- */
 async function clearCache() {
     if (!cacheEnabled) {
         try {
@@ -142,10 +114,6 @@ async function clearCache() {
     return false;
 }
 
-/**
- * Check if cache is enabled
- * @returns {boolean} Cache enabled status
- */
 function isCacheEnabled() {
     return cacheEnabled;
 }

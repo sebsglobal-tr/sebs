@@ -1,5 +1,3 @@
-// Direct test data creation script
-// Creates test user, progress, and certificate for demonstration
 
 import { PrismaClient } from '@prisma/client';
 
@@ -9,16 +7,13 @@ async function createTestData() {
     try {
         console.log('🚀 Creating test data...\n');
         
-        // 1. Create test user
         console.log('1️⃣ Creating test user...');
         
-        // Check if user exists
         let user = await prisma.user.findUnique({
             where: { email: 'testuser@sebs.com' }
         });
         
         if (!user) {
-            // Hash password using argon2 (from utils)
             const { hashPassword } = await import('./src/utils/password.js');
             const { generateULID } = await import('./src/utils/ulid.js');
             const passwordHash = await hashPassword('Test1234!');
@@ -40,10 +35,8 @@ async function createTestData() {
             console.log('ℹ️ User already exists:', user.email);
         }
         
-        // 2. Find or create modules for siber-guvenlik category
         console.log('\n2️⃣ Finding modules...');
         
-        // Find "Temel Siber Güvenlik" module
         const module = await prisma.module.findFirst({
             where: {
                 title: {
@@ -60,10 +53,8 @@ async function createTestData() {
             console.log('✅ Found module:', module.title);
         } else {
             console.log('⚠️ Module not found, using dummy ID');
-            // We'll need to create progress differently
         }
         
-        // 3. Create module progress (60% complete, not 100%)
         console.log('\n3️⃣ Creating module progress...');
         
         if (moduleId) {
@@ -111,7 +102,6 @@ async function createTestData() {
             console.log('✅ Progress created:', progress.id);
         }
         
-        // 4. Create simulation run with medium performance
         console.log('\n4️⃣ Creating simulation run...');
         
         if (moduleId) {
@@ -129,7 +119,6 @@ async function createTestData() {
             console.log('✅ Simulation run created:', simulation.id);
         }
         
-        // 5. Create certificate with test data
         console.log('\n5️⃣ Creating certificate...');
         
         const certificate = await prisma.certificate.create({
@@ -208,12 +197,10 @@ async function createTestData() {
         
         console.log('✅ Certificate created:', certificate.id);
         
-        // 6. Generate AI report
         console.log('\n6️⃣ Generating AI report...');
         
         const metadata = JSON.parse(certificate.metadata);
         
-        // Calculate report
         const report = {
             summary: `Bu sertifika ${Math.round(certificate.completionTime / 60)} saatte tamamlandı. ${metadata.modules?.length || 0} modül ve ${metadata.simulations?.length || 0} simülasyon başarıyla tamamlandı.`,
             strengths: [],
@@ -221,7 +208,6 @@ async function createTestData() {
             recommendations: []
         };
         
-        // Analyze based on avgScore
         if (metadata.avgScore >= 70 && metadata.avgScore < 80) {
             report.areasForImprovement.push('Başarı oranınız %' + metadata.avgScore + ' - İyileştirme için ek çalışma önerilir');
         } else if (metadata.avgScore < 70) {

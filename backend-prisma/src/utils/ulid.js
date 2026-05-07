@@ -1,4 +1,3 @@
-// ULID Generator for unique user publicId
 import { monotonicFactory } from 'ulid';
 
 const ulid = monotonicFactory();

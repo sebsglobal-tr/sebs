@@ -1,4 +1,3 @@
-/* Footer year and other lightweight shell helpers (pages without navigation.js). */
 (function () {
     'use strict';
     function setFooterYear() {
@@ -7,7 +6,6 @@
         });
     }
 
-    /** Gizli .content-section içindeki lazy img bazen bölüm açılınca yüklenmez; bölüm değişiminde dürt. */
     function nudgeLazyImagesInActiveSection() {
         if (!document.body.classList.contains('landing-site-body')) return;
         var sec = document.querySelector('.content-section.active');

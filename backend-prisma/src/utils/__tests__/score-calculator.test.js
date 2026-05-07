@@ -1,9 +1,7 @@
-// Test Score Calculator
 import { calculateWeightedScore } from '../score-calculator.js';
 
 console.log('🧪 Testing Score Calculator...\n');
 
-// Test 1: Basic score calculation
 console.log('Test 1: Basic score calculation with sample data');
 
 const userData = {
@@ -12,7 +10,6 @@ const userData = {
   lastName: 'User'
 };
 
-// Sample quiz results
 const quizResults = [
   { score: 85, moduleId: 'module-1', quizId: 'quiz-1' },
   { score: 90, moduleId: 'module-1', quizId: 'quiz-2' },
@@ -20,14 +17,12 @@ const quizResults = [
   { score: 80, moduleId: 'module-3', quizId: 'quiz-4' }
 ];
 
-// Sample simulation results
 const simulationResults = [
   { score: 88, simulationId: 'sim-1', simulationName: 'Network Security' },
   { score: 82, simulationId: 'sim-2', simulationName: 'Web App Security' },
   { score: 90, simulationId: 'sim-3', simulationName: 'Linux Basics' }
 ];
 
-// Sample time spent (in minutes per topic)
 const timeSpent = {
   1: 45,  // Network Fundamentals - optimal time
   2: 35,  // Protocols - good time
@@ -66,7 +61,6 @@ try {
   console.log(`    Weak Topics: ${result.summary.weakTopics.length}`);
   console.log(`    Average Topic Score: ${result.summary.averageTopicScore}%`);
   
-  // Validation
   if (result.overallScore >= 0 && result.overallScore <= 1) {
     console.log('\n  ✅ Overall score is in valid range (0-1)');
   } else {
@@ -86,7 +80,6 @@ try {
 
 console.log('\n');
 
-// Test 2: Empty data
 console.log('Test 2: Empty data handling');
 try {
   const emptyResult = calculateWeightedScore(userData, [], [], {});

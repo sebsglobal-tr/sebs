@@ -1,20 +1,13 @@
-// Evaluation Controller
-// Evidence-based evaluation using expert weights and AI interpretation
 
 import { prisma } from '../server.js';
 import { calculateWeightedScore } from '../utils/score-calculator.js';
 import { generateEvidenceBasedReport } from '../utils/evidence-based-ai-reporter.js';
 
-/**
- * Get evidence-based evaluation report for user
- * Calculates scores deterministically, then uses AI for interpretation
- */
 export async function getEvaluationReport(req, res, next) {
   try {
     const { publicId } = req.user;
     const { category } = req.query; // Optional: filter by category
 
-    // Get user
     const user = await prisma.user.findUnique({ where: { publicId } });
     if (!user) {
       return res.status(404).json({ 
@@ -23,7 +16,6 @@ export async function getEvaluationReport(req, res, next) {
       });
     }
 
-    // 1. Collect user data
     const userData = {
       id: user.id,
       firstName: user.firstName,
@@ -31,16 +23,12 @@ export async function getEvaluationReport(req, res, next) {
       email: user.email
     };
 
-    // 2. Get quiz results
     const quizResults = await getQuizResults(user.id, category);
     
-    // 3. Get simulation results
     const simulationResults = await getSimulationResults(user.id, category);
     
-    // 4. Get time spent data
     const timeSpent = await getTimeSpentData(user.id, category);
 
-    // 5. Calculate weighted scores (deterministic)
     const scoreData = calculateWeightedScore(
       userData,
       quizResults,
@@ -48,7 +36,6 @@ export async function getEvaluationReport(req, res, next) {
       timeSpent
     );
 
-    // 6. Prepare metadata for AI
     const metadata = {
       quizResults,
       simulations: simulationResults,
@@ -56,7 +43,6 @@ export async function getEvaluationReport(req, res, next) {
       modules: await getModuleProgress(user.id, category)
     };
 
-    // 7. Generate AI interpretation (AI only interprets, never scores)
     const report = await generateEvidenceBasedReport(scoreData, userData, metadata);
 
     res.json({
@@ -70,12 +56,8 @@ export async function getEvaluationReport(req, res, next) {
   }
 }
 
-/**
- * Get quiz results for user
- */
 async function getQuizResults(userId, category = null) {
   try {
-    // Get all module progress for user
     const moduleProgress = await prisma.moduleProgress.findMany({
       where: {
         userId,
@@ -98,7 +80,6 @@ async function getQuizResults(userId, category = null) {
 
     const quizResults = [];
 
-    // Extract quiz results from module progress metadata
     for (const progress of moduleProgress) {
       if (progress.lastStep) {
         try {
@@ -133,16 +114,12 @@ async function getQuizResults(userId, category = null) {
   }
 }
 
-/**
- * Get simulation results for user
- */
 async function getSimulationResults(userId, category = null) {
   try {
     const simulations = await prisma.simulationRun.findMany({
       where: {
         userId,
         ...(category && {
-          // TODO: Add category filter if simulations have category
         })
       },
       orderBy: {
@@ -174,9 +151,6 @@ async function getSimulationResults(userId, category = null) {
   }
 }
 
-/**
- * Get time spent data per topic/module
- */
 async function getTimeSpentData(userId, category = null) {
   try {
     const moduleProgress = await prisma.moduleProgress.findMany({
@@ -195,8 +169,6 @@ async function getTimeSpentData(userId, category = null) {
       }
     });
 
-    // Map time spent to topics (simplified - 1:1 mapping for now)
-    // TODO: Implement proper module-to-topic mapping
     const timeSpent = {};
     
     for (let i = 0; i < Math.min(moduleProgress.length, 10); i++) {
@@ -212,9 +184,6 @@ async function getTimeSpentData(userId, category = null) {
   }
 }
 
-/**
- * Get module progress summary
- */
 async function getModuleProgress(userId, category = null) {
   try {
     const progress = await prisma.moduleProgress.findMany({
@@ -251,9 +220,6 @@ async function getModuleProgress(userId, category = null) {
   }
 }
 
-/**
- * Calculate total time spent
- */
 function calculateTotalTime(timeSpent) {
   return Object.values(timeSpent).reduce((sum, time) => sum + (time || 0), 0);
 }

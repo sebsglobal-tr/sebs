@@ -1,4 +1,3 @@
-// Veritabanı bağlantı test script'i
 require('dotenv').config();
 const { Pool } = require('pg');
 
@@ -53,7 +52,6 @@ async function testConnection() {
         console.log('📅 Sunucu Zamanı:', result.rows[0].now);
         console.log('🗄️  PostgreSQL Versiyonu:', result.rows[0].version.split(' ')[0], result.rows[0].version.split(' ')[1]);
         
-        // Temel tabloları kontrol et
         const tablesResult = await pool.query(`
             SELECT table_name 
             FROM information_schema.tables 

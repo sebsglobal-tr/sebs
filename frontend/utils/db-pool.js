@@ -1,14 +1,7 @@
-/**
- * SEBS Veritabanı Pool Modülü
- * - Supabase ile uyumlu SSL
- * - Şifre URL encoding
- * - Tek merkezden yönetim
- */
 
 const { Pool } = require('pg');
 const path = require('path');
 
-// Root .env yükle (server.js ile aynı)
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 function getConnectionConfig() {
