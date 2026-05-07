@@ -6,67 +6,333 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <base href="/" />
   <title>SEBS Network Lab 1 - Küçük Ofis LAN/WAN</title>
-  <meta name="description" content="SEBS Network Lab 1: Küçük ofis LAN kurulumu, IP adresleme, gateway mantığı ve WAN bağlantısı." />
+  <meta name="description" content="SEBS Network Lab 1: Küçük ofis LAN kurulumu, IP adresleme, gateway ve WAN bağlantısı." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/saas-landing.css" />
   <style>
-    body { font-family: Inter, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
-    .wrap { max-width: 1040px; margin: 0 auto; padding: 24px; }
-    .card { background: #111c31; border: 1px solid #334155; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-    .title { font-size: 28px; margin: 0 0 10px; color: #fff; }
-    .muted { color: #94a3b8; line-height: 1.6; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .btn { border: none; border-radius: 10px; padding: 11px 14px; font-weight: 700; cursor: pointer; }
-    .btn-primary { background: #2563eb; color: #fff; }
-    .btn-secondary { background: #334155; color: #fff; }
-    .task { padding: 10px 12px; border: 1px solid #334155; border-radius: 10px; margin: 8px 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .topbar { height: 68px; border-bottom: 1px solid #334155; background: #111827; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+    .title { font-size: 18px; font-weight: 700; color: #fff; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .badge { border: 1px solid #475569; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #cbd5e1; }
+    .btn { border: 1px solid #475569; border-radius: 8px; background: #1e293b; color: #fff; padding: 8px 12px; font-weight: 600; cursor: pointer; }
+    .btn.primary { background: #2563eb; border-color: #2563eb; }
+    .layout { display: grid; grid-template-columns: 280px 1fr 330px; height: calc(100vh - 68px); }
+    .panel { border-right: 1px solid #334155; background: #111827; padding: 12px; overflow: auto; }
+    .right { border-right: none; border-left: 1px solid #334155; }
+    .group-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #93c5fd; margin: 8px 0; }
+    .device-item { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-bottom: 8px; cursor: grab; user-select: none; }
+    .device-item:hover { border-color: #3b82f6; }
+    .workspace-wrap { position: relative; overflow: hidden; background: radial-gradient(circle at 20% 0%, #172554 0%, #0f172a 55%); }
+    .workspace { position: absolute; inset: 0; }
+    .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(148,163,184,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.12) 1px, transparent 1px); background-size: 36px 36px; pointer-events: none; }
+    #linkLayer { position: absolute; inset: 0; pointer-events: none; }
+    .node { position: absolute; min-width: 88px; text-align: center; background: #1e293b; border: 2px solid #3b82f6; border-radius: 12px; padding: 8px; cursor: move; }
+    .node.selected { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.2); }
+    .node-type { font-size: 12px; font-weight: 700; color: #fff; }
+    .node-ip { font-size: 11px; color: #86efac; margin-top: 4px; }
+    .task { border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
+    .task.done { border-color: #16a34a; background: rgba(22,163,74,.15); color: #dcfce7; }
+    .intro { position: fixed; inset: 0; background: rgba(2,6,23,.88); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 30; }
+    .intro-card { max-width: 860px; width: 100%; border: 1px solid #334155; background: #0f172a; border-radius: 14px; padding: 20px; }
+    .intro-card h1 { margin: 0 0 10px; font-size: 28px; color: #fff; }
+    .intro-card p { color: #94a3b8; line-height: 1.6; }
+    .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+    .mini { background: #111827; border: 1px solid #334155; border-radius: 10px; padding: 12px; }
+    .mini h3 { margin: 0 0 6px; color: #bfdbfe; font-size: 15px; }
     .hidden { display: none; }
-    .pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #1d4ed8; color: #dbeafe; margin-bottom: 8px; }
-    @media (max-width: 860px) { .row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <span class="pill">Temel Network Simülasyonu</span>
-      <h1 class="title">SEBS Network Lab 1: Küçük Ofis Ağı Kurulumu ve WAN Bağlantısı</h1>
-      <p class="muted">
-        Bu senaryoda önce ofis içi LAN'ı kurar, sonra aynı ağı WAN'a bağlarsınız. Hedef; cihaz konumlandırma, IP adresleme,
-        gateway mantığı ve uzak ağ erişimini uygulamalı öğrenmektir.
-      </p>
-      <button class="btn btn-primary" id="startBtn">Simülasyonu Başlat</button>
-      <a href="/simulations.html" class="btn btn-secondary" style="text-decoration:none; display:inline-block; margin-left:8px;">Simülasyonlara Dön</a>
+  <div class="topbar">
+    <div class="title">SEBS Network Lab 1 · Küçük Ofis LAN/WAN</div>
+    <div class="top-actions">
+      <span class="badge" id="stageBadge">Aşama 1 / 2 · LAN</span>
+      <button class="btn" id="connectBtn">Bağlantı Modu</button>
+      <button class="btn" id="stageBtn">Aşama 2'ye Geç</button>
+      <button class="btn" id="testBtn">Test Et</button>
+      <button class="btn" id="resetBtn">Sıfırla</button>
     </div>
+  </div>
 
-    <div class="row hidden" id="simArea">
-      <div class="card">
-        <h2 style="margin-top:0;color:#fff;">Aşama 1 — LAN Kurulumu</h2>
-        <div class="task">1) 1 adet switch ekleyin</div>
-        <div class="task">2) 3 adet PC ekleyin</div>
-        <div class="task">3) 1 adet yazıcı ekleyin</div>
-        <div class="task">4) 1 adet yerel server ekleyin</div>
-        <div class="task">5) Tüm LAN cihazlarını switch'e bağlayın</div>
+  <div class="layout">
+    <aside class="panel">
+      <div class="group-title">Cihazlar (Sürükle Bırak)</div>
+      <div class="device-item" draggable="true" data-type="switch">Switch</div>
+      <div class="device-item" draggable="true" data-type="pc">PC</div>
+      <div class="device-item" draggable="true" data-type="printer">Yazıcı</div>
+      <div class="device-item" draggable="true" data-type="server">Yerel Server</div>
+      <div class="device-item" draggable="true" data-type="router">Şirket Router'ı</div>
+      <div class="device-item" draggable="true" data-type="isp">ISP / WAN Cloud</div>
+      <div class="device-item" draggable="true" data-type="remote-server">Uzak Sunucu</div>
+    </aside>
+
+    <main class="workspace-wrap">
+      <div class="workspace" id="workspace">
+        <svg id="linkLayer"></svg>
+        <div class="grid"></div>
       </div>
-      <div class="card">
-        <h2 style="margin-top:0;color:#fff;">Aşama 2 — WAN Bağlantısı</h2>
-        <div class="task">6) Şirket router'ı ekleyin</div>
-        <div class="task">7) ISP / WAN cloud ekleyin</div>
-        <div class="task">8) Uzak sunucu ekleyin</div>
-        <div class="task">9) LAN → Router → WAN → Uzak Sunucu zincirini kurun</div>
-        <div class="task">10) Gateway ve erişim testini tamamlayın</div>
+    </main>
+
+    <aside class="panel right">
+      <div class="group-title">Görevler</div>
+      <div class="task" data-task="1">1) 1 switch ekle</div>
+      <div class="task" data-task="2">2) 3 PC ekle</div>
+      <div class="task" data-task="3">3) 1 yazıcı ekle</div>
+      <div class="task" data-task="4">4) 1 yerel server ekle</div>
+      <div class="task" data-task="5">5) Tüm LAN cihazlarını switch'e bağla</div>
+      <div class="task" data-task="6">6) Router + ISP + uzak sunucu ekle</div>
+      <div class="task" data-task="7">7) Switch → Router → ISP → Uzak Sunucu zincirini kur</div>
+      <div class="task" data-task="8">8) Testi başarıyla geç</div>
+      <div class="group-title" style="margin-top:12px;">Eklenen Cihazlar</div>
+      <div id="deviceList" style="font-size:13px;color:#94a3b8;">Henüz cihaz eklenmedi.</div>
+    </aside>
+  </div>
+
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <h1>SEBS Network Lab 1: Küçük Ofis Ağı Kurulumu ve WAN Bağlantısı</h1>
+      <p>Önce küçük ofis LAN topolojisini kurun; ardından aynı ağ üstüne WAN katmanı ekleyin. Cihazları yerleştirip birbirine bağlayarak gateway ve yönlendirme mantığını uygulayın.</p>
+      <div class="twocol">
+        <div class="mini">
+          <h3>Aşama 1 - LAN</h3>
+          <p>Switch, 3 PC, yazıcı ve server ekle. Hepsini switch üzerinden yerel ağda konuştur.</p>
+        </div>
+        <div class="mini">
+          <h3>Aşama 2 - WAN</h3>
+          <p>Router, ISP ve uzak sunucu ekle. LAN'ı WAN'a çıkar, uzak sunucu erişimini doğrula.</p>
+        </div>
       </div>
+      <button class="btn primary" id="startBtn">Simülasyonu Başlat</button>
+      <a href="/simulations.html" class="btn" style="text-decoration:none;margin-left:6px;display:inline-block;">Simülasyonlara Dön</a>
     </div>
   </div>
 
   <script>
-    document.getElementById('startBtn').addEventListener('click', function () {
-      document.getElementById('simArea').classList.remove('hidden');
-      this.textContent = 'Senaryo Başlatıldı';
-      this.disabled = true;
-      this.style.opacity = '0.7';
+    const workspace = document.getElementById("workspace");
+    const linkLayer = document.getElementById("linkLayer");
+    const connectBtn = document.getElementById("connectBtn");
+    const stageBtn = document.getElementById("stageBtn");
+    const stageBadge = document.getElementById("stageBadge");
+    const testBtn = document.getElementById("testBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const deviceList = document.getElementById("deviceList");
+    const intro = document.getElementById("intro");
+
+    let devices = [];
+    let links = [];
+    let dragType = null;
+    let moving = null;
+    let stage = 1;
+    let connectMode = false;
+    let sourceNode = null;
+    let idSeed = 1;
+    const counters = { pc: 0, printer: 0, server: 0, switch: 0, router: 0, isp: 0, "remote-server": 0 };
+
+    const allowedByStage = {
+      1: ["switch", "pc", "printer", "server"],
+      2: ["switch", "pc", "printer", "server", "router", "isp", "remote-server"]
+    };
+
+    const label = {
+      "pc": "PC",
+      "printer": "Yazıcı",
+      "server": "Server",
+      "switch": "Switch",
+      "router": "Router",
+      "isp": "WAN",
+      "remote-server": "Uzak Server"
+    };
+
+    function genIp(type) {
+      counters[type] += 1;
+      if (type === "switch") return "192.168.10.2";
+      if (type === "router") return "192.168.10.1";
+      if (type === "pc") return `192.168.10.${100 + counters[type]}`;
+      if (type === "printer") return "192.168.10.60";
+      if (type === "server") return "192.168.10.50";
+      if (type === "isp") return "203.0.113.1";
+      if (type === "remote-server") return "203.0.113.20";
+      return "192.168.10.254";
+    }
+
+    function makeNode(d) {
+      const el = document.createElement("div");
+      el.className = "node";
+      el.dataset.id = d.id;
+      el.style.left = `${d.x}px`;
+      el.style.top = `${d.y}px`;
+      el.innerHTML = `<div class="node-type">${label[d.type]}</div><div class="node-ip">${d.ip}</div>`;
+      el.addEventListener("mousedown", (e) => {
+        if (connectMode) {
+          chooseNode(d.id, el);
+          return;
+        }
+        moving = { id: d.id, offsetX: e.offsetX, offsetY: e.offsetY };
+      });
+      workspace.appendChild(el);
+    }
+
+    function rerender() {
+      workspace.querySelectorAll(".node").forEach((n) => n.remove());
+      devices.forEach(makeNode);
+      redrawLines();
+      updateTasks();
+      deviceList.innerHTML = devices.length
+        ? devices.map((d, i) => `${i + 1}. ${label[d.type]} - ${d.ip}`).join("<br>")
+        : "Henüz cihaz eklenmedi.";
+    }
+
+    function redrawLines() {
+      const w = workspace.clientWidth;
+      const h = workspace.clientHeight;
+      linkLayer.setAttribute("width", String(w));
+      linkLayer.setAttribute("height", String(h));
+      linkLayer.innerHTML = "";
+      links.forEach((l) => {
+        const a = devices.find((d) => d.id === l.a);
+        const b = devices.find((d) => d.id === l.b);
+        if (!a || !b) return;
+        const x1 = a.x + 44, y1 = a.y + 24, x2 = b.x + 44, y2 = b.y + 24;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+        line.setAttribute("stroke", "#22c55e");
+        line.setAttribute("stroke-width", "3");
+        linkLayer.appendChild(line);
+      });
+    }
+
+    function connected(id1, id2) {
+      return links.some((l) => (l.a === id1 && l.b === id2) || (l.a === id2 && l.b === id1));
+    }
+
+    function chooseNode(id, el) {
+      if (!sourceNode) {
+        sourceNode = id;
+        el.classList.add("selected");
+        return;
+      }
+      if (sourceNode === id) return;
+      if (!connected(sourceNode, id)) links.push({ a: sourceNode, b: id });
+      sourceNode = null;
+      workspace.querySelectorAll(".node").forEach((n) => n.classList.remove("selected"));
+      rerender();
+    }
+
+    function markTask(n, done) {
+      const t = document.querySelector(`[data-task="${n}"]`);
+      if (done) t.classList.add("done");
+      else t.classList.remove("done");
+    }
+
+    function updateTasks() {
+      const count = (t) => devices.filter((d) => d.type === t).length;
+      markTask(1, count("switch") >= 1);
+      markTask(2, count("pc") >= 3);
+      markTask(3, count("printer") >= 1);
+      markTask(4, count("server") >= 1);
+
+      const sw = devices.find((d) => d.type === "switch");
+      const lan = devices.filter((d) => ["pc", "printer", "server"].includes(d.type));
+      const lanLinked = sw && lan.length && lan.every((d) => connected(d.id, sw.id));
+      markTask(5, !!lanLinked);
+
+      const router = devices.find((d) => d.type === "router");
+      const isp = devices.find((d) => d.type === "isp");
+      const remote = devices.find((d) => d.type === "remote-server");
+      markTask(6, !!(router && isp && remote));
+      const chain = sw && router && isp && remote && connected(sw.id, router.id) && connected(router.id, isp.id) && connected(isp.id, remote.id);
+      markTask(7, !!chain);
+    }
+
+    function validateFinal() {
+      updateTasks();
+      const done = [1,2,3,4,5,6,7].every((n) => document.querySelector(`[data-task="${n}"]`).classList.contains("done"));
+      if (!done) return { ok: false, msg: "Tüm kurulum görevleri tamamlanmadan test geçmez." };
+      if (stage < 2) return { ok: false, msg: "Önce Aşama 2'ye geçin." };
+      return { ok: true, msg: "Ağ topolojisi doğru. LAN ve WAN erişimi hazır." };
+    }
+
+    document.querySelectorAll(".device-item").forEach((item) => {
+      item.addEventListener("dragstart", () => { dragType = item.dataset.type; });
     });
+
+    workspace.addEventListener("dragover", (e) => e.preventDefault());
+    workspace.addEventListener("drop", (e) => {
+      e.preventDefault();
+      if (!allowedByStage[stage].includes(dragType)) {
+        alert("Bu cihazı eklemek için Aşama 2'ye geçmelisin.");
+        return;
+      }
+      const rect = workspace.getBoundingClientRect();
+      const d = { id: idSeed++, type: dragType, x: e.clientX - rect.left - 44, y: e.clientY - rect.top - 24, ip: genIp(dragType) };
+      devices.push(d);
+      rerender();
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!moving) return;
+      const rect = workspace.getBoundingClientRect();
+      const d = devices.find((x) => x.id === moving.id);
+      if (!d) return;
+      d.x = Math.max(0, Math.min(rect.width - 100, e.clientX - rect.left - moving.offsetX));
+      d.y = Math.max(0, Math.min(rect.height - 60, e.clientY - rect.top - moving.offsetY));
+      rerender();
+    });
+    window.addEventListener("mouseup", () => { moving = null; });
+
+    connectBtn.addEventListener("click", () => {
+      connectMode = !connectMode;
+      sourceNode = null;
+      workspace.querySelectorAll(".node").forEach((n) => n.classList.remove("selected"));
+      connectBtn.style.background = connectMode ? "#16a34a" : "#1e293b";
+      connectBtn.textContent = connectMode ? "Bağlantı: Aktif" : "Bağlantı Modu";
+    });
+
+    stageBtn.addEventListener("click", () => {
+      const lanReady = [1,2,3,4,5].every((n) => document.querySelector(`[data-task="${n}"]`).classList.contains("done"));
+      if (!lanReady) {
+        alert("Aşama 2 için önce LAN görevlerini tamamla.");
+        return;
+      }
+      stage = 2;
+      stageBadge.textContent = "Aşama 2 / 2 · WAN";
+      alert("Aşama 2 aktif: Router, ISP ve uzak sunucu ekleyebilirsin.");
+    });
+
+    testBtn.addEventListener("click", () => {
+      const result = validateFinal();
+      if (!result.ok) {
+        alert("Test Başarısız: " + result.msg);
+        return;
+      }
+      markTask(8, true);
+      alert("Tebrikler! " + result.msg);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      devices = [];
+      links = [];
+      stage = 1;
+      connectMode = false;
+      sourceNode = null;
+      idSeed = 1;
+      Object.keys(counters).forEach((k) => counters[k] = 0);
+      stageBadge.textContent = "Aşama 1 / 2 · LAN";
+      connectBtn.style.background = "#1e293b";
+      connectBtn.textContent = "Bağlantı Modu";
+      rerender();
+      markTask(8, false);
+    });
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      intro.classList.add("hidden");
+    });
+
+    window.addEventListener("resize", redrawLines);
   </script>
 </body>
 </html>
