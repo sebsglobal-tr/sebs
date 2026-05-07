@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="/" />
+  <title>SEBS Network Lab 1 - Küçük Ofis LAN/WAN</title>
+  <meta name="description" content="SEBS Network Lab 1: Küçük ofis LAN kurulumu, IP adresleme, gateway mantığı ve WAN bağlantısı." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <style>
+    body { font-family: Inter, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 24px; }
+    .card { background: #111c31; border: 1px solid #334155; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .title { font-size: 28px; margin: 0 0 10px; color: #fff; }
+    .muted { color: #94a3b8; line-height: 1.6; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn { border: none; border-radius: 10px; padding: 11px 14px; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-secondary { background: #334155; color: #fff; }
+    .task { padding: 10px 12px; border: 1px solid #334155; border-radius: 10px; margin: 8px 0; }
+    .hidden { display: none; }
+    .pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #1d4ed8; color: #dbeafe; margin-bottom: 8px; }
+    @media (max-width: 860px) { .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <span class="pill">Temel Network Simülasyonu</span>
+      <h1 class="title">SEBS Network Lab 1: Küçük Ofis Ağı Kurulumu ve WAN Bağlantısı</h1>
+      <p class="muted">
+        Bu senaryoda önce ofis içi LAN'ı kurar, sonra aynı ağı WAN'a bağlarsınız. Hedef; cihaz konumlandırma, IP adresleme,
+        gateway mantığı ve uzak ağ erişimini uygulamalı öğrenmektir.
+      </p>
+      <button class="btn btn-primary" id="startBtn">Simülasyonu Başlat</button>
+      <a href="/simulations.html" class="btn btn-secondary" style="text-decoration:none; display:inline-block; margin-left:8px;">Simülasyonlara Dön</a>
+    </div>
+
+    <div class="row hidden" id="simArea">
+      <div class="card">
+        <h2 style="margin-top:0;color:#fff;">Aşama 1 — LAN Kurulumu</h2>
+        <div class="task">1) 1 adet switch ekleyin</div>
+        <div class="task">2) 3 adet PC ekleyin</div>
+        <div class="task">3) 1 adet yazıcı ekleyin</div>
+        <div class="task">4) 1 adet yerel server ekleyin</div>
+        <div class="task">5) Tüm LAN cihazlarını switch'e bağlayın</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0;color:#fff;">Aşama 2 — WAN Bağlantısı</h2>
+        <div class="task">6) Şirket router'ı ekleyin</div>
+        <div class="task">7) ISP / WAN cloud ekleyin</div>
+        <div class="task">8) Uzak sunucu ekleyin</div>
+        <div class="task">9) LAN → Router → WAN → Uzak Sunucu zincirini kurun</div>
+        <div class="task">10) Gateway ve erişim testini tamamlayın</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('startBtn').addEventListener('click', function () {
+      document.getElementById('simArea').classList.remove('hidden');
+      this.textContent = 'Senaryo Başlatıldı';
+      this.disabled = true;
+      this.style.opacity = '0.7';
+    });
+  </script>
+</body>
+</html>
