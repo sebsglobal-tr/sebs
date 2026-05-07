@@ -13,22 +13,46 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Inter, sans-serif; background: #0f172a; color: #e2e8f0; }
-    .top { height: 68px; background: #111827; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
-    .title { font-size: 18px; font-weight: 800; color: #fff; }
+    .top { height: 58px; background: #0b1322; border-bottom: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+    .title { font-size: 15px; font-weight: 700; color: #c7d2fe; }
     .actions { display: flex; gap: 8px; align-items: center; }
-    .badge { border: 1px solid #475569; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #bfdbfe; }
-    .btn { border: 1px solid #475569; border-radius: 8px; background: #1e293b; color: #fff; padding: 8px 12px; font-weight: 600; cursor: pointer; }
-    .layout { height: calc(100vh - 68px); display: grid; grid-template-columns: 1.2fr 1fr 360px; }
-    .panel { background: #111827; border-right: 1px solid #334155; padding: 12px; overflow: auto; }
-    .panel.right { border-right: none; border-left: 1px solid #334155; }
-    .group { color: #93c5fd; font-size: 12px; text-transform: uppercase; margin: 8px 0; }
-    .terminal { background: #020617; border: 1px solid #334155; border-radius: 12px; padding: 10px; min-height: 340px; max-height: 55vh; overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.55; }
+    .badge { border: 1px solid #334155; border-radius: 999px; padding: 5px 10px; font-size: 11px; color: #93c5fd; }
+    .btn { border: 1px solid #334155; border-radius: 8px; background: #162033; color: #e2e8f0; padding: 7px 11px; font-weight: 600; cursor: pointer; font-size: 12px; }
+    .shell-wrap { position: relative; height: calc(100vh - 58px); padding: 14px; }
+    .terminal-shell {
+      position: absolute; inset: 14px;
+      background: linear-gradient(180deg, #030712 0%, #020617 100%);
+      border: 1px solid #1e293b; border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(148,163,184,.05);
+      padding: 0; overflow: hidden;
+    }
+    .shell-head {
+      height: 44px; border-bottom: 1px solid #1e293b; background: #0b1220;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; color: #94a3b8;
+    }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ef4444; } .dot.y { background: #f59e0b; } .dot.g { background: #22c55e; }
+    .terminal { border: none; border-radius: 0; padding: 12px; height: calc(100% - 96px); overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.55; background: transparent; }
     .line { color: #cbd5e1; white-space: pre-wrap; }
-    .line.cmd { color: #86efac; }
-    .cmdrow { display: flex; gap: 8px; margin-top: 10px; }
-    .input { flex: 1; background: #0b1220; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; padding: 10px; font-family: "JetBrains Mono", monospace; }
-    .hint { color: #94a3b8; font-size: 12px; margin-top: 8px; line-height: 1.5; }
-    .wbox { background: #0b1220; border: 1px solid #334155; border-radius: 12px; padding: 12px; }
+    .line.cmd { color: #67e8f9; }
+    .cmdrow { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #1e293b; background: #06101d; }
+    .input { flex: 1; background: #020617; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; padding: 10px; font-family: "JetBrains Mono", monospace; }
+    .hint { color: #64748b; font-size: 11px; padding: 0 12px 8px; line-height: 1.4; }
+    .task-float {
+      position: absolute; top: 18px; right: 18px; width: 330px;
+      background: rgba(8, 15, 28, 0.92); border: 1px solid #334155; border-radius: 12px;
+      box-shadow: 0 14px 32px rgba(0,0,0,.45); overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .task-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 12px; color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.9);
+    }
+    .task-body { max-height: 62vh; overflow: auto; padding: 10px; }
+    .wbox { background: #0b1220; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-top: 8px; }
     .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
     .chip { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 12px; color: #cbd5e1; }
     .task { border: 1px solid #334155; border-radius: 10px; padding: 9px; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
@@ -37,6 +61,7 @@
     .msg.show { opacity: 1; }
     .msg.ok { border-color: #16a34a; color: #dcfce7; }
     .msg.warn { border-color: #f59e0b; color: #fef3c7; }
+    .hidden { display: none; }
     .intro { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,23,.9); display: flex; align-items: center; justify-content: center; padding: 16px; }
     .intro-card { max-width: 900px; width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 20px; }
     .intro-card h1 { margin: 0 0 10px; font-size: 28px; color: #fff; }
@@ -45,7 +70,7 @@
 </head>
 <body>
   <div class="top">
-    <div class="title">SEBS Network Lab 3 · Terminalden Trafik Yakala ve Wireshark ile İncele</div>
+    <div class="title">SEBS Network Lab 3 · Terminal Capture</div>
     <div class="actions">
       <span class="badge" id="stageBadge">Aşama 1/3 · Kurulum</span>
       <button class="btn" id="testBtn">Test Et</button>
@@ -53,9 +78,13 @@
     </div>
   </div>
 
-  <div class="layout">
-    <section class="panel">
-      <div class="group">Terminal (tcpdump)</div>
+  <div class="shell-wrap">
+    <div class="terminal-shell">
+      <div class="shell-head">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <div>SSH — analyst@sebs-lab3-terminal:/bin/bash</div>
+        <div></div>
+      </div>
       <div class="terminal" id="terminalOut"></div>
       <div class="cmdrow">
         <input id="terminalInput" class="input" placeholder="Komut gir (ör: sudo apt update)" />
@@ -65,39 +94,44 @@
         Örnek akış: <code>sudo apt update</code> → <code>sudo apt install -y wireshark tcpdump</code> → <code>ip addr</code> →
         <code>sudo tcpdump -i eth0 -w sebs_lab3_capture.pcap</code> → ping/nslookup/curl → <code>CTRL + C</code>
       </div>
-    </section>
+    </div>
 
-    <section class="panel">
-      <div class="group">Wireshark Analiz Ekranı</div>
-      <div class="wbox">
-        <div style="font-weight:700;color:#fff;">PCAP Dosyası</div>
-        <div id="pcapState" style="font-size:13px;color:#94a3b8;margin-top:4px;">Henüz dosya yok.</div>
-        <div class="kpi">
-          <div class="chip">ICMP: <strong id="icmpCount">0</strong></div>
-          <div class="chip">DNS: <strong id="dnsCount">0</strong></div>
-          <div class="chip">HTTP: <strong id="httpCount">0</strong></div>
-          <div class="chip">TCP: <strong id="tcpCount">0</strong></div>
-        </div>
-        <div style="margin-top:10px;">
-          <input id="filterInput" class="input" placeholder="Filtre yaz (icmp / dns / http / ip.addr == 192.168.10.100)" />
-          <button class="btn" id="applyFilterBtn" style="margin-top:8px;">Filtreyi Uygula</button>
-        </div>
-        <div id="filterResult" style="margin-top:8px;font-size:12px;color:#94a3b8;">Filtre sonucu burada görünür.</div>
+    <aside class="task-float">
+      <div class="task-head">
+        <span>Görevler</span>
+        <span id="progressText">0/10</span>
       </div>
-    </section>
+      <div class="task-body">
+        <div class="group">Lab Adımları</div>
+        <div class="task" data-task="1">1) Paket listesini güncelle (`apt update`)</div>
+        <div class="task" data-task="2">2) Wireshark + tcpdump kur</div>
+        <div class="task" data-task="3">3) Sürüm kontrollerini yap</div>
+        <div class="task" data-task="4">4) Ağ arayüzlerini görüntüle</div>
+        <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat</div>
+        <div class="task" data-task="6">6) ping / nslookup / curl trafiği üret</div>
+        <div class="task" data-task="7">7) Yakalamayı CTRL + C ile durdur</div>
+        <div class="task" data-task="8">8) pcap dosyasını doğrula</div>
+        <div class="task" data-task="9">9) Wireshark filtrelerini uygula (icmp,dns,http,ip.addr)</div>
+        <div class="task" data-task="10">10) Testi başarıyla geç</div>
 
-    <aside class="panel right">
-      <div class="group">Görevler</div>
-      <div class="task" data-task="1">1) Paket listesini güncelle (`apt update`)</div>
-      <div class="task" data-task="2">2) Wireshark + tcpdump kur</div>
-      <div class="task" data-task="3">3) Sürüm kontrollerini yap</div>
-      <div class="task" data-task="4">4) Ağ arayüzlerini görüntüle</div>
-      <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat</div>
-      <div class="task" data-task="6">6) ping / nslookup / curl trafiği üret</div>
-      <div class="task" data-task="7">7) Yakalamayı CTRL + C ile durdur</div>
-      <div class="task" data-task="8">8) pcap dosyasını doğrula</div>
-      <div class="task" data-task="9">9) Wireshark filtrelerini uygula (icmp,dns,http,ip.addr)</div>
-      <div class="task" data-task="10">10) Testi başarıyla geç</div>
+        <div class="group" style="margin-top:10px;">Wireshark Analizi</div>
+        <div id="wiresharkLocked" style="font-size:12px;color:#64748b;">`wireshark sebs_lab3_capture.pcap` komutunu çalıştırınca analiz paneli açılır.</div>
+        <div class="wbox hidden" id="wiresharkPanel">
+          <div style="font-weight:700;color:#fff;">PCAP Dosyası</div>
+          <div id="pcapState" style="font-size:13px;color:#94a3b8;margin-top:4px;">Henüz dosya yok.</div>
+          <div class="kpi">
+            <div class="chip">ICMP: <strong id="icmpCount">0</strong></div>
+            <div class="chip">DNS: <strong id="dnsCount">0</strong></div>
+            <div class="chip">HTTP: <strong id="httpCount">0</strong></div>
+            <div class="chip">TCP: <strong id="tcpCount">0</strong></div>
+          </div>
+          <div style="margin-top:10px;">
+            <input id="filterInput" class="input" placeholder="icmp / dns / http / ip.addr == 192.168.10.100" />
+            <button class="btn" id="applyFilterBtn" style="margin-top:8px;">Filtreyi Uygula</button>
+          </div>
+          <div id="filterResult" style="margin-top:8px;font-size:12px;color:#94a3b8;">Filtre sonucu burada görünür.</div>
+        </div>
+      </div>
     </aside>
   </div>
 
@@ -118,6 +152,8 @@
     const runBtn = document.getElementById("runBtn");
     const stageBadge = document.getElementById("stageBadge");
     const pcapState = document.getElementById("pcapState");
+    const wiresharkPanel = document.getElementById("wiresharkPanel");
+    const wiresharkLocked = document.getElementById("wiresharkLocked");
     const msg = document.getElementById("msg");
     const intro = document.getElementById("intro");
     const filterInput = document.getElementById("filterInput");
@@ -125,6 +161,7 @@
     const applyFilterBtn = document.getElementById("applyFilterBtn");
     const testBtn = document.getElementById("testBtn");
     const resetBtn = document.getElementById("resetBtn");
+    const progressText = document.getElementById("progressText");
     const counts = {
       icmp: document.getElementById("icmpCount"),
       dns: document.getElementById("dnsCount"),
@@ -138,6 +175,7 @@
       captureIface: "", wrongIface: false,
       ping: false, dns: false, http: false, lsPcap: false, filePcap: false,
       filters: { icmp: false, dns: false, http: false, ip: false },
+      wiresharkOpened: false,
       packets: { icmp: 0, dns: 0, http: 0, tcp: 0 },
       stage: 1
     };
@@ -170,6 +208,8 @@
       markTask(7, state.captureStopped);
       markTask(8, state.pcapCreated && state.lsPcap);
       markTask(9, state.filters.icmp && state.filters.dns && state.filters.http && state.filters.ip);
+      const completed = document.querySelectorAll(".task.ok").length;
+      progressText.textContent = `${completed}/10`;
       counts.icmp.textContent = String(state.packets.icmp);
       counts.dns.textContent = String(state.packets.dns);
       counts.http.textContent = String(state.packets.http);
@@ -254,7 +294,16 @@
         state.filePcap = state.pcapCreated;
         line(state.pcapCreated ? "sebs_lab3_capture.pcap: tcpdump capture file" : "cannot open");
       } else if (cmd === "wireshark sebs_lab3_capture.pcap") {
-        line(state.pcapCreated ? "Wireshark GUI opened with sebs_lab3_capture.pcap" : "File not found.");
+        if (state.pcapCreated) {
+          state.wiresharkOpened = true;
+          wiresharkPanel.classList.remove("hidden");
+          wiresharkLocked.classList.add("hidden");
+          line("Wireshark GUI opened with sebs_lab3_capture.pcap");
+          say("Wireshark analiz ekranı açıldı.", "ok");
+        } else {
+          line("File not found.");
+          say("Önce pcap dosyasını üretmelisin.", "warn");
+        }
       } else {
         line("Komut tanınmadı veya bu lab için beklenen akış dışında.");
       }
@@ -267,6 +316,11 @@
       refreshTasks();
     }
     function applyFilter() {
+      if (!state.wiresharkOpened) {
+        filterResult.textContent = "Önce Wireshark komutunu terminalden çalıştır.";
+        say("Wireshark arayüzünü terminal komutuyla açmalısın.", "warn");
+        return;
+      }
       const f = filterInput.value.trim();
       if (!state.pcapCreated) {
         filterResult.textContent = "Önce pcap dosyası oluşturulmalı.";
