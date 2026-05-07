@@ -1,10 +1,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://sebsglobal.com/sitemap.xml
-
-# Özel / oturum sayfaları (ince içerik, dizine girmesin)
+# Ozel / oturum sayfalari
 Disallow: /login.html
 Disallow: /dashboard.html
 Disallow: /dashboard
@@ -14,18 +11,13 @@ Disallow: /report-output.html
 Disallow: /public/verify-email.html
 Disallow: /public/generate-pdf.html
 
-# Allow all search engines to crawl all content
-Allow: /modules/
-Allow: /css/
-Allow: /js/
-Allow: /images/
-Allow: /fonts/
+# Arama sonuclarinda istemedigimiz dosya turleri
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.docx$
+Disallow: /*.xls$
+Disallow: /*.xlsx$
+Disallow: /*.ppt$
+Disallow: /*.pptx$
 
-# Block specific file types that shouldn't be indexed
-Disallow: *.pdf$
-Disallow: *.doc$
-Disallow: *.docx$
-Disallow: *.xls$
-Disallow: *.xlsx$
-Disallow: *.ppt$
-Disallow: *.pptx$
+Sitemap: https://sebsglobal.com/sitemap.xml
