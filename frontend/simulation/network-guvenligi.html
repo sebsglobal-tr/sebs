@@ -63,8 +63,6 @@
     <div class="top-actions">
       <span class="badge" id="stageBadge">Aşama 1 / 2 · LAN A + LAN B Kurulumu</span>
       <button class="btn" id="connectBtn">Bağlantı Modu</button>
-      <button class="btn" id="stageBtn">Aşama 2'ye Geç</button>
-      <button class="btn" id="trafficBtn">Paket Akışı</button>
       <button class="btn" id="testBtn">Test Et</button>
       <button class="btn" id="resetBtn">Sıfırla</button>
     </div>
@@ -128,9 +126,7 @@
     const workspace = document.getElementById("workspace");
     const linkLayer = document.getElementById("linkLayer");
     const connectBtn = document.getElementById("connectBtn");
-    const stageBtn = document.getElementById("stageBtn");
     const stageBadge = document.getElementById("stageBadge");
-    const trafficBtn = document.getElementById("trafficBtn");
     const testBtn = document.getElementById("testBtn");
     const resetBtn = document.getElementById("resetBtn");
     const deviceList = document.getElementById("deviceList");
@@ -147,6 +143,7 @@
     let trafficOn = false;
     let packets = [];
     let trafficTimer = null;
+    let autoProgressTriggered = false;
     let idSeed = 1;
     const counters = { pc: 0, printer: 0, server: 0, switch: 0, router: 0 };
 
@@ -200,8 +197,6 @@
         return;
       }
       trafficOn = true;
-      trafficBtn.style.background = "#16a34a";
-      trafficBtn.textContent = "Akışı Durdur";
       packets = links.map((l, i) => ({
         a: l.a,
         b: l.b,
@@ -225,8 +220,6 @@
       packets = [];
       if (trafficTimer) window.clearInterval(trafficTimer);
       trafficTimer = null;
-      trafficBtn.style.background = "#1e293b";
-      trafficBtn.textContent = "Paket Akışı";
       redrawLines();
       if (!silent) showMessage("Paket akışı durduruldu.");
     }
@@ -343,6 +336,17 @@
       markTask(5, !!router);
       markTask(6, !!(router && swA && swB && connected(router.id, swA.id) && connected(router.id, swB.id)));
       markTask(7, !!document.querySelector(`[data-task="6"]`)?.classList.contains("done"));
+
+      const lanReady = [1, 2, 3, 4].every((n) =>
+        document.querySelector(`[data-task="${n}"]`).classList.contains("done")
+      );
+      if (lanReady && stage === 1 && !autoProgressTriggered) {
+        autoProgressTriggered = true;
+        stage = 2;
+        stageBadge.textContent = "Aşama 2 / 2 · LAN'ları Router ile Birleştir";
+        showMessage("LAN kurulumları tamamlandı. Aşama 2 otomatik başlatıldı.", "ok");
+        if (!trafficOn) startTraffic();
+      }
     }
 
     function validateFinal() {
@@ -393,17 +397,6 @@
       showMessage(connectMode ? "Bağlantı modu açıldı." : "Bağlantı modu kapatıldı.", connectMode ? "ok" : "warn");
     });
 
-    stageBtn.addEventListener("click", () => {
-      const lanReady = [1,2,3,4,5].every((n) => document.querySelector(`[data-task="${n}"]`).classList.contains("done"));
-      if (!lanReady) {
-        showMessage("Aşama 2 için önce LAN görevlerini tamamla.");
-        return;
-      }
-      stage = 2;
-      stageBadge.textContent = "Aşama 2 / 2 · LAN'ları Router ile Birleştir";
-      showMessage("Aşama 2 aktif: Router ekleyip iki switch'e bağla.", "ok");
-    });
-
     testBtn.addEventListener("click", () => {
       const result = validateFinal();
       if (!result.ok) {
@@ -421,6 +414,7 @@
       stage = 1;
       connectMode = false;
       sourceNode = null;
+      autoProgressTriggered = false;
       idSeed = 1;
       Object.keys(counters).forEach((k) => counters[k] = 0);
       stageBadge.textContent = "Aşama 1 / 2 · LAN A + LAN B Kurulumu";
@@ -429,11 +423,6 @@
       rerender();
       markTask(8, false);
       showMessage("Simülasyon sıfırlandı.");
-    });
-
-    trafficBtn.addEventListener("click", () => {
-      if (trafficOn) stopTraffic();
-      else startTraffic();
     });
 
     document.getElementById("startBtn").addEventListener("click", () => {
