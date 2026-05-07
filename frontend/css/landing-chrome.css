@@ -472,6 +472,14 @@ body.landing-site-body header.fixed {
 
 body.landing-site-body header.fixed nav a {
   position: relative;
+  border-radius: 999px;
+  padding: 0.42rem 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 body.landing-site-body header.fixed nav a::after {
@@ -490,6 +498,28 @@ body.landing-site-body header.fixed nav a::after {
 
 body.landing-site-body header.fixed nav a:hover::after {
   transform: scaleX(1);
+}
+
+/* Üst menü (orta link grubu): premium kapsül görünüm */
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
+  padding: 0.34rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.9) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 10px 24px -18px rgba(15, 23, 42, 0.45);
+}
+
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a {
+  color: #334155;
+}
+
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a:hover {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
 }
 
 body.landing-site-body .hero-section {
