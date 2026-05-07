@@ -513,13 +513,49 @@ body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
 }
 
 body.landing-site-body header.fixed nav[aria-label="Ana menü"] a {
-  color: #334155;
+  color: #334155 !important;
+  font-weight: 600 !important;
 }
 
 body.landing-site-body header.fixed nav[aria-label="Ana menü"] a:hover {
-  color: #0f172a;
+  color: #0f172a !important;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
+}
+
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a.is-active,
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a[aria-current="page"] {
+  color: #1d4ed8 !important;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
+}
+
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a.is-active::after,
+body.landing-site-body header.fixed nav[aria-label="Ana menü"] a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Sağ navbar alanı: profil ve çıkış butonu tüm sayfalarda sabit premium görünüm */
+body.landing-site-body header.fixed #userProfile {
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+body.landing-site-body header.fixed #userProfile:hover {
+  border-color: #cbd5e1 !important;
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body header.fixed #logoutBtn {
+  border-color: #e2e8f0 !important;
+  background: #ffffff !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body header.fixed #logoutBtn:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 body.landing-site-body .hero-section {

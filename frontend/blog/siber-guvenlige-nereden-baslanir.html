@@ -44,9 +44,26 @@
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://sebsglobal.com/blog"},{"@type":"ListItem","position":3,"name":"Siber Guvenlige Nereden Baslanir","item":"https://sebsglobal.com/blog/siber-guvenlige-nereden-baslanir"}]}
   </script>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/saas-landing.css">
+  <link rel="stylesheet" href="/css/landing-chrome.css">
+  <link rel="stylesheet" href="/css/blog-premium.css">
 </head>
-<body>
-  <main style="max-width: 860px; margin: 48px auto; padding: 0 20px;">
+<body class="landing-site-body blog-premium-page">
+  <header class="blog-topbar">
+    <div class="blog-topbar-inner">
+      <a href="/" class="blog-brand" aria-label="SEBS ana sayfa">
+        <img src="/images/sebs-global-logo-full.png" alt="SEBS Global" class="blog-brand-logo" />
+      </a>
+      <nav class="blog-nav" aria-label="Blog navigasyonu">
+        <a href="/modules.html">Egitim Modulleri</a>
+        <a href="/simulations.html">Simulasyonlar</a>
+        <a href="/blog" aria-current="page">Blog</a>
+      </nav>
+      <a href="/signup.html" class="blog-cta">Ucretsiz Basla</a>
+    </div>
+  </header>
+
+  <main class="blog-shell">
     <a href="/blog">Bloga geri don</a>
     <h1>Siber Guvenlige Nereden Baslanir?</h1>
     <p>Siber guvenlik kariyerine baslamak icin once temel BT altyapisini kavramak gerekir. Network, Linux ve guvenlik kavramlari bu yolun temelidir.</p>
@@ -59,5 +76,11 @@
     <h2>SEBS ile nasil baslanir?</h2>
     <p>Yapilandirilmis bir ogrenme akisi icin <a href="/egitimler">SEBS Egitim Modulleri</a> sayfasini inceleyebilir, pratik odakli ilerlemek icin <a href="/simulasyonlar">SEBS Simulasyonlari</a> alanina gecis yapabilirsiniz.</p>
   </main>
+
+  <footer class="blog-footer">
+    <div class="blog-footer-inner">
+      <p>SEBS Global Blog - Uygulamali ogrenme ile kariyer gelisimi.</p>
+    </div>
+  </footer>
 </body>
 </html>

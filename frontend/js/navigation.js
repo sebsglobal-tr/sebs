@@ -132,6 +132,7 @@
 
     async function updateNavigation() {
         const currentPage = getCurrentPage();
+        const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
         const loggedIn = await isLoggedIn();
         const userData = await getUserData();
         
@@ -145,6 +146,31 @@
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
+            }
+        });
+
+        // Landing chrome header (index/modules/simulations vb.) aktif menü vurgusu
+        const landingNavLinks = document.querySelectorAll('header.fixed nav[aria-label="Ana menü"] a[href]');
+        landingNavLinks.forEach(link => {
+            let isActive = false;
+            try {
+                const url = new URL(link.getAttribute('href') || '', window.location.origin);
+                const linkPath = (url.pathname || '/').replace(/\/+$/, '') || '/';
+                const hasHash = !!url.hash;
+                if (hasHash) {
+                    // Hash linkleri sadece ilgili hash açıksa aktif göster
+                    isActive = currentPath === linkPath && !!window.location.hash && window.location.hash === url.hash;
+                } else {
+                    isActive = currentPath === linkPath;
+                }
+            } catch (e) {
+                isActive = false;
+            }
+            link.classList.toggle('is-active', isActive);
+            if (isActive) {
+                link.setAttribute('aria-current', 'page');
+            } else {
+                link.removeAttribute('aria-current');
             }
         });
 
@@ -240,6 +266,53 @@
             el.style.display = loggedIn ? '' : 'none';
         });
 
+    }
+
+    function normalizeLandingNavOrder() {
+        const orderMap = {
+            '/modules.html': 10,
+            '/simulations.html': 20,
+            '/blog': 30,
+            '/#features': 40,
+            '/#how': 50,
+            '/#audience': 60,
+            '/#platform': 70
+        };
+
+        function sortedByOrder(links) {
+            return links
+                .map((el, idx) => ({ el, idx }))
+                .sort((a, b) => {
+                    const aHref = (a.el.getAttribute('href') || '').trim();
+                    const bHref = (b.el.getAttribute('href') || '').trim();
+                    const aRank = Object.prototype.hasOwnProperty.call(orderMap, aHref)
+                        ? orderMap[aHref]
+                        : 1000 + a.idx;
+                    const bRank = Object.prototype.hasOwnProperty.call(orderMap, bHref)
+                        ? orderMap[bHref]
+                        : 1000 + b.idx;
+                    return aRank - bRank;
+                })
+                .map(x => x.el);
+        }
+
+        const desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
+        if (desktopNav) {
+            const desktopLinks = Array.from(desktopNav.querySelectorAll(':scope > a[href]'));
+            sortedByOrder(desktopLinks).forEach(link => desktopNav.appendChild(link));
+        }
+
+        const mobilePanel = document.querySelector('header.fixed details > div');
+        if (mobilePanel) {
+            const firstDivider = mobilePanel.querySelector(':scope > hr');
+            if (firstDivider) {
+                const topLinks = Array.from(mobilePanel.querySelectorAll(':scope > a[href]')).filter(el => {
+                    const relation = el.compareDocumentPosition(firstDivider);
+                    return !!(relation & Node.DOCUMENT_POSITION_FOLLOWING);
+                });
+                sortedByOrder(topLinks).forEach(link => mobilePanel.insertBefore(link, firstDivider));
+            }
+        }
     }
 
     function initHamburgerMenu() {
@@ -425,6 +498,7 @@
 
     async function initNavigation() {
         ensurePremiumExperienceAssets();
+        normalizeLandingNavOrder();
         if (typeof window.initSupabase !== 'undefined') {
             try {
                 await window.initSupabase();
