@@ -319,6 +319,19 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .simulation-inline-panel {
+            margin-top: 0.85rem;
+            padding: 0.9rem;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 0.8rem;
+            background: rgba(248, 250, 252, 0.95);
+        }
+
+        .simulation-inline-panel p {
+            margin: 0 0 0.75rem;
+            color: #334155;
+        }
     </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -783,22 +796,28 @@
                             </div>
                         </div>
                         <div class="simulation-content">
-                            <p><strong>SEBS Network Lab 1:</strong> Küçük ofis ağını Packet Tracer tarzında kurun. Önce LAN topolojisini çalıştırın, ardından router ve gateway mantığı ile WAN bağlantısını devreye alıp uzak ağa erişimi doğrulayın.</p>
+                            <p><strong>SEBS Network Lab 1: Küçük Ofis Ağı Kurulumu ve WAN Bağlantısı.</strong> Amaç, temel ağ bileşenlerini teoride değil uygulamada kurmak: LAN konumlandırma, IP adresleme, gateway mantığı ve yönlendirme ile uzak ağa erişim.</p>
                             <div class="simulation-scenarios">
                                 <h4>Lab senaryosu:</h4>
                                 <ul>
-                                    <li>Aşama 1: 1 switch, 3 PC, 1 yazıcı ve 1 server ile LAN kurulumu</li>
-                                    <li>IP adresleme, aynı ağ testi ve temel iletişim doğrulaması</li>
-                                    <li>Aşama 2: Şirket router'ı ile WAN/ISP bağlantısının eklenmesi</li>
-                                    <li>Default gateway ve yönlendirme ile uzak sunucu erişimi</li>
+                                    <li><strong>Hikâye:</strong> SEBS Academy için önce ofis içi LAN kurulur, sonra mevcut yapı router üzerinden WAN'a açılır.</li>
+                                    <li><strong>Aşama 1 (LAN):</strong> 1 switch, 3 PC, 1 yazıcı, 1 server; IP planı ve aynı ağ iletişim testleri.</li>
+                                    <li><strong>Aşama 2 (WAN):</strong> Şirket router'ı + ISP router/WAN cloud + uzak sunucu; default gateway ve routing ile erişim.</li>
+                                    <li><strong>Öğrenim hedefi:</strong> Doğru kurulmuş ağ temelini görmeden güvenlik adımına geçilmez.</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="simulation-footer">
                             <div class="simulation-status"><span class="status-badge available">Mevcut</span></div>
                             <div class="simulation-actions">
-                                <a href="/simulation/network-guvenligi.html" class="btn-simulation">Packet Tracer</a>
+                                <button type="button" class="btn-simulation" data-toggle-target="temel-network-lab-panel" aria-expanded="false">Simülasyona Git</button>
                                 <a href="/modules/temel-network-egitimi.html" class="btn-simulation">Modüle Git</a>
+                            </div>
+                            <div id="temel-network-lab-panel" class="simulation-inline-panel" hidden>
+                                <p><strong>SEBS Network Lab 1</strong> açıldı. Packet Tracer senaryosunu başlatmak için aşağıdaki butonu kullanın.</p>
+                                <div class="simulation-actions">
+                                    <a href="/simulation/network-guvenligi.html" class="btn-simulation">Simülasyonu Başlat</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2009,6 +2028,26 @@
     <script>
         // Simulation access control
         document.addEventListener('DOMContentLoaded', () => {
+            const panelToggleButtons = document.querySelectorAll('[data-toggle-target]');
+            panelToggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.toggleTarget;
+                    if (!targetId) return;
+
+                    const panel = document.getElementById(targetId);
+                    if (!panel) return;
+
+                    const isOpen = !panel.hasAttribute('hidden');
+                    if (isOpen) {
+                        panel.setAttribute('hidden', '');
+                        button.setAttribute('aria-expanded', 'false');
+                    } else {
+                        panel.removeAttribute('hidden');
+                        button.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+
             // Add access level data attributes to simulation links
             const simulationLinks = document.querySelectorAll('a[href*="simulation"]');
             simulationLinks.forEach(link => {

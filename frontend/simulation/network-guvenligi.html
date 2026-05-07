@@ -16,8 +16,8 @@
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --primary-gradient: linear-gradient(135deg, #0f4c81 0%, #1d4ed8 45%, #0ea5e9 100%);
+            --secondary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             --success-color: #22c55e;
             --warning-color: #facc15;
             --danger-color: #ef4444;
@@ -49,8 +49,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.5);
             z-index: 1000;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
         }
 
         .header-left {
@@ -73,18 +74,20 @@
         }
 
         .control-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            background: rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
             color: white;
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
         }
 
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(125, 211, 252, 0.75);
             transform: translateY(-2px);
         }
 
@@ -98,8 +101,8 @@
         /* Toolbar */
         .toolbar {
             width: 280px;
-            background: #1e293b;
-            border-right: 2px solid #334155;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            border-right: 1px solid rgba(148, 163, 184, 0.3);
             padding: 1rem;
             overflow-y: auto;
         }
@@ -126,9 +129,9 @@
         }
 
         .device-item {
-            background: #334155;
-            border: 2px solid transparent;
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.95));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
             padding: 0.75rem;
             cursor: grab;
             transition: all 0.3s ease;
@@ -139,9 +142,9 @@
         }
 
         .device-item:hover {
-            background: #475569;
-            border-color: var(--info-color);
-            transform: translateX(4px);
+            border-color: rgba(56, 189, 248, 0.8);
+            transform: translateX(4px) translateY(-1px);
+            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.18);
         }
 
         .device-item:active {
@@ -154,10 +157,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(59, 130, 246, 0.2);
-            border-radius: 6px;
-            color: var(--info-color);
+            background: radial-gradient(circle at 30% 25%, rgba(56, 189, 248, 0.38), rgba(15, 23, 42, 0.6));
+            border-radius: 8px;
+            color: #7dd3fc;
             font-size: 1.2rem;
+            border: 1px solid rgba(125, 211, 252, 0.35);
         }
 
         .device-name {
@@ -175,7 +179,10 @@
         .canvas-container {
             flex: 1;
             position: relative;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background:
+                radial-gradient(circle at 20% 10%, rgba(14, 116, 144, 0.24), transparent 35%),
+                radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.18), transparent 36%),
+                linear-gradient(145deg, #020617 0%, #0f172a 45%, #111827 100%);
             overflow: hidden;
         }
 
@@ -279,8 +286,8 @@
         /* Right Panel */
         .config-panel {
             width: 350px;
-            background: #1e293b;
-            border-left: 2px solid #334155;
+            background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+            border-left: 1px solid rgba(148, 163, 184, 0.3);
             padding: 1rem;
             overflow-y: auto;
         }
@@ -316,10 +323,12 @@
         }
 
         .config-section {
-            background: #334155;
-            border-radius: 8px;
+            background: linear-gradient(140deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+            border-radius: 10px;
             padding: 1rem;
             margin-bottom: 1rem;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 12px 22px rgba(2, 6, 23, 0.28);
         }
 
         .config-section-title {
@@ -375,17 +384,19 @@
 
         /* Scenario Panel */
         .scenario-info {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-left: 4px solid var(--danger-color);
-            border-radius: 8px;
+            background: linear-gradient(130deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            border-left: 4px solid #0ea5e9;
+            border-radius: 10px;
             padding: 1rem;
             margin-bottom: 1rem;
+            box-shadow: 0 12px 24px rgba(2, 6, 23, 0.3);
         }
 
         .scenario-title {
             font-size: 1.1rem;
             font-weight: 700;
-            color: var(--danger-color);
+            color: #7dd3fc;
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
@@ -409,8 +420,9 @@
             gap: 0.75rem;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
-            background: #334155;
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.75));
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
             border-left: 3px solid #475569;
         }
 
@@ -571,7 +583,7 @@
     <header class="simulation-header">
         <div class="header-left">
             <i class="fas fa-network-wired"></i>
-            <h1 class="simulation-title">Network Security Lab - LAN/WAN Configuration</h1>
+            <h1 class="simulation-title">SEBS Network Lab 1 - Kucuk Ofis LAN + WAN</h1>
         </div>
         <div class="header-controls">
             <button class="control-btn" id="connectionBtn">
@@ -594,11 +606,12 @@
             <div class="scenario-info">
                 <div class="scenario-title">
                     <i class="fas fa-network-wired"></i>
-                    SENARYO: Şirket Network'ü Kurulumu
+                    SENARYO: Kucuk Ofis Agi Kurulumu ve WAN Baglantisi
                 </div>
                 <div class="scenario-description">
-                    <strong>Göreviniz:</strong> Bir şirket network'ünü sıfırdan kurun. Modem, router, switch, firewall ve bilgisayarları yerleştirip yapılandırın.<br><br>
-                    <strong>Network Yapısı:</strong> LAN (Local Area Network) ve WAN (Wide Area Network) bağlantıları oluşturun, güvenlik cihazlarını yerleştirin.
+                    <strong>Hikaye:</strong> SEBS Academy icin once ofis ici LAN kurulur, ardindan ayni yapi router ile WAN'a acilir.<br><br>
+                    <strong>Asama 1 (LAN):</strong> Switch + 3 PC + 1 server ile yerel agi kurun, IP planini dogrulayin.<br>
+                    <strong>Asama 2 (WAN):</strong> Router ve modem ile dis ag cikisini aktif edin, uzak erisimi test edin.
                 </div>
             </div>
 
@@ -675,43 +688,43 @@
                     <li class="task-item" data-task="1">
                         <div class="task-icon">1</div>
                         <div class="task-content">
-                            <div class="task-title">Modem Kurulumu</div>
-                            <div class="task-description">Internet bağlantısı için modem ekleyin</div>
+                            <div class="task-title">Asama 1 - Switch Kurulumu</div>
+                            <div class="task-description">LAN omurgasi icin en az 1 switch ekleyin</div>
                         </div>
                     </li>
                     <li class="task-item" data-task="2">
                         <div class="task-icon">2</div>
                         <div class="task-content">
-                            <div class="task-title">Router Yapılandırması</div>
-                            <div class="task-description">Network segmentasyonu için router ekleyin</div>
+                            <div class="task-title">Asama 1 - Personel PC'leri</div>
+                            <div class="task-description">Ofis icin en az 3 PC ekleyin</div>
                         </div>
                     </li>
                     <li class="task-item" data-task="3">
                         <div class="task-icon">3</div>
                         <div class="task-content">
-                            <div class="task-title">Firewall Kurulumu</div>
-                            <div class="task-description">Güvenlik için firewall ekleyin</div>
+                            <div class="task-title">Asama 1 - Yerel Sunucu</div>
+                            <div class="task-description">Dosya/sunum servisi icin 1 server ekleyin</div>
                         </div>
                     </li>
                     <li class="task-item" data-task="4">
                         <div class="task-icon">4</div>
                         <div class="task-content">
-                            <div class="task-title">Switch Yapılandırması</div>
-                            <div class="task-description">LAN segment'i için switch ekleyin</div>
+                            <div class="task-title">Asama 1 - LAN Baglantilari</div>
+                            <div class="task-description">Switch'i PC ve server'lara baglayin</div>
                         </div>
                     </li>
                     <li class="task-item" data-task="5">
                         <div class="task-icon">5</div>
                         <div class="task-content">
-                            <div class="task-title">Endpoint Bağlantısı</div>
-                            <div class="task-description">PC ve Server'ları bağlayın</div>
+                            <div class="task-title">Asama 2 - WAN Cikisi</div>
+                            <div class="task-description">Router + modem ekleyin, router'i switch'e baglayin</div>
                         </div>
                     </li>
                     <li class="task-item" data-task="6">
                         <div class="task-icon">6</div>
                         <div class="task-content">
-                            <div class="task-title">Network Test</div>
-                            <div class="task-description">Tüm bağlantıları test edin</div>
+                            <div class="task-title">Asama 2 - Uzak Erisim Testi</div>
+                            <div class="task-description">LAN'dan WAN'a erisimi Test Et ile dogrulayin</div>
                         </div>
                     </li>
                 </ul>
@@ -795,7 +808,11 @@
         
         // Draw Grid and Devices
         function drawCanvas() {
-            ctx.fillStyle = '#0f172a';
+            const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            bg.addColorStop(0, '#020617');
+            bg.addColorStop(0.55, '#0f172a');
+            bg.addColorStop(1, '#111827');
+            ctx.fillStyle = bg;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             // Draw connections
@@ -854,14 +871,25 @@
             const deviceSize = getDeviceSize(device.type);
             const width = deviceSize.width;
             const height = deviceSize.height;
-            
-            ctx.fillStyle = device.selected ? '#22c55e' : '#334155';
-            ctx.strokeStyle = device.selected ? '#22c55e' : '#3b82f6';
-            ctx.lineWidth = 2;
-            
-            // Draw device rectangle
-            ctx.fillRect(device.x, device.y, width, height);
-            ctx.strokeRect(device.x, device.y, width, height);
+
+            drawRoundedRect(ctx, device.x, device.y, width, height, 10);
+            const cardGrad = ctx.createLinearGradient(device.x, device.y, device.x + width, device.y + height);
+            cardGrad.addColorStop(0, '#1e293b');
+            cardGrad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = cardGrad;
+            ctx.fill();
+
+            ctx.strokeStyle = device.selected ? '#22c55e' : 'rgba(56, 189, 248, 0.7)';
+            ctx.lineWidth = device.selected ? 2.4 : 1.6;
+            ctx.stroke();
+
+            if (device.selected) {
+                ctx.shadowColor = 'rgba(34, 197, 94, 0.42)';
+                ctx.shadowBlur = 14;
+                drawRoundedRect(ctx, device.x, device.y, width, height, 10);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
             
             // Draw device icon
             drawDeviceIcon(device, device.x + width/2, device.y + height/2, width > height);
@@ -930,178 +958,178 @@
             
             ctx.restore();
         }
+
+        function drawRoundedRect(ctx, x, y, w, h, r) {
+            const radius = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function createDeviceBodyGradient(w, h) {
+            const grad = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2);
+            grad.addColorStop(0, '#1e293b');
+            grad.addColorStop(0.6, '#0f172a');
+            grad.addColorStop(1, '#020617');
+            return grad;
+        }
         
         function drawPC(ctx) {
-            const w = 40, h = 50;
-            
-            // Monitor
-            ctx.fillStyle = '#2d3748';
-            ctx.fillRect(-w/2, -h/2, w, h * 0.7);
-            
-            // Screen
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-w/2 + 4, -h/2 + 4, w - 8, h * 0.5);
-            
-            // Screen glow
-            ctx.fillStyle = '#3b82f6';
-            ctx.globalAlpha = 0.3;
-            ctx.fillRect(-w/2 + 4, -h/2 + 4, w - 8, h * 0.2);
-            ctx.globalAlpha = 1.0;
-            
-            // Stand
-            ctx.fillStyle = '#2d3748';
-            ctx.fillRect(-w/3, h/2, w * 0.66, h * 0.15);
-            
-            // Base
-            ctx.fillRect(-w/2, h/2 + h * 0.15, w, h * 0.05);
+            const w = 42;
+            const h = 48;
+
+            ctx.shadowColor = 'rgba(56, 189, 248, 0.22)';
+            ctx.shadowBlur = 14;
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h * 0.68, 4);
+            ctx.fillStyle = createDeviceBodyGradient(w, h);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            drawRoundedRect(ctx, -w / 2 + 4, -h / 2 + 4, w - 8, h * 0.48, 3);
+            const screenGrad = ctx.createLinearGradient(0, -h / 2, 0, 0);
+            screenGrad.addColorStop(0, '#60a5fa');
+            screenGrad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = screenGrad;
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(191, 219, 254, 0.32)';
+            ctx.fillRect(-w / 2 + 6, -h / 2 + 6, w - 18, 4);
+
+            ctx.fillStyle = '#334155';
+            drawRoundedRect(ctx, -8, h * 0.2, 16, 7, 2);
+            ctx.fill();
+            drawRoundedRect(ctx, -15, h * 0.34, 30, 5, 2);
+            ctx.fill();
         }
         
         function drawServer(ctx) {
-            const w = 40, h = 50;
-            
-            // Server rack
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-w/2, -h/2, w, h);
-            
-            // LEDs
-            ctx.fillStyle = '#22c55e';
-            ctx.beginPath();
-            ctx.arc(-w/2 + 5, -h/2 + 5, 2, 0, Math.PI * 2);
+            const w = 42;
+            const h = 50;
+
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h, 4);
+            ctx.fillStyle = createDeviceBodyGradient(w, h);
             ctx.fill();
-            
-            ctx.fillStyle = '#3b82f6';
-            ctx.beginPath();
-            ctx.arc(-w/2 + 5, 5, 2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Server slots
-            for (let i = 0; i < 3; i++) {
-                ctx.strokeStyle = '#475569';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(-w/2 + 8, -h/2 + 12 + i*8, w - 16, 4);
+
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const y = -h / 2 + 8 + i * 10;
+                drawRoundedRect(ctx, -w / 2 + 6, y, w - 12, 6, 2);
+                ctx.stroke();
             }
+
+            const ledY = -h / 2 + 6;
+            ['#22c55e', '#38bdf8', '#facc15'].forEach((color, index) => {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(-w / 2 + 7 + index * 6, ledY, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+            });
         }
         
         function drawModem(ctx) {
-            const r = 20;
-            
-            // Main body
-            ctx.fillStyle = '#1e293b';
-            ctx.beginPath();
-            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            const w = 42;
+            const h = 28;
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h, 8);
+            const modemGrad = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2);
+            modemGrad.addColorStop(0, '#1e293b');
+            modemGrad.addColorStop(1, '#111827');
+            ctx.fillStyle = modemGrad;
             ctx.fill();
-            
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 2;
+
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 1.4;
             ctx.stroke();
-            
-            // WiFi signals
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 2;
-            
-            for (let i = 0; i < 4; i++) {
-                const arcLength = Math.PI / 3;
-                const startAngle = -Math.PI/2 + Math.PI/12 * i;
-                
+
+            for (let i = 0; i < 3; i++) {
+                ctx.strokeStyle = `rgba(56, 189, 248, ${0.55 - i * 0.13})`;
+                ctx.lineWidth = 1.8 - i * 0.35;
                 ctx.beginPath();
-                ctx.arc(0, 0, r + 5 + i*4, startAngle, startAngle + arcLength);
+                ctx.arc(0, 2, 8 + i * 5, -Math.PI * 0.85, -Math.PI * 0.15);
                 ctx.stroke();
             }
-            
-            // Light indicator
+
             ctx.fillStyle = '#22c55e';
             ctx.beginPath();
-            ctx.arc(0, 0, 3, 0, Math.PI * 2);
+            ctx.arc(-12, 0, 2, 0, Math.PI * 2);
             ctx.fill();
         }
         
         function drawRouter(ctx) {
-            const w = 35, h = 50;
-            
-            // Router body
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-w/2, -h/2, w, h);
-            
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(-w/2, -h/2, w, h);
-            
-            // Antennas
-            ctx.strokeStyle = '#64748b';
+            const w = 44;
+            const h = 32;
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h, 6);
+            ctx.fillStyle = createDeviceBodyGradient(w, h);
+            ctx.fill();
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            ctx.strokeStyle = '#94a3b8';
             ctx.lineWidth = 2;
-            
-            // Left antenna
             ctx.beginPath();
-            ctx.moveTo(-w/2 + 8, -h/2);
-            ctx.lineTo(-w/2 + 2, -h/2 - 8);
+            ctx.moveTo(-w / 2 + 8, -h / 2);
+            ctx.lineTo(-w / 2 + 2, -h / 2 - 10);
+            ctx.moveTo(w / 2 - 8, -h / 2);
+            ctx.lineTo(w / 2 - 2, -h / 2 - 10);
             ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(-w/2 + 2, -h/2 - 10, 2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Right antenna
-            ctx.beginPath();
-            ctx.moveTo(w/2 - 8, -h/2);
-            ctx.lineTo(w/2 - 2, -h/2 - 8);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(w/2 - 2, -h/2 - 10, 2, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Status LEDs
+
+            for (let i = 0; i < 4; i++) {
+                drawRoundedRect(ctx, -w / 2 + 6 + i * 9, 3, 6, 4, 1);
+                ctx.fillStyle = '#111827';
+                ctx.fill();
+            }
+
             ctx.fillStyle = '#22c55e';
             ctx.beginPath();
-            ctx.arc(0, -h/2 + 5, 2, 0, Math.PI * 2);
+            ctx.arc(0, -5, 1.8, 0, Math.PI * 2);
             ctx.fill();
-            
-            // Ports
-            ctx.fillStyle = '#475569';
-            for (let i = 0; i < 4; i++) {
-                ctx.fillRect(-w/2 + 4, h/2 - 8 - i*8, w - 8, 3);
-            }
         }
         
         function drawSwitch(ctx) {
-            const w = 35, h = 55;
-            
-            // Switch body
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-w/2, -h/2, w, h);
-            
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(-w/2, -h/2, w, h);
-            
-            // Status LED
-            ctx.fillStyle = '#22c55e';
-            ctx.beginPath();
-            ctx.arc(0, -h/2 + 5, 2, 0, Math.PI * 2);
+            const w = 48;
+            const h = 30;
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h, 5);
+            ctx.fillStyle = createDeviceBodyGradient(w, h);
             ctx.fill();
-            
-            // Ports on front (vertical lines)
-            ctx.fillStyle = '#3b82f6';
-            const portCount = 8;
-            for (let i = 0; i < portCount; i++) {
-                const y = -h/2 + 10 + i * (h - 20) / portCount;
-                ctx.fillRect(-w/3, y, w * 0.66, 2);
-                
-                // Port indicators
-                if (i % 2 === 0) {
-                    ctx.fillStyle = '#22c55e';
-                    ctx.fillRect(-w/4, y, 3, 2);
-                    ctx.fillStyle = '#3b82f6';
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            const cols = 4;
+            const rows = 2;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const px = -w / 2 + 6 + col * 10;
+                    const py = -2 + row * 7;
+                    drawRoundedRect(ctx, px, py, 8, 4, 1);
+                    ctx.fillStyle = '#0b1120';
+                    ctx.fill();
+                    if ((row + col) % 2 === 0) {
+                        ctx.fillStyle = '#22c55e';
+                        ctx.fillRect(px + 1, py - 2, 2, 1.5);
+                    }
                 }
             }
         }
         
         function drawFirewall(ctx) {
             const r = 18;
-            
-            // Shield shape
-            ctx.fillStyle = '#ef4444';
-            ctx.strokeStyle = '#f87171';
-            ctx.lineWidth = 2;
-            
+            const fwGrad = ctx.createLinearGradient(-r, -r, r, r);
+            fwGrad.addColorStop(0, '#f87171');
+            fwGrad.addColorStop(1, '#b91c1c');
+            ctx.fillStyle = fwGrad;
+            ctx.strokeStyle = '#fecaca';
+            ctx.lineWidth = 1.8;
+
             ctx.beginPath();
             ctx.moveTo(0, -r);
             ctx.quadraticCurveTo(-r * 0.7, -r * 0.3, -r, r * 0.3);
@@ -1112,9 +1140,8 @@
             ctx.fill();
             ctx.stroke();
             
-            // X mark
             ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2.6;
             ctx.beginPath();
             ctx.moveTo(-r * 0.4, -r * 0.4);
             ctx.lineTo(r * 0.4, r * 0.4);
@@ -1124,34 +1151,31 @@
         }
         
         function drawIDS(ctx) {
-            const w = 30, h = 40;
-            
-            // IDS box
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-w/2, -h/2, w, h);
-            
+            const w = 34;
+            const h = 40;
+            drawRoundedRect(ctx, -w / 2, -h / 2, w, h, 4);
+            ctx.fillStyle = createDeviceBodyGradient(w, h);
+            ctx.fill();
             ctx.strokeStyle = '#facc15';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(-w/2, -h/2, w, h);
-            
-            // Warning icon
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
             ctx.fillStyle = '#facc15';
             ctx.beginPath();
-            ctx.moveTo(0, -h/2 + 8);
-            ctx.lineTo(-w/4, h/2 - 8);
-            ctx.lineTo(w/4, h/2 - 8);
+            ctx.moveTo(0, -h / 2 + 9);
+            ctx.lineTo(-w / 4, h / 2 - 9);
+            ctx.lineTo(w / 4, h / 2 - 9);
             ctx.closePath();
             ctx.fill();
             
             ctx.fillStyle = '#1e293b';
             ctx.fillRect(-3, 3, 6, 6);
             
-            // Detection waves
             ctx.strokeStyle = '#facc15';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1.6;
             for (let i = 0; i < 3; i++) {
                 ctx.beginPath();
-                ctx.arc(w/2 + 3, 0, 3 + i*4, 0, Math.PI);
+                ctx.arc(w / 2 + 2, 0, 3 + i * 4, -Math.PI / 2, Math.PI / 2);
                 ctx.stroke();
             }
         }
@@ -1343,28 +1367,44 @@
         function checkTaskCompletion() {
             const modemCount = devices.filter(d => d.type === 'modem').length;
             const routerCount = devices.filter(d => d.type === 'router').length;
-            const firewallCount = devices.filter(d => d.type === 'firewall').length;
             const switchCount = devices.filter(d => d.type === 'switch').length;
-            const endpointCount = devices.filter(d => d.type === 'pc' || d.type === 'server').length;
-            const configuredCount = devices.filter(d => d.ip).length;
+            const pcCount = devices.filter(d => d.type === 'pc').length;
+            const serverCount = devices.filter(d => d.type === 'server').length;
+
+            const switchDevice = devices.find(d => d.type === 'switch');
+            const routerDevice = devices.find(d => d.type === 'router');
+            const modemDevice = devices.find(d => d.type === 'modem');
+            const endpointDevices = devices.filter(d => d.type === 'pc' || d.type === 'server');
+
+            const isLinked = (a, b) => {
+                if (!a || !b) return false;
+                return connections.some(c =>
+                    (c.device1 === a.id && c.device2 === b.id) ||
+                    (c.device1 === b.id && c.device2 === a.id)
+                );
+            };
+
+            const allEndpointsToSwitch = switchDevice && endpointDevices.length > 0
+                ? endpointDevices.every(endpoint => isLinked(switchDevice, endpoint))
+                : false;
+            const routerToSwitch = isLinked(routerDevice, switchDevice);
             
-            // Task 1: Modem
-            if (modemCount > 0) markTaskComplete(1);
+            // Task 1: Switch
+            if (switchCount > 0) markTaskComplete(1);
             
-            // Task 2: Router
-            if (routerCount > 0) markTaskComplete(2);
+            // Task 2: 3 PCs
+            if (pcCount >= 3) markTaskComplete(2);
             
-            // Task 3: Firewall
-            if (firewallCount > 0) markTaskComplete(3);
+            // Task 3: 1 server
+            if (serverCount >= 1) markTaskComplete(3);
             
-            // Task 4: Switch
-            if (switchCount > 0) markTaskComplete(4);
+            // Task 4: LAN connections done
+            if (allEndpointsToSwitch) markTaskComplete(4);
             
-            // Task 5: Endpoints
-            if (endpointCount > 0) markTaskComplete(5);
+            // Task 5: WAN edge added and linked to LAN
+            if (modemCount > 0 && routerCount > 0 && routerToSwitch) markTaskComplete(5);
             
-            // Task 6: All configured
-            if (configuredCount === devices.length && devices.length > 0) markTaskComplete(6);
+            // Task 6: completed from Test Et (validateNetwork success)
         }
         
         function markTaskComplete(taskNum) {
@@ -1421,44 +1461,52 @@
         
         function validateNetwork() {
             const errors = [];
-            const requiredDevices = ['modem', 'router'];
             const deviceTypes = devices.map(d => d.type);
-            
-            // Check for required devices
-            if (!deviceTypes.includes('modem')) {
-                errors.push('❌ Modem eksik! Modem internet bağlantısı için gereklidir.');
-            }
-            if (!deviceTypes.includes('router')) {
-                errors.push('❌ Router eksik! Router network segmentasyonu için gereklidir.');
-            }
-            if (!deviceTypes.includes('switch')) {
-                errors.push('❌ Switch eksik! Switch LAN bağlantıları için gereklidir.');
-            }
-            if (!deviceTypes.includes('pc')) {
-                errors.push('❌ PC eksik! En az bir PC (iş istasyonu) ekleyin.');
-            }
-            
-            // Check minimum device count
-            if (deviceTypes.filter(t => t === 'pc').length === 0) {
-                errors.push('❌ Hiç PC yok! En az bir bilgisayar ekleyin.');
-            }
-            
-            // Check if devices are connected
-            const modem = devices.find(d => d.type === 'modem');
-            const router = devices.find(d => d.type === 'router');
-            
-            if (modem && router) {
-                const modemConnections = connections.filter(c => 
-                    c.device1 === modem.id || c.device2 === modem.id
+            const pcCount = deviceTypes.filter(t => t === 'pc').length;
+            const serverCount = deviceTypes.filter(t => t === 'server').length;
+            const switchDevice = devices.find(d => d.type === 'switch');
+            const routerDevice = devices.find(d => d.type === 'router');
+            const modemDevice = devices.find(d => d.type === 'modem');
+            const endpointDevices = devices.filter(d => d.type === 'pc' || d.type === 'server');
+
+            const isLinked = (a, b) => {
+                if (!a || !b) return false;
+                return connections.some(c =>
+                    (c.device1 === a.id && c.device2 === b.id) ||
+                    (c.device1 === b.id && c.device2 === a.id)
                 );
-                if (modemConnections.length === 0) {
-                    errors.push('❌ Modem bağlı değil! Modemi router\'a bağlayın.');
+            };
+            
+            // Aşama 1: LAN doğrulaması
+            if (!switchDevice) {
+                errors.push('❌ LAN eksik: En az 1 switch ekleyin.');
+            }
+            if (pcCount < 3) {
+                errors.push('❌ LAN eksik: En az 3 PC ekleyin.');
+            }
+            if (serverCount < 1) {
+                errors.push('❌ LAN eksik: En az 1 server ekleyin.');
+            }
+
+            if (switchDevice && endpointDevices.length > 0) {
+                const notLinkedEndpoints = endpointDevices.filter(endpoint => !isLinked(switchDevice, endpoint));
+                if (notLinkedEndpoints.length > 0) {
+                    errors.push(`❌ LAN baglantisi eksik: ${notLinkedEndpoints.length} endpoint switch'e bagli degil.`);
                 }
             }
             
-            const hasValidConnections = connections.length >= 2;
-            if (!hasValidConnections) {
-                errors.push('❌ Yetersiz bağlantı! En az 2 bağlantı oluşturun.');
+            // Aşama 2: WAN doğrulaması
+            if (!modemDevice) {
+                errors.push('❌ WAN eksik: Modem ekleyin.');
+            }
+            if (!routerDevice) {
+                errors.push('❌ WAN eksik: Router ekleyin.');
+            }
+            if (modemDevice && routerDevice && !isLinked(modemDevice, routerDevice)) {
+                errors.push("❌ WAN baglantisi eksik: Modem'i router'a baglayin.");
+            }
+            if (routerDevice && switchDevice && !isLinked(routerDevice, switchDevice)) {
+                errors.push("❌ LAN-WAN gecisi eksik: Router'i switch'e baglayin.");
             }
             
             // Check if all devices are connected
@@ -1470,7 +1518,7 @@
             });
             
             if (isolatedDevices.length > 1) {
-                errors.push(`❌ ${isolatedDevices.length} cihaz bağlı değil! Tüm cihazları network'e bağlayın.`);
+                errors.push(`❌ ${isolatedDevices.length} cihaz bagli degil! Tum cihazlari aga baglayin.`);
             }
             
             return {
@@ -1480,6 +1528,7 @@
         }
         
         function showSuccessScreen() {
+            markTaskComplete(6);
             // Start packet animation automatically
             startPacketAnimation();
             
@@ -1494,7 +1543,8 @@
                         </div>
                         <h2 style="color: #fff; font-size: 2rem; margin-bottom: 1rem;">🎉 Başarılı!</h2>
                         <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
-                            Network yapılandırması doğru! Tüm cihazlar bağlı ve network aktif durumda.<br><br>
+                            SEBS Network Lab 1 basariyla tamamlandi.<br>
+                            Asama 1 (LAN) ve Asama 2 (WAN) dogru sekilde kuruldu.<br><br>
                             <strong style="color: #22c55e;">Bağlantılar:</strong> ${connections.length}<br>
                             <strong style="color: #22c55e;">Cihazlar:</strong> ${devices.length}<br>
                             <strong style="color: #22c55e;">Durum:</strong> Çalışıyor ✅
