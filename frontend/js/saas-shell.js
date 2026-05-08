@@ -4,7 +4,14 @@
 
     function getSavedTheme() {
         try {
-            return localStorage.getItem(THEME_KEY) || '';
+            var v = localStorage.getItem(THEME_KEY);
+            if (v === 'dark' || v === 'light') return v;
+            var legacy = localStorage.getItem('theme');
+            if (legacy === 'dark' || legacy === 'light') {
+                localStorage.setItem(THEME_KEY, legacy);
+                return legacy;
+            }
+            return '';
         } catch (e) {
             return '';
         }
@@ -13,6 +20,7 @@
     function saveTheme(theme) {
         try {
             localStorage.setItem(THEME_KEY, theme);
+            localStorage.setItem('theme', theme);
         } catch (e) {
             // noop
         }
@@ -33,8 +41,13 @@
         document.body.classList.toggle('theme-light', !isDark);
     }
 
-    function getThemeLabel(theme) {
-        return theme === 'dark' ? 'Açık Tema' : 'Koyu Tema';
+    function syncThemeToggleButton(btn) {
+        if (!btn) return;
+        var theme = document.documentElement.getAttribute('data-theme') || 'light';
+        var dark = theme === 'dark';
+        btn.classList.toggle('is-dark', dark);
+        btn.setAttribute('aria-checked', dark ? 'true' : 'false');
+        btn.setAttribute('title', dark ? 'Açık temaya geç' : 'Koyu temaya geç');
     }
 
     function isSimulationRoute() {
@@ -56,17 +69,18 @@
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.id = 'themeToggleBtn';
-        btn.className = 'theme-toggle-btn rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm';
-
-        var current = document.documentElement.getAttribute('data-theme') || 'light';
-        btn.textContent = getThemeLabel(current);
+        btn.className = 'theme-toggle-btn theme-toggle-switch focus-ring';
+        btn.setAttribute('role', 'switch');
+        btn.setAttribute('aria-label', 'Koyu tema');
+        btn.innerHTML = '<span class="theme-toggle-knob" aria-hidden="true"></span>';
+        syncThemeToggleButton(btn);
 
         btn.addEventListener('click', function () {
             var now = document.documentElement.getAttribute('data-theme') || 'light';
             var next = now === 'dark' ? 'light' : 'dark';
             applyTheme(next);
             saveTheme(next);
-            btn.textContent = getThemeLabel(next);
+            syncThemeToggleButton(btn);
         });
 
         rightActions.insertBefore(btn, rightActions.firstChild);

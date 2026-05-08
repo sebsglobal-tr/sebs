@@ -496,7 +496,27 @@
         });
     }
 
+    function maybeLoadSaasShellForLanding() {
+        try {
+            if (!document.body || !document.body.classList.contains('landing-site-body')) return;
+            var p = window.location.pathname || '';
+            if (p.indexOf('/simulation/') === 0) return;
+            var scripts = document.getElementsByTagName('script');
+            for (var i = 0; i < scripts.length; i++) {
+                var src = scripts[i].getAttribute('src') || '';
+                if (src.indexOf('saas-shell.js') !== -1) return;
+            }
+            var s = document.createElement('script');
+            s.src = '/js/saas-shell.js';
+            s.async = false;
+            (document.head || document.documentElement).appendChild(s);
+        } catch (e) {
+            /* noop */
+        }
+    }
+
     async function initNavigation() {
+        maybeLoadSaasShellForLanding();
         ensurePremiumExperienceAssets();
         normalizeLandingNavOrder();
         if (typeof window.initSupabase !== 'undefined') {
