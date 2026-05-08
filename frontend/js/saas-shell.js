@@ -1,5 +1,74 @@
 (function () {
     'use strict';
+    var THEME_KEY = 'sebs-theme';
+
+    function getSavedTheme() {
+        try {
+            return localStorage.getItem(THEME_KEY) || '';
+        } catch (e) {
+            return '';
+        }
+    }
+
+    function saveTheme(theme) {
+        try {
+            localStorage.setItem(THEME_KEY, theme);
+        } catch (e) {
+            // noop
+        }
+    }
+
+    function resolveInitialTheme() {
+        var saved = getSavedTheme();
+        if (saved === 'dark' || saved === 'light') return saved;
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+        return 'light';
+    }
+
+    function applyTheme(theme) {
+        var root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        var isDark = theme === 'dark';
+        document.body.classList.toggle('theme-dark', isDark);
+        document.body.classList.toggle('theme-light', !isDark);
+    }
+
+    function getThemeLabel(theme) {
+        return theme === 'dark' ? 'Açık Tema' : 'Koyu Tema';
+    }
+
+    function injectThemeToggle() {
+        var headerBar = document.querySelector('header.fixed .mx-auto.flex');
+        if (!headerBar) return;
+        var rightActions = headerBar.querySelector('.flex.items-center.gap-1\\.5') || headerBar.querySelector('.flex.items-center.gap-2');
+        if (!rightActions) return;
+
+        if (document.getElementById('themeToggleBtn')) return;
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = 'themeToggleBtn';
+        btn.className = 'theme-toggle-btn rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm';
+
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        btn.textContent = getThemeLabel(current);
+
+        btn.addEventListener('click', function () {
+            var now = document.documentElement.getAttribute('data-theme') || 'light';
+            var next = now === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            saveTheme(next);
+            btn.textContent = getThemeLabel(next);
+        });
+
+        rightActions.insertBefore(btn, rightActions.firstChild);
+    }
+
+    function initTheme() {
+        applyTheme(resolveInitialTheme());
+        injectThemeToggle();
+    }
+
     function setFooterYear() {
         document.querySelectorAll('.saas-footer-year').forEach(function (el) {
             el.textContent = String(new Date().getFullYear());
@@ -31,6 +100,7 @@
     }
 
     function init() {
+        initTheme();
         setFooterYear();
         wireLandingModuleLazyImages();
         nudgeLazyImagesInActiveSection();
