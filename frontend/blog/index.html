@@ -19,6 +19,9 @@
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://sebsglobal.com/blog"}]}
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/saas-landing.css">
   <link rel="stylesheet" href="/css/landing-chrome.css">
@@ -35,14 +38,24 @@
         <a href="/simulations.html">Simulasyonlar</a>
         <a href="/blog" aria-current="page">Blog</a>
       </nav>
-      <a href="/signup.html" class="blog-cta">Ucretsiz Basla</a>
+      <a href="/signup.html" class="blog-cta"><span>Ucretsiz Basla</span></a>
     </div>
   </header>
 
-  <main class="blog-shell">
+  <main class="blog-shell blog-shell--listing">
     <section class="blog-hero">
-      <h1>SEBS Blog</h1>
-      <p>Kariyer planlama, teknik gelisim ve uygulamali siber guvenlik odakli rehber icerikler.</p>
+      <div class="blog-hero-grid">
+        <div class="blog-hero-copy">
+          <p class="blog-hero-eyebrow">Icerik kutuphanesi</p>
+          <h1>SEBS Blog</h1>
+          <p class="blog-hero-lead">Kariyer planlama, teknik gelisim ve uygulamali siber guvenlik odakli rehber icerikler.</p>
+        </div>
+        <div class="blog-hero-art" aria-hidden="true">
+          <div class="blog-hero-orb blog-hero-orb--a"></div>
+          <div class="blog-hero-orb blog-hero-orb--b"></div>
+          <div class="blog-hero-gridlines"></div>
+        </div>
+      </div>
       <div class="blog-kpi-grid">
         <div class="blog-kpi-card">
           <span class="blog-kpi-value">10+</span>
@@ -59,7 +72,7 @@
       </div>
     </section>
 
-    <h2 class="blog-section-title">One Cikan Yazilar</h2>
+    <h2 class="blog-section-title"><span class="blog-section-title-text">One Cikan Yazilar</span></h2>
     <section class="blog-card-grid" aria-label="Blog kartlari">
       <article class="blog-card">
         <span class="blog-card-tag">Baslangic</span>
@@ -123,7 +136,7 @@
       </article>
     </section>
 
-    <h2 class="blog-section-title">Kategori Ozeti</h2>
+    <h2 class="blog-section-title"><span class="blog-section-title-text">Kategori Ozeti</span></h2>
     <section class="blog-table-wrap" aria-label="Kategori tablosu">
       <table class="blog-table">
         <thead>
@@ -166,7 +179,15 @@
 
   <footer class="blog-footer">
     <div class="blog-footer-inner">
-      <p>SEBS Global Blog - Uygulamali ogrenme ile kariyer gelisimi.</p>
+      <div class="blog-footer-brand">
+        <strong>SEBS Blog</strong>
+        <p>Uygulamali ogrenme ve kariyer gelisimi icin pratik icerikler.</p>
+      </div>
+      <nav class="blog-footer-links" aria-label="Hizli baglantilar">
+        <a href="/modules.html">Egitim modulleri</a>
+        <a href="/simulations.html">Simulasyonlar</a>
+        <a href="/contact.html">Iletisim</a>
+      </nav>
     </div>
   </footer>
 </body>
