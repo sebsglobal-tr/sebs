@@ -37,6 +37,14 @@
         return theme === 'dark' ? 'Açık Tema' : 'Koyu Tema';
     }
 
+    function isSimulationRoute() {
+        var p = (window.location && window.location.pathname) ? window.location.pathname : '';
+        if (!p) return false;
+        if (p.indexOf('/simulation/') === 0) return true;
+        if (p.indexOf('/simulasyonlar/') === 0) return true;
+        return false;
+    }
+
     function injectThemeToggle() {
         var headerBar = document.querySelector('header.fixed .mx-auto.flex');
         if (!headerBar) return;
@@ -65,6 +73,10 @@
     }
 
     function initTheme() {
+        if (isSimulationRoute()) {
+            document.body.classList.add('sebs-sim-theme-lock');
+            return;
+        }
         applyTheme(resolveInitialTheme());
         injectThemeToggle();
     }
