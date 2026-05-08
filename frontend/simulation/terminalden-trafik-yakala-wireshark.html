@@ -118,7 +118,7 @@
         <div class="task" data-task="2">2) Wireshark + tcpdump kur</div>
         <div class="task" data-task="3">3) Sürüm kontrollerini yap</div>
         <div class="task" data-task="4">4) Ağ arayüzlerini görüntüle</div>
-        <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat</div>
+        <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat (pcap adını sen belirleyebilirsin)</div>
         <div class="task" data-task="6">6) ping / nslookup / curl trafiği üret</div>
         <div class="task" data-task="7">7) Yakalamayı CTRL + C ile durdur</div>
         <div class="task" data-task="8">8) pcap dosyasını doğrula</div>
@@ -185,11 +185,21 @@
       updated: false, installed: false, wsVer: false, tdVer: false, iface: false,
       captureStarted: false, captureStopped: false, pcapCreated: false,
       captureIface: "", wrongIface: false,
+      pcapFileName: "sebs_lab3_capture.pcap",
       ping: false, dns: false, http: false, lsPcap: false, filePcap: false,
       filters: { icmp: false, dns: false, http: false, ip: false },
       wiresharkOpened: false,
       packets: { icmp: 0, dns: 0, http: 0, tcp: 0 },
       stage: 1
+    };
+    const shell = {
+      user: "analyst",
+      host: "sebs-lab3",
+      cwd: "/home/analyst",
+      fs: {
+        "/home/analyst": { type: "dir", children: ["notes.txt"] },
+        "/home/analyst/notes.txt": { type: "file", content: "SEBS Lab 3 notlari\n" }
+      }
     };
 
     function say(text, mode = "warn") {
@@ -215,6 +225,67 @@
       if (active) out.insertBefore(d, active);
       else out.appendChild(d);
       out.scrollTop = out.scrollHeight;
+    }
+    function getPrompt() {
+      const short = shell.cwd.replace("/home/analyst", "~");
+      return `${shell.user}@${shell.host}:${short}$`;
+    }
+    function normalizePath(inputPath) {
+      if (!inputPath || inputPath === ".") return shell.cwd;
+      if (inputPath.startsWith("/")) return inputPath.replace(/\/+/g, "/");
+      const base = shell.cwd.endsWith("/") ? shell.cwd.slice(0, -1) : shell.cwd;
+      const joined = `${base}/${inputPath}`.replace(/\/+/g, "/");
+      const parts = [];
+      joined.split("/").forEach(p => {
+        if (!p || p === ".") return;
+        if (p === "..") parts.pop();
+        else parts.push(p);
+      });
+      return "/" + parts.join("/");
+    }
+    function parentDir(path) {
+      if (path === "/") return "/";
+      const idx = path.lastIndexOf("/");
+      return idx <= 0 ? "/" : path.slice(0, idx);
+    }
+    function baseName(path) {
+      if (path === "/") return "/";
+      const idx = path.lastIndexOf("/");
+      return path.slice(idx + 1);
+    }
+    function pathExists(path) { return !!shell.fs[path]; }
+    function isDir(path) { return shell.fs[path]?.type === "dir"; }
+    function ensureDir(path) {
+      if (!pathExists(path)) return false;
+      return isDir(path);
+    }
+    function listDir(path) {
+      if (!ensureDir(path)) return null;
+      return shell.fs[path].children.slice();
+    }
+    function addDir(path) {
+      if (pathExists(path)) return false;
+      const p = parentDir(path);
+      if (!ensureDir(p)) return false;
+      shell.fs[path] = { type: "dir", children: [] };
+      shell.fs[p].children.push(baseName(path));
+      return true;
+    }
+    function addFile(path, content = "") {
+      const p = parentDir(path);
+      if (!ensureDir(p)) return false;
+      if (!pathExists(path)) shell.fs[p].children.push(baseName(path));
+      shell.fs[path] = { type: "file", content };
+      return true;
+    }
+    function removePath(path) {
+      if (!pathExists(path)) return false;
+      if (path === "/" || path === "/home" || path === "/home/analyst") return false;
+      if (isDir(path) && shell.fs[path].children.length) return false;
+      const p = parentDir(path);
+      if (shell.fs[p]?.children) shell.fs[p].children = shell.fs[p].children.filter(n => n !== baseName(path));
+      delete shell.fs[path];
+      return true;
     }
     function runCommandWithAnimation(cmd) {
       if (commandRunning) {
@@ -305,19 +376,176 @@
       const cmd = raw.trim();
       if (!cmd) return;
       if (echo) line(`$ ${cmd}`, "cmd");
+      const parts = cmd.split(/\s+/);
+      const bin = parts[0];
 
-      if (cmd === "CTRL + C" || cmd.toLowerCase() === "ctrl+c") {
-        if (!state.captureStarted) {
-          line("tcpdump aktif değil.");
+      // Generic shell-like commands for realism
+      if (bin === "help") {
+        line("Desteklenen komutlar: pwd, whoami, hostname, date, ls, cd, mkdir, touch, cat, echo, cp, mv, rm, clear, history");
+        line("Ek komutlar: grep, head, tail, chmod, sudo -l");
+        line("Lab komutlari: apt update, apt install, wireshark --version, tcpdump --version, ip addr, sudo tcpdump -i ... -w ...");
+        refreshTasks();
+        return;
+      }
+      if (bin === "pwd") { line(shell.cwd); refreshTasks(); return; }
+      if (bin === "whoami") { line(shell.user); refreshTasks(); return; }
+      if (bin === "hostname") { line(shell.host); refreshTasks(); return; }
+      if (bin === "date") { line(new Date().toString()); refreshTasks(); return; }
+      if (bin === "clear") {
+        out.querySelectorAll(".line, .terminal-line:not(#activeLine)").forEach(n => n.remove());
+        refreshTasks();
+        return;
+      }
+      if (bin === "history") {
+        history.forEach((h, i) => line(`${i + 1}  ${h}`));
+        refreshTasks();
+        return;
+      }
+      if (bin === "cd") {
+        const target = normalizePath(parts[1] || "/home/analyst");
+        if (ensureDir(target)) {
+          shell.cwd = target;
+          const promptEl = document.getElementById("currentPrompt");
+          if (promptEl) promptEl.textContent = getPrompt();
         } else {
-          state.captureStarted = false;
-          state.captureStopped = true;
-          state.pcapCreated = (state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp) > 0;
-          line("^C");
-          line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets captured`);
-          pcapState.textContent = state.pcapCreated ? "sebs_lab3_capture.pcap oluşturuldu." : "Dosya oluştu ancak paket yok.";
+          line(`cd: no such file or directory: ${parts[1] || ""}`);
         }
         refreshTasks();
+        return;
+      }
+      if (bin === "ls") {
+        const arg = parts.find(p => !p.startsWith("-") && p !== "ls");
+        const target = normalizePath(arg || ".");
+        const listing = listDir(target);
+        if (!listing) line(`ls: cannot access '${arg || target}': No such file or directory`);
+        else line(listing.join("  ") || ".");
+        refreshTasks();
+        return;
+      }
+      if (bin === "mkdir") {
+        const p = parts[1];
+        if (!p) line("mkdir: missing operand");
+        else if (addDir(normalizePath(p))) line("");
+        else line(`mkdir: cannot create directory '${p}'`);
+        refreshTasks();
+        return;
+      }
+      if (bin === "touch") {
+        const p = parts[1];
+        if (!p) line("touch: missing file operand");
+        else if (!addFile(normalizePath(p), shell.fs[normalizePath(p)]?.content || "")) line(`touch: cannot touch '${p}'`);
+        refreshTasks();
+        return;
+      }
+      if (bin === "cat") {
+        const p = normalizePath(parts[1] || "");
+        if (!pathExists(p)) line(`cat: ${parts[1] || ""}: No such file or directory`);
+        else if (isDir(p)) line(`cat: ${parts[1]}: Is a directory`);
+        else line(shell.fs[p].content || "");
+        refreshTasks();
+        return;
+      }
+      if (bin === "head" || bin === "tail") {
+        const fileArg = parts.find((p, i) => i > 0 && !p.startsWith("-"));
+        const nArg = parts.find((p) => p.startsWith("-n"));
+        const n = nArg ? Number(nArg.replace("-n", "") || "10") : 10;
+        const p = normalizePath(fileArg || "");
+        if (!fileArg) {
+          line(`${bin}: missing file operand`);
+          refreshTasks();
+          return;
+        }
+        if (!pathExists(p)) line(`${bin}: cannot open '${fileArg}'`);
+        else if (isDir(p)) line(`${bin}: error reading '${fileArg}': Is a directory`);
+        else {
+          const rows = (shell.fs[p].content || "").split("\n");
+          const chunk = bin === "head" ? rows.slice(0, n) : rows.slice(Math.max(0, rows.length - n));
+          line(chunk.join("\n"));
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "grep") {
+        if (parts.length < 3) {
+          line("grep: usage: grep PATTERN FILE");
+          refreshTasks();
+          return;
+        }
+        const pattern = parts[1];
+        const p = normalizePath(parts[2]);
+        if (!pathExists(p)) line(`grep: ${parts[2]}: No such file or directory`);
+        else if (isDir(p)) line(`grep: ${parts[2]}: Is a directory`);
+        else {
+          const rows = (shell.fs[p].content || "").split("\n");
+          const hits = rows.filter(r => r.includes(pattern));
+          if (hits.length) line(hits.join("\n"));
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "chmod") {
+        if (parts.length < 3) {
+          line("chmod: missing operand");
+          refreshTasks();
+          return;
+        }
+        const p = normalizePath(parts[2]);
+        if (!pathExists(p)) line(`chmod: cannot access '${parts[2]}'`);
+        else line("");
+        refreshTasks();
+        return;
+      }
+      if (bin === "sudo" && parts[1] === "-l") {
+        line("Matching Defaults entries for analyst on sebs-lab3:");
+        line("    env_reset, mail_badpass, secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+        line("User analyst may run the following commands on sebs-lab3:");
+        line("    (ALL : ALL) ALL");
+        refreshTasks();
+        return;
+      }
+      if (bin === "echo" && cmd.includes(">")) {
+        const m = cmd.match(/^echo\s+(.+?)\s*>\s*(.+)$/);
+        if (!m) line("echo: syntax error");
+        else {
+          const content = m[1].replace(/^["']|["']$/g, "");
+          const p = normalizePath(m[2].trim());
+          if (!addFile(p, content + "\n")) line(`echo: cannot write '${m[2].trim()}'`);
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "cp" || bin === "mv") {
+        const src = normalizePath(parts[1] || "");
+        const dst = normalizePath(parts[2] || "");
+        if (!parts[1] || !parts[2]) {
+          line(`${bin}: missing file operand`);
+          refreshTasks();
+          return;
+        }
+        if (!pathExists(src) || isDir(src)) {
+          line(`${bin}: cannot stat '${parts[1]}'`);
+          refreshTasks();
+          return;
+        }
+        if (!addFile(dst, shell.fs[src].content || "")) {
+          line(`${bin}: cannot create '${parts[2]}'`);
+          refreshTasks();
+          return;
+        }
+        if (bin === "mv") removePath(src);
+        refreshTasks();
+        return;
+      }
+      if (bin === "rm") {
+        const p = normalizePath(parts[1] || "");
+        if (!parts[1]) line("rm: missing operand");
+        else if (!removePath(p)) line(`rm: cannot remove '${parts[1]}'`);
+        refreshTasks();
+        return;
+      }
+
+      if (cmd === "CTRL + C" || cmd.toLowerCase() === "ctrl+c" || cmd === "^C") {
+        handleInterrupt();
         return;
       }
 
@@ -337,16 +565,19 @@
         state.iface = true;
         line("1: lo: ...");
         line("2: eth0: inet 192.168.10.15/24");
-      } else if (cmd.startsWith("sudo tcpdump -i") && cmd.includes("-w sebs_lab3_capture.pcap")) {
+      } else if (cmd.startsWith("sudo tcpdump -i") && cmd.includes("-w")) {
         if (!state.installed) {
           line("tcpdump: command not found");
         } else {
           const m = cmd.match(/-i\s+([a-zA-Z0-9._-]+)/);
+          const outFile = cmd.match(/-w\s+([^\s]+)/);
           state.captureIface = m ? m[1] : "";
+          state.pcapFileName = outFile ? outFile[1] : "sebs_lab3_capture.pcap";
           state.wrongIface = state.captureIface !== "eth0";
           state.captureStarted = true;
           state.captureStopped = false;
           line(`tcpdump: listening on ${state.captureIface || "unknown"}, link-type EN10MB...`);
+          line(`output file: ${state.pcapFileName}`);
           if (state.wrongIface) {
             line("UYARI: Bu lab için beklenen arayüz eth0.");
             say("Yanlış arayüz seçildi. eth0 dinlemen gerekiyor.", "warn");
@@ -365,18 +596,27 @@
         state.http = true;
         if (state.captureStarted && !state.wrongIface) { state.packets.http += 2; state.packets.tcp += 6; }
         line("HTTP/1.1 200 OK");
-      } else if (cmd === "ls -lh sebs_lab3_capture.pcap") {
-        state.lsPcap = state.pcapCreated;
-        line(state.pcapCreated ? "-rw-r--r-- 1 student student 28K sebs_lab3_capture.pcap" : "ls: cannot access 'sebs_lab3_capture.pcap': No such file");
-      } else if (cmd === "file sebs_lab3_capture.pcap") {
-        state.filePcap = state.pcapCreated;
-        line(state.pcapCreated ? "sebs_lab3_capture.pcap: tcpdump capture file" : "cannot open");
-      } else if (cmd === "wireshark sebs_lab3_capture.pcap") {
+      } else if (cmd.startsWith("ls -lh ")) {
+        const target = cmd.replace("ls -lh ", "").trim();
+        state.lsPcap = state.pcapCreated && target === state.pcapFileName;
+        line(state.lsPcap ? `-rw-r--r-- 1 student student 28K ${target}` : `ls: cannot access '${target}': No such file`);
+      } else if (cmd.startsWith("file ")) {
+        const target = cmd.replace("file ", "").trim();
+        state.filePcap = state.pcapCreated && target === state.pcapFileName;
+        line(state.filePcap ? `${target}: tcpdump capture file` : "cannot open");
+      } else if (cmd.startsWith("wireshark ")) {
+        const target = cmd.replace("wireshark ", "").trim();
         if (state.pcapCreated) {
+          if (target !== state.pcapFileName) {
+            line("File not found.");
+            say(`PCAP adı farklı. Beklenen dosya: ${state.pcapFileName}`, "warn");
+            refreshTasks();
+            return;
+          }
           state.wiresharkOpened = true;
           wiresharkPanel.classList.remove("hidden");
           wiresharkLocked.classList.add("hidden");
-          line("Wireshark GUI opened with sebs_lab3_capture.pcap");
+          line(`Wireshark GUI opened with ${state.pcapFileName}`);
           say("Wireshark analiz ekranı açıldı.", "ok");
         } else {
           line("File not found.");
@@ -388,8 +628,23 @@
 
       if (state.pcapCreated) {
         pcapState.textContent = state.wrongIface
-          ? `sebs_lab3_capture.pcap oluştu fakat ${state.captureIface} arayüzünde trafik yetersiz.`
-          : "sebs_lab3_capture.pcap hazır. Wireshark ile analiz edebilirsin.";
+          ? `${state.pcapFileName} oluştu fakat ${state.captureIface} arayüzünde trafik yetersiz.`
+          : `${state.pcapFileName} hazır. Wireshark ile analiz edebilirsin.`;
+      }
+      refreshTasks();
+    }
+    function handleInterrupt() {
+      line("^C");
+      if (!state.captureStarted) {
+        line("İptal edildi.");
+      } else {
+        state.captureStarted = false;
+        state.captureStopped = true;
+        state.pcapCreated = (state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp) > 0;
+        line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets captured`);
+        line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets received by filter`);
+        pcapState.textContent = state.pcapCreated ? "sebs_lab3_capture.pcap oluşturuldu." : "Dosya oluştu ancak paket yok.";
+        say("Yakalama Ctrl+C ile durduruldu.", "ok");
       }
       refreshTasks();
     }
@@ -425,6 +680,17 @@
 
     const terminalInput = document.getElementById("terminalInput");
     terminalInput.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && (e.key === "c" || e.key === "C")) {
+        e.preventDefault();
+        if (commandRunning) {
+          say("Komut çıktısı yazılırken kısa süre bekle.", "warn");
+          return;
+        }
+        handleInterrupt();
+        terminalInput.textContent = "";
+        focusInput();
+        return;
+      }
       if (e.key === "Enter") {
         e.preventDefault();
         if (commandRunning) return;
@@ -432,7 +698,7 @@
         if (!cmd) return;
         history.push(cmd);
         historyIndex = history.length;
-        commandLine("analyst@sebs-lab3:~$", cmd);
+        commandLine(getPrompt(), cmd);
         terminalInput.textContent = "";
         runCommandWithAnimation(cmd);
       } else if (e.key === "ArrowUp") {
@@ -470,6 +736,8 @@
       intro.style.display = "none";
       line("SEBS Lab 3 ortamına hoş geldiniz.");
       line("İlk adım: sudo apt update");
+      const promptEl = document.getElementById("currentPrompt");
+      if (promptEl) promptEl.textContent = getPrompt();
       focusInput();
     });
   </script>
