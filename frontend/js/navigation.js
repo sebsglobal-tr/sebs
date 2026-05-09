@@ -226,10 +226,16 @@
             trig.setAttribute('aria-expanded', open ? 'true' : 'false');
         }
 
-        trig.addEventListener('click', function (e) {
+        function isOpen() {
+            return !panel.classList.contains('hidden');
+        }
+
+        /* Tek giriş noktası: çip (#userProfile) — avatar/isim alanına tıklayınca aç/kapa; panel içi hariç */
+        root.addEventListener('click', function (e) {
+            if (e.target.closest('#userAccountPanel')) return;
             e.preventDefault();
             e.stopPropagation();
-            setOpen(panel.classList.contains('hidden'));
+            setOpen(!isOpen());
         });
 
         document.addEventListener('click', function (e) {
