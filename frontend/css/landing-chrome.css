@@ -28,7 +28,8 @@ html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana 
 }
 
 html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] a,
-html[data-theme="dark"] body.landing-site-body header.fixed a,
+html[data-theme="dark"] body.landing-site-body header.fixed #loginBtn,
+html[data-theme="dark"] body.landing-site-body header.fixed #userName,
 html[data-theme="dark"] body.landing-site-body .theme-toggle-btn {
   color: #cbd5e1 !important;
 }
@@ -145,6 +146,71 @@ html[data-theme="dark"] body.landing-site-body .theme-toggle-switch.is-dark {
 html[data-theme="dark"] body.landing-site-body .theme-toggle-switch .theme-toggle-knob {
   background: #f8fafc !important;
   box-shadow: 0 1px 3px rgb(2 6 23 / 0.35);
+}
+
+/* Dark mode: landing hero + dashboard mockup contrast */
+html[data-theme="dark"] body.landing-site-body .hero-mesh {
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(99, 102, 241, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, rgba(14, 165, 233, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 45% at 50% 100%, rgba(37, 99, 235, 0.14) 0%, transparent 50%),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 50%, #111827 100%) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-chip {
+  background: rgba(15, 23, 42, 0.72) !important;
+  border-color: rgba(71, 85, 105, 0.7) !important;
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel {
+  border-color: rgba(51, 65, 85, 0.9) !important;
+  background: linear-gradient(165deg, rgba(15, 23, 42, 0.95) 0%, rgba(17, 24, 39, 0.96) 100%) !important;
+  box-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.5),
+    0 28px 56px -32px rgba(2, 6, 23, 0.8) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .border-slate-200\/80 {
+  border-color: rgba(71, 85, 105, 0.6) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .bg-white,
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .bg-slate-50,
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .bg-slate-50\/80 {
+  background: #0f172a !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .border-slate-200\/90,
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .border-slate-200\/80 {
+  border-color: rgba(71, 85, 105, 0.62) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-slate-500,
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .bg-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .bg-emerald-50\/90 {
+  background: rgba(6, 78, 59, 0.38) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-emerald-900 {
+  color: #6ee7b7 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-emerald-700,
+html[data-theme="dark"] body.landing-site-body .hero-mock-panel .text-emerald-700\/80 {
+  color: #a7f3d0 !important;
 }
 
 body.landing-site-body::after {
