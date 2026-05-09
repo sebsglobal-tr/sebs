@@ -519,20 +519,22 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Blog + Platform (açılır: Eğitim modülleri, Simülasyonlar). */
+    /** Landing üst menü: Platform + Blog + SEBS yolunu gör + Bize ulaşın (tipografi landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
         }
 
-        var linkClass =
-            'text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded';
+        var NAV_ACCENT = 'landing-nav-pill-link landing-nav-pill-link--accent focus-ring';
+        var NAV_MUTED = 'landing-nav-pill-link landing-nav-pill-link--muted focus-ring';
+        var NAV_PLATFORM_TRIG =
+            'landing-nav-pill-link landing-nav-pill-link--platform nav-platform-trigger inline-flex items-center gap-0.5 border-0 bg-transparent focus-ring';
 
         function makeBlogLink() {
             var a = document.createElement('a');
             a.href = '/blog';
             a.textContent = 'Blog';
-            a.className = linkClass;
+            a.className = NAV_ACCENT;
             return a;
         }
 
@@ -544,14 +546,13 @@
             var trig = document.createElement('button');
             trig.type = 'button';
             trig.id = 'navPlatformTrigger';
-            trig.className =
-                'nav-platform-trigger inline-flex items-center gap-1 rounded-full border-0 bg-transparent text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring';
+            trig.className = NAV_PLATFORM_TRIG;
             trig.setAttribute('aria-expanded', 'false');
             trig.setAttribute('aria-haspopup', 'menu');
             trig.setAttribute('aria-controls', 'navPlatformPanel');
             trig.setAttribute('aria-label', 'Platform menüsü');
             var chev = document.createElement('span');
-            chev.className = 'nav-platform-chevron text-[0.65rem] leading-none opacity-70';
+            chev.className = 'nav-platform-chevron text-[0.7rem] leading-none opacity-75';
             chev.setAttribute('aria-hidden', 'true');
             chev.textContent = '▾';
             trig.appendChild(document.createTextNode('Platform'));
@@ -589,7 +590,7 @@
             var a = document.createElement('a');
             a.href = '/pricing.html';
             a.textContent = 'SEBS yolunu gör';
-            a.className = linkClass;
+            a.className = NAV_ACCENT;
             return a;
         }
 
@@ -597,19 +598,18 @@
             var a = document.createElement('a');
             a.href = '/contact.html';
             a.textContent = 'Bize ulaşın';
-            a.className =
-                'text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded';
+            a.className = NAV_MUTED;
             return a;
         }
 
         var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
         if (desktopNav) {
             desktopNav.className =
-                'hidden min-w-0 flex-1 flex-wrap items-center justify-center gap-x-1 gap-y-1 xl:flex';
+                'hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex';
             desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
-            desktopNav.appendChild(makeBlogLink());
             desktopNav.appendChild(makeDesktopPlatformBlock());
+            desktopNav.appendChild(makeBlogLink());
             desktopNav.appendChild(makeSebsYoluNavLink());
             desktopNav.appendChild(makeContactNavLink());
         }
@@ -639,52 +639,51 @@
             }
             var frag = document.createDocumentFragment();
 
-            var blogA = document.createElement('a');
-            blogA.href = '/blog';
-            blogA.textContent = 'Blog';
-            blogA.className =
-                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
-
-            var hrAfterBlog = document.createElement('hr');
-            hrAfterBlog.className = 'my-1 border-slate-100';
+            var drawerAccent = 'landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+            var drawerMuted =
+                'landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50';
 
             var platHead = document.createElement('div');
             platHead.className =
-                'px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500';
+                'landing-nav-drawer-heading px-4 pb-1 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500';
             platHead.textContent = 'Platform';
 
             var modA = document.createElement('a');
             modA.href = '/modules.html';
             modA.textContent = 'Eğitim modülleri';
-            modA.className =
-                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+            modA.className = drawerAccent;
 
             var simA = document.createElement('a');
             simA.href = '/simulations.html';
             simA.textContent = 'Simülasyonlar';
-            simA.className =
-                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+            simA.className = drawerAccent;
+
+            var hrMid = document.createElement('hr');
+            hrMid.className = 'my-1 border-slate-100';
+
+            var blogA = document.createElement('a');
+            blogA.href = '/blog';
+            blogA.textContent = 'Blog';
+            blogA.className = drawerAccent;
 
             var pricingA = document.createElement('a');
             pricingA.href = '/pricing.html';
             pricingA.textContent = 'SEBS yolunu gör';
-            pricingA.className =
-                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+            pricingA.className = drawerAccent;
 
             var contactA = document.createElement('a');
             contactA.href = '/contact.html';
             contactA.textContent = 'Bize ulaşın';
-            contactA.className =
-                'block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50';
+            contactA.className = drawerMuted;
 
             var hrBeforeAuth = document.createElement('hr');
             hrBeforeAuth.className = 'my-1 border-slate-100';
 
-            frag.appendChild(blogA);
-            frag.appendChild(hrAfterBlog);
             frag.appendChild(platHead);
             frag.appendChild(modA);
             frag.appendChild(simA);
+            frag.appendChild(hrMid);
+            frag.appendChild(blogA);
             frag.appendChild(pricingA);
             frag.appendChild(contactA);
             frag.appendChild(hrBeforeAuth);
