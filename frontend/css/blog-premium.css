@@ -468,6 +468,9 @@ body.landing-site-body.blog-premium-page {
 
 .blog-card {
   --blog-accent: #3b82f6;
+  --tilt-x: 0;
+  --tilt-y: 0;
+  --lift: 0;
   position: relative;
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 1rem;
@@ -476,6 +479,44 @@ body.landing-site-body.blog-premium-page {
   box-shadow: 0 12px 32px -28px rgba(15, 23, 42, 0.45);
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   border-top: 3px solid var(--blog-accent);
+}
+
+a.blog-card--interactive {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: perspective(920px) rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg))
+    translateY(var(--lift));
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+a.blog-card--interactive:hover {
+  --lift: -4px;
+}
+
+a.blog-card--interactive:focus {
+  outline: none;
+}
+
+a.blog-card--interactive:focus-visible {
+  outline: 2px solid var(--blog-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.blog-card--interactive {
+    transform: none;
+    transition: box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  a.blog-card--interactive:hover {
+    transform: translateY(-3px);
+  }
 }
 
 .blog-card:nth-child(5n + 1) {
@@ -504,6 +545,21 @@ body.landing-site-body.blog-premium-page {
   box-shadow: 0 24px 40px -28px rgba(15, 23, 42, 0.38);
 }
 
+a.blog-card--interactive:hover {
+  transform: perspective(920px) rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg))
+    translateY(var(--lift));
+  border-color: rgba(59, 130, 246, 0.28);
+  box-shadow:
+    0 24px 40px -28px rgba(15, 23, 42, 0.38),
+    0 0 0 1px color-mix(in srgb, var(--blog-accent) 22%, transparent);
+}
+
+@supports not (color: color-mix(in srgb, white 50%, black)) {
+  a.blog-card--interactive:hover {
+    box-shadow: 0 24px 40px -28px rgba(15, 23, 42, 0.38);
+  }
+}
+
 .blog-card-tag {
   display: inline-flex;
   align-items: center;
@@ -523,7 +579,8 @@ body.landing-site-body.blog-premium-page {
   }
 }
 
-.blog-card h3 {
+.blog-card h3,
+.blog-card-title {
   margin: 0.75rem 0 0.5rem;
   font-size: 1.06rem;
   line-height: 1.35;
@@ -539,7 +596,18 @@ body.landing-site-body.blog-premium-page {
   color: var(--blog-accent);
 }
 
-.blog-card p {
+.blog-card-title {
+  color: #0f172a;
+  font-weight: 700;
+  transition: color 0.15s ease;
+}
+
+a.blog-card--interactive:hover .blog-card-title {
+  color: var(--blog-accent);
+}
+
+.blog-card p,
+.blog-card-excerpt {
   margin: 0;
   color: #475569;
   font-size: 0.94rem;
@@ -555,16 +623,44 @@ body.landing-site-body.blog-premium-page {
   font-weight: 600;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.blog-card-meta {
+  display: inline-flex;
+  align-items: center;
   gap: 0.35rem;
 }
 
-.blog-card-footer::before {
+.blog-card-meta::before {
   content: '';
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
   background: var(--blog-accent);
   opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.blog-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 700;
+  color: var(--blog-accent);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.blog-card-cta-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+a.blog-card--interactive:hover .blog-card-cta-arrow {
+  transform: translateX(5px);
 }
 
 .blog-table-wrap {
@@ -790,8 +886,13 @@ html[data-theme="dark"] body.blog-premium-page .blog-card:hover {
   box-shadow: 0 24px 40px -28px rgba(0, 0, 0, 0.45);
 }
 
-html[data-theme="dark"] body.blog-premium-page .blog-card h3 a {
+html[data-theme="dark"] body.blog-premium-page .blog-card h3 a,
+html[data-theme="dark"] body.blog-premium-page .blog-card-title {
   color: #f8fafc;
+}
+
+html[data-theme="dark"] body.blog-premium-page a.blog-card--interactive:hover .blog-card-title {
+  color: #93c5fd;
 }
 
 html[data-theme="dark"] body.blog-premium-page .blog-card p {
