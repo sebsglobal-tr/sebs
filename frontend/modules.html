@@ -3,6 +3,9 @@
 <head>
   <script src="/js/gtag.js"></script>
     <meta charset="UTF-8">
+    <script>
+      (function(){try{var t=localStorage.getItem('sebs-theme')||localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);return;}if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <base href="/">
     <title>SEBS Egitim Modulleri | Siber Guvenlik, SOC ve Web Guvenligi Egitimleri</title>
@@ -95,22 +98,30 @@
     <a href="/" class="flex shrink-0 items-center gap-2.5 focus-ring rounded-lg">
       <img src="/images/sebs-global-logo-full.png" alt="SEBS Global" class="h-11 w-auto" style="margin-left: -8px; transform: scaleX(1.30); transform-origin: left center; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);" />
     </a>
-    <nav class="hidden items-center gap-5 xl:flex" aria-label="Ana menü">
+    <nav class="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label="Ana menü">
       <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
       <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
-      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
-      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
-      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+      <a href="/blog" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Blog</a>
+      <a href="/#platform" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Platform</a>
     </nav>
-    <div class="flex items-center gap-1.5 sm:gap-2">
+    <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
       <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
       <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
       <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
-      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
-        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
-        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+      <div id="userProfile" class="relative hidden max-w-[10rem] sm:max-w-[12rem]" style="display: none;">
+        <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
+          <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+          <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+        </button>
+        <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
+          <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
+          <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5" role="none">
+            <span class="text-sm text-slate-600">Gece modu</span>
+            <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
+          </div>
+          <button type="button" id="logoutBtn" class="hidden w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring" style="display: none;" role="menuitem">Çıkış yap</button>
+        </div>
       </div>
-      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
       <details class="relative xl:hidden">
         <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
           Menü
@@ -118,17 +129,16 @@
         <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
           <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
           <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <a href="/blog" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Blog</a>
           <hr class="my-1 border-slate-100" />
-          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
-          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
-          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <a href="/#platform" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Platform</a>
           <hr class="my-1 border-slate-100" />
           <div id="mobileGuestLinks">
             <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
             <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
           </div>
           <div id="mobileUserLinks" style="display: none;">
-                        <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+            <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
           </div>
           <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
         </div>
@@ -1869,7 +1879,7 @@
                     mainContent.innerHTML = `
                         <div class="access-denied-wrap relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-slate-50 px-5 py-16 text-center">
                             <div class="pointer-events-none absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1920&q=90')] bg-cover bg-center opacity-[0.08]"></div>
-                            <div class="relative z-10 mx-auto w-full max-w-lg rounded-2xl border border-slate-200/90 bg-white/90 p-8 shadow-card backdrop-blur-md sm:p-10">
+                            <div class="access-denied-card relative z-10 mx-auto w-full max-w-lg rounded-2xl border border-slate-200/90 bg-white/90 p-8 shadow-card backdrop-blur-md sm:p-10">
                                 <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-3xl text-blue-600">
                                     <i class="fas fa-lock" aria-hidden="true"></i>
                                 </div>
@@ -1900,8 +1910,9 @@
                         if (typeof window.sebsApplySignupNavCta === 'function') {
                             window.sebsApplySignupNavCta(true, session.user);
                         }
-                        document.getElementById('userProfile').style.display = 'flex';
-                        document.getElementById('logoutBtn').style.display = 'block';
+                        document.getElementById('userProfile').style.display = 'block';
+                        const logoutInPanel = document.getElementById('logoutBtn');
+                        if (logoutInPanel) logoutInPanel.style.display = 'block';
                         
                         // Update user info - sadece kullanıcı adı (e-posta değil)
                         const userNameEl = document.getElementById('userName');
@@ -1913,14 +1924,6 @@
                             'Kullanıcı';
                         if (userNameEl) userNameEl.textContent = displayName;
                         if (userAvatarEl) userAvatarEl.textContent = (displayName.trim() || 'K').charAt(0).toUpperCase();
-                        
-                        // Make user profile clickable to go to dashboard
-                        const userProfileEl = document.getElementById('userProfile');
-                        if (userProfileEl) {
-                            userProfileEl.onclick = function() {
-                                window.location.href = 'dashboard.html';
-                            };
-                        }
                         
                         return;
                     }
@@ -2249,7 +2252,7 @@
     <script src="/js/supabase-auth.js?v=2.1"></script>
     <script src="/utils/api-client.js"></script>
     <script src="/utils/module-progress.js"></script>
-    <script src="js/navigation.js?v=2.3" defer></script>
+    <script src="/js/navigation.js?v=2.7" defer></script>
     <script src="/js/animations.js" defer></script>
     
     <script>
