@@ -394,6 +394,7 @@
             el.style.display = loggedIn ? '' : 'none';
         });
 
+        document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
     /** Tüm landing sayfalarında üst menü: ortada kapsül, aynı dört öğe (index ile uyumlu). */

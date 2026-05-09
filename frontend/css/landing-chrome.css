@@ -90,20 +90,29 @@ html[data-theme="dark"] body.landing-site-body .btn-secondary {
 }
 
 html[data-theme="dark"] body.landing-site-body .theme-toggle-btn,
-html[data-theme="dark"] body.landing-site-body #logoutBtn,
-html[data-theme="dark"] body.landing-site-body #userProfile {
+html[data-theme="dark"] body.landing-site-body #logoutBtn {
   background: #1e293b !important;
   border-color: #334155 !important;
   color: #cbd5e1 !important;
 }
 
-/* header.fixed ile gelen !important açık yüzeyleri ezsin — kullanıcı adı okunaklı olsun */
-html[data-theme="dark"] body.landing-site-body header.fixed #userProfile {
-  background: #1e293b !important;
-  border-color: rgba(71, 85, 105, 0.65) !important;
+/*
+ * Hesap alanı <details>: #userProfile’a arka plan verme (menü paneli summary’nin arkasında kalır).
+ * Koyu temada hap = summary üzerinde.
+ */
+html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed #userProfile:hover {
+html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile > summary {
+  background: #1e293b !important;
+  border: 1px solid rgba(71, 85, 105, 0.65) !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile > summary:hover {
   background: #334155 !important;
   border-color: rgba(148, 163, 184, 0.45) !important;
 }
@@ -1341,27 +1350,46 @@ body.landing-site-body header.fixed nav[aria-label="Ana menü"] a[aria-current="
   transform: scaleX(1);
 }
 
-/* Sağ navbar alanı: profil ve çıkış butonu tüm sayfalarda sabit premium görünüm */
-body.landing-site-body header.fixed #userProfile {
+/*
+ * Sağ navbar — profil hapı: yalnızca açık temada #userProfile’a kutu gölgesi verilir;
+ * koyu temada bu blok ezmesin diye :not([data-theme="dark"]) şartı şart.
+ */
+html:not([data-theme="dark"]) body.landing-site-body header.fixed details#userProfile > summary {
   border-color: #e2e8f0 !important;
   background: #f8fafc !important;
 }
 
-body.landing-site-body header.fixed #userProfile:hover {
+html:not([data-theme="dark"]) body.landing-site-body header.fixed details#userProfile > summary:hover {
   border-color: #cbd5e1 !important;
   background: #f1f5f9 !important;
 }
 
-body.landing-site-body header.fixed #logoutBtn {
+/* navigation.js yükseltmesi öncesi eski div#userProfile (açık tema) */
+html:not([data-theme="dark"]) body.landing-site-body header.fixed div#userProfile:not(details) {
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body header.fixed div#userProfile:not(details):hover {
+  border-color: #cbd5e1 !important;
+  background: #f1f5f9 !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body header.fixed #logoutBtn {
   border-color: #e2e8f0 !important;
   background: #ffffff !important;
   color: #334155 !important;
 }
 
-body.landing-site-body header.fixed #logoutBtn:hover {
+html:not([data-theme="dark"]) body.landing-site-body header.fixed #logoutBtn:hover {
   background: #f8fafc !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;
+}
+
+/* Giriş yapılmışken tema anahtarı hesap menüsünde; şeritte kalan yedek düğmeyi gizle */
+body.sebs-user-logged-in.landing-site-body header.fixed .mx-auto.flex.h-16 > div.flex.items-center > button#themeToggleBtn {
+  display: none !important;
 }
 
 body.landing-site-body .hero-section {
