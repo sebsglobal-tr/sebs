@@ -224,22 +224,27 @@
             panel.classList.toggle('hidden', !open);
             panel.hidden = !open;
             trig.setAttribute('aria-expanded', open ? 'true' : 'false');
+            /* Başka kurallardaki display:flex !important ile çakışmayı kır */
+            if (open) {
+                panel.style.removeProperty('display');
+            } else {
+                panel.style.setProperty('display', 'none', 'important');
+            }
         }
 
         function isOpen() {
-            return !panel.classList.contains('hidden');
+            return trig.getAttribute('aria-expanded') === 'true';
         }
 
-        /* Tek giriş noktası: çip (#userProfile) — avatar/isim alanına tıklayınca aç/kapa; panel içi hariç */
-        root.addEventListener('click', function (e) {
-            if (e.target.closest('#userAccountPanel')) return;
+        /* Yalnızca hap düğmesi — panel bazen tetikleyicinin üstüne taşınca hedef yanlış olmasın diye */
+        trig.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             setOpen(!isOpen());
         });
 
         document.addEventListener('click', function (e) {
-            if (panel.classList.contains('hidden')) return;
+            if (!isOpen()) return;
             var t = e.target;
             if (root.contains(t)) return;
             setOpen(false);
@@ -249,12 +254,9 @@
             document.documentElement.setAttribute('data-sebs-account-esc', 'true');
             document.addEventListener('keydown', function (e) {
                 if (e.key !== 'Escape') return;
-                var p = document.getElementById('userAccountPanel');
                 var tr = document.getElementById('userProfileTrigger');
-                if (!p || !tr || p.classList.contains('hidden')) return;
-                p.classList.add('hidden');
-                p.hidden = true;
-                tr.setAttribute('aria-expanded', 'false');
+                if (!tr || tr.getAttribute('aria-expanded') !== 'true') return;
+                setOpen(false);
             });
         }
     }
