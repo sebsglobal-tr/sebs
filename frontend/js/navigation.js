@@ -690,7 +690,7 @@
                 if (src.indexOf('saas-shell.js') !== -1) return;
             }
             var s = document.createElement('script');
-            s.src = '/js/saas-shell.js';
+            s.src = '/js/saas-shell.js?v=2.1';
             s.async = false;
             (document.head || document.documentElement).appendChild(s);
         } catch (e) {
