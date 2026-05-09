@@ -1,0 +1,249 @@
+/* İşverenler / Kurumsal sayfası — landing-chrome ile uyumlu interaktif kartlar */
+
+.page-isverenler .enterprise-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-isverenler .enterprise-hero::before {
+  content: '';
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 70%;
+  pointer-events: none;
+  background:
+    radial-gradient(50rem 36rem at 15% 10%, rgba(37, 99, 235, 0.12), transparent 55%),
+    radial-gradient(42rem 28rem at 85% 20%, rgba(14, 165, 233, 0.1), transparent 58%);
+}
+
+.page-isverenler .enterprise-card-grid {
+  perspective: 1200px;
+}
+
+.page-isverenler .ent-inter-card {
+  position: relative;
+  border-radius: 1.25rem;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.45),
+    rgba(99, 102, 241, 0.35),
+    rgba(14, 165, 233, 0.4)
+  );
+  background-size: 200% 200%;
+  animation: ent-border-flow 8s ease infinite;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+}
+
+@keyframes ent-border-flow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-isverenler .ent-inter-card {
+    animation: none;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(14, 165, 233, 0.35));
+  }
+}
+
+.page-isverenler .ent-inter-card:hover,
+.page-isverenler .ent-inter-card:focus-within {
+  transform: translateY(-6px);
+  box-shadow:
+    0 24px 48px -16px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(59, 130, 246, 0.12);
+}
+
+.page-isverenler .ent-inter-card__inner {
+  position: relative;
+  height: 100%;
+  border-radius: 1.2rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  padding: 1.5rem 1.5rem 1.75rem;
+  overflow: hidden;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+
+.page-isverenler .ent-inter-card__shine {
+  pointer-events: none;
+  position: absolute;
+  inset: -40% -20%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.85) 48%,
+    rgba(255, 255, 255, 0.5) 52%,
+    transparent 60%
+  );
+  transform: translateX(-100%) rotate(12deg);
+  animation: ent-shine 6s ease-in-out infinite;
+}
+
+@keyframes ent-shine {
+  0%,
+  60% {
+    transform: translateX(-100%) rotate(12deg);
+  }
+  75%,
+  100% {
+    transform: translateX(120%) rotate(12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-isverenler .ent-inter-card__shine {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.page-isverenler .ent-inter-card__icon {
+  display: flex;
+  height: 3rem;
+  width: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.9rem;
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.12));
+  color: #1d4ed8;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.page-isverenler .ent-inter-card:hover .ent-inter-card__icon {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.page-isverenler .ent-float-pulse {
+  animation: ent-float 5s ease-in-out infinite;
+}
+
+@keyframes ent-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-isverenler .ent-float-pulse {
+    animation: none;
+  }
+}
+
+/* Küçük özellik karoları */
+.page-isverenler .ent-feature-tile {
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.25rem 1.25rem 1.35rem;
+  transition:
+    border-color 0.25s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
+}
+
+.page-isverenler .ent-feature-tile:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -18px rgba(15, 23, 42, 0.15);
+}
+
+.page-isverenler .ent-step-node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.page-isverenler .ent-step-dot {
+  display: flex;
+  height: 2.75rem;
+  width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #2563eb, #0ea5e9);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px -8px rgba(37, 99, 235, 0.65);
+  animation: ent-pulse-dot 2.8s ease-in-out infinite;
+}
+
+.page-isverenler .ent-step-row .ent-step-node:nth-child(1) .ent-step-dot {
+  animation-delay: 0s;
+}
+
+.page-isverenler .ent-step-row .ent-step-node:nth-child(2) .ent-step-dot {
+  animation-delay: 0.25s;
+}
+
+.page-isverenler .ent-step-row .ent-step-node:nth-child(3) .ent-step-dot {
+  animation-delay: 0.5s;
+}
+
+.page-isverenler .ent-step-row .ent-step-node:nth-child(4) .ent-step-dot {
+  animation-delay: 0.75s;
+}
+
+@keyframes ent-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 8px 20px -8px rgba(37, 99, 235, 0.65);
+  }
+  50% {
+    box-shadow:
+      0 8px 24px -6px rgba(37, 99, 235, 0.85),
+      0 0 0 6px rgba(59, 130, 246, 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-isverenler .ent-step-dot {
+    animation: none;
+  }
+}
+
+.page-isverenler .ent-process-line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 1.35rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.55), rgba(59, 130, 246, 0.15));
+  z-index: 0;
+}
+
+/* Koyu tema */
+html[data-theme='dark'] .page-isverenler .ent-inter-card__inner {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+}
+
+html[data-theme='dark'] .page-isverenler .ent-inter-card__icon {
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.25), rgba(14, 165, 233, 0.18));
+  color: #93c5fd;
+}
+
+html[data-theme='dark'] .page-isverenler .ent-feature-tile {
+  background: rgba(17, 24, 39, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+}
+
+html[data-theme='dark'] .page-isverenler .ent-feature-tile:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+}
+

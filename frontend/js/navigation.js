@@ -595,7 +595,7 @@
 
         function makeEmployersLink() {
             var a = document.createElement('a');
-            a.href = '/#isverenler';
+            a.href = '/isverenler.html';
             a.textContent = 'İşverenler İçin';
             a.className = NAV_MUTED;
             return a;
@@ -675,7 +675,7 @@
             careerA.className = drawerAccent;
 
             var empA = document.createElement('a');
-            empA.href = '/#isverenler';
+            empA.href = '/isverenler.html';
             empA.textContent = 'İşverenler İçin';
             empA.className = drawerMuted;
 
