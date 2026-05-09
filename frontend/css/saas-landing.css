@@ -70,6 +70,12 @@ html {
   min-height: 340px;
 }
 
+@media (min-width: 1024px) {
+  .hero-visual-wrap {
+    min-height: 0;
+  }
+}
+
 .hero-connectors {
   position: absolute;
   inset: 0;
@@ -177,6 +183,22 @@ html {
   }
   .hero-mock-stack {
     animation: hero-mock-stack-float 9s ease-in-out infinite;
+  }
+
+  /* Buyuk ekranda mockup daha “yerinde”; hafif animasyon */
+  @media (min-width: 1024px) {
+    @keyframes hero-mock-stack-float-lg {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+    .hero-mock-stack {
+      animation: hero-mock-stack-float-lg 10s ease-in-out infinite;
+    }
   }
 }
 
