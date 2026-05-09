@@ -398,6 +398,12 @@
                         currentPath.indexOf('/simulasyonlar/') === 0
                     );
                 }
+                if (linkPath === '/pricing.html') {
+                    return currentPath === '/pricing.html';
+                }
+                if (linkPath === '/contact.html') {
+                    return currentPath === '/contact.html';
+                }
                 return currentPath === linkPath;
             } catch (e) {
                 return false;
@@ -579,15 +585,39 @@
             return wrap;
         }
 
+        function makeSebsYoluNavLink() {
+            var a = document.createElement('a');
+            a.href = '/pricing.html';
+            a.textContent = 'SEBS yolunu gör';
+            a.className = linkClass;
+            return a;
+        }
+
+        function makeContactNavLink() {
+            var a = document.createElement('a');
+            a.href = '/contact.html';
+            a.textContent = 'Bize ulaşın';
+            a.className =
+                'text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded';
+            return a;
+        }
+
         var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
         if (desktopNav) {
             desktopNav.className =
-                'hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex';
+                'hidden min-w-0 flex-1 flex-wrap items-center justify-center gap-x-1 gap-y-1 xl:flex';
             desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
             desktopNav.appendChild(makeBlogLink());
             desktopNav.appendChild(makeDesktopPlatformBlock());
+            desktopNav.appendChild(makeSebsYoluNavLink());
+            desktopNav.appendChild(makeContactNavLink());
         }
+
+        document.querySelectorAll('header.fixed a.landing-nav-contact').forEach(function (el) {
+            el.style.display = 'none';
+            el.setAttribute('aria-hidden', 'true');
+        });
 
         var headerRow = document.querySelector('header.fixed .mx-auto.flex.h-16');
         if (headerRow) {
@@ -635,6 +665,18 @@
             simA.className =
                 'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
 
+            var pricingA = document.createElement('a');
+            pricingA.href = '/pricing.html';
+            pricingA.textContent = 'SEBS yolunu gör';
+            pricingA.className =
+                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+
+            var contactA = document.createElement('a');
+            contactA.href = '/contact.html';
+            contactA.textContent = 'Bize ulaşın';
+            contactA.className =
+                'block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50';
+
             var hrBeforeAuth = document.createElement('hr');
             hrBeforeAuth.className = 'my-1 border-slate-100';
 
@@ -643,8 +685,16 @@
             frag.appendChild(platHead);
             frag.appendChild(modA);
             frag.appendChild(simA);
+            frag.appendChild(pricingA);
+            frag.appendChild(contactA);
             frag.appendChild(hrBeforeAuth);
             mobilePanel.insertBefore(frag, guest);
+
+            var mu = document.getElementById('mobileUserLinks');
+            if (mu && mu.nextElementSibling && mu.nextElementSibling.tagName === 'A' &&
+                mu.nextElementSibling.getAttribute('href') === '/contact.html') {
+                mu.nextElementSibling.remove();
+            }
         }
     }
 
