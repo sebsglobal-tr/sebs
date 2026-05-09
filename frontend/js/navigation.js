@@ -205,15 +205,15 @@
         var details = document.getElementById('userProfile');
         if (!details || details.tagName !== 'DETAILS' || details.hasAttribute('data-outside-close')) return;
         details.setAttribute('data-outside-close', 'true');
+        /* Native <details> toggle ile yarışmaması için kapatmayı bir mac sonraya al */
         document.addEventListener('click', function (e) {
-            if (!details.open) return;
             var t = e.target;
-            if (!t || !details.contains(t)) {
-                details.open = false;
-            }
-        });
-        details.addEventListener('click', function (e) {
-            e.stopPropagation();
+            window.setTimeout(function () {
+                var d = document.getElementById('userProfile');
+                if (!d || d.tagName !== 'DETAILS' || !d.open) return;
+                if (t && d.contains(t)) return;
+                d.open = false;
+            }, 0);
         });
         if (!document.documentElement.hasAttribute('data-sebs-account-esc')) {
             document.documentElement.setAttribute('data-sebs-account-esc', 'true');
