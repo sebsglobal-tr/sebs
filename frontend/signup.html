@@ -89,10 +89,14 @@
       <img src="/images/sebs-global-logo-full.png" alt="SEBS Global" class="h-11 w-auto" style="margin-left: -8px; transform: scaleX(1.30); transform-origin: left center; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);" />
     </a>
     <nav class="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label="Ana menü">
-      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
-      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
       <a href="/blog" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Blog</a>
-      <a href="/#platform" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Platform</a>
+      <div class="relative z-[55]" id="navPlatformWrap">
+        <button type="button" id="navPlatformTrigger" class="nav-platform-trigger inline-flex items-center gap-1 rounded-full border-0 bg-transparent text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring" aria-expanded="false" aria-haspopup="menu" aria-controls="navPlatformPanel" aria-label="Platform menüsü">Platform<span class="nav-platform-chevron text-[0.65rem] leading-none opacity-70" aria-hidden="true">▾</span></button>
+        <div id="navPlatformPanel" class="nav-platform-dropdown absolute left-1/2 top-full z-[60] mt-2 hidden w-56 -translate-x-1/2 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Simülasyonlar</a>
+        </div>
+      </div>
     </nav>
     <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
       <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
@@ -117,11 +121,11 @@
           Menü
         </summary>
         <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
-          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
           <a href="/blog" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Blog</a>
           <hr class="my-1 border-slate-100" />
-          <a href="/#platform" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Platform</a>
+          <div class="px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500">Platform</div>
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
           <hr class="my-1 border-slate-100" />
           <div id="mobileGuestLinks">
             <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
@@ -730,6 +734,6 @@
             }, 1000);
         }
     </script>
-    <script src="/js/navigation.js?v=2.9"></script>
+    <script src="/js/navigation.js?v=3.0"></script>
 </body>
 </html>

@@ -240,7 +240,11 @@
         trig.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            setOpen(!isOpen());
+            var next = !isOpen();
+            if (next) {
+                closePlatformNavDropdownIfOpen();
+            }
+            setOpen(next);
         });
 
         document.addEventListener('click', function (e) {
@@ -257,6 +261,81 @@
                 var tr = document.getElementById('userProfileTrigger');
                 if (!tr || tr.getAttribute('aria-expanded') !== 'true') return;
                 setOpen(false);
+            });
+        }
+    }
+
+    function closeUserAccountPanelIfOpen() {
+        var trig = document.getElementById('userProfileTrigger');
+        var panel = document.getElementById('userAccountPanel');
+        if (!trig || !panel || trig.getAttribute('aria-expanded') !== 'true') return;
+        panel.classList.add('hidden');
+        panel.hidden = true;
+        trig.setAttribute('aria-expanded', 'false');
+        panel.style.setProperty('display', 'none', 'important');
+    }
+
+    function closePlatformNavDropdownIfOpen() {
+        var trig = document.getElementById('navPlatformTrigger');
+        var panel = document.getElementById('navPlatformPanel');
+        if (!trig || !panel || trig.getAttribute('aria-expanded') !== 'true') return;
+        panel.classList.add('hidden');
+        panel.hidden = true;
+        trig.setAttribute('aria-expanded', 'false');
+        panel.style.setProperty('display', 'none', 'important');
+    }
+
+    function wirePlatformNavDropdown() {
+        var wrap = document.getElementById('navPlatformWrap');
+        var trig = document.getElementById('navPlatformTrigger');
+        var panel = document.getElementById('navPlatformPanel');
+        if (!wrap || !trig || !panel || wrap.hasAttribute('data-platform-nav-wired')) return;
+        wrap.setAttribute('data-platform-nav-wired', 'true');
+
+        function setOpen(open) {
+            panel.classList.toggle('hidden', !open);
+            panel.hidden = !open;
+            trig.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open) {
+                panel.style.removeProperty('display');
+            } else {
+                panel.style.setProperty('display', 'none', 'important');
+            }
+        }
+
+        function isOpen() {
+            return trig.getAttribute('aria-expanded') === 'true';
+        }
+
+        trig.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var willOpen = !isOpen();
+            if (willOpen) {
+                closeUserAccountPanelIfOpen();
+            }
+            setOpen(willOpen);
+        });
+
+        panel.addEventListener('click', function (e) {
+            if (e.target.closest && e.target.closest('a[href]')) {
+                setOpen(false);
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!isOpen()) return;
+            if (wrap.contains(e.target)) return;
+            setOpen(false);
+        });
+
+        if (!document.documentElement.hasAttribute('data-sebs-platform-esc')) {
+            document.documentElement.setAttribute('data-sebs-platform-esc', 'true');
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Escape') return;
+                var tr = document.getElementById('navPlatformTrigger');
+                if (!tr || tr.getAttribute('aria-expanded') !== 'true') return;
+                closePlatformNavDropdownIfOpen();
             });
         }
     }
@@ -335,6 +414,14 @@
                 link.removeAttribute('aria-current');
             }
         });
+
+        var navPlatformTrigger = document.getElementById('navPlatformTrigger');
+        if (navPlatformTrigger) {
+            var platformSectionActive =
+                landingNavHrefIsActive('/modules.html') ||
+                landingNavHrefIsActive('/simulations.html');
+            navPlatformTrigger.classList.toggle('is-active', platformSectionActive);
+        }
 
         const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
@@ -426,30 +513,70 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Tüm landing sayfalarında üst menü: ortada kapsül, aynı dört öğe (index ile uyumlu). */
+    /** Landing üst menü: Blog + Platform (açılır: Eğitim modülleri, Simülasyonlar). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
         }
 
-        var CANONICAL = [
-            { href: '/modules.html', label: 'Eğitim modülleri' },
-            { href: '/simulations.html', label: 'Simülasyonlar' },
-            { href: '/blog', label: 'Blog' },
-            { href: '/#platform', label: 'Platform' }
-        ];
-
         var linkClass =
             'text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded';
-        var linkClassPlatform =
-            'text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded';
 
-        function makeDesktopLink(item, isPlatform) {
+        function makeBlogLink() {
             var a = document.createElement('a');
-            a.href = item.href;
-            a.textContent = item.label;
-            a.className = isPlatform ? linkClassPlatform : linkClass;
+            a.href = '/blog';
+            a.textContent = 'Blog';
+            a.className = linkClass;
             return a;
+        }
+
+        function makeDesktopPlatformBlock() {
+            var wrap = document.createElement('div');
+            wrap.className = 'relative z-[55]';
+            wrap.id = 'navPlatformWrap';
+
+            var trig = document.createElement('button');
+            trig.type = 'button';
+            trig.id = 'navPlatformTrigger';
+            trig.className =
+                'nav-platform-trigger inline-flex items-center gap-1 rounded-full border-0 bg-transparent text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring';
+            trig.setAttribute('aria-expanded', 'false');
+            trig.setAttribute('aria-haspopup', 'menu');
+            trig.setAttribute('aria-controls', 'navPlatformPanel');
+            trig.setAttribute('aria-label', 'Platform menüsü');
+            var chev = document.createElement('span');
+            chev.className = 'nav-platform-chevron text-[0.65rem] leading-none opacity-70';
+            chev.setAttribute('aria-hidden', 'true');
+            chev.textContent = '▾';
+            trig.appendChild(document.createTextNode('Platform'));
+            trig.appendChild(chev);
+
+            var panel = document.createElement('div');
+            panel.id = 'navPlatformPanel';
+            panel.className =
+                'nav-platform-dropdown absolute left-1/2 top-full z-[60] mt-2 hidden w-56 -translate-x-1/2 rounded-xl border border-slate-200 bg-white py-1 shadow-lg';
+            panel.setAttribute('role', 'menu');
+            panel.hidden = true;
+
+            var aMod = document.createElement('a');
+            aMod.href = '/modules.html';
+            aMod.textContent = 'Eğitim modülleri';
+            aMod.className =
+                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
+            aMod.setAttribute('role', 'menuitem');
+
+            var aSim = document.createElement('a');
+            aSim.href = '/simulations.html';
+            aSim.textContent = 'Simülasyonlar';
+            aSim.className =
+                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
+            aSim.setAttribute('role', 'menuitem');
+
+            panel.appendChild(aMod);
+            panel.appendChild(aSim);
+            wrap.appendChild(trig);
+            wrap.appendChild(panel);
+            return wrap;
         }
 
         var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
@@ -458,9 +585,8 @@
                 'hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex';
             desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
-            CANONICAL.forEach(function (item, idx) {
-                desktopNav.appendChild(makeDesktopLink(item, idx === CANONICAL.length - 1));
-            });
+            desktopNav.appendChild(makeBlogLink());
+            desktopNav.appendChild(makeDesktopPlatformBlock());
         }
 
         var headerRow = document.querySelector('header.fixed .mx-auto.flex.h-16');
@@ -482,25 +608,41 @@
                 mobilePanel.removeChild(mobilePanel.firstChild);
             }
             var frag = document.createDocumentFragment();
-            CANONICAL.forEach(function (item, idx) {
-                var a = document.createElement('a');
-                a.href = item.href;
-                a.textContent = item.label;
-                if (idx === CANONICAL.length - 1) {
-                    a.className = 'block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50';
-                } else {
-                    a.className =
-                        'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
-                }
-                frag.appendChild(a);
-                if (idx === 2) {
-                    var hrMid = document.createElement('hr');
-                    hrMid.className = 'my-1 border-slate-100';
-                    frag.appendChild(hrMid);
-                }
-            });
+
+            var blogA = document.createElement('a');
+            blogA.href = '/blog';
+            blogA.textContent = 'Blog';
+            blogA.className =
+                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+
+            var hrAfterBlog = document.createElement('hr');
+            hrAfterBlog.className = 'my-1 border-slate-100';
+
+            var platHead = document.createElement('div');
+            platHead.className =
+                'px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500';
+            platHead.textContent = 'Platform';
+
+            var modA = document.createElement('a');
+            modA.href = '/modules.html';
+            modA.textContent = 'Eğitim modülleri';
+            modA.className =
+                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+
+            var simA = document.createElement('a');
+            simA.href = '/simulations.html';
+            simA.textContent = 'Simülasyonlar';
+            simA.className =
+                'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+
             var hrBeforeAuth = document.createElement('hr');
             hrBeforeAuth.className = 'my-1 border-slate-100';
+
+            frag.appendChild(blogA);
+            frag.appendChild(hrAfterBlog);
+            frag.appendChild(platHead);
+            frag.appendChild(modA);
+            frag.appendChild(simA);
             frag.appendChild(hrBeforeAuth);
             mobilePanel.insertBefore(frag, guest);
         }
@@ -713,6 +855,7 @@
         relocateThemeToggleToUserMenu();
         ensurePremiumExperienceAssets();
         normalizeLandingNavOrder();
+        wirePlatformNavDropdown();
         if (typeof window.initSupabase !== 'undefined') {
             try {
                 await window.initSupabase();
