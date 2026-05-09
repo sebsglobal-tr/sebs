@@ -41,11 +41,33 @@ body.landing-site-body.blog-premium-page {
 
 .blog-brand {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
   transition: opacity 0.2s ease;
 }
 
 .blog-brand:hover {
   opacity: 0.88;
+}
+
+.blog-brand-mark {
+  height: 2rem;
+  width: 2rem;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.blog-brand-wordmark {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 1.125rem;
+  color: #0f172a;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .blog-brand-logo {
