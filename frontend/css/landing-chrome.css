@@ -138,7 +138,47 @@ html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) .logo
   color: #64748b !important;
 }
 
+/* İletişim — .stats metrik şeridi: açık zemin + global koyu tema başlık rengi çakışması */
+html[data-theme="dark"] body.landing-site-body .stats {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%) !important;
+  border-top-color: rgba(51, 65, 85, 0.55) !important;
+  border-bottom-color: rgba(51, 65, 85, 0.55) !important;
+  color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats::before {
+  opacity: 0.5 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats .section-title {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats .section-subtitle {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats .stat-card {
+  background: rgba(17, 24, 39, 0.55) !important;
+  border: 1px solid rgba(71, 85, 105, 0.5) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.35) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats .stat-number {
+  color: #f8fafc !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .stats .stat-label {
+  color: #94a3b8 !important;
+}
+
 /* Tema anahtarı (switch) — header’daki görsel toggle */
+body.landing-site-body header.fixed #themeToggleBtn.theme-toggle-switch {
+  margin-left: auto;
+}
+
 body.landing-site-body .theme-toggle-switch {
   position: relative;
   width: 2.75rem;
@@ -297,6 +337,47 @@ html[data-theme="dark"] body.modules-page section[aria-label="SEBS Yolu özeti"]
 
 html[data-theme="dark"] body.modules-page section[aria-label="SEBS Yolu özeti"] .text-slate-600 {
   color: #94a3b8 !important;
+}
+
+/* Kişisel SEBS Yolu — üç adım kartı (.sebs-roadmap-step); modules + pricing */
+html[data-theme="dark"] body.landing-site-body:not(.blog-premium-page):not(.sebs-sim-theme-lock) .sebs-roadmap-step {
+  background: #111827 !important;
+  border-color: rgba(71, 85, 105, 0.55) !important;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.35) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body:not(.blog-premium-page):not(.sebs-sim-theme-lock) .sebs-roadmap-step h4 {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body:not(.blog-premium-page):not(.sebs-sim-theme-lock) .sebs-roadmap-step p {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body:not(.blog-premium-page):not(.sebs-sim-theme-lock) .sebs-roadmap-step .meta {
+  color: #93c5fd !important;
+}
+
+html[data-theme="dark"] body.modules-page .sebs-roadmap-step button[data-lock-action] {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(59, 130, 246, 0.45) !important;
+}
+
+html[data-theme="dark"] body.modules-page .sebs-roadmap-step button[data-lock-action]:hover {
+  filter: brightness(1.07);
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed a.landing-nav-contact {
+  background: #1e293b !important;
+  border-color: rgba(71, 85, 105, 0.65) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed a.landing-nav-contact:hover {
+  background: #334155 !important;
+  border-color: rgba(148, 163, 184, 0.42) !important;
+  color: #f8fafc !important;
 }
 
 html[data-theme="dark"] body.modules-page .modules-category-tabs .sebs-acc-block {
@@ -2346,4 +2427,153 @@ body.landing-site-body .btn-secondary {
 body.landing-site-body .btn-secondary:hover {
   background: #f8fafc !important;
   border-color: #cbd5e1 !important;
+}
+
+/*
+ * İletişim — #contact-channels & #office-hours (Tailwind bg-white + global dark typography).
+ * Bu blok dosyanın sonunda kalır; section zemini ve kartlar için background-color açıkça verilir.
+ */
+html[data-theme="dark"] body.landing-site-body section#contact-channels.bg-white,
+body.theme-dark.landing-site-body section#contact-channels.bg-white,
+html[data-theme="dark"] body.landing-site-body section#office-hours.bg-white,
+body.theme-dark.landing-site-body section#office-hours.bg-white {
+  background-color: #0f172a !important;
+  background-image: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+  border-top-color: rgba(51, 65, 85, 0.55) !important;
+  color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels h2,
+html[data-theme="dark"] body.landing-site-body section#contact-channels h3,
+html[data-theme="dark"] body.landing-site-body section#office-hours h2,
+html[data-theme="dark"] body.landing-site-body section#office-hours h3,
+body.theme-dark.landing-site-body section#contact-channels h2,
+body.theme-dark.landing-site-body section#contact-channels h3,
+body.theme-dark.landing-site-body section#office-hours h2,
+body.theme-dark.landing-site-body section#office-hours h3 {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .text-slate-600,
+html[data-theme="dark"] body.landing-site-body section#office-hours .text-slate-600,
+body.theme-dark.landing-site-body section#contact-channels .text-slate-600,
+body.theme-dark.landing-site-body section#office-hours .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-card,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-card,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-card,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-card {
+  background-color: #111827 !important;
+  background-image: none !important;
+  border-color: rgba(71, 85, 105, 0.55) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-card h3,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-card h3,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-card h3,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-card h3 {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-card p,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-card p,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-card p,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-card p {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#office-hours .hours-item,
+body.theme-dark.landing-site-body section#office-hours .hours-item {
+  background: rgba(30, 41, 59, 0.55) !important;
+  border-color: rgba(71, 85, 105, 0.55) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#office-hours .hours-item .day,
+body.theme-dark.landing-site-body section#office-hours .hours-item .day {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#office-hours .hours-item .time,
+body.theme-dark.landing-site-body section#office-hours .hours-item .time {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-blue-50,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-blue-50,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-blue-50,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-blue-50 {
+  background-color: rgba(30, 58, 138, 0.35) !important;
+  color: #93c5fd !important;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-emerald-50,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-emerald-50,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-emerald-50,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.35) !important;
+  color: #6ee7b7 !important;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.25) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-sky-50,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-sky-50 {
+  background-color: rgba(12, 74, 110, 0.35) !important;
+  color: #7dd3fc !important;
+  box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.25) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-indigo-50,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-indigo-50 {
+  background-color: rgba(49, 46, 129, 0.35) !important;
+  color: #a5b4fc !important;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-violet-50,
+html[data-theme="dark"] body.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-violet-50,
+body.theme-dark.landing-site-body section#contact-channels .contact-channel-icon-wrap.bg-violet-50,
+body.theme-dark.landing-site-body section#office-hours .contact-channel-icon-wrap.bg-violet-50 {
+  background-color: rgba(76, 29, 149, 0.35) !important;
+  color: #c4b5fd !important;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.25) !important;
+}
+
+/*
+ * İletişim formu (#contact-form): genel label kuralları #334155 !important ile kalıyor;
+ * koyu form kutusu üzerinde okunabilirlik için üstyazar gerekli.
+ */
+html[data-theme="dark"] body.landing-site-body section#contact-form .form-wrapper .form-group label:not(.checkbox-label),
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .form-group label:not(.checkbox-label),
+body.theme-dark.landing-site-body section#contact-form .form-wrapper .form-group label:not(.checkbox-label),
+body.theme-dark.landing-site-body section#contact-form .contact-form .form-group label:not(.checkbox-label) {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .checkbox-label,
+body.theme-dark.landing-site-body section#contact-form .contact-form .checkbox-label {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .checkbox-label a,
+body.theme-dark.landing-site-body section#contact-form .contact-form .checkbox-label a {
+  color: #93c5fd !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .checkbox-label a:hover,
+body.theme-dark.landing-site-body section#contact-form .contact-form .checkbox-label a:hover {
+  color: #bfdbfe !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .form-group.checkbox-group input[type="checkbox"],
+body.theme-dark.landing-site-body section#contact-form .contact-form .form-group.checkbox-group input[type="checkbox"] {
+  background-color: #f8fafc !important;
+  border-color: #64748b !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section#contact-form .contact-form .form-group.checkbox-group input[type="checkbox"]:hover,
+body.theme-dark.landing-site-body section#contact-form .contact-form .form-group.checkbox-group input[type="checkbox"]:hover {
+  border-color: #60a5fa !important;
 }
