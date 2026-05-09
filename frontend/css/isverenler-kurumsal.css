@@ -247,3 +247,78 @@ html[data-theme='dark'] .page-isverenler .ent-feature-tile:hover {
   border-color: rgba(59, 130, 246, 0.45);
 }
 
+/*
+ * landing-chrome.css gece modunda tüm h1–h3 ve p için açık renk kullanıyor (!important).
+ * Bu sayfada büyük bölümler hâlâ açık zemin (bg-white / bg-slate-50); metin okunmuyordu.
+ * Açık yüzey başlık blokları: .ent-light-intro
+ */
+html[data-theme='dark'] body.page-isverenler .ent-light-intro h1,
+html[data-theme='dark'] body.page-isverenler .ent-light-intro h2,
+html[data-theme='dark'] body.page-isverenler .ent-light-intro h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-light-intro p {
+  color: #475569 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-light-intro .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Süreç adımları — üst bölüm açık zemin */
+html[data-theme='dark'] body.page-isverenler .ent-step-node p.text-slate-900 {
+  color: #0f172a !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-step-node p.text-slate-600 {
+  color: #475569 !important;
+}
+
+/* Footer açık zemin */
+html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-900 {
+  color: #0f172a !important;
+}
+
+html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-600 {
+  color: #475569 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-500 {
+  color: #64748b !important;
+}
+
+html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Kart içi koyu yüzey — başlık ve gövde açık renk kalsın */
+html[data-theme='dark'] body.page-isverenler .ent-inter-card__inner h3 {
+  color: #f8fafc !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-inter-card__inner p,
+html[data-theme='dark'] body.page-isverenler .ent-inter-card__inner li {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-inter-card__inner .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-inter-card__inner .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+/* Özellik karoları gece modunda koyu çip üzerinde */
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile h3 {
+  color: #f8fafc !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile p {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile .text-slate-600 {
+  color: #94a3b8 !important;
+}
