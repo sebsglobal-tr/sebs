@@ -83,7 +83,7 @@
             syncThemeToggleButton(btn);
         });
 
-        rightActions.insertBefore(btn, rightActions.firstChild);
+        rightActions.appendChild(btn);
     }
 
     function initTheme() {

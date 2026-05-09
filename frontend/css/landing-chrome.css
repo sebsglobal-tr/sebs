@@ -91,6 +91,53 @@ html[data-theme="dark"] body.landing-site-body #userProfile {
   color: #cbd5e1 !important;
 }
 
+/* header.fixed ile gelen !important açık yüzeyleri ezsin — kullanıcı adı okunaklı olsun */
+html[data-theme="dark"] body.landing-site-body header.fixed #userProfile {
+  background: #1e293b !important;
+  border-color: rgba(71, 85, 105, 0.65) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed #userProfile:hover {
+  background: #334155 !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed #userName {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed #userAvatar {
+  background: rgba(59, 130, 246, 0.22) !important;
+  color: #bfdbfe !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed #logoutBtn {
+  background: #1e293b !important;
+  border-color: rgba(71, 85, 105, 0.65) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body header.fixed #logoutBtn:hover {
+  background: #334155 !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+  color: #f8fafc !important;
+}
+
+/* Ana sayfa logo/trust şeridi (bg-white) — dark tema uyumu */
+html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%) !important;
+  border-top-color: rgba(51, 65, 85, 0.55) !important;
+  border-bottom-color: rgba(51, 65, 85, 0.55) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) #trust-heading {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) .logo-strip .text-slate-400 {
+  color: #64748b !important;
+}
+
 /* Tema anahtarı (switch) — header’daki görsel toggle */
 body.landing-site-body .theme-toggle-switch {
   position: relative;
