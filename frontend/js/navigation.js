@@ -375,10 +375,9 @@
                 const linkPath = (url.pathname || '/').replace(/\/+$/, '') || '/';
                 const linkHash = url.hash || '';
                 if (linkHash) {
-                    return (
-                        currentPath === linkPath &&
-                        (window.location.hash || '') === linkHash
-                    );
+                    var cp = currentPath === '/index.html' ? '/' : currentPath;
+                    var lp = linkPath === '/index.html' ? '/' : linkPath;
+                    return lp === cp && (window.location.hash || '') === linkHash;
                 }
                 if (linkPath === '/blog') {
                     return currentPath === '/blog' || currentPath.indexOf('/blog/') === 0;
@@ -519,7 +518,7 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Platform + Blog + SEBS yolunu gör + Bize ulaşın (tipografi landing-chrome.css). */
+    /** Landing üst menü: Platform | Kariyer Yolları | İşverenler | Blog | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
@@ -586,18 +585,26 @@
             return wrap;
         }
 
-        function makeSebsYoluNavLink() {
+        function makeCareerPathsLink() {
             var a = document.createElement('a');
             a.href = '/pricing.html';
-            a.textContent = 'SEBS yolunu gör';
+            a.textContent = 'Kariyer Yolları';
             a.className = NAV_ACCENT;
+            return a;
+        }
+
+        function makeEmployersLink() {
+            var a = document.createElement('a');
+            a.href = '/#isverenler';
+            a.textContent = 'İşverenler İçin';
+            a.className = NAV_MUTED;
             return a;
         }
 
         function makeContactNavLink() {
             var a = document.createElement('a');
             a.href = '/contact.html';
-            a.textContent = 'Bize ulaşın';
+            a.textContent = 'İletişim';
             a.className = NAV_MUTED;
             return a;
         }
@@ -609,8 +616,9 @@
             desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
             desktopNav.appendChild(makeDesktopPlatformBlock());
+            desktopNav.appendChild(makeCareerPathsLink());
+            desktopNav.appendChild(makeEmployersLink());
             desktopNav.appendChild(makeBlogLink());
-            desktopNav.appendChild(makeSebsYoluNavLink());
             desktopNav.appendChild(makeContactNavLink());
         }
 
@@ -661,19 +669,24 @@
             var hrMid = document.createElement('hr');
             hrMid.className = 'my-1 border-slate-100';
 
+            var careerA = document.createElement('a');
+            careerA.href = '/pricing.html';
+            careerA.textContent = 'Kariyer Yolları';
+            careerA.className = drawerAccent;
+
+            var empA = document.createElement('a');
+            empA.href = '/#isverenler';
+            empA.textContent = 'İşverenler İçin';
+            empA.className = drawerMuted;
+
             var blogA = document.createElement('a');
             blogA.href = '/blog';
             blogA.textContent = 'Blog';
             blogA.className = drawerAccent;
 
-            var pricingA = document.createElement('a');
-            pricingA.href = '/pricing.html';
-            pricingA.textContent = 'SEBS yolunu gör';
-            pricingA.className = drawerAccent;
-
             var contactA = document.createElement('a');
             contactA.href = '/contact.html';
-            contactA.textContent = 'Bize ulaşın';
+            contactA.textContent = 'İletişim';
             contactA.className = drawerMuted;
 
             var hrBeforeAuth = document.createElement('hr');
@@ -683,8 +696,9 @@
             frag.appendChild(modA);
             frag.appendChild(simA);
             frag.appendChild(hrMid);
+            frag.appendChild(careerA);
+            frag.appendChild(empA);
             frag.appendChild(blogA);
-            frag.appendChild(pricingA);
             frag.appendChild(contactA);
             frag.appendChild(hrBeforeAuth);
             mobilePanel.insertBefore(frag, guest);
