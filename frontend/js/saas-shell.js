@@ -59,12 +59,15 @@
     }
 
     function injectThemeToggle() {
-        var headerBar = document.querySelector('header.fixed .mx-auto.flex');
-        if (!headerBar) return;
-        var rightActions = headerBar.querySelector('.flex.items-center.gap-1\\.5') || headerBar.querySelector('.flex.items-center.gap-2');
-        if (!rightActions) return;
-
         if (document.getElementById('themeToggleBtn')) return;
+
+        var headerBar = document.querySelector('header.fixed .mx-auto.flex');
+        var rightActions = headerBar
+            ? headerBar.querySelector('.flex.items-center.gap-1\\.5') || headerBar.querySelector('.flex.items-center.gap-2')
+            : null;
+
+        var mount = document.getElementById('userMenuThemeMount');
+        if (!mount && !rightActions) return;
 
         var btn = document.createElement('button');
         btn.type = 'button';
@@ -75,7 +78,8 @@
         btn.innerHTML = '<span class="theme-toggle-knob" aria-hidden="true"></span>';
         syncThemeToggleButton(btn);
 
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function (ev) {
+            ev.stopPropagation();
             var now = document.documentElement.getAttribute('data-theme') || 'light';
             var next = now === 'dark' ? 'light' : 'dark';
             applyTheme(next);
@@ -83,7 +87,11 @@
             syncThemeToggleButton(btn);
         });
 
-        rightActions.appendChild(btn);
+        if (mount) {
+            mount.appendChild(btn);
+        } else {
+            rightActions.appendChild(btn);
+        }
     }
 
     function initTheme() {

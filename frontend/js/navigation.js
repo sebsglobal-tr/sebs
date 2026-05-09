@@ -130,6 +130,111 @@
         }
     }
 
+    /** Eski DOM: div#userProfile + şeritte #logoutBtn → hesap açılır menüsü (Çıkış + tema burada). */
+    function upgradeUserAccountMenu() {
+        if (!document.body || !document.body.classList.contains('landing-site-body')) return;
+        var profile = document.getElementById('userProfile');
+        var logoutBtn = document.getElementById('logoutBtn');
+        if (!profile || !logoutBtn) return;
+        if (profile.tagName === 'DETAILS' && document.getElementById('userMenuThemeMount')) {
+            return;
+        }
+        if (profile.tagName === 'DETAILS') {
+            return;
+        }
+
+        var details = document.createElement('details');
+        details.id = 'userProfile';
+        details.className =
+            'relative hidden max-w-[10rem] sm:max-w-[12rem] group [&_summary::-webkit-details-marker]:hidden';
+        details.setAttribute('data-sebs-account-menu', 'true');
+
+        var summary = document.createElement('summary');
+        summary.className =
+            'list-none flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none';
+        summary.setAttribute('aria-label', 'Hesap menüsü');
+        summary.setAttribute('title', 'Hesap menüsü');
+
+        while (profile.firstChild) {
+            summary.appendChild(profile.firstChild);
+        }
+
+        var panel = document.createElement('div');
+        panel.className =
+            'user-account-dropdown absolute right-0 top-full z-[60] mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg';
+        panel.setAttribute('role', 'menu');
+
+        var dash = document.createElement('a');
+        dash.className =
+            'user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
+        dash.href = '/dashboard.html';
+        dash.textContent = 'Panele git';
+        dash.setAttribute('role', 'menuitem');
+        panel.appendChild(dash);
+
+        logoutBtn.className =
+            'block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring';
+        logoutBtn.style.display = 'none';
+        logoutBtn.setAttribute('role', 'menuitem');
+        panel.appendChild(logoutBtn);
+
+        var sep = document.createElement('div');
+        sep.className = 'my-1 border-t border-slate-100';
+        sep.setAttribute('aria-hidden', 'true');
+        panel.appendChild(sep);
+
+        var themeRow = document.createElement('div');
+        themeRow.className = 'flex items-center justify-between gap-3 px-4 py-3';
+        var themeLab = document.createElement('span');
+        themeLab.className = 'text-sm text-slate-600';
+        themeLab.textContent = 'Tema';
+        var themeMount = document.createElement('div');
+        themeMount.id = 'userMenuThemeMount';
+        themeMount.className = 'flex shrink-0 items-center justify-end';
+        themeRow.appendChild(themeLab);
+        themeRow.appendChild(themeMount);
+        panel.appendChild(themeRow);
+
+        details.appendChild(summary);
+        details.appendChild(panel);
+
+        profile.parentNode.replaceChild(details, profile);
+    }
+
+    function wireUserAccountMenuOutsideClose() {
+        var details = document.getElementById('userProfile');
+        if (!details || details.tagName !== 'DETAILS' || details.hasAttribute('data-outside-close')) return;
+        details.setAttribute('data-outside-close', 'true');
+        document.addEventListener('click', function (e) {
+            if (!details.open) return;
+            var t = e.target;
+            if (!t || !details.contains(t)) {
+                details.open = false;
+            }
+        });
+        details.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        if (!document.documentElement.hasAttribute('data-sebs-account-esc')) {
+            document.documentElement.setAttribute('data-sebs-account-esc', 'true');
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Escape') return;
+                var d = document.getElementById('userProfile');
+                if (d && d.tagName === 'DETAILS' && d.open) {
+                    d.open = false;
+                }
+            });
+        }
+    }
+
+    function relocateThemeToggleToUserMenu() {
+        var mount = document.getElementById('userMenuThemeMount');
+        var btn = document.getElementById('themeToggleBtn');
+        if (mount && btn && btn.parentNode !== mount) {
+            mount.appendChild(btn);
+        }
+    }
+
     async function updateNavigation() {
         const currentPage = getCurrentPage();
         const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
@@ -240,26 +345,23 @@
             }
 
             if (loginBtn) loginBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+            if (logoutBtn) {
+                logoutBtn.style.display = 'block';
+                logoutBtn.classList.remove('hidden');
+            }
             if (dashboardBtn) dashboardBtn.style.display = 'none';
 
             if (userProfile) {
                 userProfile.classList.remove('hidden');
-                userProfile.style.display = 'flex';
-                userProfile.style.cursor = 'pointer';
-                userProfile.setAttribute('role', 'link');
-                userProfile.setAttribute('title', 'Panele git');
-                if (!userProfile.hasAttribute('data-dashboard-listener')) {
-                    userProfile.addEventListener('click', function() {
-                        window.location.href = isAdmin ? '/admin.html' : '/dashboard.html';
-                    });
-                    userProfile.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            window.location.href = isAdmin ? '/admin.html' : '/dashboard.html';
-                        }
-                    });
-                    userProfile.setAttribute('data-dashboard-listener', 'true');
+                if (userProfile.tagName === 'DETAILS') {
+                    userProfile.style.display = 'block';
+                } else {
+                    userProfile.style.display = 'flex';
+                    userProfile.style.cursor = 'pointer';
+                }
+                var dashLink = userProfile.querySelector('.user-dashboard-link');
+                if (dashLink) {
+                    dashLink.setAttribute('href', isAdmin ? '/admin.html' : '/dashboard.html');
                 }
             }
 
@@ -270,7 +372,10 @@
             if (mobileUserLinks) mobileUserLinks.style.display = 'block';
         } else {
             if (loginBtn) loginBtn.style.removeProperty('display');
-            if (logoutBtn) logoutBtn.style.display = 'none';
+            if (logoutBtn) {
+                logoutBtn.style.display = 'none';
+                logoutBtn.classList.add('hidden');
+            }
             if (dashboardBtn) dashboardBtn.style.display = 'none';
             if (userProfile) {
                 userProfile.style.display = 'none';
@@ -572,7 +677,10 @@
     }
 
     async function initNavigation() {
+        upgradeUserAccountMenu();
+        wireUserAccountMenuOutsideClose();
         maybeLoadSaasShellForLanding();
+        relocateThemeToggleToUserMenu();
         ensurePremiumExperienceAssets();
         normalizeLandingNavOrder();
         if (typeof window.initSupabase !== 'undefined') {
@@ -591,6 +699,7 @@
         }
         
         await updateNavigation();
+        relocateThemeToggleToUserMenu();
         document.querySelectorAll('.saas-footer-year').forEach(function(el) {
             el.textContent = String(new Date().getFullYear());
         });

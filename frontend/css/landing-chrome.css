@@ -185,6 +185,47 @@ body.landing-site-body header.fixed #themeToggleBtn.theme-toggle-switch {
   margin-left: auto;
 }
 
+body.landing-site-body header.fixed #userMenuThemeMount #themeToggleBtn.theme-toggle-switch {
+  margin-left: 0;
+}
+
+/* Hesap menüsü (kullanıcı adı → Çıkış + tema) */
+body.landing-site-body header.fixed #userProfile > summary {
+  list-style: none;
+}
+
+body.landing-site-body .user-account-dropdown a:hover,
+body.landing-site-body .user-account-dropdown button:hover {
+  background: #f8fafc;
+}
+
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown {
+  background: #111827 !important;
+  border-color: rgba(71, 85, 105, 0.55) !important;
+  box-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.45),
+    0 18px 34px -20px rgba(2, 6, 23, 0.75) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown .user-dashboard-link,
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown #logoutBtn {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown .user-dashboard-link:hover,
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown #logoutBtn:hover {
+  background: rgba(30, 41, 59, 0.85) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown .border-t,
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown .my-1.border-t {
+  border-color: rgba(71, 85, 105, 0.55) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .user-account-dropdown .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
 body.landing-site-body .theme-toggle-switch {
   position: relative;
   width: 2.75rem;
