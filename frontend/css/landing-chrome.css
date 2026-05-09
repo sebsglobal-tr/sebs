@@ -2577,3 +2577,66 @@ html[data-theme="dark"] body.landing-site-body section#contact-form .contact-for
 body.theme-dark.landing-site-body section#contact-form .contact-form .form-group.checkbox-group input[type="checkbox"]:hover {
   border-color: #60a5fa !important;
 }
+
+/*
+ * FAQ (iletişim vb.): açık modda .faq-question h3 için -webkit-text-fill-color: #0f172a sabit;
+ * koyu kart üzerinde metin kayboluyor — dolgu rengini ve hover/active durumlarını eşle.
+ */
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item:not(.active) .faq-question,
+body.theme-dark.landing-site-body .faq-container .faq-item:not(.active) .faq-question {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item:not(.active) .faq-question h3,
+body.theme-dark.landing-site-body .faq-container .faq-item:not(.active) .faq-question h3 {
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item:not(.active) .faq-question:hover,
+body.theme-dark.landing-site-body .faq-container .faq-item:not(.active) .faq-question:hover {
+  background: rgba(30, 41, 59, 0.85) !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item:not(.active) .faq-question i,
+body.theme-dark.landing-site-body .faq-container .faq-item:not(.active) .faq-question i {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active .faq-question,
+body.theme-dark.landing-site-body .faq-container .faq-item.active .faq-question {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active .faq-question h3,
+body.theme-dark.landing-site-body .faq-container .faq-item.active .faq-question h3 {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active .faq-question:hover,
+body.theme-dark.landing-site-body .faq-container .faq-item.active .faq-question:hover {
+  background: #f8fafc !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active .faq-question i,
+body.theme-dark.landing-site-body .faq-container .faq-item.active .faq-question i {
+  color: #2563eb !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-answer p,
+body.theme-dark.landing-site-body .faq-container .faq-answer p {
+  color: #475569 !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active .faq-answer,
+body.theme-dark.landing-site-body .faq-container .faq-item.active .faq-answer {
+  background: #ffffff !important;
+}
+
+html[data-theme="dark"] body.landing-site-body .faq-container .faq-item.active,
+body.theme-dark.landing-site-body .faq-container .faq-item.active {
+  background: #ffffff !important;
+  border-color: rgba(71, 85, 105, 0.45) !important;
+}
