@@ -163,6 +163,19 @@ html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) .logo
   color: #64748b !important;
 }
 
+/* Trust şeridi — partner logo (açık / koyu varyant) */
+body.landing-site-body section:has(#trust-heading) .logo-strip .partner-logo-sertifikapp--dark {
+  display: none;
+}
+
+html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) .logo-strip .partner-logo-sertifikapp--light {
+  display: none;
+}
+
+html[data-theme="dark"] body.landing-site-body section:has(#trust-heading) .logo-strip .partner-logo-sertifikapp--dark {
+  display: block;
+}
+
 /* İletişim — .stats metrik şeridi: açık zemin + global koyu tema başlık rengi çakışması */
 html[data-theme="dark"] body.landing-site-body .stats {
   background: linear-gradient(180deg, #111827 0%, #0f172a 100%) !important;
