@@ -202,10 +202,19 @@ body.landing-site-body header.fixed #userProfileTrigger {
   font: inherit;
 }
 
-body.landing-site-body .user-account-dropdown {
+/*
+ * Açık menü: flex kolon. Kapalıyken .hidden + [hidden] ile kesin gizle —
+ * aksi halde display:flex !important, Tailwind .hidden’ı ezer; liste hep görünür kalır.
+ */
+body.landing-site-body .user-account-dropdown:not(.hidden) {
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
+}
+
+body.landing-site-body #userAccountPanel.hidden,
+body.landing-site-body #userAccountPanel[hidden] {
+  display: none !important;
 }
 
 body.landing-site-body .user-account-dropdown a:hover,
