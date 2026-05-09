@@ -117,7 +117,7 @@
 
     function setFooterYear() {
         document.querySelectorAll('.saas-footer-year').forEach(function (el) {
-            el.textContent = String(new Date().getFullYear());
+            el.textContent = '2025';
         });
     }
 
