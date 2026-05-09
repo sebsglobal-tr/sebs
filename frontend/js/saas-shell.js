@@ -89,6 +89,8 @@
     function initTheme() {
         if (isSimulationRoute()) {
             document.body.classList.add('sebs-sim-theme-lock');
+            document.documentElement.removeAttribute('data-theme');
+            document.body.classList.remove('theme-dark', 'theme-light');
             return;
         }
         applyTheme(resolveInitialTheme());

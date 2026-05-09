@@ -659,9 +659,183 @@ body.landing-site-body.blog-premium-page {
   width: 100%;
 }
 
+/* --- Dark theme --- */
+html[data-theme="dark"] body.landing-site-body.blog-premium-page {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(14, 165, 233, 0.08), transparent 45%),
+    linear-gradient(180deg, #0b1220 0%, #111827 45%, #0f172a 100%) !important;
+  color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-topbar {
+  border-bottom-color: rgba(71, 85, 105, 0.65);
+  background: rgba(15, 23, 42, 0.82);
+  box-shadow:
+    0 1px 0 rgba(30, 41, 59, 0.8) inset,
+    0 8px 24px -18px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-nav a {
+  color: #93c5fd;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-nav a:hover {
+  color: #bfdbfe;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-nav a[aria-current="page"] {
+  color: #f8fafc;
+  background: rgba(51, 65, 85, 0.45);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell {
+  background: rgba(17, 24, 39, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(30, 41, 59, 0.8) inset,
+    0 24px 50px -32px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell h1 {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell h2 {
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell h3 {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell p,
+html[data-theme="dark"] body.blog-premium-page .blog-shell li {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell a {
+  color: #93c5fd;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell a:hover {
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell:not(:has(.blog-hero)) > a + h1 {
+  border-bottom-color: rgba(71, 85, 105, 0.55);
+  background: linear-gradient(120deg, #93c5fd 0%, #60a5fa 42%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell:not(:has(.blog-hero)) > a + h1 + p {
+  color: #94a3b8;
+  border-left-color: #3b82f6;
+  background: linear-gradient(90deg, rgba(30, 58, 138, 0.35), rgba(15, 23, 42, 0.5));
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell article {
+  border-color: rgba(71, 85, 105, 0.55);
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.92));
+  box-shadow: 0 10px 24px -20px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-shell > a:first-child {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.45), rgba(15, 23, 42, 0.65));
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-section-title {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-section-title::after {
+  background: linear-gradient(90deg, rgba(71, 85, 105, 0.65), transparent);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card {
+  border-color: rgba(71, 85, 105, 0.55);
+  background: linear-gradient(165deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.94) 100%);
+  box-shadow: 0 12px 32px -28px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 24px 40px -28px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card h3 a {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card p {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card-footer {
+  border-top-color: rgba(71, 85, 105, 0.45);
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-card-tag {
+  background: rgba(59, 130, 246, 0.18);
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-table-wrap {
+  border-color: rgba(71, 85, 105, 0.55);
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  box-shadow: 0 14px 36px -30px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-table th,
+html[data-theme="dark"] body.blog-premium-page .blog-table td {
+  border-bottom-color: rgba(51, 65, 85, 0.85);
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-table thead th {
+  background: linear-gradient(180deg, #334155, #1e293b);
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-footer {
+  border-top-color: rgba(71, 85, 105, 0.55);
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(15, 23, 42, 0.94));
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-footer-brand strong {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-footer-brand p,
+html[data-theme="dark"] body.blog-premium-page .blog-footer-inner > p:only-child {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-footer-links a {
+  color: #93c5fd;
+}
+
+html[data-theme="dark"] body.blog-premium-page .blog-footer-links a:hover {
+  background: rgba(59, 130, 246, 0.15);
+}
+
 @media (max-width: 860px) {
   .blog-topbar-inner {
     flex-wrap: wrap;
+  }
+
+  html[data-theme="dark"] body.blog-premium-page .blog-nav {
+    border-top-color: rgba(71, 85, 105, 0.55);
   }
 
   .blog-nav {
