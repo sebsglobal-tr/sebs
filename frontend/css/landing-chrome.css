@@ -97,22 +97,21 @@ html[data-theme="dark"] body.landing-site-body #logoutBtn {
 }
 
 /*
- * Hesap alanı <details>: #userProfile’a arka plan verme (menü paneli summary’nin arkasında kalır).
- * Koyu temada hap = summary üzerinde.
+ * Hesap alanı: #userProfile sarmalayıcı şeffaf; hap = #userProfileTrigger düğmesi.
  */
-html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile {
+html[data-theme="dark"] body.landing-site-body header.fixed #userProfile {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile > summary {
+html[data-theme="dark"] body.landing-site-body header.fixed #userProfileTrigger {
   background: #1e293b !important;
   border: 1px solid rgba(71, 85, 105, 0.65) !important;
   color: #f8fafc !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed details#userProfile > summary:hover {
+html[data-theme="dark"] body.landing-site-body header.fixed #userProfileTrigger:hover {
   background: #334155 !important;
   border-color: rgba(148, 163, 184, 0.45) !important;
 }
@@ -198,9 +197,9 @@ body.landing-site-body header.fixed #userMenuThemeMount #themeToggleBtn.theme-to
   margin-left: 0;
 }
 
-/* Hesap menüsü (kullanıcı adı → Çıkış + tema) */
-body.landing-site-body header.fixed #userProfile > summary {
-  list-style: none;
+/* Hesap menüsü tetikleyici (buton) */
+body.landing-site-body header.fixed #userProfileTrigger {
+  font: inherit;
 }
 
 body.landing-site-body .user-account-dropdown {
@@ -1299,7 +1298,7 @@ body.landing-site-body header.fixed .mx-auto.flex.h-16 > .flex.items-center {
   overflow: visible !important;
 }
 
-body.landing-site-body header.fixed details#userProfile {
+body.landing-site-body header.fixed #userProfile {
   overflow: visible !important;
 }
 
@@ -1371,26 +1370,15 @@ body.landing-site-body header.fixed nav[aria-label="Ana menü"] a[aria-current="
 }
 
 /*
- * Sağ navbar — profil hapı: yalnızca açık temada #userProfile’a kutu gölgesi verilir;
- * koyu temada bu blok ezmesin diye :not([data-theme="dark"]) şartı şart.
+ * Sağ navbar — profil hapı (#userProfileTrigger): açık temada beyaz hap stili;
+ * koyu tamamlayıcısı yukarıda html[data-theme="dark"] bloklarında.
  */
-html:not([data-theme="dark"]) body.landing-site-body header.fixed details#userProfile > summary {
+html:not([data-theme="dark"]) body.landing-site-body header.fixed #userProfileTrigger {
   border-color: #e2e8f0 !important;
   background: #f8fafc !important;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body header.fixed details#userProfile > summary:hover {
-  border-color: #cbd5e1 !important;
-  background: #f1f5f9 !important;
-}
-
-/* navigation.js yükseltmesi öncesi eski div#userProfile (açık tema) */
-html:not([data-theme="dark"]) body.landing-site-body header.fixed div#userProfile:not(details) {
-  border-color: #e2e8f0 !important;
-  background: #f8fafc !important;
-}
-
-html:not([data-theme="dark"]) body.landing-site-body header.fixed div#userProfile:not(details):hover {
+html:not([data-theme="dark"]) body.landing-site-body header.fixed #userProfileTrigger:hover {
   border-color: #cbd5e1 !important;
   background: #f1f5f9 !important;
 }

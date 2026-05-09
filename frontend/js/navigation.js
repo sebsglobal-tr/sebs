@@ -130,99 +130,125 @@
         }
     }
 
-    /** Eski DOM: div#userProfile + şeritte #logoutBtn → hesap açılır menüsü (Çıkış + tema burada). */
+    /** Eski DOM (details/div + şerit çıkış) → düğme + panel: Profilim, Gece modu, Çıkış yap */
     function upgradeUserAccountMenu() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) return;
+        if (document.getElementById('userProfileTrigger') && document.getElementById('userAccountPanel')) {
+            return;
+        }
+
         var profile = document.getElementById('userProfile');
-        var logoutBtn = document.getElementById('logoutBtn');
-        if (!profile || !logoutBtn) return;
-        if (profile.tagName === 'DETAILS' && document.getElementById('userMenuThemeMount')) {
-            return;
+        if (!profile) return;
+
+        var existingLogout = document.getElementById('logoutBtn');
+        var parent = profile.parentNode;
+        var avatar = document.getElementById('userAvatar');
+        var nameEl = document.getElementById('userName');
+
+        var wrap = document.createElement('div');
+        wrap.id = 'userProfile';
+        wrap.className = 'relative hidden max-w-[10rem] sm:max-w-[12rem]';
+        wrap.style.cssText = profile.style.cssText;
+
+        var trig = document.createElement('button');
+        trig.type = 'button';
+        trig.id = 'userProfileTrigger';
+        trig.className =
+            'flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]';
+        trig.setAttribute('aria-expanded', 'false');
+        trig.setAttribute('aria-haspopup', 'menu');
+        trig.setAttribute('aria-controls', 'userAccountPanel');
+        trig.setAttribute('aria-label', 'Hesap menüsü');
+
+        if (avatar) {
+            trig.appendChild(avatar);
         }
-        if (profile.tagName === 'DETAILS') {
-            return;
-        }
-
-        var details = document.createElement('details');
-        details.id = 'userProfile';
-        details.className =
-            'relative hidden max-w-[10rem] sm:max-w-[12rem] group [&_summary::-webkit-details-marker]:hidden';
-        details.setAttribute('data-sebs-account-menu', 'true');
-
-        var summary = document.createElement('summary');
-        summary.className =
-            'list-none flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none';
-        summary.setAttribute('aria-label', 'Hesap menüsü');
-        summary.setAttribute('title', 'Hesap menüsü');
-
-        while (profile.firstChild) {
-            summary.appendChild(profile.firstChild);
+        if (nameEl) {
+            trig.appendChild(nameEl);
         }
 
         var panel = document.createElement('div');
+        panel.id = 'userAccountPanel';
         panel.className =
-            'user-account-dropdown absolute right-0 top-full z-[60] mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg';
+            'user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg';
         panel.setAttribute('role', 'menu');
+        panel.hidden = true;
 
         var dash = document.createElement('a');
+        dash.href = '/dashboard.html';
         dash.className =
             'user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
-        dash.href = '/dashboard.html';
-        dash.textContent = 'Panele git';
         dash.setAttribute('role', 'menuitem');
-        panel.appendChild(dash);
-
-        logoutBtn.className =
-            'block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring';
-        logoutBtn.style.display = 'none';
-        logoutBtn.setAttribute('role', 'menuitem');
-        panel.appendChild(logoutBtn);
-
-        var sep = document.createElement('div');
-        sep.className = 'my-1 border-t border-slate-100';
-        sep.setAttribute('aria-hidden', 'true');
-        panel.appendChild(sep);
+        dash.textContent = 'Profilim';
 
         var themeRow = document.createElement('div');
-        themeRow.className = 'flex items-center justify-between gap-3 px-4 py-3';
+        themeRow.className =
+            'flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5';
+        themeRow.setAttribute('role', 'none');
         var themeLab = document.createElement('span');
         themeLab.className = 'text-sm text-slate-600';
-        themeLab.textContent = 'Tema';
+        themeLab.textContent = 'Gece modu';
         var themeMount = document.createElement('div');
         themeMount.id = 'userMenuThemeMount';
         themeMount.className = 'flex shrink-0 items-center justify-end';
         themeRow.appendChild(themeLab);
         themeRow.appendChild(themeMount);
+
+        var lb = existingLogout || document.createElement('button');
+        lb.type = 'button';
+        lb.id = 'logoutBtn';
+        lb.textContent = 'Çıkış yap';
+        lb.className =
+            'hidden w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring';
+        lb.setAttribute('role', 'menuitem');
+        lb.style.display = 'none';
+
+        panel.appendChild(dash);
         panel.appendChild(themeRow);
+        panel.appendChild(lb);
 
-        details.appendChild(summary);
-        details.appendChild(panel);
+        wrap.appendChild(trig);
+        wrap.appendChild(panel);
 
-        profile.parentNode.replaceChild(details, profile);
+        parent.replaceChild(wrap, profile);
     }
 
-    function wireUserAccountMenuOutsideClose() {
-        var details = document.getElementById('userProfile');
-        if (!details || details.tagName !== 'DETAILS' || details.hasAttribute('data-outside-close')) return;
-        details.setAttribute('data-outside-close', 'true');
-        /* Native <details> toggle ile yarışmaması için kapatmayı bir mac sonraya al */
-        document.addEventListener('click', function (e) {
-            var t = e.target;
-            window.setTimeout(function () {
-                var d = document.getElementById('userProfile');
-                if (!d || d.tagName !== 'DETAILS' || !d.open) return;
-                if (t && d.contains(t)) return;
-                d.open = false;
-            }, 0);
+    function wireUserAccountDropdown() {
+        var root = document.getElementById('userProfile');
+        var trig = document.getElementById('userProfileTrigger');
+        var panel = document.getElementById('userAccountPanel');
+        if (!root || !trig || !panel || root.hasAttribute('data-dropdown-wired')) return;
+        root.setAttribute('data-dropdown-wired', 'true');
+
+        function setOpen(open) {
+            panel.classList.toggle('hidden', !open);
+            panel.hidden = !open;
+            trig.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        trig.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen(panel.classList.contains('hidden'));
         });
+
+        document.addEventListener('click', function (e) {
+            if (panel.classList.contains('hidden')) return;
+            var t = e.target;
+            if (root.contains(t)) return;
+            setOpen(false);
+        });
+
         if (!document.documentElement.hasAttribute('data-sebs-account-esc')) {
             document.documentElement.setAttribute('data-sebs-account-esc', 'true');
             document.addEventListener('keydown', function (e) {
                 if (e.key !== 'Escape') return;
-                var d = document.getElementById('userProfile');
-                if (d && d.tagName === 'DETAILS' && d.open) {
-                    d.open = false;
-                }
+                var p = document.getElementById('userAccountPanel');
+                var tr = document.getElementById('userProfileTrigger');
+                if (!p || !tr || p.classList.contains('hidden')) return;
+                p.classList.add('hidden');
+                p.hidden = true;
+                tr.setAttribute('aria-expanded', 'false');
             });
         }
     }
@@ -353,12 +379,7 @@
 
             if (userProfile) {
                 userProfile.classList.remove('hidden');
-                if (userProfile.tagName === 'DETAILS') {
-                    userProfile.style.display = 'block';
-                } else {
-                    userProfile.style.display = 'flex';
-                    userProfile.style.cursor = 'pointer';
-                }
+                userProfile.style.display = 'block';
                 var dashLink = userProfile.querySelector('.user-dashboard-link');
                 if (dashLink) {
                     dashLink.setAttribute('href', isAdmin ? '/admin.html' : '/dashboard.html');
@@ -679,7 +700,7 @@
 
     async function initNavigation() {
         upgradeUserAccountMenu();
-        wireUserAccountMenuOutsideClose();
+        wireUserAccountDropdown();
         maybeLoadSaasShellForLanding();
         relocateThemeToggleToUserMenu();
         ensurePremiumExperienceAssets();
