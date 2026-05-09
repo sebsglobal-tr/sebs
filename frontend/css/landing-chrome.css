@@ -39,6 +39,12 @@ html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana 
   color: #f8fafc !important;
 }
 
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] a.is-active,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] a[aria-current="page"] {
+  color: #f8fafc !important;
+  background: rgba(51, 65, 85, 0.55) !important;
+}
+
 html[data-theme="dark"] body.landing-site-body .section,
 html[data-theme="dark"] body.landing-site-body .simulations-grid-section,
 html[data-theme="dark"] body.landing-site-body .simulation-categories,
@@ -1257,8 +1263,10 @@ body.landing-site-body header.fixed nav a:hover::after {
   transform: scaleX(1);
 }
 
-/* Üst menü (orta link grubu): premium kapsül görünüm */
+/* Üst menü (orta link grubu): premium kapsül görünüm — logo ile sağ aksiyonlar arasında ortalanır */
 body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
+  flex: 1 1 0%;
+  min-width: 0;
   padding: 0.34rem;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.28);

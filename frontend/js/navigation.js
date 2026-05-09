@@ -150,22 +150,45 @@
         });
 
         // Landing chrome header (index/modules/simulations vb.) aktif menü vurgusu
+        function landingNavHrefIsActive(rawHref) {
+            try {
+                const href = (rawHref || '').trim();
+                const url = new URL(href, window.location.origin);
+                const linkPath = (url.pathname || '/').replace(/\/+$/, '') || '/';
+                const linkHash = url.hash || '';
+                if (linkHash) {
+                    return (
+                        currentPath === linkPath &&
+                        (window.location.hash || '') === linkHash
+                    );
+                }
+                if (linkPath === '/blog') {
+                    return currentPath === '/blog' || currentPath.indexOf('/blog/') === 0;
+                }
+                if (linkPath === '/modules.html') {
+                    return (
+                        currentPath === '/modules.html' ||
+                        currentPath === '/egitimler' ||
+                        currentPath.indexOf('/modules/') === 0
+                    );
+                }
+                if (linkPath === '/simulations.html') {
+                    return (
+                        currentPath === '/simulations.html' ||
+                        currentPath === '/simulasyonlar' ||
+                        currentPath.indexOf('/simulation/') === 0 ||
+                        currentPath.indexOf('/simulasyonlar/') === 0
+                    );
+                }
+                return currentPath === linkPath;
+            } catch (e) {
+                return false;
+            }
+        }
+
         const landingNavLinks = document.querySelectorAll('header.fixed nav[aria-label="Ana menü"] a[href]');
         landingNavLinks.forEach(link => {
-            let isActive = false;
-            try {
-                const url = new URL(link.getAttribute('href') || '', window.location.origin);
-                const linkPath = (url.pathname || '/').replace(/\/+$/, '') || '/';
-                const hasHash = !!url.hash;
-                if (hasHash) {
-                    // Hash linkleri sadece ilgili hash açıksa aktif göster
-                    isActive = currentPath === linkPath && !!window.location.hash && window.location.hash === url.hash;
-                } else {
-                    isActive = currentPath === linkPath;
-                }
-            } catch (e) {
-                isActive = false;
-            }
+            const isActive = landingNavHrefIsActive(link.getAttribute('href'));
             link.classList.toggle('is-active', isActive);
             if (isActive) {
                 link.setAttribute('aria-current', 'page');
@@ -268,50 +291,83 @@
 
     }
 
+    /** Tüm landing sayfalarında üst menü: ortada kapsül, aynı dört öğe (index ile uyumlu). */
     function normalizeLandingNavOrder() {
-        const orderMap = {
-            '/modules.html': 10,
-            '/simulations.html': 20,
-            '/blog': 30,
-            '/#features': 40,
-            '/#how': 50,
-            '/#audience': 60,
-            '/#platform': 70
-        };
-
-        function sortedByOrder(links) {
-            return links
-                .map((el, idx) => ({ el, idx }))
-                .sort((a, b) => {
-                    const aHref = (a.el.getAttribute('href') || '').trim();
-                    const bHref = (b.el.getAttribute('href') || '').trim();
-                    const aRank = Object.prototype.hasOwnProperty.call(orderMap, aHref)
-                        ? orderMap[aHref]
-                        : 1000 + a.idx;
-                    const bRank = Object.prototype.hasOwnProperty.call(orderMap, bHref)
-                        ? orderMap[bHref]
-                        : 1000 + b.idx;
-                    return aRank - bRank;
-                })
-                .map(x => x.el);
+        if (!document.body || !document.body.classList.contains('landing-site-body')) {
+            return;
         }
 
-        const desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
+        var CANONICAL = [
+            { href: '/modules.html', label: 'Eğitim modülleri' },
+            { href: '/simulations.html', label: 'Simülasyonlar' },
+            { href: '/blog', label: 'Blog' },
+            { href: '/#platform', label: 'Platform' }
+        ];
+
+        var linkClass =
+            'text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded';
+        var linkClassPlatform =
+            'text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded';
+
+        function makeDesktopLink(item, isPlatform) {
+            var a = document.createElement('a');
+            a.href = item.href;
+            a.textContent = item.label;
+            a.className = isPlatform ? linkClassPlatform : linkClass;
+            return a;
+        }
+
+        var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
         if (desktopNav) {
-            const desktopLinks = Array.from(desktopNav.querySelectorAll(':scope > a[href]'));
-            sortedByOrder(desktopLinks).forEach(link => desktopNav.appendChild(link));
+            desktopNav.className =
+                'hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex';
+            desktopNav.setAttribute('aria-label', 'Ana menü');
+            desktopNav.innerHTML = '';
+            CANONICAL.forEach(function (item, idx) {
+                desktopNav.appendChild(makeDesktopLink(item, idx === CANONICAL.length - 1));
+            });
         }
 
-        const mobilePanel = document.querySelector('header.fixed details > div');
-        if (mobilePanel) {
-            const firstDivider = mobilePanel.querySelector(':scope > hr');
-            if (firstDivider) {
-                const topLinks = Array.from(mobilePanel.querySelectorAll(':scope > a[href]')).filter(el => {
-                    const relation = el.compareDocumentPosition(firstDivider);
-                    return !!(relation & Node.DOCUMENT_POSITION_FOLLOWING);
-                });
-                sortedByOrder(topLinks).forEach(link => mobilePanel.insertBefore(link, firstDivider));
+        var headerRow = document.querySelector('header.fixed .mx-auto.flex.h-16');
+        if (headerRow) {
+            var first = headerRow.firstElementChild;
+            if (first && first.tagName === 'A' && !first.classList.contains('shrink-0')) {
+                first.classList.add('shrink-0');
             }
+            var right = headerRow.querySelector(':scope > div.flex.items-center');
+            if (right && !right.classList.contains('shrink-0')) {
+                right.classList.add('shrink-0');
+            }
+        }
+
+        var mobilePanel = document.querySelector('header.fixed details > div');
+        var guest = document.getElementById('mobileGuestLinks');
+        if (mobilePanel && guest) {
+            while (mobilePanel.firstChild && mobilePanel.firstChild !== guest) {
+                mobilePanel.removeChild(mobilePanel.firstChild);
+            }
+            var frag = document.createDocumentFragment();
+            CANONICAL.forEach(function (item, idx) {
+                var a = document.createElement('a');
+                a.href = item.href;
+                a.textContent = item.label;
+                if (idx === CANONICAL.length - 1) {
+                    a.className = 'block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50';
+                } else {
+                    a.className =
+                        'block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
+                }
+                frag.appendChild(a);
+                if (idx === 2) {
+                    var hrMid = document.createElement('hr');
+                    hrMid.className = 'my-1 border-slate-100';
+                    frag.appendChild(hrMid);
+                }
+            });
+            var hrBeforeAuth = document.createElement('hr');
+            hrBeforeAuth.className = 'my-1 border-slate-100';
+            frag.appendChild(hrBeforeAuth);
+            mobilePanel.insertBefore(frag, guest);
         }
     }
 
