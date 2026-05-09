@@ -403,6 +403,9 @@
                 if (linkPath === '/contact.html') {
                     return currentPath === '/contact.html';
                 }
+                if (linkPath === '/') {
+                    return currentPath === '/' || currentPath === '/index.html';
+                }
                 return currentPath === linkPath;
             } catch (e) {
                 return false;
@@ -518,7 +521,7 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Platform | Kariyer Yolları | İşverenler | Blog | İletişim (landing-chrome.css). */
+    /** Landing üst menü: Ana sayfa | Platform | Kariyer Yolları | İşverenler | Blog | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
@@ -533,6 +536,14 @@
             var a = document.createElement('a');
             a.href = '/blog';
             a.textContent = 'Blog';
+            a.className = NAV_ACCENT;
+            return a;
+        }
+
+        function makeHomeLink() {
+            var a = document.createElement('a');
+            a.href = '/';
+            a.textContent = 'Ana sayfa';
             a.className = NAV_ACCENT;
             return a;
         }
@@ -615,6 +626,7 @@
                 'hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex';
             desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
+            desktopNav.appendChild(makeHomeLink());
             desktopNav.appendChild(makeDesktopPlatformBlock());
             desktopNav.appendChild(makeCareerPathsLink());
             desktopNav.appendChild(makeEmployersLink());
@@ -650,6 +662,11 @@
             var drawerAccent = 'landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
             var drawerMuted =
                 'landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50';
+
+            var homeA = document.createElement('a');
+            homeA.href = '/';
+            homeA.textContent = 'Ana sayfa';
+            homeA.className = drawerAccent;
 
             var platHead = document.createElement('div');
             platHead.className =
@@ -692,6 +709,7 @@
             var hrBeforeAuth = document.createElement('hr');
             hrBeforeAuth.className = 'my-1 border-slate-100';
 
+            frag.appendChild(homeA);
             frag.appendChild(platHead);
             frag.appendChild(modA);
             frag.appendChild(simA);
