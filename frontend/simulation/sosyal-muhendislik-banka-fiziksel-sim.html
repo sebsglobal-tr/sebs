@@ -83,6 +83,33 @@
     .chk-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; }
     .chk-row label { display: flex; align-items: center; gap: 0.35rem; text-transform: none; margin: 0; cursor: pointer; }
     #cameraHud { font-size: 0.65rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.04em; }
+    #missionStrip {
+      position: fixed; top: 2.75rem; left: 50%; transform: translateX(-50%); z-index: 25;
+      max-width: min(96vw, 36rem); font-size: 0.68rem; color: #cbd5e1; background: rgba(15,23,42,0.82);
+      border: 1px solid rgba(71,85,105,0.5); border-radius: 0.5rem; padding: 0.35rem 0.65rem; pointer-events: none;
+    }
+    #usbInteract {
+      position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 26; max-width: 22rem; width: calc(100% - 2rem);
+      background: rgba(15,23,42,0.94); border: 1px solid rgba(100,116,139,0.45); border-radius: 0.65rem; padding: 0.65rem 0.85rem;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; pointer-events: auto;
+    }
+    #usbInteract.visible { display: block; }
+    #usbInteract .t { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.35rem; }
+    #usbInteract .body { font-size: 0.8125rem; line-height: 1.45; color: #e2e8f0; }
+    #usbInteract .kbd { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.45rem; border-radius: 0.25rem; background: #334155; font-weight: 700; font-size: 0.75rem; }
+    #docInspectOverlay { z-index: 45; }
+    .doc-3d {
+      perspective: 900px; margin: 0.75rem auto; max-width: 14rem; min-height: 11rem; display: flex; align-items: center; justify-content: center;
+    }
+    .doc-3d-inner {
+      width: 11rem; height: 14rem; background: linear-gradient(145deg, #f8fafc, #e2e8f0); border: 1px solid #94a3b8; border-radius: 0.2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35); padding: 0.65rem; font-size: 0.65rem; line-height: 1.35; color: #0f172a; transform: rotateX(4deg) rotateY(-12deg);
+      animation: docTilt 6s ease-in-out infinite;
+    }
+    @keyframes docTilt {
+      0%, 100% { transform: rotateX(4deg) rotateY(-12deg); }
+      50% { transform: rotateX(2deg) rotateY(8deg); }
+    }
   </style>
 </head>
 <body>
@@ -95,9 +122,17 @@
 
   <canvas id="gameCanvas" aria-label="3D banka lobisi görünümü"></canvas>
 
+  <div id="missionStrip" aria-live="polite"></div>
+
+  <div id="usbInteract">
+    <div class="t">Etkileşim · USB test objesi</div>
+    <div class="body" id="usbInteractBody"></div>
+    <span class="kbd" id="usbInteractKey">E — Bırak</span>
+  </div>
+
   <div id="hud">
     <div class="hud-inner">
-      <p id="hudText"><strong>W A S D</strong> ile hareket · yeşil halkada <strong>F</strong> ile USB · sarı yelekli güvenliğe yaklaşmayın · şüphe dolunca müdahale artar.</p>
+      <p id="hudText">Görev postasını okuyun; 3D aşamada sokaktan şubeye, ardından servis alanına ilerleyeceksiniz.</p>
       <div class="meter" aria-hidden="true"><span id="suspicionFill"></span></div>
     </div>
   </div>
@@ -146,7 +181,18 @@
       <h2 id="observeTitle">Gözlem</h2>
       <p id="observeBody" style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0.35rem 0 0;"></p>
       <p class="hint" id="observeHint"></p>
-      <button type="button" class="btn" id="btnObserveContinue">Çöp alanı aşamasına geç</button>
+      <button type="button" class="btn" id="btnObserveContinue">Şubeden çıkışa geç</button>
+    </div>
+  </div>
+
+  <div id="docInspectOverlay" class="overlay hidden">
+    <div class="card" style="max-width: 24rem;">
+      <p class="sub">Kanıt · Maskeli eğitim belgesi</p>
+      <h2>Şube operasyon notu (sahte)</h2>
+      <div class="doc-3d"><div class="doc-3d-inner" id="docInspectText"></div></div>
+      <p class="hint">Gerçek müşteri verisi yoktur. Sadece eğitim ve raporlama alıştırması.</p>
+      <button type="button" class="btn" id="btnDocBag">Kanıt poşetine ekle</button>
+      <button type="button" class="btn secondary" id="btnDocClose" style="margin-left:0.5rem;">Kapat</button>
     </div>
   </div>
 
@@ -259,6 +305,12 @@
     const reportOverlay = document.getElementById('reportOverlay');
     const reportForm = document.getElementById('reportForm');
     const endOverlay = document.getElementById('endOverlay');
+    const missionStrip = document.getElementById('missionStrip');
+    const usbInteract = document.getElementById('usbInteract');
+    const usbInteractBody = document.getElementById('usbInteractBody');
+    const usbInteractKey = document.getElementById('usbInteractKey');
+    const docInspectOverlay = document.getElementById('docInspectOverlay');
+    const docInspectText = document.getElementById('docInspectText');
 
     let score = 0;
     let phase = 'OFFICE_MAIL';
@@ -281,9 +333,9 @@
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0c1525);
-    scene.fog = new THREE.Fog(0x1a2332, 14, 48);
+    scene.fog = new THREE.Fog(0x1a2332, 18, 120);
 
-    const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 120);
+    const camera = new THREE.PerspectiveCamera(52, 1, 0.04, 220);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -309,6 +361,15 @@
     const fill = new THREE.DirectionalLight(0xa8c4ff, 0.28);
     fill.position.set(-12, 8, -6);
     scene.add(fill);
+
+    const interiorGroup = new THREE.Group();
+    const exteriorGroup = new THREE.Group();
+    const collisionMeshes = [];
+    const raycaster = new THREE.Raycaster();
+    scene.add(interiorGroup);
+    scene.add(exteriorGroup);
+    let worldMode = 'INTERIOR';
+    let moveTransition = null;
 
     function matStd(color, rough, metal) {
       return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal });
@@ -427,12 +488,18 @@
     }
 
     function buildBankInterior() {
-      const marble = matStd(0xe8e4dc, 0.38, 0.06);
+      const marble = new THREE.MeshPhysicalMaterial({
+        color: 0xe8ecf4,
+        roughness: 0.22,
+        metalness: 0.06,
+        clearcoat: 0.28,
+        clearcoatRoughness: 0.45
+      });
       const floor = new THREE.Mesh(new THREE.PlaneGeometry(42, 26), marble);
       floor.rotation.x = -Math.PI / 2;
       floor.receiveShadow = true;
       floor.castShadow = false;
-      scene.add(floor);
+      interiorGroup.add(floor);
 
       const border = matStd(0xc4b8a8, 0.55, 0.12);
       const sk = 0.15;
@@ -444,7 +511,8 @@
       ].forEach(([w, h, d, x, y, z]) => {
         const b = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), border));
         b.position.set(x, y, z);
-        scene.add(b);
+        interiorGroup.add(b);
+        collisionMeshes.push(b);
       });
 
       const plaster = matStd(0xf2efe8, 0.85, 0);
@@ -454,7 +522,8 @@
         const m = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat));
         m.position.set(x, y0 + h / 2, z);
         m.rotation.y = ry || 0;
-        scene.add(m);
+        interiorGroup.add(m);
+        collisionMeshes.push(m);
         return m;
       }
       wallPanel(42, 1.15, 0.45, 0, -12.75, 0, woodLow, 0);
@@ -473,11 +542,12 @@
         const z = -2 + Math.floor(i / 2) * 8;
         const col = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, wallH - 0.3, 16), colMat));
         col.position.set(x, (wallH - 0.3) / 2, z);
-        scene.add(col);
+        interiorGroup.add(col);
+        collisionMeshes.push(col);
         const ring = addShadow(new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.04, 8, 24), gold));
         ring.rotation.x = Math.PI / 2;
         ring.position.set(x, 3.2, z);
-        scene.add(ring);
+        interiorGroup.add(ring);
       }
 
       const ceil = new THREE.Mesh(
@@ -487,7 +557,7 @@
       ceil.rotation.x = Math.PI / 2;
       ceil.position.y = wallH;
       ceil.receiveShadow = true;
-      scene.add(ceil);
+      interiorGroup.add(ceil);
 
       for (let i = -15; i <= 15; i += 10) {
         const pan = new THREE.Mesh(
@@ -502,7 +572,7 @@
         );
         pan.rotation.x = Math.PI / 2;
         pan.position.set(i, wallH - 0.05, 0);
-        scene.add(pan);
+        interiorGroup.add(pan);
       }
 
       const deskWood = matStd(0x5c3d2e, 0.65, 0);
@@ -517,7 +587,8 @@
       const kick = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 0.22, 0.08), matStd(0x1e293b, 0.4, 0.4)));
       kick.position.set(0, 0.11, -8.45);
       tellerIsland.add(kick);
-      scene.add(tellerIsland);
+      interiorGroup.add(tellerIsland);
+      collisionMeshes.push(deskBody, deskTop);
 
       const glassMat = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
@@ -531,7 +602,75 @@
       const glass = new THREE.Mesh(new THREE.BoxGeometry(25.5, 1.35, 0.06), glassMat);
       glass.position.set(0, 1.95, -8.35);
       glass.castShadow = true;
-      scene.add(glass);
+      interiorGroup.add(glass);
+      collisionMeshes.push(glass);
+
+      const queueBoard = new THREE.Group();
+      const qbBack = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.15, 0.12), matStd(0x1e293b, 0.45, 0.2)));
+      qbBack.position.set(-11, 1.55, 3.5);
+      queueBoard.add(qbBack);
+      const qbScr = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.55, 0.85),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0x1d4ed8, emissiveIntensity: 0.35, roughness: 0.35 })
+      );
+      qbScr.position.set(-11, 1.55, 3.58);
+      queueBoard.add(qbScr);
+      const qCanvas = document.createElement('canvas');
+      qCanvas.width = 256;
+      qCanvas.height = 128;
+      const qctx = qCanvas.getContext('2d');
+      qctx.fillStyle = '#0f172a';
+      qctx.fillRect(0, 0, 256, 128);
+      qctx.fillStyle = '#e2e8f0';
+      qctx.font = 'bold 28px Inter,sans-serif';
+      qctx.fillText('SIRA: A-042', 24, 52);
+      qctx.font = '16px Inter,sans-serif';
+      qctx.fillStyle = '#94a3b8';
+      qctx.fillText('Atlas Şubesi', 24, 88);
+      const qTex = new THREE.CanvasTexture(qCanvas);
+      qTex.colorSpace = THREE.SRGBColorSpace;
+      const qPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.75), new THREE.MeshBasicMaterial({ map: qTex }));
+      qPlane.position.set(-11, 1.52, 3.59);
+      queueBoard.add(qPlane);
+      interiorGroup.add(queueBoard);
+
+      const reception = new THREE.Group();
+      const recDesk = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.95, 1.1), matStd(0x334155, 0.5, 0.15)));
+      recDesk.position.set(14.5, 0.48, 4.5);
+      reception.add(recDesk);
+      const recTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.25, 0.08, 1.15), matStd(0x475569, 0.35, 0.25)));
+      recTop.position.set(14.5, 0.99, 4.5);
+      reception.add(recTop);
+      interiorGroup.add(reception);
+      collisionMeshes.push(recDesk);
+
+      for (let pi = 0; pi < 3; pi++) {
+        const poster = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.2, 1.4),
+          new THREE.MeshStandardMaterial({ color: pi === 0 ? 0x1e3a8a : pi === 1 ? 0x0f766e : 0x713f12, roughness: 0.65, metalness: 0.05 })
+        );
+        poster.position.set(-19.55, 2.2 + pi * 0.1, -4 + pi * 3.5);
+        poster.rotation.y = Math.PI / 2;
+        interiorGroup.add(poster);
+      }
+
+      function deskPropSet(cx, cz, ry) {
+        const g = new THREE.Group();
+        const mon = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.05), matStd(0x111827, 0.25, 0.5)));
+        mon.position.set(0, 1.18, -0.12);
+        g.add(mon);
+        const kb = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.02, 0.18), matStd(0x1e293b, 0.55, 0.1)));
+        kb.position.set(0, 1.02, 0.08);
+        g.add(kb);
+        const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 8), new THREE.MeshStandardMaterial({ color: 0xfef9c3, emissive: 0xfde68a, emissiveIntensity: 0.4 }));
+        lamp.position.set(0.35, 1.35, 0);
+        g.add(lamp);
+        g.position.set(cx, 0, cz);
+        g.rotation.y = ry;
+        interiorGroup.add(g);
+      }
+      deskPropSet(7.5, -6.8, -0.4);
+      deskPropSet(-9, -6.5, 0.35);
 
       const staff1 = createHumanoid({
         shirt: 0xffffff,
@@ -544,7 +683,7 @@
       });
       staff1.position.set(-6, 0, -10.15);
       staff1.rotation.y = Math.PI * 0.08;
-      scene.add(staff1);
+      interiorGroup.add(staff1);
 
       const staff2 = createHumanoid({
         shirt: 0xf8fafc,
@@ -556,7 +695,7 @@
       });
       staff2.position.set(5, 0, -10.1);
       staff2.rotation.y = -Math.PI * 0.12;
-      scene.add(staff2);
+      interiorGroup.add(staff2);
 
       const atmBody = matStd(0x1a1f2e, 0.45, 0.35);
       for (let ax of [-17, 17]) {
@@ -573,7 +712,8 @@
         atm.add(scr);
         atm.position.set(ax, 0, 11.2);
         atm.rotation.y = ax < 0 ? 0 : Math.PI;
-        scene.add(atm);
+        interiorGroup.add(atm);
+        collisionMeshes.push(body);
       }
 
       const bench = new THREE.Group();
@@ -589,7 +729,7 @@
       const legR = legL.clone();
       legR.position.set(12.85, 0.21, 7.55);
       bench.add(legR);
-      scene.add(bench);
+      interiorGroup.add(bench);
 
       const planter = new THREE.Group();
       const pot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.45, 1.1), matStd(0x78716c, 0.75, 0.05)));
@@ -603,7 +743,7 @@
         leaf.scale.set(1, 1.2, 0.85);
         planter.add(leaf);
       }
-      scene.add(planter);
+      interiorGroup.add(planter);
 
       const brochure = new THREE.Group();
       const stand = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.85, 8), matStd(0x64748b, 0.5, 0.25)));
@@ -615,12 +755,143 @@
         shelf.rotation.x = -0.35 - k * 0.08;
         brochure.add(shelf);
       }
-      scene.add(brochure);
+      interiorGroup.add(brochure);
 
       return [staff1, staff2];
     }
 
+    function buildExteriorWorld() {
+      const asphalt = new THREE.Mesh(
+        new THREE.PlaneGeometry(55, 42),
+        new THREE.MeshStandardMaterial({ color: 0x2d3748, roughness: 0.88, metalness: 0.05 })
+      );
+      asphalt.rotation.x = -Math.PI / 2;
+      asphalt.position.set(0, -0.02, 32);
+      asphalt.receiveShadow = true;
+      exteriorGroup.add(asphalt);
+
+      const sidewalk = new THREE.Mesh(
+        new THREE.PlaneGeometry(16, 34),
+        new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.65, metalness: 0.02 })
+      );
+      sidewalk.rotation.x = -Math.PI / 2;
+      sidewalk.position.set(-10, 0.01, 30);
+      sidewalk.receiveShadow = true;
+      exteriorGroup.add(sidewalk);
+
+      const facade = new THREE.Group();
+      const baseWall = addShadow(new THREE.Mesh(new THREE.BoxGeometry(32, 5.2, 0.45), matStd(0x1e293b, 0.55, 0.12)));
+      baseWall.position.set(0, 2.6, 13.2);
+      facade.add(baseWall);
+      collisionMeshes.push(baseWall);
+      const glassCurtain = new THREE.Mesh(
+        new THREE.PlaneGeometry(26, 4.2),
+        new THREE.MeshPhysicalMaterial({
+          color: 0xa5d8ff,
+          metalness: 0.05,
+          roughness: 0.12,
+          transmission: 0.55,
+          thickness: 0.2,
+          transparent: true
+        })
+      );
+      glassCurtain.position.set(0, 2.5, 12.96);
+      facade.add(glassCurtain);
+
+      const logoC = document.createElement('canvas');
+      logoC.width = 512;
+      logoC.height = 128;
+      const lctx = logoC.getContext('2d');
+      lctx.fillStyle = '#0f172a';
+      lctx.fillRect(0, 0, 512, 128);
+      lctx.fillStyle = '#38bdf8';
+      lctx.font = 'bold 52px Inter,sans-serif';
+      lctx.fillText('ATLAS BANK', 40, 82);
+      const logoTex = new THREE.CanvasTexture(logoC);
+      logoTex.colorSpace = THREE.SRGBColorSpace;
+      const logoPlane = new THREE.Mesh(new THREE.PlaneGeometry(9, 2.2), new THREE.MeshStandardMaterial({ map: logoTex, roughness: 0.45 }));
+      logoPlane.position.set(0, 4.1, 12.92);
+      facade.add(logoPlane);
+
+      const hoursC = document.createElement('canvas');
+      hoursC.width = 256;
+      hoursC.height = 64;
+      const hctx = hoursC.getContext('2d');
+      hctx.fillStyle = '#f1f5f9';
+      hctx.fillRect(0, 0, 256, 64);
+      hctx.fillStyle = '#0f172a';
+      hctx.font = '22px Inter,sans-serif';
+      hctx.fillText('Hafta içi 09:00 – 17:30', 12, 40);
+      const hoursTex = new THREE.CanvasTexture(hoursC);
+      hoursTex.colorSpace = THREE.SRGBColorSpace;
+      const hoursPl = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 0.95), new THREE.MeshStandardMaterial({ map: hoursTex, roughness: 0.5 }));
+      hoursPl.position.set(10, 1.35, 12.92);
+      facade.add(hoursPl);
+
+      exteriorGroup.add(facade);
+
+      for (let i = 0; i < 3; i++) {
+        const pole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 5.5, 8), matStd(0x334155, 0.45, 0.35)));
+        pole.position.set(-16 + i * 14, 2.75, 22 + i * 2);
+        exteriorGroup.add(pole);
+        const bulb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.28, 10, 8),
+          new THREE.MeshStandardMaterial({ color: 0xfef3c7, emissive: 0xfde68a, emissiveIntensity: 0.5 })
+        );
+        bulb.position.copy(pole.position).add(new THREE.Vector3(0, 2.85, 0));
+        exteriorGroup.add(bulb);
+      }
+
+      for (let c = 0; c < 4; c++) {
+        const car = new THREE.Group();
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.75, 4.2), matStd(0x1e293b + c * 0x050505, 0.4, 0.45)));
+        body.position.set(0, 0.55, 0);
+        car.add(body);
+        const roof = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.45, 2.2), matStd(0x0f172a, 0.35, 0.5)));
+        roof.position.set(0, 1.05, -0.2);
+        car.add(roof);
+        car.position.set(12 + (c % 2) * 3.5, 0, 26 + Math.floor(c / 2) * 5.5);
+        car.rotation.y = (c % 2) * 0.08;
+        exteriorGroup.add(car);
+      }
+
+      const camPole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 3.2, 8), matStd(0x475569, 0.5, 0.3)));
+      camPole.position.set(18.5, 1.6, 12.8);
+      exteriorGroup.add(camPole);
+      const camBox = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, 0.25), matStd(0x111827, 0.35, 0.2)));
+      camBox.position.set(18.5, 3.05, 12.8);
+      exteriorGroup.add(camBox);
+
+      const alley = new THREE.Group();
+      const alleyGround = new THREE.Mesh(
+        new THREE.PlaneGeometry(14, 12),
+        new THREE.MeshStandardMaterial({ color: 0x57534e, roughness: 0.9, metalness: 0.02 })
+      );
+      alleyGround.rotation.x = -Math.PI / 2;
+      alleyGround.position.set(26, 0.015, 20);
+      alleyGround.receiveShadow = true;
+      alley.add(alleyGround);
+      const binCols = [0x57534e, 0x2563eb, 0x15803d, 0x92400e];
+      for (let b = 0; b < 4; b++) {
+        const bin = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.1, 1.1), matStd(binCols[b], 0.55, 0.12)));
+        bin.position.set(23 + b * 1.85, 1.05, 19.5);
+        alley.add(bin);
+        collisionMeshes.push(bin);
+      }
+      const svcSign = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.8, 0.7),
+        new THREE.MeshStandardMaterial({ color: 0xfefce8, emissive: 0x422006, emissiveIntensity: 0.08, roughness: 0.6 })
+      );
+      svcSign.position.set(26, 2.2, 14.5);
+      svcSign.rotation.x = -0.35;
+      alley.add(svcSign);
+      exteriorGroup.add(alley);
+    }
+
     const bankStaffMeshes = buildBankInterior();
+    buildExteriorWorld();
+    interiorGroup.visible = false;
+    exteriorGroup.visible = false;
 
     const player = createHumanoid({
       shirt: 0x0ea5e9,
@@ -647,7 +918,7 @@
       g.position.set(x, 0, z);
       g.userData.base = new THREE.Vector3(x, 0, z);
       g.userData.t = Math.random() * 6;
-      scene.add(g);
+      interiorGroup.add(g);
       guards.push(g);
       return g;
     }
@@ -668,7 +939,7 @@
       g.userData.base = new THREE.Vector3(16.2, 0, 9.4);
       g.userData.t = 0;
       g.userData.staticGuard = true;
-      scene.add(g);
+      interiorGroup.add(g);
       guards.push(g);
     })();
 
@@ -676,7 +947,7 @@
     function addWanderingNpc(x, z, path, preset) {
       const h = createHumanoid(preset);
       h.position.set(x, 0, z);
-      scene.add(h);
+      interiorGroup.add(h);
       npcs.push({ mesh: h, path, wp: 0, speed: 0.65 + Math.random() * 0.35 });
       return h;
     }
@@ -724,34 +995,44 @@
     bar.position.set(0, 2.78, 0.08);
     door.add(bar);
     door.userData.isDoor = true;
-    scene.add(door);
+    interiorGroup.add(door);
+    collisionMeshes.push(frame);
 
     const spots = [
-      { x: 3, z: -7.1, q: 'ideal', label: 'Müşteri temsilcisi hattına yakın ortak zemin (kapsam içi)', pts: 78, ring: 0x22c55e },
-      { x: -6, z: -9, q: 'good', label: 'Broşürlük yakını (çalışan/müşteri dengesi)', pts: 52, ring: 0x4ade80 },
-      { x: -2, z: 2.2, q: 'risk', label: 'Sıra numarası / bekleme köşesi', pts: 38, ring: 0xfacc15 },
-      { x: 12, z: 8, q: 'fail_customer', label: 'Müşteri koltuğu / bank yanı (yüksek müşteri riski)', pts: 12, ring: 0xfb7185 },
-      { x: 16.2, z: 9.5, q: 'fail_entrance', label: 'Giriş güvenlik hattı önü', pts: 10, ring: 0xef4444 },
-      { x: 17.2, z: 8.8, q: 'fail_atm', label: 'ATM çevresi (yoğun müşteri trafiği)', pts: 14, ring: 0xf97316 }
+      {
+        x: 3,
+        z: -7.1,
+        q: 'ideal',
+        label: 'Müşteri temsilcisi hattına yakın ortak zemin (kapsam içi)',
+        pts: 78,
+        risk: 'Orta',
+        emp: 'Yüksek',
+        cust: 'Düşük'
+      },
+      {
+        x: -6,
+        z: -9,
+        q: 'good',
+        label: 'Broşürlük yakını (çalışan/müşteri dengesi)',
+        pts: 52,
+        risk: 'Orta',
+        emp: 'Orta',
+        cust: 'Orta'
+      },
+      { x: -2, z: 2.2, q: 'risk', label: 'Sıra numarası / bekleme köşesi', pts: 38, risk: 'Orta-yüksek', emp: 'Orta', cust: 'Yüksek' },
+      {
+        x: 12,
+        z: 8,
+        q: 'fail_customer',
+        label: 'Müşteri koltuğu / bank yanı (yüksek müşteri riski)',
+        pts: 12,
+        risk: 'Kötü (kapsam)',
+        emp: 'Düşük',
+        cust: 'Çok yüksek'
+      },
+      { x: 16.2, z: 9.5, q: 'fail_entrance', label: 'Giriş güvenlik hattı önü', pts: 10, risk: 'Yüksek', emp: 'Düşük', cust: 'Orta' },
+      { x: 17.2, z: 8.8, q: 'fail_atm', label: 'ATM çevresi (yoğun müşteri trafiği)', pts: 14, risk: 'Yüksek', emp: 'Orta', cust: 'Çok yüksek' }
     ];
-
-    const spotMeshes = [];
-    spots.forEach((s) => {
-      const ring = new THREE.Mesh(
-        new THREE.RingGeometry(0.55, 0.88, 32),
-        new THREE.MeshBasicMaterial({
-          color: s.ring || 0x22c55e,
-          transparent: true,
-          opacity: 0.52,
-          side: THREE.DoubleSide
-        })
-      );
-      ring.rotation.x = -Math.PI / 2;
-      ring.position.set(s.x, 0.02, s.z);
-      ring.userData.spot = s;
-      scene.add(ring);
-      spotMeshes.push(ring);
-    });
 
     const cameraZones = [
       { x: 6, z: -4, r: 2.75 },
@@ -766,7 +1047,7 @@
       );
       m.rotation.x = -Math.PI / 2;
       m.position.set(cz.x, 0.025, cz.z);
-      scene.add(m);
+      interiorGroup.add(m);
       cameraFloorMarks.push(m);
     });
 
@@ -801,15 +1082,27 @@
       const map = {
         OFFICE_MAIL: 'Ofis · Görev postası',
         OFFICE_PREP: 'Ofis · Hazırlık',
+        STREET: 'Dışarı · Şube önü',
         DROP: 'Şube · USB',
         OBSERVE_USB: 'Şube · Gözlem',
         GUARD_DIALOG: 'Şube · Güvenlik',
-        TRASH_UI: 'Dış alan · Çöp',
-        EXIT: 'Çıkış',
+        LEAVE_BANK: 'Şube · Çıkış',
+        ALLEY: 'Servis alanı · Konteyner',
+        TRASH_UI: 'Atık · İnceleme',
         REPORT: 'Ofis · Rapor',
         END: 'Özet'
       };
       phaseLabel.textContent = map[p] || p;
+      const strip = {
+        STREET: '1/5 Banka cephesi · Kapı bölgesine yaklaşın — <strong>E</strong> ile içeri girin.',
+        DROP: '2/5 Lobide · Uygun zemine yaklaşın — etkileşim panelinde <strong>E</strong> ile USB bırakın.',
+        OBSERVE_USB: '3/5 Gözlem sonucu — ardından şubeden çıkış.',
+        LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
+        ALLEY: '5/5 Konteynerlere yaklaşın — <strong>E</strong> ile poşet incelemesi (RoE).',
+        TRASH_UI: 'Poşet / belge incelemesi — tamamlayınca rapor.',
+        REPORT: 'Şirket ofisi — raporu gönderin.'
+      };
+      if (missionStrip) missionStrip.innerHTML = strip[p] || '';
     }
 
     function pushTrackerCompletion(passed) {
@@ -844,9 +1137,59 @@
     resize();
 
     function updateCamera() {
-      const off = new THREE.Vector3(0, 4.6, 8.2);
-      camera.position.copy(player.position).add(off);
-      camera.lookAt(player.position.x, player.position.y + 0.95, player.position.z);
+      const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
+      const yaw = player.rotation.y;
+      const off = new THREE.Vector3(0, 2.15, 7.4);
+      off.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const targetCam = eye.clone().add(off);
+      const dir = new THREE.Vector3().subVectors(targetCam, eye);
+      const fullDist = dir.length();
+      if (fullDist < 0.01) {
+        camera.position.copy(targetCam);
+      } else {
+        dir.normalize();
+        raycaster.set(eye, dir);
+        raycaster.far = fullDist;
+        const hits = raycaster.intersectObjects(visibleCollisionMeshes(), false);
+        let dist = fullDist;
+        if (hits.length) {
+          dist = Math.max(1.15, Math.min(fullDist, hits[0].distance - 0.28));
+        }
+        camera.position.copy(eye.clone().add(dir.clone().multiplyScalar(dist)));
+      }
+      camera.lookAt(player.position.x, player.position.y + 1.05, player.position.z);
+    }
+
+    function updateNearestUsbHud() {
+      if (phase !== 'DROP' || dropped || worldMode !== 'INTERIOR') {
+        usbInteract.classList.remove('visible');
+        return;
+      }
+      let best = null;
+      let bestD = 99;
+      spots.forEach((s) => {
+        const d = Math.hypot(s.x - player.position.x, s.z - player.position.z);
+        if (d < bestD) {
+          bestD = d;
+          best = s;
+        }
+      });
+      if (best && bestD < 2.05) {
+        usbInteract.classList.add('visible');
+        usbInteractBody.innerHTML =
+          '<strong>' +
+          best.label +
+          '</strong><br/>Risk: <strong>' +
+          best.risk +
+          '</strong> · Çalışan fark: <strong>' +
+          best.emp +
+          '</strong> · Müşteri alım: <strong>' +
+          best.cust +
+          '</strong>';
+        usbInteractKey.textContent = 'E — USB’yi burada bırak';
+      } else {
+        usbInteract.classList.remove('visible');
+      }
     }
 
     function animHumanIdle(group, time) {
@@ -876,8 +1219,86 @@
     }
 
     function clampPlayer() {
-      player.position.x = THREE.MathUtils.clamp(player.position.x, -19, 19);
-      player.position.z = THREE.MathUtils.clamp(player.position.z, -11.5, 11.5);
+      if (worldMode === 'INTERIOR') {
+        player.position.x = THREE.MathUtils.clamp(player.position.x, -19, 19);
+        player.position.z = THREE.MathUtils.clamp(player.position.z, -11.5, 11.5);
+      } else {
+        player.position.x = THREE.MathUtils.clamp(player.position.x, -24, 34);
+        player.position.z = THREE.MathUtils.clamp(player.position.z, 11.5, 42);
+      }
+    }
+
+    function visibleCollisionMeshes() {
+      return collisionMeshes.filter((m) => {
+        let p = m;
+        while (p) {
+          if (p === interiorGroup && !interiorGroup.visible) return false;
+          if (p === exteriorGroup && !exteriorGroup.visible) return false;
+          p = p.parent;
+        }
+        return m.visible !== false;
+      });
+    }
+
+    function tickMoveTransition(dt) {
+      if (!moveTransition) return false;
+      moveTransition.elapsed += dt;
+      const k = Math.min(1, moveTransition.elapsed / moveTransition.dur);
+      const sm = k * k * (3 - 2 * k);
+      player.position.lerpVectors(moveTransition.from, moveTransition.to, sm);
+      if (k >= 1) {
+        player.position.copy(moveTransition.to);
+        const cb = moveTransition.onDone;
+        moveTransition = null;
+        if (cb) cb();
+        return true;
+      }
+      return false;
+    }
+
+    function tryEnterBankFromStreet() {
+      if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) return;
+      const dd = Math.hypot(player.position.x - 15.5, player.position.z - 14.4);
+      if (dd > 2.85) return;
+      moveTransition = {
+        from: player.position.clone(),
+        to: new THREE.Vector3(15.2, 0, 10.2),
+        elapsed: 0,
+        dur: 0.82,
+        onDone: () => {
+          interiorGroup.visible = true;
+          exteriorGroup.visible = false;
+          worldMode = 'INTERIOR';
+          setPhase('DROP');
+          lastMoveAt = clock.getElapsedTime();
+        }
+      };
+    }
+
+    function tryExitBankDoor() {
+      if (phase !== 'LEAVE_BANK' || worldMode !== 'INTERIOR' || moveTransition) return;
+      const d = Math.hypot(door.position.x - player.position.x, door.position.z - player.position.z);
+      if (d > 2.35) return;
+      moveTransition = {
+        from: player.position.clone(),
+        to: new THREE.Vector3(14.5, 0, 16.8),
+        elapsed: 0,
+        dur: 0.78,
+        onDone: () => {
+          interiorGroup.visible = false;
+          exteriorGroup.visible = true;
+          worldMode = 'EXTERIOR';
+          setPhase('ALLEY');
+        }
+      };
+    }
+
+    function tryOpenDumpsterTrash() {
+      if (phase !== 'ALLEY' || worldMode !== 'EXTERIOR' || moveTransition) return;
+      const d = Math.hypot(player.position.x - 24, player.position.z - 19.5);
+      if (d > 3.4) return;
+      trashOverlay.classList.remove('hidden');
+      buildTrashFlow();
     }
 
     function animGuards(dt, time) {
@@ -992,7 +1413,7 @@
         }
       });
       if (!best) {
-        hudText.innerHTML = '<strong>Daha yaklaş</strong> — renkli halkanın üstüne gelip tekrar <strong>F</strong>.';
+        hudText.innerHTML = '<strong>Etkileşim alanına yaklaşın</strong> — panel açıldığında <strong>E</strong>.';
         return;
       }
       dropped = true;
@@ -1004,10 +1425,8 @@
       );
       usbMesh.position.set(best.x, 0.05, best.z);
       usbMesh.rotation.y = Math.random();
-      scene.add(usbMesh);
-      spotMeshes.forEach((m) => {
-        m.visible = false;
-      });
+      interiorGroup.add(usbMesh);
+      usbInteract.classList.remove('visible');
       hudText.innerHTML =
         'USB <strong>' +
         best.label +
@@ -1017,7 +1436,7 @@
 
     function buildTrashFlow() {
       trashHint.textContent =
-        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Sarı halkalar kamera görüş alanına işaret eder (şube içi farkındalık).';
+        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Şube içinde sarı zemin işaretleri kamera bölgeleridir.';
       const containers = [
         { correct: true, label: 'Genel karışık poşet (yanlış imha / kâğıt karışık) — inceleme için uygun' },
         { correct: false, label: 'Mavi kapaklı kağıt kutusu (çoğunlukla parça / düşük anlam)' },
@@ -1067,11 +1486,11 @@
           if (d.ok) {
             documentFoundLevel = 'mid';
             score += 36;
-            trashHint.textContent = 'Orta riskli bulgu tespit edildi; kanıt poşetine kondu. Şubeden çık (3D).';
+            trashHint.textContent = 'Belge güvenli torbaya alınmadan önce maskeli önizleme.';
             trashOverlay.classList.add('hidden');
-            setPhase('EXIT');
-            hudText.innerHTML =
-              'Çıkış kapısına yaklaş (<strong>cam kapı</strong>) — <strong>E</strong> ile ayrıl. Ardından ofiste <strong>rapor formunu</strong> tamamlayacaksın.';
+            docInspectText.innerHTML =
+              '<strong>Şube Operasyon Notu</strong> (eğitim)<br/><br/>Dahili sistem: CRM-SUBE-01<br/>Yazıcı: FIN-PRN-03<br/>Vardiya: A***, M***, K***<br/>Geçici erişim talebi: onay bekliyor<br/>Müşteri satırı: maskeli özet<br/><br/><em>Bu kağıt yanlış imha ile karışmış poşette bulunmuştur.</em>';
+            docInspectOverlay.classList.remove('hidden');
             scoreLabel.textContent = 'Puan: ' + score;
           } else {
             score = Math.max(0, score - 10);
@@ -1123,30 +1542,26 @@
       });
     }
 
-    function tryExit() {
-      if (phase !== 'EXIT') return;
-      const d = Math.hypot(door.position.x - player.position.x, door.position.z - player.position.z);
-      if (d < 2.2) {
-        setPhase('REPORT');
-        reportOverlay.classList.remove('hidden');
-        const loc = document.getElementById('rfUsbLoc');
-        const who = document.getElementById('rfWho');
-        const beh = document.getElementById('rfBehav');
-        const doc = document.getElementById('rfDoc');
-        const sens = document.getElementById('rfSens');
-        if (loc) loc.value = lastDropSpot ? lastDropSpot.label : '';
-        if (who) {
-          if (usbPickedByCustomer) who.value = 'customer';
-          else if (employeeUsbBehavior === 'security') who.value = 'security';
-          else who.value = 'employee';
-        }
-        if (beh && employeeUsbBehavior && employeeUsbBehavior !== 'customer') {
-          const map = { security: 'security', usb_pc: 'usb_pc', drawer: 'drawer', ignore: 'ignore' };
-          beh.value = map[employeeUsbBehavior] || '';
-        }
-        if (doc) doc.value = documentFoundLevel ? 'yes' : 'no';
-        if (sens) sens.value = documentFoundLevel === 'mid' ? 'mid' : documentFoundLevel ? 'mid' : 'low';
+    function openReportFormPrefilled() {
+      setPhase('REPORT');
+      reportOverlay.classList.remove('hidden');
+      const loc = document.getElementById('rfUsbLoc');
+      const who = document.getElementById('rfWho');
+      const beh = document.getElementById('rfBehav');
+      const doc = document.getElementById('rfDoc');
+      const sens = document.getElementById('rfSens');
+      if (loc) loc.value = lastDropSpot ? lastDropSpot.label : '';
+      if (who) {
+        if (usbPickedByCustomer) who.value = 'customer';
+        else if (employeeUsbBehavior === 'security') who.value = 'security';
+        else who.value = 'employee';
       }
+      if (beh && employeeUsbBehavior && employeeUsbBehavior !== 'customer') {
+        const map = { security: 'security', usb_pc: 'usb_pc', drawer: 'drawer', ignore: 'ignore' };
+        beh.value = map[employeeUsbBehavior] || '';
+      }
+      if (doc) doc.value = documentFoundLevel ? 'yes' : 'no';
+      if (sens) sens.value = documentFoundLevel === 'mid' ? 'mid' : documentFoundLevel ? 'mid' : 'low';
     }
 
     function finishRun() {
@@ -1198,10 +1613,15 @@
 
     document.getElementById('btnPrepBank').addEventListener('click', () => {
       prepOverlay.classList.add('hidden');
-      setPhase('DROP');
+      interiorGroup.visible = false;
+      exteriorGroup.visible = true;
+      worldMode = 'EXTERIOR';
+      player.position.set(-4, 0, 30);
+      player.rotation.y = Math.PI;
+      setPhase('STREET');
       lastMoveAt = clock.getElapsedTime();
       hudText.innerHTML =
-        '<strong>W A S D</strong> · renkli halkada <strong>F</strong> (USB) · sarı yelekli güvenlik · vezne çizgisine fazla yaklaşma · <strong>sarı zemin halkaları</strong> kamera bölgesi · kuzeyde personel koridoruna girme.';
+        '<strong>W A S D</strong> · banka cephesine yürüyün · giriş bölgesinde <strong>E</strong> ile içeri girin · içeride USB için zeminde panel + <strong>E</strong>.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
@@ -1209,9 +1629,18 @@
 
     document.getElementById('btnObserveContinue').addEventListener('click', () => {
       observeUsbOverlay.classList.add('hidden');
-      setPhase('TRASH_UI');
-      trashOverlay.classList.remove('hidden');
-      buildTrashFlow();
+      setPhase('LEAVE_BANK');
+      hudText.innerHTML =
+        'Cam kapıya gidin (<strong>güneydoğu</strong>) — <strong>E</strong> ile şubeden çıkın. Ardından yan servis yolundaki konteynerlere yaklaşın.';
+    });
+
+    document.getElementById('btnDocBag').addEventListener('click', () => {
+      docInspectOverlay.classList.add('hidden');
+      openReportFormPrefilled();
+    });
+    document.getElementById('btnDocClose').addEventListener('click', () => {
+      docInspectOverlay.classList.add('hidden');
+      openReportFormPrefilled();
     });
 
     reportForm.addEventListener('submit', (e) => {
@@ -1241,15 +1670,19 @@
 
     window.addEventListener('keydown', (e) => {
       keys[e.code] = true;
-      if (
-        e.code === 'KeyF' &&
-        phase === 'DROP' &&
-        observeUsbOverlay.classList.contains('hidden') &&
-        guardDialogOverlay.classList.contains('hidden')
-      ) {
-        tryDropUsb();
+      if (e.code === 'KeyE') {
+        if (phase === 'STREET') tryEnterBankFromStreet();
+        else if (phase === 'LEAVE_BANK') tryExitBankDoor();
+        else if (phase === 'ALLEY') tryOpenDumpsterTrash();
+        else if (
+          phase === 'DROP' &&
+          usbInteract.classList.contains('visible') &&
+          observeUsbOverlay.classList.contains('hidden') &&
+          guardDialogOverlay.classList.contains('hidden')
+        ) {
+          tryDropUsb();
+        }
       }
-      if (e.code === 'KeyE' && phase === 'EXIT') tryExit();
     });
     window.addEventListener('keyup', (e) => {
       keys[e.code] = false;
@@ -1275,8 +1708,22 @@
         if (trashDwellSec > 24) suspicion += dt * 3.2;
       }
 
-      if (phase === 'DROP' || phase === 'EXIT') {
-        const speed = phase === 'EXIT' ? 5.2 : 4.2;
+      if (moveTransition) {
+        tickMoveTransition(dt);
+        animHumanIdle(player, elapsed);
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
+        updateNearestUsbHud();
+        updateCamera();
+        renderer.render(scene, camera);
+        return;
+      }
+
+      if (phase === 'DROP' || phase === 'LEAVE_BANK') {
+        const speed = phase === 'LEAVE_BANK' ? 5.0 : 4.2;
         let mx = 0,
           mz = 0;
         if (keys['KeyW']) mz -= 1;
@@ -1293,17 +1740,18 @@
           player.rotation.y = Math.atan2(mx, mz);
         }
         animHumanIdle(player, elapsed);
-        animGuards(dt, elapsed);
-        animNpcs(dt, elapsed);
-        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
 
         const px = player.position.x;
         const pz = player.position.z;
-        const gd = guardProximity();
-        if (gd < 2.8) suspicion += dt * 22;
-        if (gd < 1.4) suspicion += dt * 35;
-
-        if (phase === 'DROP') {
+        if (phase === 'DROP' && interiorGroup.visible) {
+          const gd = guardProximity();
+          if (gd < 2.8) suspicion += dt * 22;
+          if (gd < 1.4) suspicion += dt * 35;
           if (inCameraZone(px, pz)) {
             suspicion += dt * 8.8;
             cameraHud.style.display = 'inline';
@@ -1332,7 +1780,9 @@
         suspicionFill.style.width = suspicion + '%';
         suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
 
-        if (suspicion >= 95 && phase === 'DROP' && !runEnded) {
+        updateNearestUsbHud();
+
+        if (suspicion >= 95 && phase === 'DROP' && interiorGroup.visible && !runEnded) {
           runEnded = true;
           setPhase('END');
           endOverlay.classList.remove('hidden');
@@ -1344,6 +1794,29 @@
           pushTrackerCompletion(false);
         }
         updateCamera();
+      } else if (phase === 'STREET' || phase === 'ALLEY') {
+        cameraHud.style.display = 'none';
+        const speed = 4.6;
+        let mx = 0,
+          mz = 0;
+        if (keys['KeyW']) mz -= 1;
+        if (keys['KeyS']) mz += 1;
+        if (keys['KeyA']) mx -= 1;
+        if (keys['KeyD']) mx += 1;
+        if (mx !== 0 || mz !== 0) {
+          const len = Math.hypot(mx, mz) || 1;
+          player.position.x += (mx / len) * speed * dt;
+          player.position.z += (mz / len) * speed * dt;
+          clampPlayer();
+          player.rotation.y = Math.atan2(mx, mz);
+          lastMoveAt = elapsed;
+        }
+        animHumanIdle(player, elapsed);
+        suspicion -= dt * 0.35;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+        updateCamera();
       } else {
         cameraHud.style.display = 'none';
         suspicion -= dt * 0.4;
@@ -1351,9 +1824,11 @@
         suspicionFill.style.width = suspicion + '%';
         suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
         animHumanIdle(player, elapsed);
-        animGuards(dt, elapsed);
-        animNpcs(dt, elapsed);
-        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
         updateCamera();
       }
       renderer.render(scene, camera);
