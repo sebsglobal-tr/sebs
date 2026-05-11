@@ -546,13 +546,24 @@
             } catch (e2) { /* ignore */ }
         }
 
+        function hrefWithDersParam(lessonKey) {
+            try {
+                var u = new URL(basePath, global.location.origin);
+                u.searchParams.set('ders', lessonKey);
+                return u.pathname + u.search + (u.hash || '');
+            } catch (e) {
+                var join = String(basePath).indexOf('?') >= 0 ? '&' : '?';
+                return basePath + join + 'ders=' + encodeURIComponent(lessonKey);
+            }
+        }
+
         function wireLessonNavigation() {
             document.querySelectorAll('.nav-link-sub').forEach(function (a) {
                 var secId = a.getAttribute('data-section');
                 var anchorId = a.getAttribute('data-anchor');
                 if (!secId || !anchorId) return;
                 var lk = secId + '::' + anchorId;
-                a.setAttribute('href', basePath + '?ders=' + encodeURIComponent(lk));
+                a.setAttribute('href', hrefWithDersParam(lk));
                 a.addEventListener('click', function (e) {
                     e.preventDefault();
                     navigateToLesson(lk);
@@ -564,7 +575,7 @@
                     return k.indexOf(sid + '::') === 0;
                 });
                 if (firstKey) {
-                    link.setAttribute('href', basePath + '?ders=' + encodeURIComponent(firstKey));
+                    link.setAttribute('href', hrefWithDersParam(firstKey));
                 }
                 link.addEventListener('click', function (e) {
                     e.preventDefault();

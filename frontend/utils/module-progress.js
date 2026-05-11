@@ -461,7 +461,9 @@ function getCategoryFromModule(moduleName) {
         'Threat Intelligence',
         'Penetration Testing',
         'Red Team & Pentest (İleri)',
-        'Olay Müdahalesi & Digital Forensics'
+        'Olay Müdahalesi & Digital Forensics',
+        'İşletim Sistemleri Güvenliği (Temel)',
+        'İşletim Sistemi Güvenliği (İleri Temel)'
     ];
     
     const bulutBilisimModules = [
