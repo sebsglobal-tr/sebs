@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <base href="/" />
+  <title>Misafir Ağ Olayı · Karar Simülasyonu | SEBS</title>
+  <meta name="description" content="NOC perspektifiyle misafir Wi‑Fi ve segmentasyon: doğru sırayla gözlem, izolasyon ve kalıcı düzeltme kararları." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=3" />
+  <script src="/utils/simulation-tracker.js"></script>
+</head>
+<body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-slate-50">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+    <div class="mx-auto flex h-16 max-w-4xl items-center justify-between gap-3 px-4 sm:px-6">
+      <a href="/simulation/temel-network-simulasyonlari.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">← Temel Network simülasyonları</a>
+      <span class="hidden text-xs font-medium text-slate-500 sm:inline" id="stepLabel">Hazır</span>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-4 pb-24 pt-24 sm:px-6">
+    <div id="panelIntro" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-700/80">Karar simülasyonu</p>
+      <h1 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">Misafir ağda DNS ve yönlendirme şüphesi</h1>
+      <p class="mt-4 text-slate-600 leading-relaxed">
+        Yardım masasından gelen bildirim: misafir Wi‑Fi kullanıcıları yavaşlık ve “garip arama sonuçları” yaşıyor. Kurumsal VLAN’da henüz aynı semptom yok.
+        Sen NOC’ta vardiyadasın; her adımda en mantıklı ağ ve güvenlik kararını seç.
+      </p>
+      <ul class="mt-4 list-disc space-y-1 pl-5 text-sm text-slate-600">
+        <li>5 karar adımı; her doğru seçim 20 puan (toplam 100).</li>
+        <li>70 ve üzeri “başarılı” kabul edilir.</li>
+      </ul>
+      <button type="button" id="btnStart" class="mt-6 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-ring">
+        Simülasyonu başlat
+      </button>
+    </div>
+
+    <div id="panelSteps" class="hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div class="mb-4 flex items-center justify-between gap-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Adım 1 / 5</span>
+        <span class="text-sm font-bold text-blue-700" id="scoreLive">0 / 100</span>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900" id="questionTitle"></h2>
+      <p class="mt-3 text-slate-600 leading-relaxed" id="questionBody"></p>
+      <div class="mt-6 flex flex-col gap-3" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
+      <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900" id="feedbackBox"></p>
+      <button type="button" id="btnNext" class="mt-6 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+        Sonraki adım
+      </button>
+    </div>
+
+    <div id="panelEnd" class="hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <h2 class="text-xl font-bold text-slate-900">Sonuç</h2>
+      <p class="mt-2 text-3xl font-extrabold text-slate-900"><span id="finalScore">0</span> / 100</p>
+      <p class="mt-2 text-slate-600" id="finalMessage"></p>
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <a href="/simulation/temel-network-simulasyonlari.html" class="inline-flex justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">Listeye dön</a>
+        <button type="button" id="btnRetry" class="inline-flex justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">Tekrar dene</button>
+        <button type="button" id="btnSave" class="inline-flex justify-center rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-900 transition hover:bg-blue-100">
+          İlerlemeyi kaydet (giriş gerekli)
+        </button>
+      </div>
+      <p class="mt-4 text-xs text-slate-500" id="saveHint"></p>
+    </div>
+  </main>
+
+  <script src="../config.js?v=1.0.2"></script>
+  <script src="../js/api-integration.js?v=1.0.2"></script>
+  <script>
+    (function () {
+      var SIM_ID = 'temel-network-misafir-ag-karar';
+      var SIM_NAME = 'Temel Network · Misafir Ağ Karar Simülasyonu';
+      var MODULE_NAME = 'Temel Network Eğitimi';
+
+      var steps = [
+        {
+          title: 'İlk tepki',
+          body: 'Ticket: misafir SSID’de yavaşlık ve şüpheli yönlendirme; iç ağda henüz benzer rapor yok. İlk hamlen hangisi?',
+          options: [
+            { label: 'Misafir SSID’yi hemen tamamen kapat (kesinti riski, kanıt yok)', points: 5, feedback: 'Kesinti ve itibar riski; önce kanıt ve kapsam netleştirilmeli.' },
+            { label: 'Misafir segmentte DNS/HTTP hedeflerini örnekle; corp VLAN’a sızan trafik var mı kontrol et', points: 20, feedback: 'Doğru: önce gözlem ve blast radius.' },
+            { label: 'Herkesi kurumsal Wi‑Fi’ye al, misafiri boşver', points: 0, feedback: 'Misafir trafiğini iç ağa taşımak riski büyütür; politikaya da aykırı olabilir.' }
+          ]
+        },
+        {
+          title: 'DNS ve çıkış trafiği',
+          body: 'Örneklerde bilinmeyen resolver’lara giden DNS ve tutarsız yanıtlar görünüyor.',
+          options: [
+            { label: 'Misafirden yalnızca onaylı DNS forwarder’a izin veren firewall kuralı (diğer 53’ü kısıtla)', points: 20, feedback: 'İyi: kontrollü çıkış ve sahte DNS’i keser.' },
+            { label: 'Kullanıcıya “modem resetle” de, ağa dokunma', points: 5, feedback: 'Kök neden ağda kalır; geçici rahatlama sağlar.' },
+            { label: 'UDP/53’ü her yere aç, “DNS engeli olmasın”', points: 0, feedback: 'Sahte DNS ve sızıntı riskini artırır.' }
+          ]
+        },
+        {
+          title: 'DHCP ve port güvenliği',
+          body: 'Loglarda aynı portta çakışan lease’ler ve şüpheli DHCP teklifleri izleri var.',
+          options: [
+            { label: 'Misafir erişim switch’lerinde DHCP snooping / port security ile yetkisiz DHCP’yi kes', points: 20, feedback: 'Rogue DHCP için standart savunma.' },
+            { label: 'DHCP havuzunu genişlet, çakışma “normal” der geç', points: 5, feedback: 'Semptomu maskelemez, kök nedeni çözmez.' },
+            { label: 'Olayı düşük öncelikli kapat', points: 0, feedback: 'Aktif müdahale gecikirse corp tarafa sıçrayabilir.' }
+          ]
+        },
+        {
+          title: 'Doğu-batı trafiği',
+          body: 'Misafir VLAN’dan iç file sunucusuna SMB denemeleri görülüyor.',
+          options: [
+            { label: 'VLAN ACL: misafirden RFC1918 iç hedefleri ve SMB’yi engelle; sadece gerekli internet çıkışı', points: 20, feedback: 'Segmentasyonun amacı budur.' },
+            { label: 'Misafiri iç sunucuya NAT’la “erişsin” kolaylığı sağla', points: 0, feedback: 'Misafir ile iç varlıkları yanlışlıkla birleştirir; çok riskli.' },
+            { label: 'Alarmı sustur, kural ekleme', points: 0, feedback: 'Saldırı yüzeyi açık kalır.' }
+          ]
+        },
+        {
+          title: 'Olay sonrası',
+          body: 'Kısa vadede semptomlar azaldı. Son adım?',
+          options: [
+            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı / değişiklik kaydı', points: 20, feedback: 'Operasyonel olgunluk ve tekrarlanabilirlik.' },
+            { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 10, feedback: 'Bilgi birikimi oluşmaz; benzer olayda zaman kaybedilir.' },
+            { label: 'Kimseye duyurma, sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.' }
+          ]
+        }
+      ];
+
+      var state = {
+        index: 0,
+        score: 0,
+        bestPicks: 0,
+        startedAt: 0,
+        choiceLocked: false,
+        completionSaved: false
+      };
+
+      var elIntro = document.getElementById('panelIntro');
+      var elSteps = document.getElementById('panelSteps');
+      var elEnd = document.getElementById('panelEnd');
+      var elFeedback = document.getElementById('feedbackBox');
+      var elNext = document.getElementById('btnNext');
+
+      function showToast(msg) {
+        elFeedback.textContent = msg;
+        elFeedback.classList.remove('hidden');
+      }
+
+      function renderStep() {
+        var s = steps[state.index];
+        document.getElementById('stepBadge').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
+        document.getElementById('stepLabel').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
+        document.getElementById('questionTitle').textContent = s.title;
+        document.getElementById('questionBody').textContent = s.body;
+        document.getElementById('scoreLive').textContent = state.score + ' / 100';
+        elFeedback.classList.add('hidden');
+        elNext.classList.add('hidden');
+        state.choiceLocked = false;
+
+        var wrap = document.getElementById('optionsWrap');
+        wrap.innerHTML = '';
+        s.options.forEach(function (opt, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className =
+            'rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:border-blue-300 hover:bg-blue-50/60 focus-ring';
+          b.textContent = opt.label;
+          b.addEventListener('click', function () {
+            if (state.choiceLocked) return;
+            state.choiceLocked = true;
+            state.score += opt.points;
+            if (opt.points >= 20) state.bestPicks += 1;
+            document.getElementById('scoreLive').textContent = Math.min(100, state.score) + ' / 100';
+            showToast(opt.feedback);
+            elNext.classList.remove('hidden');
+            wrap.querySelectorAll('button').forEach(function (btn, j) {
+              btn.disabled = true;
+              if (j === i) {
+                btn.classList.add(opt.points >= 15 ? 'border-emerald-400 bg-emerald-50' : opt.points >= 8 ? 'border-amber-300 bg-amber-50' : 'border-red-200 bg-red-50');
+              } else {
+                btn.classList.add('opacity-50');
+              }
+            });
+          });
+          wrap.appendChild(b);
+        });
+      }
+
+      function finish() {
+        elSteps.classList.add('hidden');
+        elEnd.classList.remove('hidden');
+        var sc = Math.min(100, state.score);
+        document.getElementById('finalScore').textContent = String(sc);
+        var msg =
+          sc >= 90
+            ? 'Güçlü sıra: gözlem → DNS kontrolü → DHCP güvenliği → segmentasyon → dokümantasyon.'
+            : sc >= 70
+              ? 'Temel doğrular yerinde; birkaç adımda daha agresif izolasyon ve dokümantasyon seçilebilirdi.'
+              : 'Tekrar dene: önce blast radius ve kanıt, sonra kontrollü DNS ve VLAN kuralları, en sonda olay kapanışı.';
+        document.getElementById('finalMessage').textContent = msg;
+        document.getElementById('saveHint').textContent =
+          'Kaydet: giriş yaptıysanız tamamlama API’ye gider. İsterseniz sadece sayfada sonucu da inceleyebilirsiniz.';
+        state.completionSaved = false;
+      }
+
+      function resetAll() {
+        state.index = 0;
+        state.score = 0;
+        state.bestPicks = 0;
+        state.startedAt = Date.now();
+        state.choiceLocked = false;
+        state.completionSaved = false;
+        elEnd.classList.add('hidden');
+        elIntro.classList.add('hidden');
+        elSteps.classList.remove('hidden');
+        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+        }
+        renderStep();
+      }
+
+      document.getElementById('btnStart').addEventListener('click', function () {
+        state.startedAt = Date.now();
+        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+        }
+        elIntro.classList.add('hidden');
+        elSteps.classList.remove('hidden');
+        renderStep();
+      });
+
+      elNext.addEventListener('click', function () {
+        state.index += 1;
+        if (state.index >= steps.length) {
+          finish();
+        } else {
+          renderStep();
+        }
+      });
+
+      document.getElementById('btnRetry').addEventListener('click', function () {
+        if (window.SimulationTracker && typeof window.SimulationTracker.clearRunId === 'function') {
+          window.SimulationTracker.clearRunId(SIM_ID);
+        }
+        resetAll();
+      });
+
+      document.getElementById('btnSave').addEventListener('click', async function () {
+        if (!window.SimulationTracker || typeof window.SimulationTracker.saveCompletion !== 'function') return;
+        var sc = Math.min(100, state.score);
+        var elapsed = state.startedAt ? Math.max(0, Math.floor((Date.now() - state.startedAt) / 1000)) : 0;
+        var wrong = steps.length - state.bestPicks;
+        var hint = document.getElementById('saveHint');
+        hint.textContent = 'Kaydediliyor…';
+        await window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+          score: sc,
+          maxScore: 100,
+          timeSpentSeconds: elapsed,
+          correctCount: state.bestPicks,
+          wrongCount: wrong,
+          passed: sc >= 70,
+          moduleName: MODULE_NAME,
+          redirectToDashboard: false,
+          resetCount: 0,
+          hintUsedCount: 0
+        });
+        state.completionSaved = true;
+        hint.textContent = 'Kayıt isteği gönderildi. Giriş yoksa konsolda uyarı görebilirsiniz; sonuç yine bu sayfada.';
+      });
+    })();
+  </script>
+  <script src="/js/saas-shell.js"></script>
+</body>
+</html>
