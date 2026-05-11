@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <base href="/" />
-  <title>Banka Fiziksel Pentest (Eğitim) | Sosyal Mühendislik Simülasyonu · SEBS</title>
-  <meta name="description" content="Eğitim simülasyonu: yazılı pentest kapsamında bankada USB bırakma ve bilgi toplama risklerini 3D ortamda deneyimleyin. Gerçek saldırı değildir." />
+  <title>Operation Silent Drop — Banka Sosyal Mühendislik Simülasyonu · SEBS</title>
+  <meta name="description" content="Yetkili pentest eğitimi: USB test objesi konumu, çalışan/müşteri kapsamı, çöp alanı belge imhası ve raporlama. Gerçek saldırı veya müşteri hedefi değildir." />
   <meta name="theme-color" content="#0f172a" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,12 +68,28 @@
       background: #1e293b; color: #e2e8f0; font-size: 0.8125rem; cursor: pointer;
     }
     .trash-grid button:hover { border-color: #64748b; background: #334155; }
+    .scroll-mail { max-height: min(52vh, 22rem); overflow-y: auto; padding-right: 0.35rem; margin: 0.5rem 0; }
+    .equip-list { font-size: 0.8125rem; line-height: 1.55; color: #cbd5e1; margin: 0.5rem 0 0; padding-left: 1.1rem; }
+    .equip-list li { margin: 0.25rem 0; }
+    .warn-box {
+      font-size: 0.75rem; line-height: 1.5; color: #fecaca; background: rgba(127, 29, 29, 0.25);
+      border: 1px solid rgba(248, 113, 113, 0.35); border-radius: 0.5rem; padding: 0.65rem 0.75rem; margin-top: 0.75rem;
+    }
+    .report-form label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; margin: 0.65rem 0 0.25rem; }
+    .report-form input[type="text"], .report-form select, .report-form textarea {
+      width: 100%; padding: 0.45rem 0.5rem; border-radius: 0.4rem; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-size: 0.8125rem;
+    }
+    .report-form textarea { min-height: 3.5rem; resize: vertical; }
+    .chk-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; }
+    .chk-row label { display: flex; align-items: center; gap: 0.35rem; text-transform: none; margin: 0; cursor: pointer; }
+    #cameraHud { font-size: 0.65rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.04em; }
   </style>
 </head>
 <body>
   <div id="topBar">
     <a href="/simulations.html">← Simülasyonlar</a>
-    <span class="badge" id="phaseLabel">Brifing</span>
+    <span class="badge" id="phaseLabel">Ofis</span>
+    <span class="badge" id="cameraHud" style="display:none;">● KAMERA BÖLGESİ</span>
     <span class="badge" id="scoreLabel">Puan: 0</span>
   </div>
 
@@ -86,39 +102,133 @@
     </div>
   </div>
 
-  <div id="briefOverlay" class="overlay">
-    <div class="card">
-      <p class="sub">Görev · Pentest ekibi (kurgusal)</p>
-      <h2>Yöneticiden talimat</h2>
-      <div class="mail">
-        <strong>Konu:</strong> Pentest — Atlas Bankası saha adımı<br /><br />
-        Ekibimiz bankadan yazılı izin aldı. Sen sahada olacaksın: <strong>fiziksel yüzey testi</strong> kapsamında
-        kontrollü bir USB bırakılacak (içinde yalnızca eğitim yükü simülasyonu). Kimseye yakalanmadan,
-        müşteri veya personelin <strong>doğal olarak fark edebileceği</strong> bir noktayı seç.
-        Ardından <strong>atık alanında</strong> (RoE’de izin verilen çerçevede) şirketimize ait sızıntı riski taşıyan bir kağıt aranacak — bulursan güvenli kanalla raporla ve çık.
+  <div id="officeMailOverlay" class="overlay">
+    <div class="card" style="max-width: 32rem;">
+      <p class="sub">Operation Silent Drop · Şirket ofisi (kurgusal)</p>
+      <h2 style="font-size:1rem;">Bankada Fiziksel Sosyal Mühendislik Testi: USB Drop &amp; Dumpster Review</h2>
+      <div class="mail scroll-mail">
+        <strong>Konu:</strong> Yetkili Sosyal Mühendislik Testi — Banka Şubesi Fiziksel Güvenlik Değerlendirmesi<br /><br />
+        Merhaba,<br /><br />
+        Bugün senin için yetkili bir sosyal mühendislik testi görevi oluşturduk. Müşterimiz olan banka, fiziksel güvenlik farkındalığını, çalışanların bilinmeyen USB cihazlara karşı davranışını ve hassas belge imha süreçlerini ölçmemizi istedi.<br /><br />
+        <strong>Görevin şu adımlardan oluşuyor:</strong><br /><br />
+        Öncelikle banka şubesine girecek ve ortamı gözlemleyeceksin. Güvenlik görevlileri, çalışanlar ve müşteriler şube içinde aktif şekilde hareket edecek. Amacın dikkat çekmeden, kapsam içinde uygun bir noktaya <strong>eğitim amaçlı sahte USB belleği</strong> bırakmak.<br /><br />
+        USB belleğin rastgele bir <strong>müşteri</strong> tarafından değil, <strong>banka çalışanlarından biri</strong> tarafından fark edilmesi hedefleniyor. Bu yüzden bırakacağın konum kritik: çok görünür yer müşteri dikkatini çeker; çok gizli yer çalışanın fark etmesini zorlaştırır.<br /><br />
+        Ardından bankadan çıkıp şubenin <strong>dışındaki çöp alanını</strong> kontrol edeceksin. Poşetlerde banka veya süreçlerle ilgili hassas belge olup olmadığına bakacaksın. Bulduğun belgeyi kanıt olarak güvenli torbayla alacak, şirkete dönüp <strong>rapor ekranında</strong> teslim edeceksin.<br /><br />
+        Unutma: Bu görev yetkili ve kontrollü bir güvenlik testidir. Gerçek kişilere zarar vermek, müşteri verisi toplamak veya kapsam dışı alanlara girmek kesinlikle yasaktır.<br /><br />
+        Başarılar,<br />
+        Operasyon Yöneticisi
       </div>
-      <p class="hint">Bu içerik yalnızca farkındalık ve prosedür eğitimidir; gerçek ortamda izinsiz eylem yasadışıdır.</p>
-      <button type="button" class="btn" id="btnStart3d">Bankaya gir (3D)</button>
+      <button type="button" class="btn" id="btnMailNext">Hazırlığa geç</button>
+    </div>
+  </div>
+
+  <div id="prepOverlay" class="overlay hidden">
+    <div class="card" style="max-width: 28rem;">
+      <p class="sub">Görev alma ve hazırlık</p>
+      <h2>Ekipman ve uyarı</h2>
+      <ul class="equip-list">
+        <li><strong>Eğitim amaçlı sahte USB</strong> — gerçek zararlı yazılım içermez; yalnızca test objesi.</li>
+        <li><strong>Görev kimliği / yetki özeti</strong> — normalde gösterilmez; yakalanırsan prosedür gereği kullanılır.</li>
+        <li><strong>Not alma tableti</strong> — gözlem, konum, çöp bulguları ve rapor notları.</li>
+        <li><strong>Kanıt poşeti</strong> — çöpten alınan belgeyi güvenli taşıma (simülasyon).</li>
+      </ul>
+      <div class="warn-box">
+        Bu simülasyon yalnızca <strong>yetkili pentest ve farkındalık eğitimi</strong> içindir. Amaç saldırı tekniği öğretmek değil; kurumların bu risklere karşı nasıl test edildiğini, raporlandığını ve nasıl korunacağını anlamaktır.
+        <strong>Müşteri hedef değildir</strong> — USB’yi müşteri alırsa kapsam ve etik açısından başarısızlık sayılır.
+      </div>
+      <button type="button" class="btn" id="btnPrepBank">Şubeye git (3D)</button>
+    </div>
+  </div>
+
+  <div id="observeUsbOverlay" class="overlay hidden">
+    <div class="card" style="max-width: 26rem;">
+      <p class="sub">Gözlem · USB sonucu (simülasyon)</p>
+      <h2 id="observeTitle">Gözlem</h2>
+      <p id="observeBody" style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0.35rem 0 0;"></p>
+      <p class="hint" id="observeHint"></p>
+      <button type="button" class="btn" id="btnObserveContinue">Çöp alanı aşamasına geç</button>
+    </div>
+  </div>
+
+  <div id="guardDialogOverlay" class="overlay hidden">
+    <div class="card" style="max-width: 26rem;">
+      <p class="sub">Güvenlik teması</p>
+      <h2>Güvenlik görevlisi</h2>
+      <p style="font-size:0.875rem;color:#e2e8f0;margin:0 0 0.75rem;">
+        Merhaba, yardımcı olabilir miyim? Bir süredir şube içinde dolaştığınızı fark ettim.
+      </p>
+      <div class="trash-grid" id="guardDialogButtons"></div>
+      <p class="hint" id="guardDialogHint"></p>
     </div>
   </div>
 
   <div id="trashOverlay" class="overlay hidden">
-    <div class="card">
-      <p class="sub">Aşama 2 · Atık alanı (RoE içi)</p>
-      <h2>Çöp kutusu — hedef belge</h2>
-      <p style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0 0 0.5rem;">
-        Maskeleme: eldiven ve çanta kullanıyorsun. Üç poşetten birinde müşteri adayları içeren <strong>“Akış Teklif Özeti”</strong> zarfı olabilir.
-      </p>
-      <div class="trash-grid" id="trashButtons"></div>
+    <div class="card" style="max-width: 28rem;">
+      <p class="sub">Şube dışı · Belge imha kontrolü (RoE)</p>
+      <h2>Atık konteynerleri</h2>
+      <div id="trashPanel"></div>
       <p class="hint" id="trashHint"></p>
     </div>
   </div>
 
+  <div id="reportOverlay" class="overlay hidden">
+    <div class="card" style="max-width: 30rem;">
+      <p class="sub">Şirket ofisi · Pentest raporu</p>
+      <h2>Bulguları kaydet</h2>
+      <form class="report-form" id="reportForm">
+        <label for="rfUsbLoc">USB bırakılan konum (özet)</label>
+        <input type="text" id="rfUsbLoc" name="usbLoc" placeholder="Örn: Temsilci hattı yakını ortak zemin" />
+        <label for="rfWho">USB’yi kim aldı? (gözlem)</label>
+        <select id="rfWho" name="who">
+          <option value="">Seçin</option>
+          <option value="employee">Banka çalışanı</option>
+          <option value="customer">Müşteri (kapsam dışı)</option>
+          <option value="security">Güvenlik</option>
+          <option value="none">Henüz net değil / kimse almadı</option>
+        </select>
+        <label for="rfBehav">Çalışan davranışı (varsa)</label>
+        <select id="rfBehav" name="behav">
+          <option value="">Seçin</option>
+          <option value="security">Güvenliğe teslim</option>
+          <option value="usb_pc">Bilgisayara takma girişimi (yüksek risk)</option>
+          <option value="drawer">Çekmeceye koydu</option>
+          <option value="ignore">Görmezden gelindi</option>
+        </select>
+        <label for="rfDoc">Çöp alanında hassas belge?</label>
+        <select id="rfDoc" name="doc">
+          <option value="">Seçin</option>
+          <option value="yes">Evet</option>
+          <option value="no">Hayır</option>
+        </select>
+        <label for="rfSens">Belge hassasiyeti (tahmini)</label>
+        <select id="rfSens" name="sens">
+          <option value="">Seçin</option>
+          <option value="low">Düşük</option>
+          <option value="mid">Orta</option>
+          <option value="high">Yüksek</option>
+          <option value="crit">Kritik (eğitim senaryosu)</option>
+        </select>
+        <label>Önerilen önlemler (işaretleyin)</label>
+        <div class="chk-row">
+          <label><input type="checkbox" name="rec_usb" /> USB prosedürü</label>
+          <label><input type="checkbox" name="rec_train" /> Farkındalık eğitimi</label>
+          <label><input type="checkbox" name="rec_shred" /> Öğütücü / imha politikası</label>
+          <label><input type="checkbox" name="rec_bin" /> Kilitli atık kutusu</label>
+          <label><input type="checkbox" name="rec_patrol" /> Devriye / fiziksel kontrol</label>
+        </div>
+        <label for="rfNotes">Ek not</label>
+        <textarea id="rfNotes" name="notes" placeholder="Kısa operasyonel not…"></textarea>
+        <button type="submit" class="btn" style="margin-top:1rem;">Raporu tamamla</button>
+      </form>
+    </div>
+  </div>
+
   <div id="endOverlay" class="overlay hidden">
-    <div class="card">
+    <div class="card" style="max-width: 30rem;">
       <p class="sub">Değerlendirme</p>
       <h2 id="endTitle">Görev tamamlandı</h2>
       <p id="endBody" style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0.5rem 0 0;"></p>
+      <p class="hint" id="endLearning" style="margin-top:0.75rem;"></p>
       <button type="button" class="btn secondary" id="btnReplay">Yeniden oyna</button>
       <a class="btn" href="/simulations.html" style="text-decoration:none;margin-left:0.5rem;">Simülasyon listesi</a>
     </div>
@@ -128,7 +238,7 @@
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
     const SIM_ID = 'sosyal-muhendislik-banka-fiziksel';
-    const SIM_NAME = 'Sosyal Mühendislik · Banka fiziksel pentest (eğitim)';
+    const SIM_NAME = 'Operation Silent Drop: Banka Sosyal Mühendislik Simülasyonu';
     const MODULE_NAME = 'Sosyal Mühendisliğe Giriş';
 
     const canvas = document.getElementById('gameCanvas');
@@ -136,21 +246,38 @@
     const suspicionFill = document.getElementById('suspicionFill');
     const phaseLabel = document.getElementById('phaseLabel');
     const scoreLabel = document.getElementById('scoreLabel');
-    const briefOverlay = document.getElementById('briefOverlay');
+    const cameraHud = document.getElementById('cameraHud');
+    const officeMailOverlay = document.getElementById('officeMailOverlay');
+    const prepOverlay = document.getElementById('prepOverlay');
+    const observeUsbOverlay = document.getElementById('observeUsbOverlay');
+    const guardDialogOverlay = document.getElementById('guardDialogOverlay');
+    const guardDialogButtons = document.getElementById('guardDialogButtons');
+    const guardDialogHint = document.getElementById('guardDialogHint');
     const trashOverlay = document.getElementById('trashOverlay');
-    const endOverlay = document.getElementById('endOverlay');
-    const trashButtons = document.getElementById('trashButtons');
+    const trashPanel = document.getElementById('trashPanel');
     const trashHint = document.getElementById('trashHint');
+    const reportOverlay = document.getElementById('reportOverlay');
+    const reportForm = document.getElementById('reportForm');
+    const endOverlay = document.getElementById('endOverlay');
 
     let score = 0;
-    let phase = 'BRIEFING';
+    let phase = 'OFFICE_MAIL';
     let suspicion = 0;
     let runEnded = false;
     let trackerPushed = false;
     let dropped = false;
     let dropQuality = null;
+    let lastDropSpot = null;
+    let usbPickedByCustomer = false;
+    let employeeUsbBehavior = null;
+    let ethicalChoiceBonus = 0;
+    let guardDialogShown = false;
+    let trashDwellSec = 0;
+    let documentFoundLevel = null;
     let keys = {};
     let clock = new THREE.Clock();
+    let lastMoveAt = 0;
+    let staffWarnCooldown = 0;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0c1525);
@@ -526,6 +653,24 @@
     }
     addGuard(-8, -4);
     addGuard(10, 2);
+    (function addEntranceGuard() {
+      const g = createHumanoid({
+        shirt: 0x1e3a5f,
+        pants: 0x0f172a,
+        vest: 0xfacc15,
+        skin: 0xa8907c,
+        hair: 0x111827,
+        cap: true,
+        scale: 1.03
+      });
+      g.position.set(16.2, 0, 9.4);
+      g.rotation.y = -0.85;
+      g.userData.base = new THREE.Vector3(16.2, 0, 9.4);
+      g.userData.t = 0;
+      g.userData.staticGuard = true;
+      scene.add(g);
+      guards.push(g);
+    })();
 
     const npcs = [];
     function addWanderingNpc(x, z, path, preset) {
@@ -582,17 +727,24 @@
     scene.add(door);
 
     const spots = [
-      { x: 0, z: 0, q: 'bad', label: 'lobi ortası', pts: 15 },
-      { x: -14, z: 6, q: 'good', label: 'bitki köşesi', pts: 55 },
-      { x: 12, z: 8, q: 'good', label: 'oturma bankı', pts: 50 },
-      { x: -6, z: -9, q: 'great', label: 'broşürlük altı (düşük trafik)', pts: 70 }
+      { x: 3, z: -7.1, q: 'ideal', label: 'Müşteri temsilcisi hattına yakın ortak zemin (kapsam içi)', pts: 78, ring: 0x22c55e },
+      { x: -6, z: -9, q: 'good', label: 'Broşürlük yakını (çalışan/müşteri dengesi)', pts: 52, ring: 0x4ade80 },
+      { x: -2, z: 2.2, q: 'risk', label: 'Sıra numarası / bekleme köşesi', pts: 38, ring: 0xfacc15 },
+      { x: 12, z: 8, q: 'fail_customer', label: 'Müşteri koltuğu / bank yanı (yüksek müşteri riski)', pts: 12, ring: 0xfb7185 },
+      { x: 16.2, z: 9.5, q: 'fail_entrance', label: 'Giriş güvenlik hattı önü', pts: 10, ring: 0xef4444 },
+      { x: 17.2, z: 8.8, q: 'fail_atm', label: 'ATM çevresi (yoğun müşteri trafiği)', pts: 14, ring: 0xf97316 }
     ];
 
     const spotMeshes = [];
     spots.forEach((s) => {
       const ring = new THREE.Mesh(
-        new THREE.RingGeometry(0.55, 0.85, 32),
-        new THREE.MeshBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
+        new THREE.RingGeometry(0.55, 0.88, 32),
+        new THREE.MeshBasicMaterial({
+          color: s.ring || 0x22c55e,
+          transparent: true,
+          opacity: 0.52,
+          side: THREE.DoubleSide
+        })
       );
       ring.rotation.x = -Math.PI / 2;
       ring.position.set(s.x, 0.02, s.z);
@@ -601,36 +753,77 @@
       spotMeshes.push(ring);
     });
 
+    const cameraZones = [
+      { x: 6, z: -4, r: 2.75 },
+      { x: -10, z: 4, r: 2.55 },
+      { x: 14, z: 6, r: 2.35 }
+    ];
+    const cameraFloorMarks = [];
+    cameraZones.forEach((cz) => {
+      const m = new THREE.Mesh(
+        new THREE.RingGeometry(cz.r - 0.25, cz.r + 0.12, 40),
+        new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
+      );
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(cz.x, 0.025, cz.z);
+      scene.add(m);
+      cameraFloorMarks.push(m);
+    });
+
+    function inStaffOnlyCorridor(px, pz) {
+      return px >= -19.6 && px <= -13.5 && pz <= -9.05 && pz >= -11.35;
+    }
+
+    function inCameraZone(px, pz) {
+      for (let i = 0; i < cameraZones.length; i++) {
+        const c = cameraZones[i];
+        if (Math.hypot(px - c.x, pz - c.z) < c.r) return true;
+      }
+      return false;
+    }
+
+    function distToNearestTellerStaff(px, pz) {
+      const pts = [
+        { x: -6, z: -10.15 },
+        { x: 5, z: -10.1 }
+      ];
+      let m = 99;
+      pts.forEach((p) => {
+        m = Math.min(m, Math.hypot(px - p.x, pz - p.z));
+      });
+      return m;
+    }
+
     let usbMesh = null;
 
     function setPhase(p) {
       phase = p;
-      phaseLabel.textContent =
-        p === 'BRIEFING'
-          ? 'Brifing'
-          : p === 'DROP'
-            ? 'USB bırakma'
-            : p === 'TRASH_UI'
-              ? 'Atık alanı'
-              : p === 'EXIT'
-                ? 'Çıkış'
-                : p === 'END'
-                  ? 'Özet'
-                  : p;
+      const map = {
+        OFFICE_MAIL: 'Ofis · Görev postası',
+        OFFICE_PREP: 'Ofis · Hazırlık',
+        DROP: 'Şube · USB',
+        OBSERVE_USB: 'Şube · Gözlem',
+        GUARD_DIALOG: 'Şube · Güvenlik',
+        TRASH_UI: 'Dış alan · Çöp',
+        EXIT: 'Çıkış',
+        REPORT: 'Ofis · Rapor',
+        END: 'Özet'
+      };
+      phaseLabel.textContent = map[p] || p;
     }
 
     function pushTrackerCompletion(passed) {
       if (trackerPushed) return;
       trackerPushed = true;
       if (!window.SimulationTracker || typeof window.SimulationTracker.saveCompletion !== 'function') return;
-      const norm = Math.min(100, Math.round((score / 200) * 100));
+      const norm = Math.max(0, Math.min(100, Math.round((score / 220) * 100)));
       window.SimulationTracker
         .saveCompletion(SIM_ID, SIM_NAME, {
           score: norm,
           maxScore: 100,
           timeSpentSeconds: Math.floor(clock.getElapsedTime()),
-          correctCount: dropQuality === 'great' || dropQuality === 'good' ? 1 : 0,
-          wrongCount: dropQuality === 'bad' ? 1 : 0,
+          correctCount: usbPickedByCustomer ? 0 : dropQuality === 'ideal' || dropQuality === 'good' || dropQuality === 'risk' ? 1 : 0,
+          wrongCount: usbPickedByCustomer || dropQuality === 'fail_customer' || dropQuality === 'fail_atm' ? 1 : 0,
           passed,
           moduleName: MODULE_NAME,
           redirectToDashboard: false,
@@ -689,6 +882,10 @@
 
     function animGuards(dt, time) {
       guards.forEach((g) => {
+        if (g.userData.staticGuard) {
+          animHumanIdle(g, time);
+          return;
+        }
         g.userData.t += dt;
         const r = 3.5;
         g.position.x = g.userData.base.x + Math.sin(g.userData.t * 0.55) * r;
@@ -711,10 +908,82 @@
       return dMin;
     }
 
+    function rollEmployeeUsbBehavior(q) {
+      const r = Math.random();
+      if (q === 'ideal') {
+        if (r < 0.4) return 'security';
+        if (r < 0.52) return 'usb_pc';
+        if (r < 0.78) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'good') {
+        if (r < 0.3) return 'security';
+        if (r < 0.4) return 'usb_pc';
+        if (r < 0.72) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'risk') {
+        if (r < 0.18) return 'security';
+        if (r < 0.42) return 'usb_pc';
+        if (r < 0.7) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'fail_entrance') {
+        return r < 0.5 ? 'security' : 'ignore';
+      }
+      return 'security';
+    }
+
+    function showUsbObserveAfterDrop(best) {
+      lastDropSpot = best;
+      dropQuality = best.q;
+      setPhase('OBSERVE_USB');
+      observeUsbOverlay.classList.remove('hidden');
+      const titleEl = document.getElementById('observeTitle');
+      const bodyEl = document.getElementById('observeBody');
+      const hintEl = document.getElementById('observeHint');
+
+      if (best.q === 'fail_customer' || best.q === 'fail_atm') {
+        usbPickedByCustomer = true;
+        employeeUsbBehavior = 'customer';
+        titleEl.textContent = 'Kapsam dışı sonuç';
+        bodyEl.innerHTML =
+          'USB, <strong>banka çalışanı yerine müşteri trafiğinin yüksek olduğu bölgede</strong> öne çıktı. Pentest hedefi çalışan farkındalığı ve süreçti; müşteri etkileşimi <strong>etik ve operasyonel risk</strong> oluşturur.';
+        hintEl.textContent =
+          'Öğrenme notu: Başarı yalnızca hedefe ulaşmak değil; kapsam, etik sınır ve zarar vermeme ilkesi de başarının parçasıdır.';
+        score = Math.max(0, score - 52);
+      } else if (best.q === 'fail_entrance') {
+        usbPickedByCustomer = false;
+        employeeUsbBehavior = rollEmployeeUsbBehavior(best.q);
+        titleEl.textContent = 'Yüksek görünürlük (giriş hattı)';
+        bodyEl.innerHTML =
+          'Güvenlik hattına çok yakın konumda test objesi <strong>yoğun gözetim</strong> altında kaldı. Çalışan gözlemi sınırlı kalabilir; güvenlik sürecine düşme ihtimali yüksek.';
+        hintEl.textContent = 'Gözlem notu oluşturuldu. Çöp alanı kontrolüne geçebilirsin.';
+        score = Math.max(0, score - 24);
+      } else {
+        usbPickedByCustomer = false;
+        employeeUsbBehavior = rollEmployeeUsbBehavior(best.q);
+        const lines = {
+          security:
+            'Bir banka çalışanı USB’yi fark etti ve <strong>güvenlik birimine teslim etti</strong>. Olumlu güvenlik davranışı — raporda başarılı çalışan farkındalığı olarak not edilir.',
+          usb_pc:
+            'Çalışan, cihazı <strong>iş istasyonuna takma girişimi</strong> gösterdi (kurgusal yüksek risk bulgusu). Rapor: kritik farkındalık zafiyeti — bilinmeyen USB prosedürü ihlali.',
+          drawer:
+            'Çalışan USB’yi <strong>çekmeceye</strong> koydu; tanımlı güvenli sürece hemen dahil edilmedi. Orta-yüksek risk — prosedür ve farkındalık güçlendirilmeli.',
+          ignore: 'USB bir süre <strong>fark edilmeden</strong> kaldı. Düşük farkındalık sinyali; gözlem notuna eklenir.'
+        };
+        titleEl.textContent = 'Test objesi çalışan tarafından fark edildi (simülasyon örneklemi)';
+        bodyEl.innerHTML = lines[employeeUsbBehavior] || lines.ignore;
+        hintEl.textContent =
+          'Senaryo sonucu örneklemidir; gerçek pentestte uzun süreli gözlem, kanıt zinciri ve RoE kaydı gerekir.';
+      }
+      scoreLabel.textContent = 'Puan: ' + score;
+    }
+
     function tryDropUsb() {
       if (dropped || phase !== 'DROP') return;
       let best = null;
-      let bestD = 2.1;
+      let bestD = 2.15;
       spots.forEach((s) => {
         const d = Math.hypot(s.x - player.position.x, s.z - player.position.z);
         if (d < bestD) {
@@ -723,11 +992,10 @@
         }
       });
       if (!best) {
-        hudText.innerHTML = '<strong>Daha yaklaş</strong> — yeşil halkanın üstüne gelip tekrar <strong>F</strong>.';
+        hudText.innerHTML = '<strong>Daha yaklaş</strong> — renkli halkanın üstüne gelip tekrar <strong>F</strong>.';
         return;
       }
       dropped = true;
-      dropQuality = best.q;
       score += best.pts;
       scoreLabel.textContent = 'Puan: ' + score;
       usbMesh = new THREE.Mesh(
@@ -743,45 +1011,115 @@
       hudText.innerHTML =
         'USB <strong>' +
         best.label +
-        '</strong> konumuna bırakıldı. Şimdi <strong>atık alanına</strong> git (sol arka koridor hissi: bankanın <strong>W</strong> ile kuzey duvarına, <strong>A/D</strong> ile merkeze).';
-      setTimeout(() => {
-        if (phase === 'DROP') {
-          setPhase('TRASH_UI');
-          trashOverlay.classList.remove('hidden');
-          buildTrashUi();
-        }
-      }, 900);
+        '</strong> konumuna bırakıldı. Gözlem sonucunu oku; ardından şube <strong>dışı çöp alanı</strong> aşamasına geçeceksin.';
+      showUsbObserveAfterDrop(best);
     }
 
-    function buildTrashUi() {
-      trashButtons.innerHTML = '';
-      trashHint.textContent = 'Bir poşeti seç.';
-      const opts = [
-        { id: 1, ok: false, t: 'Poşet A — kahve telvesi ve ATM fişleri' },
-        { id: 2, ok: true, t: 'Poşet B — müşteri broşürleri ve zarf (Akış Teklif Özeti)' },
-        { id: 3, ok: false, t: 'Poşet C — boş şeker ambalajları' }
+    function buildTrashFlow() {
+      trashHint.textContent =
+        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Sarı halkalar kamera görüş alanına işaret eder (şube içi farkındalık).';
+      const containers = [
+        { correct: true, label: 'Genel karışık poşet (yanlış imha / kâğıt karışık) — inceleme için uygun' },
+        { correct: false, label: 'Mavi kapaklı kağıt kutusu (çoğunlukla parça / düşük anlam)' },
+        { correct: false, label: 'Parçalanmış evrak torbası (anlamlı veri beklenmez)' },
+        { correct: false, label: 'Islak genel atık (kahve, ambalaj)' }
       ];
-      opts.sort(() => Math.random() - 0.5);
+      trashPanel.innerHTML =
+        '<p style="font-size:0.8125rem;color:#cbd5e1;line-height:1.5;margin:0 0 0.5rem;">Şube dışı atık alanı. Uzun süre kalıp gürültü yapmak riski artırır; hızlı ve kontrollü inceleme yapın.</p><div class="trash-grid" id="trashCtnGrid"></div>';
+      const grid = document.getElementById('trashCtnGrid');
+      containers
+        .sort(() => Math.random() - 0.5)
+        .forEach((c) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = c.label;
+          b.addEventListener('click', () => {
+            if (!c.correct) {
+              score = Math.max(0, score - 8);
+              suspicion += 14;
+              trashHint.textContent = 'Yanlış konteyner — zaman kaybı ve dikkat maliyeti. Başka konteyneri deneyin.';
+              scoreLabel.textContent = 'Puan: ' + score;
+              return;
+            }
+            openTrashExamineStep();
+          });
+          grid.appendChild(b);
+        });
+    }
+
+    function openTrashExamineStep() {
+      trashPanel.innerHTML =
+        '<p style="font-size:0.8125rem;color:#cbd5e1;line-height:1.5;margin:0 0 0.5rem;">Poşet açıldı. Maskeli eğitim belgelerinden <strong>hassas görüneni</strong> seçin.</p><div class="trash-grid" id="docPick"></div>';
+      const grid = document.getElementById('docPick');
+      const docs = [
+        { ok: false, t: 'Genel duyuru: “Şube temizlik listesi — hafta 12” (düşük değer)' },
+        {
+          ok: true,
+          t: 'Zarf etiketi: Akış Teklif Özeti — Ad A*** Y****, Müşteri No 45****, IBAN TR12 **** **** ****, Geçici: Temp-**** (maskeli eğitim çıktısı)'
+        },
+        { ok: false, t: 'Boş formlar ve ATM fişleri' }
+      ];
+      docs.sort(() => Math.random() - 0.5).forEach((d) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = d.t;
+        b.addEventListener('click', () => {
+          if (d.ok) {
+            documentFoundLevel = 'mid';
+            score += 36;
+            trashHint.textContent = 'Orta riskli bulgu tespit edildi; kanıt poşetine kondu. Şubeden çık (3D).';
+            trashOverlay.classList.add('hidden');
+            setPhase('EXIT');
+            hudText.innerHTML =
+              'Çıkış kapısına yaklaş (<strong>cam kapı</strong>) — <strong>E</strong> ile ayrıl. Ardından ofiste <strong>rapor formunu</strong> tamamlayacaksın.';
+            scoreLabel.textContent = 'Puan: ' + score;
+          } else {
+            score = Math.max(0, score - 10);
+            suspicion += 16;
+            trashHint.textContent = 'Bu kâğıt önemsiz veya düşük riskli görünüyor; başka kalemi seçin.';
+            scoreLabel.textContent = 'Puan: ' + score;
+          }
+        });
+        grid.appendChild(b);
+      });
+    }
+
+    function openGuardDialog() {
+      guardDialogShown = true;
+      setPhase('GUARD_DIALOG');
+      guardDialogOverlay.classList.remove('hidden');
+      guardDialogHint.textContent = 'Profesyonel pentestte yakalanma anında yalan yerine yetki ve RoE şeffaflığı tercih edilir.';
+      guardDialogButtons.innerHTML = '';
+      const opts = [
+        { t: 'Sıra bekliyordum, işlem yapmadan çıkacağım.', sus: 16, sc: -5 },
+        { t: 'Yanlış şubeye gelmişim, çıkıyorum.', sus: 10, sc: -3 },
+        { t: 'Yetkili test ekibindenim; görev ve RoE özeti bende.', sus: -34, sc: 14, pro: true },
+        { t: 'Bir şey yok.', sus: 42, sc: -22 }
+      ];
       opts.forEach((o) => {
         const b = document.createElement('button');
         b.type = 'button';
         b.textContent = o.t;
         b.addEventListener('click', () => {
-          if (o.ok) {
-            score += 35;
-            trashHint.textContent = 'Hedef zarf güvenli torbaya alındı. Şubeden çıkışa gidin (3D).';
-            trashOverlay.classList.add('hidden');
-            setPhase('EXIT');
-            hudText.innerHTML = 'Çıkış kapısına yaklaş (<strong>cam kapı — doğu duvarı</strong>) — <strong>E</strong> ile binadan çık.';
-            scoreLabel.textContent = 'Puan: ' + score;
-          } else {
-            suspicion += 28;
-            trashHint.textContent = 'Yanlış poşet — zaman kaybı ve gürültü. Başka poşeti deneyin.';
-            score = Math.max(0, score - 10);
-            scoreLabel.textContent = 'Puan: ' + score;
+          suspicion = Math.min(100, Math.max(0, suspicion + o.sus));
+          score = Math.max(0, score + o.sc);
+          if (o.pro) ethicalChoiceBonus += 10;
+          guardDialogOverlay.classList.add('hidden');
+          setPhase('DROP');
+          scoreLabel.textContent = 'Puan: ' + score;
+          suspicionFill.style.width = suspicion + '%';
+          if (suspicion >= 96 && !runEnded) {
+            runEnded = true;
+            setPhase('END');
+            endOverlay.classList.remove('hidden');
+            document.getElementById('endTitle').textContent = 'Güvenlik müdahalesi (simülasyon)';
+            document.getElementById('endBody').textContent =
+              'Yanıtınız güvenlik prosedürünü tetikledi veya şüphe kritik seviyede kaldı. Yakalanma anında yetki belgesi ve şeffaflık en güvenli profesyonel yoldur.';
+            document.getElementById('endLearning').textContent = '';
+            pushTrackerCompletion(false);
           }
         });
-        trashButtons.appendChild(b);
+        guardDialogButtons.appendChild(b);
       });
     }
 
@@ -789,7 +1127,25 @@
       if (phase !== 'EXIT') return;
       const d = Math.hypot(door.position.x - player.position.x, door.position.z - player.position.z);
       if (d < 2.2) {
-        finishRun();
+        setPhase('REPORT');
+        reportOverlay.classList.remove('hidden');
+        const loc = document.getElementById('rfUsbLoc');
+        const who = document.getElementById('rfWho');
+        const beh = document.getElementById('rfBehav');
+        const doc = document.getElementById('rfDoc');
+        const sens = document.getElementById('rfSens');
+        if (loc) loc.value = lastDropSpot ? lastDropSpot.label : '';
+        if (who) {
+          if (usbPickedByCustomer) who.value = 'customer';
+          else if (employeeUsbBehavior === 'security') who.value = 'security';
+          else who.value = 'employee';
+        }
+        if (beh && employeeUsbBehavior && employeeUsbBehavior !== 'customer') {
+          const map = { security: 'security', usb_pc: 'usb_pc', drawer: 'drawer', ignore: 'ignore' };
+          beh.value = map[employeeUsbBehavior] || '';
+        }
+        if (doc) doc.value = documentFoundLevel ? 'yes' : 'no';
+        if (sens) sens.value = documentFoundLevel === 'mid' ? 'mid' : documentFoundLevel ? 'mid' : 'low';
       }
     }
 
@@ -798,34 +1154,85 @@
       runEnded = true;
       setPhase('END');
       let extra = 0;
-      if (dropQuality === 'great') extra += 15;
-      else if (dropQuality === 'good') extra += 8;
-      if (suspicion < 35) extra += 20;
-      score += extra;
+      if (dropQuality === 'ideal') extra += 18;
+      else if (dropQuality === 'good') extra += 10;
+      else if (dropQuality === 'risk') extra += 4;
+      if (suspicion < 38) extra += 18;
+      if (!usbPickedByCustomer && documentFoundLevel) extra += 8;
+      score += extra + ethicalChoiceBonus;
       scoreLabel.textContent = 'Puan: ' + score;
+      const norm = Math.max(0, Math.min(100, Math.round((score / 220) * 100)));
+      const usbOk = !usbPickedByCustomer && (dropQuality === 'ideal' || dropQuality === 'good' || dropQuality === 'risk');
+      const docLine = documentFoundLevel
+        ? 'Belge imha kontrolü: orta riskli maskeli bulgu tespit edildi.'
+        : 'Belge imha kontrolü: hedef belge seçilemedi veya düşük öncelik.';
+      const ethicalLine = usbPickedByCustomer ? 'Etik uyum: Müşteri etkileşimi — geliştirilmeli.' : 'Etik uyum: Kapsam içi hedefleme — kabul edilebilir.';
       endOverlay.classList.remove('hidden');
-      document.getElementById('endTitle').textContent = 'Görev tamamlandı';
+      document.getElementById('endTitle').textContent = norm >= 52 ? 'Operasyon özeti' : 'Operasyon tamamlandı — geliştirme alanları';
       document.getElementById('endBody').innerHTML =
-        '<strong>Puan:</strong> ' +
+        '<strong>Genel skor (iç puan):</strong> ' +
         score +
-        ' / 200 (yaklaşık)<br/>' +
-        '<strong>USB konumu:</strong> ' +
-        (dropQuality || '-') +
+        ' · <strong>Yüzde (yaklaşık):</strong> %' +
+        norm +
+        '<br/><strong>USB testi:</strong> ' +
+        (usbPickedByCustomer ? 'Kapsam dışı müşteri riski' : usbOk ? 'Tamamlandı (çalışan gözlemi senaryosu)' : 'Konum / görünürlük zayıf') +
+        '<br/><strong>' +
+        docLine +
+        '</strong><br/><strong>' +
+        ethicalLine +
+        '</strong><br/><strong>Çalışan davranışı (örneklem):</strong> ' +
+        (employeeUsbBehavior || '-') +
         '<br/><strong>Şüphe birikimi:</strong> ' +
         Math.round(suspicion) +
-        '<br/><br/>Gerçek pentestte tüm adımlar yazılı RoE, kanıt zinciri ve hukuki çerçeve ile yapılır; bu sahne yalnızca <strong>fiziksel sosyal mühendislik risk farkındalığı</strong> içindir.';
-      const norm = Math.min(100, Math.round((score / 200) * 100));
-      pushTrackerCompletion(norm >= 45);
+        '<br/><br/>Bu simülasyon saldırı uygulamayı değil; <strong>yetkili test, raporlama ve önlem</strong> çerçevesini öğretir. Gerçek ortamda izinsiz eylem yasadışıdır.';
+      document.getElementById('endLearning').innerHTML =
+        '<strong>Öğrenme notu:</strong> Bilinmeyen USB cihazları ciddi risktir; çalışanların güvenlik ekibine teslim etmesi gerekir. Kurum içi belgelerin çöpe uygun şekilde imha edilmemesi fiziksel bilgi sızıntısı riskidir; öğütücü, kilitli atık ve politika önemlidir.';
+      pushTrackerCompletion(norm >= 48);
     }
 
-    document.getElementById('btnStart3d').addEventListener('click', () => {
-      briefOverlay.classList.add('hidden');
+    document.getElementById('btnMailNext').addEventListener('click', () => {
+      officeMailOverlay.classList.add('hidden');
+      prepOverlay.classList.remove('hidden');
+      setPhase('OFFICE_PREP');
+    });
+
+    document.getElementById('btnPrepBank').addEventListener('click', () => {
+      prepOverlay.classList.add('hidden');
       setPhase('DROP');
+      lastMoveAt = clock.getElapsedTime();
       hudText.innerHTML =
-        '<strong>W A S D</strong> hareket · yeşil halkaya yaklaş · <strong>F</strong> USB bırak · <strong>sarı yelekli güvenlik</strong> ve vezneye fazla yaklaşma.';
+        '<strong>W A S D</strong> · renkli halkada <strong>F</strong> (USB) · sarı yelekli güvenlik · vezne çizgisine fazla yaklaşma · <strong>sarı zemin halkaları</strong> kamera bölgesi · kuzeyde personel koridoruna girme.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
+    });
+
+    document.getElementById('btnObserveContinue').addEventListener('click', () => {
+      observeUsbOverlay.classList.add('hidden');
+      setPhase('TRASH_UI');
+      trashOverlay.classList.remove('hidden');
+      buildTrashFlow();
+    });
+
+    reportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let rp = 0;
+      const fd = new FormData(reportForm);
+      if ((fd.get('usbLoc') || '').toString().trim().length > 14) rp += 10;
+      if (fd.get('who')) rp += 8;
+      if (fd.get('behav')) rp += 8;
+      if (fd.get('doc')) rp += 6;
+      if (fd.get('sens')) rp += 6;
+      let chk = 0;
+      ['rec_usb', 'rec_train', 'rec_shred', 'rec_bin', 'rec_patrol'].forEach((n) => {
+        const el = reportForm.querySelector('input[type="checkbox"][name="' + n + '"]');
+        if (el && el.checked) chk++;
+      });
+      rp += Math.min(14, chk * 3);
+      if ((fd.get('notes') || '').toString().trim().length > 20) rp += 6;
+      score += rp;
+      reportOverlay.classList.add('hidden');
+      finishRun();
     });
 
     document.getElementById('btnReplay').addEventListener('click', () => {
@@ -834,7 +1241,14 @@
 
     window.addEventListener('keydown', (e) => {
       keys[e.code] = true;
-      if (e.code === 'KeyF' && phase === 'DROP') tryDropUsb();
+      if (
+        e.code === 'KeyF' &&
+        phase === 'DROP' &&
+        observeUsbOverlay.classList.contains('hidden') &&
+        guardDialogOverlay.classList.contains('hidden')
+      ) {
+        tryDropUsb();
+      }
       if (e.code === 'KeyE' && phase === 'EXIT') tryExit();
     });
     window.addEventListener('keyup', (e) => {
@@ -845,6 +1259,22 @@
       requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.1);
       const elapsed = clock.elapsedTime;
+
+      if (phase === 'GUARD_DIALOG') {
+        animHumanIdle(player, elapsed);
+        animGuards(dt, elapsed);
+        animNpcs(dt, elapsed);
+        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        updateCamera();
+        renderer.render(scene, camera);
+        return;
+      }
+
+      if (!trashOverlay.classList.contains('hidden')) {
+        trashDwellSec += dt;
+        if (trashDwellSec > 24) suspicion += dt * 3.2;
+      }
+
       if (phase === 'DROP' || phase === 'EXIT') {
         const speed = phase === 'EXIT' ? 5.2 : 4.2;
         let mx = 0,
@@ -853,7 +1283,9 @@
         if (keys['KeyS']) mz += 1;
         if (keys['KeyA']) mx -= 1;
         if (keys['KeyD']) mx += 1;
-        if (mx !== 0 || mz !== 0) {
+        const moving = mx !== 0 || mz !== 0;
+        if (moving) {
+          lastMoveAt = elapsed;
           const len = Math.hypot(mx, mz) || 1;
           player.position.x += (mx / len) * speed * dt;
           player.position.z += (mz / len) * speed * dt;
@@ -864,25 +1296,60 @@
         animGuards(dt, elapsed);
         animNpcs(dt, elapsed);
         bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+
+        const px = player.position.x;
+        const pz = player.position.z;
         const gd = guardProximity();
         if (gd < 2.8) suspicion += dt * 22;
         if (gd < 1.4) suspicion += dt * 35;
+
+        if (phase === 'DROP') {
+          if (inCameraZone(px, pz)) {
+            suspicion += dt * 8.8;
+            cameraHud.style.display = 'inline';
+          } else {
+            cameraHud.style.display = 'none';
+          }
+          if (inStaffOnlyCorridor(px, pz)) {
+            suspicion += dt * 38;
+            player.position.z += dt * 0.85;
+            player.position.x += (px < -16.5 ? dt * 0.4 : -dt * 0.4);
+            clampPlayer();
+          }
+          const td = distToNearestTellerStaff(px, pz);
+          if (td < 2.38) suspicion += dt * 13;
+          if (!moving && elapsed - lastMoveAt > 5.5) suspicion += dt * 2.8;
+          if (!guardDialogShown && suspicion >= 87 && suspicion < 95) {
+            openGuardDialog();
+          }
+        } else {
+          cameraHud.style.display = 'none';
+        }
+
         suspicion = Math.min(100, suspicion);
-        suspicion -= dt * 1.2;
+        suspicion -= dt * 1.15;
         if (suspicion < 0) suspicion = 0;
         suspicionFill.style.width = suspicion + '%';
         suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+
         if (suspicion >= 95 && phase === 'DROP' && !runEnded) {
           runEnded = true;
           setPhase('END');
           endOverlay.classList.remove('hidden');
           document.getElementById('endTitle').textContent = 'Yakalandınız (simülasyon)';
           document.getElementById('endBody').textContent =
-            'Güvenlik görevlileri sizi uzaklaştırdı. Daha düşük profilli konum ve güvenlikten uzak durmayı deneyin.';
+            'Güvenlik görevlileri sizi uzaklaştırdı. Kamera altında gereksiz bekleme, personel alanı veya güvenlik çizgisine aşırı yakınlık şüpheyi hızlandırır.';
+          document.getElementById('endLearning').textContent =
+            'Yüksek şüphe anında profesyonel seçenek: yetki / RoE şeffaflığı ve testi kontrollü şekilde sonlandırmak.';
           pushTrackerCompletion(false);
         }
         updateCamera();
       } else {
+        cameraHud.style.display = 'none';
+        suspicion -= dt * 0.4;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
         animHumanIdle(player, elapsed);
         animGuards(dt, elapsed);
         animNpcs(dt, elapsed);
@@ -891,6 +1358,8 @@
       }
       renderer.render(scene, camera);
     }
+
+    setPhase('OFFICE_MAIL');
     animate();
   </script>
 </body>
