@@ -81,7 +81,7 @@
 
   <div id="hud">
     <div class="hud-inner">
-      <p id="hudText"><strong>W A S D</strong> ile hareket · yakın olduğunuzda yeşil halkada <strong>F</strong> ile USB’yi bırakın · şüphe dolunca güvenlik tepkisi artar.</p>
+      <p id="hudText"><strong>W A S D</strong> ile hareket · yeşil halkada <strong>F</strong> ile USB · sarı yelekli güvenliğe yaklaşmayın · şüphe dolunca müdahale artar.</p>
       <div class="meter" aria-hidden="true"><span id="suspicionFill"></span></div>
     </div>
   </div>
@@ -159,6 +159,7 @@
     const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 120);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
