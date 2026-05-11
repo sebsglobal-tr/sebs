@@ -22,7 +22,7 @@ html[data-theme="dark"] body.landing-site-body header.fixed {
   border-bottom-color: rgba(71, 85, 105, 0.45) !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
   border-color: rgba(71, 85, 105, 0.5) !important;
 }
@@ -1758,8 +1758,8 @@ body.landing-site-body header.fixed #userProfile {
   overflow: visible !important;
 }
 
-/* Üst menü (orta link grubu): premium kapsül görünüm — logo ile sağ aksiyonlar arasında ortalanır */
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
+/* Üst menü — tam kapsül: yalnızca ana sayfadaki gibi .landing-nav-pill-link içeren nav */
+body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
   flex: 1 1 0%;
   min-width: 0;
   padding: 0.28rem 0.35rem;
@@ -1770,6 +1770,18 @@ body.landing-site-body header.fixed nav[aria-label="Ana menü"] {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     0 10px 24px -18px rgba(15, 23, 42, 0.45);
+}
+
+/* Basit menü (simülasyon / modül alt sayfaları): geniş “boş hap” yok, içerik kadar genişlik */
+body.landing-site-body header.fixed nav[aria-label="Ana menü"]:not(:has(.landing-nav-pill-link)) {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  justify-content: center;
 }
 
 /* Kapsül içi: yalnızca doğrudan linkler + Platform tetikleyici (açılır paneldeki <a> hariç) */
