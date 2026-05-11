@@ -153,63 +153,370 @@
     let clock = new THREE.Clock();
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b1220);
-    scene.fog = new THREE.Fog(0x0b1220, 12, 38);
+    scene.background = new THREE.Color(0x0c1525);
+    scene.fog = new THREE.Fog(0x1a2332, 14, 48);
 
-    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 120);
+    const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 120);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
 
-    const hemi = new THREE.HemisphereLight(0xc7d2fe, 0x0f172a, 0.55);
+    const hemi = new THREE.HemisphereLight(0xd4e4ff, 0x1a1a24, 0.62);
     scene.add(hemi);
-    const dir = new THREE.DirectionalLight(0xffffff, 0.85);
-    dir.position.set(6, 14, 4);
+    const dir = new THREE.DirectionalLight(0xfff5e6, 1.05);
+    dir.position.set(8, 18, 10);
     dir.castShadow = true;
-    dir.shadow.mapSize.set(1024, 1024);
+    dir.shadow.mapSize.set(2048, 2048);
+    dir.shadow.camera.near = 2;
+    dir.shadow.camera.far = 45;
+    dir.shadow.camera.left = -24;
+    dir.shadow.camera.right = 24;
+    dir.shadow.camera.top = 20;
+    dir.shadow.camera.bottom = -20;
+    dir.shadow.bias = -0.00025;
     scene.add(dir);
+    const fill = new THREE.DirectionalLight(0xa8c4ff, 0.28);
+    fill.position.set(-12, 8, -6);
+    scene.add(fill);
 
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(42, 26),
-      new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.55, metalness: 0.08 })
-    );
-    floor.rotation.x = -Math.PI / 2;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    function wall(w, h, d, x, z, ry) {
-      const m = new THREE.Mesh(
-        new THREE.BoxGeometry(w, h, d),
-        new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 })
-      );
-      m.position.set(x, h / 2, z);
-      m.rotation.y = ry || 0;
-      m.castShadow = true;
-      m.receiveShadow = true;
-      scene.add(m);
-      return m;
+    function matStd(color, rough, metal) {
+      return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal });
     }
-    wall(42, 5, 0.6, 0, -13, 0);
-    wall(42, 5, 0.6, 0, 13, 0);
-    wall(0.6, 5, 26, -21, 0, 0);
-    wall(0.6, 5, 26, 21, 0, 0);
 
-    const player = new THREE.Mesh(
-      new THREE.BoxGeometry(0.45, 1.35, 0.45),
-      new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.4 })
-    );
-    player.position.set(0, 0.675, 10);
-    player.castShadow = true;
+    function addShadow(mesh) {
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      return mesh;
+    }
+
+    /** Prosedürel insan (ayaklar y=0); role: guard | staff | customer */
+    function createHumanoid(opts) {
+      const s = opts.scale || 1;
+      const skin = opts.skin ?? 0xdcb8a0;
+      const shirt = opts.shirt ?? 0x3b82f6;
+      const pants = opts.pants ?? 0x1e293b;
+      const shoes = opts.shoes ?? 0x171717;
+      const vest = opts.vest;
+      const cap = opts.cap === true;
+
+      const root = new THREE.Group();
+      root.userData.isHuman = true;
+      root.userData.idlePhase = Math.random() * Math.PI * 2;
+
+      const skinM = matStd(skin, 0.72, 0);
+      const shirtM = matStd(shirt, 0.62, 0.02);
+      const pantsM = matStd(pants, 0.75, 0.02);
+      const shoeM = matStd(shoes, 0.88, 0.05);
+
+      const head = addShadow(
+        new THREE.Mesh(new THREE.SphereGeometry(0.11 * s, 18, 14), skinM)
+      );
+      head.position.set(0, 1.56 * s, 0);
+      root.add(head);
+
+      const hair = new THREE.Mesh(
+        new THREE.SphereGeometry(0.115 * s, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.45),
+        matStd(opts.hair ?? 0x2c1810, 0.9, 0)
+      );
+      hair.position.set(0, 1.62 * s, -0.01 * s);
+      hair.castShadow = true;
+      root.add(hair);
+
+      const torso = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.4 * s, 0.5 * s, 0.22 * s), shirtM));
+      torso.position.set(0, 1.14 * s, 0);
+      root.add(torso);
+      root.userData.torso = torso;
+
+      if (vest != null) {
+        const vestMesh = addShadow(
+          new THREE.Mesh(new THREE.BoxGeometry(0.42 * s, 0.32 * s, 0.24 * s), matStd(vest, 0.55, 0.08))
+        );
+        vestMesh.position.set(0, 1.18 * s, 0.03 * s);
+        root.add(vestMesh);
+      }
+
+      const hip = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.34 * s, 0.18 * s, 0.2 * s), pantsM));
+      hip.position.set(0, 0.88 * s, 0);
+      root.add(hip);
+
+      function limbLeg(side) {
+        const g = new THREE.Group();
+        const x = side * 0.11 * s;
+        const thigh = addShadow(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.065 * s, 0.055 * s, 0.38 * s, 10), pantsM)
+        );
+        thigh.position.set(x, 0.62 * s, 0);
+        thigh.rotation.z = side * 0.06;
+        g.add(thigh);
+        const calf = addShadow(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.05 * s, 0.045 * s, 0.36 * s, 10), pantsM)
+        );
+        calf.position.set(x, 0.28 * s, 0.02 * s);
+        g.add(calf);
+        const foot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.1 * s, 0.06 * s, 0.22 * s), shoeM));
+        foot.position.set(x, 0.03 * s, 0.04 * s);
+        g.add(foot);
+        return g;
+      }
+      root.add(limbLeg(-1));
+      root.add(limbLeg(1));
+
+      function limbArm(side) {
+        const x = side * 0.26 * s;
+        const upper = addShadow(
+          new THREE.Mesh(new THREE.CylinderGeometry(0.045 * s, 0.04 * s, 0.28 * s, 8), shirtM)
+        );
+        upper.position.set(x, 1.22 * s, 0);
+        upper.rotation.z = side * 0.25;
+        root.add(upper);
+        const lower = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.038 * s, 0.034 * s, 0.26 * s, 8), skinM));
+        lower.position.set(x * 1.08, 0.98 * s, 0.05 * s);
+        lower.rotation.z = side * 0.15;
+        root.add(lower);
+      }
+      limbArm(-1);
+      limbArm(1);
+
+      if (cap) {
+        const capMesh = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.1 * s, 0.1 * s, 0.06 * s, 14), matStd(0x1e3a5f, 0.65, 0.12)));
+        capMesh.position.set(0, 1.66 * s, 0);
+        root.add(capMesh);
+        const visor = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.14 * s, 0.03 * s, 0.1 * s), matStd(0x0f172a, 0.5, 0.2)));
+        visor.position.set(0, 1.63 * s, 0.09 * s);
+        root.add(visor);
+      }
+
+      root.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+        }
+      });
+      return root;
+    }
+
+    function buildBankInterior() {
+      const marble = matStd(0xe8e4dc, 0.38, 0.06);
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(42, 26), marble);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      floor.castShadow = false;
+      scene.add(floor);
+
+      const border = matStd(0xc4b8a8, 0.55, 0.12);
+      const sk = 0.15;
+      [
+        [42, sk, 0.8, 0, sk / 2, -13],
+        [42, sk, 0.8, 0, sk / 2, 13],
+        [sk, sk, 26, -21 + sk / 2, sk / 2, 0],
+        [sk, sk, 26, 21 - sk / 2, sk / 2, 0]
+      ].forEach(([w, h, d, x, y, z]) => {
+        const b = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), border));
+        b.position.set(x, y, z);
+        scene.add(b);
+      });
+
+      const plaster = matStd(0xf2efe8, 0.85, 0);
+      const woodLow = matStd(0x4a3728, 0.78, 0);
+      const wallH = 4.9;
+      function wallPanel(w, h, d, x, z, ry, mat, y0) {
+        const m = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat));
+        m.position.set(x, y0 + h / 2, z);
+        m.rotation.y = ry || 0;
+        scene.add(m);
+        return m;
+      }
+      wallPanel(42, 1.15, 0.45, 0, -12.75, 0, woodLow, 0);
+      wallPanel(42, wallH - 1.15, 0.45, 0, -12.78, 0, plaster, 1.15);
+      wallPanel(42, 1.15, 0.45, 0, 12.75, 0, woodLow, 0);
+      wallPanel(42, wallH - 1.15, 0.45, 0, 12.78, Math.PI, plaster, 1.15);
+      wallPanel(0.45, 1.15, 26, -20.78, 0, 0, woodLow, 0);
+      wallPanel(0.45, wallH - 1.15, 26, -20.82, 0, 0, plaster, 1.15);
+      wallPanel(0.45, 1.15, 26, 20.78, 0, Math.PI, woodLow, 0);
+      wallPanel(0.45, wallH - 1.15, 26, 20.82, 0, Math.PI, plaster, 1.15);
+
+      const colMat = matStd(0xd6cfc4, 0.42, 0.15);
+      const gold = matStd(0xc9a227, 0.35, 0.55);
+      for (let i = 0; i < 4; i++) {
+        const x = -12 + (i % 2) * 24;
+        const z = -2 + Math.floor(i / 2) * 8;
+        const col = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, wallH - 0.3, 16), colMat));
+        col.position.set(x, (wallH - 0.3) / 2, z);
+        scene.add(col);
+        const ring = addShadow(new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.04, 8, 24), gold));
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(x, 3.2, z);
+        scene.add(ring);
+      }
+
+      const ceil = new THREE.Mesh(
+        new THREE.PlaneGeometry(42, 26),
+        new THREE.MeshStandardMaterial({ color: 0x252830, roughness: 0.92, metalness: 0.05 })
+      );
+      ceil.rotation.x = Math.PI / 2;
+      ceil.position.y = wallH;
+      ceil.receiveShadow = true;
+      scene.add(ceil);
+
+      for (let i = -15; i <= 15; i += 10) {
+        const pan = new THREE.Mesh(
+          new THREE.PlaneGeometry(3.2, 1.4),
+          new THREE.MeshStandardMaterial({
+            color: 0xfffff5,
+            emissive: 0xfff8e7,
+            emissiveIntensity: 0.35,
+            roughness: 0.4,
+            side: THREE.DoubleSide
+          })
+        );
+        pan.rotation.x = Math.PI / 2;
+        pan.position.set(i, wallH - 0.05, 0);
+        scene.add(pan);
+      }
+
+      const deskWood = matStd(0x5c3d2e, 0.65, 0);
+      const deskFront = matStd(0x2d3748, 0.55, 0.15);
+      const tellerIsland = new THREE.Group();
+      const deskTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 0.12, 2.4), deskWood));
+      deskTop.position.set(0, 1.12, -9.2);
+      tellerIsland.add(deskTop);
+      const deskBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 1.05, 2.15), deskFront));
+      deskBody.position.set(0, 0.52, -9.35);
+      tellerIsland.add(deskBody);
+      const kick = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 0.22, 0.08), matStd(0x1e293b, 0.4, 0.4)));
+      kick.position.set(0, 0.11, -8.45);
+      tellerIsland.add(kick);
+      scene.add(tellerIsland);
+
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0,
+        roughness: 0.08,
+        transmission: 0.88,
+        thickness: 0.12,
+        transparent: true,
+        envMapIntensity: 1
+      });
+      const glass = new THREE.Mesh(new THREE.BoxGeometry(25.5, 1.35, 0.06), glassMat);
+      glass.position.set(0, 1.95, -8.35);
+      glass.castShadow = true;
+      scene.add(glass);
+
+      const staff1 = createHumanoid({
+        shirt: 0xffffff,
+        pants: 0x1e3a5f,
+        vest: null,
+        skin: 0xc99e8b,
+        hair: 0x1a1208,
+        cap: false,
+        scale: 0.98
+      });
+      staff1.position.set(-6, 0, -10.15);
+      staff1.rotation.y = Math.PI * 0.08;
+      scene.add(staff1);
+
+      const staff2 = createHumanoid({
+        shirt: 0xf8fafc,
+        pants: 0x1e3a5f,
+        skin: 0xb8956c,
+        hair: 0x0f0f0f,
+        cap: false,
+        scale: 0.95
+      });
+      staff2.position.set(5, 0, -10.1);
+      staff2.rotation.y = -Math.PI * 0.12;
+      scene.add(staff2);
+
+      const atmBody = matStd(0x1a1f2e, 0.45, 0.35);
+      for (let ax of [-17, 17]) {
+        const atm = new THREE.Group();
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.35, 2.05, 0.65), atmBody));
+        body.position.set(0, 1.025, 0);
+        atm.add(body);
+        const scr = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.85, 0.55),
+          new THREE.MeshStandardMaterial({ color: 0x0d1b2a, emissive: 0x1e3a8a, emissiveIntensity: 0.5, roughness: 0.3 })
+        );
+        scr.position.set(0, 1.35, ax < 0 ? 0.33 : -0.33);
+        scr.rotation.y = ax < 0 ? 0 : Math.PI;
+        atm.add(scr);
+        atm.position.set(ax, 0, 11.2);
+        atm.rotation.y = ax < 0 ? 0 : Math.PI;
+        scene.add(atm);
+      }
+
+      const bench = new THREE.Group();
+      const slat = deskWood;
+      for (let i = 0; i < 4; i++) {
+        const sl = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.06, 0.45), slat));
+        sl.position.set(12, 0.45 + i * 0.09, 8);
+        bench.add(sl);
+      }
+      const legL = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.42, 0.12), matStd(0x334155, 0.6, 0.2)));
+      legL.position.set(11.15, 0.21, 7.55);
+      bench.add(legL);
+      const legR = legL.clone();
+      legR.position.set(12.85, 0.21, 7.55);
+      bench.add(legR);
+      scene.add(bench);
+
+      const planter = new THREE.Group();
+      const pot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.45, 1.1), matStd(0x78716c, 0.75, 0.05)));
+      pot.position.set(-14, 0.225, 6);
+      planter.add(pot);
+      for (let j = 0; j < 5; j++) {
+        const leaf = addShadow(
+          new THREE.Mesh(new THREE.SphereGeometry(0.22 + (j % 2) * 0.06, 8, 6), matStd(0x166534 + j * 0x020202, 0.88, 0))
+        );
+        leaf.position.set(-14 + (j - 2) * 0.18, 0.65 + (j % 3) * 0.12, 6 + ((j * 7) % 5) * 0.08 - 0.15);
+        leaf.scale.set(1, 1.2, 0.85);
+        planter.add(leaf);
+      }
+      scene.add(planter);
+
+      const brochure = new THREE.Group();
+      const stand = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.85, 8), matStd(0x64748b, 0.5, 0.25)));
+      stand.position.set(-6, 0.425, -9);
+      brochure.add(stand);
+      for (let k = 0; k < 3; k++) {
+        const shelf = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.04, 0.35), matStd(0xf1f5f9, 0.8, 0)));
+        shelf.position.set(-6, 0.55 + k * 0.22, -9.12 - k * 0.04);
+        shelf.rotation.x = -0.35 - k * 0.08;
+        brochure.add(shelf);
+      }
+      scene.add(brochure);
+
+      return [staff1, staff2];
+    }
+
+    const bankStaffMeshes = buildBankInterior();
+
+    const player = createHumanoid({
+      shirt: 0x0ea5e9,
+      pants: 0x0f172a,
+      skin: 0xd4a574,
+      hair: 0x292524,
+      cap: false,
+      scale: 1
+    });
+    player.position.set(0, 0, 10);
     scene.add(player);
 
     const guards = [];
     function addGuard(x, z) {
-      const g = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.38, 0.42, 1.85, 12),
-        new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.45 })
-      );
-      g.position.set(x, 0.925, z);
-      g.castShadow = true;
+      const g = createHumanoid({
+        shirt: 0x1e3a5f,
+        pants: 0x0f172a,
+        vest: 0xfacc15,
+        skin: 0xc99e8b,
+        hair: 0x1c1917,
+        cap: true,
+        scale: 1.02
+      });
+      g.position.set(x, 0, z);
       g.userData.base = new THREE.Vector3(x, 0, z);
       g.userData.t = Math.random() * 6;
       scene.add(g);
@@ -219,32 +526,57 @@
     addGuard(-8, -4);
     addGuard(10, 2);
 
-    const counters = new THREE.Group();
-    const cMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.5 });
-    const c1 = new THREE.Mesh(new THREE.BoxGeometry(8, 1.1, 2.2), cMat);
-    c1.position.set(-5, 0.55, -8);
-    c1.castShadow = true;
-    counters.add(c1);
-    const c2 = new THREE.Mesh(new THREE.BoxGeometry(6, 1.1, 2.2), cMat);
-    c2.position.set(8, 0.55, -7);
-    c2.castShadow = true;
-    counters.add(c2);
-    scene.add(counters);
+    const npcs = [];
+    function addWanderingNpc(x, z, path, preset) {
+      const h = createHumanoid(preset);
+      h.position.set(x, 0, z);
+      scene.add(h);
+      npcs.push({ mesh: h, path, wp: 0, speed: 0.65 + Math.random() * 0.35 });
+      return h;
+    }
+    addWanderingNpc(2, 4, [
+      { x: 2, z: 4 },
+      { x: -4, z: 2 },
+      { x: -2, z: -2 },
+      { x: 4, z: 0 }
+    ], { shirt: 0x64748b, pants: 0x334155, skin: 0xe0bc9a, hair: 0x3f2e22, cap: false });
+    addWanderingNpc(-3, 7, [
+      { x: -3, z: 7 },
+      { x: -10, z: 5 },
+      { x: -8, z: 1 }
+    ], { shirt: 0xa855f7, pants: 0x1e1b4b, skin: 0x8d5524, hair: 0x0c0a09, cap: false });
+    addWanderingNpc(8, -1, [
+      { x: 8, z: -1 },
+      { x: 14, z: 3 },
+      { x: 10, z: 6 }
+    ], { shirt: 0xf97316, pants: 0x422006, skin: 0xf3cba8, hair: 0x78350f, cap: false });
+    addWanderingNpc(-12, -2, [
+      { x: -12, z: -2 },
+      { x: -5, z: 0 },
+      { x: -8, z: 4 }
+    ], { shirt: 0x22c55e, pants: 0x14532d, skin: 0xd4a574, hair: 0x292524, cap: false });
 
-    const plant = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.55, 0.65, 1.2, 10),
-      new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.8 })
+    const door = new THREE.Group();
+    door.position.set(18, 0, 11);
+    const frame = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.95, 0.22), matStd(0xb45309, 0.45, 0.35)));
+    frame.position.set(0, 1.475, 0);
+    door.add(frame);
+    const doorGlass = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.85, 2.45),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xc8e6ff,
+        metalness: 0,
+        roughness: 0.06,
+        transmission: 0.75,
+        thickness: 0.08,
+        transparent: true
+      })
     );
-    plant.position.set(-14, 0.6, 6);
-    plant.castShadow = true;
-    scene.add(plant);
-
-    const door = new THREE.Mesh(
-      new THREE.BoxGeometry(2.2, 2.8, 0.35),
-      new THREE.MeshStandardMaterial({ color: 0xca8a04, metalness: 0.2, roughness: 0.35 })
-    );
-    door.position.set(18, 1.4, 11);
-    door.castShadow = true;
+    doorGlass.position.set(0, 1.45, 0.12);
+    door.add(doorGlass);
+    const bar = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.12, 0.15), matStd(0xd97706, 0.4, 0.5)));
+    bar.position.set(0, 2.78, 0.08);
+    door.add(bar);
     door.userData.isDoor = true;
     scene.add(door);
 
@@ -318,9 +650,35 @@
     resize();
 
     function updateCamera() {
-      const off = new THREE.Vector3(0, 4.2, 7.5);
+      const off = new THREE.Vector3(0, 4.6, 8.2);
       camera.position.copy(player.position).add(off);
-      camera.lookAt(player.position.x, player.position.y + 0.6, player.position.z);
+      camera.lookAt(player.position.x, player.position.y + 0.95, player.position.z);
+    }
+
+    function animHumanIdle(group, time) {
+      if (!group || !group.userData.torso) return;
+      const ph = group.userData.idlePhase;
+      const sway = Math.sin(time * 1.8 + ph) * 0.035;
+      group.userData.torso.rotation.z = sway;
+      group.userData.torso.rotation.x = Math.sin(time * 0.9 + ph * 0.5) * 0.02;
+    }
+
+    function animNpcs(dt, time) {
+      npcs.forEach((n) => {
+        const tgt = n.path[n.wp];
+        const dx = tgt.x - n.mesh.position.x;
+        const dz = tgt.z - n.mesh.position.z;
+        const d = Math.hypot(dx, dz) || 1;
+        if (d < 0.45) {
+          n.wp = (n.wp + 1) % n.path.length;
+        } else {
+          const sp = n.speed * dt;
+          n.mesh.position.x += (dx / d) * sp;
+          n.mesh.position.z += (dz / d) * sp;
+          n.mesh.rotation.y = Math.atan2(dx, dz);
+        }
+        animHumanIdle(n.mesh, time);
+      });
     }
 
     function clampPlayer() {
@@ -328,12 +686,17 @@
       player.position.z = THREE.MathUtils.clamp(player.position.z, -11.5, 11.5);
     }
 
-    function animGuards(dt) {
+    function animGuards(dt, time) {
       guards.forEach((g) => {
         g.userData.t += dt;
         const r = 3.5;
         g.position.x = g.userData.base.x + Math.sin(g.userData.t * 0.55) * r;
         g.position.z = g.userData.base.z + Math.cos(g.userData.t * 0.45) * r * 0.6;
+        const dx = Math.cos(g.userData.t * 0.55) * r * 0.55;
+        const dz = -Math.sin(g.userData.t * 0.45) * r * 0.45 * 0.6;
+        const yaw = Math.atan2(dx, dz);
+        g.rotation.y = yaw;
+        animHumanIdle(g, time);
       });
     }
 
@@ -408,7 +771,7 @@
             trashHint.textContent = 'Hedef zarf güvenli torbaya alındı. Şubeden çıkışa gidin (3D).';
             trashOverlay.classList.add('hidden');
             setPhase('EXIT');
-            hudText.innerHTML = 'Çıkış kapısına yaklaş (<strong>sarı blok</strong>) — <strong>E</strong> ile binadan çık.';
+            hudText.innerHTML = 'Çıkış kapısına yaklaş (<strong>cam kapı — doğu duvarı</strong>) — <strong>E</strong> ile binadan çık.';
             scoreLabel.textContent = 'Puan: ' + score;
           } else {
             suspicion += 28;
@@ -458,7 +821,7 @@
       briefOverlay.classList.add('hidden');
       setPhase('DROP');
       hudText.innerHTML =
-        '<strong>W A S D</strong> hareket · yeşil halkaya yaklaş · <strong>F</strong> USB bırak · güvenlik kırmızı silindirlere yaklaşma.';
+        '<strong>W A S D</strong> hareket · yeşil halkaya yaklaş · <strong>F</strong> USB bırak · <strong>sarı yelekli güvenlik</strong> ve vezneye fazla yaklaşma.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
@@ -480,6 +843,7 @@
     function animate() {
       requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.1);
+      const elapsed = clock.elapsedTime;
       if (phase === 'DROP' || phase === 'EXIT') {
         const speed = phase === 'EXIT' ? 5.2 : 4.2;
         let mx = 0,
@@ -493,8 +857,12 @@
           player.position.x += (mx / len) * speed * dt;
           player.position.z += (mz / len) * speed * dt;
           clampPlayer();
+          player.rotation.y = Math.atan2(mx, mz);
         }
-        animGuards(dt);
+        animHumanIdle(player, elapsed);
+        animGuards(dt, elapsed);
+        animNpcs(dt, elapsed);
+        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
         const gd = guardProximity();
         if (gd < 2.8) suspicion += dt * 22;
         if (gd < 1.4) suspicion += dt * 35;
@@ -514,6 +882,10 @@
         }
         updateCamera();
       } else {
+        animHumanIdle(player, elapsed);
+        animGuards(dt, elapsed);
+        animNpcs(dt, elapsed);
+        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
         updateCamera();
       }
       renderer.render(scene, camera);
