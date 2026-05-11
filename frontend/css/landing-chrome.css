@@ -1758,7 +1758,7 @@ body.landing-site-body header.fixed #userProfile {
   overflow: visible !important;
 }
 
-/* Üst menü — tam kapsül: yalnızca ana sayfadaki gibi .landing-nav-pill-link içeren nav */
+/* Üst menü — tam kapsül: yalnızca .landing-nav-pill-link içeren nav */
 body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
   flex: 1 1 0%;
   min-width: 0;
@@ -1772,15 +1772,32 @@ body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav
     0 10px 24px -18px rgba(15, 23, 42, 0.45);
 }
 
-/* Basit menü (simülasyon / modül alt sayfaları): geniş “boş hap” yok, içerik kadar genişlik */
-body.landing-site-body header.fixed nav[aria-label="Ana menü"]:not(:has(.landing-nav-pill-link)) {
-  flex: 0 1 auto;
+/* Basit menü: :has() yok / eski önbellek — sınıf ile kesin; geniş “boş hap” kalkar */
+body.landing-site-body header.fixed nav.landing-nav--compact {
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   min-width: 0;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  max-width: 100%;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  justify-content: center;
+}
+
+body.landing-site-body header.fixed nav[aria-label="Ana menü"]:not(:has(.landing-nav-pill-link)) {
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   justify-content: center;
 }
 
