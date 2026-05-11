@@ -14,21 +14,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="/utils/simulation-tracker.js"></script>
   <style>
-    :root { --panel: rgba(15, 23, 42, 0.88); --accent: #22c55e; --warn: #f59e0b; --bad: #ef4444; }
+    :root {
+      --panel: rgba(15, 23, 42, 0.88);
+      --accent: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --glass: rgba(15, 23, 42, 0.72);
+      --glass-b: rgba(148, 163, 184, 0.18);
+      --brand: #0ea5e9;
+    }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; overflow: hidden; font-family: Inter, system-ui, sans-serif; background: #020617; color: #e2e8f0; }
     #gameCanvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
     #hud {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-      padding: 0.65rem 1rem 1rem;
-      background: linear-gradient(180deg, transparent, rgba(2,6,23,0.92));
+      padding: 0.75rem 1rem 1.1rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(2,6,23,0.55) 35%, rgba(2,6,23,0.94) 100%);
       pointer-events: none;
     }
-    #hud .hud-inner { max-width: 720px; margin: 0 auto; pointer-events: auto; }
-    #hud p { margin: 0; font-size: 0.8125rem; line-height: 1.45; color: #cbd5e1; }
-    #hud strong { color: #f8fafc; }
-    .meter { height: 6px; border-radius: 99px; background: #334155; margin-top: 0.5rem; overflow: hidden; }
-    .meter > span { display: block; height: 100%; width: 0%; background: var(--accent); transition: width 0.15s ease, background 0.2s; }
+    #hud .hud-inner {
+      max-width: 720px; margin: 0 auto; pointer-events: auto;
+      background: var(--glass); backdrop-filter: blur(14px) saturate(140%);
+      border: 1px solid var(--glass-b); border-radius: 0.75rem; padding: 0.75rem 1rem;
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.35);
+    }
+    #hud p { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: #cbd5e1; }
+    #hud strong { color: #f8fafc; font-weight: 600; }
+    .meter { height: 5px; border-radius: 99px; background: rgba(51, 65, 85, 0.85); margin-top: 0.55rem; overflow: hidden; border: 1px solid rgba(71, 85, 105, 0.5); }
+    .meter > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #22c55e, #4ade80); transition: width 0.15s ease, background 0.2s; }
     .overlay {
       position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
       padding: 1rem; background: rgba(2, 6, 23, 0.72); backdrop-filter: blur(8px);
@@ -55,19 +68,52 @@
     .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.65rem; }
     #topBar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 30;
-      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-      padding: 0.5rem 0.75rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid rgba(51, 65, 85, 0.6);
-      font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.4rem 0.85rem 0.45rem;
+      background: linear-gradient(180deg, rgba(15,23,42,0.92), rgba(15,23,42,0.55));
+      backdrop-filter: blur(16px) saturate(160%);
+      border-bottom: 1px solid rgba(100, 116, 139, 0.28);
+      font-size: 0.72rem;
     }
-    #topBar a { color: #93c5fd; text-decoration: none; font-weight: 600; }
-    #topBar a:hover { text-decoration: underline; }
-    .badge { font-variant-numeric: tabular-nums; color: #94a3b8; }
+    #topBar .top-back { color: #93c5fd; text-decoration: none; font-weight: 600; letter-spacing: 0.01em; }
+    #topBar .top-back:hover { color: #bfdbfe; text-decoration: underline; }
+    #topBar .top-meta { display: flex; align-items: center; gap: 0.45rem; flex: 1; justify-content: center; flex-wrap: wrap; }
+    .phase-chip {
+      font-variant-numeric: tabular-nums; color: #e2e8f0; font-weight: 600; font-size: 0.7rem;
+      padding: 0.28rem 0.65rem; border-radius: 999px;
+      background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(71, 85, 105, 0.55);
+      letter-spacing: 0.02em;
+    }
+    .cam-chip {
+      font-size: 0.62rem; color: #fde68a; font-weight: 700; letter-spacing: 0.06em;
+      padding: 0.25rem 0.5rem; border-radius: 0.35rem; background: rgba(120, 53, 15, 0.35); border: 1px solid rgba(251, 191, 36, 0.35);
+    }
+    .score-chip {
+      display: flex; align-items: baseline; gap: 0.35rem;
+      padding: 0.3rem 0.65rem 0.32rem; border-radius: 0.5rem;
+      background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(148, 163, 184, 0.25);
+      min-width: 4.5rem; justify-content: flex-end;
+    }
+    .score-chip .score-n { font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #f8fafc; }
+    .score-chip .score-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; }
+    .mission-panel {
+      position: fixed; top: 3.35rem; left: 0.65rem; z-index: 25; width: min(17.5rem, 42vw);
+      background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(14px) saturate(150%);
+      border: 1px solid rgba(100, 116, 139, 0.28); border-radius: 0.65rem; padding: 0.55rem 0.65rem 0.5rem;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .mission-panel-h { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.14em; color: #94a3b8; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.35rem; }
+    .mission-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 10px rgba(14,165,233,0.55); }
+    .mission-panel-body { font-size: 0.72rem; line-height: 1.45; color: #cbd5e1; }
+    .mission-panel-body strong { color: #f1f5f9; }
+    .mission-panel-foot { margin-top: 0.45rem; font-size: 0.58rem; color: #64748b; letter-spacing: 0.04em; }
     .trash-grid { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
     .trash-grid button {
-      text-align: left; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid #334155;
-      background: #1e293b; color: #e2e8f0; font-size: 0.8125rem; cursor: pointer;
+      text-align: left; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(71, 85, 105, 0.55);
+      background: linear-gradient(145deg, #1e293b, #0f172a); color: #e2e8f0; font-size: 0.8125rem; cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .trash-grid button:hover { border-color: #64748b; background: #334155; }
+    .trash-grid button:hover { border-color: rgba(56, 189, 248, 0.45); box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.12); background: #1e293b; }
     .scroll-mail { max-height: min(52vh, 22rem); overflow-y: auto; padding-right: 0.35rem; margin: 0.5rem 0; }
     .equip-list { font-size: 0.8125rem; line-height: 1.55; color: #cbd5e1; margin: 0.5rem 0 0; padding-left: 1.1rem; }
     .equip-list li { margin: 0.25rem 0; }
@@ -82,22 +128,18 @@
     .report-form textarea { min-height: 3.5rem; resize: vertical; }
     .chk-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; }
     .chk-row label { display: flex; align-items: center; gap: 0.35rem; text-transform: none; margin: 0; cursor: pointer; }
-    #cameraHud { font-size: 0.65rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.04em; }
-    #missionStrip {
-      position: fixed; top: 2.75rem; left: 50%; transform: translateX(-50%); z-index: 25;
-      max-width: min(96vw, 36rem); font-size: 0.68rem; color: #cbd5e1; background: rgba(15,23,42,0.82);
-      border: 1px solid rgba(71,85,105,0.5); border-radius: 0.5rem; padding: 0.35rem 0.65rem; pointer-events: none;
-    }
     #usbInteract {
       position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 26; max-width: 22rem; width: calc(100% - 2rem);
-      background: rgba(15,23,42,0.94); border: 1px solid rgba(100,116,139,0.45); border-radius: 0.65rem; padding: 0.65rem 0.85rem;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; pointer-events: auto;
+      background: rgba(15,23,42,0.9); backdrop-filter: blur(16px); border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 0.7rem; padding: 0.7rem 0.9rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(15,23,42,0.5) inset; display: none; pointer-events: auto;
     }
     #usbInteract.visible { display: block; }
     #streetEnterHud {
       position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 26; max-width: 22rem; width: calc(100% - 2rem);
-      background: rgba(15,23,42,0.94); border: 1px solid rgba(56,189,248,0.35); border-radius: 0.65rem; padding: 0.65rem 0.85rem;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; pointer-events: none;
+      background: rgba(15,23,42,0.9); backdrop-filter: blur(16px); border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 0.7rem; padding: 0.7rem 0.9rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5); display: none; pointer-events: none;
     }
     #streetEnterHud.visible { display: block; }
     #streetEnterHud .t { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7dd3fc; margin-bottom: 0.35rem; }
@@ -111,9 +153,16 @@
       perspective: 900px; margin: 0.75rem auto; max-width: 14rem; min-height: 11rem; display: flex; align-items: center; justify-content: center;
     }
     .doc-3d-inner {
-      width: 11rem; height: 14rem; background: linear-gradient(145deg, #f8fafc, #e2e8f0); border: 1px solid #94a3b8; border-radius: 0.2rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35); padding: 0.65rem; font-size: 0.65rem; line-height: 1.35; color: #0f172a; transform: rotateX(4deg) rotateY(-12deg);
+      position: relative;
+      width: 11rem; height: 14rem; background: linear-gradient(165deg, #ffffff 0%, #f1f5f9 45%, #e2e8f0 100%);
+      border: 1px solid #94a3b8; border-radius: 0.15rem;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.8); padding: 0.65rem; font-size: 0.62rem; line-height: 1.38; color: #0f172a;
+      transform: rotateX(4deg) rotateY(-12deg);
       animation: docTilt 6s ease-in-out infinite;
+    }
+    .doc-3d-inner .doc-stamp {
+      position: absolute; top: 0.5rem; right: 0.45rem; font-size: 0.5rem; font-weight: 800; letter-spacing: 0.08em;
+      color: #b91c1c; border: 2px solid #b91c1c; padding: 0.12rem 0.28rem; border-radius: 0.15rem; transform: rotate(-8deg); opacity: 0.92;
     }
     @keyframes docTilt {
       0%, 100% { transform: rotateX(4deg) rotateY(-12deg); }
@@ -122,16 +171,22 @@
   </style>
 </head>
 <body>
-  <div id="topBar">
-    <a href="/simulations.html">← Simülasyonlar</a>
-    <span class="badge" id="phaseLabel">Ofis</span>
-    <span class="badge" id="cameraHud" style="display:none;">● KAMERA BÖLGESİ</span>
-    <span class="badge" id="scoreLabel">Puan: 0</span>
-  </div>
+  <header id="topBar">
+    <a class="top-back" href="/simulations.html">← Simülasyonlar</a>
+    <div class="top-meta">
+      <span class="phase-chip" id="phaseLabel">Ofis</span>
+      <span class="cam-chip" id="cameraHud" style="display:none;">● KAMERA BÖLGESİ</span>
+    </div>
+    <div class="score-chip" id="scoreWrap"><span class="score-n" id="scoreValue">0</span><span class="score-lbl">puan</span></div>
+  </header>
 
   <canvas id="gameCanvas" tabindex="0" role="application" aria-label="3D banka lobisi görünümü"></canvas>
 
-  <div id="missionStrip" aria-live="polite"></div>
+  <aside id="missionPanel" class="mission-panel" aria-live="polite">
+    <div class="mission-panel-h"><span class="mission-dot"></span> Görev</div>
+    <div id="missionPanelBody" class="mission-panel-body">Görev postasını okuyun.</div>
+    <div class="mission-panel-foot">SEBS · yetkili test simülasyonu</div>
+  </aside>
 
   <div id="usbInteract">
     <div class="t">Etkileşim · USB test objesi</div>
@@ -306,7 +361,7 @@
     const hudText = document.getElementById('hudText');
     const suspicionFill = document.getElementById('suspicionFill');
     const phaseLabel = document.getElementById('phaseLabel');
-    const scoreLabel = document.getElementById('scoreLabel');
+    const scoreValue = document.getElementById('scoreValue');
     const cameraHud = document.getElementById('cameraHud');
     const officeMailOverlay = document.getElementById('officeMailOverlay');
     const prepOverlay = document.getElementById('prepOverlay');
@@ -320,7 +375,7 @@
     const reportOverlay = document.getElementById('reportOverlay');
     const reportForm = document.getElementById('reportForm');
     const endOverlay = document.getElementById('endOverlay');
-    const missionStrip = document.getElementById('missionStrip');
+    const missionPanelBody = document.getElementById('missionPanelBody');
     const usbInteract = document.getElementById('usbInteract');
     const usbInteractBody = document.getElementById('usbInteractBody');
     const usbInteractKey = document.getElementById('usbInteractKey');
@@ -369,8 +424,56 @@
     let staffWarnCooldown = 0;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0c1525);
-    scene.fog = new THREE.Fog(0x1a2332, 18, 120);
+    scene.background = new THREE.Color(0x8eb4d4);
+    scene.fog = new THREE.Fog(0xb9cee3, 32, 145);
+
+    function applyWorldAtmosphere() {
+      if (worldMode === 'INTERIOR') {
+        scene.background.setHex(0x141c2b);
+        scene.fog.color.setHex(0x1e2838);
+        scene.fog.near = 12;
+        scene.fog.far = 72;
+      } else {
+        scene.background.setHex(0x8eb4d4);
+        scene.fog.color.setHex(0xb9cee3);
+        scene.fog.near = 28;
+        scene.fog.far = 138;
+      }
+    }
+
+    let ambCtx = null;
+    function startLobbyAmbience() {
+      if (ambCtx) {
+        ambCtx.resume().catch(function () {});
+        return;
+      }
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      ambCtx = new Ctx();
+      const mix = ambCtx.createGain();
+      mix.gain.value = 0.028;
+      const len = 3 * ambCtx.sampleRate;
+      const buf = ambCtx.createBuffer(1, len, ambCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        last = (last + 0.015 * w) * 0.992;
+        data[i] = last * 0.4;
+      }
+      const src = ambCtx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      const bp = ambCtx.createBiquadFilter();
+      bp.type = 'lowpass';
+      bp.frequency.value = 380;
+      const hp = ambCtx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 90;
+      src.connect(hp).connect(bp).connect(mix).connect(ambCtx.destination);
+      src.start(0);
+      ambCtx.resume().catch(function () {});
+    }
 
     const camera = new THREE.PerspectiveCamera(52, 1, 0.04, 220);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -379,25 +482,29 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.12;
 
-    const hemi = new THREE.HemisphereLight(0xd4e4ff, 0x1a1a24, 0.62);
+    const hemi = new THREE.HemisphereLight(0xe8f0ff, 0x3d4f66, 0.55);
     scene.add(hemi);
-    const dir = new THREE.DirectionalLight(0xfff5e6, 1.05);
-    dir.position.set(8, 18, 10);
+    const dir = new THREE.DirectionalLight(0xfff6ed, 1.18);
+    dir.position.set(10, 22, 12);
     dir.castShadow = true;
     dir.shadow.mapSize.set(2048, 2048);
-    dir.shadow.camera.near = 2;
-    dir.shadow.camera.far = 45;
-    dir.shadow.camera.left = -24;
-    dir.shadow.camera.right = 24;
-    dir.shadow.camera.top = 20;
-    dir.shadow.camera.bottom = -20;
-    dir.shadow.bias = -0.00025;
+    dir.shadow.camera.near = 1.5;
+    dir.shadow.camera.far = 52;
+    dir.shadow.camera.left = -28;
+    dir.shadow.camera.right = 28;
+    dir.shadow.camera.top = 24;
+    dir.shadow.camera.bottom = -26;
+    dir.shadow.bias = -0.00022;
+    dir.shadow.normalBias = 0.035;
     scene.add(dir);
-    const fill = new THREE.DirectionalLight(0xa8c4ff, 0.28);
-    fill.position.set(-12, 8, -6);
+    const fill = new THREE.DirectionalLight(0xc7d8ff, 0.32);
+    fill.position.set(-16, 12, -8);
     scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffe4c4, 0.22);
+    rim.position.set(0, 6, -18);
+    scene.add(rim);
 
     const interiorGroup = new THREE.Group();
     const exteriorGroup = new THREE.Group();
@@ -418,9 +525,10 @@
       return mesh;
     }
 
-    /** Prosedürel insan (ayaklar y=0); role: guard | staff | customer */
+    /** Prosedürel insan (ayaklar y=0); opts.role: 'security' | 'staff' | undefined */
     function createHumanoid(opts) {
       const s = opts.scale || 1;
+      const role = opts.role || 'civilian';
       const skin = opts.skin ?? 0xdcb8a0;
       const shirt = opts.shirt ?? 0x3b82f6;
       const pants = opts.pants ?? 0x1e293b;
@@ -441,7 +549,9 @@
         new THREE.Mesh(new THREE.SphereGeometry(0.11 * s, 18, 14), skinM)
       );
       head.position.set(0, 1.56 * s, 0);
+      head.scale.set(0.92, 1.05, 0.95);
       root.add(head);
+      root.userData.head = head;
 
       const hair = new THREE.Mesh(
         new THREE.SphereGeometry(0.115 * s, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.45),
@@ -456,12 +566,26 @@
       root.add(torso);
       root.userData.torso = torso;
 
-      if (vest != null) {
+      if (vest != null || role === 'security') {
+        const vestCol = role === 'security' ? 0x1e293b : vest;
         const vestMesh = addShadow(
-          new THREE.Mesh(new THREE.BoxGeometry(0.42 * s, 0.32 * s, 0.24 * s), matStd(vest, 0.55, 0.08))
+          new THREE.Mesh(new THREE.BoxGeometry(0.42 * s, 0.32 * s, 0.24 * s), matStd(vestCol, 0.48, 0.12))
         );
         vestMesh.position.set(0, 1.18 * s, 0.03 * s);
         root.add(vestMesh);
+        if (role === 'security') {
+          const stripe = addShadow(
+            new THREE.Mesh(new THREE.BoxGeometry(0.43 * s, 0.04 * s, 0.25 * s), matStd(0x0ea5e9, 0.35, 0.25))
+          );
+          stripe.position.set(0, 1.26 * s, 0.04 * s);
+          root.add(stripe);
+          const badge = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.07 * s, 0.09 * s),
+            new THREE.MeshStandardMaterial({ color: 0xc7d2fe, roughness: 0.35, metalness: 0.55, emissive: 0x1e3a8a, emissiveIntensity: 0.15 })
+          );
+          badge.position.set(0.11 * s, 1.22 * s, 0.14 * s);
+          root.add(badge);
+        }
       }
 
       const hip = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.34 * s, 0.18 * s, 0.2 * s), pantsM));
@@ -525,12 +649,41 @@
     }
 
     function buildBankInterior() {
+      const floorCanvas = document.createElement('canvas');
+      floorCanvas.width = 512;
+      floorCanvas.height = 512;
+      const fctx = floorCanvas.getContext('2d');
+      fctx.fillStyle = '#eef2f7';
+      fctx.fillRect(0, 0, 512, 512);
+      for (let i = 0; i < 120; i++) {
+        fctx.fillStyle = 'rgba(148,163,184,' + (0.025 + Math.random() * 0.04) + ')';
+        fctx.fillRect(Math.random() * 508, Math.random() * 508, 1 + Math.random() * 50, 0.8 + Math.random());
+      }
+      fctx.strokeStyle = 'rgba(100,116,139,0.14)';
+      fctx.lineWidth = 1;
+      for (let g = 0; g <= 32; g++) {
+        fctx.beginPath();
+        fctx.moveTo(g * 16, 0);
+        fctx.lineTo(g * 16, 512);
+        fctx.stroke();
+        fctx.beginPath();
+        fctx.moveTo(0, g * 16);
+        fctx.lineTo(512, g * 16);
+        fctx.stroke();
+      }
+      const floorTex = new THREE.CanvasTexture(floorCanvas);
+      floorTex.colorSpace = THREE.SRGBColorSpace;
+      floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
+      floorTex.repeat.set(5, 3.2);
+      floorTex.anisotropy = 4;
       const marble = new THREE.MeshPhysicalMaterial({
-        color: 0xe8ecf4,
-        roughness: 0.22,
-        metalness: 0.06,
-        clearcoat: 0.28,
-        clearcoatRoughness: 0.45
+        map: floorTex,
+        color: 0xffffff,
+        roughness: 0.14,
+        metalness: 0.08,
+        clearcoat: 0.45,
+        clearcoatRoughness: 0.28,
+        envMapIntensity: 0.9
       });
       const floor = new THREE.Mesh(new THREE.PlaneGeometry(42, 26), marble);
       floor.rotation.x = -Math.PI / 2;
@@ -589,7 +742,13 @@
 
       const ceil = new THREE.Mesh(
         new THREE.PlaneGeometry(42, 26),
-        new THREE.MeshStandardMaterial({ color: 0x252830, roughness: 0.92, metalness: 0.05 })
+        new THREE.MeshStandardMaterial({
+          color: 0x2a3140,
+          roughness: 0.88,
+          metalness: 0.06,
+          emissive: 0x1a2030,
+          emissiveIntensity: 0.12
+        })
       );
       ceil.rotation.x = Math.PI / 2;
       ceil.position.y = wallH;
@@ -710,25 +869,25 @@
       deskPropSet(-9, -6.5, 0.35);
 
       const staff1 = createHumanoid({
-        shirt: 0xffffff,
-        pants: 0x1e3a5f,
+        shirt: 0xf8fafc,
+        pants: 0x1e293b,
         vest: null,
         skin: 0xc99e8b,
         hair: 0x1a1208,
         cap: false,
-        scale: 0.98
+        scale: 0.99
       });
       staff1.position.set(-6, 0, -10.15);
       staff1.rotation.y = Math.PI * 0.08;
       interiorGroup.add(staff1);
 
       const staff2 = createHumanoid({
-        shirt: 0xf8fafc,
-        pants: 0x1e3a5f,
+        shirt: 0xe2e8f0,
+        pants: 0x0f172a,
         skin: 0xb8956c,
         hair: 0x0f0f0f,
         cap: false,
-        scale: 0.95
+        scale: 0.97
       });
       staff2.position.set(5, 0, -10.1);
       staff2.rotation.y = -Math.PI * 0.12;
@@ -794,22 +953,115 @@
       }
       interiorGroup.add(brochure);
 
+      const warmL1 = new THREE.PointLight(0xffecd8, 0.52, 26, 1.9);
+      warmL1.position.set(-5, 3.45, -2.5);
+      interiorGroup.add(warmL1);
+      const warmL2 = new THREE.PointLight(0xffe9d6, 0.38, 20, 1.85);
+      warmL2.position.set(10, 3.2, 5);
+      interiorGroup.add(warmL2);
+      const coolFill = new THREE.PointLight(0xdbeafe, 0.22, 16, 2);
+      coolFill.position.set(-14, 2.9, 7);
+      interiorGroup.add(coolFill);
+
+      const stanchMat = matStd(0xc9a227, 0.35, 0.55);
+      for (let si = 0; si < 4; si++) {
+        const zx = -9.2 + si * 1.15;
+        const post = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.95, 10), stanchMat));
+        post.position.set(zx, 0.48, 0.8);
+        interiorGroup.add(post);
+        if (si < 3) {
+          const rope = new THREE.Mesh(
+            new THREE.TorusGeometry(0.52, 0.018, 6, 16, Math.PI * 0.42),
+            matStd(0x7f1d1d, 0.55, 0.08)
+          );
+          rope.rotation.x = Math.PI / 2;
+          rope.position.set(zx + 0.575, 0.78, 0.8);
+          interiorGroup.add(rope);
+        }
+      }
+
+      const bench2 = bench.clone();
+      bench2.position.set(-24, 0, -1.2);
+      interiorGroup.add(bench2);
+
+      const printerCab = new THREE.Group();
+      const pcBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.05, 0.55), matStd(0xe2e8f0, 0.42, 0.12)));
+      pcBody.position.set(-2.8, 0.52, -8.35);
+      printerCab.add(pcBody);
+      const pcTray = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.06, 0.38), matStd(0x334155, 0.45, 0.2)));
+      pcTray.position.set(-2.8, 1.08, -8.35);
+      printerCab.add(pcTray);
+      interiorGroup.add(printerCab);
+
+      const dirCanvas = document.createElement('canvas');
+      dirCanvas.width = 256;
+      dirCanvas.height = 128;
+      const dctx = dirCanvas.getContext('2d');
+      dctx.fillStyle = '#f8fafc';
+      dctx.fillRect(0, 0, 256, 128);
+      dctx.fillStyle = '#0f172a';
+      dctx.font = 'bold 22px Inter,sans-serif';
+      dctx.fillText('ATM →', 20, 52);
+      dctx.font = '15px Inter,sans-serif';
+      dctx.fillStyle = '#475569';
+      dctx.fillText('Danışma 14', 20, 86);
+      const dirTex = new THREE.CanvasTexture(dirCanvas);
+      dirTex.colorSpace = THREE.SRGBColorSpace;
+      const dirBoard = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.8, 0.95),
+        new THREE.MeshStandardMaterial({ map: dirTex, roughness: 0.45, metalness: 0.05 })
+      );
+      dirBoard.position.set(19.58, 2.15, 2);
+      dirBoard.rotation.y = -Math.PI / 2;
+      interiorGroup.add(dirBoard);
+
       return [staff1, staff2];
     }
 
     function buildExteriorWorld() {
+      const aspC = document.createElement('canvas');
+      aspC.width = 256;
+      aspC.height = 256;
+      const ax = aspC.getContext('2d');
+      ax.fillStyle = '#2d3a4d';
+      ax.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 400; i++) {
+        ax.fillStyle = 'rgba(15,23,42,' + (0.04 + Math.random() * 0.06) + ')';
+        ax.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+      }
+      const aspTex = new THREE.CanvasTexture(aspC);
+      aspTex.wrapS = aspTex.wrapT = THREE.RepeatWrapping;
+      aspTex.repeat.set(10, 8);
+      aspTex.colorSpace = THREE.SRGBColorSpace;
       const asphalt = new THREE.Mesh(
         new THREE.PlaneGeometry(55, 42),
-        new THREE.MeshStandardMaterial({ color: 0x2d3748, roughness: 0.88, metalness: 0.05 })
+        new THREE.MeshStandardMaterial({ map: aspTex, color: 0xffffff, roughness: 0.82, metalness: 0.06 })
       );
       asphalt.rotation.x = -Math.PI / 2;
       asphalt.position.set(0, -0.02, 32);
       asphalt.receiveShadow = true;
       exteriorGroup.add(asphalt);
 
+      const swC = document.createElement('canvas');
+      swC.width = 128;
+      swC.height = 128;
+      const sx = swC.getContext('2d');
+      sx.fillStyle = '#cbd5e1';
+      sx.fillRect(0, 0, 128, 128);
+      sx.strokeStyle = 'rgba(100,116,139,0.25)';
+      for (let g = 0; g <= 8; g++) {
+        sx.beginPath();
+        sx.moveTo(g * 16, 0);
+        sx.lineTo(g * 16, 128);
+        sx.stroke();
+      }
+      const swTex = new THREE.CanvasTexture(swC);
+      swTex.wrapS = swTex.wrapT = THREE.RepeatWrapping;
+      swTex.repeat.set(4, 9);
+      swTex.colorSpace = THREE.SRGBColorSpace;
       const sidewalk = new THREE.Mesh(
         new THREE.PlaneGeometry(16, 34),
-        new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.65, metalness: 0.02 })
+        new THREE.MeshStandardMaterial({ map: swTex, color: 0xffffff, roughness: 0.58, metalness: 0.04 })
       );
       sidewalk.rotation.x = -Math.PI / 2;
       sidewalk.position.set(-10, 0.01, 30);
@@ -833,6 +1085,7 @@
         })
       );
       glassCurtain.position.set(0, 2.5, 12.96);
+      glassCurtain.receiveShadow = true;
       facade.add(glassCurtain);
 
       const logoC = document.createElement('canvas');
@@ -963,7 +1216,22 @@
         bin.position.set(23 + b * 1.85, 1.05, 19.5);
         alley.add(bin);
         collisionMeshes.push(bin);
+        const lid = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.12, 1.12), matStd(0x0f172a, 0.4, 0.35)));
+        lid.position.set(23 + b * 1.85, 2.12, 19.5);
+        alley.add(lid);
       }
+      for (let f = 0; f < 9; f++) {
+        const pole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.4, 6), matStd(0x64748b, 0.45, 0.35)));
+        pole.position.set(18.2 + f * 0.85, 1.2, 22.6);
+        alley.add(pole);
+      }
+      const chain = new THREE.Mesh(
+        new THREE.TorusGeometry(3.2, 0.025, 6, 36, Math.PI * 0.88),
+        matStd(0x475569, 0.35, 0.55)
+      );
+      chain.rotation.x = Math.PI / 2;
+      chain.position.set(21.5, 1.35, 22.5);
+      alley.add(chain);
       const svcSign = new THREE.Mesh(
         new THREE.PlaneGeometry(2.8, 0.7),
         new THREE.MeshStandardMaterial({ color: 0xfefce8, emissive: 0x422006, emissiveIntensity: 0.08, roughness: 0.6 })
@@ -980,12 +1248,12 @@
     exteriorGroup.visible = false;
 
     const player = createHumanoid({
-      shirt: 0x0ea5e9,
-      pants: 0x0f172a,
+      shirt: 0x1e40af,
+      pants: 0x172554,
       skin: 0xd4a574,
       hair: 0x292524,
       cap: false,
-      scale: 1
+      scale: 1.01
     });
     player.position.set(0, 0, 10);
     scene.add(player);
@@ -995,11 +1263,11 @@
       const g = createHumanoid({
         shirt: 0x1e3a5f,
         pants: 0x0f172a,
-        vest: 0xfacc15,
+        role: 'security',
         skin: 0xc99e8b,
         hair: 0x1c1917,
         cap: true,
-        scale: 1.02
+        scale: 1.02 + Math.random() * 0.04
       });
       g.position.set(x, 0, z);
       g.userData.base = new THREE.Vector3(x, 0, z);
@@ -1014,7 +1282,7 @@
       const g = createHumanoid({
         shirt: 0x1e3a5f,
         pants: 0x0f172a,
-        vest: 0xfacc15,
+        role: 'security',
         skin: 0xa8907c,
         hair: 0x111827,
         cap: true,
@@ -1042,22 +1310,22 @@
       { x: -4, z: 2 },
       { x: -2, z: -2 },
       { x: 4, z: 0 }
-    ], { shirt: 0x64748b, pants: 0x334155, skin: 0xe0bc9a, hair: 0x3f2e22, cap: false });
+    ], { shirt: 0x475569, pants: 0x1e293b, skin: 0xe0bc9a, hair: 0x3f2e22, cap: false, scale: 0.96 });
     addWanderingNpc(-3, 7, [
       { x: -3, z: 7 },
       { x: -10, z: 5 },
       { x: -8, z: 1 }
-    ], { shirt: 0xa855f7, pants: 0x1e1b4b, skin: 0x8d5524, hair: 0x0c0a09, cap: false });
+    ], { shirt: 0x3730a3, pants: 0x172554, skin: 0x8d5524, hair: 0x0c0a09, cap: false, scale: 1.03 });
     addWanderingNpc(8, -1, [
       { x: 8, z: -1 },
       { x: 14, z: 3 },
       { x: 10, z: 6 }
-    ], { shirt: 0xf97316, pants: 0x422006, skin: 0xf3cba8, hair: 0x78350f, cap: false });
+    ], { shirt: 0x9a3412, pants: 0x292524, skin: 0xf3cba8, hair: 0x451a03, cap: false, scale: 0.94 });
     addWanderingNpc(-12, -2, [
       { x: -12, z: -2 },
       { x: -5, z: 0 },
       { x: -8, z: 4 }
-    ], { shirt: 0x22c55e, pants: 0x14532d, skin: 0xd4a574, hair: 0x292524, cap: false });
+    ], { shirt: 0x365314, pants: 0x1c2e0a, skin: 0xd4a574, hair: 0x292524, cap: false, scale: 1.05 });
 
     const door = new THREE.Group();
     door.position.set(18, 0, 11);
@@ -1099,7 +1367,7 @@
         x: -6,
         z: -9,
         q: 'good',
-        label: 'Broşürlük yakını (çalışan/müşteri dengesi)',
+        label: 'Broşür standı ve yazıcı dolabı yakını (çalışan/müşteri dengesi)',
         pts: 52,
         risk: 'Orta',
         emp: 'Orta',
@@ -1128,13 +1396,23 @@
     const cameraFloorMarks = [];
     cameraZones.forEach((cz) => {
       const m = new THREE.Mesh(
-        new THREE.RingGeometry(cz.r - 0.25, cz.r + 0.12, 40),
-        new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
+        new THREE.RingGeometry(cz.r - 0.18, cz.r + 0.08, 40),
+        new THREE.MeshBasicMaterial({ color: 0x64748b, transparent: true, opacity: 0.045, side: THREE.DoubleSide })
       );
       m.rotation.x = -Math.PI / 2;
-      m.position.set(cz.x, 0.025, cz.z);
+      m.position.set(cz.x, 0.022, cz.z);
       interiorGroup.add(m);
       cameraFloorMarks.push(m);
+    });
+
+    spots.forEach((sp) => {
+      const mark = new THREE.Mesh(
+        new THREE.RingGeometry(0.32, 0.44, 32),
+        new THREE.MeshBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.055, side: THREE.DoubleSide })
+      );
+      mark.rotation.x = -Math.PI / 2;
+      mark.position.set(sp.x, 0.019, sp.z);
+      interiorGroup.add(mark);
     });
 
     function inStaffOnlyCorridor(px, pz) {
@@ -1180,6 +1458,8 @@
       };
       phaseLabel.textContent = map[p] || p;
       const strip = {
+        OFFICE_MAIL: 'Görev postasını okuyun — ardından <strong>Hazırlığa geç</strong>.',
+        OFFICE_PREP: 'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.',
         STREET:
           '1/5 Banka cephesi · <strong>Cephe ortası — turuncu kasalı cam kapı</strong> önüne gelin — <strong>E</strong> ile içeri girin.',
         DROP: '2/5 Lobide · Uygun zemine yaklaşın — etkileşim panelinde <strong>E</strong> ile USB bırakın.',
@@ -1187,9 +1467,11 @@
         LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
         ALLEY: '5/5 Konteynerlere yaklaşın — <strong>E</strong> ile poşet incelemesi (RoE).',
         TRASH_UI: 'Poşet / belge incelemesi — tamamlayınca rapor.',
-        REPORT: 'Şirket ofisi — raporu gönderin.'
+        REPORT: 'Şirket ofisi — raporu gönderin.',
+        END: 'Özet ekranı — yeniden oynayabilir veya listeye dönebilirsiniz.',
+        GUARD_DIALOG: 'Güvenlik diyaloğu — profesyonel bir seçenek işaretleyin.'
       };
-      if (missionStrip) missionStrip.innerHTML = strip[p] || '';
+      if (missionPanelBody) missionPanelBody.innerHTML = strip[p] || '';
     }
 
     function pushTrackerCompletion(passed) {
@@ -1223,16 +1505,24 @@
     window.addEventListener('resize', resize);
     resize();
 
-    function updateCamera() {
+    const camSmoothPos = new THREE.Vector3(0, 6, 14);
+    let camSmoothInit = false;
+
+    function resetCameraSmooth() {
+      camSmoothInit = false;
+    }
+
+    function updateCamera(dt) {
       const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
       const yaw = player.rotation.y;
-      const off = new THREE.Vector3(0, 2.15, 7.4);
+      const off = new THREE.Vector3(0, 2.08, 7.05);
       off.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
       const targetCam = eye.clone().add(off);
       const dir = new THREE.Vector3().subVectors(targetCam, eye);
       const fullDist = dir.length();
+      let desired;
       if (fullDist < 0.01) {
-        camera.position.copy(targetCam);
+        desired = targetCam.clone();
       } else {
         dir.normalize();
         raycaster.set(eye, dir);
@@ -1240,10 +1530,18 @@
         const hits = raycaster.intersectObjects(visibleCollisionMeshes(), false);
         let dist = fullDist;
         if (hits.length) {
-          dist = Math.max(1.15, Math.min(fullDist, hits[0].distance - 0.28));
+          dist = Math.max(0.88, Math.min(fullDist, hits[0].distance - 0.45));
         }
-        camera.position.copy(eye.clone().add(dir.clone().multiplyScalar(dist)));
+        desired = eye.clone().add(dir.clone().multiplyScalar(dist));
       }
+      if (!camSmoothInit) {
+        camSmoothPos.copy(desired);
+        camSmoothInit = true;
+      } else {
+        const a = 1 - Math.exp(-15 * Math.min(0.08, dt || 0.016));
+        camSmoothPos.lerp(desired, Math.min(1, a));
+      }
+      camera.position.copy(camSmoothPos);
       camera.lookAt(player.position.x, player.position.y + 1.05, player.position.z);
     }
 
@@ -1300,6 +1598,11 @@
       const sway = Math.sin(time * 1.8 + ph) * 0.035;
       group.userData.torso.rotation.z = sway;
       group.userData.torso.rotation.x = Math.sin(time * 0.9 + ph * 0.5) * 0.02;
+      const h = group.userData.head;
+      if (h) {
+        h.rotation.y = Math.sin(time * 0.65 + ph) * 0.11;
+        h.rotation.x = Math.sin(time * 0.5 + ph * 0.7) * 0.05;
+      }
     }
 
     function animNpcs(dt, time) {
@@ -1370,6 +1673,8 @@
           interiorGroup.visible = true;
           exteriorGroup.visible = false;
           worldMode = 'INTERIOR';
+          applyWorldAtmosphere();
+          resetCameraSmooth();
           setPhase('DROP');
           lastMoveAt = clock.getElapsedTime();
         }
@@ -1389,6 +1694,8 @@
           interiorGroup.visible = false;
           exteriorGroup.visible = true;
           worldMode = 'EXTERIOR';
+          applyWorldAtmosphere();
+          resetCameraSmooth();
           setPhase('ALLEY');
         }
       };
@@ -1499,7 +1806,7 @@
         hintEl.textContent =
           'Senaryo sonucu örneklemidir; gerçek pentestte uzun süreli gözlem, kanıt zinciri ve RoE kaydı gerekir.';
       }
-      scoreLabel.textContent = 'Puan: ' + score;
+      if (scoreValue) scoreValue.textContent = String(score);
     }
 
     function tryDropUsb() {
@@ -1519,7 +1826,7 @@
       }
       dropped = true;
       score += best.pts;
-      scoreLabel.textContent = 'Puan: ' + score;
+      if (scoreValue) scoreValue.textContent = String(score);
       usbMesh = new THREE.Mesh(
         new THREE.BoxGeometry(0.25, 0.08, 0.55),
         new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.3 })
@@ -1537,7 +1844,7 @@
 
     function buildTrashFlow() {
       trashHint.textContent =
-        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Şube içinde sarı zemin işaretleri kamera bölgeleridir.';
+        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Şube içinde zeminde çok hafif gri halkalar kamera izleme bölgeleridir (discrete işaret).';
       const containers = [
         { correct: true, label: 'Genel karışık poşet (yanlış imha / kâğıt karışık) — inceleme için uygun' },
         { correct: false, label: 'Mavi kapaklı kağıt kutusu (çoğunlukla parça / düşük anlam)' },
@@ -1558,7 +1865,7 @@
               score = Math.max(0, score - 8);
               suspicion += 14;
               trashHint.textContent = 'Yanlış konteyner — zaman kaybı ve dikkat maliyeti. Başka konteyneri deneyin.';
-              scoreLabel.textContent = 'Puan: ' + score;
+              if (scoreValue) scoreValue.textContent = String(score);
               return;
             }
             openTrashExamineStep();
@@ -1590,14 +1897,14 @@
             trashHint.textContent = 'Belge güvenli torbaya alınmadan önce maskeli önizleme.';
             trashOverlay.classList.add('hidden');
             docInspectText.innerHTML =
-              '<strong>Şube Operasyon Notu</strong> (eğitim)<br/><br/>Dahili sistem: CRM-SUBE-01<br/>Yazıcı: FIN-PRN-03<br/>Vardiya: A***, M***, K***<br/>Geçici erişim talebi: onay bekliyor<br/>Müşteri satırı: maskeli özet<br/><br/><em>Bu kağıt yanlış imha ile karışmış poşette bulunmuştur.</em>';
+              '<span class="doc-stamp">HASSAS</span><strong>Şube Operasyon Notu</strong> (eğitim)<br/><br/>Dahili sistem: CRM-SUBE-01<br/>Yazıcı: FIN-PRN-03<br/>Personel vardiya listesi: kısmen maskeli<br/>Geçici erişim talebi: onay bekliyor<br/>Müşteri bilgileri: maskelenmiş özet<br/><br/><em>Bu kağıt yanlış imha ile karışmış poşette bulunmuştur.</em>';
             docInspectOverlay.classList.remove('hidden');
-            scoreLabel.textContent = 'Puan: ' + score;
+            if (scoreValue) scoreValue.textContent = String(score);
           } else {
             score = Math.max(0, score - 10);
             suspicion += 16;
             trashHint.textContent = 'Bu kâğıt önemsiz veya düşük riskli görünüyor; başka kalemi seçin.';
-            scoreLabel.textContent = 'Puan: ' + score;
+            if (scoreValue) scoreValue.textContent = String(score);
           }
         });
         grid.appendChild(b);
@@ -1626,7 +1933,7 @@
           if (o.pro) ethicalChoiceBonus += 10;
           guardDialogOverlay.classList.add('hidden');
           setPhase('DROP');
-          scoreLabel.textContent = 'Puan: ' + score;
+          if (scoreValue) scoreValue.textContent = String(score);
           suspicionFill.style.width = suspicion + '%';
           if (suspicion >= 96 && !runEnded) {
             runEnded = true;
@@ -1676,7 +1983,7 @@
       if (suspicion < 38) extra += 18;
       if (!usbPickedByCustomer && documentFoundLevel) extra += 8;
       score += extra + ethicalChoiceBonus;
-      scoreLabel.textContent = 'Puan: ' + score;
+      if (scoreValue) scoreValue.textContent = String(score);
       const norm = Math.max(0, Math.min(100, Math.round((score / 220) * 100)));
       const usbOk = !usbPickedByCustomer && (dropQuality === 'ideal' || dropQuality === 'good' || dropQuality === 'risk');
       const docLine = documentFoundLevel
@@ -1720,8 +2027,11 @@
       player.position.set(-4, 0, 30);
       player.rotation.y = Math.PI;
       setPhase('STREET');
+      applyWorldAtmosphere();
+      resetCameraSmooth();
       lastMoveAt = clock.getElapsedTime();
       canvas.focus({ preventScroll: true });
+      startLobbyAmbience();
       hudText.innerHTML =
         '<strong>W A S D</strong> veya <strong>ok tuşları</strong> · cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin · kapı önünde <strong>E</strong> ile şubeye girin · içeride USB için panel + <strong>E</strong>.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
@@ -1812,7 +2122,7 @@
         animGuards(dt, elapsed);
         animNpcs(dt, elapsed);
         bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
-        updateCamera();
+        updateCamera(dt);
         renderer.render(scene, camera);
         return;
       }
@@ -1831,7 +2141,7 @@
           bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
         }
         updateNearestUsbHud();
-        updateCamera();
+        updateCamera(dt);
         renderer.render(scene, camera);
         return;
       }
@@ -1863,7 +2173,7 @@
           if (gd < 1.4) suspicion += dt * 35;
           if (inCameraZone(px, pz)) {
             suspicion += dt * 8.8;
-            cameraHud.style.display = 'inline';
+            cameraHud.style.display = 'inline-flex';
           } else {
             cameraHud.style.display = 'none';
           }
@@ -1902,7 +2212,7 @@
             'Yüksek şüphe anında profesyonel seçenek: yetki / RoE şeffaflığı ve testi kontrollü şekilde sonlandırmak.';
           pushTrackerCompletion(false);
         }
-        updateCamera();
+        updateCamera(dt);
       } else if (phase === 'STREET' || phase === 'ALLEY') {
         cameraHud.style.display = 'none';
         const speed = 4.6;
@@ -1920,7 +2230,7 @@
         if (suspicion < 0) suspicion = 0;
         suspicionFill.style.width = suspicion + '%';
         suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
-        updateCamera();
+        updateCamera(dt);
       } else {
         cameraHud.style.display = 'none';
         suspicion -= dt * 0.4;
@@ -1933,11 +2243,12 @@
           animNpcs(dt, elapsed);
           bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
         }
-        updateCamera();
+        updateCamera(dt);
       }
       renderer.render(scene, camera);
     }
 
+    applyWorldAtmosphere();
     setPhase('OFFICE_MAIL');
     animate();
   </script>
