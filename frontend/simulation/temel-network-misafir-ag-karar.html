@@ -7,8 +7,8 @@
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <meta name="theme-color" content="#0f172a" />
   <base href="/" />
-  <title>Misafir Ağ Olayı · Karar Simülasyonu | SEBS</title>
-  <meta name="description" content="NOC perspektifiyle misafir Wi‑Fi ve segmentasyon: doğru sırayla gözlem, izolasyon ve kalıcı düzeltme kararları." />
+  <title>Atlas Lojistik · Misafir Ağ Olayı | SEBS</title>
+  <meta name="description" content="Atlas Lojistik NOC’ta stajyer eşliğinde misafir Wi‑Fi olayı: öncelik, DNS, DHCP, segmentasyon ve iletişim kararları." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -16,58 +16,110 @@
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=3" />
   <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    #chatThread::-webkit-scrollbar { width: 6px; }
+    #chatThread::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
+    .bubble-intern { animation: bubbleIn 0.35s ease-out; }
+    @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
-<body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-slate-50">
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
-    <div class="mx-auto flex h-16 max-w-4xl items-center justify-between gap-3 px-4 sm:px-6">
-      <a href="/simulation/temel-network-simulasyonlari.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">← Temel Network simülasyonları</a>
-      <span class="hidden text-xs font-medium text-slate-500 sm:inline" id="stepLabel">Hazır</span>
+<body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-slate-100">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/90 bg-white/95 backdrop-blur-xl">
+    <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
+      <a href="/simulation/temel-network-simulasyonlari.html" class="text-xs font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded sm:text-sm">← Temel Network simülasyonları</a>
+      <div class="flex items-center gap-2 text-right">
+        <span class="hidden rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800 sm:inline">Canlı vardiya</span>
+        <span class="text-[11px] font-medium text-slate-500 sm:text-xs" id="stepLabel">Lobi</span>
+      </div>
     </div>
   </header>
 
-  <main class="mx-auto max-w-3xl px-4 pb-24 pt-24 sm:px-6">
-    <div id="panelIntro" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-700/80">Karar simülasyonu</p>
-      <h1 class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">Misafir ağda DNS ve yönlendirme şüphesi</h1>
-      <p class="mt-4 text-slate-600 leading-relaxed">
-        Yardım masasından gelen bildirim: misafir Wi‑Fi kullanıcıları yavaşlık ve “garip arama sonuçları” yaşıyor. Kurumsal VLAN’da henüz aynı semptom yok.
-        Sen NOC’ta vardiyadasın; her adımda en mantıklı ağ ve güvenlik kararını seç.
-      </p>
-      <ul class="mt-4 list-disc space-y-1 pl-5 text-sm text-slate-600">
-        <li>5 karar adımı; her doğru seçim 20 puan (toplam 100).</li>
-        <li>70 ve üzeri “başarılı” kabul edilir.</li>
-      </ul>
-      <button type="button" id="btnStart" class="mt-6 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-ring">
-        Simülasyonu başlat
-      </button>
+  <main class="mx-auto max-w-6xl px-3 pb-28 pt-20 sm:px-6 sm:pt-24">
+    <div class="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 pb-3">
+      <div>
+        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Atlas Lojistik A.Ş. · İstanbul HQ</p>
+        <h1 class="text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">Operasyon &amp; NOC — Misafir ağ olayı</h1>
+      </div>
+      <p class="max-w-md text-xs text-slate-600 sm:text-sm">Bugün stajyer <strong>Deniz</strong> seni karşılıyor; sen vardiya kararlarını veriyorsun. Her adımda en iyi seçenek <strong>10 puan</strong> (10 adım, toplam 100). <strong>70+</strong> başarılı sayılır.</p>
     </div>
 
-    <div id="panelSteps" class="hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <div class="mb-4 flex items-center justify-between gap-2">
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Adım 1 / 5</span>
-        <span class="text-sm font-bold text-blue-700" id="scoreLive">0 / 100</span>
-      </div>
-      <h2 class="text-xl font-bold text-slate-900" id="questionTitle"></h2>
-      <p class="mt-3 text-slate-600 leading-relaxed" id="questionBody"></p>
-      <div class="mt-6 flex flex-col gap-3" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
-      <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900" id="feedbackBox"></p>
-      <button type="button" id="btnNext" class="mt-6 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
-        Sonraki adım
-      </button>
-    </div>
+    <div class="grid gap-4 lg:grid-cols-12">
+      <!-- Sol: dahili sohbet + stajyer -->
+      <aside class="lg:col-span-5">
+        <div class="flex h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:h-[min(68vh,560px)]">
+          <div class="flex items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-orange-300 text-lg font-bold text-amber-950" aria-hidden="true">D</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-bold text-slate-900">Deniz · NOC stajyeri</p>
+              <p class="text-xs text-slate-500">Dahili sohbet · #noc-gölgelik</p>
+            </div>
+            <span class="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">çevrimiçi</span>
+          </div>
+          <div id="chatThread" class="bubble-intern flex-1 space-y-3 overflow-y-auto p-4 text-sm" role="log" aria-live="polite"></div>
+          <div class="border-t border-slate-100 bg-slate-50 px-4 py-2 text-[11px] text-slate-500">Deniz senin seçimlerini not alıyor; mentor raporuna gidecek.</div>
+        </div>
+      </aside>
 
-    <div id="panelEnd" class="hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <h2 class="text-xl font-bold text-slate-900">Sonuç</h2>
-      <p class="mt-2 text-3xl font-extrabold text-slate-900"><span id="finalScore">0</span> / 100</p>
-      <p class="mt-2 text-slate-600" id="finalMessage"></p>
-      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <a href="/simulation/temel-network-simulasyonlari.html" class="inline-flex justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">Listeye dön</a>
-        <button type="button" id="btnRetry" class="inline-flex justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">Tekrar dene</button>
-        <button type="button" id="btnSave" class="inline-flex justify-center rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-900 transition hover:bg-blue-100">
-          İlerlemeyi kaydet (giriş gerekli)
-        </button>
+      <!-- Sağ: senaryo + kararlar -->
+      <div class="lg:col-span-7">
+        <div id="panelLobby" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <p class="text-xs font-semibold uppercase tracking-wider text-blue-700/90">Karşılama</p>
+          <p class="mt-3 text-slate-600 leading-relaxed">
+            Sol panelde Deniz seninle tanışacak. Ardından Help Desk’ten düşen ticket ile birlikte misafir Wi‑Fi tarafındaki şikayetleri ele alacaksın.
+          </p>
+          <button type="button" id="btnMeetIntern" class="mt-5 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-ring">
+            Ofise gir, Deniz’le tanış
+          </button>
+        </div>
+
+        <div id="panelIntroFlow" class="hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <p class="text-xs font-semibold text-slate-500" id="introFlowHint">Sohbetteki mesajları oku; hazır olunca devam et.</p>
+          <button type="button" id="btnIntroNext" class="mt-4 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+            Devam
+          </button>
+          <button type="button" id="btnBeginShift" class="mt-3 hidden rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus-ring">
+            Vardiyayı başlat (ticket açılır)
+          </button>
+        </div>
+
+        <div id="panelSteps" class="mt-4 hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Adım 1 / 10</span>
+            <div class="flex items-center gap-2">
+              <div class="h-2 w-24 overflow-hidden rounded-full bg-slate-200 sm:w-32">
+                <div id="progressBar" class="h-full rounded-full bg-blue-600 transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <span class="text-sm font-bold text-blue-700 tabular-nums" id="scoreLive">0 / 100</span>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 text-xs text-slate-600">
+            <span class="font-semibold text-slate-800">Ticket özeti:</span>
+            <span id="ticketSnippet">—</span>
+          </div>
+          <h2 class="mt-5 text-lg font-bold text-slate-900 sm:text-xl" id="questionTitle"></h2>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base" id="questionBody"></p>
+          <div class="mt-5 flex flex-col gap-2.5" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
+          <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950" id="feedbackBox"></p>
+          <button type="button" id="btnNext" class="mt-5 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+            Sonraki adım
+          </button>
+        </div>
+
+        <div id="panelEnd" class="mt-4 hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <h2 class="text-lg font-bold text-slate-900">Vardiya özeti</h2>
+          <p class="mt-2 text-3xl font-extrabold text-slate-900 tabular-nums"><span id="finalScore">0</span> / 100</p>
+          <p class="mt-2 text-sm text-slate-600" id="finalMessage"></p>
+          <div id="denizClosing" class="mt-4 rounded-xl border border-amber-100 bg-amber-50/80 p-4 text-sm text-amber-950"></div>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href="/simulation/temel-network-simulasyonlari.html" class="inline-flex justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">Listeye dön</a>
+            <button type="button" id="btnRetry" class="inline-flex justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">Tekrar dene</button>
+            <button type="button" id="btnSave" class="inline-flex justify-center rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-900 transition hover:bg-blue-100">
+              İlerlemeyi kaydet (giriş gerekli)
+            </button>
+          </div>
+          <p class="mt-4 text-xs text-slate-500" id="saveHint"></p>
+        </div>
       </div>
-      <p class="mt-4 text-xs text-slate-500" id="saveHint"></p>
     </div>
   </main>
 
@@ -79,55 +131,129 @@
       var SIM_NAME = 'Temel Network · Misafir Ağ Karar Simülasyonu';
       var MODULE_NAME = 'Temel Network Eğitimi';
 
+      var introScript = [
+        'Merhaba! Ben **Deniz**, bugün seninle NOC’ta stajyerim. İlk günümde biraz heyecanlıyım ama hazırım.',
+        'Müdürüm dedi ki: “Önemli ağ kararlarını bugünkü vardiya kaptanı verecek.” Yani sensin — ben sadece eşlik edip not alacağım.',
+        'Şu an **Atlas Lojistik** İstanbul ofisindeyiz. Misafir Wi‑Fi ayrı VLAN’da; kurumsal ağ şimdilik temiz görünüyor.',
+        'Help Desk’ten yeni ticket düştü: misafirlerde yavaşlık ve “garip arama sonuçları” iddiası var. Hazırsan birlikte üstüne gidelim mi?'
+      ];
+
       var steps = [
         {
-          title: 'İlk tepki',
-          body: 'Ticket: misafir SSID’de yavaşlık ve şüpheli yönlendirme; iç ağda henüz benzer rapor yok. İlk hamlen hangisi?',
+          title: 'Öncelik sınıfı',
+          ticket: 'INC-4482 · Misafir SSID · çoklu kullanıcı · SLA 8s',
+          body: 'Ticket kuyruğu dolu. Bu olayı nasıl etiketleyip sahiplenirsin?',
+          internOnEnter: 'Ben olsam paniklerdim ama prosedürde öncelik netleşiyormuş… Sen karar ver.',
           options: [
-            { label: 'Misafir SSID’yi hemen tamamen kapat (kesinti riski, kanıt yok)', points: 5, feedback: 'Kesinti ve itibar riski; önce kanıt ve kapsam netleştirilmeli.' },
-            { label: 'Misafir segmentte DNS/HTTP hedeflerini örnekle; corp VLAN’a sızan trafik var mı kontrol et', points: 20, feedback: 'Doğru: önce gözlem ve blast radius.' },
-            { label: 'Herkesi kurumsal Wi‑Fi’ye al, misafiri boşver', points: 0, feedback: 'Misafir trafiğini iç ağa taşımak riski büyütür; politikaya da aykırı olabilir.' }
+            { label: 'Sev-1: tüm şirket ağını dondur, genel incident ilan et', points: 0, feedback: 'Kanıt kurumsal tarafa sıçramadan tüm işi durdurmak aşırı tepki ve maliyetlidir.', internLine: 'Vay… herkes çalışamazdı, sanırım bu fazla agresif olurdu.' },
+            { label: 'Sev-2: misafir segment + DNS yolu odaklı olay, NOC sahiplensin', points: 10, feedback: 'Doğru ölçek: blast radius misafir ve DNS çıkışı ile sınırlı tutulur.', internLine: 'Tamam, not ettim: önce misafir tarafı, diğer VLAN’lar izlenir.' },
+            { label: 'Sev-4: düşük öncelik, “wifi yine bozuk” diye haftaya bırak', points: 0, feedback: 'Sahte DNS ve yönlendirme ciddi güvenlik riski; ertelemek doğru değil.', internLine: 'Hmm, kullanıcılar şikayet ediyordu… ertelemek garip hissettirdi.' }
+          ]
+        },
+        {
+          title: 'İlk müdahale sırası',
+          ticket: 'Aynı ticket · henüz iç ağda aynı semptom yok',
+          body: 'İlk teknik hamlen hangisi olsun?',
+          internOnEnter: 'Ben hâlâ tcpdump komutunu ezberliyorum; sen ne dersen o.',
+          options: [
+            { label: 'Misafir SSID’yi hemen kapat; kullanıcıya “bakım” de', points: 3, feedback: 'Kesinti ve itibar riski; önce kanıt ve etki alanı netleşmeli.', internLine: 'Anladım… yani önce kanıt toplamak daha profesyonelmiş gibi.' },
+            { label: 'Misafir segmentte DNS/HTTP hedeflerini örnekle; corp VLAN’a sızan trafik var mı bak', points: 10, feedback: 'Önce gözlem ve blast radius: standart olgun NOC tepkisi.', internLine: 'Süper, ben de öğrendim: önce sınır ve örnek, sonra kural.' },
+            { label: 'Herkesi kurumsal Wi‑Fi’ye al; misafiri geçici kapatma', points: 0, feedback: 'Misafir trafiğini iç ağa taşımak riski büyütür.', internLine: 'Kurumsal şifreyi misafire vermek… sanki olmazdı diyebilir miyim?' }
+          ]
+        },
+        {
+          title: 'Bilgilendirme ve koordinasyon',
+          ticket: 'NOC lead toplantıda · SOC devrede',
+          body: 'Paralel inceleme yaparken kimleri bilgilendirirsin?',
+          internOnEnter: 'Slack’te #noc kanalı açık; SOC da “gözümüz üstünüzde” yazmış.',
+          options: [
+            { label: 'Ticket’a tek satır “inceleniyor” yaz, kimseye ping atma', points: 2, feedback: 'Stakeholder kör kalır; SOC ve Help Desk senkronu zayıflar.', internLine: 'Ben olsam biraz kaybolurdum habersiz kalınca…' },
+            { label: 'NOC lead’e kısa özet + SOC’a “misafir DNS şüphesi, corp izleniyor” notu', points: 10, feedback: 'Zincir görünür kalır; onay beklemeden gözlem devam edebilir.', internLine: 'Güzel, böylece toplantıdan dönünce lead de ne olduğunu bilir.' },
+            { label: 'Tüm şirkete mail: “siber saldırı olabilir” panik başlığı', points: 0, feedback: 'Kanitsız panik; operasyonu ve itibar yönetimini zorlaştırır.', internLine: 'Bu mail… ofiste kaos çıkardı galiba.' }
           ]
         },
         {
           title: 'DNS ve çıkış trafiği',
-          body: 'Örneklerde bilinmeyen resolver’lara giden DNS ve tutarsız yanıtlar görünüyor.',
+          ticket: 'Örnek capture · bilinmeyen resolver’lar · tutarsız yanıtlar',
+          body: 'Örneklerde şüpheli DNS yolu netleşti. Ne uygularsın?',
+          internOnEnter: 'Wireshark’ta garip bir şey gördüm dediler; ben dosyayı henüz açmadım.',
           options: [
-            { label: 'Misafirden yalnızca onaylı DNS forwarder’a izin veren firewall kuralı (diğer 53’ü kısıtla)', points: 20, feedback: 'İyi: kontrollü çıkış ve sahte DNS’i keser.' },
-            { label: 'Kullanıcıya “modem resetle” de, ağa dokunma', points: 5, feedback: 'Kök neden ağda kalır; geçici rahatlama sağlar.' },
-            { label: 'UDP/53’ü her yere aç, “DNS engeli olmasın”', points: 0, feedback: 'Sahte DNS ve sızıntı riskini artırır.' }
+            { label: 'Misafirden yalnızca onaylı DNS forwarder’a izin; diğer 53’ü firewall’da kısıtla', points: 10, feedback: 'Kontrollü çıkış; sahte DNS’i kesmek için doğru seviye.', internLine: 'Whitelist DNS… bunu labda duymuştum, gerçek hayatta da mantıklı.' },
+            { label: 'Kullanıcıya modem reset attır; ağ ekibine dokunma', points: 3, feedback: 'Kök neden ağda kalır.', internLine: 'Reset bazen işe yarar ama burada yetmez gibi.' },
+            { label: 'UDP/53’ü her yere aç: “Engel olmasın, DNS özgür olsun”', points: 0, feedback: 'Risk yükselir; sahte yanıtlar devam eder.', internLine: 'Bu seçenek… biraz korkutucu geldi bana.' }
           ]
         },
         {
-          title: 'DHCP ve port güvenliği',
-          body: 'Loglarda aynı portta çakışan lease’ler ve şüpheli DHCP teklifleri izleri var.',
+          title: 'Değişiklik penceresi',
+          ticket: 'Firewall kuralı değişikliği · CAB yarın sabah',
+          body: 'Üretim firewall’da acil kural gerekiyor. Prosedüre en uygun yaklaşım?',
+          internOnEnter: 'CAB diye bir şey duydum; “break glass” da varmış… hangisi doğru acaba?',
           options: [
-            { label: 'Misafir erişim switch’lerinde DHCP snooping / port security ile yetkisiz DHCP’yi kes', points: 20, feedback: 'Rogue DHCP için standart savunma.' },
-            { label: 'DHCP havuzunu genişlet, çakışma “normal” der geç', points: 5, feedback: 'Semptomu maskelemez, kök nedeni çözmez.' },
-            { label: 'Olayı düşük öncelikli kapat', points: 0, feedback: 'Aktif müdahale gecikirse corp tarafa sıçrayabilir.' }
+            { label: 'CAB’i bekle; olay bitene kadar hiç kural yazma', points: 2, feedback: 'Aktif müdahale gecikebilir; denge için acil istisna düşünülmeli.', internLine: 'Beklemek… semptomlar uzasa ne olurdu ki?' },
+            { label: 'Kontrollü acil değişiklik: kuralı uygula, ticket’ta risk + geri alma planı, CAB’e retrospektif kayıt', points: 10, feedback: 'İş sürekliliği + denetim izi: olgun model.', internLine: 'Tamam, yani hız + kağıt üzerinde iz bırakmak birlikte gidiyor.' },
+            { label: 'Kuralı sessizce yaz, dokümante etme; kimse sormasın', points: 0, feedback: 'Denetim ve geri alma riski; ekip öğrenemez.', internLine: 'Bu mentoruma iyi not düşmezdi sanırım.' }
           ]
         },
         {
-          title: 'Doğu-batı trafiği',
-          body: 'Misafir VLAN’dan iç file sunucusuna SMB denemeleri görülüyor.',
+          title: 'DHCP ve switch güvenliği',
+          ticket: 'Switch log · çakışan lease · şüpheli DHCP OFFER',
+          body: 'Aynı portta garip DHCP izleri var. Ne yaparsın?',
+          internOnEnter: 'Rogue DHCP diye bir şey anlattılar… ciddi miymiş?',
           options: [
-            { label: 'VLAN ACL: misafirden RFC1918 iç hedefleri ve SMB’yi engelle; sadece gerekli internet çıkışı', points: 20, feedback: 'Segmentasyonun amacı budur.' },
-            { label: 'Misafiri iç sunucuya NAT’la “erişsin” kolaylığı sağla', points: 0, feedback: 'Misafir ile iç varlıkları yanlışlıkla birleştirir; çok riskli.' },
-            { label: 'Alarmı sustur, kural ekleme', points: 0, feedback: 'Saldırı yüzeyi açık kalır.' }
+            { label: 'Misafir erişim switch’lerinde DHCP snooping + port security (yetkisiz DHCP’yi kes)', points: 10, feedback: 'Rogue DHCP için standart savunma.', internLine: 'Switch tarafında kesmek… anladım, ağın kapısı orasıymış.' },
+            { label: 'DHCP havuzunu genişlet; çakışmayı “yoğunluk” say', points: 3, feedback: 'Kök nedeni çözmez.', internLine: 'Yani semptomu boyamak gibi mi oldu?' },
+            { label: 'Olayı düşük öncelikli kapat; “stabil görünüyor” de', points: 0, feedback: 'Gecikme iç tarafa sıçramayı kolaylaştırır.', internLine: 'Kapatmak… pek içime sinmedi.' }
           ]
         },
         {
-          title: 'Olay sonrası',
-          body: 'Kısa vadede semptomlar azaldı. Son adım?',
+          title: 'Doğu–batı (east–west) trafik',
+          ticket: 'FW log · misafir VLAN → iç file sunucusu SMB denemeleri',
+          body: 'Misafir segmentten iç SMB görülüyor. Kararın?',
+          internOnEnter: 'SMB… dosya paylaşımı mı? Misafirden içe olmaması lazım değil mi?',
           options: [
-            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı / değişiklik kaydı', points: 20, feedback: 'Operasyonel olgunluk ve tekrarlanabilirlik.' },
-            { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 10, feedback: 'Bilgi birikimi oluşmaz; benzer olayda zaman kaybedilir.' },
-            { label: 'Kimseye duyurma, sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.' }
+            { label: 'VLAN ACL: misafirden RFC1918 iç hedefleri ve SMB’yi engelle; sadece gerekli internet çıkışı', points: 10, feedback: 'Segmentasyonun amacı budur.', internLine: 'Net sınır çizdik, bunu karta yazıyorum.' },
+            { label: 'Misafiri iç sunucuya NAT’la; “ziyaretçi de erişsin”', points: 0, feedback: 'Misafir ile iç varlıkları birleştirir; çok riskli.', internLine: 'Bu… güvenlikten çok “kolaylık” gibi geldi, hata mı?' },
+            { label: 'Alarmı sustur; kural ekleme', points: 0, feedback: 'Saldırı yüzeyi açık kalır.', internLine: 'Sessiz alarm kötü fikir gibi.' }
+          ]
+        },
+        {
+          title: 'İzleme ve doğrulama',
+          ticket: 'Düzeltmeler uygulandı · doğrulama adımı',
+          body: 'Tekrarlanmayı ve sızıntıyı izlemek için neyi tercih edersin?',
+          internOnEnter: 'Grafanada mı bakıyoruz yoksa SIEM’de mi… karıştı bende.',
+          options: [
+            { label: 'SIEM / NOC panosunda misafir→corp ve DNS anomalisi için kural + dashboard', points: 10, feedback: 'Olay sonrası görünürlük ve erken uyarı.', internLine: 'Dashboard… yani tekrar ederse hemen kırmızı yanar mantığı.' },
+            { label: 'Sadece ping ile misafir AP’lere bak; trafik içeriği yok', points: 3, feedback: 'Uygulama/DNS katmanını kaçırır.', internLine: 'Ping “yaşıyor” der ama sahte DNS’i görmezmiş.' },
+            { label: 'Log seviyesini kapat; disk dolsun istemiyoruz', points: 0, feedback: 'İnceleme ve uyumluluk için kötü.', internLine: 'Log kapatmak… pek profesyonel durmaz.' }
+          ]
+        },
+        {
+          title: 'Kullanıcı iletişimi',
+          ticket: 'Help Desk · misafir kullanıcı bilgilendirmesi',
+          body: 'Misafir kullanıcılara durumu nasıl iletirsin?',
+          internOnEnter: 'İletişim ekibi “şeffaf ama panik yok” dedi.',
+          options: [
+            { label: 'Kısa statü sayfası + misafir portalında “bakım / güvenlik güncellemesi” metni', points: 10, feedback: 'Şeffaflık + kontrollü dil.', internLine: 'Kullanıcı güveni için iyimiş.' },
+            { label: 'Sadece iç Slack’e yaz; dışarıya hiçbir şey söyleme', points: 3, feedback: 'Misafir kullanıcı kör kalır; şikayet artar.', internLine: 'Dışarı sessiz kalınca ofiste dedikodu çıkar diye korktum.' },
+            { label: 'Sosyal medyada “saldırı altındayız” paylaşımı yap', points: 0, feedback: 'Kanitsız ve itibar riski.', internLine: 'Bu… PR felaketi olurdu herhalde.' }
+          ]
+        },
+        {
+          title: 'Olay kapanışı',
+          ticket: 'INC-4482 · çözüm doğrulandı · kapanış bekliyor',
+          body: 'Kısa vadede semptomlar azaldı. Son operasyonel adım?',
+          internOnEnter: 'Mentorum “kapatmadan önce öğrenilenleri yaz” demişti.',
+          options: [
+            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı ve CAB retrospektif kaydı', points: 10, feedback: 'Olgun kapanış ve bilgi birikimi.', internLine: 'Bugün benden çok şey öğrendim; teşekkürler kaptan!' },
+            { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 5, feedback: 'Bilgi birikimi zayıf; benzer olayda zaman kaybı.', internLine: 'Yine de kapattık ama not az kaldı galiba.' },
+            { label: 'Kimseye duyurma; sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.', internLine: 'Sessiz kapanış… pek iyi not getirmezdi.' }
           ]
         }
       ];
 
+      var POINTS_TOP = 10;
       var state = {
+        introIdx: 0,
         index: 0,
         score: 0,
         bestPicks: 0,
@@ -136,14 +262,51 @@
         completionSaved: false
       };
 
-      var elIntro = document.getElementById('panelIntro');
+      var chatThread = document.getElementById('chatThread');
+      var elLobby = document.getElementById('panelLobby');
+      var elIntroFlow = document.getElementById('panelIntroFlow');
       var elSteps = document.getElementById('panelSteps');
       var elEnd = document.getElementById('panelEnd');
       var elFeedback = document.getElementById('feedbackBox');
       var elNext = document.getElementById('btnNext');
+      var btnIntroNext = document.getElementById('btnIntroNext');
+      var btnBeginShift = document.getElementById('btnBeginShift');
 
-      function showToast(msg) {
-        elFeedback.textContent = msg;
+      function scrollChat() {
+        chatThread.scrollTop = chatThread.scrollHeight;
+      }
+
+      function appendInternBubble(html) {
+        var wrap = document.createElement('div');
+        wrap.className = 'bubble-intern flex gap-2';
+        wrap.innerHTML =
+          '<div class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-orange-300 text-xs font-bold text-amber-950">D</div>' +
+          '<div class="min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-3 py-2.5 text-slate-800 shadow-sm">' +
+          html +
+          '</div>';
+        chatThread.appendChild(wrap);
+        scrollChat();
+      }
+
+      function appendSystemLine(text) {
+        var p = document.createElement('p');
+        p.className = 'text-center text-[11px] text-slate-400';
+        p.textContent = text;
+        chatThread.appendChild(p);
+        scrollChat();
+      }
+
+      function formatBold(s) {
+        return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }
+
+      function updateProgress() {
+        var pct = steps.length ? Math.round(((state.index + 1) / steps.length) * 100) : 0;
+        document.getElementById('progressBar').style.width = Math.min(100, pct) + '%';
+      }
+
+      function showFeedback(msg) {
+        elFeedback.innerHTML = formatBold(msg);
         elFeedback.classList.remove('hidden');
       }
 
@@ -151,12 +314,18 @@
         var s = steps[state.index];
         document.getElementById('stepBadge').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
         document.getElementById('stepLabel').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
+        document.getElementById('ticketSnippet').textContent = s.ticket;
         document.getElementById('questionTitle').textContent = s.title;
         document.getElementById('questionBody').textContent = s.body;
-        document.getElementById('scoreLive').textContent = state.score + ' / 100';
+        document.getElementById('scoreLive').textContent = Math.min(100, state.score) + ' / 100';
         elFeedback.classList.add('hidden');
         elNext.classList.add('hidden');
         state.choiceLocked = false;
+        updateProgress();
+
+        if (s.internOnEnter) {
+          appendInternBubble('<p class="leading-relaxed">' + formatBold(s.internOnEnter) + '</p>');
+        }
 
         var wrap = document.getElementById('optionsWrap');
         wrap.innerHTML = '';
@@ -170,14 +339,24 @@
             if (state.choiceLocked) return;
             state.choiceLocked = true;
             state.score += opt.points;
-            if (opt.points >= 20) state.bestPicks += 1;
+            if (opt.points >= POINTS_TOP) state.bestPicks += 1;
             document.getElementById('scoreLive').textContent = Math.min(100, state.score) + ' / 100';
-            showToast(opt.feedback);
+            showFeedback(opt.feedback);
+            if (opt.internLine) {
+              appendInternBubble('<p class="leading-relaxed">' + formatBold(opt.internLine) + '</p>');
+            }
             elNext.classList.remove('hidden');
+            updateProgress();
             wrap.querySelectorAll('button').forEach(function (btn, j) {
               btn.disabled = true;
               if (j === i) {
-                btn.classList.add(opt.points >= 15 ? 'border-emerald-400 bg-emerald-50' : opt.points >= 8 ? 'border-amber-300 bg-amber-50' : 'border-red-200 bg-red-50');
+                btn.classList.add(
+                  opt.points >= POINTS_TOP
+                    ? 'border-emerald-400 bg-emerald-50'
+                    : opt.points >= 4
+                      ? 'border-amber-300 bg-amber-50'
+                      : 'border-red-200 bg-red-50'
+                );
               } else {
                 btn.classList.add('opacity-50');
               }
@@ -194,39 +373,57 @@
         document.getElementById('finalScore').textContent = String(sc);
         var msg =
           sc >= 90
-            ? 'Güçlü sıra: gözlem → DNS kontrolü → DHCP güvenliği → segmentasyon → dokümantasyon.'
+            ? 'Güçlü vardiya: öncelik → gözlem → koordinasyon → DNS → değişiklik disiplini → DHCP/switch → segmentasyon → izleme → iletişim → kapanış.'
             : sc >= 70
-              ? 'Temel doğrular yerinde; birkaç adımda daha agresif izolasyon ve dokümantasyon seçilebilirdi.'
-              : 'Tekrar dene: önce blast radius ve kanıt, sonra kontrollü DNS ve VLAN kuralları, en sonda olay kapanışı.';
+              ? 'İyi gidiyordun; birkaç adımda prosedür veya iletişim tarafını sıkılaştırarak 90+ bandına çıkabilirsin.'
+              : 'Tekrar dene: önce etki alanı ve öncelik, sonra kanıt toplama, kontrollü DNS ve VLAN kuralları, en sonda şeffaf kapanış.';
         document.getElementById('finalMessage').textContent = msg;
+        var closing =
+          sc >= 70
+            ? '<strong>Deniz:</strong> Bugün gerçekten profesyonel bir vardiya gördüm. Mentoruma “DNS önce, panik sonra değil” diye özet geçeceğim. Bir dahaki staj gününde görüşürüz, kaptan!'
+            : '<strong>Deniz:</strong> Zor bir olaydı, birlikte tekrar üzerinden geçeriz. Ben yine buradayım; bir dahaki seferde öncelik ve dokümantasyona daha çok takılırız, tamam mı?';
+        document.getElementById('denizClosing').innerHTML = closing;
         document.getElementById('saveHint').textContent =
-          'Kaydet: giriş yaptıysanız tamamlama API’ye gider. İsterseniz sadece sayfada sonucu da inceleyebilirsiniz.';
+          'Kaydet: giriş yaptıysanız tamamlama API’ye gider. İsterseniz sonucu yalnızca bu sayfada da inceleyebilirsiniz.';
+        appendInternBubble('<p class="leading-relaxed">' + (sc >= 70 ? formatBold('**Deniz:** Vardiya bitti; eline sağlık, kaptan.') : formatBold('**Deniz:** Pes yok; bir daha deneriz.')) + '</p>');
         state.completionSaved = false;
       }
 
-      function resetAll() {
-        state.index = 0;
-        state.score = 0;
-        state.bestPicks = 0;
-        state.startedAt = Date.now();
-        state.choiceLocked = false;
-        state.completionSaved = false;
-        elEnd.classList.add('hidden');
-        elIntro.classList.add('hidden');
-        elSteps.classList.remove('hidden');
-        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
-          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
-        }
-        renderStep();
+      function clearChat() {
+        chatThread.innerHTML = '';
       }
 
-      document.getElementById('btnStart').addEventListener('click', function () {
+      document.getElementById('btnMeetIntern').addEventListener('click', function () {
+        elLobby.classList.add('hidden');
+        elIntroFlow.classList.remove('hidden');
+        state.introIdx = 0;
+        clearChat();
+        appendSystemLine('Atlas Lojistik · NOC · ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }));
+        appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[0]) + '</p>');
+        btnIntroNext.classList.remove('hidden');
+        document.getElementById('introFlowHint').textContent = 'Deniz yazdı. “Devam” ile sıradaki mesajı getir.';
+      });
+
+      btnIntroNext.addEventListener('click', function () {
+        state.introIdx += 1;
+        if (state.introIdx < introScript.length) {
+          appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[state.introIdx]) + '</p>');
+        }
+        if (state.introIdx >= introScript.length - 1) {
+          btnIntroNext.classList.add('hidden');
+          btnBeginShift.classList.remove('hidden');
+          document.getElementById('introFlowHint').textContent = 'Hazırsan vardiyayı başlat; ticket ekranı açılacak ve skor tutulacak.';
+        }
+      });
+
+      btnBeginShift.addEventListener('click', function () {
         state.startedAt = Date.now();
         if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
           window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
         }
-        elIntro.classList.add('hidden');
+        elIntroFlow.classList.add('hidden');
         elSteps.classList.remove('hidden');
+        appendSystemLine('— Ticket INC-4482 atandı · karar modu —');
         renderStep();
       });
 
@@ -243,7 +440,25 @@
         if (window.SimulationTracker && typeof window.SimulationTracker.clearRunId === 'function') {
           window.SimulationTracker.clearRunId(SIM_ID);
         }
-        resetAll();
+        state.index = 0;
+        state.score = 0;
+        state.bestPicks = 0;
+        state.startedAt = Date.now();
+        state.choiceLocked = false;
+        state.completionSaved = false;
+        elEnd.classList.add('hidden');
+        elSteps.classList.remove('hidden');
+        clearChat();
+        appendSystemLine('— Senaryo sıfırlandı —');
+        appendInternBubble(
+          '<p class="leading-relaxed">' +
+            formatBold('**Deniz:** Tamam kaptan, baştan alıyoruz. Ticket yine INC-4482 gibi düşün; bu sefer nasıl oynayacağına bakalım.') +
+            '</p>'
+        );
+        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+        }
+        renderStep();
       });
 
       document.getElementById('btnSave').addEventListener('click', async function () {
