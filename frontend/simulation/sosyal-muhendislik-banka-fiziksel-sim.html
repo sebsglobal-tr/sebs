@@ -410,6 +410,38 @@
       return { mx, mz };
     }
 
+    /**
+     * Hareket vektörü dünya XZ yerine kameranın arkadan baktığı eksene göre:
+     * W/S = ekranda ileri/geri, A/D = ekranda sol/sağ.
+     */
+    function readMoveXZCameraRelative() {
+      const raw = readMoveXZ();
+      if (raw.mx === 0 && raw.mz === 0) return raw;
+
+      const cx = camera.position.x;
+      const cz = camera.position.z;
+      const px = player.position.x;
+      const pz = player.position.z;
+      let fx = px - cx;
+      let fz = pz - cz;
+      let fl = Math.hypot(fx, fz);
+      if (fl < 0.07) {
+        const y = player.rotation.y;
+        fx = Math.sin(y);
+        fz = Math.cos(y);
+        fl = 1;
+      } else {
+        fx /= fl;
+        fz /= fl;
+      }
+      const f = new THREE.Vector3(fx, 0, fz);
+      const up = new THREE.Vector3(0, 1, 0);
+      const r = new THREE.Vector3().crossVectors(up, f).normalize();
+      const mx = -raw.mz * f.x + raw.mx * r.x;
+      const mz = -raw.mz * f.z + raw.mx * r.z;
+      return { mx, mz };
+    }
+
     /** Cephe ortası cam kapı önü — eski tetik (15.5, 14.4) kaldırımdan gelen oyuncuyla hizasızdı. */
     const STREET_ENTRANCE = { x: 0, z: 14.1, r: 5.9 };
     function isNearStreetBankEntrance() {
@@ -824,7 +856,7 @@
       qctx.fillStyle = '#94a3b8';
       qctx.fillText('Atlas Şubesi', 24, 88);
       const qTex = new THREE.CanvasTexture(qCanvas);
-      qTex.colorSpace = THREE.SRGBColorSpace;
+       qTex.colorSpace = THREE.SRGBColorSpace;
       const qPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.75), new THREE.MeshBasicMaterial({ map: qTex }));
       qPlane.position.set(-11, 1.52, 3.59);
       queueBoard.add(qPlane);
@@ -2033,7 +2065,7 @@
       canvas.focus({ preventScroll: true });
       startLobbyAmbience();
       hudText.innerHTML =
-        '<strong>W A S D</strong> veya <strong>ok tuşları</strong> · cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin · kapı önünde <strong>E</strong> ile şubeye girin · içeride USB için panel + <strong>E</strong>.';
+        '<strong>W A S D</strong> veya <strong>ok tuşları</strong> — hareket <strong>kameranın arkadan baktığı yöne göre</strong> (ekranda ileri = W). Cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin; kapı önünde <strong>E</strong> ile şubeye girin. İçeride USB için panel + <strong>E</strong>.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
@@ -2043,7 +2075,7 @@
       observeUsbOverlay.classList.add('hidden');
       setPhase('LEAVE_BANK');
       hudText.innerHTML =
-        'Cam kapıya gidin (<strong>güneydoğu</strong>) — <strong>E</strong> ile şubeden çıkın. Ardından yan servis yolundaki konteynerlere yaklaşın.';
+        'Cam kapıya gidin (<strong>güneydoğu</strong>) — yürüyüş <strong>kameraya göre</strong> (W = ekranda ileri). Kapıda <strong>E</strong> ile çıkın; ardından yan servis yolundaki konteynerlere yaklaşın.';
     });
 
     document.getElementById('btnDocBag').addEventListener('click', () => {
@@ -2148,7 +2180,7 @@
 
       if (phase === 'DROP' || phase === 'LEAVE_BANK') {
         const speed = phase === 'LEAVE_BANK' ? 5.0 : 4.2;
-        const { mx, mz } = readMoveXZ();
+        const { mx, mz } = readMoveXZCameraRelative();
         const moving = mx !== 0 || mz !== 0;
         if (moving) {
           lastMoveAt = elapsed;
@@ -2216,7 +2248,7 @@
       } else if (phase === 'STREET' || phase === 'ALLEY') {
         cameraHud.style.display = 'none';
         const speed = 4.6;
-        const { mx, mz } = readMoveXZ();
+        const { mx, mz } = readMoveXZCameraRelative();
         if (mx !== 0 || mz !== 0) {
           const len = Math.hypot(mx, mz) || 1;
           player.position.x += (mx / len) * speed * dt;
