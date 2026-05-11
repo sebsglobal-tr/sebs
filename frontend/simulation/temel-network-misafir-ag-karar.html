@@ -146,6 +146,43 @@
       border-color: rgba(45, 212, 191, 0.4);
       background: linear-gradient(90deg, rgba(240, 253, 250, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
     }
+    /* Bölüm 2: bağlam yukarıda kayar, seçenekler sabit dock’ta — sayfa boyunca kaydırmadan cevap */
+    .panel-steps--p2 #stepsBodyShell {
+      display: flex;
+      flex-direction: column;
+      min-height: min(58vh, 520px);
+      max-height: min(78vh, 720px);
+    }
+    @media (min-width: 1024px) {
+      .panel-steps--p2 #stepsBodyShell {
+        min-height: min(52vh, 560px);
+        max-height: min(72vh, 760px);
+      }
+    }
+    .panel-steps--p2 #stepsScrollZone {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 2px;
+      margin-right: -2px;
+    }
+    .panel-steps--p2 #stepsActionDock {
+      flex-shrink: 0;
+      margin-top: 0;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(13, 148, 136, 0.2);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(248, 250, 252, 0.92) 18%, #ffffff 40%);
+      box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.07);
+      border-radius: 0 0 12px 12px;
+    }
+    .p2-dock-label {
+      display: none;
+    }
+    .panel-steps--p2 .p2-dock-label {
+      display: block;
+    }
   </style>
 </head>
 <body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-[#e8ebf0]">
@@ -194,13 +231,13 @@
                 <span class="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-200 to-orange-400 text-[10px] font-bold text-amber-950" title="Günsu">G</span>
                 <span class="relative z-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-400 text-[10px] font-semibold text-white" title="Sen">S</span>
               </div>
-              <p class="min-w-0 flex-1 truncate text-xs text-slate-600"><span class="font-semibold text-slate-800">Günsu Yılmaz</span> · stajyer · <span class="text-slate-500">NOC vardiya sorumlusu: siz</span></p>
+              <p class="min-w-0 flex-1 truncate text-xs text-slate-600"><span class="font-semibold text-slate-800">Günsu Yılmaz</span> · aydın stajyer · <span class="text-slate-500">NOC vardiya sorumlusu: siz</span></p>
             </div>
             <div id="chatThread" class="msg-in flex-1 space-y-1 overflow-y-auto bg-[#f0f2f5] p-3 text-[13px] leading-snug sm:p-4" role="log" aria-live="polite"></div>
             <div id="chatHintBar" class="hidden border-t border-indigo-100 bg-gradient-to-r from-indigo-50/90 to-slate-50 px-2.5 py-2">
               <button type="button" id="btnAskGunsuHint" class="focus-ring w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-left text-xs font-semibold text-slate-900 shadow-sm transition hover:border-[#464eb8]/35 hover:bg-indigo-50/40 disabled:cursor-not-allowed disabled:opacity-45">
                 Günsu’ya sor: “Sen olsan ne yapardın?”
-                <span class="mt-0.5 block text-[10px] font-normal text-slate-600">Sohbette bu metin gider · Stajyer görüşü, talimat değil · Adım başına 1 kez · Puana etki etmez</span>
+                <span class="mt-0.5 block text-[10px] font-normal text-slate-600">Sohbette bu metin gider · Adım başına 1 kez · Her kullanımda toplam puandan −3</span>
               </button>
             </div>
             <div class="border-t border-slate-200 bg-white p-2">
@@ -254,7 +291,7 @@
             <div id="wanFeed" class="itsm-feed-scroll min-h-0 flex-1 space-y-3 overflow-y-auto p-3 sm:p-4" role="log" aria-live="polite"></div>
             <div class="shrink-0 border-t border-slate-700/80 bg-slate-950 px-3 py-2.5 sm:px-4">
               <p class="text-center text-[10px] leading-relaxed text-slate-500">
-                <span class="text-teal-500/90">●</span> Canlı simülasyon · Notlar salt okunur · Kararlar sağ panelden
+                <span class="text-teal-500/90">●</span> Canlı simülasyon · Notlar salt okunur · Kararlar sağda; seçenekler panelde sabit altta
               </p>
             </div>
           </div>
@@ -265,8 +302,8 @@
         <div id="panelLobby" class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <p class="text-xs font-semibold uppercase tracking-wider text-[#464eb8]">Karşılama</p>
           <p class="mt-3 text-slate-600 leading-relaxed">
-            <strong>Bölüm 1:</strong> sol tarafta Teams benzeri sohbet; <strong>Günsu</strong> stajyer olarak eşlik eder; <strong>karar sizdedir.</strong> Sorular sırasında alttaki düğme sohbete <strong>“Sen olsan ne yapardın?”</strong> mesajını yollar; Günsu yalnızca bakış açısı önerir (şıkkı söylemez, puana etki etmez).
-            <strong>Bölüm 2:</strong> aynı sütunda sohbet kapanır; <strong>ITSM / NOC notları</strong> akışı açılır (Modül 10: DNS, DHCP, NAT; Modül 9.2: servis portları — Günsu’dan özel mesaj yok).
+            <strong>Bölüm 1:</strong> sol tarafta Teams benzeri sohbet; <strong>Günsu</strong> aydın stajyer olarak eşlik eder; <strong>karar sizdedir.</strong> Alttaki düğme sohbete <strong>“Sen olsan ne yapardın?”</strong> mesajını yollar; Günsu bakış açısı önerir — <strong>her ipucu toplam puandan −3</strong> düşer.
+            <strong>Bölüm 2:</strong> aynı sütunda sohbet kapanır; <strong>ITSM / NOC notları</strong> akışı açılır (Modül 10: DNS, DHCP, NAT; Modül 9.2: servis portları — Günsu’dan özel mesaj yok). Sağda ticket, CPE ve soru metni üst bölümde kayar; <strong>şıklar ve “Sonraki” her zaman altta sabit</strong> kalır.
             İkinci bölüme geçmeden simülasyon tamamlanmaz.
           </p>
           <button type="button" id="btnMeetIntern" class="mt-5 inline-flex rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3d449f] focus-ring">
@@ -294,6 +331,8 @@
               <span class="text-sm font-bold text-[#464eb8] tabular-nums" id="scoreLive">0 / 200</span>
             </div>
           </div>
+          <div id="stepsBodyShell">
+            <div id="stepsScrollZone" class="pb-2 sm:pb-3">
           <div id="ticketStrip" class="rounded-lg border border-slate-100 bg-slate-50 px-4 py-3 text-xs text-slate-600 transition-colors duration-200">
             <div class="flex flex-wrap items-center gap-2">
               <span class="font-semibold text-slate-800">Ticket</span>
@@ -374,11 +413,16 @@
 
           <h2 class="mt-5 text-lg font-bold text-slate-900 sm:text-xl" id="questionTitle"></h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base" id="questionBody"></p>
-          <div class="mt-5 flex flex-col gap-2.5" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
-          <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950" id="feedbackBox"></p>
-          <button type="button" id="btnNext" class="mt-5 hidden w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
-            Sonraki adım
-          </button>
+            </div>
+            <div id="stepsActionDock" class="mt-5 sm:mt-6">
+              <p class="p2-dock-label mb-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-800/90">Bölüm 2 · Karar</p>
+              <div class="flex flex-col gap-2.5" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
+              <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950" id="feedbackBox"></p>
+              <button type="button" id="btnNext" class="mt-4 hidden w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+                Sonraki adım
+              </button>
+            </div>
+          </div>
         </div>
 
         <div id="panelPhaseBridge" class="mt-4 hidden rounded-xl border-2 border-teal-500/25 bg-gradient-to-br from-white via-teal-50/40 to-indigo-50/60 p-5 shadow-md ring-1 ring-teal-500/10 sm:p-7">
@@ -434,9 +478,10 @@
       var MODULE_NAME = 'Temel Network Eğitimi';
       var PASS_TOTAL = 140;
       var MAX_TOTAL = 200;
+      var HINT_PHASE1_PENALTY = 3;
 
       var introScript = [
-        'Merhaba. Ben **Günsu**; NOC’ta stajyerim, bugün ilk günüm. Bu vardiyada **NOC vardiya sorumlusu** sizsiniz; karar ve sorumluluk sizde. Ben eşlik eder, not düşer, istendiğinde görüş bildiririm.',
+        'Merhaba. Ben **Günsu**; NOC’ta **aydın stajyer** olarak bugün ilk günüm. Bu vardiyada **NOC vardiya sorumlusu** sizsiniz; karar ve sorumluluk sizde. Ben eşlik eder, not düşer, istendiğinde bakış açısı paylaşırım.',
         'Müdürüm bugün **NOC vardiya sorumlusu** rolünün sizde olduğunu iletti. Nasıl ilerlemek istediğinizi belirlemenizi bekliyorum.',
         '**Atlas Lojistik** İstanbul ofisindeyiz. Misafir Wi‑Fi ayrı VLAN’da; kurumsal taraf şu an için temiz görünüyor.',
         'Help Desk’ten **INC-4482** düştü: misafir segmentte yavaşlık ve DNS şüphesi. Hazırsanız ticket üzerinden birlikte ilerleyebiliriz.'
@@ -756,7 +801,8 @@
         choiceLocked: false,
         hintUsedThisStep: false,
         completionSaved: false,
-        typingTimer: null
+        typingTimer: null,
+        hintUsedCount: 0
       };
 
       var chatThread = document.getElementById('chatThread');
@@ -1181,6 +1227,10 @@
           wrap.appendChild(b);
         });
         syncChatHintBar();
+        if (state.phase === 2) {
+          var elStepsScrollZone = document.getElementById('stepsScrollZone');
+          if (elStepsScrollZone) elStepsScrollZone.scrollTop = 0;
+        }
       }
 
       function finishPhase1() {
@@ -1271,15 +1321,14 @@
         var st = steps1[state.index];
         if (!st || !st.denizHint) return;
         state.hintUsedThisStep = true;
+        state.hintUsedCount += 1;
+        state.score = Math.max(0, state.score - HINT_PHASE1_PENALTY);
+        document.getElementById('scoreLive').textContent = Math.min(MAX_TOTAL, state.score) + ' / ' + MAX_TOTAL;
         syncChatHintBar();
-        appendSelfBubble(
-          'Günsu, bu adımda sen olsan ne yapardın? Talimat verme; hangi açıya bakmam gerektiğini kısaca tarif et. Seçimi ben yapacağım.'
-        );
+        appendSelfBubble('Günsu, bu adımda sen olsan ne yapardın? Hangi açıya bakmamı önerirsin?');
         showTyping(function () {
           var reply =
-            '**Günsu:** Stajyer görüşü — **kesin talimat değil**, şıkkı da söylemiyorum. Sorunuza göre ben olsam önce şunu düşünürdüm: ' +
-            st.denizHint +
-            ' Son karar sizde; notumu buna göre alıyorum.';
+            '**Günsu:** Ben olsam önce şunu düşünürdüm: ' + st.denizHint + ' Son karar sizde; notumu buna göre alıyorum.';
           appendInternBubble('<p class="leading-relaxed">' + formatBold(reply) + '</p>');
         });
       });
@@ -1345,6 +1394,7 @@
         state.startedAt = Date.now();
         state.choiceLocked = false;
         state.hintUsedThisStep = false;
+        state.hintUsedCount = 0;
         state.completionSaved = false;
         elEnd.classList.add('hidden');
         elBridge.classList.add('hidden');
@@ -1357,7 +1407,7 @@
         showTyping(function () {
           appendInternBubble(
             '<p class="leading-relaxed">' +
-              formatBold('**Günsu:** Senaryo sıfırlandı. Önce misafir olayı, ardından şube **DNS–DHCP–NAT**; sıra aynı. Görüş istediğinizde yine **“sen olsan ne yapardın”** çerçevesinde cevap veririm; karar yine sizde.') +
+              formatBold('**Günsu:** Senaryo sıfırlandı. Önce misafir olayı, ardından şube **DNS–DHCP–NAT**; sıra aynı. İpucu her kullanımda puandan düşer; görüş istediğinizde yine **“sen olsan ne yapardın”** çerçevesinde cevap veririm; karar yine sizde.') +
               '</p>'
           );
         });
@@ -1387,7 +1437,7 @@
           moduleName: MODULE_NAME,
           redirectToDashboard: false,
           resetCount: 0,
-          hintUsedCount: 0
+          hintUsedCount: state.hintUsedCount
         });
         state.completionSaved = true;
         hint.textContent =
