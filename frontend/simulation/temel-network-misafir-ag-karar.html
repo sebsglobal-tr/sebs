@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#464eb8" />
   <base href="/" />
   <title>Atlas Lojistik · NOC Karar Simülasyonu | SEBS</title>
-  <meta name="description" content="İki bölümlü NOC simülasyonu: Bölüm 1 Teams/Deniz; Bölüm 2 operatör kaydı + CPE, WAN kararları." />
+  <meta name="description" content="Temel Network modülü ile uyumlu iki bölüm: misafir segment güvenliği; şube DNS, DHCP, NAT ve port (Modül 9–10)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -18,8 +18,8 @@
   <script src="/utils/simulation-tracker.js"></script>
   <style>
     .chat-shell { box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.06); }
-    #chatThread::-webkit-scrollbar, #wanFeed::-webkit-scrollbar { width: 7px; }
-    #chatThread::-webkit-scrollbar-thumb, #wanFeed::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+    #chatThread::-webkit-scrollbar { width: 7px; }
+    #chatThread::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
     .msg-in { animation: msgIn 0.32s ease-out; }
     @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .typing-dot { animation: td 1.2s ease-in-out infinite; }
@@ -31,6 +31,121 @@
     .cpe-pill-ok { background: rgba(22, 163, 74, 0.12); color: #166534; border: 1px solid rgba(22, 163, 74, 0.28); }
     .cpe-live-dot { animation: cpePulse 1.8s ease-in-out infinite; }
     @keyframes cpePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    /* Bölüm 2 · ITSM aside */
+    .aside-shell--itsm {
+      box-shadow: 0 16px 48px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(45, 212, 191, 0.12);
+      border-color: rgba(45, 212, 191, 0.25);
+    }
+    .itsm-feed-scroll::-webkit-scrollbar { width: 8px; }
+    .itsm-feed-scroll::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.45);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    .itsm-feed-scroll {
+      scrollbar-color: rgba(100, 116, 139, 0.5) transparent;
+      scrollbar-width: thin;
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(45, 212, 191, 0.08), transparent 55%),
+        linear-gradient(180deg, #0f172a 0%, #0c1222 100%);
+    }
+    .itsm-card {
+      border-radius: 12px;
+      border: 1px solid rgba(51, 65, 85, 0.85);
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    }
+    .itsm-card__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .itsm-card__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #2dd4bf;
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
+      flex-shrink: 0;
+    }
+    .itsm-card__title {
+      flex: 1;
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .itsm-card__time {
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+    }
+    .itsm-card__body {
+      padding: 10px 12px 12px;
+    }
+    .itsm-card__line {
+      position: relative;
+      padding-left: 14px;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+    .itsm-card__line:first-child { margin-top: 0; }
+    .itsm-card__line::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 4px;
+      height: 4px;
+      border-radius: 9999px;
+      background: #475569;
+    }
+    .itsm-audit {
+      display: flex;
+      gap: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      background: linear-gradient(90deg, rgba(49, 46, 129, 0.35) 0%, rgba(30, 27, 75, 0.25) 100%);
+      padding: 10px 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+    .itsm-audit__mark {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(99, 102, 241, 0.35);
+      color: #c7d2fe;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .itsm-sms {
+      border-radius: 12px;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.45) 0%, rgba(69, 26, 3, 0.35) 100%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    /* Bölüm 2 · sağ panel vurgusu */
+    .panel-steps--p2 {
+      border-color: rgba(45, 212, 191, 0.35);
+      box-shadow: 0 4px 32px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(45, 212, 191, 0.12);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #f1f5f9 100%);
+    }
+    .ticket-strip--p2 {
+      border-color: rgba(45, 212, 191, 0.4);
+      background: linear-gradient(90deg, rgba(240, 253, 250, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
+    }
   </style>
 </head>
 <body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-[#e8ebf0]">
@@ -52,13 +167,13 @@
       </div>
       <p class="max-w-lg text-xs text-slate-600 sm:text-sm">
         <strong>Bölüm 1:</strong> misafir Wi‑Fi / DNS (10×10 puan).
-        <strong>Bölüm 2:</strong> şube WAN (5×20 puan) — <em>Deniz sohbeti yok</em>; sol tarafta operatör/ticket akışı. Toplam <strong>200</strong>; <strong>140+</strong> geçer.
+        <strong>Bölüm 2:</strong> şube <strong>DNS–DHCP–NAT</strong> (Modül 10 ile uyumlu, 5×20 puan) — <em>Deniz sohbeti yok</em>; sol tarafta ITSM/NOC not akışı. Toplam <strong>200</strong>; <strong>140+</strong> geçer.
       </p>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-12">
       <aside class="lg:col-span-5">
-        <div class="chat-shell relative flex h-[min(54vh,440px)] flex-col overflow-hidden rounded-xl border border-slate-300/80 bg-white lg:h-[min(70vh,580px)]">
+        <div id="asideShell" class="chat-shell relative flex h-[min(54vh,440px)] flex-col overflow-hidden rounded-xl border border-slate-300/80 bg-white transition-shadow duration-300 lg:h-[min(70vh,600px)]">
           <div id="sideModeChat" class="flex min-h-0 flex-1 flex-col">
             <!-- Üst çubuk: kurumsal IM -->
             <div class="flex items-center gap-0 border-b border-slate-200 bg-[#464eb8] px-1 py-0.5 text-white">
@@ -82,6 +197,12 @@
               <p class="min-w-0 flex-1 truncate text-xs text-slate-600"><span class="font-semibold text-slate-800">Deniz Yılmaz</span> çevrimiçi · Sen vardiya kaptanısın</p>
             </div>
             <div id="chatThread" class="msg-in flex-1 space-y-1 overflow-y-auto bg-[#f0f2f5] p-3 text-[13px] leading-snug sm:p-4" role="log" aria-live="polite"></div>
+            <div id="chatHintBar" class="hidden border-t border-indigo-100 bg-gradient-to-r from-indigo-50/90 to-slate-50 px-2.5 py-2">
+              <button type="button" id="btnAskDenizHint" class="focus-ring w-full rounded-lg border border-amber-200/90 bg-amber-50 px-3 py-2.5 text-left text-xs font-semibold text-amber-950 shadow-sm transition hover:border-amber-300 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-45">
+                <span class="mr-1" aria-hidden="true">💡</span> Deniz’e ipucu sor
+                <span class="mt-0.5 block text-[10px] font-normal text-amber-800/80">Tam cevabı vermez; nereye bakacağını tarif eder · Adım başına 1 kez · Puana etki etmez</span>
+              </button>
+            </div>
             <div class="border-t border-slate-200 bg-white p-2">
               <div class="flex items-end gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
                 <span class="pb-1 text-slate-400" aria-hidden="true">➕</span>
@@ -93,23 +214,48 @@
             </div>
           </div>
 
-          <div id="sideModeWan" class="hidden flex min-h-0 flex-1 flex-col bg-slate-100">
-            <div class="flex shrink-0 items-center justify-between gap-2 border-b border-slate-300 bg-gradient-to-r from-slate-800 to-slate-700 px-3 py-2.5 text-white">
-              <div class="min-w-0">
-                <p class="truncate text-xs font-bold uppercase tracking-wider text-amber-200/90">Operatör &amp; kayıt</p>
-                <p class="truncate text-sm font-semibold">TT-88421 · Metro Ethernet · Ankara POP</p>
-                <p class="truncate text-[11px] text-slate-300">Atlas Lojistik · müşteri ref. ALX-ANK-4491</p>
+          <div id="sideModeWan" class="hidden flex min-h-0 flex-1 flex-col bg-[#0b1120]">
+            <div class="shrink-0 border-b border-teal-500/20 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 px-3 pb-3 pt-3 text-white shadow-inner sm:px-4">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex min-w-0 flex-1 items-start gap-3">
+                  <div class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 ring-1 ring-teal-400/30">
+                    <svg class="h-5 w-5 text-teal-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-teal-200/90">NOC ITSM · Şube görünümü</p>
+                    <p class="mt-0.5 truncate text-sm font-bold tracking-tight text-white sm:text-base">INC-4491</p>
+                    <p class="mt-0.5 truncate text-[11px] leading-snug text-slate-400">DNS · DHCP · NAT <span class="text-slate-500">·</span> Modül 10</p>
+                  </div>
+                </div>
+                <span class="shrink-0 rounded-lg bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-300 ring-1 ring-white/10">Salt okunur</span>
               </div>
-              <span class="shrink-0 rounded bg-white/10 px-2 py-1 text-[10px] font-medium text-slate-200">Salt okunur</span>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="rounded-lg bg-black/25 px-2 py-2 ring-1 ring-white/5">
+                  <p class="text-[9px] font-semibold uppercase tracking-wider text-slate-500">Öncelik</p>
+                  <p class="mt-0.5 text-xs font-bold text-amber-200">P2</p>
+                </div>
+                <div class="rounded-lg bg-black/25 px-2 py-2 ring-1 ring-white/5">
+                  <p class="text-[9px] font-semibold uppercase tracking-wider text-slate-500">SLA</p>
+                  <p class="mt-0.5 text-xs font-bold tabular-nums text-teal-200">4s 12dk</p>
+                </div>
+                <div class="rounded-lg bg-black/25 px-2 py-2 ring-1 ring-white/5">
+                  <p class="text-[9px] font-semibold uppercase tracking-wider text-slate-500">Atanan</p>
+                  <p class="mt-0.5 truncate text-xs font-bold text-slate-200">NOC vardiya</p>
+                </div>
+              </div>
             </div>
-            <div class="flex shrink-0 gap-1 border-b border-slate-200 bg-white px-2 py-1.5">
-              <span class="rounded-md bg-slate-900 px-3 py-1 text-[11px] font-semibold text-white">Özet</span>
-              <span class="rounded-md px-3 py-1 text-[11px] text-slate-500">MTR çıktısı</span>
-              <span class="rounded-md px-3 py-1 text-[11px] text-slate-500">Ekler</span>
+            <div class="flex shrink-0 gap-1 border-b border-slate-700/80 bg-slate-900/90 px-2 py-2 sm:px-3">
+              <span class="rounded-lg bg-teal-500/20 px-3 py-1.5 text-[11px] font-bold text-teal-100 ring-1 ring-teal-400/30">Özet</span>
+              <span class="rounded-lg px-3 py-1.5 text-[11px] font-medium text-slate-600" title="Bu sekme bu simülasyonda kapalı">DHCP lease</span>
+              <span class="rounded-lg px-3 py-1.5 text-[11px] font-medium text-slate-600" title="Bu sekme bu simülasyonda kapalı">Ekler</span>
             </div>
-            <div id="wanFeed" class="min-h-0 flex-1 space-y-3 overflow-y-auto p-3 text-[13px] leading-snug" role="log" aria-live="polite"></div>
-            <div class="shrink-0 border-t border-slate-200 bg-white px-3 py-2 text-center text-[10px] text-slate-500">
-              Bu akış simüle edilmiştir · Kararlar sağ panelden · CPE kartı üstte
+            <div id="wanFeed" class="itsm-feed-scroll min-h-0 flex-1 space-y-3 overflow-y-auto p-3 sm:p-4" role="log" aria-live="polite"></div>
+            <div class="shrink-0 border-t border-slate-700/80 bg-slate-950 px-3 py-2.5 sm:px-4">
+              <p class="text-center text-[10px] leading-relaxed text-slate-500">
+                <span class="text-teal-500/90">●</span> Canlı simülasyon · Notlar salt okunur · Kararlar sağ panelden
+              </p>
             </div>
           </div>
         </div>
@@ -119,8 +265,8 @@
         <div id="panelLobby" class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <p class="text-xs font-semibold uppercase tracking-wider text-[#464eb8]">Karşılama</p>
           <p class="mt-3 text-slate-600 leading-relaxed">
-            <strong>Bölüm 1:</strong> sol tarafta Teams benzeri sohbet; <strong>Deniz</strong> seni karşılar.
-            <strong>Bölüm 2:</strong> aynı sütunda sohbet kapanır; operatör müşteri kaydı + NOC notları akışı açılır (WAN odaklı, Deniz DM yok).
+            <strong>Bölüm 1:</strong> sol tarafta Teams benzeri sohbet; <strong>Deniz</strong> seni karşılar. Vardiya soruları sırasında altta <strong>“Deniz’e ipucu sor”</strong> ile yönlendirme alabilirsin (tam cevap vermez, puana etki etmez).
+            <strong>Bölüm 2:</strong> aynı sütunda sohbet kapanır; <strong>ITSM / NOC notları</strong> akışı açılır (Modül 10: DNS, DHCP, NAT; Modül 9.2: servis portları — Deniz DM yok).
             İkinci bölüme geçmeden simülasyon tamamlanmaz.
           </p>
           <button type="button" id="btnMeetIntern" class="mt-5 inline-flex rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3d449f] focus-ring">
@@ -143,65 +289,87 @@
             <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Bölüm 1 · Adım 1 / 10</span>
             <div class="flex items-center gap-2">
               <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                <div id="progressBar" class="h-full rounded-full bg-[#464eb8] transition-all duration-300" style="width: 0%"></div>
+                <div id="progressBar" class="h-full rounded-full bg-[#464eb8] transition-all duration-300 motion-reduce:transition-none" style="width: 0%"></div>
               </div>
               <span class="text-sm font-bold text-[#464eb8] tabular-nums" id="scoreLive">0 / 200</span>
             </div>
           </div>
-          <div class="rounded-lg border border-slate-100 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-            <span class="font-semibold text-slate-800">Ticket:</span>
-            <span id="ticketSnippet">—</span>
+          <div id="ticketStrip" class="rounded-lg border border-slate-100 bg-slate-50 px-4 py-3 text-xs text-slate-600 transition-colors duration-200">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-semibold text-slate-800">Ticket</span>
+              <span id="p2StepChip" class="hidden rounded-full bg-teal-600/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-teal-800 ring-1 ring-teal-500/25">Bölüm 2</span>
+            </div>
+            <p id="ticketSnippet" class="mt-1.5 leading-relaxed text-slate-700">—</p>
           </div>
 
-          <div id="cpeStatusCard" class="hidden mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-900 text-slate-100 shadow-md ring-1 ring-white/10">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-slate-800/90 px-4 py-2.5">
-              <div class="flex min-w-0 items-center gap-2">
-                <span class="relative flex h-2.5 w-2.5 shrink-0">
+          <div id="cpeStatusCard" class="cpe-dash hidden mt-4 overflow-hidden rounded-2xl border border-teal-500/20 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-slate-100 shadow-xl ring-1 ring-white/10">
+            <div class="relative flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-slate-800/50 px-4 py-3 backdrop-blur-sm">
+              <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_120%_at_100%_0%,rgba(45,212,191,0.12),transparent_50%)]"></div>
+              <div class="relative flex min-w-0 items-center gap-3">
+                <span class="relative flex h-3 w-3 shrink-0">
                   <span class="cpe-live-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                  <span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-emerald-400/40"></span>
                 </span>
-                <p class="truncate text-xs font-bold tracking-tight text-white">Uzak uç · <span id="cpeSiteId">ANK-CPE-01</span></p>
+                <div class="min-w-0">
+                  <p class="text-[10px] font-bold uppercase tracking-[0.12em] text-teal-200/80">Şube CPE · canlı özet</p>
+                  <p class="truncate text-sm font-bold tracking-tight text-white">Uzak uç · <span id="cpeSiteId">ANK-CPE-01</span></p>
+                </div>
               </div>
-              <p class="shrink-0 font-mono text-[10px] text-slate-400">SNMP pull · <span id="cpeAgentSync">—</span></p>
+              <div class="relative flex items-center gap-2">
+                <span class="rounded-md bg-black/30 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400 ring-1 ring-white/10">Modül 10</span>
+                <p class="max-w-[11rem] shrink-0 truncate font-mono text-[10px] text-slate-400 sm:max-w-none">SNMP · <span id="cpeAgentSync">—</span></p>
+              </div>
             </div>
             <div class="grid gap-3 p-4 sm:grid-cols-2">
-              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Tünel (merkez)</p>
-                <p id="cpeTunnelText" class="mt-1 text-sm font-medium leading-snug text-white">—</p>
-                <span id="cpeTunnelPill" class="mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide cpe-pill-warn">—</span>
+              <div class="group rounded-xl border border-cyan-500/20 bg-slate-800/40 p-3.5 ring-1 ring-inset ring-white/5 transition hover:border-cyan-500/35">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-cyan-200/90">
+                  <svg class="h-4 w-4 shrink-0 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                  DNS zinciri
+                </div>
+                <p id="cpeTunnelText" class="mt-2 text-sm font-medium leading-snug text-white">—</p>
+                <span id="cpeTunnelPill" class="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide cpe-pill-warn">—</span>
               </div>
-              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">ERP / kritik</p>
-                <p id="cpeErpText" class="mt-1 text-sm font-medium text-white">—</p>
-                <p id="cpeFlapText" class="mt-1.5 font-mono text-[11px] text-amber-200/90">—</p>
+              <div class="group rounded-xl border border-amber-500/20 bg-slate-800/40 p-3.5 ring-1 ring-inset ring-white/5 transition hover:border-amber-500/35">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-amber-200/90">
+                  <svg class="h-4 w-4 shrink-0 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  ERP / kritik
+                </div>
+                <p id="cpeErpText" class="mt-2 text-sm font-medium text-white">—</p>
+                <p id="cpeFlapText" class="mt-2 font-mono text-[11px] leading-snug text-amber-200/90">—</p>
               </div>
-              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3 sm:col-span-2">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Ölçüm (son 60 sn · sentetik)</p>
-                <div class="mt-2 grid grid-cols-3 gap-2 font-mono text-xs sm:text-sm">
-                  <div>
-                    <p class="text-[10px] text-slate-500">RTT</p>
-                    <p id="cpeLatency" class="font-semibold text-cyan-300">—</p>
+              <div class="rounded-xl border border-slate-600/50 bg-slate-800/30 p-3.5 sm:col-span-2">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ölçüm · son 60 sn (sentetik)</p>
+                <div class="mt-3 grid grid-cols-3 gap-3">
+                  <div class="rounded-lg bg-black/25 px-2.5 py-2 ring-1 ring-white/5">
+                    <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-500">Sorgu</p>
+                    <p id="cpeLatency" class="mt-1 font-mono text-sm font-semibold text-cyan-300">—</p>
                   </div>
-                  <div>
-                    <p class="text-[10px] text-slate-500">Kayıp</p>
-                    <p id="cpeLoss" class="font-semibold text-amber-300">—</p>
+                  <div class="rounded-lg bg-black/25 px-2.5 py-2 ring-1 ring-white/5">
+                    <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-500">Hata</p>
+                    <p id="cpeLoss" class="mt-1 font-mono text-sm font-semibold text-amber-300">—</p>
                   </div>
-                  <div>
-                    <p class="text-[10px] text-slate-500">Jitter</p>
-                    <p id="cpeJitter" class="font-semibold text-violet-300">—</p>
+                  <div class="rounded-lg bg-black/25 px-2.5 py-2 ring-1 ring-white/5">
+                    <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-500">Dalga</p>
+                    <p id="cpeJitter" class="mt-1 font-mono text-sm font-semibold text-violet-300">—</p>
                   </div>
                 </div>
               </div>
-              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Birincil WAN</p>
-                <p id="cpePrimaryWan" class="mt-1 text-xs leading-relaxed text-slate-200">—</p>
+              <div class="rounded-xl border border-violet-500/20 bg-slate-800/40 p-3.5 ring-1 ring-inset ring-white/5">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-violet-200/90">
+                  <svg class="h-4 w-4 shrink-0 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  NAT / çıkış
+                </div>
+                <p id="cpePrimaryWan" class="mt-2 text-xs leading-relaxed text-slate-200">—</p>
               </div>
-              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Yedek LTE</p>
-                <p id="cpeBackupLte" class="mt-1 text-xs leading-relaxed text-slate-200">—</p>
+              <div class="rounded-xl border border-emerald-500/20 bg-slate-800/40 p-3.5 ring-1 ring-inset ring-white/5">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-emerald-200/90">
+                  <svg class="h-4 w-4 shrink-0 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                  DHCP / seçenekler
+                </div>
+                <p id="cpeBackupLte" class="mt-2 text-xs leading-relaxed text-slate-200">—</p>
               </div>
             </div>
-            <p id="cpeFootNote" class="border-t border-white/10 bg-black/20 px-4 py-2 text-[11px] text-slate-400">—</p>
+            <p id="cpeFootNote" class="border-t border-white/10 bg-black/30 px-4 py-2.5 text-[11px] leading-relaxed text-slate-400">—</p>
           </div>
 
           <h2 class="mt-5 text-lg font-bold text-slate-900 sm:text-xl" id="questionTitle"></h2>
@@ -213,18 +381,18 @@
           </button>
         </div>
 
-        <div id="panelPhaseBridge" class="mt-4 hidden rounded-xl border-2 border-[#464eb8]/30 bg-gradient-to-br from-white to-indigo-50/80 p-5 shadow-sm sm:p-7">
-          <p class="text-xs font-bold uppercase tracking-wider text-[#464eb8]">Bölüm 1 tamamlandı</p>
-          <h2 class="mt-2 text-xl font-bold text-slate-900">Sırada: şube WAN ve yedek hat</h2>
+        <div id="panelPhaseBridge" class="mt-4 hidden rounded-xl border-2 border-teal-500/25 bg-gradient-to-br from-white via-teal-50/40 to-indigo-50/60 p-5 shadow-md ring-1 ring-teal-500/10 sm:p-7">
+          <p class="text-xs font-bold uppercase tracking-wider text-teal-800">Bölüm 1 tamamlandı</p>
+          <h2 class="mt-2 text-xl font-bold text-slate-900">Sırada: şube DNS, DHCP ve NAT</h2>
           <p class="mt-3 text-sm leading-relaxed text-slate-600">
-            INC-4482 kapatıldı. Aynı gün öğleden sonra <strong>Ankara şubesi</strong>’nden yeni uyarı: kurumsal tünel aralıklı düşüyor, ERP erişimi kesiliyor.
-            Bölüm 2’de sol panel <strong>operatör/ticket akışına</strong> döner (Deniz ile sürekli sohbet yok); sağda <strong>CPE</strong> kartı kalır. WAN ve operatör tarafını düşünmen gerekiyor.
+            INC-4482 kapatıldı. Aynı gün öğleden sonra <strong>Ankara şubesi</strong> <strong>kurumsal Wi-Fi</strong> tarafında yeni uyarı: sayfalar açılıyor ama uygulamalar takılıyor; DNS ve lease tarafında tutarsızlık şüphesi (Modül <strong>10</strong> kapsamı).
+            Bölüm 2’de sol panel <strong>ITSM / NOC notlarına</strong> döner; sağda şube CPE için <strong>DNS / DHCP / NAT</strong> özeti kartı açık kalır. IP/MPLS operatör senaryosu <em>bu modülde yoktur</em>; akış müfredatla sınırlıdır.
           </p>
           <p class="mt-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
             <span class="font-semibold text-slate-900">Bölüm 1 puanın:</span>
             <span id="bridgeScore1" class="tabular-nums font-bold text-[#464eb8]">0</span> / 100
           </p>
-          <button type="button" id="btnStartPhase2" class="mt-5 inline-flex rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3d449f] focus-ring">
+          <button type="button" id="btnStartPhase2" class="mt-5 inline-flex rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-teal-900/20 transition hover:from-teal-500 hover:to-teal-600 focus-ring">
             Bölüm 2’ye geç
           </button>
         </div>
@@ -262,16 +430,16 @@
   <script>
     (function () {
       var SIM_ID = 'temel-network-misafir-ag-karar';
-      var SIM_NAME = 'Temel Network · Misafir Ağ + WAN Karar Simülasyonu';
+      var SIM_NAME = 'Temel Network · Misafir Ağ + Şube DNS/DHCP/NAT Karar Simülasyonu';
       var MODULE_NAME = 'Temel Network Eğitimi';
       var PASS_TOTAL = 140;
       var MAX_TOTAL = 200;
 
       var introScript = [
-        'Merhaba! Ben **Deniz**, bugün seninle NOC’ta stajyerim. İlk günümde biraz heyecanlıyım ama hazırım.',
-        'Müdürüm dedi ki: “Önemli ağ kararlarını bugünkü vardiya kaptanı verecek.” Yani sensin — ben sadece eşlik edip not alacağım.',
-        'Şu an **Atlas Lojistik** İstanbul ofisindeyiz. Misafir Wi‑Fi ayrı VLAN’da; kurumsal ağ şimdilik temiz görünüyor.',
-        'Help Desk’ten yeni ticket düştü: misafirlerde yavaşlık ve “garip arama sonuçları” iddiası var. Hazırsan birlikte üstüne gidelim mi?'
+        'Selam! Ben **Deniz** — NOC’ta stajyerim; bugün ilk günüm, kartımı ters taktım sanıyorum ama idare ederiz.',
+        'Müdürüm dedi: “Bugün kaptan sensin.” Ben de içimden “ooo roller coaster” dedim; sen karar vereceksin, ben not düşüp ara sıra komik düşeceğim.',
+        'Şu an **Atlas Lojistik** İstanbul’dayız. Misafir Wi‑Fi ayrı VLAN’daymış; ben VLAN’ı hâlâ “renkli kablo düzeni” gibi hayal ediyorum ama ciddiyim, yemin.',
+        'Help Desk’ten ticket geldi: misafirler yavaşlık + “Google bana gülümsüyor ama garip” modu. Ben heyecandan iki kez Ctrl+S bastım; hazırsan şu işi yakalayalım mı?'
       ];
 
       var steps1 = [
@@ -279,110 +447,130 @@
           title: 'Öncelik sınıfı',
           ticket: 'INC-4482 · Misafir SSID · çoklu kullanıcı · SLA 8s',
           body: 'Ticket kuyruğu dolu. Bu olayı nasıl etiketleyip sahiplenirsin?',
-          internOnEnter: 'Ben olsam paniklerdim ama prosedürde öncelik netleşiyormuş… Sen karar ver.',
+          internOnEnter: 'Ben panik modunda “her şey yanıyor” yazmak istedim ama mentor “ölçek, ölçek” diye bağırdı… Sen ne dersen o, ben popcorn alıyorum.',
+          denizHint:
+            'Şunu düşün: **tüm şirket** mi sallanıyor, yoksa **misafir + DNS hattı** gibi daha dar bir halka mı? SLA da 8 saat yazıyor — yani “dünya sonu” ile “sıraya gir” arasında bir yer seçmek lazım. Ben tam cevabı bilmiyorum; sadece prosedürde **ölçek** kelimesinin sürekli geçtiğini fark ettim.',
           options: [
-            { label: 'Sev-1: tüm şirket ağını dondur, genel incident ilan et', points: 0, feedback: 'Kanıt kurumsal tarafa sıçramadan tüm işi durdurmak aşırı tepki ve maliyetlidir.', internLine: 'Vay… herkes çalışamazdı, sanırım bu fazla agresif olurdu.' },
-            { label: 'Sev-2: misafir segment + DNS yolu odaklı olay, NOC sahiplensin', points: 10, feedback: 'Doğru ölçek: blast radius misafir ve DNS çıkışı ile sınırlı tutulur.', internLine: 'Tamam, not ettim: önce misafir tarafı, diğer VLAN’lar izlenir.' },
-            { label: 'Sev-4: düşük öncelik, “wifi yine bozuk” diye haftaya bırak', points: 0, feedback: 'Sahte DNS ve yönlendirme ciddi güvenlik riski; ertelemek doğru değil.', internLine: 'Hmm, kullanıcılar şikayet ediyordu… ertelemek garip hissettirdi.' }
+            { label: 'Sev-1: tüm şirket ağını dondur, genel incident ilan et', points: 0, feedback: 'Kanıt kurumsal tarafa sıçramadan tüm işi durdurmak aşırı tepki ve maliyetlidir.', internLine: 'Vay be… herkes donunca ben de donarım sanırım; bu biraz “filmi durdur” gibi oldu.' },
+            { label: 'Sev-2: misafir segment + DNS yolu odaklı olay, NOC sahiplensin', points: 10, feedback: 'Doğru ölçek: blast radius misafir ve DNS çıkışı ile sınırlı tutulur.', internLine: 'Tamam kaptan, not ettim: önce misafir, diğer VLAN’lar izlenir — ben de artık panik yerine checklist modundayım.' },
+            { label: 'Sev-4: düşük öncelik, “wifi yine bozuk” diye haftaya bırak', points: 0, feedback: 'Sahte DNS ve yönlendirme ciddi güvenlik riski; ertelemek doğru değil.', internLine: 'Haftaya bırakmak… içime sinmedi; sanki “yarın ben yokum” triki gibi.' }
           ]
         },
         {
           title: 'İlk müdahale sırası',
           ticket: 'Aynı ticket · henüz iç ağda aynı semptom yok',
           body: 'İlk teknik hamlen hangisi olsun?',
-          internOnEnter: 'Ben hâlâ tcpdump komutunu ezberliyorum; sen ne dersen o.',
+          internOnEnter: 'Ben hâlâ tcpdump’ı “tcp-dump” diye okuyorum; ilk hamlede ne yapılır bilmiyorum ama meraklı gözlerle bakıyorum.',
+          denizHint:
+            'Modülde anlattıkları şey şuydu: önce **trafiğin nereden nereye** aktığını ve **kurumsala sıçtı mı** sorusunu netleştir; sonra “herkesi başka SSID’ye” gibi dramatik hamlelere geç. Ben olsam önce **gözlem + örnek** tarafına bakardım — yani “kanıt topla, sonra panik sat” modu.',
           options: [
-            { label: 'Misafir SSID’yi hemen kapat; kullanıcıya “bakım” de', points: 3, feedback: 'Kesinti ve itibar riski; önce kanıt ve etki alanı netleşmeli.', internLine: 'Anladım… yani önce kanıt toplamak daha profesyonelmiş gibi.' },
-            { label: 'Misafir segmentte DNS/HTTP hedeflerini örnekle; corp VLAN’a sızan trafik var mı bak', points: 10, feedback: 'Önce gözlem ve blast radius: standart olgun NOC tepkisi.', internLine: 'Süper, ben de öğrendim: önce sınır ve örnek, sonra kural.' },
-            { label: 'Herkesi kurumsal Wi‑Fi’ye al; misafiri geçici kapatma', points: 0, feedback: 'Misafir trafiğini iç ağa taşımak riski büyütür.', internLine: 'Kurumsal şifreyi misafire vermek… sanki olmazdı diyebilir miyim?' }
+            { label: 'Misafir SSID’yi hemen kapat; kullanıcıya “bakım” de', points: 3, feedback: 'Kesinti ve itibar riski; önce kanıt ve etki alanı netleşmeli.', internLine: 'Hemen kapatmak… kullanıcı yüzüme emoji fırlatırdı galiba; sen daha sakin davrandın.' },
+            { label: 'Misafir segmentte DNS/HTTP hedeflerini örnekle; corp VLAN’a sızan trafik var mı bak', points: 10, feedback: 'Önce gözlem ve blast radius: standart olgun NOC tepkisi.', internLine: 'Süper, ben de öğrendim: önce sınır ve örnek, sonra kural — notumu kalp ile çizdim.' },
+            { label: 'Herkesi kurumsal Wi‑Fi’ye al; misafiri geçici kapatma', points: 0, feedback: 'Misafir trafiğini iç ağa taşımak riski büyütür.', internLine: 'Kurumsal şifreyi misafire… sanki “gel çay iç iç ağa” demek gibi oldu, ürkütücü.' }
           ]
         },
         {
           title: 'Bilgilendirme ve koordinasyon',
           ticket: 'NOC lead toplantıda · SOC devrede',
           body: 'Paralel inceleme yaparken kimleri bilgilendirirsin?',
-          internOnEnter: 'Slack’te #noc kanalı açık; SOC da “gözümüz üstünüzde” yazmış.',
+          internOnEnter: 'Slack’te #noc açık; SOC da “gözümüz üstünüzde” yazmış — ben okuyunca gülümsedim, sonra ciddileştim.',
+          denizHint:
+            'Burada mesele “kimse duymasın” değil, **kimin neyi bilmesi gerektiği**. Lead toplantıda, SOC da trafik tarafında… yani **kısa, kokulu** bir özetle zinciri ayakta tutmak lazım gibi hissettim. Ben romanı değil, tweet uzunluğunu severim bu arada.',
           options: [
-            { label: 'Ticket’a tek satır “inceleniyor” yaz, kimseye ping atma', points: 2, feedback: 'Stakeholder kör kalır; SOC ve Help Desk senkronu zayıflar.', internLine: 'Ben olsam biraz kaybolurdum habersiz kalınca…' },
-            { label: 'NOC lead’e kısa özet + SOC’a “misafir DNS şüphesi, corp izleniyor” notu', points: 10, feedback: 'Zincir görünür kalır; onay beklemeden gözlem devam edebilir.', internLine: 'Güzel, böylece toplantıdan dönünce lead de ne olduğunu bilir.' },
-            { label: 'Tüm şirkete mail: “siber saldırı olabilir” panik başlığı', points: 0, feedback: 'Kanitsız panik; operasyonu ve itibar yönetimini zorlaştırır.', internLine: 'Bu mail… ofiste kaos çıkardı galiba.' }
+            { label: 'Ticket’a tek satır “inceleniyor” yaz, kimseye ping atma', points: 2, feedback: 'Stakeholder kör kalır; SOC ve Help Desk senkronu zayıflar.', internLine: 'Tek satır… ben olsam “???” moduna girerdim, haberleşme önemliymiş.' },
+            { label: 'NOC lead’e kısa özet + SOC’a “misafir DNS şüphesi, corp izleniyor” notu', points: 10, feedback: 'Zincir görünür kalır; onay beklemeden gözlem devam edebilir.', internLine: 'Güzel, lead dönünce “ne olmuş” diye sormaz; ben de rahatladım.' },
+            { label: 'Tüm şirkete mail: “siber saldırı olabilir” panik başlığı', points: 0, feedback: 'Kanitsız panik; operasyonu ve itibar yönetimini zorlaştırır.', internLine: 'Bu mail… kantinde kahve dökülür, ben kaçarım.' }
           ]
         },
         {
           title: 'DNS ve çıkış trafiği',
           ticket: 'Örnek capture · bilinmeyen resolver’lar · tutarsız yanıtlar',
           body: 'Örneklerde şüpheli DNS yolu netleşti. Ne uygularsın?',
-          internOnEnter: 'Wireshark’ta garip bir şey gördüm dediler; ben dosyayı henüz açmadım.',
+          internOnEnter: 'Wireshark dosyasını açmaya korkuyorum; ekran siyah-beyaz Matrix gibi görünür diye bekliyorum.',
+          denizHint:
+            'Burada ipucu şu yönde: **hangi DNS’e gidiliyor** ve **53 numaralı kapı** kontrollü mü? “Modemi resetle” genelde hikâyenin sonunu getirmez; **çıkışta kim cevap veriyor** sorusuna yaklaş derler. Ben de tam cevabı seçmiyorum, sadece kulak misafiri oldum.',
           options: [
-            { label: 'Misafirden yalnızca onaylı DNS forwarder’a izin; diğer 53’ü firewall’da kısıtla', points: 10, feedback: 'Kontrollü çıkış; sahte DNS’i kesmek için doğru seviye.', internLine: 'Whitelist DNS… bunu labda duymuştum, gerçek hayatta da mantıklı.' },
-            { label: 'Kullanıcıya modem reset attır; ağ ekibine dokunma', points: 3, feedback: 'Kök neden ağda kalır.', internLine: 'Reset bazen işe yarar ama burada yetmez gibi.' },
-            { label: 'UDP/53’ü her yere aç: “Engel olmasın, DNS özgür olsun”', points: 0, feedback: 'Risk yükselir; sahte yanıtlar devam eder.', internLine: 'Bu seçenek… biraz korkutucu geldi bana.' }
+            { label: 'Misafirden yalnızca onaylı DNS forwarder’a izin; diğer 53’ü firewall’da kısıtla', points: 10, feedback: 'Kontrollü çıkış; sahte DNS’i kesmek için doğru seviye.', internLine: 'Whitelist DNS… labda duymuştum; gerçek hayatta da “mantıklı” dedim içimden.' },
+            { label: 'Kullanıcıya modem reset attır; ağ ekibine dokunma', points: 3, feedback: 'Kök neden ağda kalır.', internLine: 'Reset… bazen sihir gibi, bazen “sihir yok” gibi; burada ikincisiymiş.' },
+            { label: 'UDP/53’ü her yere aç: “Engel olmasın, DNS özgür olsun”', points: 0, feedback: 'Risk yükselir; sahte yanıtlar devam eder.', internLine: 'Bu seçenek… özgürlük maskeli macera parkı gibi, ürkütücü.' }
           ]
         },
         {
           title: 'Değişiklik penceresi',
           ticket: 'Firewall kuralı değişikliği · CAB yarın sabah',
           body: 'Üretim firewall’da acil kural gerekiyor. Prosedüre en uygun yaklaşım?',
-          internOnEnter: 'CAB diye bir şey duydum; “break glass” da varmış… hangisi doğru acaba?',
+          internOnEnter: 'CAB diye bir canavar varmış; “break glass” da var… ben cam kırmayı literal sandım bir an.',
+          denizHint:
+            'Üç köşe var gibi: **sadece bekle**, **hiç yazılı iz bırakmadan oyna**, ya da **acele ama geri dönüş planı yaz + sonra CAB’e düş**… Modülde “yetişsin ama kağıt kalsın” diye anlatılan şey genelde ortadaki dengeymiş. Ben seçemiyorum, ellerim terli; sen bak kaptan.',
           options: [
-            { label: 'CAB’i bekle; olay bitene kadar hiç kural yazma', points: 2, feedback: 'Aktif müdahale gecikebilir; denge için acil istisna düşünülmeli.', internLine: 'Beklemek… semptomlar uzasa ne olurdu ki?' },
-            { label: 'Kontrollü acil değişiklik: kuralı uygula, ticket’ta risk + geri alma planı, CAB’e retrospektif kayıt', points: 10, feedback: 'İş sürekliliği + denetim izi: olgun model.', internLine: 'Tamam, yani hız + kağıt üzerinde iz bırakmak birlikte gidiyor.' },
-            { label: 'Kuralı sessizce yaz, dokümante etme; kimse sormasın', points: 0, feedback: 'Denetim ve geri alma riski; ekip öğrenemez.', internLine: 'Bu mentoruma iyi not düşmezdi sanırım.' }
+            { label: 'CAB’i bekle; olay bitene kadar hiç kural yazma', points: 2, feedback: 'Aktif müdahale gecikebilir; denge için acil istisna düşünülmeli.', internLine: 'Sırf beklemek… semptom uzayınca ben de uzarım galiba.' },
+            { label: 'Kontrollü acil değişiklik: kuralı uygula, ticket’ta risk + geri alma planı, CAB’e retrospektif kayıt', points: 10, feedback: 'İş sürekliliği + denetim izi: olgun model.', internLine: 'Tamam, hız + kağıt üstünde iz birlikte gidiyormuş; mentor mutlu olur (umarım).' },
+            { label: 'Kuralı sessizce yaz, dokümante etme; kimse sormasın', points: 0, feedback: 'Denetim ve geri alma riski; ekip öğrenemez.', internLine: 'Sessiz kural… “gece yarısı gizli ajan” gibi; kötü PR.' }
           ]
         },
         {
           title: 'DHCP ve switch güvenliği',
           ticket: 'Switch log · çakışan lease · şüpheli DHCP OFFER',
           body: 'Aynı portta garip DHCP izleri var. Ne yaparsın?',
-          internOnEnter: 'Rogue DHCP diye bir şey anlattılar… ciddi miymiş?',
+          internOnEnter: 'Rogue DHCP deyince aklıma korsan geldi; switch “ben buradayım” diyor galiba?',
+          denizHint:
+            'Log “kim sunucu rolü oynuyor” diye bağırıyormuş gibi; **rogue** kelimesini duyunca ben tüylerim diken. Havuzu büyütmek çoğu zaman kök nedeni gizler derler — **yetkisiz dağıtıcı** ve **port güvenliği** tarafına bakmak lazım gibi bir his var; tam reçete veremem, ben stajyerim ya.',
           options: [
-            { label: 'Misafir erişim switch’lerinde DHCP snooping + port security (yetkisiz DHCP’yi kes)', points: 10, feedback: 'Rogue DHCP için standart savunma.', internLine: 'Switch tarafında kesmek… anladım, ağın kapısı orasıymış.' },
-            { label: 'DHCP havuzunu genişlet; çakışmayı “yoğunluk” say', points: 3, feedback: 'Kök nedeni çözmez.', internLine: 'Yani semptomu boyamak gibi mi oldu?' },
-            { label: 'Olayı düşük öncelikli kapat; “stabil görünüyor” de', points: 0, feedback: 'Gecikme iç tarafa sıçramayı kolaylaştırır.', internLine: 'Kapatmak… pek içime sinmedi.' }
+            { label: 'Misafir erişim switch’lerinde DHCP snooping + port security (yetkisiz DHCP’yi kes)', points: 10, feedback: 'Rogue DHCP için standart savunma.', internLine: 'Switch kapısıymış… ben de “güvenlik görevlisi” gibi düşünüyorum artık.' },
+            { label: 'DHCP havuzunu genişlet; çakışmayı “yoğunluk” say', points: 3, feedback: 'Kök nedeni çözmez.', internLine: 'Genişletmek… kalabalık partide daha çok sandalye; gürültü aynı.' },
+            { label: 'Olayı düşük öncelikli kapat; “stabil görünüyor” de', points: 0, feedback: 'Gecikme iç tarafa sıçramayı kolaylaştırır.', internLine: 'Kapatmak kolay, vicdan zor; içim buruk kaldı.' }
           ]
         },
         {
           title: 'Doğu–batı (east–west) trafik',
           ticket: 'FW log · misafir VLAN → iç file sunucusu SMB denemeleri',
           body: 'Misafir segmentten iç SMB görülüyor. Kararın?',
-          internOnEnter: 'SMB… dosya paylaşımı mı? Misafirden içe olmaması lazım değil mi?',
+          internOnEnter: 'SMB… dosya paylaşımı değil mi? Misafirden içe “merhaba” demek garip geldi bana, doğru mu hissediyorum?',
+          denizHint:
+            'Segmentasyon dedikleri şey: **misafir parkı** ile **iç ofis** arasında çizgi. Log’da içe doğru **dosya** trafiği görünüyorsa, “kolay yol” yerine **sınırı sıkılaştır** tarafına yaklaş derler. Ben haritada çizgi çekmek gibi düşündüm; sen çizersin diye bekliyorum.',
           options: [
-            { label: 'VLAN ACL: misafirden RFC1918 iç hedefleri ve SMB’yi engelle; sadece gerekli internet çıkışı', points: 10, feedback: 'Segmentasyonun amacı budur.', internLine: 'Net sınır çizdik, bunu karta yazıyorum.' },
-            { label: 'Misafiri iç sunucuya NAT’la; “ziyaretçi de erişsin”', points: 0, feedback: 'Misafir ile iç varlıkları birleştirir; çok riskli.', internLine: 'Bu… güvenlikten çok “kolaylık” gibi geldi, hata mı?' },
-            { label: 'Alarmı sustur; kural ekleme', points: 0, feedback: 'Saldırı yüzeyi açık kalır.', internLine: 'Sessiz alarm kötü fikir gibi.' }
+            { label: 'VLAN ACL: misafirden RFC1918 iç hedefleri ve SMB’yi engelle; sadece gerekli internet çıkışı', points: 10, feedback: 'Segmentasyonun amacı budur.', internLine: 'Net sınır çizdik; ben bunu sticker’lı deftere de yazıyorum.' },
+            { label: 'Misafiri iç sunucuya NAT’la; “ziyaretçi de erişsin”', points: 0, feedback: 'Misafir ile iç varlıkları birleştirir; çok riskli.', internLine: 'Bu… “herkes içeri” kampanyası gibi; ürkütücü.' },
+            { label: 'Alarmı sustur; kural ekleme', points: 0, feedback: 'Saldırı yüzeyi açık kalır.', internLine: 'Sessiz alarm… ben uyuyamam o gece.' }
           ]
         },
         {
           title: 'İzleme ve doğrulama',
           ticket: 'Düzeltmeler uygulandı · doğrulama adımı',
           body: 'Tekrarlanmayı ve sızıntıyı izlemek için neyi tercih edersin?',
-          internOnEnter: 'Grafanada mı bakıyoruz yoksa SIEM’de mi… karıştı bende.',
+          internOnEnter: 'Grafana mı SIEM mi… ben ikisini de “grafik sanatı” sandım ilk gün.',
+          denizHint:
+            'Ping “yaşıyorum” der ama **uygulama/DNS** hikâyesini anlatmazmış. **Misafirden corp’a sıçrama** ve **DNS garabeti** tekrar eder mi diye bakılacak bir **kural/pano** düşünmek lazım gibi. Ben dashboard deyince gözüm parlıyor, o kadar.',
           options: [
-            { label: 'SIEM / NOC panosunda misafir→corp ve DNS anomalisi için kural + dashboard', points: 10, feedback: 'Olay sonrası görünürlük ve erken uyarı.', internLine: 'Dashboard… yani tekrar ederse hemen kırmızı yanar mantığı.' },
-            { label: 'Sadece ping ile misafir AP’lere bak; trafik içeriği yok', points: 3, feedback: 'Uygulama/DNS katmanını kaçırır.', internLine: 'Ping “yaşıyor” der ama sahte DNS’i görmezmiş.' },
-            { label: 'Log seviyesini kapat; disk dolsun istemiyoruz', points: 0, feedback: 'İnceleme ve uyumluluk için kötü.', internLine: 'Log kapatmak… pek profesyonel durmaz.' }
+            { label: 'SIEM / NOC panosunda misafir→corp ve DNS anomalisi için kural + dashboard', points: 10, feedback: 'Olay sonrası görünürlük ve erken uyarı.', internLine: 'Yani tekrar olursa kırmızı yanar mantığı; süper, anladım.' },
+            { label: 'Sadece ping ile misafir AP’lere bak; trafik içeriği yok', points: 3, feedback: 'Uygulama/DNS katmanını kaçırır.', internLine: 'Ping… “nefes alıyor” der, sahte DNS’i görmezmiş; ilginç.' },
+            { label: 'Log seviyesini kapat; disk dolsun istemiyoruz', points: 0, feedback: 'İnceleme ve uyumluluk için kötü.', internLine: 'Log kapatmak… “gözümü kapatayım korkmuyorum” gibi; olmaz.' }
           ]
         },
         {
           title: 'Kullanıcı iletişimi',
           ticket: 'Help Desk · misafir kullanıcı bilgilendirmesi',
           body: 'Misafir kullanıcılara durumu nasıl iletirsin?',
-          internOnEnter: 'İletişim ekibi “şeffaf ama panik yok” dedi.',
+          internOnEnter: 'İletişim “şeffaf ama panik yok” dedi; ben de gülümseyip not aldım, panik benim iç işlerimde zaten.',
+          denizHint:
+            'İç Slack’e yazınca **misafir duymuyor**; dışarıda da “dünyanın sonu” demeden **statü / portal** gibi bir yüz lazım derler. Ben olsam emoji kullanmam… belki bir tane, idare eder.',
           options: [
-            { label: 'Kısa statü sayfası + misafir portalında “bakım / güvenlik güncellemesi” metni', points: 10, feedback: 'Şeffaflık + kontrollü dil.', internLine: 'Kullanıcı güveni için iyimiş.' },
-            { label: 'Sadece iç Slack’e yaz; dışarıya hiçbir şey söyleme', points: 3, feedback: 'Misafir kullanıcı kör kalır; şikayet artar.', internLine: 'Dışarı sessiz kalınca ofiste dedikodu çıkar diye korktum.' },
-            { label: 'Sosyal medyada “saldırı altındayız” paylaşımı yap', points: 0, feedback: 'Kanitsız ve itibar riski.', internLine: 'Bu… PR felaketi olurdu herhalde.' }
+            { label: 'Kısa statü sayfası + misafir portalında “bakım / güvenlik güncellemesi” metni', points: 10, feedback: 'Şeffaflık + kontrollü dil.', internLine: 'Kullanıcı güveni + benim iç huzurum; win-win.' },
+            { label: 'Sadece iç Slack’e yaz; dışarıya hiçbir şey söyleme', points: 3, feedback: 'Misafir kullanıcı kör kalır; şikayet artar.', internLine: 'Dışarı sessiz kalınca dedikodu patlar; ben de korktum.' },
+            { label: 'Sosyal medyada “saldırı altındayız” paylaşımı yap', points: 0, feedback: 'Kanitsız ve itibar riski.', internLine: 'Bu… PR ekibi beni bloklar, eminim.' }
           ]
         },
         {
           title: 'Olay kapanışı',
           ticket: 'INC-4482 · çözüm doğrulandı · kapanış bekliyor',
           body: 'Kısa vadede semptomlar azaldı. Son operasyonel adım?',
-          internOnEnter: 'Mentorum “kapatmadan önce öğrenilenleri yaz” demişti.',
+          internOnEnter: 'Mentor “kapatmadan önce öğrenilenleri yaz” dedi; ben de “öğrenilen = hayatta kaldım” yazacaktım neredeyse.',
+          denizHint:
+            'Kapanışta genelde **kısa öğrenme özeti** + ticket’ta **ne yaptık** + ileride **izleme/CAB** tarafına not düşülüyormuş. “Düzeldi kapandı” tek başına yetmiyormuş gibi bir hava var. Ben de stajyer notu tutuyorum; sen olgun versiyonu seç kaptan.',
           options: [
-            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı ve CAB retrospektif kaydı', points: 10, feedback: 'Olgun kapanış ve bilgi birikimi.', internLine: 'Bölüm 1 bitti sanırım… bir nefes alalım mı?' },
-            { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 5, feedback: 'Bilgi birikimi zayıf; benzer olayda zaman kaybı.', internLine: 'Yine de kapattık ama not az kaldı galiba.' },
-            { label: 'Kimseye duyurma; sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.', internLine: 'Sessiz kapanış… pek iyi not getirmezdi.' }
+            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı ve CAB retrospektif kaydı', points: 10, feedback: 'Olgun kapanış ve bilgi birikimi.', internLine: 'Bölüm 1 bitti… ben hâlâ ayaktayım; çay molası alalım mı?' },
+            { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 5, feedback: 'Bilgi birikimi zayıf; benzer olayda zaman kaybı.', internLine: 'Kısa not kaldı; mentor “eh işte” yüzü yapar diye korktum.' },
+            { label: 'Kimseye duyurma; sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.', internLine: 'Sessiz kapanış… “hiç olmamış gibi”; içime sinmedi.' }
           ]
         }
       ];
@@ -390,169 +578,169 @@
       var P2_TOP = 20;
       var steps2 = [
         {
-          title: 'İlk teşhis (şube)',
-          ticket: 'INC-4491 · Ankara şubesi · IPsec tünel flapping · ERP timeout',
-          body: 'Şube “bazen VPN var bazen yok” diyor. Merkezden ilk olarak ne yaparsın?',
+          title: 'DNS önceliği (Modül 10.1 · 6.6)',
+          ticket: 'INC-4491 · Ankara · Kurumsal Wi-Fi · çözümleme gecikmesi / garip yanıt',
+          body: 'Ping çoğunlukla yeşil; tarayıcı “bağlanıyor”da takılıyor. Modüldeki DNS çalışma akışına göre ilk ne yaparsın?',
           options: [
-            { label: 'Önce merkez ve şube uçlarında eşzamanlı tünel logu + ISP durumu + son değişiklikleri korelasyonla incele', points: 20, feedback: 'Veri toplamadan ISP veya iç ağ suçlanmaz; MTTR düşer.' },
-            { label: 'Şubeye “CPE’yi resetle” SMS at, sen merkezden bakma', points: 5, feedback: 'Geçici rahatlama olabilir; kök neden ve SLA izi zayıf kalır.' },
-            { label: 'Tüm şubelerde tüneli kapat aç (toplu script)', points: 0, feedback: 'Gereksiz kesinti ve risk; önce tek şube izolasyonu.' }
+            { label: 'İstemci önbelleği → DHCP ile verilen DNS → kurumsal forwarder zincirini doğrula; gerekirse Wireshark/tcpdump ile DNS yanıtlarını örnekle', points: 20, feedback: 'Modül 10.1 sırası: önce veri, sonra yorum; 6.6 ile paket düzeyi doğrulanır.' },
+            { label: 'Sadece ping ve traceroute yap; DNS içeriğine bakma', points: 5, feedback: 'Uygulama katmanı şikayetinde ICMP yetersiz kalır.' },
+            { label: 'Tüm istemcilere elle 8.8.8.8 yazdır, hızlı çöz', points: 0, feedback: 'Kurumsal DNS politikası ve görünürlük ihlali; kök neden gizlenir.' }
           ]
         },
         {
-          title: 'ISP sınırı',
-          ticket: 'Traceroute · son hop öncesi paket kaybı dalgalı',
-          body: 'Ölçümlerde kayıp çoğunlukla operatör POP öncesi görünüyor. Ne yaparsın?',
+          title: 'DHCP ve Option 6 (Modül 10.2)',
+          ticket: 'Lease analizi · Option 6 (DNS sunucuları) şüpheli · CPE yakın zamanda elden geçmiş',
+          body: 'Lease kayıtlarında yanlış veya çakışan DNS sunucuları görünüyor. Ne yaparsın?',
           options: [
-            { label: 'MTR/smoke sonuçları + zaman damgası ile operatör ticket aç; paralelde iç CPE arayüz sağlığı', points: 20, feedback: 'Operatörle çalışmak için kanıt paketi şart.' },
-            { label: 'Operatörü suçla; iç ekip dokümantasyonu yok say', points: 0, feedback: 'İlişkiler ve teşhis kalitesi bozulur.' },
-            { label: 'Bekle, belki kendiliğinden düzelir (48 saat)', points: 5, feedback: 'ERP kesintisi varken SLA ve iş etkisi büyür.' }
+            { label: 'DHCP scope ve Option 6 değerlerini düzelt; lease yenileme planı + ticket’ta değişiklik kaydı (CAB/geri alma notu)', points: 20, feedback: 'Modül 10.2: DHCP’nin dağıttığı bilgi doğru olmalı; iz bırakılmalı.' },
+            { label: 'Sadece lease süresini uzat, içeriği değiştirme', points: 5, feedback: 'Yanlış DNS dağıtmaya devam eder.' },
+            { label: 'DHCP’yi kapat; herkese statik IP ve elle DNS dağıt', points: 0, feedback: 'Operasyonel borç ve hata riski; modülde önerilen sürdürülebilir yol değil.' }
           ]
         },
         {
-          title: 'Yedek çıkış',
-          ticket: 'Bütçe: 4G yedek hat · ay başı maliyet limiti',
-          body: 'Birincil hat hâlâ dalgalı. İş sürekliliği için?',
+          title: 'NAT ve çıkış (Modül 10.3)',
+          ticket: 'Merkez SaaS oturumları · tutarsız port / zaman aşımı · çift NAT şüphesi',
+          body: 'Aynı şikayetlerde çift NAT / hairpin belirtileri var. Modül 10.3 perspektifiyle ne yaparsın?',
           options: [
-            { label: 'Playbook’a göre 4G yedek devreye al; maliyet ve süre ticket + onay zincirine işle', points: 20, feedback: 'Kontrollü failover + mali iz.' },
-            { label: 'Yedek hattı asla açma; maliyet riski', points: 0, feedback: 'ERP kesintisi iş kaybı; risk kabulü yazılmadan doğru değil.' },
-            { label: 'Şube müdürünün kişisel hotspot’una ERP’yi taşı', points: 0, feedback: 'Güvenlik ve uyumluluk açısından uygun değil.' }
+            { label: 'Tek NAT noktası politikası netleştir; hairpin ve split-DNS uyumsuzluğunu kontrol listesine al; ticket’ta risk notu', points: 20, feedback: 'Modül 10.3: NAT tekilleştirilmeden uçtan uca öngörülebilir oturum zor.' },
+            { label: 'NAT’ı “denemek için” geçici tamamen kapat', points: 0, feedback: 'Güvenlik ve adresleme riski; üretimde uygun değil.' },
+            { label: 'Çift NAT’ı görmezden gel; kullanıcıya reboot söyle', points: 0, feedback: 'Kök neden çözülmez.' }
           ]
         },
         {
-          title: 'Yönlendirme kararı',
-          ticket: 'Çift hat aktif · asimetrik rota riski',
-          body: 'Yedek hat açıldı. Trafik dengesini nasıl kurarsın?',
+          title: 'Servis portu — DNS (Modül 9.2)',
+          ticket: 'Güvenlik duvarı logu · UDP/53 dar kanal / drop · TCP 53 fallback kapalı',
+          body: 'DNS trafiği (53) firewall’da sıkışıyor. Port ve servis odaklı ne yaparsın?',
           options: [
-            { label: 'Şube çıkışını policy ile tekilleştir: ERP ve AD kritik trafiği tünelden; internet split veya merkez proxy politikasına göre', points: 20, feedback: 'Asimetrik yönlendirme ve sızıntı riskini kontrol eder.' },
-            { label: 'Her trafiği rastgele hangi hat hızlıysa oraya akıt', points: 0, feedback: 'Tutarsız oturumlar ve güvenlik boşlukları.' },
-            { label: 'Sadece varsayılan route’u iki kez ekle (ECMP), izleme yok', points: 5, feedback: 'Flapping ortamında ECMP doğru tasarlanmadan risk artar.' }
+            { label: 'Kurumsal DNS forwarder için 53/udp ve 53/tcp kurallarını açıkça tanımla; “tüm UDP aç” yerine servis bazlı', points: 20, feedback: 'Modül 9.2: servis/port eşlemesi; gereksiz geniş açıklık verilmez.' },
+            { label: 'Sadece TCP 53 aç, UDP 53’ü tamamen kapat', points: 5, feedback: 'Bazı istemci/stack senaryolarında sorun sürebilir; ölçüm gerekir.' },
+            { label: 'Tüm UDP’yü serbest bırak', points: 0, feedback: 'En kötü güvenlik genişlemesi; modüldeki sıkılaştırma mantığına aykırı.' }
           ]
         },
         {
-          title: 'Kapanış ve öğrenme',
-          ticket: 'INC-4491 · operatör onarımı planlandı',
-          body: 'Birincil hat stabilize olacak. WAN olayı için son adım?',
+          title: 'Kapanış (Modül 0.4 · raporlama)',
+          ticket: 'INC-4491 · semptomlar azaldı · kapanış',
+          body: 'Şube tarafı toparlanıyor. Etik ve raporlama çerçevesinde son adım?',
           options: [
-            { label: 'Şube runbook güncelle: failover sırası, onay kodu, iletişim listesi; RCAd birleştir (misafir olayı ile öğrenilenler)', points: 20, feedback: 'Tekrarlanabilir operasyon.' },
-            { label: 'Operatör düzeltti deyip dosyayı kapat', points: 5, feedback: 'Runbook ve ölçüm eksik kalır.' },
-            { label: 'Kimseye anlatma; “gizli incident”', points: 0, feedback: 'Ekip öğrenmesi ve denetim için zayıf.' }
+            { label: 'Ticket’ta öğrenilenler + kısa özet (Modül 0.4); misafir olayı (INC-4482) ile çapraz referans ve izleme önerisi', points: 20, feedback: 'Modül 0: kanıt ve raporlama disiplini; bilgi birikimi oluşur.' },
+            { label: '“Düzeldi” tek cümle ile kapat', points: 5, feedback: 'Öğrenilenler kaybolur.' },
+            { label: 'Gizli incident; ekip dışı paylaşım yok', points: 0, feedback: 'Şeffaflık ve denetim için zayıf; modül 0 ile çelişir.' }
           ]
         }
       ];
 
       var cpeSnapshots = [
         {
-          tunnelText: 'IPsec site-to-site · dalgalı (15 dk: 6 kesinti, child SA yeniden kurulum)',
+          tunnelText: 'İstemci → DHCP DNS: şüpheli upstream · NXDOMAIN / yavaş yanıt oranı yüksek',
           tunnelTone: 'bad',
-          tunnelPill: 'Kritik',
-          latency: '182 ms',
-          loss: '%8.2',
-          jitter: '34 ms',
-          primaryWan: 'Metro Ethernet 500M · POP-ANK-04 · son hop öncesi kayıp artıyor',
-          backupLte: 'LTE Cat-12 · SIM hazır · trafik taşımıyor (standby)',
-          erpText: 'SAP GUI · zaman aşımı oranı ~%12 · RDP kesintili',
-          flapText: 'Son tünel düşüşü: ~3 dk önce · CPE CPU %71',
-          foot: 'Kaynak: şube NOC agent + merkez collector (sentetik canlı önizleme).',
+          tunnelPill: 'DNS risk',
+          latency: '420 ms',
+          loss: '%11',
+          jitter: 'yüksek',
+          primaryWan: 'PAT aktif · çift NAT ihtimali (CPE + üst gateway)',
+          backupLte: 'DHCP pool %78 dolu · Option 6: iki farklı DNS (çakışma)',
+          erpText: 'HTTPS uygulamaları · zaman aşımı artıyor',
+          flapText: 'Son CPE config değişikliği: 9 gün önce',
+          foot: 'Modül 10.1–10.2 ile uyumlu özet (sentetik CPE görünümü).',
           agentSync: 'T-0s'
         },
         {
-          tunnelText: 'IPsec · hâlâ dalgalı · MTR örnekleri merkeze yüklendi',
+          tunnelText: 'Capture: bazı sorgular bilinmeyen forwarder’a gidiyor; kurumsal forwarder’a düşmüyor',
           tunnelTone: 'warn',
           tunnelPill: 'İzleniyor',
-          latency: '168 ms',
-          loss: '%6.1',
-          jitter: '29 ms',
-          primaryWan: 'Operatör ticket #TT-88421 açık · POP öncesi %4–7 kayıp',
-          backupLte: 'LTE · beklemede · bütçe onayı bekleniyor (playbook)',
-          erpText: 'ERP · hata oranı ~%9 · kullanıcı şikayeti sürüyor',
-          flapText: 'Son kesinti: ~7 dk önce · ikiz tünelden biri DOWN',
-          foot: 'Traceroute/MTR çıktıları ticket’a eklendi (simülasyon).',
-          agentSync: 'T-15s'
+          latency: '310 ms',
+          loss: '%7',
+          jitter: 'orta',
+          primaryWan: 'NAT tablosu: çok sayıda kısa ömürlü oturum (yeniden eşleme)',
+          backupLte: 'Option 6 düzeltme taslağı ticket’a işlendi',
+          erpText: 'ERP web · hata oranı düşüş trendinde',
+          flapText: 'Lease renew dalgalanması azaldı',
+          foot: 'Wireshark/tcpdump varsayımı: modül 6.6 pratiği.',
+          agentSync: 'T-12s'
         },
         {
-          tunnelText: 'IPsec · geçici stabilize · yedek hat devreye alındı (playbook)',
+          tunnelText: 'DHCP Option 6 tekilleştirildi · lease renew planı yürütüldü',
           tunnelTone: 'warn',
-          tunnelPill: 'Yedek aktif',
-          latency: '54 ms',
-          loss: '%1.4',
-          jitter: '11 ms',
-          primaryWan: 'Metro · hâlâ dalgalı · ERP için tercih düşürüldü',
-          backupLte: 'LTE backup UP · IMEI doğrulandı · maliyet sayacı başladı',
-          erpText: 'ERP · zaman aşımı ~%3 · oturumlar toparlanıyor',
-          flapText: 'Son kesinti: ~18 dk önce (birincil hat)',
-          foot: 'Failover: kritik trafik önce yedek üzerinden; birincil izleniyor.',
-          agentSync: 'T-8s'
+          tunnelPill: 'DHCP',
+          latency: '95 ms',
+          loss: '%2',
+          jitter: 'düşük',
+          primaryWan: 'NAT: tek çıkış noktasına doğru hizalama başladı',
+          backupLte: 'Pool %62 · çakışan DNS kaydı yok',
+          erpText: 'Uygulama yanıtları toparlanıyor',
+          flapText: 'Son anomali: ~25 dk önce',
+          foot: 'Modül 10.2 uygulama adımları yansıtıldı.',
+          agentSync: 'T-6s'
         },
         {
-          tunnelText: 'Çift yol · policy routing uygulandı · asimetri riski kontrol altında',
+          tunnelText: 'Firewall: 53/udp+tcp forwarder kural seti netleşti',
+          tunnelTone: 'ok',
+          tunnelPill: 'Port net',
+          latency: '48 ms',
+          loss: '%0.8',
+          jitter: 'düşük',
+          primaryWan: 'NAT hairpin kontrolü: uyarılar kapandı',
+          backupLte: 'DHCP dağıtımı stabil · renew başarı oranı yüksek',
+          erpText: 'ERP · normal seviyeye indi',
+          flapText: 'Son policy değişikliği ticket ile ilişkili',
+          foot: 'Modül 9.2 servis/port odaklı kural.',
+          agentSync: 'T-4s'
+        },
+        {
+          tunnelText: 'DNS çözümleme · DHCP · NAT göstergeleri yeşil banda',
           tunnelTone: 'ok',
           tunnelPill: 'Stabil',
-          latency: '41 ms',
-          loss: '%0.6',
-          jitter: '6 ms',
-          primaryWan: 'Metro · ERP/AD için tercihli çıkış (tünel)',
-          backupLte: 'LTE · genel internet / split trafik politikaya göre',
-          erpText: 'ERP · zaman aşımı <%0.5 · RDP sorunsuz',
-          flapText: 'Son anomali: ~42 dk önce · CPE CPU %38',
-          foot: 'Policy: kritik uygulamalar tek yol; ECMP yok; izleme açık.',
-          agentSync: 'T-3s'
-        },
-        {
-          tunnelText: 'IPsec + LTE · operatör onarım penceresi planlandı · izleme devam',
-          tunnelTone: 'ok',
-          tunnelPill: 'Operasyonel',
           latency: '38 ms',
-          loss: '%0.4',
-          jitter: '5 ms',
-          primaryWan: 'Metro · bakım penceresi için NOC bildirimi zamanlandı',
-          backupLte: 'LTE · failover testi runbook’a işlendi',
-          erpText: 'ERP · normal · olay kapanışı için dokümantasyon bekleniyor',
-          flapText: 'Uptime son 2s: %99.94 (kaynak: CPE özeti)',
-          foot: 'Son adım: runbook + RCA — kart verileri “son bilinen iyi” anına sabitlendi.',
+          loss: '%0.3',
+          jitter: 'düşük',
+          primaryWan: 'NAT tekilleştirildi · izleme kuralı eklendi',
+          backupLte: 'Runbook güncellemesi bekliyor (kapanış adımı)',
+          erpText: 'Servisler · beklenen davranış',
+          flapText: 'Kapanış özeti için dokümantasyon hazır',
+          foot: 'Modül 0.4 raporlama + Modül 10 öğrenilenler — kapanışa uygun.',
           agentSync: 'T-2s'
         }
       ];
 
       var wanStepBlocks = [
         {
-          title: 'NOC iç notu · Korelasyon',
+          title: 'NOC iç notu · Modül 10.1',
           lines: [
-            'IPsec child SA rekey hataları merkez ve ANK-CPE-01 loglarında aynı zaman diliminde',
-            'APM: ERP timeout spike ↔ POP-ANK-04 öncesi paket kaybı korrelasyonu yüksek',
-            'Son yapılandırma: CPE push ~11 gün önce (değişiklik kaydı temiz)'
+            'Şikayet: ping iyi, uygulama yavaş — önce DNS zinciri şüphesi (ders 10.1 akışı)',
+            'Öneri: istemci/DHCP/forwarder sırası + gerekirse paket örneği (ders 6.6)',
+            'Şube VLAN: kurumsal Wi-Fi (misafir olayından bağımsız segment)'
           ]
         },
         {
-          title: 'Operatör mesajı · TT-88421',
+          title: 'ITSM güncelleme · Modül 10.2',
           lines: [
-            'NOC müşteri ekibinden MTR + smoke sonuçları alındı (ekler sekmesine düşecek şekilde işlendi)',
-            'POP-ANK-04: bakım penceresi dışı dalgalı kayıp · saha ekibi bilgilendirme kuyruğunda',
-            'İç CPE: CPU sıcaklık normal · güç kaynağı A/B her iki giriş OK'
+            'Lease dump: Option 6’da çelişkili DNS sunucuları tespit edildi',
+            'Aksiyon: scope/option düzeltmesi + kontrollü lease renew (değişiklik kaydı açıldı)',
+            'Fiziksel katman: CPE güç/CPU normal (Modül 4–5 ile uyumlu genel kontrol)'
           ]
         },
         {
-          title: 'Finans / COO notu (ticket üzerinde)',
+          title: 'Korelasyon · Modül 10.3',
           lines: [
-            'Finans: yedek LTE maliyet onayı “olay sonrası CAB” ile kapatılacak',
-            'COO: ERP erişimi öncelik — risk kabulü metni şablonu HRBP onayında',
-            'Otomatik: LTE IMEI allowlist doğrulandı · failover denemesi loglandı'
+            'SaaS oturumlarında port tutarsızlığı · çift NAT ihtimali',
+            'Öneri: tek NAT noktası + hairpin/split DNS kontrol listesi',
+            'Risk notu: “geçici NAT kapatma” reddedildi (üretim güvenliği)'
           ]
         },
         {
-          title: 'Yönlendirme politikası · uygulama özeti',
+          title: 'Güvenlik duvarı · Modül 9.2',
           lines: [
-            'Policy route: ERP/AD → tünel; genel internet → split veya merkez proxy (şube politikası v2)',
-            'ECMP devre dışı · asimetrik yönlendirme alarmı susturuldu',
-            'İzleme: “çift NAT” ve “aynı beşli için çift çıkış” panoları yeşil'
+            'Servis: DNS · UDP/53 ve TCP/53 forwarder hedefleri için kural taslağı',
+            'Reddedilen öneri: tüm UDP serbest (gerekçe: gereksiz yüzey genişlemesi)',
+            'Onay: sadece tanımlı DNS forwarder IP aralığı'
           ]
         },
         {
-          title: 'Kapanış kaydı · operatör + NOC',
+          title: 'Kapanış · Modül 0.4',
           lines: [
-            'Operatör: birincil hat onarımı P3 penceresinde · müşteri bilgilendirme şablonu gönderildi',
-            'NOC: runbook v1.4 taslağı oluşturuldu (şube imzalayan: şube müdür yard.)',
-            'Deniz (şube): “Fiziksel kabloda gevşeklik yok” — WAN kök nedeni dış hat tarafında kaldı'
+            'Ticket özet şablonu dolduruldu; INC-4482 ile çapraz referans eklendi',
+            'İzleme: DNS yanlış yanıt oranı + DHCP scope doluluk panosu',
+            'Deniz (şube): fiziksel kabloda sorun yok — olay katman 3–7 ve politika tarafında kapatıldı'
           ]
         }
       ];
@@ -566,6 +754,7 @@
         bestPicks: 0,
         startedAt: 0,
         choiceLocked: false,
+        hintUsedThisStep: false,
         completionSaved: false,
         typingTimer: null
       };
@@ -585,17 +774,39 @@
       var elSideChat = document.getElementById('sideModeChat');
       var elSideWan = document.getElementById('sideModeWan');
       var elHeaderBadge = document.getElementById('headerContextBadge');
+      var elChatHintBar = document.getElementById('chatHintBar');
+      var btnAskDenizHint = document.getElementById('btnAskDenizHint');
+      var elAsideShell = document.getElementById('asideShell');
+      var elPanelSteps = document.getElementById('panelSteps');
+      var elTicketStrip = document.getElementById('ticketStrip');
+      var elP2StepChip = document.getElementById('p2StepChip');
 
       function setAsideMode(mode) {
         if (mode === 'wan') {
           elSideChat.classList.add('hidden');
           elSideWan.classList.remove('hidden');
-          if (elHeaderBadge) elHeaderBadge.textContent = 'wan-kayıt';
+          if (elHeaderBadge) elHeaderBadge.textContent = 'noc-itsm';
+          if (elAsideShell) elAsideShell.classList.add('aside-shell--itsm');
         } else {
           elSideWan.classList.add('hidden');
           elSideChat.classList.remove('hidden');
           if (elHeaderBadge) elHeaderBadge.textContent = 'atlas-teams';
+          if (elAsideShell) elAsideShell.classList.remove('aside-shell--itsm');
         }
+        syncChatHintBar();
+      }
+
+      function syncChatHintBar() {
+        if (!elChatHintBar || !btnAskDenizHint) return;
+        var stepsVisible = elSteps && !elSteps.classList.contains('hidden');
+        if (state.phase !== 1 || !stepsVisible) {
+          elChatHintBar.classList.add('hidden');
+          return;
+        }
+        elChatHintBar.classList.remove('hidden');
+        var disabled = state.choiceLocked || state.hintUsedThisStep;
+        btnAskDenizHint.disabled = disabled;
+        btnAskDenizHint.setAttribute('aria-disabled', disabled ? 'true' : 'false');
       }
 
       function clearWanFeed() {
@@ -608,19 +819,31 @@
 
       function appendWanListBlock(title, lines) {
         var div = document.createElement('div');
-        div.className = 'msg-in rounded-lg border border-slate-200 bg-white p-3 shadow-sm';
-        var ul = document.createElement('ul');
-        ul.className = 'mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700';
-        lines.forEach(function (line) {
-          var li = document.createElement('li');
-          li.textContent = line;
-          ul.appendChild(li);
-        });
+        div.className = 'msg-in itsm-card';
+        var head = document.createElement('div');
+        head.className = 'itsm-card__head';
+        var dot = document.createElement('span');
+        dot.className = 'itsm-card__dot';
+        dot.setAttribute('aria-hidden', 'true');
         var h = document.createElement('p');
-        h.className = 'text-xs font-bold uppercase tracking-wide text-slate-500';
+        h.className = 'itsm-card__title';
         h.textContent = title;
-        div.appendChild(h);
-        div.appendChild(ul);
+        var time = document.createElement('span');
+        time.className = 'itsm-card__time';
+        time.textContent = nowTime();
+        head.appendChild(dot);
+        head.appendChild(h);
+        head.appendChild(time);
+        var body = document.createElement('div');
+        body.className = 'itsm-card__body';
+        lines.forEach(function (line) {
+          var p = document.createElement('p');
+          p.className = 'itsm-card__line';
+          p.textContent = line;
+          body.appendChild(p);
+        });
+        div.appendChild(head);
+        div.appendChild(body);
         elWanFeed.appendChild(div);
         scrollWanFeed();
       }
@@ -628,24 +851,31 @@
       function appendWanDecisionRow(label) {
         var shortLabel = label.length > 200 ? label.slice(0, 197) + '…' : label;
         var div = document.createElement('div');
-        div.className =
-          'msg-in rounded-md border-l-4 border-indigo-600 bg-indigo-50/90 px-3 py-2 text-xs text-slate-800 shadow-sm';
+        div.className = 'msg-in itsm-audit';
         div.innerHTML =
-          '<span class="font-semibold text-indigo-900">Vardiya kararı · </span><span class="text-slate-800">' +
+          '<div class="itsm-audit__mark" aria-hidden="true">K</div>' +
+          '<div class="min-w-0 flex-1">' +
+          '<p class="text-[10px] font-bold uppercase tracking-wide text-indigo-200/90">Vardiya kararı · ITSM\'e işlendi</p>' +
+          '<p class="mt-1 text-xs leading-relaxed text-slate-100">' +
           escapeHtml(shortLabel) +
-          '</span>';
+          '</p>' +
+          '<p class="mt-1.5 font-mono text-[10px] text-slate-400">' +
+          nowTime() +
+          ' · otomatik not</p></div>';
         elWanFeed.appendChild(div);
         scrollWanFeed();
       }
 
       function appendWanSmsRow(text) {
         var div = document.createElement('div');
-        div.className =
-          'msg-in rounded-lg border border-amber-200/80 bg-amber-50 px-3 py-2 text-xs text-amber-950 shadow-sm';
+        div.className = 'msg-in itsm-sms px-3.5 py-3 text-xs shadow-lg';
         div.innerHTML =
-          '<span class="font-semibold">SMS · Deniz</span> <span class="text-slate-500">(' +
+          '<div class="flex flex-wrap items-center justify-between gap-2">' +
+          '<span class="font-bold uppercase tracking-wide text-amber-200">SMS · Deniz</span>' +
+          '<span class="font-mono text-[10px] text-amber-100/70">' +
           nowTime() +
-          ')</span><p class="mt-1 leading-relaxed">' +
+          '</span></div>' +
+          '<p class="mt-2 leading-relaxed text-amber-50/95">' +
           escapeHtml(text) +
           '</p>';
         elWanFeed.appendChild(div);
@@ -654,15 +884,15 @@
 
       function initWanFeedIntro() {
         clearWanFeed();
-        appendWanListBlock('Bölüm 2 · Bağlam', [
-          'Deniz şube fiziksel kontrole yönlendirildi; WAN kararları bu oturumda sana ait (Teams DM akışı kapalı).',
-          'Sol panel: operatör müşteri kaydı + NOC iç notları (salt okunur örnek).',
-          'Referanslar: INC-4491 · TT-88421 · ALX-ANK-4491'
+        appendWanListBlock('Bölüm 2 · Modül hizası', [
+          'Bu bölüm Temel Network müfredatındaki Modül 10 (DNS, DHCP, NAT), Modül 9.2 (port/servis) ve Modül 0.4 (raporlama) ile aynı dilde yazılmıştır.',
+          'Deniz şube fiziksel kontrole yönlendirildi; sen merkezden şube kurumsal Wi-Fi / CPE tarafını yönetiyorsun (Teams DM yok).',
+          'Ticket: INC-4491 · Senaryo: şube DNS–DHCP–NAT zinciri (modülde IP/MPLS operatör dersi yoktur).'
         ]);
-        appendWanListBlock('Sistem · Operatör portalı', [
-          'Durum: İnceleniyor · Öncelik: Müşteri-NOC ortak',
-          'Son olay: ERP timeout artışı · POP-ANK-04 öncesi kayıp dalgalı',
-          'Beklenen aksiyon: kanıtlı ticket güncellemesi (senin sağdaki seçimlerin bu akışa yansır)'
+        appendWanListBlock('ITSM · Özet', [
+          'Durum: İnceleniyor · Öncelik: uygulama erişimi (HTTPS) + DNS çözümleme',
+          'Not: Birinci bölümdeki misafir olayından farklı segment; aynı kök neden tekrarı değil',
+          'Beklenen: ticket güncellemesi + CPE kartı ile tutarlı kararlar (sağ panel)'
         ]);
       }
 
@@ -841,14 +1071,25 @@
         var topPts = topPointsForCurrentPhase();
 
         if (state.phase === 1) {
+          state.hintUsedThisStep = false;
           elCpeCard.classList.add('hidden');
+          if (elPanelSteps) elPanelSteps.classList.remove('panel-steps--p2');
+          if (elTicketStrip) elTicketStrip.classList.remove('ticket-strip--p2');
+          if (elP2StepChip) elP2StepChip.classList.add('hidden');
         } else {
           elCpeCard.classList.remove('hidden');
+          if (elPanelSteps) elPanelSteps.classList.add('panel-steps--p2');
+          if (elTicketStrip) elTicketStrip.classList.add('ticket-strip--p2');
+          if (elP2StepChip) elP2StepChip.classList.remove('hidden');
           updateCpeDashboard();
         }
 
-        document.getElementById('stepBadge').textContent =
-          'Bölüm ' + state.phase + ' · Adım ' + (state.index + 1) + ' / ' + list.length;
+        var stepBadgeEl = document.getElementById('stepBadge');
+        stepBadgeEl.textContent = 'Bölüm ' + state.phase + ' · Adım ' + (state.index + 1) + ' / ' + list.length;
+        stepBadgeEl.className =
+          state.phase === 2
+            ? 'rounded-md bg-teal-600/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-teal-900 ring-1 ring-teal-500/20'
+            : 'text-xs font-semibold uppercase tracking-wider text-slate-500';
         document.getElementById('stepLabel').textContent = 'B' + state.phase + ' · ' + (state.index + 1) + '/' + list.length;
         document.getElementById('ticketSnippet').textContent = s.ticket;
         document.getElementById('questionTitle').textContent = s.title;
@@ -858,6 +1099,26 @@
         elNext.classList.add('hidden');
         state.choiceLocked = false;
         updateProgress();
+        var progressBarEl = document.getElementById('progressBar');
+        if (progressBarEl) {
+          if (state.phase === 2) {
+            progressBarEl.classList.remove('bg-[#464eb8]');
+            progressBarEl.classList.add('bg-teal-600');
+          } else {
+            progressBarEl.classList.add('bg-[#464eb8]');
+            progressBarEl.classList.remove('bg-teal-600');
+          }
+        }
+        var scoreLiveEl = document.getElementById('scoreLive');
+        if (scoreLiveEl) {
+          if (state.phase === 2) {
+            scoreLiveEl.classList.remove('text-[#464eb8]');
+            scoreLiveEl.classList.add('text-teal-800');
+          } else {
+            scoreLiveEl.classList.add('text-[#464eb8]');
+            scoreLiveEl.classList.remove('text-teal-800');
+          }
+        }
 
         if (state.phase === 1 && s.internOnEnter) {
           showTyping(function () {
@@ -871,11 +1132,14 @@
 
         var wrap = document.getElementById('optionsWrap');
         wrap.innerHTML = '';
+        var optBtnBase =
+          state.phase === 1
+            ? 'rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:border-[#464eb8]/40 hover:bg-indigo-50/50 focus-ring'
+            : 'rounded-xl border-2 border-slate-200/90 bg-white px-4 py-3.5 text-left text-sm font-semibold text-slate-800 shadow-sm transition hover:border-teal-400/55 hover:bg-teal-50/25 hover:shadow-md focus-ring';
         s.options.forEach(function (opt, i) {
           var b = document.createElement('button');
           b.type = 'button';
-          b.className =
-            'rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:border-[#464eb8]/40 hover:bg-indigo-50/50 focus-ring';
+          b.className = optBtnBase;
           b.textContent = opt.label;
           b.addEventListener('click', function () {
             if (state.choiceLocked) return;
@@ -897,6 +1161,7 @@
             }
             elNext.classList.remove('hidden');
             updateProgress();
+            syncChatHintBar();
             wrap.querySelectorAll('button').forEach(function (btn, j) {
               btn.disabled = true;
               if (j === i) {
@@ -915,11 +1180,13 @@
           });
           wrap.appendChild(b);
         });
+        syncChatHintBar();
       }
 
       function finishPhase1() {
         state.scorePhase1End = Math.min(100, state.score);
         elSteps.classList.add('hidden');
+        syncChatHintBar();
         elBridge.classList.remove('hidden');
         document.getElementById('bridgeScore1').textContent = String(state.scorePhase1End);
         appendSystemLine('— INC-4482 kapatıldı · Bölüm 1 bitti —');
@@ -927,7 +1194,7 @@
           appendInternBubble(
             '<p class="leading-relaxed">' +
               formatBold(
-                '**Deniz:** Bölüm 1 tamam. Ben şubeye fiziksel kontrole çağrıldım — WAN tarafı sende. Sonraki bölümde sol panel Teams değil, operatör/ticket akışı olacak; CPE kartın sağda açık kalacak.'
+                '**Deniz:** Bölüm 1 bitti, ben hâlâ ayaktayım (şok). Beni şubeye “fiziksel kontrol” diye çağırdılar — heyecanlıyım, panikliyim, ikisi birden. Sende sol tarafta Teams kapanıyor, ITSM açılıyor; Modül 10’daki **DNS–DHCP–NAT** üçlüsünü düşün, CPE kartın sağda seninle.'
               ) +
               '</p>'
           );
@@ -959,20 +1226,20 @@
           total >= 170
             ? 'Çok güçlü: iki olayda da ölçü, prosedür ve iletişim dengesi iyi.'
             : total >= PASS_TOTAL
-              ? 'Geçer vardiya: her iki bölümde de ana hatlar doğru; ince ayar için dokümantasyon ve operatör kanıtı detaylandırılabilir.'
-              : 'Tekrar dene: Bölüm 1’de öncelik–DNS–segmentasyon; Bölüm 2’de log korelasyonu, operatör ticket’ı ve kontrollü failover öne çıkmalı.';
+              ? 'Geçer vardiya: her iki bölümde de ana hatlar doğru; ince ayar için ticket notları, DHCP lease ve DNS/NAT kanıtları detaylandırılabilir.'
+              : 'Tekrar dene: Bölüm 1’de öncelik–DNS–segmentasyon; Bölüm 2’de Modül 10.1–10.3 (DNS zinciri, DHCP Option 6, NAT) ve Modül 9.2 (53/udp–tcp) ile Modül 0.4 özet öne çıkmalı.';
         document.getElementById('finalMessage').textContent = msg;
         var closing =
           total >= PASS_TOTAL
-            ? '<strong>Özet:</strong> Bölüm 1’de sohbet + ticket; Bölüm 2’de operatör kaydı + CPE ile ilerledin. Deniz şubede — kısa SMS sol panelde.'
-            : '<strong>Özet:</strong> WAN tarafında kanıt ve playbook adımlarına tekrar bak. Deniz şubede; kısa not sol panelde.';
+            ? '<strong>Özet:</strong> Bölüm 1 segmentasyon/DNS; Bölüm 2 şube tarafında Modül 10–9 kavramlarıyla ilerledin. Deniz şubede — kısa SMS sol ITSM akışında.'
+            : '<strong>Özet:</strong> Bölüm 2’de önce DNS zinciri ve DHCP dağıtımı, sonra NAT ve 53 portu disiplinine tekrar bak. Deniz şubede; kısa not sol panelde.';
         document.getElementById('denizClosing').innerHTML = closing;
         document.getElementById('saveHint').textContent =
           'Kayıt: ekranda 200 üzerinden görünür; sisteme 0–100 ölçeğine çevrilerek kaydedilir (≥70 geçer).';
         appendWanSmsRow(
           total >= PASS_TOTAL
-            ? 'Şubedeyim, logları gördüm. Eline sağlık kaptan — WAN notlarını operatörle düzgün kapatmışsın.'
-            : 'WAN tarafında bir dahaki sefer önce MTR + ticket, sonra konuş. Buradayım, birlikte tekrarlarız.'
+            ? 'Şubedeyim. DNS/DHCP/NAT notlarını modüldeki sıraya uygun kapatmışsın — eline sağlık kaptan.'
+            : 'Bir dahaki sefer önce DNS zinciri (10.1), sonra DHCP (10.2) ve NAT (10.3); 53 için servis kuralı (9.2). Buradayım, birlikte tekrarlarız.'
         );
         state.completionSaved = false;
       }
@@ -987,6 +1254,7 @@
         elIntroFlow.classList.remove('hidden');
         state.introIdx = 0;
         setAsideMode('chat');
+        if (elChatHintBar) elChatHintBar.classList.add('hidden');
         clearChat();
         setChannel(1);
         appendDayDivider('Bugün · Sabah');
@@ -996,6 +1264,20 @@
         });
         btnIntroNext.classList.remove('hidden');
         document.getElementById('introFlowHint').textContent = 'Deniz yazıyor… ardından “Devam” ile sıradaki mesaj.';
+      });
+
+      btnAskDenizHint.addEventListener('click', function () {
+        if (state.phase !== 1 || state.choiceLocked || state.hintUsedThisStep) return;
+        var st = steps1[state.index];
+        if (!st || !st.denizHint) return;
+        state.hintUsedThisStep = true;
+        syncChatHintBar();
+        appendSelfBubble('Deniz, mini ipucu? Tam cevabı söyleme yaa 😅');
+        showTyping(function () {
+          appendInternBubble(
+            '<p class="leading-relaxed">' + formatBold('**Deniz (ipucu — cevap yok):** ' + st.denizHint) + '</p>'
+          );
+        });
       });
 
       btnIntroNext.addEventListener('click', function () {
@@ -1058,6 +1340,7 @@
         state.bestPicks = 0;
         state.startedAt = Date.now();
         state.choiceLocked = false;
+        state.hintUsedThisStep = false;
         state.completionSaved = false;
         elEnd.classList.add('hidden');
         elBridge.classList.add('hidden');
@@ -1070,7 +1353,7 @@
         showTyping(function () {
           appendInternBubble(
             '<p class="leading-relaxed">' +
-              formatBold('**Deniz:** Baştan başlıyoruz. Önce misafir olayı, sonra WAN — aynı sıra, kaptan.') +
+              formatBold('**Deniz:** Sıfırdan! Önce misafir olayı, sonra şube DNS–DHCP–NAT — aynı sıra kaptan. İpucu hakkın adım başı tazelendi; ben yine ilk gün enerjisiyle buradayım.') +
               '</p>'
           );
         });
