@@ -5,10 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#464eb8" />
   <base href="/" />
-  <title>Atlas Lojistik · Misafir Ağ Olayı | SEBS</title>
-  <meta name="description" content="Atlas Lojistik NOC’ta stajyer eşliğinde misafir Wi‑Fi olayı: öncelik, DNS, DHCP, segmentasyon ve iletişim kararları." />
+  <title>Atlas Lojistik · NOC Karar Simülasyonu | SEBS</title>
+  <meta name="description" content="İki bölümlü NOC simülasyonu: misafir ağ olayı ve şube WAN kararları. Stajyer Deniz ile dahili sohbet arayüzü." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -17,103 +17,214 @@
   <link rel="stylesheet" href="/css/landing-chrome.css?v=3" />
   <script src="/utils/simulation-tracker.js"></script>
   <style>
-    #chatThread::-webkit-scrollbar { width: 6px; }
-    #chatThread::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
-    .bubble-intern { animation: bubbleIn 0.35s ease-out; }
-    @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .chat-shell { box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.06); }
+    #chatThread::-webkit-scrollbar { width: 7px; }
+    #chatThread::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+    .msg-in { animation: msgIn 0.32s ease-out; }
+    @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .typing-dot { animation: td 1.2s ease-in-out infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes td { 0%, 80%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+    .cpe-pill-bad { background: rgba(220, 38, 38, 0.12); color: #991b1b; border: 1px solid rgba(220, 38, 38, 0.25); }
+    .cpe-pill-warn { background: rgba(245, 158, 11, 0.15); color: #92400e; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .cpe-pill-ok { background: rgba(22, 163, 74, 0.12); color: #166534; border: 1px solid rgba(22, 163, 74, 0.28); }
+    .cpe-live-dot { animation: cpePulse 1.8s ease-in-out infinite; }
+    @keyframes cpePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   </style>
 </head>
-<body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-slate-100">
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/90 bg-white/95 backdrop-blur-xl">
+<body class="landing-site-body min-h-screen font-sans text-slate-800 antialiased bg-[#e8ebf0]">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-300/80 bg-white/95 backdrop-blur-xl">
     <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
-      <a href="/simulation/temel-network-simulasyonlari.html" class="text-xs font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded sm:text-sm">← Temel Network simülasyonları</a>
+      <a href="/simulation/temel-network-simulasyonlari.html" class="text-xs font-semibold text-[#464eb8] transition hover:text-[#32398f] focus-ring rounded sm:text-sm">← Temel Network simülasyonları</a>
       <div class="flex items-center gap-2 text-right">
-        <span class="hidden rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800 sm:inline">Canlı vardiya</span>
+        <span class="hidden rounded-md bg-slate-200 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-700 sm:inline">atlas-teams</span>
         <span class="text-[11px] font-medium text-slate-500 sm:text-xs" id="stepLabel">Lobi</span>
       </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-6xl px-3 pb-28 pt-20 sm:px-6 sm:pt-24">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 pb-3">
+    <div class="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-slate-300/60 pb-3">
       <div>
         <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Atlas Lojistik A.Ş. · İstanbul HQ</p>
-        <h1 class="text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">Operasyon &amp; NOC — Misafir ağ olayı</h1>
+        <h1 class="text-lg font-extrabold tracking-tight text-slate-900 sm:text-2xl">NOC karar simülasyonu · 2 bölüm</h1>
       </div>
-      <p class="max-w-md text-xs text-slate-600 sm:text-sm">Bugün stajyer <strong>Deniz</strong> seni karşılıyor; sen vardiya kararlarını veriyorsun. Her adımda en iyi seçenek <strong>10 puan</strong> (10 adım, toplam 100). <strong>70+</strong> başarılı sayılır.</p>
+      <p class="max-w-lg text-xs text-slate-600 sm:text-sm">
+        <strong>Bölüm 1:</strong> misafir Wi‑Fi / DNS (10×10 puan).
+        <strong>Bölüm 2:</strong> şube WAN ve yedek hat (5×20 puan). Toplam <strong>200</strong>; <strong>140+</strong> ile vardiya “geçer”.
+      </p>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-12">
-      <!-- Sol: dahili sohbet + stajyer -->
       <aside class="lg:col-span-5">
-        <div class="flex h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:h-[min(68vh,560px)]">
-          <div class="flex items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3">
-            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-orange-300 text-lg font-bold text-amber-950" aria-hidden="true">D</div>
-            <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-bold text-slate-900">Deniz · NOC stajyeri</p>
-              <p class="text-xs text-slate-500">Dahili sohbet · #noc-gölgelik</p>
+        <div class="chat-shell flex h-[min(54vh,440px)] flex-col overflow-hidden rounded-xl border border-slate-300/80 bg-white lg:h-[min(70vh,580px)]">
+          <!-- Üst çubuk: kurumsal IM -->
+          <div class="flex items-center gap-0 border-b border-slate-200 bg-[#464eb8] px-1 py-0.5 text-white">
+            <button type="button" class="rounded px-2 py-2 opacity-70 hover:bg-white/10" aria-hidden="true" tabindex="-1">
+              <span class="text-lg leading-none">☰</span>
+            </button>
+            <div class="min-w-0 flex-1 px-2 py-2">
+              <p class="truncate text-sm font-semibold tracking-tight" id="chatChannelTitle">#noc-incidents</p>
+              <p class="truncate text-[11px] text-white/75" id="chatChannelSub">Atlas Lojistik · 12 üye · Dahili</p>
             </div>
-            <span class="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">çevrimiçi</span>
+            <div class="flex shrink-0 gap-0.5 pr-1">
+              <span class="rounded px-2 py-2 text-sm opacity-80" aria-hidden="true">🔍</span>
+              <span class="rounded px-2 py-2 text-sm opacity-80" aria-hidden="true">⋮</span>
+            </div>
           </div>
-          <div id="chatThread" class="bubble-intern flex-1 space-y-3 overflow-y-auto p-4 text-sm" role="log" aria-live="polite"></div>
-          <div class="border-t border-slate-100 bg-slate-50 px-4 py-2 text-[11px] text-slate-500">Deniz senin seçimlerini not alıyor; mentor raporuna gidecek.</div>
+          <!-- Üye şeridi -->
+          <div class="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2">
+            <div class="flex -space-x-2">
+              <span class="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-200 to-orange-400 text-[10px] font-bold text-amber-950" title="Deniz">D</span>
+              <span class="relative z-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-400 text-[10px] font-semibold text-white" title="Sen">S</span>
+            </div>
+            <p class="min-w-0 flex-1 truncate text-xs text-slate-600"><span class="font-semibold text-slate-800">Deniz Yılmaz</span> çevrimiçi · Sen vardiya kaptanısın</p>
+          </div>
+          <div id="chatThread" class="msg-in flex-1 space-y-1 overflow-y-auto bg-[#f0f2f5] p-3 text-[13px] leading-snug sm:p-4" role="log" aria-live="polite"></div>
+          <!-- Sahte composer -->
+          <div class="border-t border-slate-200 bg-white p-2">
+            <div class="flex items-end gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              <span class="pb-1 text-slate-400" aria-hidden="true">➕</span>
+              <p class="min-h-[40px] flex-1 pt-1.5 text-xs italic text-slate-400">Mesaj yaz… (simülasyon modunda sohbet kapalı)</p>
+              <span class="rounded p-1.5 text-slate-300" aria-hidden="true">😊</span>
+              <span class="rounded bg-[#464eb8]/40 px-3 py-1.5 text-xs font-semibold text-white">Gönder</span>
+            </div>
+            <p class="mt-1.5 text-center text-[10px] text-slate-400">Kararlar sağ panelden verilir · Kayıtlar ticket ile ilişkilidir</p>
+          </div>
         </div>
       </aside>
 
-      <!-- Sağ: senaryo + kararlar -->
       <div class="lg:col-span-7">
-        <div id="panelLobby" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <p class="text-xs font-semibold uppercase tracking-wider text-blue-700/90">Karşılama</p>
+        <div id="panelLobby" class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <p class="text-xs font-semibold uppercase tracking-wider text-[#464eb8]">Karşılama</p>
           <p class="mt-3 text-slate-600 leading-relaxed">
-            Sol panelde Deniz seninle tanışacak. Ardından Help Desk’ten düşen ticket ile birlikte misafir Wi‑Fi tarafındaki şikayetleri ele alacaksın.
+            Sol tarafta kurumsal sohbet (Teams benzeri) açılacak; <strong>Deniz</strong> seni karşılayacak. Ardından iki bölümlük olay akışı başlar — birinci bölüm bittiğinde ikinci bölüme geçmeden simülasyon tamamlanmaz.
           </p>
-          <button type="button" id="btnMeetIntern" class="mt-5 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-ring">
+          <button type="button" id="btnMeetIntern" class="mt-5 inline-flex rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3d449f] focus-ring">
             Ofise gir, Deniz’le tanış
           </button>
         </div>
 
-        <div id="panelIntroFlow" class="hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div id="panelIntroFlow" class="hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <p class="text-xs font-semibold text-slate-500" id="introFlowHint">Sohbetteki mesajları oku; hazır olunca devam et.</p>
-          <button type="button" id="btnIntroNext" class="mt-4 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+          <button type="button" id="btnIntroNext" class="mt-4 hidden w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
             Devam
           </button>
-          <button type="button" id="btnBeginShift" class="mt-3 hidden rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus-ring">
-            Vardiyayı başlat (ticket açılır)
+          <button type="button" id="btnBeginShift" class="mt-3 hidden rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#3d449f] focus-ring">
+            Bölüm 1’i başlat (ticket açılır)
           </button>
         </div>
 
-        <div id="panelSteps" class="mt-4 hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div id="panelSteps" class="mt-4 hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Adım 1 / 10</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500" id="stepBadge">Bölüm 1 · Adım 1 / 10</span>
             <div class="flex items-center gap-2">
-              <div class="h-2 w-24 overflow-hidden rounded-full bg-slate-200 sm:w-32">
-                <div id="progressBar" class="h-full rounded-full bg-blue-600 transition-all duration-300" style="width: 0%"></div>
+              <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                <div id="progressBar" class="h-full rounded-full bg-[#464eb8] transition-all duration-300" style="width: 0%"></div>
               </div>
-              <span class="text-sm font-bold text-blue-700 tabular-nums" id="scoreLive">0 / 100</span>
+              <span class="text-sm font-bold text-[#464eb8] tabular-nums" id="scoreLive">0 / 200</span>
             </div>
           </div>
-          <div class="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 text-xs text-slate-600">
-            <span class="font-semibold text-slate-800">Ticket özeti:</span>
+          <div class="rounded-lg border border-slate-100 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+            <span class="font-semibold text-slate-800">Ticket:</span>
             <span id="ticketSnippet">—</span>
           </div>
+
+          <div id="cpeStatusCard" class="hidden mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-900 text-slate-100 shadow-md ring-1 ring-white/10">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-slate-800/90 px-4 py-2.5">
+              <div class="flex min-w-0 items-center gap-2">
+                <span class="relative flex h-2.5 w-2.5 shrink-0">
+                  <span class="cpe-live-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                </span>
+                <p class="truncate text-xs font-bold tracking-tight text-white">Uzak uç · <span id="cpeSiteId">ANK-CPE-01</span></p>
+              </div>
+              <p class="shrink-0 font-mono text-[10px] text-slate-400">SNMP pull · <span id="cpeAgentSync">—</span></p>
+            </div>
+            <div class="grid gap-3 p-4 sm:grid-cols-2">
+              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Tünel (merkez)</p>
+                <p id="cpeTunnelText" class="mt-1 text-sm font-medium leading-snug text-white">—</p>
+                <span id="cpeTunnelPill" class="mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide cpe-pill-warn">—</span>
+              </div>
+              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">ERP / kritik</p>
+                <p id="cpeErpText" class="mt-1 text-sm font-medium text-white">—</p>
+                <p id="cpeFlapText" class="mt-1.5 font-mono text-[11px] text-amber-200/90">—</p>
+              </div>
+              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3 sm:col-span-2">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Ölçüm (son 60 sn · sentetik)</p>
+                <div class="mt-2 grid grid-cols-3 gap-2 font-mono text-xs sm:text-sm">
+                  <div>
+                    <p class="text-[10px] text-slate-500">RTT</p>
+                    <p id="cpeLatency" class="font-semibold text-cyan-300">—</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] text-slate-500">Kayıp</p>
+                    <p id="cpeLoss" class="font-semibold text-amber-300">—</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] text-slate-500">Jitter</p>
+                    <p id="cpeJitter" class="font-semibold text-violet-300">—</p>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Birincil WAN</p>
+                <p id="cpePrimaryWan" class="mt-1 text-xs leading-relaxed text-slate-200">—</p>
+              </div>
+              <div class="rounded-lg border border-white/10 bg-slate-800/60 p-3">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Yedek LTE</p>
+                <p id="cpeBackupLte" class="mt-1 text-xs leading-relaxed text-slate-200">—</p>
+              </div>
+            </div>
+            <p id="cpeFootNote" class="border-t border-white/10 bg-black/20 px-4 py-2 text-[11px] text-slate-400">—</p>
+          </div>
+
           <h2 class="mt-5 text-lg font-bold text-slate-900 sm:text-xl" id="questionTitle"></h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base" id="questionBody"></p>
           <div class="mt-5 flex flex-col gap-2.5" id="optionsWrap" role="group" aria-label="Seçenekler"></div>
           <p class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950" id="feedbackBox"></p>
-          <button type="button" id="btnNext" class="mt-5 hidden w-full rounded-full border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
+          <button type="button" id="btnNext" class="mt-5 hidden w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:w-auto">
             Sonraki adım
           </button>
         </div>
 
-        <div id="panelEnd" class="mt-4 hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <h2 class="text-lg font-bold text-slate-900">Vardiya özeti</h2>
-          <p class="mt-2 text-3xl font-extrabold text-slate-900 tabular-nums"><span id="finalScore">0</span> / 100</p>
+        <div id="panelPhaseBridge" class="mt-4 hidden rounded-xl border-2 border-[#464eb8]/30 bg-gradient-to-br from-white to-indigo-50/80 p-5 shadow-sm sm:p-7">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#464eb8]">Bölüm 1 tamamlandı</p>
+          <h2 class="mt-2 text-xl font-bold text-slate-900">Sırada: şube WAN ve yedek hat</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">
+            INC-4482 kapatıldı. Aynı gün öğleden sonra <strong>Ankara şubesi</strong>’nden yeni uyarı: kurumsal tünel aralıklı düşüyor, ERP erişimi kesiliyor. Bölüm 2’de sağda <strong>Uzak uç · CPE</strong> canlı özet kartı açılacak (sentetik telemetri). Bu olay misafir Wi‑Fi’den bağımsız; WAN ve operatör tarafını düşünmen gerekiyor.
+          </p>
+          <p class="mt-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
+            <span class="font-semibold text-slate-900">Bölüm 1 puanın:</span>
+            <span id="bridgeScore1" class="tabular-nums font-bold text-[#464eb8]">0</span> / 100
+          </p>
+          <button type="button" id="btnStartPhase2" class="mt-5 inline-flex rounded-lg bg-[#464eb8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3d449f] focus-ring">
+            Bölüm 2’ye geç
+          </button>
+        </div>
+
+        <div id="panelEnd" class="mt-4 hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+          <h2 class="text-lg font-bold text-slate-900">Vardiya özeti · her iki bölüm</h2>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+              <p class="text-xs font-semibold uppercase text-slate-500">Bölüm 1</p>
+              <p class="mt-1 text-2xl font-extrabold tabular-nums text-slate-900"><span id="finalScore1">0</span> / 100</p>
+            </div>
+            <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+              <p class="text-xs font-semibold uppercase text-slate-500">Bölüm 2</p>
+              <p class="mt-1 text-2xl font-extrabold tabular-nums text-slate-900"><span id="finalScore2">0</span> / 100</p>
+            </div>
+          </div>
+          <p class="mt-4 text-2xl font-extrabold text-slate-900 tabular-nums">Toplam: <span id="finalScoreTotal">0</span> / 200</p>
           <p class="mt-2 text-sm text-slate-600" id="finalMessage"></p>
-          <div id="denizClosing" class="mt-4 rounded-xl border border-amber-100 bg-amber-50/80 p-4 text-sm text-amber-950"></div>
+          <div id="denizClosing" class="mt-4 rounded-lg border border-amber-100 bg-amber-50/90 p-4 text-sm text-amber-950"></div>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href="/simulation/temel-network-simulasyonlari.html" class="inline-flex justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">Listeye dön</a>
-            <button type="button" id="btnRetry" class="inline-flex justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">Tekrar dene</button>
-            <button type="button" id="btnSave" class="inline-flex justify-center rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-900 transition hover:bg-blue-100">
+            <a href="/simulation/temel-network-simulasyonlari.html" class="inline-flex justify-center rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800">Listeye dön</a>
+            <button type="button" id="btnRetry" class="inline-flex justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">Baştan</button>
+            <button type="button" id="btnSave" class="inline-flex justify-center rounded-lg border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-900 transition hover:bg-blue-100">
               İlerlemeyi kaydet (giriş gerekli)
             </button>
           </div>
@@ -128,8 +239,10 @@
   <script>
     (function () {
       var SIM_ID = 'temel-network-misafir-ag-karar';
-      var SIM_NAME = 'Temel Network · Misafir Ağ Karar Simülasyonu';
+      var SIM_NAME = 'Temel Network · Misafir Ağ + WAN Karar Simülasyonu';
       var MODULE_NAME = 'Temel Network Eğitimi';
+      var PASS_TOTAL = 140;
+      var MAX_TOTAL = 200;
 
       var introScript = [
         'Merhaba! Ben **Deniz**, bugün seninle NOC’ta stajyerim. İlk günümde biraz heyecanlıyım ama hazırım.',
@@ -138,7 +251,7 @@
         'Help Desk’ten yeni ticket düştü: misafirlerde yavaşlık ve “garip arama sonuçları” iddiası var. Hazırsan birlikte üstüne gidelim mi?'
       ];
 
-      var steps = [
+      var steps1 = [
         {
           title: 'Öncelik sınıfı',
           ticket: 'INC-4482 · Misafir SSID · çoklu kullanıcı · SLA 8s',
@@ -244,53 +357,288 @@
           body: 'Kısa vadede semptomlar azaldı. Son operasyonel adım?',
           internOnEnter: 'Mentorum “kapatmadan önce öğrenilenleri yaz” demişti.',
           options: [
-            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı ve CAB retrospektif kaydı', points: 10, feedback: 'Olgun kapanış ve bilgi birikimi.', internLine: 'Bugün benden çok şey öğrendim; teşekkürler kaptan!' },
+            { label: 'Kısa postmortem, ticket’ta öğrenilenler, izleme kuralı ve CAB retrospektif kaydı', points: 10, feedback: 'Olgun kapanış ve bilgi birikimi.', internLine: 'Bölüm 1 bitti sanırım… bir nefes alalım mı?' },
             { label: '“Düzeldi” deyip dokümante etmeden kapat', points: 5, feedback: 'Bilgi birikimi zayıf; benzer olayda zaman kaybı.', internLine: 'Yine de kapattık ama not az kaldı galiba.' },
             { label: 'Kimseye duyurma; sessiz kapat', points: 0, feedback: 'Uyumluluk ve ekip öğrenmesi için zayıf.', internLine: 'Sessiz kapanış… pek iyi not getirmezdi.' }
           ]
         }
       ];
 
-      var POINTS_TOP = 10;
+      var P2_TOP = 20;
+      var steps2 = [
+        {
+          title: 'İlk teşhis (şube)',
+          ticket: 'INC-4491 · Ankara şubesi · IPsec tünel flapping · ERP timeout',
+          body: 'Şube “bazen VPN var bazen yok” diyor. Merkezden ilk olarak ne yaparsın?',
+          internOnEnter: 'Kanal değişti: artık #wan-şubeler. Ben Ankara’daki iletişim bilgisini ticket’a ekledim.',
+          options: [
+            { label: 'Önce merkez ve şube uçlarında eşzamanlı tünel logu + ISP durumu + son değişiklikleri korelasyonla incele', points: 20, feedback: 'Veri toplamadan ISP veya iç ağ suçlanmaz; MTTR düşer.', internLine: 'Eşzamanlı log… mantıklı, yoksa “modem mi ISP mi” kör dövüşü olurmuş.' },
+            { label: 'Şubeye “CPE’yi resetle” SMS at, sen merkezden bakma', points: 5, feedback: 'Geçici rahatlama olabilir; kök neden ve SLA izi zayıf kalır.', internLine: 'Reset her zaman çözüm müymüş ya…' },
+            { label: 'Tüm şubelerde tüneli kapat aç (toplu script)', points: 0, feedback: 'Gereksiz kesinti ve risk; önce tek şube izolasyonu.', internLine: 'Tüm şubeler… bu biraz sert kaçtı sanki.' }
+          ]
+        },
+        {
+          title: 'ISP sınırı',
+          ticket: 'Traceroute · son hop öncesi paket kaybı dalgalı',
+          body: 'Ölçümlerde kayıp çoğunlukla operatör POP öncesi görünüyor. Ne yaparsın?',
+          internOnEnter: 'ISP müşteri temsilcisi aramadan önce elimizde özet olsun dediler.',
+          options: [
+            { label: 'MTR/smoke sonuçları + zaman damgası ile operatör ticket aç; paralelde iç CPE arayüz sağlığı', points: 20, feedback: 'Operatörle çalışmak için kanıt paketi şart.', internLine: 'Ticket numarasını not aldım; toplantıda lazım olur.' },
+            { label: 'Operatörü suçla; iç ekip dokümantasyonu yok say', points: 0, feedback: 'İlişkiler ve teşhis kalitesi bozulur.', internLine: 'Bu… pek profesyonel durmadı.' },
+            { label: 'Bekle, belki kendiliğinden düzelir (48 saat)', points: 5, feedback: 'ERP kesintisi varken SLA ve iş etkisi büyür.', internLine: '48 saat beklemek şubeyi çok zorlar gibi.' }
+          ]
+        },
+        {
+          title: 'Yedek çıkış',
+          ticket: 'Bütçe: 4G yedek hat · ay başı maliyet limiti',
+          body: 'Birincil hat hâlâ dalgalı. İş sürekliliği için?',
+          internOnEnter: 'Finans “onaysız maliyet yok” dedi ama COO “ERP açık kalsın” dedi.',
+          options: [
+            { label: 'Playbook’a göre 4G yedek devreye al; maliyet ve süre ticket + onay zincirine işle', points: 20, feedback: 'Kontrollü failover + mali iz.', internLine: 'Yani önce hayat kurtar, kağıdı sonra tamamla — anladım.' },
+            { label: 'Yedek hattı asla açma; maliyet riski', points: 0, feedback: 'ERP kesintisi iş kaybı; risk kabulü yazılmadan doğru değil.', internLine: 'COO duymasa iyi olur bu seçenek…' },
+            { label: 'Şube müdürünün kişisel hotspot’una ERP’yi taşı', points: 0, feedback: 'Güvenlik ve uyumluluk açısından uygun değil.', internLine: 'Hotspot… IT politikasına aykırı gibi.' }
+          ]
+        },
+        {
+          title: 'Yönlendirme kararı',
+          ticket: 'Çift hat aktif · asimetrik rota riski',
+          body: 'Yedek hat açıldı. Trafik dengesini nasıl kurarsın?',
+          internOnEnter: '“Split tunnel / tam tünel” diye terimler duydum; hangisi güvenli?',
+          options: [
+            { label: 'Şube çıkışını policy ile tekilleştir: ERP ve AD kritik trafiği tünelden; internet split veya merkez proxy politikasına göre', points: 20, feedback: 'Asimetrik yönlendirme ve sızıntı riskini kontrol eder.', internLine: 'Policy routing… labda çizmiştik, gerçek hayatta da varmış.' },
+            { label: 'Her trafiği rastgele hangi hat hızlıysa oraya akıt', points: 0, feedback: 'Tutarsız oturumlar ve güvenlik boşlukları.', internLine: 'Rastgele… VPN oturumu düşer diye korktum.' },
+            { label: 'Sadece varsayılan route’u iki kez ekle (ECMP), izleme yok', points: 5, feedback: 'Flapping ortamında ECMP doğru tasarlanmadan risk artar.', internLine: 'ECMP… duymuştum ama “dikkat” gerekiyormuş.' }
+          ]
+        },
+        {
+          title: 'Kapanış ve öğrenme',
+          ticket: 'INC-4491 · operatör onarımı planlandı',
+          body: 'Birincil hat stabilize olacak. WAN olayı için son adım?',
+          internOnEnter: 'Mentor “tek seferlik değil, süreç” dedi.',
+          options: [
+            { label: 'Şube runbook güncelle: failover sırası, onay kodu, iletişim listesi; RCAd birleştir (misafir olayı ile öğrenilenler)', points: 20, feedback: 'Tekrarlanabilir operasyon.', internLine: 'İki olayı tek öğrenme dokümanında birleştirmek güçlüymüş.' },
+            { label: 'Operatör düzeltti deyip dosyayı kapat', points: 5, feedback: 'Runbook ve ölçüm eksik kalır.', internLine: 'Yarım kapanış gibi hissettirdi.' },
+            { label: 'Kimseye anlatma; “gizli incident”', points: 0, feedback: 'Ekip öğrenmesi ve denetim için zayıf.', internLine: 'Gizli incident… pek hoş değil.' }
+          ]
+        }
+      ];
+
+      var cpeSnapshots = [
+        {
+          tunnelText: 'IPsec site-to-site · dalgalı (15 dk: 6 kesinti, child SA yeniden kurulum)',
+          tunnelTone: 'bad',
+          tunnelPill: 'Kritik',
+          latency: '182 ms',
+          loss: '%8.2',
+          jitter: '34 ms',
+          primaryWan: 'Metro Ethernet 500M · POP-ANK-04 · son hop öncesi kayıp artıyor',
+          backupLte: 'LTE Cat-12 · SIM hazır · trafik taşımıyor (standby)',
+          erpText: 'SAP GUI · zaman aşımı oranı ~%12 · RDP kesintili',
+          flapText: 'Son tünel düşüşü: ~3 dk önce · CPE CPU %71',
+          foot: 'Kaynak: şube NOC agent + merkez collector (sentetik canlı önizleme).',
+          agentSync: 'T-0s'
+        },
+        {
+          tunnelText: 'IPsec · hâlâ dalgalı · MTR örnekleri merkeze yüklendi',
+          tunnelTone: 'warn',
+          tunnelPill: 'İzleniyor',
+          latency: '168 ms',
+          loss: '%6.1',
+          jitter: '29 ms',
+          primaryWan: 'Operatör ticket #TT-88421 açık · POP öncesi %4–7 kayıp',
+          backupLte: 'LTE · beklemede · bütçe onayı bekleniyor (playbook)',
+          erpText: 'ERP · hata oranı ~%9 · kullanıcı şikayeti sürüyor',
+          flapText: 'Son kesinti: ~7 dk önce · ikiz tünelden biri DOWN',
+          foot: 'Traceroute/MTR çıktıları ticket’a eklendi (simülasyon).',
+          agentSync: 'T-15s'
+        },
+        {
+          tunnelText: 'IPsec · geçici stabilize · yedek hat devreye alındı (playbook)',
+          tunnelTone: 'warn',
+          tunnelPill: 'Yedek aktif',
+          latency: '54 ms',
+          loss: '%1.4',
+          jitter: '11 ms',
+          primaryWan: 'Metro · hâlâ dalgalı · ERP için tercih düşürüldü',
+          backupLte: 'LTE backup UP · IMEI doğrulandı · maliyet sayacı başladı',
+          erpText: 'ERP · zaman aşımı ~%3 · oturumlar toparlanıyor',
+          flapText: 'Son kesinti: ~18 dk önce (birincil hat)',
+          foot: 'Failover: kritik trafik önce yedek üzerinden; birincil izleniyor.',
+          agentSync: 'T-8s'
+        },
+        {
+          tunnelText: 'Çift yol · policy routing uygulandı · asimetri riski kontrol altında',
+          tunnelTone: 'ok',
+          tunnelPill: 'Stabil',
+          latency: '41 ms',
+          loss: '%0.6',
+          jitter: '6 ms',
+          primaryWan: 'Metro · ERP/AD için tercihli çıkış (tünel)',
+          backupLte: 'LTE · genel internet / split trafik politikaya göre',
+          erpText: 'ERP · zaman aşımı <%0.5 · RDP sorunsuz',
+          flapText: 'Son anomali: ~42 dk önce · CPE CPU %38',
+          foot: 'Policy: kritik uygulamalar tek yol; ECMP yok; izleme açık.',
+          agentSync: 'T-3s'
+        },
+        {
+          tunnelText: 'IPsec + LTE · operatör onarım penceresi planlandı · izleme devam',
+          tunnelTone: 'ok',
+          tunnelPill: 'Operasyonel',
+          latency: '38 ms',
+          loss: '%0.4',
+          jitter: '5 ms',
+          primaryWan: 'Metro · bakım penceresi için NOC bildirimi zamanlandı',
+          backupLte: 'LTE · failover testi runbook’a işlendi',
+          erpText: 'ERP · normal · olay kapanışı için dokümantasyon bekleniyor',
+          flapText: 'Uptime son 2s: %99.94 (kaynak: CPE özeti)',
+          foot: 'Son adım: runbook + RCA — kart verileri “son bilinen iyi” anına sabitlendi.',
+          agentSync: 'T-2s'
+        }
+      ];
+
       var state = {
+        phase: 1,
         introIdx: 0,
         index: 0,
         score: 0,
+        scorePhase1End: 0,
         bestPicks: 0,
         startedAt: 0,
         choiceLocked: false,
-        completionSaved: false
+        completionSaved: false,
+        typingTimer: null
       };
 
       var chatThread = document.getElementById('chatThread');
       var elLobby = document.getElementById('panelLobby');
       var elIntroFlow = document.getElementById('panelIntroFlow');
       var elSteps = document.getElementById('panelSteps');
+      var elBridge = document.getElementById('panelPhaseBridge');
       var elEnd = document.getElementById('panelEnd');
       var elFeedback = document.getElementById('feedbackBox');
       var elNext = document.getElementById('btnNext');
       var btnIntroNext = document.getElementById('btnIntroNext');
       var btnBeginShift = document.getElementById('btnBeginShift');
+      var elCpeCard = document.getElementById('cpeStatusCard');
+
+      function setCpePill(tone, label) {
+        var el = document.getElementById('cpeTunnelPill');
+        el.textContent = label;
+        el.className =
+          'mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ' +
+          (tone === 'bad' ? 'cpe-pill-bad' : tone === 'ok' ? 'cpe-pill-ok' : 'cpe-pill-warn');
+      }
+
+      function updateCpeDashboard() {
+        if (state.phase !== 2) return;
+        var snap = cpeSnapshots[state.index];
+        if (!snap) return;
+        var syncClock = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById('cpeAgentSync').textContent = syncClock + ' · ' + snap.agentSync;
+        document.getElementById('cpeTunnelText').textContent = snap.tunnelText;
+        setCpePill(snap.tunnelTone, snap.tunnelPill);
+        document.getElementById('cpeLatency').textContent = snap.latency;
+        document.getElementById('cpeLoss').textContent = snap.loss;
+        document.getElementById('cpeJitter').textContent = snap.jitter;
+        document.getElementById('cpePrimaryWan').textContent = snap.primaryWan;
+        document.getElementById('cpeBackupLte').textContent = snap.backupLte;
+        document.getElementById('cpeErpText').textContent = snap.erpText;
+        document.getElementById('cpeFlapText').textContent = snap.flapText;
+        document.getElementById('cpeFootNote').textContent = snap.foot;
+      }
+
+      function nowTime() {
+        return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      }
 
       function scrollChat() {
         chatThread.scrollTop = chatThread.scrollHeight;
       }
 
+      function removeTyping() {
+        var t = document.getElementById('typingRow');
+        if (t) t.remove();
+      }
+
+      function showTyping(cb) {
+        removeTyping();
+        var row = document.createElement('div');
+        row.id = 'typingRow';
+        row.className = 'msg-in flex gap-2 px-1 py-1';
+        row.innerHTML =
+          '<div class="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-amber-200 to-orange-400"></div>' +
+          '<div class="rounded-2xl rounded-tl-md border border-slate-200 bg-white px-4 py-2.5 shadow-sm">' +
+          '<span class="text-xs font-medium text-slate-500">Deniz yazıyor</span>' +
+          '<span class="ml-2 inline-flex gap-1 align-middle">' +
+          '<span class="typing-dot inline-block h-1.5 w-1.5 rounded-full bg-slate-400"></span>' +
+          '<span class="typing-dot inline-block h-1.5 w-1.5 rounded-full bg-slate-400"></span>' +
+          '<span class="typing-dot inline-block h-1.5 w-1.5 rounded-full bg-slate-400"></span>' +
+          '</span></div>';
+        chatThread.appendChild(row);
+        scrollChat();
+        if (state.typingTimer) clearTimeout(state.typingTimer);
+        state.typingTimer = setTimeout(function () {
+          removeTyping();
+          if (typeof cb === 'function') cb();
+        }, 520);
+      }
+
       function appendInternBubble(html) {
         var wrap = document.createElement('div');
-        wrap.className = 'bubble-intern flex gap-2';
+        wrap.className = 'msg-in flex gap-2 py-1';
         wrap.innerHTML =
-          '<div class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-orange-300 text-xs font-bold text-amber-950">D</div>' +
-          '<div class="min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-3 py-2.5 text-slate-800 shadow-sm">' +
+          '<div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-orange-400 text-[10px] font-bold text-amber-950">D</div>' +
+          '<div class="min-w-0 max-w-[92%]">' +
+          '<div class="mb-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0">' +
+          '<span class="text-[13px] font-semibold text-slate-900">Deniz Yılmaz</span>' +
+          '<span class="text-[11px] text-slate-400">' +
+          nowTime() +
+          '</span></div>' +
+          '<div class="rounded-2xl rounded-tl-md border border-slate-200/90 bg-white px-3.5 py-2.5 text-[13px] text-slate-800 shadow-sm">' +
           html +
-          '</div>';
+          '</div></div>';
         chatThread.appendChild(wrap);
+        scrollChat();
+      }
+
+      function appendSelfBubble(text) {
+        var shortText = text.length > 120 ? text.slice(0, 117) + '…' : text;
+        var wrap = document.createElement('div');
+        wrap.className = 'msg-in flex justify-end py-1';
+        wrap.innerHTML =
+          '<div class="max-w-[90%]">' +
+          '<div class="mb-0.5 flex justify-end gap-2">' +
+          '<span class="text-[11px] text-slate-400">' +
+          nowTime() +
+          '</span>' +
+          '<span class="text-[13px] font-semibold text-slate-700">Sen · vardiya</span></div>' +
+          '<div class="rounded-2xl rounded-tr-md border border-[#464eb8]/25 bg-[#e8e9fc] px-3.5 py-2.5 text-[13px] text-slate-900 shadow-sm">' +
+          escapeHtml(shortText) +
+          '</div></div>';
+        chatThread.appendChild(wrap);
+        scrollChat();
+      }
+
+      function escapeHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      function appendDayDivider(label) {
+        var d = document.createElement('div');
+        d.className = 'msg-in flex justify-center py-3';
+        d.innerHTML =
+          '<span class="rounded-full bg-white/90 px-4 py-1 text-[11px] font-medium text-slate-500 shadow-sm ring-1 ring-slate-200/80">' +
+          escapeHtml(label) +
+          '</span>';
+        chatThread.appendChild(d);
         scrollChat();
       }
 
       function appendSystemLine(text) {
         var p = document.createElement('p');
-        p.className = 'text-center text-[11px] text-slate-400';
+        p.className = 'msg-in py-2 text-center text-[11px] font-medium text-slate-500';
         p.textContent = text;
         chatThread.appendChild(p);
         scrollChat();
@@ -300,9 +648,38 @@
         return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       }
 
+      function currentList() {
+        return state.phase === 1 ? steps1 : steps2;
+      }
+
+      function totalStepCount() {
+        return steps1.length + steps2.length;
+      }
+
+      function globalStepNumber() {
+        return state.phase === 1 ? state.index : steps1.length + state.index;
+      }
+
+      function topPointsForCurrentPhase() {
+        return state.phase === 1 ? 10 : P2_TOP;
+      }
+
       function updateProgress() {
-        var pct = steps.length ? Math.round(((state.index + 1) / steps.length) * 100) : 0;
+        var n = globalStepNumber();
+        var pct = totalStepCount() ? Math.round(((n + 1) / totalStepCount()) * 100) : 0;
         document.getElementById('progressBar').style.width = Math.min(100, pct) + '%';
+      }
+
+      function setChannel(phase) {
+        var title = document.getElementById('chatChannelTitle');
+        var sub = document.getElementById('chatChannelSub');
+        if (phase === 1) {
+          title.textContent = '#noc-incidents';
+          sub.textContent = 'Atlas Lojistik · Misafir & iç ağ olayları';
+        } else {
+          title.textContent = '#wan-şubeler';
+          sub.textContent = 'Şube bağlantıları · MPLS / VPN / yedek hat';
+        }
       }
 
       function showFeedback(msg) {
@@ -311,20 +688,34 @@
       }
 
       function renderStep() {
-        var s = steps[state.index];
-        document.getElementById('stepBadge').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
-        document.getElementById('stepLabel').textContent = 'Adım ' + (state.index + 1) + ' / ' + steps.length;
+        removeTyping();
+        var list = currentList();
+        var s = list[state.index];
+        var topPts = topPointsForCurrentPhase();
+
+        if (state.phase === 1) {
+          elCpeCard.classList.add('hidden');
+        } else {
+          elCpeCard.classList.remove('hidden');
+          updateCpeDashboard();
+        }
+
+        document.getElementById('stepBadge').textContent =
+          'Bölüm ' + state.phase + ' · Adım ' + (state.index + 1) + ' / ' + list.length;
+        document.getElementById('stepLabel').textContent = 'B' + state.phase + ' · ' + (state.index + 1) + '/' + list.length;
         document.getElementById('ticketSnippet').textContent = s.ticket;
         document.getElementById('questionTitle').textContent = s.title;
         document.getElementById('questionBody').textContent = s.body;
-        document.getElementById('scoreLive').textContent = Math.min(100, state.score) + ' / 100';
+        document.getElementById('scoreLive').textContent = Math.min(MAX_TOTAL, state.score) + ' / ' + MAX_TOTAL;
         elFeedback.classList.add('hidden');
         elNext.classList.add('hidden');
         state.choiceLocked = false;
         updateProgress();
 
         if (s.internOnEnter) {
-          appendInternBubble('<p class="leading-relaxed">' + formatBold(s.internOnEnter) + '</p>');
+          showTyping(function () {
+            appendInternBubble('<p class="leading-relaxed">' + formatBold(s.internOnEnter) + '</p>');
+          });
         }
 
         var wrap = document.getElementById('optionsWrap');
@@ -333,27 +724,32 @@
           var b = document.createElement('button');
           b.type = 'button';
           b.className =
-            'rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:border-blue-300 hover:bg-blue-50/60 focus-ring';
+            'rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 transition hover:border-[#464eb8]/40 hover:bg-indigo-50/50 focus-ring';
           b.textContent = opt.label;
           b.addEventListener('click', function () {
             if (state.choiceLocked) return;
             state.choiceLocked = true;
             state.score += opt.points;
-            if (opt.points >= POINTS_TOP) state.bestPicks += 1;
-            document.getElementById('scoreLive').textContent = Math.min(100, state.score) + ' / 100';
+            var top = topPointsForCurrentPhase();
+            if (opt.points >= top) state.bestPicks += 1;
+            document.getElementById('scoreLive').textContent = Math.min(MAX_TOTAL, state.score) + ' / ' + MAX_TOTAL;
+            appendSelfBubble(opt.label);
             showFeedback(opt.feedback);
             if (opt.internLine) {
-              appendInternBubble('<p class="leading-relaxed">' + formatBold(opt.internLine) + '</p>');
+              showTyping(function () {
+                appendInternBubble('<p class="leading-relaxed">' + formatBold(opt.internLine) + '</p>');
+              });
             }
             elNext.classList.remove('hidden');
             updateProgress();
             wrap.querySelectorAll('button').forEach(function (btn, j) {
               btn.disabled = true;
               if (j === i) {
+                var half = top <= 10 ? 4 : 12;
                 btn.classList.add(
-                  opt.points >= POINTS_TOP
+                  opt.points >= top
                     ? 'border-emerald-400 bg-emerald-50'
-                    : opt.points >= 4
+                    : opt.points >= half
                       ? 'border-amber-300 bg-amber-50'
                       : 'border-red-200 bg-red-50'
                 );
@@ -366,30 +762,80 @@
         });
       }
 
-      function finish() {
+      function finishPhase1() {
+        state.scorePhase1End = Math.min(100, state.score);
+        elSteps.classList.add('hidden');
+        elBridge.classList.remove('hidden');
+        document.getElementById('bridgeScore1').textContent = String(state.scorePhase1End);
+        appendSystemLine('— INC-4482 kapatıldı · Bölüm 1 bitti —');
+        showTyping(function () {
+          appendInternBubble(
+            '<p class="leading-relaxed">' +
+              formatBold(
+                '**Deniz:** Nefes aldık… ama Teams’te #wan-şubeler patladı. Ankara şubesi tünelden şikayet ediyor; devam edelim mi?'
+              ) +
+              '</p>'
+          );
+        });
+      }
+
+      function startPhase2() {
+        elBridge.classList.add('hidden');
+        state.phase = 2;
+        state.index = 0;
+        setChannel(2);
+        appendDayDivider('Öğleden sonra · WAN bridge');
+        appendSystemLine('Kanal: #wan-şubeler · INC-4491 atandı');
+        showTyping(function () {
+          appendInternBubble(
+            '<p class="leading-relaxed">' +
+              formatBold(
+                '**Deniz:** Şimdi misafir Wi‑Fi değil; şube IPsec ve operatör tarafı. Aynı dikkatle gidelim, kaptan.'
+              ) +
+              '</p>'
+          );
+        });
+        elSteps.classList.remove('hidden');
+        setTimeout(function () {
+          renderStep();
+        }, 600);
+      }
+
+      function finishAll() {
         elSteps.classList.add('hidden');
         elEnd.classList.remove('hidden');
-        var sc = Math.min(100, state.score);
-        document.getElementById('finalScore').textContent = String(sc);
+        var s1 = Math.min(100, state.scorePhase1End);
+        var s2 = Math.min(100, state.score - s1);
+        var total = Math.min(MAX_TOTAL, state.score);
+        document.getElementById('finalScore1').textContent = String(s1);
+        document.getElementById('finalScore2').textContent = String(s2);
+        document.getElementById('finalScoreTotal').textContent = String(total);
         var msg =
-          sc >= 90
-            ? 'Güçlü vardiya: öncelik → gözlem → koordinasyon → DNS → değişiklik disiplini → DHCP/switch → segmentasyon → izleme → iletişim → kapanış.'
-            : sc >= 70
-              ? 'İyi gidiyordun; birkaç adımda prosedür veya iletişim tarafını sıkılaştırarak 90+ bandına çıkabilirsin.'
-              : 'Tekrar dene: önce etki alanı ve öncelik, sonra kanıt toplama, kontrollü DNS ve VLAN kuralları, en sonda şeffaf kapanış.';
+          total >= 170
+            ? 'Çok güçlü: iki olayda da ölçü, prosedür ve iletişim dengesi iyi.'
+            : total >= PASS_TOTAL
+              ? 'Geçer vardiya: her iki bölümde de ana hatlar doğru; ince ayar için dokümantasyon ve operatör kanıtı detaylandırılabilir.'
+              : 'Tekrar dene: Bölüm 1’de öncelik–DNS–segmentasyon; Bölüm 2’de log korelasyonu, operatör ticket’ı ve kontrollü failover öne çıkmalı.';
         document.getElementById('finalMessage').textContent = msg;
         var closing =
-          sc >= 70
-            ? '<strong>Deniz:</strong> Bugün gerçekten profesyonel bir vardiya gördüm. Mentoruma “DNS önce, panik sonra değil” diye özet geçeceğim. Bir dahaki staj gününde görüşürüz, kaptan!'
-            : '<strong>Deniz:</strong> Zor bir olaydı, birlikte tekrar üzerinden geçeriz. Ben yine buradayım; bir dahaki seferde öncelik ve dokümantasyona daha çok takılırız, tamam mı?';
+          total >= PASS_TOTAL
+            ? '<strong>Deniz:</strong> İki farklı olay, tek gün — ikisini de taşıdın. Mentoruma “vardiya kaptanı hazır” diyeceğim.'
+            : '<strong>Deniz:</strong> Zor gün ama öğrendik. Bir dahaki sefer WAN tarafında daha çok kanıt toplamaya takılırız, tamam mı?';
         document.getElementById('denizClosing').innerHTML = closing;
         document.getElementById('saveHint').textContent =
-          'Kaydet: giriş yaptıysanız tamamlama API’ye gider. İsterseniz sonucu yalnızca bu sayfada da inceleyebilirsiniz.';
-        appendInternBubble('<p class="leading-relaxed">' + (sc >= 70 ? formatBold('**Deniz:** Vardiya bitti; eline sağlık, kaptan.') : formatBold('**Deniz:** Pes yok; bir daha deneriz.')) + '</p>');
+          'Kayıt: ekranda 200 üzerinden görünür; sisteme 0–100 ölçeğine çevrilerek kaydedilir (≥70 geçer).';
+        showTyping(function () {
+          appendInternBubble(
+            '<p class="leading-relaxed">' +
+              formatBold(total >= PASS_TOTAL ? '**Deniz:** Vardiya kapandı. Eline sağlık!' : '**Deniz:** Birlikte tekrarlarız; pes yok.') +
+              '</p>'
+          );
+        });
         state.completionSaved = false;
       }
 
       function clearChat() {
+        removeTyping();
         chatThread.innerHTML = '';
       }
 
@@ -398,39 +844,59 @@
         elIntroFlow.classList.remove('hidden');
         state.introIdx = 0;
         clearChat();
-        appendSystemLine('Atlas Lojistik · NOC · ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }));
-        appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[0]) + '</p>');
+        setChannel(1);
+        appendDayDivider('Bugün · Sabah');
+        appendSystemLine('Atlas Lojistik · Dahili mesajlaşma · ' + nowTime());
+        showTyping(function () {
+          appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[0]) + '</p>');
+        });
         btnIntroNext.classList.remove('hidden');
-        document.getElementById('introFlowHint').textContent = 'Deniz yazdı. “Devam” ile sıradaki mesajı getir.';
+        document.getElementById('introFlowHint').textContent = 'Deniz yazıyor… ardından “Devam” ile sıradaki mesaj.';
       });
 
       btnIntroNext.addEventListener('click', function () {
         state.introIdx += 1;
         if (state.introIdx < introScript.length) {
-          appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[state.introIdx]) + '</p>');
+          showTyping(function () {
+            appendInternBubble('<p class="leading-relaxed">' + formatBold(introScript[state.introIdx]) + '</p>');
+          });
         }
         if (state.introIdx >= introScript.length - 1) {
           btnIntroNext.classList.add('hidden');
           btnBeginShift.classList.remove('hidden');
-          document.getElementById('introFlowHint').textContent = 'Hazırsan vardiyayı başlat; ticket ekranı açılacak ve skor tutulacak.';
+          document.getElementById('introFlowHint').textContent = 'Hazırsan Bölüm 1 başlar; bitince otomatik olarak Bölüm 2 köprüsü açılır.';
         }
       });
 
       btnBeginShift.addEventListener('click', function () {
         state.startedAt = Date.now();
+        state.phase = 1;
+        state.index = 0;
         if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
           window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
         }
         elIntroFlow.classList.add('hidden');
         elSteps.classList.remove('hidden');
-        appendSystemLine('— Ticket INC-4482 atandı · karar modu —');
-        renderStep();
+        appendSystemLine('— INC-4482 atandı · Bölüm 1 —');
+        setTimeout(function () {
+          renderStep();
+        }, 400);
+      });
+
+      document.getElementById('btnStartPhase2').addEventListener('click', function () {
+        startPhase2();
       });
 
       elNext.addEventListener('click', function () {
+        removeTyping();
         state.index += 1;
-        if (state.index >= steps.length) {
-          finish();
+        var list = currentList();
+        if (state.index >= list.length) {
+          if (state.phase === 1) {
+            finishPhase1();
+          } else {
+            finishAll();
+          }
         } else {
           renderStep();
         }
@@ -440,48 +906,62 @@
         if (window.SimulationTracker && typeof window.SimulationTracker.clearRunId === 'function') {
           window.SimulationTracker.clearRunId(SIM_ID);
         }
+        state.phase = 1;
         state.index = 0;
         state.score = 0;
+        state.scorePhase1End = 0;
         state.bestPicks = 0;
         state.startedAt = Date.now();
         state.choiceLocked = false;
         state.completionSaved = false;
         elEnd.classList.add('hidden');
+        elBridge.classList.add('hidden');
         elSteps.classList.remove('hidden');
         clearChat();
+        setChannel(1);
         appendSystemLine('— Senaryo sıfırlandı —');
-        appendInternBubble(
-          '<p class="leading-relaxed">' +
-            formatBold('**Deniz:** Tamam kaptan, baştan alıyoruz. Ticket yine INC-4482 gibi düşün; bu sefer nasıl oynayacağına bakalım.') +
-            '</p>'
-        );
+        showTyping(function () {
+          appendInternBubble(
+            '<p class="leading-relaxed">' +
+              formatBold('**Deniz:** Baştan başlıyoruz. Önce misafir olayı, sonra WAN — aynı sıra, kaptan.') +
+              '</p>'
+          );
+        });
         if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
           window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
         }
-        renderStep();
+        setTimeout(function () {
+          renderStep();
+        }, 650);
       });
 
       document.getElementById('btnSave').addEventListener('click', async function () {
         if (!window.SimulationTracker || typeof window.SimulationTracker.saveCompletion !== 'function') return;
-        var sc = Math.min(100, state.score);
+        var total = Math.min(MAX_TOTAL, state.score);
+        var normalized = Math.round((total / MAX_TOTAL) * 100);
         var elapsed = state.startedAt ? Math.max(0, Math.floor((Date.now() - state.startedAt) / 1000)) : 0;
-        var wrong = steps.length - state.bestPicks;
+        var wrong = totalStepCount() - state.bestPicks;
         var hint = document.getElementById('saveHint');
         hint.textContent = 'Kaydediliyor…';
         await window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
-          score: sc,
+          score: normalized,
           maxScore: 100,
           timeSpentSeconds: elapsed,
           correctCount: state.bestPicks,
           wrongCount: wrong,
-          passed: sc >= 70,
+          passed: normalized >= 70,
           moduleName: MODULE_NAME,
           redirectToDashboard: false,
           resetCount: 0,
           hintUsedCount: 0
         });
         state.completionSaved = true;
-        hint.textContent = 'Kayıt isteği gönderildi. Giriş yoksa konsolda uyarı görebilirsiniz; sonuç yine bu sayfada.';
+        hint.textContent =
+          'Kayıt gönderildi (ekrandaki ' +
+          total +
+          '/200 → sistem notu ' +
+          normalized +
+          '/100). Giriş yoksa konsolda uyarı görebilirsiniz.';
       });
     })();
   </script>
