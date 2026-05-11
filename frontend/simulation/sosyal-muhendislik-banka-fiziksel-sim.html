@@ -410,33 +410,26 @@
       return { mx, mz };
     }
 
+    /** updateCamera ile aynı yatay orbit mesafesi (XZ); duvara itilmiş gerçek kamera pozisyonu kullanılmaz — kayma bozulmaz. */
+    const CAM_ORBIT_OFF = new THREE.Vector3(0, 2.08, 7.05);
+
     /**
-     * Hareket vektörü dünya XZ yerine kameranın arkadan baktığı eksene göre:
-     * W/S = ekranda ileri/geri, A/D = ekranda sol/sağ.
+     * W/S/A/D: üçüncü şahıs kamerasının oyuncunun arkasına yerleştiği eksene göre (updateCamera ile aynı rig).
+     * İleri = orbit vektörünün tersi (sahneye doğru), sağ/sol = yatayda dik.
      */
     function readMoveXZCameraRelative() {
       const raw = readMoveXZ();
       if (raw.mx === 0 && raw.mz === 0) return raw;
 
-      const cx = camera.position.x;
-      const cz = camera.position.z;
-      const px = player.position.x;
-      const pz = player.position.z;
-      let fx = px - cx;
-      let fz = pz - cz;
-      let fl = Math.hypot(fx, fz);
-      if (fl < 0.07) {
-        const y = player.rotation.y;
-        fx = Math.sin(y);
-        fz = Math.cos(y);
-        fl = 1;
-      } else {
-        fx /= fl;
-        fz /= fl;
-      }
-      const f = new THREE.Vector3(fx, 0, fz);
+      const yaw = player.rotation.y;
+      const off = CAM_ORBIT_OFF.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const f = new THREE.Vector3(off.x, 0, off.z);
+      if (f.lengthSq() < 1e-8) f.set(0, 0, -1);
+      f.normalize().multiplyScalar(-1);
+
       const up = new THREE.Vector3(0, 1, 0);
       const r = new THREE.Vector3().crossVectors(up, f).normalize();
+
       const mx = -raw.mz * f.x + raw.mx * r.x;
       const mz = -raw.mz * f.z + raw.mx * r.z;
       return { mx, mz };
@@ -1547,8 +1540,7 @@
     function updateCamera(dt) {
       const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
       const yaw = player.rotation.y;
-      const off = new THREE.Vector3(0, 2.08, 7.05);
-      off.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const off = CAM_ORBIT_OFF.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
       const targetCam = eye.clone().add(off);
       const dir = new THREE.Vector3().subVectors(targetCam, eye);
       const fullDist = dir.length();
@@ -2065,7 +2057,7 @@
       canvas.focus({ preventScroll: true });
       startLobbyAmbience();
       hudText.innerHTML =
-        '<strong>W A S D</strong> veya <strong>ok tuşları</strong> — hareket <strong>kameranın arkadan baktığı yöne göre</strong> (ekranda ileri = W). Cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin; kapı önünde <strong>E</strong> ile şubeye girin. İçeride USB için panel + <strong>E</strong>.';
+        '<strong>W A S D</strong> veya <strong>ok tuşları</strong> — hareket <strong>üçüncü şahıs kamera rig’iyle aynı eksende</strong> (W = karakterin baktığı / ekranda ileri; duvara yapışan kamera hareketi bozmaz). Cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin; kapı önünde <strong>E</strong> ile şubeye girin. İçeride USB için panel + <strong>E</strong>.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
@@ -2075,7 +2067,7 @@
       observeUsbOverlay.classList.add('hidden');
       setPhase('LEAVE_BANK');
       hudText.innerHTML =
-        'Cam kapıya gidin (<strong>güneydoğu</strong>) — yürüyüş <strong>kameraya göre</strong> (W = ekranda ileri). Kapıda <strong>E</strong> ile çıkın; ardından yan servis yolundaki konteynerlere yaklaşın.';
+        'Cam kapıya gidin (<strong>güneydoğu</strong>) — yürüyüş <strong>kamera rig’ine göre</strong> (W = ileri). Kapıda <strong>E</strong> ile çıkın; ardından yan servis yolundaki konteynerlere yaklaşın.';
     });
 
     document.getElementById('btnDocBag').addEventListener('click', () => {
