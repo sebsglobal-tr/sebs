@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <base href="/" />
+  <title>Banka Fiziksel Pentest (Eğitim) | Sosyal Mühendislik Simülasyonu · SEBS</title>
+  <meta name="description" content="Eğitim simülasyonu: yazılı pentest kapsamında bankada USB bırakma ve bilgi toplama risklerini 3D ortamda deneyimleyin. Gerçek saldırı değildir." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    :root { --panel: rgba(15, 23, 42, 0.88); --accent: #22c55e; --warn: #f59e0b; --bad: #ef4444; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; font-family: Inter, system-ui, sans-serif; background: #020617; color: #e2e8f0; }
+    #gameCanvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+    #hud {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      padding: 0.65rem 1rem 1rem;
+      background: linear-gradient(180deg, transparent, rgba(2,6,23,0.92));
+      pointer-events: none;
+    }
+    #hud .hud-inner { max-width: 720px; margin: 0 auto; pointer-events: auto; }
+    #hud p { margin: 0; font-size: 0.8125rem; line-height: 1.45; color: #cbd5e1; }
+    #hud strong { color: #f8fafc; }
+    .meter { height: 6px; border-radius: 99px; background: #334155; margin-top: 0.5rem; overflow: hidden; }
+    .meter > span { display: block; height: 100%; width: 0%; background: var(--accent); transition: width 0.15s ease, background 0.2s; }
+    .overlay {
+      position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
+      padding: 1rem; background: rgba(2, 6, 23, 0.72); backdrop-filter: blur(8px);
+    }
+    .overlay.hidden { display: none !important; }
+    .card {
+      max-width: 28rem; width: 100%; border-radius: 1rem; border: 1px solid rgba(148, 163, 184, 0.25);
+      background: #0f172a; box-shadow: 0 24px 48px rgba(0,0,0,0.45); padding: 1.25rem 1.35rem;
+    }
+    .card h2 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #f8fafc; }
+    .card .sub { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; margin-bottom: 0.75rem; }
+    .mail {
+      font-size: 0.8125rem; line-height: 1.55; color: #cbd5e1;
+      border-left: 3px solid #3b82f6; padding-left: 0.75rem; margin: 0.75rem 0;
+      background: rgba(30, 41, 59, 0.5); padding: 0.75rem 0.75rem 0.75rem 0.85rem; border-radius: 0 0.5rem 0.5rem 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      margin-top: 0.85rem; padding: 0.55rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer;
+      font-weight: 600; font-size: 0.875rem; background: #22c55e; color: #052e16;
+    }
+    .btn.secondary { background: #334155; color: #e2e8f0; }
+    .btn:hover { filter: brightness(1.06); }
+    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.65rem; }
+    #topBar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      padding: 0.5rem 0.75rem; background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+      font-size: 0.75rem;
+    }
+    #topBar a { color: #93c5fd; text-decoration: none; font-weight: 600; }
+    #topBar a:hover { text-decoration: underline; }
+    .badge { font-variant-numeric: tabular-nums; color: #94a3b8; }
+    .trash-grid { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+    .trash-grid button {
+      text-align: left; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid #334155;
+      background: #1e293b; color: #e2e8f0; font-size: 0.8125rem; cursor: pointer;
+    }
+    .trash-grid button:hover { border-color: #64748b; background: #334155; }
+  </style>
+</head>
+<body>
+  <div id="topBar">
+    <a href="/simulations.html">← Simülasyonlar</a>
+    <span class="badge" id="phaseLabel">Brifing</span>
+    <span class="badge" id="scoreLabel">Puan: 0</span>
+  </div>
+
+  <canvas id="gameCanvas" aria-label="3D banka lobisi görünümü"></canvas>
+
+  <div id="hud">
+    <div class="hud-inner">
+      <p id="hudText"><strong>W A S D</strong> ile hareket · yakın olduğunuzda yeşil halkada <strong>F</strong> ile USB’yi bırakın · şüphe dolunca güvenlik tepkisi artar.</p>
+      <div class="meter" aria-hidden="true"><span id="suspicionFill"></span></div>
+    </div>
+  </div>
+
+  <div id="briefOverlay" class="overlay">
+    <div class="card">
+      <p class="sub">Görev · Pentest ekibi (kurgusal)</p>
+      <h2>Yöneticiden talimat</h2>
+      <div class="mail">
+        <strong>Konu:</strong> Pentest — Atlas Bankası saha adımı<br /><br />
+        Ekibimiz bankadan yazılı izin aldı. Sen sahada olacaksın: <strong>fiziksel yüzey testi</strong> kapsamında
+        kontrollü bir USB bırakılacak (içinde yalnızca eğitim yükü simülasyonu). Kimseye yakalanmadan,
+        müşteri veya personelin <strong>doğal olarak fark edebileceği</strong> bir noktayı seç.
+        Ardından <strong>atık alanında</strong> (RoE’de izin verilen çerçevede) şirketimize ait sızıntı riski taşıyan bir kağıt aranacak — bulursan güvenli kanalla raporla ve çık.
+      </div>
+      <p class="hint">Bu içerik yalnızca farkındalık ve prosedür eğitimidir; gerçek ortamda izinsiz eylem yasadışıdır.</p>
+      <button type="button" class="btn" id="btnStart3d">Bankaya gir (3D)</button>
+    </div>
+  </div>
+
+  <div id="trashOverlay" class="overlay hidden">
+    <div class="card">
+      <p class="sub">Aşama 2 · Atık alanı (RoE içi)</p>
+      <h2>Çöp kutusu — hedef belge</h2>
+      <p style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0 0 0.5rem;">
+        Maskeleme: eldiven ve çanta kullanıyorsun. Üç poşetten birinde müşteri adayları içeren <strong>“Akış Teklif Özeti”</strong> zarfı olabilir.
+      </p>
+      <div class="trash-grid" id="trashButtons"></div>
+      <p class="hint" id="trashHint"></p>
+    </div>
+  </div>
+
+  <div id="endOverlay" class="overlay hidden">
+    <div class="card">
+      <p class="sub">Değerlendirme</p>
+      <h2 id="endTitle">Görev tamamlandı</h2>
+      <p id="endBody" style="font-size:0.8125rem;line-height:1.55;color:#cbd5e1;margin:0.5rem 0 0;"></p>
+      <button type="button" class="btn secondary" id="btnReplay">Yeniden oyna</button>
+      <a class="btn" href="/simulations.html" style="text-decoration:none;margin-left:0.5rem;">Simülasyon listesi</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+    const SIM_ID = 'sosyal-muhendislik-banka-fiziksel';
+    const SIM_NAME = 'Sosyal Mühendislik · Banka fiziksel pentest (eğitim)';
+    const MODULE_NAME = 'Sosyal Mühendisliğe Giriş';
+
+    const canvas = document.getElementById('gameCanvas');
+    const hudText = document.getElementById('hudText');
+    const suspicionFill = document.getElementById('suspicionFill');
+    const phaseLabel = document.getElementById('phaseLabel');
+    const scoreLabel = document.getElementById('scoreLabel');
+    const briefOverlay = document.getElementById('briefOverlay');
+    const trashOverlay = document.getElementById('trashOverlay');
+    const endOverlay = document.getElementById('endOverlay');
+    const trashButtons = document.getElementById('trashButtons');
+    const trashHint = document.getElementById('trashHint');
+
+    let score = 0;
+    let phase = 'BRIEFING';
+    let suspicion = 0;
+    let runEnded = false;
+    let trackerPushed = false;
+    let dropped = false;
+    let dropQuality = null;
+    let keys = {};
+    let clock = new THREE.Clock();
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b1220);
+    scene.fog = new THREE.Fog(0x0b1220, 12, 38);
+
+    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 120);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.shadowMap.enabled = true;
+
+    const hemi = new THREE.HemisphereLight(0xc7d2fe, 0x0f172a, 0.55);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.85);
+    dir.position.set(6, 14, 4);
+    dir.castShadow = true;
+    dir.shadow.mapSize.set(1024, 1024);
+    scene.add(dir);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(42, 26),
+      new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.55, metalness: 0.08 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    function wall(w, h, d, x, z, ry) {
+      const m = new THREE.Mesh(
+        new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 })
+      );
+      m.position.set(x, h / 2, z);
+      m.rotation.y = ry || 0;
+      m.castShadow = true;
+      m.receiveShadow = true;
+      scene.add(m);
+      return m;
+    }
+    wall(42, 5, 0.6, 0, -13, 0);
+    wall(42, 5, 0.6, 0, 13, 0);
+    wall(0.6, 5, 26, -21, 0, 0);
+    wall(0.6, 5, 26, 21, 0, 0);
+
+    const player = new THREE.Mesh(
+      new THREE.BoxGeometry(0.45, 1.35, 0.45),
+      new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.4 })
+    );
+    player.position.set(0, 0.675, 10);
+    player.castShadow = true;
+    scene.add(player);
+
+    const guards = [];
+    function addGuard(x, z) {
+      const g = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.38, 0.42, 1.85, 12),
+        new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.45 })
+      );
+      g.position.set(x, 0.925, z);
+      g.castShadow = true;
+      g.userData.base = new THREE.Vector3(x, 0, z);
+      g.userData.t = Math.random() * 6;
+      scene.add(g);
+      guards.push(g);
+      return g;
+    }
+    addGuard(-8, -4);
+    addGuard(10, 2);
+
+    const counters = new THREE.Group();
+    const cMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.5 });
+    const c1 = new THREE.Mesh(new THREE.BoxGeometry(8, 1.1, 2.2), cMat);
+    c1.position.set(-5, 0.55, -8);
+    c1.castShadow = true;
+    counters.add(c1);
+    const c2 = new THREE.Mesh(new THREE.BoxGeometry(6, 1.1, 2.2), cMat);
+    c2.position.set(8, 0.55, -7);
+    c2.castShadow = true;
+    counters.add(c2);
+    scene.add(counters);
+
+    const plant = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.55, 0.65, 1.2, 10),
+      new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.8 })
+    );
+    plant.position.set(-14, 0.6, 6);
+    plant.castShadow = true;
+    scene.add(plant);
+
+    const door = new THREE.Mesh(
+      new THREE.BoxGeometry(2.2, 2.8, 0.35),
+      new THREE.MeshStandardMaterial({ color: 0xca8a04, metalness: 0.2, roughness: 0.35 })
+    );
+    door.position.set(18, 1.4, 11);
+    door.castShadow = true;
+    door.userData.isDoor = true;
+    scene.add(door);
+
+    const spots = [
+      { x: 0, z: 0, q: 'bad', label: 'lobi ortası', pts: 15 },
+      { x: -14, z: 6, q: 'good', label: 'bitki köşesi', pts: 55 },
+      { x: 12, z: 8, q: 'good', label: 'oturma bankı', pts: 50 },
+      { x: -6, z: -9, q: 'great', label: 'broşürlük altı (düşük trafik)', pts: 70 }
+    ];
+
+    const spotMeshes = [];
+    spots.forEach((s) => {
+      const ring = new THREE.Mesh(
+        new THREE.RingGeometry(0.55, 0.85, 32),
+        new THREE.MeshBasicMaterial({ color: 0x22c55e, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
+      );
+      ring.rotation.x = -Math.PI / 2;
+      ring.position.set(s.x, 0.02, s.z);
+      ring.userData.spot = s;
+      scene.add(ring);
+      spotMeshes.push(ring);
+    });
+
+    let usbMesh = null;
+
+    function setPhase(p) {
+      phase = p;
+      phaseLabel.textContent =
+        p === 'BRIEFING'
+          ? 'Brifing'
+          : p === 'DROP'
+            ? 'USB bırakma'
+            : p === 'TRASH_UI'
+              ? 'Atık alanı'
+              : p === 'EXIT'
+                ? 'Çıkış'
+                : p === 'END'
+                  ? 'Özet'
+                  : p;
+    }
+
+    function pushTrackerCompletion(passed) {
+      if (trackerPushed) return;
+      trackerPushed = true;
+      if (!window.SimulationTracker || typeof window.SimulationTracker.saveCompletion !== 'function') return;
+      const norm = Math.min(100, Math.round((score / 200) * 100));
+      window.SimulationTracker
+        .saveCompletion(SIM_ID, SIM_NAME, {
+          score: norm,
+          maxScore: 100,
+          timeSpentSeconds: Math.floor(clock.getElapsedTime()),
+          correctCount: dropQuality === 'great' || dropQuality === 'good' ? 1 : 0,
+          wrongCount: dropQuality === 'bad' ? 1 : 0,
+          passed,
+          moduleName: MODULE_NAME,
+          redirectToDashboard: false,
+          resetCount: 0,
+          hintUsedCount: 0
+        })
+        .catch(function () {});
+    }
+
+    function resize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function updateCamera() {
+      const off = new THREE.Vector3(0, 4.2, 7.5);
+      camera.position.copy(player.position).add(off);
+      camera.lookAt(player.position.x, player.position.y + 0.6, player.position.z);
+    }
+
+    function clampPlayer() {
+      player.position.x = THREE.MathUtils.clamp(player.position.x, -19, 19);
+      player.position.z = THREE.MathUtils.clamp(player.position.z, -11.5, 11.5);
+    }
+
+    function animGuards(dt) {
+      guards.forEach((g) => {
+        g.userData.t += dt;
+        const r = 3.5;
+        g.position.x = g.userData.base.x + Math.sin(g.userData.t * 0.55) * r;
+        g.position.z = g.userData.base.z + Math.cos(g.userData.t * 0.45) * r * 0.6;
+      });
+    }
+
+    function guardProximity() {
+      let dMin = 99;
+      guards.forEach((g) => {
+        const dx = g.position.x - player.position.x;
+        const dz = g.position.z - player.position.z;
+        dMin = Math.min(dMin, Math.hypot(dx, dz));
+      });
+      return dMin;
+    }
+
+    function tryDropUsb() {
+      if (dropped || phase !== 'DROP') return;
+      let best = null;
+      let bestD = 2.1;
+      spots.forEach((s) => {
+        const d = Math.hypot(s.x - player.position.x, s.z - player.position.z);
+        if (d < bestD) {
+          bestD = d;
+          best = s;
+        }
+      });
+      if (!best) {
+        hudText.innerHTML = '<strong>Daha yaklaş</strong> — yeşil halkanın üstüne gelip tekrar <strong>F</strong>.';
+        return;
+      }
+      dropped = true;
+      dropQuality = best.q;
+      score += best.pts;
+      scoreLabel.textContent = 'Puan: ' + score;
+      usbMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.25, 0.08, 0.55),
+        new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.3 })
+      );
+      usbMesh.position.set(best.x, 0.05, best.z);
+      usbMesh.rotation.y = Math.random();
+      scene.add(usbMesh);
+      spotMeshes.forEach((m) => {
+        m.visible = false;
+      });
+      hudText.innerHTML =
+        'USB <strong>' +
+        best.label +
+        '</strong> konumuna bırakıldı. Şimdi <strong>atık alanına</strong> git (sol arka koridor hissi: bankanın <strong>W</strong> ile kuzey duvarına, <strong>A/D</strong> ile merkeze).';
+      setTimeout(() => {
+        if (phase === 'DROP') {
+          setPhase('TRASH_UI');
+          trashOverlay.classList.remove('hidden');
+          buildTrashUi();
+        }
+      }, 900);
+    }
+
+    function buildTrashUi() {
+      trashButtons.innerHTML = '';
+      trashHint.textContent = 'Bir poşeti seç.';
+      const opts = [
+        { id: 1, ok: false, t: 'Poşet A — kahve telvesi ve ATM fişleri' },
+        { id: 2, ok: true, t: 'Poşet B — müşteri broşürleri ve zarf (Akış Teklif Özeti)' },
+        { id: 3, ok: false, t: 'Poşet C — boş şeker ambalajları' }
+      ];
+      opts.sort(() => Math.random() - 0.5);
+      opts.forEach((o) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = o.t;
+        b.addEventListener('click', () => {
+          if (o.ok) {
+            score += 35;
+            trashHint.textContent = 'Hedef zarf güvenli torbaya alındı. Şubeden çıkışa gidin (3D).';
+            trashOverlay.classList.add('hidden');
+            setPhase('EXIT');
+            hudText.innerHTML = 'Çıkış kapısına yaklaş (<strong>sarı blok</strong>) — <strong>E</strong> ile binadan çık.';
+            scoreLabel.textContent = 'Puan: ' + score;
+          } else {
+            suspicion += 28;
+            trashHint.textContent = 'Yanlış poşet — zaman kaybı ve gürültü. Başka poşeti deneyin.';
+            score = Math.max(0, score - 10);
+            scoreLabel.textContent = 'Puan: ' + score;
+          }
+        });
+        trashButtons.appendChild(b);
+      });
+    }
+
+    function tryExit() {
+      if (phase !== 'EXIT') return;
+      const d = Math.hypot(door.position.x - player.position.x, door.position.z - player.position.z);
+      if (d < 2.2) {
+        finishRun();
+      }
+    }
+
+    function finishRun() {
+      if (runEnded) return;
+      runEnded = true;
+      setPhase('END');
+      let extra = 0;
+      if (dropQuality === 'great') extra += 15;
+      else if (dropQuality === 'good') extra += 8;
+      if (suspicion < 35) extra += 20;
+      score += extra;
+      scoreLabel.textContent = 'Puan: ' + score;
+      endOverlay.classList.remove('hidden');
+      document.getElementById('endTitle').textContent = 'Görev tamamlandı';
+      document.getElementById('endBody').innerHTML =
+        '<strong>Puan:</strong> ' +
+        score +
+        ' / 200 (yaklaşık)<br/>' +
+        '<strong>USB konumu:</strong> ' +
+        (dropQuality || '-') +
+        '<br/><strong>Şüphe birikimi:</strong> ' +
+        Math.round(suspicion) +
+        '<br/><br/>Gerçek pentestte tüm adımlar yazılı RoE, kanıt zinciri ve hukuki çerçeve ile yapılır; bu sahne yalnızca <strong>fiziksel sosyal mühendislik risk farkındalığı</strong> içindir.';
+      const norm = Math.min(100, Math.round((score / 200) * 100));
+      pushTrackerCompletion(norm >= 45);
+    }
+
+    document.getElementById('btnStart3d').addEventListener('click', () => {
+      briefOverlay.classList.add('hidden');
+      setPhase('DROP');
+      hudText.innerHTML =
+        '<strong>W A S D</strong> hareket · yeşil halkaya yaklaş · <strong>F</strong> USB bırak · güvenlik kırmızı silindirlere yaklaşma.';
+      if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+        window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+      }
+    });
+
+    document.getElementById('btnReplay').addEventListener('click', () => {
+      location.reload();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      keys[e.code] = true;
+      if (e.code === 'KeyF' && phase === 'DROP') tryDropUsb();
+      if (e.code === 'KeyE' && phase === 'EXIT') tryExit();
+    });
+    window.addEventListener('keyup', (e) => {
+      keys[e.code] = false;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.1);
+      if (phase === 'DROP' || phase === 'EXIT') {
+        const speed = phase === 'EXIT' ? 5.2 : 4.2;
+        let mx = 0,
+          mz = 0;
+        if (keys['KeyW']) mz -= 1;
+        if (keys['KeyS']) mz += 1;
+        if (keys['KeyA']) mx -= 1;
+        if (keys['KeyD']) mx += 1;
+        if (mx !== 0 || mz !== 0) {
+          const len = Math.hypot(mx, mz) || 1;
+          player.position.x += (mx / len) * speed * dt;
+          player.position.z += (mz / len) * speed * dt;
+          clampPlayer();
+        }
+        animGuards(dt);
+        const gd = guardProximity();
+        if (gd < 2.8) suspicion += dt * 22;
+        if (gd < 1.4) suspicion += dt * 35;
+        suspicion = Math.min(100, suspicion);
+        suspicion -= dt * 1.2;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+        if (suspicion >= 95 && phase === 'DROP' && !runEnded) {
+          runEnded = true;
+          setPhase('END');
+          endOverlay.classList.remove('hidden');
+          document.getElementById('endTitle').textContent = 'Yakalandınız (simülasyon)';
+          document.getElementById('endBody').textContent =
+            'Güvenlik görevlileri sizi uzaklaştırdı. Daha düşük profilli konum ve güvenlikten uzak durmayı deneyin.';
+          pushTrackerCompletion(false);
+        }
+        updateCamera();
+      } else {
+        updateCamera();
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
