@@ -1,8 +1,8 @@
 /* SEBS Blog — liste ve makale sayfalari */
 
-/* landing-chrome body.landing-site-body beyaz zemin + padding-top blog’u bozar; blog’da geri al */
+/* Ana site ile aynı fixed navbar (header.fixed) — üst boşluk landing-chrome ile uyumlu */
 body.landing-site-body.blog-premium-page {
-  padding-top: 0 !important;
+  padding-top: 4rem !important;
   font-family: Inter, system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.14), transparent 55%),
@@ -125,7 +125,7 @@ body.landing-site-body.blog-premium-page {
 
 .blog-shell {
   max-width: 960px;
-  margin: 2rem auto 3rem;
+  margin: 1.25rem auto 3rem;
   padding: 2rem 1.5rem;
   background: rgba(255, 255, 255, 0.78);
   border: 1px solid rgba(148, 163, 184, 0.22);
@@ -792,6 +792,12 @@ html[data-theme="dark"] body.blog-premium-page .blog-topbar {
   box-shadow:
     0 1px 0 rgba(30, 41, 59, 0.8) inset,
     0 8px 24px -18px rgba(0, 0, 0, 0.4);
+}
+
+/* Blog artık ana site header.fixed kullanıyor — gece modu landing-chrome ile gelir */
+html[data-theme="dark"] body.blog-premium-page header.fixed {
+  background: rgba(10, 15, 26, 0.85) !important;
+  border-bottom-color: rgba(71, 85, 105, 0.45) !important;
 }
 
 html[data-theme="dark"] body.blog-premium-page .blog-nav a {

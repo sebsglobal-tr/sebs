@@ -1,0 +1,74 @@
+/* Premium modül: ders rotası (?ders=) — tek content-card görünür */
+body.lesson-route-mode .content-section {
+    display: none !important;
+}
+
+body.lesson-route-mode .content-section.lesson-route-current-section {
+    display: block !important;
+}
+
+body.lesson-route-mode .section-inner > .content-card {
+    display: none !important;
+}
+
+body.lesson-route-mode .section-inner > .content-card.lesson-route-current-card {
+    display: block !important;
+    animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.lesson-route-mode .lesson-route-current-section .section-inner > h1,
+body.lesson-route-mode .lesson-route-current-section .section-inner > .lesson-image-wrap {
+    display: none !important;
+}
+
+.lesson-route-hero {
+    margin: 0 0 2rem;
+    padding: 0;
+    max-width: 100%;
+}
+
+.lesson-route-hero-module {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    opacity: 0.85;
+    margin: 0 0 0.4rem;
+    line-height: 1.35;
+}
+
+.lesson-route-hero-lesson {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    line-height: 1.28;
+}
+
+.lesson-route-hero-img-wrap {
+    margin: 0;
+    padding: 0.6rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.lesson-route-hero-img {
+    width: 100%;
+    max-width: 1100px;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+@keyframes sebs-lesson-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

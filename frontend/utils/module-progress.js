@@ -455,13 +455,19 @@ function getCategoryFromModule(moduleName) {
         'Temel Network Eğitimi',
         'Network Güvenliği',
         'Malware Analizi',
+        'Malware Analizi (Orta Seviye)',
+        'İleri Malware Analizi & Reverse Engineering',
         'Threat Hunting',
-        'Penetration Testing'
+        'Threat Intelligence',
+        'Penetration Testing',
+        'Red Team & Pentest (İleri)',
+        'Olay Müdahalesi & Digital Forensics'
     ];
     
     const bulutBilisimModules = [
         'AWS Temelleri',
         'Azure Temelleri',
+        'Microsoft Azure',
         'Google Cloud Platform'
     ];
     
