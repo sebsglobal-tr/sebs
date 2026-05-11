@@ -94,6 +94,15 @@
       box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; pointer-events: auto;
     }
     #usbInteract.visible { display: block; }
+    #streetEnterHud {
+      position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 26; max-width: 22rem; width: calc(100% - 2rem);
+      background: rgba(15,23,42,0.94); border: 1px solid rgba(56,189,248,0.35); border-radius: 0.65rem; padding: 0.65rem 0.85rem;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; pointer-events: none;
+    }
+    #streetEnterHud.visible { display: block; }
+    #streetEnterHud .t { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7dd3fc; margin-bottom: 0.35rem; }
+    #streetEnterHud .body { font-size: 0.8125rem; line-height: 1.45; color: #e2e8f0; }
+    #streetEnterHud .kbd { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.45rem; border-radius: 0.25rem; background: #0c4a6e; font-weight: 700; font-size: 0.75rem; color: #e0f2fe; }
     #usbInteract .t { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.35rem; }
     #usbInteract .body { font-size: 0.8125rem; line-height: 1.45; color: #e2e8f0; }
     #usbInteract .kbd { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.45rem; border-radius: 0.25rem; background: #334155; font-weight: 700; font-size: 0.75rem; }
@@ -120,7 +129,7 @@
     <span class="badge" id="scoreLabel">Puan: 0</span>
   </div>
 
-  <canvas id="gameCanvas" aria-label="3D banka lobisi görünümü"></canvas>
+  <canvas id="gameCanvas" tabindex="0" role="application" aria-label="3D banka lobisi görünümü"></canvas>
 
   <div id="missionStrip" aria-live="polite"></div>
 
@@ -128,6 +137,12 @@
     <div class="t">Etkileşim · USB test objesi</div>
     <div class="body" id="usbInteractBody"></div>
     <span class="kbd" id="usbInteractKey">E — Bırak</span>
+  </div>
+
+  <div id="streetEnterHud" aria-live="polite">
+    <div class="t">Şube girişi</div>
+    <div class="body" id="streetEnterHudBody"></div>
+    <span class="kbd" id="streetEnterHudKey">E — İçeri gir</span>
   </div>
 
   <div id="hud">
@@ -309,6 +324,8 @@
     const usbInteract = document.getElementById('usbInteract');
     const usbInteractBody = document.getElementById('usbInteractBody');
     const usbInteractKey = document.getElementById('usbInteractKey');
+    const streetEnterHud = document.getElementById('streetEnterHud');
+    const streetEnterHudBody = document.getElementById('streetEnterHudBody');
     const docInspectOverlay = document.getElementById('docInspectOverlay');
     const docInspectText = document.getElementById('docInspectText');
 
@@ -327,6 +344,26 @@
     let trashDwellSec = 0;
     let documentFoundLevel = null;
     let keys = {};
+
+    function readMoveXZ() {
+      let mx = 0,
+        mz = 0;
+      if (keys['KeyW'] || keys['ArrowUp']) mz -= 1;
+      if (keys['KeyS'] || keys['ArrowDown']) mz += 1;
+      if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
+      if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
+      return { mx, mz };
+    }
+
+    /** Cephe ortası cam kapı önü — eski tetik (15.5, 14.4) kaldırımdan gelen oyuncuyla hizasızdı. */
+    const STREET_ENTRANCE = { x: 0, z: 14.1, r: 5.9 };
+    function isNearStreetBankEntrance() {
+      const px = player.position.x;
+      const pz = player.position.z;
+      const ring = Math.hypot(px - STREET_ENTRANCE.x, pz - STREET_ENTRANCE.z) <= STREET_ENTRANCE.r;
+      const wideBand = Math.abs(px) <= 8 && pz >= 11.2 && pz <= 17.2;
+      return ring || wideBand;
+    }
     let clock = new THREE.Clock();
     let lastMoveAt = 0;
     let staffWarnCooldown = 0;
@@ -828,6 +865,55 @@
       hoursPl.position.set(10, 1.35, 12.92);
       facade.add(hoursPl);
 
+      const extDoorFrame = new THREE.Group();
+      extDoorFrame.position.set(0, 0, 12.68);
+      const pilG = new THREE.BoxGeometry(0.4, 3.05, 0.36);
+      const amber = matStd(0xb45309, 0.48, 0.38);
+      const pilL = addShadow(new THREE.Mesh(pilG, amber));
+      pilL.position.set(-1.28, 1.525, 0.14);
+      const pilR = pilL.clone();
+      pilR.position.x = 1.28;
+      const lintel = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.15, 0.34, 0.3), matStd(0x9a3412, 0.42, 0.45)));
+      lintel.position.set(0, 3.06, 0.12);
+      const extDoorGlass = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.15, 2.75),
+        new THREE.MeshPhysicalMaterial({
+          color: 0xc7e8ff,
+          metalness: 0,
+          roughness: 0.06,
+          transmission: 0.7,
+          thickness: 0.1,
+          transparent: true
+        })
+      );
+      extDoorGlass.position.set(0, 1.52, 0.2);
+      extDoorFrame.add(pilL, pilR, lintel, extDoorGlass);
+      facade.add(extDoorFrame);
+
+      const entrySignC = document.createElement('canvas');
+      entrySignC.width = 320;
+      entrySignC.height = 88;
+      const esx = entrySignC.getContext('2d');
+      esx.fillStyle = 'rgba(15,23,42,0.94)';
+      esx.fillRect(0, 0, 320, 88);
+      esx.strokeStyle = '#38bdf8';
+      esx.lineWidth = 3;
+      esx.strokeRect(3, 3, 314, 82);
+      esx.fillStyle = '#f0f9ff';
+      esx.font = 'bold 26px Inter,sans-serif';
+      esx.fillText('OTOMATİK GİRİŞ', 16, 38);
+      esx.fillStyle = '#94a3b8';
+      esx.font = '16px Inter,sans-serif';
+      esx.fillText('Şubeye buradan — E', 16, 64);
+      const entryTex = new THREE.CanvasTexture(entrySignC);
+      entryTex.colorSpace = THREE.SRGBColorSpace;
+      const entrySignPl = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.1, 0.86),
+        new THREE.MeshStandardMaterial({ map: entryTex, roughness: 0.45, transparent: true })
+      );
+      entrySignPl.position.set(-4.35, 2.25, 12.9);
+      facade.add(entrySignPl);
+
       exteriorGroup.add(facade);
 
       for (let i = 0; i < 3; i++) {
@@ -1094,7 +1180,8 @@
       };
       phaseLabel.textContent = map[p] || p;
       const strip = {
-        STREET: '1/5 Banka cephesi · Kapı bölgesine yaklaşın — <strong>E</strong> ile içeri girin.',
+        STREET:
+          '1/5 Banka cephesi · <strong>Cephe ortası — turuncu kasalı cam kapı</strong> önüne gelin — <strong>E</strong> ile içeri girin.',
         DROP: '2/5 Lobide · Uygun zemine yaklaşın — etkileşim panelinde <strong>E</strong> ile USB bırakın.',
         OBSERVE_USB: '3/5 Gözlem sonucu — ardından şubeden çıkış.',
         LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
@@ -1192,6 +1279,21 @@
       }
     }
 
+    function updateStreetEnterHud() {
+      if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) {
+        streetEnterHud.classList.remove('visible');
+        return;
+      }
+      streetEnterHud.classList.add('visible');
+      if (isNearStreetBankEntrance()) {
+        streetEnterHudBody.innerHTML =
+          '<strong>Giriş hazır.</strong> Cephe ortasındaki <strong>turuncu çerçeveli cam kapı</strong> şube girişidir. <strong>E</strong> ile içeri geçin.';
+      } else {
+        streetEnterHudBody.innerHTML =
+          '<strong>Cepheye ilerleyin.</strong> Kaldırımdan bankaya doğru yürüyün; logo altında <strong>ortadaki cam kapı</strong> ve solunda <strong>“Otomatik giriş”</strong> tabelası görünür. Kapı önüne gelince <strong>E</strong> ile şubeye girilir.';
+      }
+    }
+
     function animHumanIdle(group, time) {
       if (!group || !group.userData.torso) return;
       const ph = group.userData.idlePhase;
@@ -1258,8 +1360,7 @@
 
     function tryEnterBankFromStreet() {
       if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) return;
-      const dd = Math.hypot(player.position.x - 15.5, player.position.z - 14.4);
-      if (dd > 2.85) return;
+      if (!isNearStreetBankEntrance()) return;
       moveTransition = {
         from: player.position.clone(),
         to: new THREE.Vector3(15.2, 0, 10.2),
@@ -1620,8 +1721,9 @@
       player.rotation.y = Math.PI;
       setPhase('STREET');
       lastMoveAt = clock.getElapsedTime();
+      canvas.focus({ preventScroll: true });
       hudText.innerHTML =
-        '<strong>W A S D</strong> · banka cephesine yürüyün · giriş bölgesinde <strong>E</strong> ile içeri girin · içeride USB için zeminde panel + <strong>E</strong>.';
+        '<strong>W A S D</strong> veya <strong>ok tuşları</strong> · cephe ortasındaki <strong>turuncu çerçeveli cam kapıya</strong> ilerleyin · kapı önünde <strong>E</strong> ile şubeye girin · içeride USB için panel + <strong>E</strong>.';
       if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
         window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
       }
@@ -1670,6 +1772,17 @@
 
     window.addEventListener('keydown', (e) => {
       keys[e.code] = true;
+      const move3d =
+        phase === 'STREET' ||
+        phase === 'ALLEY' ||
+        phase === 'DROP' ||
+        phase === 'LEAVE_BANK';
+      if (
+        move3d &&
+        (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'ArrowLeft' || e.code === 'ArrowRight')
+      ) {
+        e.preventDefault();
+      }
       if (e.code === 'KeyE') {
         if (phase === 'STREET') tryEnterBankFromStreet();
         else if (phase === 'LEAVE_BANK') tryExitBankDoor();
@@ -1692,6 +1805,7 @@
       requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.1);
       const elapsed = clock.elapsedTime;
+      updateStreetEnterHud();
 
       if (phase === 'GUARD_DIALOG') {
         animHumanIdle(player, elapsed);
@@ -1724,12 +1838,7 @@
 
       if (phase === 'DROP' || phase === 'LEAVE_BANK') {
         const speed = phase === 'LEAVE_BANK' ? 5.0 : 4.2;
-        let mx = 0,
-          mz = 0;
-        if (keys['KeyW']) mz -= 1;
-        if (keys['KeyS']) mz += 1;
-        if (keys['KeyA']) mx -= 1;
-        if (keys['KeyD']) mx += 1;
+        const { mx, mz } = readMoveXZ();
         const moving = mx !== 0 || mz !== 0;
         if (moving) {
           lastMoveAt = elapsed;
@@ -1797,12 +1906,7 @@
       } else if (phase === 'STREET' || phase === 'ALLEY') {
         cameraHud.style.display = 'none';
         const speed = 4.6;
-        let mx = 0,
-          mz = 0;
-        if (keys['KeyW']) mz -= 1;
-        if (keys['KeyS']) mz += 1;
-        if (keys['KeyA']) mx -= 1;
-        if (keys['KeyD']) mx += 1;
+        const { mx, mz } = readMoveXZ();
         if (mx !== 0 || mz !== 0) {
           const len = Math.hypot(mx, mz) || 1;
           player.position.x += (mx / len) * speed * dt;
