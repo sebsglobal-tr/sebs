@@ -397,6 +397,7 @@
         Bu simülasyon yalnızca <strong>yetkili pentest ve farkındalık eğitimi</strong> içindir. Amaç saldırı tekniği öğretmek değil; kurumların bu risklere karşı nasıl test edildiğini, raporlandığını ve nasıl korunacağını anlamaktır.
         <strong>Müşteri hedef değildir</strong> — USB’yi müşteri alırsa kapsam ve etik açısından başarısızlık sayılır.
       </div>
+      <p id="prep3dWaitHint" class="hint" style="display: none; margin-top: 0.65rem; color: #fbbf24"></p>
       <button type="button" class="btn" id="btnPrepBank">Şubeye git (3D)</button>
     </div>
   </div>
@@ -422,6 +423,24 @@
       window.__sebsSilentDropMailToPrep = mailToPrep;
       var btn = document.getElementById('btnMailNext');
       if (btn) btn.addEventListener('click', mailToPrep);
+
+      function prepToStreet() {
+        var hint = document.getElementById('prep3dWaitHint');
+        if (typeof window.__sebsSilentDropStartStreet === 'function') {
+          if (hint) hint.style.display = 'none';
+          window.__sebsSilentDropStartStreet();
+          return;
+        }
+        window.__sebsSilentDropStreetQueued = true;
+        if (hint) {
+          hint.style.display = 'block';
+          hint.textContent =
+            '3D ortamı yükleniyor… Birkaç saniye bekleyip tekrar tıklayın. Yükleme bitmezse sayfayı yenileyin (Cmd/Ctrl+Shift+R).';
+        }
+      }
+      window.__sebsSilentDropPrepToStreet = prepToStreet;
+      var prepBtn = document.getElementById('btnPrepBank');
+      if (prepBtn) prepBtn.addEventListener('click', prepToStreet);
     })();
   </script>
 
@@ -2239,30 +2258,27 @@
 
     let usbMesh = null;
 
-    const btnPrepBankEl = document.getElementById('btnPrepBank');
-    if (btnPrepBankEl) {
-      btnPrepBankEl.addEventListener('click', () => {
-        prepOverlay.classList.add('hidden');
-        interiorGroup.visible = false;
-        exteriorGroup.visible = true;
-        worldMode = 'EXTERIOR';
-        player.position.set(-4.5, 0, 31.6);
-        player.rotation.y = Math.PI * 1.02;
-        cameraYaw = player.rotation.y;
-        velX = 0;
-        velZ = 0;
-        setPhase('STREET');
-        applyWorldAtmosphere();
-        resetCameraSmooth();
-        lastMoveAt = clock.getElapsedTime();
-        canvas.focus({ preventScroll: true });
-        startLobbyAmbience();
-        hudText.innerHTML =
-          '<strong>W A S D</strong> hareket; <strong>fare</strong> ile kamera (sürükle veya çift tık ile imleç kilidi). Cephedeki <strong>cam girişe</strong> yaklaşıp <strong>E — Şubeye gir</strong>. İçeride USB paneli + <strong>E — USB’yi bırak</strong>. Hassasiyet: <strong>[</strong> <strong>]</strong>.';
-        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
-          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
-        }
-      });
+    function startStreetFromPrep() {
+      prepOverlay.classList.add('hidden');
+      interiorGroup.visible = false;
+      exteriorGroup.visible = true;
+      worldMode = 'EXTERIOR';
+      player.position.set(-4.5, 0, 31.6);
+      player.rotation.y = Math.PI * 1.02;
+      cameraYaw = player.rotation.y;
+      velX = 0;
+      velZ = 0;
+      setPhase('STREET');
+      applyWorldAtmosphere();
+      resetCameraSmooth();
+      lastMoveAt = clock.getElapsedTime();
+      canvas.focus({ preventScroll: true });
+      startLobbyAmbience();
+      hudText.innerHTML =
+        '<strong>W A S D</strong> hareket; <strong>fare</strong> ile kamera (sürükle veya çift tık ile imleç kilidi). Cephedeki <strong>cam girişe</strong> yaklaşıp <strong>E — Şubeye gir</strong>. İçeride USB paneli + <strong>E — USB’yi bırak</strong>. Hassasiyet: <strong>[</strong> <strong>]</strong>.';
+      if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+        window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+      }
     }
 
     function pushTrackerCompletion(passed) {
@@ -3357,7 +3373,13 @@
     }
 
     applyWorldAtmosphere();
-    if (prepOverlay && !prepOverlay.classList.contains('hidden')) {
+    window.__sebsSilentDropStartStreet = startStreetFromPrep;
+    const prep3dHint = document.getElementById('prep3dWaitHint');
+    if (prep3dHint) prep3dHint.style.display = 'none';
+    if (window.__sebsSilentDropStreetQueued) {
+      window.__sebsSilentDropStreetQueued = false;
+      startStreetFromPrep();
+    } else if (prepOverlay && !prepOverlay.classList.contains('hidden')) {
       setPhase('OFFICE_PREP');
     } else {
       setPhase('OFFICE_MAIL');
