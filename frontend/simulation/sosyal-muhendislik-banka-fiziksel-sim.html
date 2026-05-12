@@ -27,7 +27,16 @@
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--body-font); background: #050a14; color: #e8eef7; }
-    #gameCanvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+    /* Tam ekran canvas üstte kalmaması için sabit katman + düşük z-index (modal tıklanabilir olsun) */
+    #gameCanvas {
+      position: fixed;
+      inset: 0;
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      touch-action: none;
+    }
     #hud {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
       padding: 0.5rem 1rem 1rem;
@@ -46,7 +55,7 @@
     #hud p { margin: 0; font-size: 0.78rem; line-height: 1.55; color: #a8b8d0; letter-spacing: 0.01em; }
     #hud strong { color: #f1f5f9; font-weight: 600; }
     #controlGuide {
-      position: fixed; left: 0.45rem; bottom: 5.5rem; z-index: 24; max-width: 13.5rem;
+      position: fixed; left: 0.45rem; bottom: 5.5rem; z-index: 88; max-width: 13.5rem;
       font-family: var(--ui-font); font-size: 0.58rem; line-height: 1.45; color: #94a3b8;
       background: linear-gradient(155deg, rgba(10,16,30,0.92) 0%, rgba(6,10,20,0.88) 100%);
       border: 1px solid rgba(71, 85, 105, 0.35); border-radius: 0.38rem; padding: 0.38rem 0.45rem 0.42rem;
@@ -64,8 +73,9 @@
     .meter { height: 3px; border-radius: 99px; background: rgba(30, 41, 59, 0.95); margin-top: 0.5rem; overflow: hidden; border: 1px solid rgba(51, 65, 85, 0.4); }
     .meter > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #5eead4); transition: width 0.2s ease, background 0.25s; }
     .overlay {
-      position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
+      position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
       padding: 1rem; background: rgba(2, 6, 23, 0.72); backdrop-filter: blur(8px);
+      pointer-events: auto;
     }
     .overlay.hidden { display: none !important; }
     .card {
@@ -95,7 +105,7 @@
       transition: opacity 0.08s linear;
     }
     #topBar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 95;
       display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
       align-items: center; gap: 0.5rem;
       padding: 0.22rem 0.65rem 0.26rem;
@@ -135,7 +145,7 @@
     .score-chip .score-n { font-size: 0.9rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #f8fafc; }
     .score-chip .score-lbl { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.14em; color: #7c8ca3; font-weight: 700; }
     .mission-panel {
-      position: fixed; top: 2.35rem; left: 0.5rem; z-index: 25; width: min(18.5rem, 46vw);
+      position: fixed; top: 2.35rem; left: 0.5rem; z-index: 85; width: min(18.5rem, 46vw);
       background: linear-gradient(145deg, rgba(14,22,38,0.94) 0%, rgba(8,13,26,0.9) 100%);
       backdrop-filter: blur(20px) saturate(165%);
       border: 1px solid rgba(71, 85, 105, 0.28);
@@ -175,7 +185,7 @@
     .chk-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; }
     .chk-row label { display: flex; align-items: center; gap: 0.35rem; text-transform: none; margin: 0; cursor: pointer; }
     .interact-card {
-      position: fixed; left: 50%; bottom: 5.25rem; transform: translateX(-50%); z-index: 26; max-width: 21rem; width: calc(100% - 2rem);
+      position: fixed; left: 50%; bottom: 5.25rem; transform: translateX(-50%); z-index: 90; max-width: 21rem; width: calc(100% - 2rem);
       font-family: var(--ui-font);
       background: linear-gradient(160deg, rgba(16,24,42,0.96) 0%, rgba(8,12,24,0.94) 100%);
       backdrop-filter: blur(22px) saturate(170%);
@@ -212,7 +222,7 @@
     #alleyInteract .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #a5b4fc; margin-bottom: 0.3rem; font-weight: 700; }
     #alleyInteract .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
     #alleyInteract .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(49,46,129,0.5); border: 1px solid rgba(165,180,252,0.25); font-weight: 700; font-size: 0.7rem; color: #e0e7ff; }
-    #docInspectOverlay { z-index: 45; }
+    #docInspectOverlay { z-index: 110; }
     .doc-3d {
       perspective: 900px; margin: 0.75rem auto; max-width: 14rem; min-height: 11rem; display: flex; align-items: center; justify-content: center;
     }
@@ -2200,6 +2210,40 @@
       }
     }
 
+    const btnMailNextEl = document.getElementById('btnMailNext');
+    if (btnMailNextEl) {
+      btnMailNextEl.addEventListener('click', () => {
+        officeMailOverlay.classList.add('hidden');
+        prepOverlay.classList.remove('hidden');
+        setPhase('OFFICE_PREP');
+      });
+    }
+    const btnPrepBankEl = document.getElementById('btnPrepBank');
+    if (btnPrepBankEl) {
+      btnPrepBankEl.addEventListener('click', () => {
+        prepOverlay.classList.add('hidden');
+        interiorGroup.visible = false;
+        exteriorGroup.visible = true;
+        worldMode = 'EXTERIOR';
+        player.position.set(-4.5, 0, 31.6);
+        player.rotation.y = Math.PI * 1.02;
+        cameraYaw = player.rotation.y;
+        velX = 0;
+        velZ = 0;
+        setPhase('STREET');
+        applyWorldAtmosphere();
+        resetCameraSmooth();
+        lastMoveAt = clock.getElapsedTime();
+        canvas.focus({ preventScroll: true });
+        startLobbyAmbience();
+        hudText.innerHTML =
+          '<strong>W A S D</strong> hareket; <strong>fare</strong> ile kamera (sürükle veya çift tık ile imleç kilidi). Cephedeki <strong>cam girişe</strong> yaklaşıp <strong>E — Şubeye gir</strong>. İçeride USB paneli + <strong>E — USB’yi bırak</strong>. Hassasiyet: <strong>[</strong> <strong>]</strong>.';
+        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+        }
+      });
+    }
+
     function pushTrackerCompletion(passed) {
       if (trackerPushed) return;
       trackerPushed = true;
@@ -3044,35 +3088,6 @@
         '<strong>Öğrenme notu:</strong> Bilinmeyen USB cihazları ciddi risktir; çalışanların güvenlik ekibine teslim etmesi gerekir. Kurum içi belgelerin çöpe uygun şekilde imha edilmemesi fiziksel bilgi sızıntısı riskidir; öğütücü, kilitli atık ve politika önemlidir.';
       pushTrackerCompletion(norm >= 48);
     }
-
-    document.getElementById('btnMailNext').addEventListener('click', () => {
-      officeMailOverlay.classList.add('hidden');
-      prepOverlay.classList.remove('hidden');
-      setPhase('OFFICE_PREP');
-    });
-
-    document.getElementById('btnPrepBank').addEventListener('click', () => {
-      prepOverlay.classList.add('hidden');
-      interiorGroup.visible = false;
-      exteriorGroup.visible = true;
-      worldMode = 'EXTERIOR';
-      player.position.set(-4.5, 0, 31.6);
-      player.rotation.y = Math.PI * 1.02;
-      cameraYaw = player.rotation.y;
-      velX = 0;
-      velZ = 0;
-      setPhase('STREET');
-      applyWorldAtmosphere();
-      resetCameraSmooth();
-      lastMoveAt = clock.getElapsedTime();
-      canvas.focus({ preventScroll: true });
-      startLobbyAmbience();
-      hudText.innerHTML =
-        '<strong>W A S D</strong> hareket; <strong>fare</strong> ile kamera (sürükle veya çift tık ile imleç kilidi). Cephedeki <strong>cam girişe</strong> yaklaşıp <strong>E — Şubeye gir</strong>. İçeride USB paneli + <strong>E — USB’yi bırak</strong>. Hassasiyet: <strong>[</strong> <strong>]</strong>.';
-      if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
-        window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
-      }
-    });
 
     document.getElementById('btnObserveContinue').addEventListener('click', () => {
       observeUsbOverlay.classList.add('hidden');
