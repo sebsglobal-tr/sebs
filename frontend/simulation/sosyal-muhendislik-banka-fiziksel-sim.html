@@ -1934,6 +1934,7 @@
       alleyCamBox.position.set(20.2, 2.55, 17.2);
       alley.add(alleyCamBox);
       const binLbls = ['GENEL', 'KAĞIT', 'ORGANİK', 'TEHLİKELİ'];
+      const binCols = [0x57534e, 0x2563eb, 0x365314, 0xb91c1c];
       for (let b = 0; b < 4; b++) {
         const bin = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.45, 2.05, 1.05), matStd(binCols[b], 0.48, 0.22)));
         bin.position.set(23 + b * 1.85, 1.025, 19.5);
