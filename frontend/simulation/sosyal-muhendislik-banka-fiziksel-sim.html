@@ -575,6 +575,58 @@
     let trashDwellSec = 0;
     let documentFoundLevel = null;
     let keys = {};
+
+    function setPhase(p) {
+      phase = p;
+      const map = {
+        OFFICE_MAIL: 'Ofis · Görev postası',
+        OFFICE_PREP: 'Ofis · Hazırlık',
+        STREET: 'Dışarı · Şube önü',
+        DROP: 'Şube · USB',
+        OBSERVE_USB: 'Şube · Gözlem',
+        GUARD_DIALOG: 'Şube · Güvenlik',
+        LEAVE_BANK: 'Şube · Çıkış',
+        ALLEY: 'Servis alanı · Konteyner',
+        TRASH_UI: 'Atık · İnceleme',
+        REPORT: 'Ofis · Rapor',
+        END: 'Özet'
+      };
+      phaseLabel.textContent = map[p] || p;
+      const strip = {
+        OFFICE_MAIL: 'Görev postasını okuyun — ardından <strong>Hazırlığa geç</strong>.',
+        OFFICE_PREP: 'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.',
+        STREET:
+          '1/5 Banka cephesi · <strong>Cephe ortası — cam otomatik giriş</strong> önüne gelin — <strong>E</strong> ile içeri girin.',
+        DROP: '2/5 Lobide · Uygun zemine yaklaşın; etkileşim kutusu açıldığında <strong>E</strong> ile USB bırakın.',
+        OBSERVE_USB: '3/5 Gözlem sonucu — ardından şubeden çıkış.',
+        LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
+        ALLEY: '5/5 Konteynerlere yaklaşın — <strong>E</strong> ile poşet incelemesi (RoE).',
+        TRASH_UI: 'Poşet / belge incelemesi — tamamlayınca rapor.',
+        REPORT: 'Şirket ofisi — raporu gönderin.',
+        END: 'Özet ekranı — yeniden oynayabilir veya listeye dönebilirsiniz.',
+        GUARD_DIALOG: 'Güvenlik diyaloğu — profesyonel bir seçenek işaretleyin.'
+      };
+      if (missionPanelBody) missionPanelBody.innerHTML = strip[p] || '';
+      if (controlGuide) {
+        if (p === 'STREET' || p === 'ALLEY' || p === 'DROP' || p === 'LEAVE_BANK') {
+          controlGuide.classList.remove('hidden');
+          controlGuide.setAttribute('aria-hidden', 'false');
+        } else {
+          controlGuide.classList.add('hidden');
+          controlGuide.setAttribute('aria-hidden', 'true');
+        }
+      }
+    }
+
+    const btnMailNextEl = document.getElementById('btnMailNext');
+    if (btnMailNextEl) {
+      btnMailNextEl.addEventListener('click', () => {
+        officeMailOverlay.classList.add('hidden');
+        prepOverlay.classList.remove('hidden');
+        setPhase('OFFICE_PREP');
+      });
+    }
+
     let cameraYaw = 0;
     let velX = 0;
     let velZ = 0;
@@ -2168,56 +2220,6 @@
 
     let usbMesh = null;
 
-    function setPhase(p) {
-      phase = p;
-      const map = {
-        OFFICE_MAIL: 'Ofis · Görev postası',
-        OFFICE_PREP: 'Ofis · Hazırlık',
-        STREET: 'Dışarı · Şube önü',
-        DROP: 'Şube · USB',
-        OBSERVE_USB: 'Şube · Gözlem',
-        GUARD_DIALOG: 'Şube · Güvenlik',
-        LEAVE_BANK: 'Şube · Çıkış',
-        ALLEY: 'Servis alanı · Konteyner',
-        TRASH_UI: 'Atık · İnceleme',
-        REPORT: 'Ofis · Rapor',
-        END: 'Özet'
-      };
-      phaseLabel.textContent = map[p] || p;
-      const strip = {
-        OFFICE_MAIL: 'Görev postasını okuyun — ardından <strong>Hazırlığa geç</strong>.',
-        OFFICE_PREP: 'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.',
-        STREET:
-          '1/5 Banka cephesi · <strong>Cephe ortası — cam otomatik giriş</strong> önüne gelin — <strong>E</strong> ile içeri girin.',
-        DROP: '2/5 Lobide · Uygun zemine yaklaşın; etkileşim kutusu açıldığında <strong>E</strong> ile USB bırakın.',
-        OBSERVE_USB: '3/5 Gözlem sonucu — ardından şubeden çıkış.',
-        LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
-        ALLEY: '5/5 Konteynerlere yaklaşın — <strong>E</strong> ile poşet incelemesi (RoE).',
-        TRASH_UI: 'Poşet / belge incelemesi — tamamlayınca rapor.',
-        REPORT: 'Şirket ofisi — raporu gönderin.',
-        END: 'Özet ekranı — yeniden oynayabilir veya listeye dönebilirsiniz.',
-        GUARD_DIALOG: 'Güvenlik diyaloğu — profesyonel bir seçenek işaretleyin.'
-      };
-      if (missionPanelBody) missionPanelBody.innerHTML = strip[p] || '';
-      if (controlGuide) {
-        if (p === 'STREET' || p === 'ALLEY' || p === 'DROP' || p === 'LEAVE_BANK') {
-          controlGuide.classList.remove('hidden');
-          controlGuide.setAttribute('aria-hidden', 'false');
-        } else {
-          controlGuide.classList.add('hidden');
-          controlGuide.setAttribute('aria-hidden', 'true');
-        }
-      }
-    }
-
-    const btnMailNextEl = document.getElementById('btnMailNext');
-    if (btnMailNextEl) {
-      btnMailNextEl.addEventListener('click', () => {
-        officeMailOverlay.classList.add('hidden');
-        prepOverlay.classList.remove('hidden');
-        setPhase('OFFICE_PREP');
-      });
-    }
     const btnPrepBankEl = document.getElementById('btnPrepBank');
     if (btnPrepBankEl) {
       btnPrepBankEl.addEventListener('click', () => {
