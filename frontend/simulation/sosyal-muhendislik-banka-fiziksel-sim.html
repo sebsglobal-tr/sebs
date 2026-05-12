@@ -71,19 +71,30 @@
     .btn.secondary { background: #334155; color: #e2e8f0; }
     .btn:hover { filter: brightness(1.06); }
     .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.65rem; }
+    #sceneCurtain {
+      position: fixed; inset: 0; z-index: 15; pointer-events: none; opacity: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% 45%, rgba(5,10,22,0.55) 0%, rgba(5,10,22,0.88) 100%);
+      transition: opacity 0.08s linear;
+    }
     #topBar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 30;
-      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-      padding: 0.28rem 0.75rem 0.32rem;
+      display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+      align-items: center; gap: 0.5rem;
+      padding: 0.22rem 0.65rem 0.26rem;
       font-family: var(--ui-font);
-      background: linear-gradient(180deg, rgba(8,12,22,0.94) 0%, rgba(8,12,22,0.72) 100%);
-      backdrop-filter: blur(18px) saturate(180%);
-      border-bottom: 1px solid rgba(71, 85, 105, 0.22);
-      font-size: 0.68rem;
+      background: linear-gradient(180deg, rgba(6,10,20,0.96) 0%, rgba(6,10,20,0.78) 100%);
+      backdrop-filter: blur(22px) saturate(185%);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.35);
+      font-size: 0.65rem;
     }
-    #topBar .top-back { color: #7dd3fc; text-decoration: none; font-weight: 600; letter-spacing: 0.02em; font-size: 0.66rem; }
-    #topBar .top-back:hover { color: #bae6fd; text-decoration: none; opacity: 0.92; }
-    #topBar .top-meta { display: flex; align-items: center; gap: 0.4rem; flex: 1; justify-content: center; flex-wrap: wrap; }
+    #topBar .top-left { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+    #topBar .top-brand {
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #94a3b8; white-space: nowrap;
+    }
+    #topBar .top-back { color: #93c5fd; text-decoration: none; font-weight: 600; letter-spacing: 0.02em; font-size: 0.64rem; flex-shrink: 0; }
+    #topBar .top-back:hover { color: #e0f2fe; text-decoration: none; opacity: 0.95; }
+    #topBar .top-meta { display: flex; align-items: center; justify-content: center; gap: 0.35rem; flex-wrap: wrap; }
     .phase-chip {
       font-variant-numeric: tabular-nums; color: #e2e8f0; font-weight: 600; font-size: 0.65rem;
       padding: 0.22rem 0.55rem; border-radius: 0.25rem;
@@ -94,16 +105,19 @@
       font-size: 0.58rem; color: #fcd34d; font-weight: 700; letter-spacing: 0.08em;
       padding: 0.2rem 0.45rem; border-radius: 0.2rem; background: rgba(69, 26, 3, 0.45); border: 1px solid rgba(251, 191, 36, 0.28);
     }
+    #topBar .top-right { display: flex; justify-content: flex-end; align-items: center; }
     .score-chip {
-      display: flex; align-items: baseline; gap: 0.28rem;
-      padding: 0.22rem 0.55rem 0.24rem; border-radius: 0.25rem;
-      background: rgba(15, 23, 42, 0.55); border: 1px solid rgba(100, 116, 139, 0.2);
-      min-width: 4.25rem; justify-content: flex-end;
+      display: flex; align-items: baseline; gap: 0.32rem;
+      padding: 0.2rem 0.5rem 0.22rem 0.55rem; border-radius: 0.3rem;
+      background: linear-gradient(145deg, rgba(22,32,52,0.92), rgba(12,18,32,0.88));
+      border: 1px solid rgba(71, 85, 105, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      min-width: 4.5rem; justify-content: flex-end;
     }
-    .score-chip .score-n { font-size: 0.88rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #f8fafc; }
-    .score-chip .score-lbl { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; font-weight: 600; }
+    .score-chip .score-n { font-size: 0.9rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #f8fafc; }
+    .score-chip .score-lbl { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.14em; color: #7c8ca3; font-weight: 700; }
     .mission-panel {
-      position: fixed; top: 2.65rem; left: 0.55rem; z-index: 25; width: min(18rem, 44vw);
+      position: fixed; top: 2.35rem; left: 0.5rem; z-index: 25; width: min(18.5rem, 46vw);
       background: linear-gradient(145deg, rgba(14,22,38,0.94) 0%, rgba(8,13,26,0.9) 100%);
       backdrop-filter: blur(20px) saturate(165%);
       border: 1px solid rgba(71, 85, 105, 0.28);
@@ -162,8 +176,16 @@
     #streetEnterHud .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
     #streetEnterHud .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(30,58,95,0.85); border: 1px solid rgba(56,189,248,0.25); font-weight: 700; font-size: 0.7rem; color: #e0f2fe; }
     #usbInteract .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; margin-bottom: 0.3rem; font-weight: 700; }
-    #usbInteract .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
-    #usbInteract .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(30,41,59,0.95); border: 1px solid rgba(148,163,184,0.25); font-weight: 700; font-size: 0.7rem; color: #f1f5f9; }
+    #usbInteract .body { font-size: 0.76rem; line-height: 1.48; color: #b8c5d9; }
+    #usbInteract .usb-title { font-size: 0.72rem; color: #e8eef7; font-weight: 600; line-height: 1.35; margin-bottom: 0.45rem; }
+    #usbInteract .usb-metrics {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 0.65rem; margin-top: 0.4rem;
+      padding: 0.45rem 0.5rem; border-radius: 0.3rem;
+      background: rgba(8,12,24,0.55); border: 1px solid rgba(71,85,105,0.35);
+    }
+    #usbInteract .usb-metrics span { font-size: 0.62rem; color: #8b9cb0; letter-spacing: 0.02em; }
+    #usbInteract .usb-metrics strong { display: block; font-size: 0.68rem; color: #e2e8f0; font-weight: 600; margin-top: 0.08rem; }
+    #usbInteract .kbd { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.48rem; border-radius: 0.22rem; background: rgba(30,41,59,0.95); border: 1px solid rgba(100,116,139,0.3); font-weight: 700; font-size: 0.68rem; color: #f1f5f9; }
     #alleyInteract .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #a5b4fc; margin-bottom: 0.3rem; font-weight: 700; }
     #alleyInteract .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
     #alleyInteract .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(49,46,129,0.5); border: 1px solid rgba(165,180,252,0.25); font-weight: 700; font-size: 0.7rem; color: #e0e7ff; }
@@ -187,16 +209,53 @@
       0%, 100% { transform: rotateX(4deg) rotateY(-12deg); }
       50% { transform: rotateX(2deg) rotateY(8deg); }
     }
+    .trash-layout { display: grid; gap: 0.75rem; }
+    @media (min-width: 640px) {
+      .trash-layout { grid-template-columns: 1fr 11rem; align-items: start; }
+    }
+    .trash-bag-stage {
+      perspective: 640px; min-height: 10rem; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 70%, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.15) 70%);
+      border-radius: 0.45rem; border: 1px solid rgba(71,85,105,0.35);
+    }
+    .trash-bag-3d {
+      width: 5.5rem; height: 6.5rem; position: relative;
+      transform-style: preserve-3d; transform: rotateX(8deg) rotateY(-18deg);
+      animation: bagFloat 5s ease-in-out infinite;
+    }
+    .trash-bag-3d .bag-body {
+      position: absolute; inset: 0.4rem 0.35rem 0.5rem;
+      background: linear-gradient(165deg, #3f3f46 0%, #27272a 45%, #18181b 100%);
+      border-radius: 0.35rem 0.35rem 0.2rem 0.2rem;
+      box-shadow: inset 0 -6px 12px rgba(0,0,0,0.35), 0 12px 28px rgba(0,0,0,0.45);
+      border: 1px solid rgba(82,82,91,0.6);
+    }
+    .trash-bag-3d .bag-tie {
+      position: absolute; top: 0.15rem; left: 50%; transform: translateX(-50%);
+      width: 2.2rem; height: 0.55rem; background: #52525b; border-radius: 0.15rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    @keyframes bagFloat {
+      0%, 100% { transform: rotateX(8deg) rotateY(-18deg) translateY(0); }
+      50% { transform: rotateX(6deg) rotateY(12deg) translateY(-4px); }
+    }
+    .trash-panel-main { min-width: 0; }
   </style>
 </head>
 <body>
+  <div id="sceneCurtain" aria-hidden="true"></div>
   <header id="topBar">
-    <a class="top-back" href="/simulations.html">← Simülasyonlar</a>
+    <div class="top-left">
+      <a class="top-back" href="/simulations.html">← Simülasyonlar</a>
+      <span class="top-brand">SEBS · Silent Drop</span>
+    </div>
     <div class="top-meta">
       <span class="phase-chip" id="phaseLabel">Ofis</span>
       <span class="cam-chip" id="cameraHud" style="display:none;">İzleme alanı</span>
     </div>
-    <div class="score-chip" id="scoreWrap"><span class="score-n" id="scoreValue">0</span><span class="score-lbl">puan</span></div>
+    <div class="top-right">
+      <div class="score-chip" id="scoreWrap"><span class="score-n" id="scoreValue">0</span><span class="score-lbl">puan</span></div>
+    </div>
   </header>
 
   <canvas id="gameCanvas" tabindex="0" role="application" aria-label="3D banka lobisi görünümü"></canvas>
@@ -304,11 +363,21 @@
   </div>
 
   <div id="trashOverlay" class="overlay hidden">
-    <div class="card" style="max-width: 28rem;">
+    <div class="card" style="max-width: 34rem;">
       <p class="sub">Şube dışı · Belge imha kontrolü (RoE)</p>
       <h2>Atık konteynerleri</h2>
-      <div id="trashPanel"></div>
-      <p class="hint" id="trashHint"></p>
+      <div class="trash-layout">
+        <div class="trash-panel-main">
+          <div id="trashPanel"></div>
+          <p class="hint" id="trashHint"></p>
+        </div>
+        <div class="trash-bag-stage" aria-hidden="true">
+          <div class="trash-bag-3d">
+            <div class="bag-tie"></div>
+            <div class="bag-body"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -580,6 +649,7 @@
     const interiorGroup = new THREE.Group();
     const exteriorGroup = new THREE.Group();
     const collisionMeshes = [];
+    const cameraFadeMeshes = [];
     const raycaster = new THREE.Raycaster();
     scene.add(interiorGroup);
     scene.add(exteriorGroup);
@@ -594,6 +664,49 @@
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       return mesh;
+    }
+
+    function registerCameraFade(mesh, opacityLow) {
+      if (!mesh || !mesh.material) return;
+      mesh.userData.fadeLevel = opacityLow == null ? 0.32 : opacityLow;
+      mesh.userData.cameraFade = true;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      mats.forEach((mat) => {
+        mat.transparent = true;
+        mat.opacity = 1;
+        mat.depthWrite = true;
+      });
+      cameraFadeMeshes.push(mesh);
+    }
+
+    function applyCameraOcclusionFade() {
+      if (worldMode !== 'INTERIOR' || !interiorGroup.visible || cameraFadeMeshes.length === 0) return;
+      const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
+      const toCam = new THREE.Vector3().subVectors(camera.position, eye);
+      const len = toCam.length();
+      if (len < 0.25) return;
+      const dir = toCam.multiplyScalar(1 / len);
+      cameraFadeMeshes.forEach((mesh) => {
+        if (!mesh.visible) return;
+        const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        mats.forEach((mat) => {
+          mat.opacity = 1;
+          mat.depthWrite = true;
+        });
+      });
+      raycaster.set(eye, dir);
+      raycaster.far = len - 0.12;
+      const hits = raycaster.intersectObjects(cameraFadeMeshes, false);
+      for (let i = 0; i < Math.min(3, hits.length); i++) {
+        const o = hits[i].object;
+        if (!o.userData.cameraFade) continue;
+        const low = o.userData.fadeLevel != null ? o.userData.fadeLevel : 0.3;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((mat) => {
+          mat.opacity = Math.min(mat.opacity, low);
+          mat.depthWrite = mat.opacity > 0.55;
+        });
+      }
     }
 
     /** Prosedürel insan (ayaklar y=0); opts.role: 'security' | 'staff' | undefined — semi-realistic oranlar */
@@ -612,6 +725,7 @@
       const root = new THREE.Group();
       root.userData.isHuman = true;
       root.userData.idlePhase = Math.random() * Math.PI * 2;
+      root.userData.pose = opts.pose || 'idle';
 
       const skinM = matStd(skin, 0.68, 0.02);
       const shirtM = matStd(shirt, 0.58, 0.04);
@@ -716,6 +830,8 @@
         lower.position.set(x * 1.06, 0.96 * s, 0.05 * s);
         lower.rotation.z = side * 0.12;
         root.add(lower);
+        if (side < 0) root.userData.armLL = lower;
+        else root.userData.armLR = lower;
       }
       limbArm(-1);
       limbArm(1);
@@ -803,25 +919,33 @@
         collisionMeshes.push(b);
       });
 
-      const plaster = matStd(0xf5f2ec, 0.82, 0.02);
+      const plaster = new THREE.MeshPhysicalMaterial({
+        color: 0xf2efe8,
+        roughness: 0.78,
+        metalness: 0.04,
+        clearcoat: 0.12,
+        clearcoatRoughness: 0.55,
+        envMapIntensity: 0.65
+      });
       const woodLow = matStd(0x4a3728, 0.78, 0);
       const wallH = 4.9;
-      function wallPanel(w, h, d, x, z, ry, mat, y0) {
+      function wallPanel(w, h, d, x, z, ry, mat, y0, registerFade) {
         const m = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat));
         m.position.set(x, y0 + h / 2, z);
         m.rotation.y = ry || 0;
         interiorGroup.add(m);
         collisionMeshes.push(m);
+        if (registerFade) registerCameraFade(m, 0.3);
         return m;
       }
-      wallPanel(42, 1.15, 0.45, 0, -12.75, 0, woodLow, 0);
-      wallPanel(42, wallH - 1.15, 0.45, 0, -12.78, 0, plaster, 1.15);
-      wallPanel(42, 1.15, 0.45, 0, 12.75, 0, woodLow, 0);
-      wallPanel(42, wallH - 1.15, 0.45, 0, 12.78, Math.PI, plaster, 1.15);
-      wallPanel(0.45, 1.15, 26, -20.78, 0, 0, woodLow, 0);
-      wallPanel(0.45, wallH - 1.15, 26, -20.82, 0, 0, plaster, 1.15);
-      wallPanel(0.45, 1.15, 26, 20.78, 0, Math.PI, woodLow, 0);
-      wallPanel(0.45, wallH - 1.15, 26, 20.82, 0, Math.PI, plaster, 1.15);
+      wallPanel(42, 1.15, 0.45, 0, -12.75, 0, woodLow, 0, false);
+      wallPanel(42, wallH - 1.15, 0.45, 0, -12.78, 0, plaster, 1.15, true);
+      wallPanel(42, 1.15, 0.45, 0, 12.75, 0, woodLow, 0, false);
+      wallPanel(42, wallH - 1.15, 0.45, 0, 12.78, Math.PI, plaster, 1.15, true);
+      wallPanel(0.45, 1.15, 26, -20.78, 0, 0, woodLow, 0, false);
+      wallPanel(0.45, wallH - 1.15, 26, -20.82, 0, 0, plaster, 1.15, true);
+      wallPanel(0.45, 1.15, 26, 20.78, 0, Math.PI, woodLow, 0, false);
+      wallPanel(0.45, wallH - 1.15, 26, 20.82, 0, Math.PI, plaster, 1.15, true);
 
       const colMat = new THREE.MeshPhysicalMaterial({
         color: 0xeae2d6,
@@ -838,6 +962,7 @@
         col.position.set(x, (wallH - 0.3) / 2, z);
         interiorGroup.add(col);
         collisionMeshes.push(col);
+        registerCameraFade(col, 0.34);
         const capRing = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.42, 0.1, 24), matStd(0xd4c4b0, 0.38, 0.35)));
         capRing.position.set(x, wallH - 0.18, z);
         interiorGroup.add(capRing);
@@ -888,6 +1013,7 @@
       tellerIsland.add(kick);
       interiorGroup.add(tellerIsland);
       collisionMeshes.push(deskBody, deskTop);
+      registerCameraFade(deskBody, 0.26);
 
       const glassMat = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
@@ -943,6 +1069,7 @@
       reception.add(recTop);
       interiorGroup.add(reception);
       collisionMeshes.push(recDesk);
+      registerCameraFade(recDesk, 0.28);
 
       for (let pi = 0; pi < 3; pi++) {
         const pcv = document.createElement('canvas');
@@ -1023,8 +1150,163 @@
       staff2.position.set(5, 0, -10.1);
       staff2.rotation.y = -Math.PI * 0.12;
       interiorGroup.add(staff2);
+      staff1.userData.pose = 'typing';
+      staff2.userData.pose = 'typing';
 
-      const atmBody = matStd(0x1a1f2e, 0.45, 0.35);
+      function addArmchair(cx, cz, ry, leather) {
+        const g = new THREE.Group();
+        const seat = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.22, 0.7), matStd(leather || 0x3f3428, 0.52, 0.08)));
+        seat.position.set(0, 0.48, 0);
+        g.add(seat);
+        const back = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.55, 0.12), matStd(leather || 0x352a22, 0.55, 0.06)));
+        back.position.set(0, 0.82, -0.32);
+        g.add(back);
+        const armL = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.25, 0.55), matStd(0x44403c, 0.6, 0.12)));
+        armL.position.set(-0.38, 0.58, 0.05);
+        g.add(armL);
+        const armR = armL.clone();
+        armR.position.x = 0.38;
+        g.add(armR);
+        const leg = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.12, 8), matStd(0x1c1917, 0.45, 0.35)));
+        leg.position.set(-0.26, 0.06, 0.22);
+        g.add(leg);
+        const leg2 = leg.clone();
+        leg2.position.set(0.26, 0.06, 0.22);
+        g.add(leg2);
+        const leg3 = leg.clone();
+        leg3.position.set(-0.26, 0.06, -0.22);
+        g.add(leg3);
+        const leg4 = leg.clone();
+        leg4.position.set(0.26, 0.06, -0.22);
+        g.add(leg4);
+        g.position.set(cx, 0, cz);
+        g.rotation.y = ry;
+        interiorGroup.add(g);
+      }
+      addArmchair(9.2, 5.4, -0.15, 0x422006);
+      addArmchair(10.5, 5.1, 0.2, 0x3f2d24);
+      addArmchair(-7.8, 6.8, 0.85, 0x334155);
+      addArmchair(-9.2, 6.2, 0.55, 0x292524);
+      addArmchair(0.5, 6.5, -0.9, 0x451a03);
+      addArmchair(-3.5, 8.2, 2.5, 0x1e3a5f);
+
+      const wTrim = matStd(0x5c534c, 0.62, 0.1);
+      [
+        [40, 0.38, 0.12, 0, 0.75, -12.42, 0],
+        [40, 0.38, 0.12, 0, 0.75, 12.42, Math.PI],
+        [0.12, 0.38, 24, -20.42, 0.75, 0, 0],
+        [0.12, 0.38, 24, 20.42, 0.75, 0, Math.PI]
+      ].forEach(([w, h, d, x, y, z, ry]) => {
+        const tr = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wTrim));
+        tr.position.set(x, y, z);
+        tr.rotation.y = ry;
+        interiorGroup.add(tr);
+      });
+
+      for (let gx = -18; gx <= 18; gx += 6) {
+        for (let gz = -10; gz <= 10; gz += 5) {
+          const led = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.8, 0.55),
+            new THREE.MeshStandardMaterial({
+              color: 0xfffff5,
+              emissive: 0xfff2d6,
+              emissiveIntensity: 0.55,
+              roughness: 0.38,
+              side: THREE.DoubleSide
+            })
+          );
+          led.rotation.x = Math.PI / 2;
+          led.position.set(gx, wallH - 0.08, gz);
+          interiorGroup.add(led);
+        }
+      }
+
+      function addCeilingCam(px, pz) {
+        const dome = new THREE.Mesh(
+          new THREE.SphereGeometry(0.11, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5),
+          matStd(0xf8fafc, 0.25, 0.15)
+        );
+        dome.position.set(px, wallH - 0.02, pz);
+        interiorGroup.add(dome);
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.18), matStd(0x1e293b, 0.4, 0.35)));
+        body.position.set(px, wallH - 0.12, pz);
+        interiorGroup.add(body);
+      }
+      addCeilingCam(-18.5, -10.5);
+      addCeilingCam(18.5, -10.2);
+      addCeilingCam(-18.2, 9.5);
+      addCeilingCam(17.8, 9.8);
+
+      const cooler = new THREE.Group();
+      const cBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.45, 0.52), matStd(0xe2e8f0, 0.38, 0.15)));
+      cBody.position.set(12.2, 0.72, -1.8);
+      cooler.add(cBody);
+      const cTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.12, 0.48), matStd(0x1e293b, 0.35, 0.25)));
+      cTop.position.set(12.2, 1.52, -1.8);
+      cooler.add(cTop);
+      interiorGroup.add(cooler);
+
+      const persC = document.createElement('canvas');
+      persC.width = 280;
+      persC.height = 96;
+      const pctx = persC.getContext('2d');
+      pctx.fillStyle = '#1e293b';
+      pctx.fillRect(0, 0, 280, 96);
+      pctx.strokeStyle = '#64748b';
+      pctx.strokeRect(2, 2, 276, 92);
+      pctx.fillStyle = '#f8fafc';
+      pctx.font = 'bold 22px Inter,sans-serif';
+      pctx.fillText('PERSONEL ALANI', 14, 38);
+      pctx.fillStyle = '#94a3b8';
+      pctx.font = '14px Inter,sans-serif';
+      pctx.fillText('Yetkisiz giriş yasaktır', 14, 68);
+      const persTex = new THREE.CanvasTexture(persC);
+      persTex.colorSpace = THREE.SRGBColorSpace;
+      const persPl = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.4, 0.82),
+        new THREE.MeshStandardMaterial({ map: persTex, roughness: 0.45, metalness: 0.05 })
+      );
+      persPl.position.set(-19.56, 2.35, -8.5);
+      persPl.rotation.y = Math.PI / 2;
+      interiorGroup.add(persPl);
+
+      const csDesk = new THREE.Group();
+      const csTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.09, 1.05), matStd(0x5c4d3d, 0.48, 0.08)));
+      csTop.position.set(-11.5, 1.02, -4.5);
+      csDesk.add(csTop);
+      const csLeg = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.95, 0.95), matStd(0x334155, 0.5, 0.12)));
+      csLeg.position.set(-11.5, 0.48, -4.5);
+      csDesk.add(csLeg);
+      interiorGroup.add(csDesk);
+      collisionMeshes.push(csLeg);
+      deskPropSet(-11.5, -4.5, Math.PI * 0.85);
+
+      const custPhone = createHumanoid({
+        shirt: 0x64748b,
+        pants: 0x1e293b,
+        skin: 0xd4a896,
+        hair: 0x1c1917,
+        cap: false,
+        scale: 0.97,
+        pose: 'phone'
+      });
+      custPhone.position.set(9.85, 0, 5.25);
+      custPhone.rotation.y = Math.PI + 0.35;
+      interiorGroup.add(custPhone);
+
+      const custWait = createHumanoid({
+        shirt: 0xa16207,
+        pants: 0x292524,
+        skin: 0xc4a574,
+        hair: 0x292524,
+        cap: false,
+        scale: 1.02
+      });
+      custWait.position.set(-8.1, 0, 6.9);
+      custWait.rotation.y = 0.55;
+      interiorGroup.add(custWait);
+
+      return [staff1, staff2, custPhone, custWait];
       for (let ax of [-17, 17]) {
         const atm = new THREE.Group();
         const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.35, 2.05, 0.65), atmBody));
@@ -1131,6 +1413,7 @@
         const part = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1.22, 0.04), partitionMat);
         part.position.set(4.25, 1.66, -10.15 + pi * 0.82);
         interiorGroup.add(part);
+        registerCameraFade(part, 0.5);
       }
 
       const dirCanvas = document.createElement('canvas');
