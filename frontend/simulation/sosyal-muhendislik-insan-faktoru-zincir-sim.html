@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <base href="/" />
+  <title>İnsan Faktörü — Sosyal Mühendislik Zinciri · SEBS</title>
+  <meta name="description" content="Kurgusal kurumda farkındalık denetçisi rolü: bilgi zinciri, tavır ve prosedür. Gerçek şifre veya hassas veri içermez." />
+  <meta name="theme-color" content="#0c1222" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    :root {
+      --bg: #070b14;
+      --panel: rgba(14, 20, 36, 0.94);
+      --border: rgba(100, 116, 139, 0.28);
+      --muted: #64748b;
+      --text-dim: #94a3b8;
+      --text: #e2e8f0;
+      --head: #f8fafc;
+      --accent: #38bdf8;
+      --ui: "DM Sans", Inter, system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 42rem; margin: 0 auto; padding: 1rem 1rem 2.5rem; min-height: 100vh; display: flex; flex-direction: column; }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+    }
+    header h1 { font-family: var(--ui); font-size: 1rem; font-weight: 700; margin: 0; color: var(--head); letter-spacing: 0.02em; }
+    header .sub { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 0.2rem; }
+    .back { color: #7dd3fc; text-decoration: none; font-size: 0.78rem; font-weight: 600; }
+    .back:hover { color: #bae6fd; }
+    .trust-bar {
+      font-family: var(--ui); font-size: 0.65rem; color: var(--text-dim);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .trust-bar .meter {
+      width: 6rem; height: 4px; border-radius: 99px; background: rgba(30,41,59,0.9); overflow: hidden; border: 1px solid var(--border);
+    }
+    .trust-bar .meter > span { display: block; height: 100%; background: linear-gradient(90deg, #64748b, #94a3b8); transition: width 0.35s ease; }
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 0.55rem;
+      padding: 1rem 1.1rem 1.1rem; box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+    }
+    .scene-tag { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); font-weight: 700; font-family: var(--ui); margin-bottom: 0.45rem; }
+    .npc-row { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.85rem; }
+    .avatar {
+      flex-shrink: 0; width: 2.6rem; height: 2.6rem; border-radius: 0.4rem;
+      background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-family: var(--ui); font-weight: 700; font-size: 0.72rem; color: var(--text-dim);
+    }
+    .npc-meta h2 { margin: 0; font-size: 1rem; color: var(--head); font-family: var(--ui); }
+    .npc-meta .role { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+    .npc-meta .attitude { font-size: 0.68rem; color: #a78bfa; margin-top: 0.35rem; font-weight: 600; }
+    .bubble {
+      font-size: 0.875rem; line-height: 1.55; color: var(--text);
+      padding: 0.75rem 0.85rem; border-radius: 0.45rem; background: rgba(8, 12, 24, 0.65); border: 1px solid rgba(71, 85, 105, 0.35);
+      margin-bottom: 1rem;
+    }
+    .mission-box {
+      font-size: 0.78rem; line-height: 1.5; color: var(--text-dim); border-left: 3px solid var(--accent);
+      padding: 0.55rem 0.75rem; margin-bottom: 1rem; background: rgba(30, 41, 59, 0.35); border-radius: 0 0.4rem 0.4rem 0;
+    }
+    .choices-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 0.5rem; font-weight: 600; }
+    .choices { display: flex; flex-direction: column; gap: 0.45rem; }
+    .choice-btn {
+      text-align: left; width: 100%; padding: 0.65rem 0.75rem; border-radius: 0.45rem; cursor: pointer; font-size: 0.8rem; line-height: 1.45;
+      font-family: inherit; border: 1px solid rgba(71, 85, 105, 0.45);
+      background: linear-gradient(180deg, rgba(30,41,59,0.55), rgba(15,23,42,0.75));
+      color: #94a3b8;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .choice-btn:hover:not(:disabled) {
+      border-color: rgba(100, 116, 139, 0.55); color: #cbd5e1; background: rgba(30, 41, 59, 0.75);
+    }
+    .choice-btn:disabled { opacity: 0.45; cursor: default; }
+    .response-block {
+      margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border);
+      display: none;
+    }
+    .response-block.visible { display: block; }
+    .response-block .npc-reply { font-size: 0.84rem; line-height: 1.55; color: #cbd5e1; margin-bottom: 0.65rem; }
+    .hint-line { font-size: 0.72rem; color: #64748b; font-style: italic; margin-bottom: 0.75rem; }
+    .btn-next {
+      display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border-radius: 0.45rem;
+      border: none; cursor: pointer; font-weight: 600; font-size: 0.82rem; font-family: var(--ui);
+      background: #334155; color: #e2e8f0;
+    }
+    .btn-next:hover { filter: brightness(1.08); }
+    .clues-strip { margin-top: 1rem; font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+    .clues-strip strong { color: var(--text-dim); font-weight: 600; }
+    #introScreen .card p { font-size: 0.84rem; line-height: 1.55; color: var(--text-dim); margin: 0 0 0.75rem; }
+    #reportScreen h2 { font-family: var(--ui); font-size: 1.05rem; color: var(--head); margin: 0 0 0.5rem; }
+    #reportScreen .report-grid { display: grid; gap: 0.5rem; font-size: 0.8rem; margin: 0.75rem 0; }
+    #reportScreen .report-row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(51,65,85,0.5); padding-bottom: 0.35rem; color: var(--text-dim); }
+    #reportScreen .commentary { font-size: 0.8rem; line-height: 1.55; color: var(--text-dim); margin-top: 0.75rem; }
+    .hidden { display: none !important; }
+    .warn { color: #fca5a5; font-size: 0.75rem; margin-top: 0.35rem; }
+    .ok { color: #86efac; font-size: 0.75rem; margin-top: 0.35rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <a class="back" href="/simulations.html">← Simülasyonlar</a>
+        <h1>İnsan faktörü — sosyal mühendislik zinciri</h1>
+        <div class="sub">Kurgusal farkındalık senaryosu · eğitim</div>
+      </div>
+      <div class="trust-bar" id="trustHud" title="Kurumsal güven / tavır özeti">
+        <span>Güven</span>
+        <div class="meter"><span id="trustFill" style="width:55%"></span></div>
+        <span id="trustNum">55</span>/100
+      </div>
+    </header>
+
+    <div id="introScreen">
+      <div class="card">
+        <div class="scene-tag">Görev</div>
+        <div class="mission-box" id="missionText"></div>
+        <p>Lobide başlıyorsunuz. Aşağıdaki ifadeler bilinçli olarak <strong>benzer tonda</strong> yazıldı; hangisinin kurum için daha uygun olduğunu siz seçeceksiniz.</p>
+        <button type="button" class="btn-next" id="startBtn">Lobiye geç</button>
+      </div>
+    </div>
+
+    <div id="gameScreen" class="hidden">
+      <div class="card">
+        <div class="scene-tag" id="sceneTag"></div>
+        <div class="npc-row">
+          <div class="avatar" id="npcInitials"></div>
+          <div class="npc-meta">
+            <h2 id="npcName"></h2>
+            <div class="role" id="npcRole"></div>
+            <div class="attitude" id="npcAttitude"></div>
+          </div>
+        </div>
+        <div class="bubble" id="npcOpen"></div>
+        <div class="choices-label">Nasıl yanıt verirsiniz? (beş seçenek — ton olarak birbirine yakın)</div>
+        <div class="choices" id="choicesRoot"></div>
+        <div class="response-block" id="responseBlock">
+          <div class="npc-reply" id="npcReply"></div>
+          <div class="hint-line" id="hintLine"></div>
+          <button type="button" class="btn-next" id="continueBtn">Sonraki görüşme</button>
+        </div>
+        <div class="clues-strip" id="cluesStrip"></div>
+      </div>
+    </div>
+
+    <div id="reportScreen" class="hidden">
+      <div class="card">
+        <div class="scene-tag">Simülasyon raporu</div>
+        <h2 id="reportTitle"></h2>
+        <div class="report-grid" id="reportGrid"></div>
+        <p class="commentary" id="reportCommentary"></p>
+        <a class="btn-next" href="/simulations.html" style="text-decoration:none;display:inline-flex;margin-top:0.75rem;">Listeye dön</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SIM_ID = 'sosyal-muhendislik-insan-faktoru-zincir';
+      const SIM_NAME = 'İnsan Faktörü — Sosyal Mühendislik Zinciri';
+
+      const MISSION_HTML =
+        '“Merhaba, bugün kurum içinde <strong>sosyal mühendislik farkındalık simülasyonu</strong> yürüteceksin. Hedefin, çalışanlarla konuşarak bilgi paylaşım zincirinin nasıl oluştuğunu gözlemlemek. ' +
+        '<strong>Gerçek şifre, kişisel veri veya kurumsal sır istemek yasaktır.</strong> Amacın çalışanların güvenlik reflekslerini test etmek ve raporlamaktır.”';
+
+      function attitudeLabel(t) {
+        if (t >= 80) return 'Tavır: güvenli iş birliği';
+        if (t >= 65) return 'Tavır: yardımcı';
+        if (t >= 45) return 'Tavır: nötr';
+        if (t >= 28) return 'Tavır: temkinli';
+        return 'Tavır: şüpheli';
+      }
+
+      function clamp(n, a, b) {
+        return Math.max(a, Math.min(b, n));
+      }
+
+      let trust = 55;
+      let stageIndex = 0;
+      let clues = {
+        receptionRoute: false,
+        portalProcedure: false,
+        managerTraining: false,
+        eceOfficial: false
+      };
+      let riskyRequests = 0;
+      let procedureScore = 0;
+      let securityFlagged = false;
+      let lastChoiceMeta = null;
+      let completionSaved = false;
+
+      const stages = [
+        {
+          id: 'zeynep',
+          tag: 'Lobi · danışma',
+          initials: 'Z',
+          name: 'Zeynep',
+          role: 'Resepsiyon / danışma görevlisi',
+          open: 'Merhaba, size nasıl yardımcı olabilirim?',
+          choices: [
+            {
+              text:
+                'Merhaba; kurum içi farkındalık çalışması kapsamında ilgili birimle görüşmem gerekiyor. Beni bilgi güvenliği veya BT destek ekibine yönlendirebilir misiniz?',
+              trust: 12,
+              procedure: 1,
+              clue: 'receptionRoute',
+              reply:
+                'Tabii, bu tür konular için genelde BT destek ekibiyle görüşülüyor. İkinci katta Mert Bey ilgileniyor olabilir.',
+              hint: 'Not: yönlendirme ve genel konum — çalışan özel iletişimi değil.'
+            },
+            {
+              text:
+                'Acilen yöneticinin odasına gitmem lazım; zemin planına göre en kısa güzergâhı ve varsa erişim notunu paylaşabilir misiniz?',
+              trust: -14,
+              risky: 1,
+              reply:
+                'Bu bilgileri paylaşamam. Lütfen yetkili kişiyle randevunuzu doğrulatın.',
+              hint: 'Baskı ve hassas alan ipucu istemi tavrı sertleştirir.'
+            },
+            {
+              text:
+                'Ofiste yeni sayılıyorum; IT ile görüşeceğim ama isimleri karıştırıyorum. Bugün kimlerin masa başında olduğunu kabaca söyleyebilir misiniz?',
+              trust: -6,
+              risky: 1,
+              reply:
+                'İsim ve varlık bilgisi paylaşamam. Genel olarak destek için resepsiyon kaydı veya portal üzerinden ilerleyebilirsiniz.',
+              hint: 'Kişi/konum sorusu gizlilik sınırına yaklaşır.'
+            },
+            {
+              text:
+                'Üst kattan bir arkadaş “BT’yi sor” dedi; hangi kata çıkmam gerektiğini netleştirebilir misiniz?',
+              trust: 4,
+              procedure: 0,
+              clue: 'receptionRoute',
+              reply:
+                'BT destek genelde ikinci katta. Oradaki görevliye yönlendirebilirim; detay için kayıt tutmanızı rica ederim.',
+              hint: 'Kısmi yönlendirme alındı; resmi çerçeve zayıf kaldı.'
+            },
+            {
+              text:
+                'Şu an çok sıkışık bir durumdayım; parola sıfırlama için doğrudan kiminle konuştuğunuzu söylemeniz yeterli.',
+              trust: -9,
+              risky: 1,
+              reply:
+                'Parola veya erişim konularında rehberlik veremem. Lütfen kurumsal destek kanalını kullanın.',
+              hint: 'Parola bağlamı ön büroda bile temkin uyandırır.'
+            }
+          ]
+        },
+        {
+          id: 'mert',
+          tag: 'BT destek · ikinci kat',
+          initials: 'M',
+          name: 'Mert',
+          role: 'IT helpdesk',
+          open: 'Merhaba, destek hattı. Nasıl yardımcı olabilirim?',
+          choices: [
+            {
+              text:
+                'Zeynep Hanım beni size yönlendirdi. Kurum içi güvenlik farkındalık sürecinde destek prosedürlerini anlamaya çalışıyorum; parola sıfırlama taleplerinin kurumda nasıl işlendiğini özetleyebilir misiniz?',
+              trust: 14,
+              procedure: 1,
+              clue: 'portalProcedure',
+              needReception: true,
+              reply:
+                'Anladım. Parola veya erişim bilgisi paylaşmıyoruz ama süreç hakkında bilgi verebilirim. Çalışanlar parola sıfırlama için sadece resmi destek portalını kullanmalı.',
+              hint: 'İpucu: parola sıfırlama yalnızca resmi portal üzerinden.',
+              fallbackReply:
+                'Portal üzerinden ilerlenmesi gerekir dediklerini duydum; detay için yine de kayıtlı görev tanımınızı görmek isterim.',
+              fallbackHint: 'Yönlendirme zayıf olsa da genel çizgi korunuyor.'
+            },
+            {
+              text:
+                'Yöneticinin hesabına giriş yapmam gerekiyor; eğitim kapsamında olsa bile geçici bir şifre üretebilir misiniz?',
+              trust: -22,
+              risky: 1,
+              security: true,
+              reply:
+                'Böyle bir bilgiyi kimseyle paylaşamam. Bu talebi güvenlik ekibine bildiriyorum.',
+              hint: 'Kritik talep: güvenlik alarmı tetiklendi.'
+            },
+            {
+              text:
+                'Son dönemde ticket açanların çoğunlukla hangi konularda takıldığını istatistik olarak bilen var mı? İsim vermeden genel dağılım yeterli.',
+              trust: -5,
+              risky: 1,
+              reply:
+                'Kişiye bağlı metrik paylaşamam. Prosedür dokümanına yönlendirebilirim.',
+              hint: 'Veri sınırına yaklaşım tavrı düşürür.'
+            },
+            {
+              text:
+                'Farkındalık çalışması için “nasıl yönlendiriyorsunuz” sorusuna tek cümlelik, resmi cevap rica edeceğim.',
+              trust: 6,
+              procedure: 1,
+              clue: 'portalProcedure',
+              needReception: false,
+              reply:
+                'Resmi portal ve ticket akışı dışında parola veya MFA ile ilgili işlem yapılmaz; başka kanaldan istemeyin uyarısı da var.',
+              hint: 'İpucu: yalnızca resmi kanal vurgusu alındı.'
+            },
+            {
+              text:
+                'VPN kopmalarında kullanılan geçici kod formatını örnekleyebilir misiniz? Gerçek değil, şablon olarak.',
+              trust: -10,
+              risky: 1,
+              reply:
+                'MFA veya VPN kodu örneği veremem. Lütfen bilgi güvenliği birimiyle görüşün.',
+              hint: 'MFA/VPN çağrışımı sınır ihlali sayılır.'
+            }
+          ]
+        },
+        {
+          id: 'aylin',
+          tag: 'İnsan kaynakları',
+          initials: 'A',
+          name: 'Aylin',
+          role: 'İK uzmanı',
+          open: 'Merhaba, randevunuz var mıydı?',
+          choices: [
+            {
+              text:
+                'BT destek ekibi, güvenlik farkındalık süreçlerinin İK ile de koordine edildiğini söyledi. Çalışanlara verilen siber farkındalık eğitimlerinin genel takvimi hakkında bilgi alabilir miyim?',
+              trust: 12,
+              procedure: 1,
+              clue: 'managerTraining',
+              needPortal: true,
+              reply:
+                'Elbette, genel eğitim programını paylaşabilirim. Bu hafta yöneticiler için “Kimlik Avı ve Parola Güvenliği” oturumu var.',
+              hint: 'İpucu: yöneticiler bu hafta parola güvenliği oturumunda.',
+              fallbackReply:
+                'Genel takvimde bu hafta yönetici oturumları da var; detayları intranet duyurusundan izleyebilirsiniz.',
+              fallbackHint: 'Bağlam eksik; yine de genel bilgi verildi.'
+            },
+            {
+              text:
+                'Serkan Bey’in kişisel telefonunu ve özel toplantı saatlerini paylaşabilir misiniz? Kayıt dışı, sadece hizalanmak için.',
+              trust: -18,
+              risky: 1,
+              reply:
+                'Bu bilgileri paylaşamam. Kişisel veriler sadece yetkili süreçlerde paylaşılır.',
+              hint: 'Kişisel veri talebi İK kanalını kapatır.'
+            },
+            {
+              text:
+                'Yönetici isimlerini listeleyebilir misiniz? Kimlerin eğitime zorunlu olduğunu anlamam lazım.',
+              trust: -8,
+              risky: 1,
+              reply:
+                'İsim listesi veremem. Duyurulan genel programı paylaşabilirim.',
+              hint: 'İsim listesi gizlilik riski oluşturur.'
+            },
+            {
+              text:
+                'Eğitim saatlerini “kurum içi genel duyuru” formatında, kişiselleştirmeden aktarabilir misiniz?',
+              trust: 5,
+              procedure: 1,
+              clue: 'managerTraining',
+              needPortal: false,
+              reply:
+                'Bu hafta yönetici oturumu var; katılım zorunluluğu rol bazlı duyurulur, saatler intranette.',
+              hint: 'Genel oturum bilgisi alındı.'
+            },
+            {
+              text:
+                'İzin kayıtlarından bugün kimin uzaktan olduğunu görebilir miyiz? Operasyon planlıyorum.',
+              trust: -12,
+              risky: 1,
+              reply:
+                'İzin ve çalışma şekli bilgisi paylaşılamaz. Lütfen yöneticiniz üzerinden talep oluşturun.',
+              hint: 'Hassas İK verisi talebi tavrı düşürür.'
+            }
+          ]
+        },
+        {
+          id: 'ece',
+          tag: 'Operasyon · proje koordinasyonu',
+          initials: 'E',
+          name: 'Ece',
+          role: 'Proje koordinatörü',
+          open: 'Merhaba, nasıl yardımcı olabilirim?',
+          choices: [
+            {
+              text:
+                'BT destek ekibi parola sıfırlama işlemlerinin sadece resmi portal üzerinden yapılması gerektiğini söyledi. İK tarafında da yöneticiler için parola güvenliği oturumu olduğunu öğrendim. Bu farkındalık çalışmasının yönetici tarafındaki onay sürecini anlamak istiyorum.',
+              trust: 14,
+              procedure: 1,
+              clue: 'eceOfficial',
+              needChain: true,
+              reply:
+                'Bu konularda son onayı Serkan Bey verir ama kendisi de hassas erişim bilgilerini paylaşmaz. Görüşme yapacaksanız resmi kayıt üzerinden ilerlemeniz gerekir.',
+              hint: 'İpucu: yönetici yalnızca resmi kayıt ve doğrulama üzerinden işlem yapar.',
+              fallbackReply:
+                'Yönetici görüşmeleri için resmi kayıt şart; ben detay veremem.',
+              fallbackHint: 'Resmi kayıt vurgusu kısmen alındı.'
+            },
+            {
+              text:
+                'Serkan Bey’e gitmeden önce, kullandığı sistemler ve erişim kapsamı hakkında kısa bir özet rica edeceğim.',
+              trust: -20,
+              risky: 1,
+              reply:
+                'Bu talep güvenli değil. Bu konuşmayı burada sonlandırıyorum.',
+              hint: 'Erişim bilgisi isteme tavrı kırılır.'
+            },
+            {
+              text:
+                'Bugünkü toplantı linklerinden hangisinin “dış paydaş içermeyen” olduğunu söyleyebilir misiniz?',
+              trust: -4,
+              reply:
+                'Toplantı linki paylaşamam. Davetler kişisel iletişimle gitmez.',
+              hint: 'Link talebi prosedür dışı kalır.'
+            },
+            {
+              text:
+                'Onay sürecini “kurumsal dilde” tek paragraf halinde yazılı iletebilir misiniz?',
+              trust: 7,
+              procedure: 1,
+              clue: 'eceOfficial',
+              needChain: false,
+              reply:
+                'Serkan Bey yalnızca kayıtlı taleplerle görüşür; erişim bilgisi paylaşılmaz.',
+              hint: 'Resmi süreç vurgusu alındı.'
+            },
+            {
+              text:
+                'Müşteri dosyası özetini isimsiz örnekle anlatabilir misiniz? Sadece yapıyı anlamak için.',
+              trust: -6,
+              risky: 1,
+              reply:
+                'Müşteri içeriği aktarılamaz. Lütfen görev mektubunuzu gösterin.',
+              hint: 'Müşteri verisi sınırı aşıldı.'
+            }
+          ]
+        },
+        {
+          id: 'serkan',
+          tag: 'Yönetici görüşmesi',
+          initials: 'S',
+          name: 'Serkan',
+          role: 'Departman yöneticisi',
+          open: 'Merhaba, kaydınızı gördüm mü?',
+          choices: [
+            {
+              text:
+                'BT destek ekibi parola işlemlerinin sadece resmi portal üzerinden yapılacağını belirtti. İK tarafında bu hafta parola güvenliği farkındalık oturumu olduğunu öğrendim. Bu simülasyon kapsamında yönetici seviyesinde güvenlik doğrulama refleksini değerlendirmek istiyorum. Bana gerçek bir şifre değil, yalnızca eğitim senaryosunda kullanılacak simülasyon onay kodunu verebilir misiniz?',
+              trust: 10,
+              procedure: 1,
+              finale: 'good',
+              needOfficial: true,
+              reply:
+                'Gerçek şifre veya erişim bilgisi hiçbir koşulda paylaşılmaz. Ancak bu çalışma kayıtlı ve yetkili olduğu için simülasyon onay kodunu paylaşabilirim: TRAINING-CODE-204.',
+              hint: 'Başarılı güvenli senaryo: gerçek şifre istenmedi; yalnızca simülasyon kodu verildi.',
+              partialReply:
+                'Talebiniz prosedüre yakın ama kayıt tarafında tam hizalı değil. Simülasyon kodunu şimdilik paylaşmıyorum; bilgi güvenliği ile doğrulama yapın.',
+              partialHint: 'Kısmi sonuç: resmi zinciri güçlendirmek gerekirdi.'
+            },
+            {
+              text:
+                'Acil işlem yapmam gerekiyor. Yönetici hesabınızın şifresini paylaşır mısınız? Sonradan sıfırlarsınız.',
+              trust: -30,
+              finale: 'bad',
+              risky: 1,
+              reply:
+                'Bu talep güvenlik politikasına aykırı. Şifre hiçbir koşulda paylaşılmaz. Bu girişimi bilgi güvenliği ekibine bildiriyorum.',
+              hint: 'Başarısız senaryo: gerçek şifre talebi güvenlik prosedürünü tetikler.'
+            },
+            {
+              text:
+                'MFA kodunuzu bir kerelik okuyabilir miyim? Sistem ekranda takılı kaldı, sadece doğrulama için.',
+              trust: -24,
+              finale: 'bad',
+              risky: 1,
+              reply:
+                'MFA kodu paylaşılmaz. Bu tür istekler raporlanır.',
+              hint: 'MFA talebi saldırı göstergesidir.'
+            },
+            {
+              text:
+                'Bu konuyu aramızda tutalım; Serkan Bey olarak sizden “test amaçlı” admin parolasını iletmenizi rica ediyorum.',
+              trust: -28,
+              finale: 'bad',
+              risky: 1,
+              reply:
+                'Otorite taklidi ve gizlilik baskısı kabul edilemez. Süreci güvenlik ekibine iletiyorum.',
+              hint: 'Çift tehdit: gizlilik baskısı + yetki taklidi.'
+            },
+            {
+              text:
+                'Sadece formatı anlamak istiyorum: şifre politikasındaki özel karakter kuralını örnek bir üretimle gösterebilir misiniz? Gerçek hesap değil, desen olarak.',
+              trust: -8,
+              finale: 'neutral',
+              risky: 1,
+              reply:
+                'Canlı örnek üretemem. Politika dokümanına yönlendiririm; simülasyon kodu talebiniz varsa resmi görev kaydıyla gelin.',
+              hint: 'Şifre deseni bile talep etmek riskli sayılır; simülasyon koduna geçilmedi.'
+            }
+          ]
+        }
+      ];
+
+      function setTrustDisplay() {
+        trust = clamp(trust, 0, 100);
+        document.getElementById('trustNum').textContent = String(trust);
+        document.getElementById('trustFill').style.width = trust + '%';
+      }
+
+      function renderClues() {
+        const bits = [];
+        if (clues.receptionRoute) bits.push('BT yönlendirmesi (lobi)');
+        if (clues.portalProcedure) bits.push('Portal prosedürü');
+        if (clues.managerTraining) bits.push('Yönetici eğitim oturumu');
+        if (clues.eceOfficial) bits.push('Resmi kayıt / onay çizgisi');
+        document.getElementById('cluesStrip').innerHTML =
+          bits.length === 0
+            ? '<strong>Toplanan güvenli ipuçları:</strong> henüz kayıt yok.'
+            : '<strong>Toplanan güvenli ipuçları:</strong> ' + bits.join(' · ');
+      }
+
+      function applyChoiceEffects(ch) {
+        trust += ch.trust || 0;
+        if (ch.risky) riskyRequests += 1;
+        if (ch.procedure) procedureScore += 1;
+        if (ch.security) securityFlagged = true;
+        if (ch.clue === 'receptionRoute') clues.receptionRoute = true;
+        if (ch.clue === 'portalProcedure') clues.portalProcedure = true;
+        if (ch.clue === 'managerTraining') clues.managerTraining = true;
+        if (ch.clue === 'eceOfficial') clues.eceOfficial = true;
+        setTrustDisplay();
+        renderClues();
+      }
+
+      function resolveChoiceText(stage, ch) {
+        if (stage.id === 'mert' && ch.needReception && !clues.receptionRoute) {
+          return { reply: ch.fallbackReply || ch.reply, hint: ch.fallbackHint || ch.hint };
+        }
+        if (stage.id === 'aylin' && ch.needPortal && !clues.portalProcedure) {
+          return { reply: ch.fallbackReply || ch.reply, hint: ch.fallbackHint || ch.hint };
+        }
+        if (stage.id === 'ece' && ch.needChain && !(clues.portalProcedure && clues.managerTraining)) {
+          return { reply: ch.fallbackReply || ch.reply, hint: ch.fallbackHint || ch.hint };
+        }
+        if (stage.id === 'serkan' && ch.finale === 'good' && ch.needOfficial && !clues.eceOfficial) {
+          return { reply: ch.partialReply || ch.reply, hint: ch.partialHint || ch.hint };
+        }
+        return { reply: ch.reply, hint: ch.hint };
+      }
+
+      function renderStage() {
+        const stage = stages[stageIndex];
+        document.getElementById('sceneTag').textContent = stage.tag;
+        document.getElementById('npcInitials').textContent = stage.initials;
+        document.getElementById('npcName').textContent = stage.name;
+        document.getElementById('npcRole').textContent = stage.role;
+        document.getElementById('npcAttitude').textContent = attitudeLabel(trust);
+        document.getElementById('npcOpen').textContent = stage.open;
+        document.getElementById('responseBlock').classList.remove('visible');
+        document.getElementById('continueBtn').classList.add('hidden');
+
+        const root = document.getElementById('choicesRoot');
+        root.innerHTML = '';
+        stage.choices.forEach(function (ch, idx) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'choice-btn';
+          btn.textContent = ch.text;
+          btn.addEventListener('click', function () {
+            onPick(stage, ch, idx);
+          });
+          root.appendChild(btn);
+        });
+        renderClues();
+      }
+
+      function onPick(stage, ch) {
+        const buttons = document.querySelectorAll('#choicesRoot .choice-btn');
+        buttons.forEach(function (b) {
+          b.disabled = true;
+        });
+
+        if (ch.security && !securityFlagged) {
+          securityFlagged = true;
+          trust -= 4;
+        }
+
+        const hadReception = clues.receptionRoute;
+        const hadPortal = clues.portalProcedure;
+        const hadChain = clues.portalProcedure && clues.managerTraining;
+
+        applyChoiceEffects(ch);
+
+        if (stage.id === 'mert' && ch.needReception && !hadReception) clues.portalProcedure = false;
+        if (stage.id === 'aylin' && ch.needPortal && !hadPortal) clues.managerTraining = false;
+        if (stage.id === 'ece' && ch.needChain && !hadChain) clues.eceOfficial = false;
+        renderClues();
+
+        const resolved = resolveChoiceText(stage, ch);
+        document.getElementById('npcReply').textContent = resolved.reply;
+        document.getElementById('hintLine').textContent = resolved.hint || '';
+        lastChoiceMeta = { stageId: stage.id, finale: ch.finale || null };
+
+        document.getElementById('npcAttitude').textContent = attitudeLabel(trust);
+        document.getElementById('responseBlock').classList.add('visible');
+        document.getElementById('continueBtn').classList.remove('hidden');
+
+        const btn = document.getElementById('continueBtn');
+        btn.onclick = function () {
+          if (stage.id === 'serkan') {
+            finishSimulation();
+          } else {
+            stageIndex += 1;
+            setTrustDisplay();
+            renderStage();
+          }
+        };
+      }
+
+      function finishSimulation() {
+        document.getElementById('gameScreen').classList.add('hidden');
+        document.getElementById('reportScreen').classList.remove('hidden');
+
+        const meta = lastChoiceMeta || {};
+        let outcome = 'Karma sonuç';
+        let commentary =
+          'Zincirin tamamı ideal şekilde kurulmadı veya riskli talepler dengeyi bozdu. Küçük bilgilerin birleşerek güven ürettiği fikrini tekrar gözden geçirin.';
+
+        if (meta.finale === 'good' && clues.eceOfficial) {
+          outcome = 'Başarılı';
+          commentary =
+            'Oyuncu doğrudan hassas bilgi istemeden zinciri kullandı. Yönetici gerçek şifre paylaşmadı; yalnızca simülasyon onay kodu verildi. Bu akış, kurum içi sosyal mühendislik riskini kontrollü biçimde göstermektedir.';
+        } else if (meta.finale === 'bad') {
+          outcome = 'Başarısız';
+          commentary =
+            'Gerçek şifre, MFA veya yetki taklidi gibi talepler güvenlik politikasını tetikler. Sosyal mühendislik saldırılarında bu tür son talepler genelde zincirin son halkasıdır.';
+        } else if (meta.finale === 'good' && !clues.eceOfficial) {
+          outcome = 'Kısmi başarı';
+          commentary =
+            'Son mesaj prosedüre yakındı ancak koordinatör hattında resmi kayıt ipucu eksik kaldı. Zinciri tamamlamak için güvenli bağlamın birikimi önemlidir.';
+        } else if (meta.finale === 'neutral') {
+          outcome = 'Tamamlanmadı';
+          commentary =
+            'Simülasyon onay koduna uygun çerçevede ulaşılmadı. Şifre formatı bile olsa canlı örnek istemek risk oluşturur.';
+        }
+
+        document.getElementById('reportTitle').textContent = 'Sonuç: ' + outcome;
+        const reflex =
+          trust >= 70 ? 'Yüksek' : trust >= 50 ? 'Orta-yüksek' : trust >= 35 ? 'Orta' : trust >= 20 ? 'Düşük-orta' : 'Düşük';
+
+        document.getElementById('reportGrid').innerHTML =
+          '<div class="report-row"><span>Toplam güven skoru</span><span>' +
+          trust +
+          '/100</span></div>' +
+          '<div class="report-row"><span>Riskli talep sayısı</span><span>' +
+          riskyRequests +
+          '</span></div>' +
+          '<div class="report-row"><span>Doğru prosedür vurgusu (yaklaşık)</span><span>' +
+          Math.min(procedureScore, 5) +
+          '/5</span></div>' +
+          '<div class="report-row"><span>Çalışan güvenlik refleksi (özet)</span><span>' +
+          reflex +
+          '</span></div>' +
+          (securityFlagged
+            ? '<div class="report-row"><span>Güvenlik bildirimi</span><span>BT hattında tetiklendi</span></div>'
+            : '');
+
+        document.getElementById('reportCommentary').textContent = commentary;
+
+        if (!completionSaved && window.SimulationTracker && typeof window.SimulationTracker.saveCompletion === 'function') {
+          completionSaved = true;
+          window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+            score: trust,
+            passed: outcome === 'Başarılı',
+            details: { outcome: outcome, riskyRequests: riskyRequests, procedureScore: procedureScore }
+          });
+        }
+      }
+
+      document.getElementById('missionText').innerHTML = MISSION_HTML;
+      document.getElementById('startBtn').addEventListener('click', function () {
+        document.getElementById('introScreen').classList.add('hidden');
+        document.getElementById('gameScreen').classList.remove('hidden');
+        stageIndex = 0;
+        trust = securityFlagged ? 48 : 55;
+        clues = { receptionRoute: false, portalProcedure: false, managerTraining: false, eceOfficial: false };
+        riskyRequests = 0;
+        procedureScore = 0;
+        securityFlagged = false;
+        lastChoiceMeta = null;
+        completionSaved = false;
+        setTrustDisplay();
+        renderStage();
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+          window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: 'Sosyal Mühendisliğe Giriş' });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

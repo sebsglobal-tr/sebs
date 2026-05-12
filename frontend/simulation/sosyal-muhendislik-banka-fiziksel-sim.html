@@ -707,8 +707,8 @@
       const up = new THREE.Vector3(0, 1, 0);
       const r = new THREE.Vector3().crossVectors(up, f).normalize();
 
-      const mx = -raw.mz * f.x + raw.mx * r.x;
-      const mz = -raw.mz * f.z + raw.mx * r.z;
+      const mx = -raw.mz * f.x - raw.mx * r.x;
+      const mz = -raw.mz * f.z - raw.mx * r.z;
       return { mx, mz };
     }
 
