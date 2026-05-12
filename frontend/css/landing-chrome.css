@@ -3296,3 +3296,34 @@ body.theme-dark.landing-site-body .faq-container .faq-item.active {
   background: #ffffff !important;
   border-color: rgba(71, 85, 105, 0.45) !important;
 }
+
+/* Tutarlı klavye odağı: mobil çekmece ve misafir bağlantıları (.focus-ring yok) */
+body.landing-site-body .landing-nav-drawer-link:focus-visible,
+body.landing-site-body #mobileGuestLinks a:focus-visible,
+body.landing-site-body #mobileUserLinks .btn-logout:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+html[data-theme="dark"] body.landing-site-body .landing-nav-drawer-link:focus-visible,
+html[data-theme="dark"] body.landing-site-body #mobileGuestLinks a:focus-visible,
+html[data-theme="dark"] body.landing-site-body #mobileUserLinks .btn-logout:focus-visible {
+  outline-color: #60a5fa;
+}
+
+body.theme-dark.landing-site-body .landing-nav-drawer-link:focus-visible,
+body.theme-dark.landing-site-body #mobileGuestLinks a:focus-visible,
+body.theme-dark.landing-site-body #mobileUserLinks .btn-logout:focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* Simülasyonlar keşfet: akordeon başlıkları */
+body.landing-site-body #simulationsCategoriesExplore .sebs-acc-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+html[data-theme="dark"] body.landing-site-body #simulationsCategoriesExplore .sebs-acc-btn:focus-visible,
+body.theme-dark.landing-site-body #simulationsCategoriesExplore .sebs-acc-btn:focus-visible {
+  outline-color: #60a5fa;
+}

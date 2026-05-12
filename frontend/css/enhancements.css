@@ -171,8 +171,9 @@ a[href^="#"] {
     scroll-behavior: smooth;
 }
 
-button:focus-visible,
-a:focus-visible {
+/* Altın odak: yalnızca landing-site-body dışı (eski modüller / styles.css sayfaları) */
+body:not(.landing-site-body) button:focus-visible,
+body:not(.landing-site-body) a:focus-visible {
     outline: 2px solid rgba(212, 168, 83, 0.8);
     outline-offset: 2px;
 }
