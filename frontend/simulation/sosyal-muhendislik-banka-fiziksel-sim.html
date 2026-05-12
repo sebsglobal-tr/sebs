@@ -568,7 +568,7 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "/js/vendor/three/build/three.module.js",
+        "three": "/js/vendor/three/pkg/three.module.js",
         "three/addons/": "/js/vendor/three/examples/jsm/"
       }
     }
@@ -2692,6 +2692,8 @@
       player.userData.walkBlend = Math.min(1, sp / (maxSp * 0.9 + 1e-6));
       if (inLen > 1e-6) lastMoveAt = elapsed;
     }
+
+    function tickMoveTransition(dt) {
       if (!moveTransition) return false;
       moveTransition.elapsed += dt;
       const k = Math.min(1, moveTransition.elapsed / moveTransition.dur);
@@ -2759,7 +2761,7 @@
         return true;
       }
       return false;
-    
+    }
 
     function tryEnterBankFromStreet() {
       if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) return;
