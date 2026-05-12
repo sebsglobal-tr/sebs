@@ -1,0 +1,69 @@
+/**
+ * SEBS Global — paylaşılan tasarım değişkenleri ve hafif global baseline.
+ * saas-landing.css ve styles.css üzerinden @import ile yüklenir.
+ */
+:root {
+  --sebs-ink: #0c1222;
+  --sebs-mist: #f4f6fa;
+  --sebs-accent: #2563eb;
+  --sebs-accent-hover: #1d4ed8;
+  --sebs-accent-soft: rgba(37, 99, 235, 0.12);
+  --sebs-accent-muted: rgba(37, 99, 235, 0.18);
+  --sebs-violet: #7c3aed;
+  --sebs-violet-soft: rgba(124, 58, 237, 0.14);
+
+  --sebs-slate-950: #020617;
+  --sebs-slate-900: #0f172a;
+  --sebs-slate-800: #1e293b;
+  --sebs-slate-700: #334155;
+  --sebs-slate-600: #475569;
+  --sebs-slate-500: #64748b;
+
+  --sebs-border: rgba(148, 163, 184, 0.25);
+  --sebs-border-medium: rgba(148, 163, 184, 0.3);
+  --sebs-border-strong: rgba(148, 163, 184, 0.35);
+
+  --sebs-radius-sm: 0.375rem;
+  --sebs-radius-md: 0.625rem;
+  --sebs-radius-lg: 1rem;
+  --sebs-radius-xl: 1.25rem;
+  --sebs-radius-pill: 999px;
+
+  --sebs-space-1: 0.25rem;
+  --sebs-space-2: 0.5rem;
+  --sebs-space-3: 0.75rem;
+  --sebs-space-4: 1rem;
+  --sebs-space-5: 1.25rem;
+  --sebs-space-6: 1.5rem;
+
+  --sebs-shadow-hero: 0 24px 40px -30px rgba(37, 99, 235, 0.32);
+  --sebs-shadow-card: 0 10px 24px -20px rgba(15, 23, 42, 0.22);
+  --sebs-shadow-card-hover: 0 18px 32px -22px rgba(37, 99, 235, 0.32);
+  --sebs-shadow-elevated: 0 24px 38px -26px rgba(15, 23, 42, 0.26);
+
+  --sebs-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sebs-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:not([data-theme="dark"]) {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body.landing-site-body ::selection {
+  background: rgba(37, 99, 235, 0.22);
+  color: inherit;
+}
+
+html[data-theme="dark"] body.landing-site-body ::selection {
+  background: rgba(96, 165, 250, 0.35);
+  color: #f8fafc;
+}
+
+body.theme-dark.landing-site-body ::selection {
+  background: rgba(96, 165, 250, 0.35);
+  color: #f8fafc;
+}
