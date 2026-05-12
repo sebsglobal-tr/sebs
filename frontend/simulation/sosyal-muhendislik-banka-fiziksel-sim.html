@@ -434,8 +434,14 @@
         window.__sebsSilentDropStreetQueued = true;
         if (hint) {
           hint.style.display = 'block';
-          hint.textContent =
-            '3D ortamı yükleniyor… Birkaç saniye bekleyip tekrar tıklayın. Yükleme bitmezse sayfayı yenileyin (Cmd/Ctrl+Shift+R).';
+          var glOk = false;
+          try {
+            var test = document.createElement('canvas');
+            glOk = !!(test.getContext('webgl') || test.getContext('experimental-webgl'));
+          } catch (e) {}
+          hint.textContent = glOk
+            ? '3D ortamı yükleniyor… Birkaç saniye bekleyip tekrar tıklayın. Bitmezse sayfayı önbelleksiz yenileyin (Cmd/Ctrl+Shift+R).'
+            : 'WebGL (donanım hızlandırması) bu tarayıcıda kapalı veya desteklenmiyor. Tarayıcı ayarlarından etkinleştirip sayfayı yenileyin.';
         }
       }
       window.__sebsSilentDropPrepToStreet = prepToStreet;
@@ -562,8 +568,8 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        "three": "/js/vendor/three/build/three.module.js",
+        "three/addons/": "/js/vendor/three/examples/jsm/"
       }
     }
   </script>
