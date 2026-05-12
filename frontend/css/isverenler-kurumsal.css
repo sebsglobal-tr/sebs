@@ -248,48 +248,95 @@ html[data-theme='dark'] .page-isverenler .ent-feature-tile:hover {
 }
 
 /*
- * landing-chrome.css gece modunda tüm h1–h3 ve p için açık renk kullanıyor (!important).
- * Bu sayfada büyük bölümler hâlâ açık zemin (bg-white / bg-slate-50); metin okunmuyordu.
- * Açık yüzey başlık blokları: .ent-light-intro
+ * Gece teması: hero-mesh zaten koyu (landing-chrome). Eski .ent-light-intro koyu metin
+ * kuralları başlığı #0f172a yapıyordu → koyu zemin üzerinde okunmuyordu.
+ * Footer’da da aynı override landing-chrome’un açık tipografisini bozuyordu.
+ * Çözüm: main bölümlerini koyu yüzeye çek + slate metin sınıflarını açık tona çevir;
+ * footer’u landing-chrome’a bırak.
  */
-html[data-theme='dark'] body.page-isverenler .ent-light-intro h1,
-html[data-theme='dark'] body.page-isverenler .ent-light-intro h2,
-html[data-theme='dark'] body.page-isverenler .ent-light-intro h3 {
-  color: #0f172a !important;
+html[data-theme='dark'] body.page-isverenler .enterprise-hero {
+  border-bottom-color: rgba(51, 65, 105, 0.5) !important;
 }
 
-html[data-theme='dark'] body.page-isverenler .ent-light-intro p {
-  color: #475569 !important;
+html[data-theme='dark'] body.page-isverenler main > section.border-t.border-slate-100.bg-white {
+  background: #0f172a !important;
+  border-color: rgba(51, 65, 105, 0.5) !important;
 }
 
-html[data-theme='dark'] body.page-isverenler .ent-light-intro .text-slate-500 {
-  color: #64748b !important;
+html[data-theme='dark'] body.page-isverenler main > section[class*='bg-slate-50'] {
+  background: #111827 !important;
+  border-color: rgba(51, 65, 105, 0.45) !important;
 }
 
-/* Süreç adımları — üst bölüm açık zemin */
-html[data-theme='dark'] body.page-isverenler .ent-step-node p.text-slate-900 {
-  color: #0f172a !important;
+html[data-theme='dark'] body.page-isverenler main .text-slate-900 {
+  color: #f1f5f9 !important;
 }
 
-html[data-theme='dark'] body.page-isverenler .ent-step-node p.text-slate-600 {
-  color: #475569 !important;
+html[data-theme='dark'] body.page-isverenler main .text-slate-800 {
+  color: #e2e8f0 !important;
 }
 
-/* Footer açık zemin */
-html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-900 {
-  color: #0f172a !important;
-}
-
-html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-600 {
-  color: #475569 !important;
-}
-
-html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-500 {
-  color: #64748b !important;
-}
-
-html[data-theme='dark'] body.page-isverenler footer.bg-white .text-slate-400 {
+html[data-theme='dark'] body.page-isverenler main .text-slate-600 {
   color: #94a3b8 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler main .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler main .text-slate-400 {
+  color: #64748b !important;
+}
+
+html[data-theme='dark'] body.page-isverenler main a.text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler main a.text-slate-600:hover {
+  color: #f8fafc !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .enterprise-hero.hero-mesh a.border-slate-200.bg-white {
+  background: rgba(15, 23, 42, 0.55) !important;
+  border-color: rgba(71, 85, 105, 0.75) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .enterprise-hero.hero-mesh a.border-slate-200.bg-white:hover {
+  background: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler #cta .rounded-3xl.border.border-slate-200 {
+  background: linear-gradient(165deg, #111827 0%, #0f172a 52%, #172554 100%) !important;
+  border-color: rgba(71, 85, 105, 0.65) !important;
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler #cta a.border-slate-200.bg-white {
+  background: rgba(15, 23, 42, 0.65) !important;
+  border-color: rgba(71, 85, 105, 0.65) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme='dark'] body.page-isverenler #cta a.border-slate-200.bg-white:hover {
+  background: rgba(30, 41, 59, 0.9) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile .bg-blue-50 {
+  background: rgba(30, 64, 175, 0.35) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile .bg-indigo-50 {
+  background: rgba(67, 56, 202, 0.28) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile .bg-sky-50 {
+  background: rgba(3, 105, 161, 0.3) !important;
+}
+
+html[data-theme='dark'] body.page-isverenler .ent-feature-tile .bg-emerald-50 {
+  background: rgba(6, 95, 70, 0.32) !important;
 }
 
 /* Kart içi koyu yüzey — başlık ve gövde açık renk kalsın */
