@@ -128,8 +128,8 @@
       <div class="card">
         <div class="scene-tag">Görev</div>
         <div class="mission-box" id="missionText"></div>
-        <p>Dört kişiyle sırayla görüşeceksiniz; <strong>her kişiye beş mesaj</strong> hakkınız var. Her turda beş gri tonlu seçenekten birini seçerek ikna çabasını sürdürürsünüz. Lobide başlıyorsunuz.</p>
-        <button type="button" class="btn-next" id="startBtn">Lobiye geç</button>
+        <p>Dört kişiyle tek tek konuşacaksın; <strong>her birine beş mesaj</strong> hakkın var. Her seferinde alttaki cümlelerden birini seç — hepsi birbirine yakın tonda, sanki gerçekten lobide ya da masabaşında konuşuyormuş gibi.</p>
+        <button type="button" class="btn-next" id="startBtn">Tamam, lobideyim</button>
       </div>
     </div>
 
@@ -146,7 +146,7 @@
         </div>
         <div class="turn-pill" id="turnPill"></div>
         <div class="bubble" id="npcOpen"></div>
-        <div class="choices-label">İknaya yönelik yanıtınız (beş seçenek — ton olarak birbirine yakın)</div>
+        <div class="choices-label">Ne dersin? (beş cümle — hangisi daha doğal geliyorsa)</div>
         <div class="choices" id="choicesRoot"></div>
         <div class="response-block" id="responseBlock">
           <div class="npc-reply" id="npcReply"></div>
@@ -174,15 +174,15 @@
       const SIM_NAME = 'İnsan Faktörü — Sosyal Mühendislik Zinciri';
 
       const MISSION_HTML =
-        '“Merhaba, bugün kurum içinde <strong>sosyal mühendislik farkındalık simülasyonu</strong> yürüteceksin. Hedefin, çalışanlarla konuşarak bilgi paylaşım zincirinin nasıl oluştuğunu gözlemlemek. ' +
-        '<strong>Gerçek şifre, kişisel veri veya kurumsal sır istemek yasaktır.</strong> Amacın çalışanların güvenlik reflekslerini test etmek ve raporlamaktır.”';
+        '“Selam, bugün ofiste <strong>sosyal mühendislik farkındalık simülasyonu</strong> koşturacaksın. İnsanlarla konuşup bilginin küçük küçük nasıl zincirlendiğine bakacaksın. ' +
+        '<strong>Gerçek şifre, kişisel veri ya da kurumsal sır isteme;</strong> yok. Amaç çalışanların refleksini görmek ve bunu raporlamak.”';
 
       function attitudeLabel(t) {
-        if (t >= 80) return 'Tavır: güvenli iş birliği';
-        if (t >= 65) return 'Tavır: yardımcı';
-        if (t >= 45) return 'Tavır: nötr';
-        if (t >= 28) return 'Tavır: temkinli';
-        return 'Tavır: şüpheli';
+        if (t >= 80) return 'Tavır: rahat ve iş birlikçi';
+        if (t >= 65) return 'Tavır: açık ve yardımcı';
+        if (t >= 45) return 'Tavır: dengede';
+        if (t >= 28) return 'Tavır: temkinli, mesafeli';
+        return 'Tavır: soğuk, şüpheli';
       }
 
       function clamp(n, a, b) {
@@ -228,47 +228,47 @@
           'Zeynep',
           'Resepsiyon / danışma görevlisi',
           [
-            'Merhaba, size nasıl yardımcı olabilirim?',
-            'Farkındalık denetimi… Görev kapsamınızı biraz açar mısınız?',
-            'BT veya bilgi güvenliği birimine yönlenmek istediğinizi not aldım; kayıt tarafı net mi?',
-            'Katlar arası yürüyüşlerde zaman kaybı oluyor; yine de nasıl ilerlemek istersiniz?',
-            'Son mesajınız: yönlendirmemi nasıl formüle edeyim?'
+            'Günaydın, buyurun — size nasıl yardımcı olayım?',
+            'Tamam, farkındalık işi… Biraz açar mısınız, tam olarak neye bakıyorsunuz?',
+            'Anladım, BT tarafına gideceksiniz. Peki elinizde kayıt falan var mı, yoksa sadece mi geldiniz?',
+            'Bir sürü kat var, kimse kaybolmasın diye soruyorum: siz nasıl ilerlemek istersiniz?',
+            'Tamam son bir şey — yönlendirmeyi nasıl söyleyeyim, resmi mi kalsın yoksa daha mı sade?'
           ],
           [
             [
-              O('Merhaba; kurum içi farkındalık çalışması kapsamında ilgili birimle görüşmem gerekiyor. Beni bilgi güvenliği veya BT destek ekibine yönlendirebilir misiniz?', 11, 'Tabii, bu tür konular için genelde BT destek ekibiyle görüşülüyor. İkinci katta Mert Bey ilgileniyor olabilir.', 'Yönlendirme ve genel konum — kişisel iletişim değil.', { procedure: 1, clue: 'receptionRoute' }),
-              O('Acilen yöneticinin odasına gitmem lazım; en kısa güzergâhı ve varsa erişim notunu paylaşır mısınız?', -12, 'Bu bilgileri paylaşamam. Lütfen yetkili kişiyle randevunuzu doğrulatın.', 'Baskı ve hassas alan ipucu tavrı sertleştirir.', { risky: 1 }),
-              O('Bugün kimlerin masa başında olduğunu kabaca söyleyebilir misiniz? IT ile görüşeceğim.', -6, 'İsim ve varlık bilgisi paylaşamam. Destek için kayıt veya portal önerilir.', 'Gizlilik sınırına yaklaşır.', { risky: 1 }),
-              O('Üst kattan “BT’yi sor” dediler; hangi kata çıkmam gerektiğini netleştirebilir misiniz?', 4, 'BT destek genelde ikinci katta. Kayıt tutmanızı rica ederim.', 'Kısmi yönlendirme.', { clue: 'receptionRoute' }),
-              O('Parola sıfırlama için doğrudan kiminle konuştuğunuzu söylemeniz yeterli, çok sıkışığım var.', -8, 'Parola konusunda rehberlik veremem; kurumsal destek kanalını kullanın.', 'Parola bağlamı temkin uyandırır.', { risky: 1 })
+              O('Merhaba Zeynep Hanım, ben kurum içi farkındalık çalışması için geldim. Bilgi güvenliği ya da BT desteğe gitmem lazım — oraya nasıl yönlendirebilirsiniz?', 11, 'Tabii ki, genelde bu işler BT destekten dönüyor. İkinci katta Mert Bey var, o bakıyor olabilir.', 'Genel yönlendirme; özel numara değil.', { procedure: 1, clue: 'receptionRoute' }),
+              O('Çok acil, yöneticinin odasına yetişmem lazım — en kısa yolu söyler misiniz, belki kapı kodu falan?', -12, 'Bunları buradan veremem maalesef. Randevunuzu yetkili biriyle netleştirmeniz lazım.', 'Baskı + hassas detay tavırı sertletir.', { risky: 1 }),
+              O('Şey diyeceğim, bugün IT’de kim var acaba, isim isim… ben yeni sayılıyorum da.', -6, 'İsim falan söyleyemem ama genel olarak kayıt ya da portal üzerinden giderseniz daha doğru olur.', 'Varlık bilgisi sınırda.', { risky: 1 }),
+              O('Üstte biri “BT’yi sor” dedi ama ben karıştırdım — hangi kata çıkayım sizce?', 4, 'BT destek ikinci katta genelde. Kayıt da tutarsanız sevinirim.', 'Kısmen yönlendirdi.', { clue: 'receptionRoute' }),
+              O('Parolayı sıfırlayacaktım da kime danışsam diye… çok sıkıştım, tek cümlede söyleseniz yeter.', -8, 'Parola işini buradan yönlendiremem; kurumsal destek hattına bakmanız lazım.', 'Parola kelimesi bile tetikleyebilir.', { risky: 1 })
             ],
             [
-              O('Görev mektubum dijital; isterseniz QR ile doğrulayabilirsiniz. BT birimine resmi çerçevede yönlenmek istiyorum.', 8, 'QR tarafını kontrol ederiz; BT için ikinci kat ve kayıtlı yönlendirme uygun.', 'Resmi çerçeve tavrı yumuşatır.', { procedure: 1 }),
-              O('İçeriden biri “hızlı geç” dedi; siz de aynı şekilde mi bakıyorsunuz?', -5, 'İç iletişimle yönlendirme yapamam. Prosedürü sorun.', 'Kayıt dışı baskı zayıf karşılanır.', { risky: 1 }),
-              O('Bu bilgiyi paylaşmanız uygun değilse resmi kanaldan ilerleyebilirim; alternatif nedir?', 6, 'Memnuniyetle: portal veya resepsiyon kaydı ile ilerleyin.', 'Sınır saygısı tavrı artırır.', { procedure: 1 }),
-              O('Yönetici adını kullanarak öncelik istesem kırıcı olur mu?', -4, 'Otorite baskısı önermem; nötr yönlendirme yaparım.', 'Otorite taklidi riskli.', { risky: 1 }),
-              O('Lobide bekleyen başka biri var; tek cümlede BT nerede?', 3, 'İkinci kat, sol koridor tarafı genelde; isim vermeden bu kadar.', 'Kısa yol ipucu.', {})
+              O('Görev yazım dijital aslında, isterseniz QR’dan da bakabilirsiniz. Ben BT’ye resmi taraftan gitmek istiyorum.', 8, 'Tamam, QR’ı kontrol ederiz. BT için ikinci kat deriz, kayıtlı gitmeniz iyi olur.', 'Resmî çizgi tavrı yumuşatır.', { procedure: 1 }),
+              O('İçeriden biri “çabuk geç” dedi — siz de öyle mi yapıyorsunuz burada?', -5, 'İçeriden gelen talimatla yönlendirme yapamam; prosedürü sorun lütfen.', 'Kayıt dışı baskı zayıf karşılanır.', { risky: 1 }),
+              O('Tamam, siz “uygun değil” derseniz ben de resmi kanaldan giderim — o zaman alternatif ne olur?', 6, 'Memnuniyetle: portal ya da resepsiyon kaydıyla devam edin.', 'Sınırı saymak tavırı artırır.', { procedure: 1 }),
+              O('Yönetici adını geçsem “öncelik” gibi olur mu, kötü mü durur?', -4, 'Otorite baskısı gibi durur; ben nötr yönlendiririm.', 'Otorite taklidi riskli.', { risky: 1 }),
+              O('Arkada bekleyen var, ben de yetişeyim — tek cümle: BT nerede?', 3, 'İkinci kat, sol taraf genelde; isim vermeden bu kadar söyleyeyim.', 'Kısa yol.', {})
             ],
             [
-              O('Kayıt numaram yok ama görev tanımı farkındalık simülasyonu; BT ile süreç konuşulacak.', 5, 'Anladım; yine de resepsiyon kaydı açmanızı öneririm.', 'Kayıt eksikliği hafif temkin.', {}),
-              O('Zeynep Hanım dedi ki ikinci kat; siz de aynı şekilde onaylıyor musunuz?', 7, 'Evet, BT destek ikinci katta; Mert Bey tarafı sık iletişimde.', 'Tutarlı yönlendirme güven verir.', { procedure: 1, clue: 'receptionRoute' }),
-              O('Asansör kartı basmam için hangi katı seçeyim—teknik olarak?', 2, 'BT için ikinci kat seçilir; kart politikası güvenlikte.', 'Nötr teknik soru.', {}),
-              O('Özel toplantı salonu ile BT aynı kata mı?', -3, 'Toplantı detayı paylaşamam.', 'Toplantı sınırı.', { risky: 1 }),
-              O('Bugün çok yoğunum; “BT” deyin yeter.', -6, 'Yoğunluk nedeniyle yine de kayıt isteyeceğim.', 'Acelecilik tavrı düşürür.', { risky: 1 })
+              O('Kayıt numaram yok ama iş farkındalık simülasyonu; BT ile süreçten bahsedeceğim.', 5, 'Anladım ama yine de resepsiyon kaydı açmanızı öneririm.', 'Kayıt eksikliği hafif temkin.', {}),
+              O('Zeynep Hanım ikinci kat dedi — siz de öyle mi görüyorsunuz?', 7, 'Evet, BT ikinci katta; Mert Bey’le sık konuşulur orası.', 'Tutarlılık güven verir.', { procedure: 1, clue: 'receptionRoute' }),
+              O('Asansörde hangi kata basayım, teknik soru yani?', 2, 'BT için ikinci kat; kart işleri güvenlikte.', 'Nötr soru.', {}),
+              O('Özel toplantı salonu BT ile aynı mı kata?', -3, 'Toplantı detayı veremem.', 'Toplantı sınırı.', { risky: 1 }),
+              O('Çok yoğunum ya, “BT” deyin geçeyim.', -6, 'Yoğunluk anlıyorum ama yine de kayıt isteyeceğim.', 'Acelecilik tavırı düşürür.', { risky: 1 })
             ],
             [
-              O('Resmi kanal dışında kalmak istemiyorum; BT için net yönlendirme rica ediyorum.', 9, 'Doğru yaklaşım: ikinci kat BT, portal önce.', 'Prosedür uyumu.', { procedure: 1 }),
-              O('Bir üstüm “hemen çık” dedi; siz de onaylarsanız geçeyim.', -10, 'Üst yönlendirme ile işlem yapamam.', 'Zincir otoritesi riskli.', { risky: 1 }),
-              O('Misafir yaka kartım var; BT’ye bu kartla gidebilir miyim?', 2, 'Kart girişte yeterli olabilir; BT içi için kayıt sorulabilir.', 'Nötr.', {}),
-              O('Yönetici odası ile BT aynı koridorda mı—yanlış kapıya gitmeyeyim?', -4, 'Yönetici alanı tarif etmem.', 'Hassas alan sorusu.', { risky: 1 }),
-              O('Son kez: BT için isim ve kat yeterli mi?', 5, 'Evet: ikinci kat, Mert Bey hattı.', 'Özet onay.', { clue: 'receptionRoute' })
+              O('Resmi kanal dışına çıkmak istemiyorum; BT için net bir şey söyleyebilir misiniz?', 9, 'Doğrusu bu: önce portal, BT ikinci katta.', 'Prosedür uyumu.', { procedure: 1 }),
+              O('Üstüm “hemen çık yukarı” dedi — siz de onaylarsanız ben geçeyim.', -10, 'Üstten gelen yönlendirme ile iş yapamam.', 'Zincir otoritesi riskli.', { risky: 1 }),
+              O('Misafir kartım var, BT’ye bununla gidebilir miyim?', 2, 'Girişte olabilir; içeride kayıt sorabilirler.', 'Nötr.', {}),
+              O('Yönetici odasıyla BT aynı koridorda mu — yanlış kapıya düşmeyeyim?', -4, 'Yönetici alanını tarif edemem.', 'Hassas alan.', { risky: 1 }),
+              O('Son kez sorayım: isim + kat yeterli mi BT için?', 5, 'Evet, ikinci kat, Mert Bey tarafı.', 'Özet.', { clue: 'receptionRoute' })
             ],
             [
-              O('Teşekkürler; BT’ye çıkıyorum. Son bir not: randevu şart mı?', 4, 'Çoğu zaman kayıtlı talep yeterli; BT masası yine de sorabilir.', 'Kapanış.', {}),
-              O('Randevu almadan çıkarsam sorun olur mu—sorumluluk size kalır mı?', -5, 'Sorumluluk devredemem; kayıt öneririm.', 'Sorumluluk kaydırma.', { risky: 1 }),
-              O('Bu konuşmayı kimseye söylemeyin; sadece yönlendirme yeter.', -8, 'Gizlilik baskısı kabul edilemez; resmi iletişim kullanın.', 'Gizlilik baskısı.', { risky: 1 }),
-              O('İyi günler; portal linkini lobide görebilir miyim?', 3, 'Broşürde genel portal adresi var; hassas link yok.', 'Genel bilgi.', {}),
-              O('BT’ye “farkındalık denetçisi” olduğumu söyleyeyim mi?', 5, 'Evet, görev tanımını net söylemeniz doğru olur.', 'Şeffaflık.', { procedure: 1 })
+              O('Teşekkürler, çıkıyorum o zaman. Randevu şart mı peki?', 4, 'Çoğu zaman kayıtlı talep yeter; BT yine de sorabilir.', 'Kapanış.', {}),
+              O('Randevu almadan gidersem sorun olur mu — sorumluluk size kalır mı?', -5, 'Sorumluluk deviremem; kayıt daha iyi.', 'Sorumluluk kaydırma.', { risky: 1 }),
+              O('Şunu kimseye söylemeyin ama… yönlendirme yeter bana.', -8, '“Kimseye söyleme” demeyelim; resmi kanal kullanın.', 'Gizlilik baskısı.', { risky: 1 }),
+              O('İyi günler — portal linki lobide bir yerde yazıyor mu?', 3, 'Broşürde genel adres var; özel link veremem.', 'Genel bilgi.', {}),
+              O('BT’ye “farkındalık denetçisi”yim desem doğru mu olur?', 5, 'Evet, görevü net söylemeniz iyi olur.', 'Şeffaflık.', { procedure: 1 })
             ]
           ]
         ),
@@ -279,47 +279,47 @@
           'Mert',
           'IT helpdesk',
           [
-            'Merhaba, destek hattı. Nasıl yardımcı olabilirim?',
-            'Farkındalık tarafını anladım; hangi süreçleri netleştirmek istiyorsunuz?',
-            'Yönlendirme notu veya önceki temas var mı?',
-            'Parola/MFA tarafında beklentiniz tam olarak ne?',
-            'Son tur: başka birimden gelen bir referans var mı?'
+            'Selam, BT destek, buyurun.',
+            'Tamam, farkındalık işi… Peki siz tam olarak neyi merak ediyorsunuz?',
+            'Bir saniye — sizi biri mi yönlendirdi, yoksa doğrudan mı geldiniz?',
+            'Parola falan dediniz mi, MFA mı — netleştirelim mi?',
+            'Son bir şey: başka birimden “şunu söyle” diye not var mı elinizde?'
           ],
           [
             [
-              O('Zeynep Hanım beni size yönlendirdi. Güvenlik farkındalık sürecinde parola sıfırlama prosedürünü öğrenmek istiyorum.', 12, 'Anladım. Parola veya erişim bilgisi paylaşmıyoruz; sıfırlama yalnızca resmi destek portalından.', 'İpucu: yalnızca resmi portal.', { procedure: 1, clue: 'portalProcedure', needReception: true, fallbackReply: 'Portal üzerinden ilerlenir; görev kaydınızı görmek isterim.', fallbackHint: 'Lobi yönlendirmesi zayıfsa tam ipucu gelmeyebilir.' }),
-              O('Yöneticinin hesabına giriş için geçici şifre üretebilir misiniz?', -20, 'Böyle bir bilgiyi paylaşamam. Güvenlik ekibine bildiriyorum.', 'Kritik talep.', { risky: 1, security: true }),
-              O('Ticket istatistiklerini isimsiz dağılım olarak paylaşır mısınız?', -4, 'Kişiye bağlı metrik yok; prosedür dokümanına yönlendiririm.', 'Veri sınırı.', { risky: 1 }),
-              O('Farkındalık için tek cümlelik resmi yönlendirme rica edeceğim.', 7, 'Portal ve ticket dışında parola/MFA işlemi yok.', 'İyi prosedür sorusu.', { procedure: 1, clue: 'portalProcedure', needReception: false }),
-              O('VPN geçici kod formatını şablon olarak örnekler misiniz?', -9, 'MFA/VPN kodu örneği veremem.', 'MFA sınırı.', { risky: 1 })
+              O('Zeynep Hanım beni size gönderdi. Ben güvenlik farkındalığı için buradayım; parola sıfırlama işi nasıl yürüyor, bir anlatır mısınız?', 12, 'Tamam, anladım. Parola ya da erişim vermiyoruz tabii; sıfırlama sadece resmi destek portalından oluyor.', 'Portal tek kanal.', { procedure: 1, clue: 'portalProcedure', needReception: true, fallbackReply: 'Portal üzerinden gidilir normalde; görev yazınızı da bir göreyim isterseniz.', fallbackHint: 'Lobiden net yönlendirme yoksa tam ipucu gelmeyebilir.' }),
+              O('Yönetici hesabına girmem lazım, eğitim için bile olsa — geçici şifre üretemez misiniz?', -20, 'Hayır, öyle bir şey yok. Bunu güvenliğe iletmem lazım.', 'Kırmızı çizgi.', { risky: 1, security: true }),
+              O('Ticket’larda en çok ne takılıyor, istatistik var mı — isim istemiyorum.', -4, 'Kişi bazlı metrik veremem; dokümana bakın.', 'Veri sınırı.', { risky: 1 }),
+              O('Şunu tek cümleyle söyleyebilir misiniz: siz insanları nasıl yönlendiriyorsunuz?', 7, 'Portal ve ticket dışında parola/MFA işlemi yok; başka kanaldan istemeyin uyarısı da var.', 'İyi soru.', { procedure: 1, clue: 'portalProcedure', needReception: false }),
+              O('VPN kopunca atılan o geçici kodun formatını örnekler misiniz, sahte olsa bile?', -9, 'MFA/VPN kodu örneği veremem.', 'MFA sınırı.', { risky: 1 })
             ],
             [
-              O('Portal üzerinden self-servis dışında telefonla sıfırlama var mı?', 5, 'Varsa bile kayıt ve kimlik doğrulama şart; ben detay vermem.', 'Nötr prosedür.', { procedure: 1 }),
-              O('Şu an sistemde “acil bypass” açılmış olabilir; kontrol eder misiniz?', -8, 'Bypass bilgisi paylaşmam; resmi duyuruya bakın.', 'Acil miti riskli.', { risky: 1 }),
-              O('BT’de bugün kim vardı—isim vermeden vardiya sayısı?', -5, 'Vardiya bilgisi yok.', 'Varlık bilgisi.', { risky: 1 }),
-              O('Yine de portalı birlikte adım adım tarif edebilir misiniz?', 6, 'Genel menü: Destek > Parola > Self servis.', 'Yardımcı nötr.', {}),
-              O('Admin hesabıyla ilgili iç prosedür dokümanını özetler misiniz?', -6, 'Admin içeriği aktaramam.', 'Yetki sınırı.', { risky: 1 })
+              O('Telefondan da sıfırlama oluyor mu, yoksa sadece portal mı?', 5, 'Varsa bile kayıt + kimlik doğrulama şart; detayı portal anlatır.', 'Nötr.', { procedure: 1 }),
+              O('Şu an herhalde “acil bypass” açıktır ya, bir bakar mısınız?', -8, 'Bypass falan söylemem; resmi duyuruya bakın.', 'Şüpheli.', { risky: 1 }),
+              O('Bugün masada kim var — isim demeyeyim, kaç kişi falan?', -5, 'O bilgi yok.', 'Varlık.', { risky: 1 }),
+              O('Portal menüsünü birlikte tarif edebilir misiniz, ben kayboluyorum?', 6, 'Genelde Destek > Parola > self servis gibi gidiyor.', 'Yardımcı.', {}),
+              O('Admin tarafının iç prosedürünü özetler misiniz?', -6, 'Admin içeriği aktaramam.', 'Yetki.', { risky: 1 })
             ],
             [
-              O('Lobiden yönlendirildiğimi tekrar teyit ediyorum; portal tek kanal mı?', 8, 'Evet; başka kanal önerilmez.', 'Tutarlılık.', { procedure: 1, clue: 'portalProcedure', needReception: true }),
-              O('MFA kodunu ekranda göstersem yeter mi—siz onaylar mısınız?', -12, 'MFA kodu paylaşılmaz.', 'Kritik.', { risky: 1 }),
-              O('Parola sıfırlama SLA’sı kaç saat—genel aralık?', 3, 'SLA portalda; aralık verebilirim: iş günü içinde.', 'Genel bilgi.', {}),
-              O('Yöneticim “hemen hallet” dedi; siz de aynı şekilde mi?', -7, 'Yönetici baskısıyla prosedür değişmez.', 'Otorite baskısı.', { risky: 1 }),
-              O('Bu konuşmayı kayda alıyor musunuz—haklarım neler?', 4, 'Kayıt politikası portalda; ben teknik yanıt veririm.', 'Nötr.', {})
+              O('Lobiden geldiğimi tekrar söyleyeyim — parola işleri yalnızca portal, öyle mi?', 8, 'Evet, başka kanal önermiyoruz.', 'Tutarlı.', { procedure: 1, clue: 'portalProcedure', needReception: true }),
+              O('MFA kodunu ekranda göstersem, siz “tamam” deseniz yetmiyor mu?', -12, 'Yetmez. MFA kodu paylaşılmaz.', 'Kritik.', { risky: 1 }),
+              O('Peki sıfırlama genelde ne kadar sürer, kabaca?', 3, 'SLA portalda; iş günü içinde gibi düşünün.', 'Genel.', {}),
+              O('Yöneticim “hemen çöz” dedi — siz de öyle mi yapıyorsunuz?', -7, 'Yönetici baskısı prosedürü değiştirmez.', 'Baskı.', { risky: 1 }),
+              O('Bu görüşme kayda alınıyor mu, merak ettim?', 4, 'Kayıt politikası portalda; ben teknik konuşurum.', 'Nötr.', {})
             ],
             [
-              O('Portal dışı linkle sıfırlama olursa nasıl ayırt ederim?', 5, 'Resmi olmayan linklere güvenmeyin; portalı kullanın.', 'İyi güvenlik uyarısı.', { procedure: 1 }),
-              O('Geçici parola üreticisi linkini iletir misiniz?', -10, 'Link paylaşamam; portal içinden ilerleyin.', 'Link talebi.', { risky: 1 }),
-              O('Şifre politikasındaki özel karakter sayısını hatırlatır mısınız?', 2, 'Politika intranette; rakam vermem.', 'Nötr yönlendirme.', {}),
-              O('VPN kesintisi için “tek seferlik kod” rica ediyorum.', -9, 'Kod paylaşılmaz.', 'MFA benzeri.', { risky: 1 }),
-              O('Teşekkürler; BT tarafında başka neyi netleştirmeliyim?', 4, 'Ticket açarsanız süreç takip edilir.', 'Kapanış.', {})
+              O('Sahte linkle sıfırlama gelirse nasıl ayırt ederim?', 5, 'Resmi olmayan linke güvenmeyin; portal.', 'İyi uyarı.', { procedure: 1 }),
+              O('Geçici parola üreticisi linkini atar mısınız?', -10, 'Link atamam; portal içinden.', 'Link talebi.', { risky: 1 }),
+              O('Şifrede kaç özel karakter istiyordunuz, hatırlatır mısınız?', 2, 'Rakamı ben söylemem; politika intranette.', 'Nötr.', {}),
+              O('VPN için tek seferlik kod istiyorum.', -9, 'Kod verilmez.', 'Riskli.', { risky: 1 }),
+              O('Tamam, başka ne sormam lazım sizce?', 4, 'Ticket açarsanız takip edersiniz.', 'Kapanış.', {})
             ],
             [
-              O('Son olarak: parola işleri yalnızca portal—doğru mu tekrar edeyim?', 6, 'Evet, bu kritik kural.', 'Pekiştirme.', { procedure: 1, clue: 'portalProcedure', needReception: false }),
-              O('Bir kerelik istisna tanımlayabilir misiniz—eğitim için?', -8, 'İstisna tanımlamam.', 'İstisna baskısı.', { risky: 1 }),
-              O('BT masasına çıkıyorum; başka uyarı var mı?', 3, 'Kimlik doğrulama hazır olsun.', 'Nötr.', {}),
-              O('Çalışan listesinden rastgele üç kişi seçip durumlarını sorar mısınız?', -11, 'Liste yok.', 'Kişisel veri.', { risky: 1 }),
-              O('İyi günler; portalda “Destek” menüsünden devam edeceğim.', 5, 'Uygun olur.', 'Olumlu kapanış.', {})
+              O('Son olarak tekrar edeyim: parola işi = sadece portal, doğru mu?', 6, 'Doğru, kritik kural bu.', 'Pekiştirme.', { procedure: 1, clue: 'portalProcedure', needReception: false }),
+              O('Bir kereye mahsus istisna yazamaz mısınız, eğitim diye?', -8, 'İstisna yazmam.', 'İstisna baskısı.', { risky: 1 }),
+              O('Tamam, masaya çıkıyorum — ekstra uyarı var mı?', 3, 'Kimlik doğrulama hazır olsun.', 'Nötr.', {}),
+              O('Rastgele üç kişinin şifre sorunu var mı diye bakar mısınız?', -11, 'Liste yok.', 'Kişisel veri.', { risky: 1 }),
+              O('Eline sağlık, portalda Destek’ten devam ederim.', 5, 'Rica ederim, kolay gelsin.', 'Olumlu.', {})
             ]
           ]
         ),
@@ -330,47 +330,47 @@
           'Ece',
           'İK ve proje koordinasyonu',
           [
-            'Merhaba; hem eğitim takvimi hem onay süreçleri tarafına bakıyorum.',
-            'BT portal vurgusunu duyduk; İK tarafında farkındalık nasıl işliyor?',
-            'Yönetici oturumları ve duyurular hakkında ne paylaşabilirim?',
-            'Serkan Bey hattı için resmi kayıt konusunu netleştirelim mi?',
-            'Son tur: yönetici görüşmesine geçmeden önce eksik bir şey var mı?'
+            'Merhaba, buyurun — ben hem eğitim tarafına hem de şu onay işlerine bakıyorum.',
+            'BT “her şey portal” dedi galiba; İK’da bizde nasıl işliyor, onu mu konuşalım?',
+            'Yönetici oturumları için genelde ne söyleyebilirim, onu netleştireyim.',
+            'Serkan Bey tarafına gidecekseniz… orada kayıt meselesi var, onu da konuşalım mı?',
+            'Tamam, son tur — yöneticiye çıkmadan eksik bir şey kaldı mı sizce?'
           ],
           [
             [
-              O('BT ekibi süreçlerin İK ile koordine edildiğini söyledi; genel farkındalık takvimini öğrenebilir miyim?', 10, 'Genel takvimi paylaşabilirim; kişisel veri yok.', 'İyi açılış.', { procedure: 1 }),
-              O('Serkan Bey’in kişisel telefonu ve özel toplantı saatleri?', -16, 'Paylaşamam.', 'Kişisel veri.', { risky: 1 }),
-              O('İzin kayıtlarından bugün kimin uzaktan olduğunu görelim mi?', -10, 'İzin bilgisi yok.', 'İK hassas veri.', { risky: 1 }),
-              O('Eğitim saatlerini duyuru formatında, isimsiz aktarır mısınız?', 6, 'Bu hafta yöneticiler için parola güvenliği oturumu var; detay intranette.', 'İpucu: yönetici oturumu.', { procedure: 1, clue: 'managerTraining', needPortal: true, fallbackReply: 'Yönetici oturumları duyurulmuş; portal bağlamı netleşince detay verilir.', fallbackHint: 'Portal ipucu eksikse kısmi kalır.' }),
-              O('Yönetici isim listesi—eğitime zorunlular?', -7, 'İsim listesi yok.', 'Liste talebi.', { risky: 1 })
+              O('BT dedi ki İK ile de koordinasyon varmış. Siber farkındalık takvimini — genel olarak — anlatır mısınız?', 10, 'Tabii, genel takvimi anlatırım; kişisel veri yok.', 'İyi başlangıç.', { procedure: 1 }),
+              O('Serkan Bey’in cep numarası ve özel toplantı saatleri lazım bana.', -16, 'O bilgiler yok burada.', 'Kişisel veri.', { risky: 1 }),
+              O('Bugün kim uzaktan, kim ofiste — izin kaydından görebilir miyiz?', -10, 'İzin bilgisi paylaşamam.', 'Hassas.', { risky: 1 }),
+              O('Eğitim saatlerini şöyle duyuru gibi, isim vermeden aktarır mısınız?', 6, 'Bu hafta yöneticiler için parola güvenliği oturumu var; detay intranette.', 'Oturum ipucu.', { procedure: 1, clue: 'managerTraining', needPortal: true, fallbackReply: 'Yönetici oturumları duyurulmuş; portal tarafı netleşince daha net konuşuruz.', fallbackHint: 'Portal ipucu eksikse kısmi kalır.' }),
+              O('Eğitime kimler zorunlu, isim listesi atar mısınız?', -7, 'İsim listesi yok.', 'Liste.', { risky: 1 })
             ],
             [
-              O('Portal üzerinden self-servis dışında İK bildirimi gerekir mi?', 5, 'Genelde portal önce; İK duyurusu geneldir.', 'Nötr.', { procedure: 1, needPortal: true }),
-              O('Performans notlarından eğitim muafiyeti çıkar mısınız?', -9, 'Performans verisi yok.', 'Hassas veri.', { risky: 1 }),
-              O('Bu haftaki oturumun konusunu tekrar netler misiniz?', 7, 'Kimlik avı ve parola güvenliği başlığı var.', 'Pekiştirme.', { clue: 'managerTraining', needPortal: false }),
-              O('Katılımı zorunlu tutan rol kodlarını paylaşır mısınız?', -5, 'Rol kodu paylaşamam.', 'Sınır.', { risky: 1 }),
-              O('İntranet duyuru başlığını söylemeniz yeterli.', 4, 'Duyuru başlığı intranette; ben tekrar etmeyeyim.', 'Nötr.', {})
+              O('Portal dışında İK’ya ayrıca yazmam gerekiyor mu?', 5, 'Genelde önce portal; bizim taraf genel duyuru.', 'Nötr.', { procedure: 1, needPortal: true }),
+              O('Performans notlarından eğitimden muaf mıyım diye bakar mısınız?', -9, 'Performans verisi yok.', 'Hassas.', { risky: 1 }),
+              O('Bu haftaki oturumun konusunu bir daha söyler misiniz, kısaca?', 7, 'Kimlik avı ve parola güvenliği.', 'Pekiştirme.', { clue: 'managerTraining', needPortal: false }),
+              O('Hangi rol kodları katılmak zorunda, kodları yazar mısınız?', -5, 'Rol kodu veremem.', 'Sınır.', { risky: 1 }),
+              O('Duyuru başlığı yeter bana aslında, tekrar etmeyin isterseniz.', 4, 'Tamam, intranette zaten duruyor.', 'Nötr.', {})
             ],
             [
-              O('Yönetici oturumu ile portal prosedürünü birlikte düşünüyorum; koordinasyon nasıl?', 8, 'Portal teknik, İK iletişim genel; ikisi birlikte duyurulur.', 'Zincir farkındalığı.', { procedure: 1, clue: 'managerTraining', needPortal: true }),
-              O('Eğitim linkini buradan yapıştırır mısınız?', -6, 'Link paylaşamam.', 'Link talebi.', { risky: 1 }),
-              O('Serkan Bey’in hangi gün müsait olduğunu söyleyin.', -8, 'Takvim paylaşamam.', 'Kişisel plan.', { risky: 1 }),
-              O('Genel olarak yöneticiler bu hafta hangi başlıkta toplanıyor—tek cümle?', 6, 'Parola güvenliği farkındalığı.', 'Özet.', {}),
-              O('Bu bilgi yeterli mi—başka ne istemem uygun olmaz?', 5, 'Genelde yeterli; detay intranet.', 'Sınır farkındalığı.', { procedure: 1 })
+              O('Şöyle düşünüyorum: yönetici oturumu bir yanda, portal prosedürü bir yanda — sizde koordinasyon nasıl görünüyor?', 8, 'Portal teknik işi, biz daha çok genel iletişim; ikisi birlikte duyuruluyor.', 'Zincir.', { procedure: 1, clue: 'managerTraining', needPortal: true }),
+              O('Eğitim linkini buraya yapıştırır mısınız?', -6, 'Link atamam.', 'Link.', { risky: 1 }),
+              O('Serkan Bey hangi gün boş, söyleyin yeter.', -8, 'Takvim paylaşamam.', 'Kişisel plan.', { risky: 1 }),
+              O('Peki yöneticiler bu hafta neye toplanıyor, tek cümle?', 6, 'Parola güvenliği farkındalığı.', 'Özet.', {}),
+              O('Başka ne sorarsam ayıp olur?', 5, 'Genelde bu kadar yeter; detay intranet.', 'Sınır.', { procedure: 1 })
             ],
             [
-              O('BT portal + bu haftaki yönetici oturumu bilgisini birleştirince onay süreci nasıl işliyor?', 12, 'Son onayı Serkan Bey verir; hassas erişim paylaşmaz. Görüşme için resmi kayıt gerekir.', 'İpucu: resmi kayıt.', { procedure: 1, clue: 'eceOfficial', needChain: true, fallbackReply: 'Resmi kayıt şart; zincir tam değilse detay sınırlı kalır.', fallbackHint: 'Portal ve oturum ipuçları eksikse zayıf.' }),
-              O('Serkan Bey’in sistemleri ve erişim kapsamı özeti?', -18, 'Bu talep güvenli değil; konuşmayı sonlandırıyorum.', 'Erişim talebi.', { risky: 1 }),
-              O('Onay sürecini kurumsal dilde tek paragraf yazılı iletir misiniz?', 7, 'Serkan Bey yalnızca kayıtlı taleplerle görüşür; erişim bilgisi yok.', 'Resmi süreç.', { procedure: 1, clue: 'eceOfficial', needChain: false }),
-              O('Müşteri dosyasından isimsiz örnek?', -6, 'Müşteri içeriği yok.', 'Veri sınırı.', { risky: 1 }),
-              O('Toplantı linki hangisi “dış paydaş yok”?', -4, 'Link yok.', 'Link.', { risky: 1 })
+              O('BT portal dedi, bu hafta yönetici oturumu dediniz — bunları birleştirince Serkan Bey tarafında onay nasıl işliyor?', 12, 'Son söz Serkan Bey’de ama o da hassas erişim vermez. Görüşme için resmi kayıt şart.', 'Resmi kayıt ipucu.', { procedure: 1, clue: 'eceOfficial', needChain: true, fallbackReply: 'Kayıt şart; zincir tam değilse ben detayı sınırlı tutarım.', fallbackHint: 'Portal + oturum ipuçları eksikse zayıf.' }),
+              O('Serkan Bey’in hangi sistemlere eriştiğini özetler misiniz?', -18, 'Bu güvenli değil; bu konuşmayı burada kapatıyorum.', 'Erişim talebi.', { risky: 1 }),
+              O('Onayı kurumsal dilde tek paragraf yazıp atar mısınız?', 7, 'Serkan Bey sadece kayıtlı taleple görüşür; erişim bilgisi yok.', 'Resmi süreç.', { procedure: 1, clue: 'eceOfficial', needChain: false }),
+              O('Müşteri dosyasından isimsiz örnek verir misiniz?', -6, 'Müşteri içeriği yok.', 'Veri sınırı.', { risky: 1 }),
+              O('Hangi toplantı linki dışarı kapalı?', -4, 'Link veremem.', 'Link.', { risky: 1 })
             ],
             [
-              O('Resmi kayıt dışında bilgi vermeyeceğinizi bilerek devam ediyorum; başka uyarı?', 6, 'Güzel; kayıt ve kimlik doğrulama hazır olsun.', 'Olumlu kapanış.', { procedure: 1 }),
-              O('Kayıt olmadan “sadece iki dakika” görüşme ayarlar mısınız?', -8, 'Kayıtsız görüşme ayarlamam.', 'Bypass.', { risky: 1 }),
-              O('Teşekkürler; yöneticiye çıkıyorum.', 4, 'Rica ederim.', 'Nötr.', {}),
-              O('Bu konuşmayı gizli tutalım.', -7, 'Gizlilik baskısı uygun değil.', 'Kırmızı bayrak.', { risky: 1 }),
-              O('İK tarafında başka hangi genel duyurular var—tek başlık?', 3, 'Siber farkındalık serisi devam ediyor; detay intranet.', 'Genel.', {})
+              O('Resmi kayıt dışında bilgi vermeyeceğinizi biliyorum; ekstra bir uyarı var mı?', 6, 'Güzel; kayıt + kimlik doğrulama hazır olsun.', 'Olumlu.', { procedure: 1 }),
+              O('Kayıt olmadan iki dakikalığına görüşme ayarlayalım mı?', -8, 'Kayıtsız ayarlamam.', 'Bypass.', { risky: 1 }),
+              O('Tamam, çok sağ olun — yöneticiye çıkıyorum.', 4, 'Rica ederim, kolay gelsin.', 'Nötr.', {}),
+              O('Bunu aramızda tutalım tamam mı?', -7, '“Aramızda” demeyelim; resmi kanal.', 'Kırmızı bayrak.', { risky: 1 }),
+              O('Başka hangi genel duyuru var, tek başlık yeter?', 3, 'Siber farkındalık serisi devam ediyor; detay intranet.', 'Genel.', {})
             ]
           ]
         ),
@@ -381,47 +381,47 @@
           'Serkan',
           'Departman yöneticisi',
           [
-            'Merhaba, kaydınızı gördüm mü?',
-            'Gelen notlarda portal ve eğitim vurgusu var; neyi doğrulayalım?',
-            'Hassas veri istemediğinizi kayda geçireyim mi?',
-            'Simülasyon çerçevesi dışında bir talep var mı?',
-            'Son mesajınız: neyi netleştirmek istiyorsunuz?'
+            'Merhaba, oturun lütfen — kayıt tarafını ben de kontrol ettim ama bir netleştirelim.',
+            'Notlarda portal ve şu eğitim işi geçiyor; siz neyi doğrulamak istiyorsunuz?',
+            'Şunu net söyleyeyim: benden hassas veri beklemediğinizi anlıyorum, değil mi?',
+            'Simülasyon dışında, “ayrıca şunu da halledelim” gibi bir şey yok, doğru mu?',
+            'Tamam, son sözünüzü dinliyorum — ne istiyorsunuz benden?'
           ],
           [
             [
-              O('BT tarafında parola işlerinin yalnızca resmi portal üzerinden yürüdüğünü not aldım; aynı çizgideyiz.', 6, 'Uygun; portal dışı kanal önerilmez.', 'Olumlu açılış.', { procedure: 1 }),
-              O('Kayıt sisteminde “geçici tam yetki” açılmış mı kontrol eder misiniz?', -8, 'Böyle bir kontrol veya bilgi paylaşamam.', 'Şüpheli talep.', { risky: 1 }),
-              O('Yöneticiler için bu hafta parola güvenliği oturumu olduğunu İK özetledi; teyit eder misiniz?', 7, 'Evet, genel duyuru kapsamında.', 'Bağlam pekiştirme.', {}),
-              O('Serkan Bey’in özel e-postasını iletir misiniz?', -6, 'Kişisel iletişim paylaşmam.', 'Kişisel veri.', { risky: 1 }),
-              O('Sadece simülasyon kapsamında refleks ölçüyorum; baskı yok.', 5, 'Anladım; yine de prosedürü korurum.', 'Nötr.', {})
+              O('BT tarafında parolayla ilgili her şeyin portal üzerinden döndüğünü söylediler; ben de aynı çizgideyim.', 6, 'İyi, öyle kalsın; portal dışına çekmeyelim işi.', 'Olumlu.', { procedure: 1 }),
+              O('Sistemde şu an “geçici tam yetki” açılmış mı, bir bakar mısınız?', -8, 'Böyle bir şeye bakamam, bilgi de vermem.', 'Şüpheli talep.', { risky: 1 }),
+              O('Bu hafta yöneticiler için parola güvenliği oturumu varmış — doğru mu duymuşum?', 7, 'Evet, genel duyuru öyle.', 'Bağlam.', {}),
+              O('Özel e-postanızı alabilir miyim, sonra yazarım?', -6, 'Kişisel iletişim vermem.', 'Kişisel veri.', { risky: 1 }),
+              O('Ben sadece simülasyon için refleks ölçüyorum, baskı falan yok yani.', 5, 'Anladım; yine de ben çizgiyi korurum.', 'Nötr.', {})
             ],
             [
-              O('Portal + yönetici oturumu + resmi kayıt üçlüsünü birlikte değerlendiriyorum.', 7, 'Doğru sıra: kayıt, doğrulama, görüşme.', 'İyi çerçeve.', { procedure: 1 }),
-              O('Hızlıca yönetici VPN bilgisini hatırlatır mısınız?', -10, 'VPN bilgisi yok.', 'Sınır.', { risky: 1 }),
-              O('Bu haftaki oturum başlığını tekrarlamanız yeterli.', 4, 'Parola güvenliği farkındalığı.', 'Nötr.', {}),
-              O('Toplantı kaydını bana iletir misiniz?', -5, 'Kayıt içeriği yok.', 'Talep.', { risky: 1 }),
-              O('Resmi süreçte kaldığınızı teyit etmek istiyorum.', 6, 'Teyit ederim.', 'Olumlu.', {})
+              O('Şöyle toparlıyorum: portal var, oturum var, kayıt var — sıra doğru mu sizce?', 7, 'Evet, önce kayıt, doğrulama, sonra görüşme.', 'İyi çerçeve.', { procedure: 1 }),
+              O('VPN tarafını çabucak hatırlatır mısınız, yönetici için?', -10, 'VPN bilgisi yok.', 'Sınır.', { risky: 1 }),
+              O('Oturumun başlığını bir daha söyleyin yeter.', 4, 'Parola güvenliği farkındalığı.', 'Nötr.', {}),
+              O('Toplantı kaydını bana atar mısınız?', -5, 'Kayıt içeriği yok.', 'Talep.', { risky: 1 }),
+              O('Resmi süreçte kaldığımızı teyit etmek istiyorum.', 6, 'Teyit ederim.', 'Olumlu.', {})
             ],
             [
-              O('Gerçek şifre veya MFA istemediğimi özellikle belirtmek istiyorum.', 6, 'İyi; bu ayrım önemli.', 'Sınır farkındalığı.', { procedure: 1 }),
-              O('MFA’yı “sadece test” için gösterebilir misiniz?', -12, 'MFA yok.', 'Kötü.', { risky: 1 }),
-              O('Simülasyon onay kodu dışında bir şey istemiyorum—ileride.', 5, 'İleride de aynı çizgi.', 'Nötr.', {}),
-              O('Admin hesabıyla ilgili iç bilgi?', -9, 'İç bilgi yok.', 'Kötü.', { risky: 1 }),
-              O('Kayda geçirirseniz memnun olurum.', 4, 'Not düşerim.', 'Nötr.', {})
+              O('Gerçek şifre ya da MFA istemediğimi özellikle söylemek istiyorum.', 6, 'İyi, bu ayrım önemli.', 'Sınır farkındalığı.', { procedure: 1 }),
+              O('MFA’yı “test için” göstersek olmaz mı?', -12, 'Olmaz.', 'Kötü.', { risky: 1 }),
+              O('Simülasyon onay kodundan başka bir şey istemem ileride.', 5, 'İleride de aynı çizgi.', 'Nötr.', {}),
+              O('Admin tarafında iç bilgi var mı?', -9, 'Yok.', 'Kötü.', { risky: 1 }),
+              O('Not düşerseniz sevinirim.', 4, 'Düşerim.', 'Nötr.', {})
             ],
             [
-              O('Yönetici seviyesinde doğrulama refleksini ölçmek istiyorum; gerçek erişim değil.', 6, 'Anladım.', 'Çerçeve.', {}),
-              O('Acil bir iş için hesabınızı ödünç alabilir miyim—kısa süre?', -14, 'Bu uygun değil.', 'Kötü.', { risky: 1 }),
-              O('Politika dokümanına yönlendirin yeterli.', 3, 'Intranet politika bölümü.', 'Nötr.', {}),
-              O('“Kimseye söylemeyin” modunda ilerleyelim.', -10, 'Gizlilik baskısı kabul edilmez.', 'Kötü.', { risky: 1 }),
-              O('Simülasyon kodu talebini son turda netleştireceğim.', 4, 'Hazırım dinlemeye.', 'Geçiş.', {})
+              O('Yönetici refleksini ölçüyorum; gerçek erişim falan değil.', 6, 'Anladım.', 'Çerçeve.', {}),
+              O('Acil iş var, hesabınızı kısa süreliğine ödünç alsam?', -14, 'Uygun değil.', 'Kötü.', { risky: 1 }),
+              O('Politikaya intranette bakarım, yeter.', 3, 'Oradan devam.', 'Nötr.', {}),
+              O('Kimseye demeyelim bunu, aramızda kalsın.', -10, 'Öyle demeyelim; gizlilik baskısı olur.', 'Kötü.', { risky: 1 }),
+              O('Simülasyon kodunu son turda netleştireceğim.', 4, 'Dinliyorum.', 'Geçiş.', {})
             ],
             [
-              O('BT ekibi parola işlemlerinin yalnızca resmi portal üzerinden yapılacağını belirtti. İK tarafında bu hafta parola güvenliği oturumu olduğunu öğrendim. Bu simülasyonda yönetici refleksini ölçüyorum; gerçek şifre değil, yalnızca eğitim senaryosu simülasyon onay kodunu verebilir misiniz?', 10, 'Gerçek şifre veya erişim bilgisi paylaşılmaz. Kayıtlı çalışma olduğu için simülasyon onay kodu: TRAINING-CODE-204.', 'Başarılı güvenli senaryo.', { procedure: 1, finale: 'good', needOfficial: true, partialReply: 'Talep prosedüre yakın ama kayıt tam hizalı değil; kodu şimdilik vermiyorum.', partialHint: 'Resmi zincir zayıf.' }),
-              O('Acil işlem için yönetici hesabınızın şifresini paylaşır mısınız? Sonra sıfırlarsınız.', -28, 'Bu talep politikaya aykırı; güvenliğe bildiriyorum.', 'Başarısız senaryo.', { risky: 1, finale: 'bad' }),
-              O('MFA kodunuzu bir kerelik okuyabilir miyim?', -22, 'MFA paylaşılmaz; raporlanır.', 'Kötü final.', { risky: 1, finale: 'bad' }),
-              O('Test amaçlı admin parolasını iletin; aramızda kalsın.', -26, 'Otorite taklidi ve gizlilik baskısı kabul edilemez.', 'Kötü final.', { risky: 1, finale: 'bad' }),
-              O('Şifre politikası için örnek bir üretim gösterir misiniz—desen olarak?', -8, 'Canlı örnek yok; simülasyon kodu için resmi kayıt gerekir.', 'Nötr final.', { risky: 1, finale: 'neutral' })
+              O('BT dedi ki parola işleri sadece portal. İK dedi ki bu hafta parola güvenliği oturumu var. Ben de simülasyon kapsamında şunu sorayım: gerçek şifre değil, sadece eğitim senaryosu için simülasyon onay kodunu verebilir misiniz?', 10, 'Gerçek şifre veya erişim bilgisi vermem hiçbir koşulda. Ama bu iş kayıtlı ve yetkili olduğu için simülasyon onay kodunu verebilirim: TRAINING-CODE-204.', 'Başarılı güvenli senaryo.', { procedure: 1, finale: 'good', needOfficial: true, partialReply: 'Yaklaştınız ama kayıt tarafı tam oturmadı; kodu şimdilik vermiyorum, bilgi güvenliğiyle netleştirin.', partialHint: 'Resmi zincir zayıfsa kısmi kalır.' }),
+              O('Çok acil iş var, hesabınızın şifresini verir misiniz? Sonra sıfırlarsınız zaten.', -28, 'Bu olmaz; güvenliğe gider bu talep.', 'Başarısız senaryo.', { risky: 1, finale: 'bad' }),
+              O('MFA kodunuzu bir kere okuyayım, ekranda kaldı.', -22, 'MFA paylaşılmaz; raporlanır.', 'Kötü final.', { risky: 1, finale: 'bad' }),
+              O('Test için admin şifresini verin, aramızda kalsın.', -26, 'Olmaz; hem gizlilik baskısı hem yetki taklidi gibi durdu.', 'Kötü final.', { risky: 1, finale: 'bad' }),
+              O('Şifre kuralını örnek bir üretimle gösterir misiniz, desen olarak?', -8, 'Canlı örnek yok; simülasyon kodu için resmi kayıt lazım.', 'Nötr final.', { risky: 1, finale: 'neutral' })
             ]
           ]
         )
@@ -479,11 +479,11 @@
         const lastNpc = npcIndex >= NPCS.length - 1;
         const lastRound = roundIndex >= ROUNDS_PER_NPC - 1;
         if (lastNpc && lastRound) {
-          btn.textContent = 'Simülasyonu tamamla';
+          btn.textContent = 'Bitir, raporu görelim';
         } else if (lastRound) {
-          btn.textContent = 'Sonraki kişiye geç';
+          btn.textContent = 'Sıradaki kişiye geç';
         } else {
-          btn.textContent = 'Sonraki mesajınız';
+          btn.textContent = 'Sıradaki mesajım';
         }
       }
 
@@ -496,7 +496,7 @@
         document.getElementById('npcRole').textContent = npc.role;
         document.getElementById('npcAttitude').textContent = attitudeLabel(trust);
         document.getElementById('turnPill').textContent =
-          npc.name + ' · mesaj ' + (roundIndex + 1) + ' / ' + ROUNDS_PER_NPC;
+          npc.name + ' ile konuşma · ' + (roundIndex + 1) + '/' + ROUNDS_PER_NPC;
         document.getElementById('npcOpen').textContent = round.npcSays;
         document.getElementById('responseBlock').classList.remove('visible');
         document.getElementById('continueBtn').classList.add('hidden');
@@ -580,16 +580,16 @@
         }
         let outcome = 'Karma sonuç';
         let commentary =
-          'Zincirin tamamı ideal şekilde kurulmadı veya riskli talepler dengeyi bozdu. Küçük bilgilerin birleşerek güven ürettiği fikrini tekrar gözden geçirin.';
+          'Bazen iyi niyetle de olsa sınırı zorlayan cümleler seçilmiş; zincir tam oturmamış olabilir. Küçük bilgilerin bir araya gelince güven ürettiğini tekrar düşün.';
 
         if (meta.finale === 'good' && clues.eceOfficial) {
           outcome = 'Başarılı';
           commentary =
-            'Oyuncu doğrudan hassas bilgi istemeden zinciri kullandı. Yönetici gerçek şifre paylaşmadı; yalnızca simülasyon onay kodu verildi. Bu akış, kurum içi sosyal mühendislik riskini kontrollü biçimde göstermektedir.';
+            'İnsanlar küçük parçaları birleştirince güven oluşabiliyor; sen de hassas şey istemeden ilerledin. Serkan gerçek şifre vermedi, sadece simülasyon kodunu verdi — bu da olması gereken.';
         } else if (meta.finale === 'bad') {
           outcome = 'Başarısız';
           commentary =
-            'Gerçek şifre, MFA veya yetki taklidi gibi talepler güvenlik politikasını tetikler. Sosyal mühendislik saldırılarında bu tür son talepler genelde zincirin son halkasıdır.';
+            'Şifre, MFA ya da “kimseye söyleme” gibi istekler gerçek hayatta da genelde alarmdır. Saldırganlar bazen en sonda böyle bir şey ister.';
         } else if (meta.finale === 'good' && !clues.eceOfficial) {
           outcome = 'Kısmi başarı';
           commentary =
