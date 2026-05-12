@@ -835,8 +835,8 @@
     scene.add(exteriorGroup);
     let worldMode = 'INTERIOR';
     let moveTransition = null;
-    const interiorCamOrbit = new THREE.Vector3(0, 2.04, 5.68);
-    const exteriorCamOrbit = new THREE.Vector3(0, 2.36, 8.02);
+    const interiorCamOrbit = new THREE.Vector3(0, 2.04, -5.68);
+    const exteriorCamOrbit = new THREE.Vector3(0, 2.36, -8.02);
     function getCamOrbitOffset() {
       return (worldMode === 'INTERIOR' ? interiorCamOrbit : exteriorCamOrbit).clone();
     }
