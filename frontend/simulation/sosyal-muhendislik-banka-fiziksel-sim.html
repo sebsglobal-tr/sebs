@@ -78,6 +78,10 @@
       pointer-events: auto;
     }
     .overlay.hidden { display: none !important; }
+    #officeMailOverlay,
+    #prepOverlay {
+      z-index: 150;
+    }
     .card {
       max-width: 28rem; width: 100%; border-radius: 0.55rem; border: 1px solid rgba(100, 116, 139, 0.22);
       background: linear-gradient(165deg, rgba(17,26,46,0.98) 0%, rgba(10,15,28,0.96) 100%);
@@ -396,6 +400,30 @@
       <button type="button" class="btn" id="btnPrepBank">Şubeye git (3D)</button>
     </div>
   </div>
+  <script>
+    (function () {
+      function mailToPrep() {
+        var mail = document.getElementById('officeMailOverlay');
+        var prep = document.getElementById('prepOverlay');
+        if (mail) mail.classList.add('hidden');
+        if (prep) prep.classList.remove('hidden');
+        var pl = document.getElementById('phaseLabel');
+        var mb = document.getElementById('missionPanelBody');
+        if (pl) pl.textContent = 'Ofis · Hazırlık';
+        if (mb)
+          mb.innerHTML =
+            'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.';
+        var cg = document.getElementById('controlGuide');
+        if (cg) {
+          cg.classList.add('hidden');
+          cg.setAttribute('aria-hidden', 'true');
+        }
+      }
+      window.__sebsSilentDropMailToPrep = mailToPrep;
+      var btn = document.getElementById('btnMailNext');
+      if (btn) btn.addEventListener('click', mailToPrep);
+    })();
+  </script>
 
   <div id="observeUsbOverlay" class="overlay hidden">
     <div class="card" style="max-width: 26rem;">
@@ -616,15 +644,6 @@
           controlGuide.setAttribute('aria-hidden', 'true');
         }
       }
-    }
-
-    const btnMailNextEl = document.getElementById('btnMailNext');
-    if (btnMailNextEl) {
-      btnMailNextEl.addEventListener('click', () => {
-        officeMailOverlay.classList.add('hidden');
-        prepOverlay.classList.remove('hidden');
-        setPhase('OFFICE_PREP');
-      });
     }
 
     let cameraYaw = 0;
@@ -3338,7 +3357,11 @@
     }
 
     applyWorldAtmosphere();
-    setPhase('OFFICE_MAIL');
+    if (prepOverlay && !prepOverlay.classList.contains('hidden')) {
+      setPhase('OFFICE_PREP');
+    } else {
+      setPhase('OFFICE_MAIL');
+    }
     animate();
   </script>
 </body>
