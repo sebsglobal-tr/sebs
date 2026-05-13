@@ -20,16 +20,93 @@
   <style>
     .ws-root {
       min-height: 100vh;
-      background:
-        radial-gradient(ellipse 100% 70% at 50% -25%, rgba(34, 197, 94, 0.12), transparent 50%),
-        radial-gradient(ellipse 55% 45% at 100% 40%, rgba(59, 130, 246, 0.12), transparent 45%),
-        linear-gradient(168deg, #0b1220 0%, #111827 40%, #0f172a 100%);
+      background-color: #030712;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(16, 185, 129, 0.14), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 100% 0%, rgba(59, 130, 246, 0.12), transparent 50%),
+        radial-gradient(ellipse 50% 40% at 0% 100%, rgba(139, 92, 246, 0.08), transparent 45%),
+        linear-gradient(170deg, #020617 0%, #0f172a 42%, #020617 100%);
     }
+    .ws-root::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ws-root > * { position: relative; z-index: 1; }
+
     .ws-card {
+      position: relative;
       border-radius: 1.25rem;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.55) 100%);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.55);
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 42, 0.72) 48%, rgba(2, 6, 23, 0.85) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 32px 64px -28px rgba(0, 0, 0, 0.65),
+        0 0 100px -40px rgba(59, 130, 246, 0.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .ws-card--modal::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.5), rgba(56, 189, 248, 0.35), rgba(167, 139, 250, 0.35));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .ws-title-shine {
+      background: linear-gradient(105deg, #f8fafc 0%, #94a3b8 40%, #e2e8f0 50%, #94a3b8 60%, #f8fafc 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .ws-title-shine { animation: wsShine 6s linear infinite; }
+    }
+    @keyframes wsShine {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .ws-desk-chrome {
+      border-radius: 1rem 1rem 0 0;
+      border: 1px solid rgba(51, 65, 85, 0.65);
+      border-bottom: none;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      padding: 0.5rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ws-desk-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .ws-desk-title {
+      flex: 1;
+      text-align: center;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+    }
+
+    .ws-nav-wrap {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(71, 85, 105, 0.8) transparent;
+    }
+    .ws-nav-wrap::-webkit-scrollbar { height: 5px; }
+    .ws-nav-wrap::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.6);
+      border-radius: 999px;
     }
     .ws-nav-btn {
       display: flex;
@@ -37,202 +114,373 @@
       gap: 0.65rem;
       width: 100%;
       text-align: left;
-      padding: 0.65rem 0.85rem;
-      border-radius: 0.85rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 0.75rem;
       border: 1px solid transparent;
       font-size: 0.8125rem;
       font-weight: 600;
       color: #cbd5e1;
       background: transparent;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      min-height: 2.75rem;
     }
     .ws-nav-btn:hover:not(:disabled) {
-      background: rgba(59, 130, 246, 0.12);
-      border-color: rgba(59, 130, 246, 0.25);
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(96, 165, 250, 0.22);
       color: #f1f5f9;
     }
     .ws-nav-btn--active {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: rgba(96, 165, 250, 0.45);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(99, 102, 241, 0.12) 100%);
+      border-color: rgba(129, 140, 248, 0.45);
       color: #fff;
+      box-shadow: 0 0 24px -8px rgba(59, 130, 246, 0.35);
     }
     .ws-nav-btn:disabled {
-      opacity: 0.45;
+      opacity: 0.5;
       cursor: not-allowed;
+      filter: grayscale(0.3);
     }
     .ws-nav-btn .check {
       margin-left: auto;
       color: #4ade80;
       opacity: 0;
+      font-size: 0.75rem;
     }
-    .ws-nav-btn--done .check {
-      opacity: 1;
+    .ws-nav-btn--done .check { opacity: 1; }
+
+    .ws-table-wrap {
+      border-radius: 0.85rem;
+      border: 1px solid rgba(51, 65, 85, 0.55);
+      overflow: hidden;
+      background: rgba(2, 6, 23, 0.45);
     }
+    .ws-table { width: 100%; border-collapse: collapse; }
     .ws-table th, .ws-table td {
-      padding: 0.55rem 0.65rem;
-      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.55);
       font-size: 0.8125rem;
+      vertical-align: middle;
     }
+    .ws-table tbody tr:hover { background: rgba(59, 130, 246, 0.06); }
+    .ws-table tbody tr:last-child td { border-bottom: none; }
     .ws-table th {
       text-align: left;
       font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: #94a3b8;
+      background: rgba(15, 23, 42, 0.9);
     }
-    .ws-pill-bad { background: rgba(220, 38, 38, 0.2); color: #fecaca; border: 1px solid rgba(248, 113, 113, 0.35); }
-    .ws-pill-warn { background: rgba(234, 179, 8, 0.15); color: #fef08a; border: 1px solid rgba(250, 204, 21, 0.35); }
-    .ws-pill-ok { background: rgba(22, 163, 74, 0.2); color: #bbf7d0; border: 1px solid rgba(74, 222, 128, 0.35); }
+
+    .ws-pill-bad { background: rgba(220, 38, 38, 0.18); color: #fecaca; border: 1px solid rgba(248, 113, 113, 0.35); }
+    .ws-pill-warn { background: rgba(234, 179, 8, 0.12); color: #fef9c3; border: 1px solid rgba(250, 204, 21, 0.35); }
+    .ws-pill-ok { background: rgba(22, 163, 74, 0.18); color: #bbf7d0; border: 1px solid rgba(74, 222, 128, 0.38); }
+    .ws-pill-bad, .ws-pill-warn, .ws-pill-ok {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
     .ws-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.75rem;
+      gap: 0.45rem;
+      min-height: 2.5rem;
+      padding: 0.5rem 1rem;
       border-radius: 0.65rem;
-      font-size: 0.75rem;
+      font-size: 0.8125rem;
       font-weight: 600;
-      border: 1px solid rgba(71, 85, 105, 0.7);
-      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(71, 85, 105, 0.65);
+      background: linear-gradient(180deg, rgba(51, 65, 85, 0.5) 0%, rgba(30, 41, 59, 0.85) 100%);
       color: #e2e8f0;
-      transition: border-color 0.15s, background 0.15s;
+      transition: border-color 0.18s, background 0.18s, transform 0.12s, box-shadow 0.18s;
     }
     .ws-btn:hover:not(:disabled) {
-      border-color: rgba(96, 165, 250, 0.5);
-      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(96, 165, 250, 0.45);
+      background: rgba(59, 130, 246, 0.18);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -12px rgba(59, 130, 246, 0.35);
     }
+    .ws-btn:active:not(:disabled) { transform: translateY(0); }
     .ws-btn:disabled { opacity: 0.45; cursor: default; }
     .ws-btn-primary {
-      border-color: rgba(34, 197, 94, 0.45);
-      background: rgba(22, 163, 74, 0.2);
-      color: #bbf7d0;
+      border-color: rgba(34, 197, 94, 0.5);
+      background: linear-gradient(180deg, rgba(22, 163, 74, 0.35) 0%, rgba(21, 128, 61, 0.25) 100%);
+      color: #ecfdf5;
+    }
+    .ws-btn-primary:hover:not(:disabled) {
+      border-color: rgba(74, 222, 128, 0.55);
+      box-shadow: 0 8px 28px -10px rgba(34, 197, 94, 0.4);
     }
     .ws-btn-danger {
       border-color: rgba(248, 113, 113, 0.45);
-      background: rgba(127, 29, 29, 0.25);
+      background: linear-gradient(180deg, rgba(127, 29, 29, 0.35) 0%, rgba(30, 27, 45, 0.6) 100%);
       color: #fecaca;
     }
-    .ws-select, .ws-toggle-row select {
-      background: #0f172a;
-      border: 1px solid rgba(71, 85, 105, 0.8);
+
+    .ws-select {
+      min-height: 2.5rem;
+      width: 100%;
+      max-width: 20rem;
+      background: #020617;
+      border: 1px solid rgba(71, 85, 105, 0.85);
       color: #e2e8f0;
-      border-radius: 0.5rem;
-      padding: 0.35rem 0.5rem;
-      font-size: 0.75rem;
+      border-radius: 0.65rem;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8125rem;
+      cursor: pointer;
     }
+    .ws-select:focus, .ws-btn:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.55);
+      outline-offset: 2px;
+    }
+
+    .ws-panel-stack { border-radius: 0 0 1rem 1rem; border: 1px solid rgba(51, 65, 85, 0.55); border-top: none; }
+    .ws-field {
+      border-radius: 0.85rem;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      background: rgba(2, 6, 23, 0.35);
+      padding: 1rem 1.1rem;
+    }
+    .ws-kpi {
+      border-radius: 0.85rem;
+      border: 1px solid rgba(51, 65, 85, 0.55);
+      background: rgba(2, 6, 23, 0.5);
+      padding: 1.1rem 1rem;
+      text-align: center;
+    }
+    .ws-table input[type='checkbox'] {
+      width: 1.05rem;
+      height: 1.05rem;
+      border-radius: 0.25rem;
+      accent-color: #34d399;
+    }
+
+    .ws-score-ring {
+      --ws-p: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: conic-gradient(from 200deg, #34d399, #38bdf8, #818cf8 calc(var(--ws-p) * 3.6deg), rgba(51, 65, 85, 0.5) 0);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .ws-score-ring span {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #020617;
+      display: grid;
+      place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #e2e8f0;
+    }
+
     .ws-toast {
       position: fixed;
       bottom: 1.25rem;
       left: 50%;
-      transform: translateX(-50%) translateY(120%);
-      max-width: min(520px, calc(100vw - 2rem));
-      z-index: 80;
-      padding: 0.85rem 1rem;
-      border-radius: 0.9rem;
+      transform: translateX(-50%) translateY(140%);
+      max-width: min(32rem, calc(100vw - 1.5rem));
+      z-index: 100;
+      padding: 0;
+      border-radius: 1rem;
       font-size: 0.875rem;
-      line-height: 1.45;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      line-height: 1.5;
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.55);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+      opacity: 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
-    .ws-toast--show { transform: translateX(-50%) translateY(0); }
+    .ws-toast-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1.15rem;
+    }
+    .ws-toast-icon {
+      flex-shrink: 0;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.65rem;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+    }
+    .ws-toast--show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .ws-toast--bad {
-      border: 1px solid rgba(248, 113, 113, 0.45);
-      background: rgba(30, 27, 45, 0.95);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      background: rgba(24, 10, 15, 0.92);
       color: #fecaca;
     }
+    .ws-toast--bad .ws-toast-icon { background: rgba(220, 38, 38, 0.25); color: #fca5a5; }
     .ws-toast--good {
-      border: 1px solid rgba(74, 222, 128, 0.45);
-      background: rgba(15, 40, 30, 0.95);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      background: rgba(6, 40, 28, 0.92);
       color: #bbf7d0;
     }
+    .ws-toast--good .ws-toast-icon { background: rgba(22, 163, 74, 0.28); color: #86efac; }
     .ws-toast--info {
-      border: 1px solid rgba(96, 165, 250, 0.45);
-      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      background: rgba(15, 23, 42, 0.92);
       color: #bfdbfe;
     }
+    .ws-toast--info .ws-toast-icon { background: rgba(59, 130, 246, 0.22); color: #93c5fd; }
+
     .ws-overlay {
       position: fixed;
       inset: 0;
-      z-index: 70;
+      z-index: 90;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      background: rgba(2, 6, 23, 0.82);
-      backdrop-filter: blur(8px);
+      background: rgba(2, 6, 23, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
+
+    .ws-experience {
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ws-experience--ready {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .ws-badge-premium {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fcd34d;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.45) 0%, rgba(30, 20, 10, 0.6) 100%);
+    }
+
     .font-sg { font-family: 'Space Grotesk', system-ui, sans-serif; }
     .font-jb { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
     @media (prefers-reduced-motion: reduce) {
       .ws-toast { transition: none; }
+      .ws-experience { transition: none; }
+      .ws-title-shine { animation: none !important; }
     }
   </style>
 </head>
 <body class="landing-site-body ws-root font-sans text-slate-200 antialiased">
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-700/60 bg-slate-950/88 backdrop-blur-xl">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
     <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:h-16">
       <div class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
-        <a href="/modules/isletim-sistemi-guvenligi.html" class="font-semibold text-emerald-400 hover:text-emerald-300 focus-ring rounded">← Modül</a>
-        <span class="hidden text-slate-600 sm:inline" aria-hidden="true">|</span>
-        <a href="/simulations.html" class="font-medium text-slate-400 hover:text-white focus-ring rounded">Simülasyonlar</a>
+        <a href="/modules/isletim-sistemi-guvenligi.html" class="font-semibold text-emerald-400/95 transition hover:text-emerald-300 focus-ring rounded">← Modül</a>
+        <span class="hidden text-slate-700 sm:inline" aria-hidden="true">|</span>
+        <a href="/simulations.html" class="font-medium text-slate-400 transition hover:text-white focus-ring rounded">Simülasyonlar</a>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="rounded-md border border-slate-600 bg-slate-900 px-2 py-0.5 font-jb text-[10px] font-semibold text-slate-400 sm:text-xs" id="progressLabel">0/7 bölüm</span>
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Savunma
-        </span>
+      <div class="flex items-center gap-3">
+        <div id="hdrScoreRing" class="ws-score-ring opacity-50" style="--ws-p: 0" aria-hidden="true">
+          <span id="hdrScoreRingLbl">0</span>
+        </div>
+        <div class="flex flex-col items-end">
+          <span class="rounded-md border border-slate-600/80 bg-slate-900/90 px-2 py-0.5 font-jb text-[10px] font-semibold tracking-wide text-slate-300 sm:text-xs" id="progressLabel">0/7 bölüm</span>
+          <span class="mt-0.5 hidden font-jb text-[10px] text-slate-500 sm:block" id="scorePreview">Skor: —</span>
+        </div>
+        <span class="ws-badge-premium hidden sm:inline-flex" title="Kurumsal içerik"><i class="fa-solid fa-crown text-amber-300/90" style="font-size:0.55rem" aria-hidden="true"></i> Premium</span>
       </div>
     </div>
   </header>
 
   <div id="missionOverlay" class="ws-overlay" role="dialog" aria-modal="true" aria-labelledby="missionTitle">
-    <div class="ws-card max-w-lg p-6 sm:p-8">
-      <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-400">Görev mesajı</p>
-      <h1 id="missionTitle" class="font-sg mt-2 text-xl font-bold text-white sm:text-2xl">Kurumsal iş istasyonu hazırlığı</h1>
-      <p class="mt-4 text-sm leading-relaxed text-slate-400">
-        Şirkete yeni katılan bir çalışan için <strong class="text-slate-200">Windows/Linux tabanlı</strong> bir iş istasyonu hazırlanacak. Bu cihazda
-        <strong class="text-slate-200">kullanıcı hesabı</strong>, <strong class="text-slate-200">güncelleme durumu</strong>, <strong class="text-slate-200">parola politikası</strong>,
-        <strong class="text-slate-200">güvenlik duvarı</strong>, <strong class="text-slate-200">dosya izinleri</strong> ve <strong class="text-slate-200">temel log kontrolleri</strong> incelenmelidir.
-        Amacın cihazı güvenli hale getirmek ve raporlamaktır. Bu simülasyonda saldırı yoktur; yalnızca kontrol, yapılandırma ve farkındalık.
-      </p>
-      <button type="button" id="btnOpenDesk" class="focus-ring mt-6 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-sky-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/30">
-        <i class="fa-solid fa-desktop mr-2" aria-hidden="true"></i>Masaüstünü aç
-      </button>
+    <div class="ws-card ws-card--modal relative max-w-lg p-6 sm:p-9">
+      <div class="relative z-[1]">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="ws-badge-premium"><i class="fa-solid fa-gem text-amber-200/90" style="font-size:0.55rem" aria-hidden="true"></i> Premium senaryo</span>
+          <span class="rounded-full border border-sky-500/30 bg-sky-950/50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300">Savunma</span>
+        </div>
+        <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-400/90">Görev mesajı</p>
+        <h1 id="missionTitle" class="font-sg mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">Kurumsal iş istasyonu hazırlığı</h1>
+        <p class="mt-4 text-sm leading-relaxed text-slate-400">
+          Şirkete yeni katılan bir çalışan için <strong class="text-slate-100">Windows/Linux tabanlı</strong> bir iş istasyonu hazırlanacak. Bu cihazda
+          <strong class="text-slate-100">kullanıcı hesabı</strong>, <strong class="text-slate-100">güncelleme durumu</strong>, <strong class="text-slate-100">parola politikası</strong>,
+          <strong class="text-slate-100">güvenlik duvarı</strong>, <strong class="text-slate-100">dosya izinleri</strong> ve <strong class="text-slate-100">temel log kontrolleri</strong> incelenmelidir.
+          Amacın cihazı güvenli hale getirmek ve raporlamaktır. Bu simülasyonda saldırı yoktur; yalnızca kontrol, yapılandırma ve farkındalık.
+        </p>
+        <button type="button" id="btnOpenDesk" class="focus-ring group relative mt-8 w-full overflow-hidden rounded-xl py-4 text-sm font-bold text-white shadow-lg shadow-emerald-900/25 sm:text-base">
+          <span class="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 transition group-hover:opacity-95"></span>
+          <span class="relative z-[1] inline-flex items-center justify-center gap-2">
+            <i class="fa-solid fa-desktop" aria-hidden="true"></i>Masaüstünü aç
+            <i class="fa-solid fa-arrow-right text-xs opacity-80 transition group-hover:translate-x-0.5" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <main class="relative mx-auto max-w-6xl px-4 pb-24 pt-20 sm:pt-24">
-    <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+  <main id="wsExperience" class="ws-experience relative mx-auto max-w-6xl px-4 pb-28 pt-20 sm:pt-24">
+    <div class="mb-6 flex flex-col gap-4 border-b border-white/5 pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">İşletim sistemi güvenliği (temel)</p>
-        <h2 class="font-sg text-2xl font-bold tracking-tight text-white sm:text-3xl">Güvenli İş İstasyonu</h2>
-        <p class="mt-1 max-w-2xl text-sm text-slate-400">Kontrol panelinden ayarları incele, riskli yapılandırmaları düzelt. Her bölüm tamamlandığında sol menüde onay işareti belirir.</p>
+        <h2 class="font-sg mt-2 text-2xl font-bold tracking-tight sm:text-3xl"><span class="ws-title-shine">Güvenli İş İstasyonu</span></h2>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">Kurumsal kontrol panelinden ayarları inceleyin, riskli yapılandırmaları düzeltin. Her bölüm tamamlandığında menüde onay belirir; tüm denetimler bitince sonuç raporu açılır.</p>
       </div>
-      <div class="font-jb text-right text-xs text-slate-500">
-        <span id="scorePreview">Güvenlik skoru: —</span>
+      <div class="flex items-center gap-3 sm:flex-col sm:items-end">
+        <span class="ws-badge-premium sm:hidden"><i class="fa-solid fa-crown text-amber-300/90" style="font-size:0.55rem" aria-hidden="true"></i> Premium</span>
+        <div class="flex items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-900/50 px-3 py-2">
+          <i class="fa-solid fa-shield-halved text-emerald-400/90" aria-hidden="true"></i>
+          <div>
+            <p class="font-jb text-lg font-bold leading-none text-white" id="heroScore">—</p>
+            <p class="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">güvenlik skoru</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-start">
-      <nav class="ws-card flex w-full shrink-0 flex-row gap-1 overflow-x-auto p-2 lg:w-56 lg:flex-col lg:overflow-visible" aria-label="Masaüstü bölgeleri">
-        <button type="button" class="ws-nav-btn ws-nav-btn--active shrink-0" data-panel="durum"><i class="fa-solid fa-gauge-high w-5 text-center text-sky-400" aria-hidden="true"></i><span>Sistem durumu</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="hesaplar"><i class="fa-solid fa-users w-5 text-center text-amber-400" aria-hidden="true"></i><span>Hesaplar</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="parola"><i class="fa-solid fa-key w-5 text-center text-violet-400" aria-hidden="true"></i><span>Parola / oturum</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="guncelleme"><i class="fa-solid fa-rotate w-5 text-center text-cyan-400" aria-hidden="true"></i><span>Güncellemeler</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="duvar"><i class="fa-solid fa-fire-flame-curved w-5 text-center text-orange-400" aria-hidden="true"></i><span>Güvenlik duvarı</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="izinler"><i class="fa-solid fa-folder-tree w-5 text-center text-teal-400" aria-hidden="true"></i><span>Dosya izinleri</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="av"><i class="fa-solid fa-virus-slash w-5 text-center text-rose-400" aria-hidden="true"></i><span>Uç nokta koruması</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="loglar"><i class="fa-solid fa-list-ul w-5 text-center text-slate-400" aria-hidden="true"></i><span>Loglar</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-        <button type="button" class="ws-nav-btn shrink-0" data-panel="rapor" id="navRapor" disabled><i class="fa-solid fa-file-shield w-5 text-center text-emerald-400" aria-hidden="true"></i><span>Sonuç raporu</span><i class="fa-solid fa-check check text-sm" aria-hidden="true"></i></button>
-      </nav>
+    <div class="ws-card overflow-hidden p-0 shadow-2xl shadow-black/40">
+      <div class="ws-desk-chrome border-b border-slate-700/80">
+        <span class="ws-desk-dot bg-red-500/90"></span>
+        <span class="ws-desk-dot bg-amber-400/90"></span>
+        <span class="ws-desk-dot bg-emerald-500/90"></span>
+        <span class="ws-desk-title">SEBS_SECURE_WORKSTATION_LAB · v1</span>
+      </div>
+      <div class="flex flex-col gap-3 p-3 sm:p-4 lg:flex-row lg:items-stretch lg:gap-0">
+        <nav class="ws-nav-wrap flex w-full shrink-0 snap-x snap-mandatory gap-1.5 overflow-x-auto pb-1 lg:w-60 lg:flex-col lg:overflow-y-auto lg:overflow-x-visible lg:border-r lg:border-slate-800/80 lg:pr-3 lg:pb-0" aria-label="Masaüstü bölgeleri">
+          <p class="mb-1 hidden pl-1 text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600 lg:block">Denetim</p>
+          <button type="button" class="ws-nav-btn ws-nav-btn--active shrink-0 snap-start" data-panel="durum"><i class="fa-solid fa-gauge-high w-5 shrink-0 text-center text-sky-400" aria-hidden="true"></i><span class="truncate">Sistem durumu</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="hesaplar"><i class="fa-solid fa-users w-5 shrink-0 text-center text-amber-400" aria-hidden="true"></i><span class="truncate">Hesaplar</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="parola"><i class="fa-solid fa-key w-5 shrink-0 text-center text-violet-400" aria-hidden="true"></i><span class="truncate">Parola / oturum</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="guncelleme"><i class="fa-solid fa-rotate w-5 shrink-0 text-center text-cyan-400" aria-hidden="true"></i><span class="truncate">Güncellemeler</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="duvar"><i class="fa-solid fa-fire-flame-curved w-5 shrink-0 text-center text-orange-400" aria-hidden="true"></i><span class="truncate">Güvenlik duvarı</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="izinler"><i class="fa-solid fa-folder-tree w-5 shrink-0 text-center text-teal-400" aria-hidden="true"></i><span class="truncate">Dosya izinleri</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="av"><i class="fa-solid fa-virus-slash w-5 shrink-0 text-center text-rose-400" aria-hidden="true"></i><span class="truncate">Uç nokta koruması</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="loglar"><i class="fa-solid fa-list-ul w-5 shrink-0 text-center text-slate-400" aria-hidden="true"></i><span class="truncate">Loglar</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
+          <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="rapor" id="navRapor" disabled><i class="fa-solid fa-file-shield w-5 shrink-0 text-center text-emerald-400" aria-hidden="true"></i><span class="truncate">Sonuç raporu</span><i class="fa-solid fa-lock check text-slate-500 !opacity-100" id="navRaporLock" aria-hidden="true"></i><i class="fa-solid fa-chevron-right check hidden text-xs text-emerald-400/90 !opacity-100" id="navRaporGo" aria-hidden="true"></i></button>
+        </nav>
 
-      <div class="ws-card min-h-[420px] flex-1 p-5 sm:p-7" id="panelHost">
-        <!-- panels injected -->
+        <div class="min-h-[min(70vh,560px)] flex-1 rounded-xl border border-slate-800/80 bg-gradient-to-b from-slate-950/90 to-slate-950 p-5 sm:p-7" id="panelHost">
+          <!-- panels injected -->
+        </div>
       </div>
     </div>
   </main>
 
-  <div id="toast" class="ws-toast ws-toast--info pointer-events-none opacity-0" role="status"></div>
+  <div id="toast" class="ws-toast ws-toast--info" role="status" aria-live="polite"></div>
 
   <script>
     (function () {
@@ -270,15 +518,20 @@
 
       function showToast(msg, kind) {
         var el = document.getElementById('toast');
-        el.className = 'ws-toast ws-toast--' + (kind || 'info') + ' pointer-events-none';
-        el.textContent = msg;
+        var k = kind || 'info';
+        var icons = { good: 'fa-circle-check', bad: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+        el.className = 'ws-toast ws-toast--' + k;
+        el.innerHTML =
+          '<div class="ws-toast-inner"><span class="ws-toast-icon"><i class="fa-solid ' +
+          icons[k] +
+          '" aria-hidden="true"></i></span><span class="min-w-0 flex-1 leading-snug">' +
+          esc(msg) +
+          '</span></div>';
         el.classList.add('ws-toast--show');
-        el.style.opacity = '1';
         clearTimeout(toastTimer);
         toastTimer = setTimeout(function () {
           el.classList.remove('ws-toast--show');
-          el.style.opacity = '0';
-        }, 4200);
+        }, 4600);
       }
 
       function sectionHesaplarOk() {
@@ -341,9 +594,38 @@
         });
         var all = countSectionsDone() === 7;
         var rapor = document.getElementById('navRapor');
-        rapor.disabled = !all;
-        document.getElementById('progressLabel').textContent = countSectionsDone() + '/7 bölüm';
-        document.getElementById('scorePreview').textContent = 'Güvenlik skoru: ' + (startedAt ? computeScore() : '—');
+        if (rapor) rapor.disabled = !all;
+        var lock = document.getElementById('navRaporLock');
+        var go = document.getElementById('navRaporGo');
+        if (lock && go) {
+          if (all) {
+            lock.classList.add('hidden');
+            go.classList.remove('hidden');
+          } else {
+            lock.classList.remove('hidden');
+            go.classList.add('hidden');
+          }
+        }
+        var pl = document.getElementById('progressLabel');
+        if (pl) pl.textContent = countSectionsDone() + '/7 bölüm';
+        var sc = startedAt ? computeScore() : null;
+        var prev = document.getElementById('scorePreview');
+        if (prev) prev.textContent = sc == null ? 'Skor: —' : 'Skor: ' + sc;
+        var hero = document.getElementById('heroScore');
+        if (hero) hero.textContent = sc == null ? '—' : String(sc);
+        var ring = document.getElementById('hdrScoreRing');
+        var ringLbl = document.getElementById('hdrScoreRingLbl');
+        if (ring && ringLbl) {
+          if (sc != null) {
+            ringLbl.textContent = String(sc);
+            ring.style.setProperty('--ws-p', String(sc));
+            ring.classList.remove('opacity-50');
+          } else {
+            ringLbl.textContent = '0';
+            ring.style.setProperty('--ws-p', '0');
+            ring.classList.add('opacity-50');
+          }
+        }
       }
 
       function setPanel(id) {
@@ -370,17 +652,17 @@
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Sistem durumu</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Sol menüden her alanı sırayla veya istediğin sırayla aç. Riskli ayarları düzelttiğinde bu özet güncellenir.</p>' +
             '<div class="mt-6 grid gap-3 sm:grid-cols-3">' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/40 p-4 text-center">' +
+            '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold ' + (risks === 0 ? 'text-emerald-400' : 'text-amber-400') + '">' + risks + '</p>' +
             '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">açık risk alanı</p></div>' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/40 p-4 text-center">' +
+            '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold text-sky-400">' + countSectionsDone() + '</p>' +
             '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">tamamlanan bölüm</p></div>' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/40 p-4 text-center">' +
+            '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold text-slate-200">' + (startedAt ? computeScore() : '—') + '</p>' +
             '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">tahmini skor</p></div></div>' +
-            '<p class="mt-6 rounded-xl border border-sky-500/20 bg-sky-950/25 px-4 py-3 text-sm text-sky-100/90">' +
-            '<i class="fa-solid fa-lightbulb mr-2 text-sky-400" aria-hidden="true"></i>Günlük kullanım hesabı yönetici olmamalı; güncellemeler ve güvenlik duvarı profilleri tutarlı olmalı; hassas klasörlerde “Herkes” tam yetkisi bulunmamalıdır.</p>';
+            '<div class="mt-6 ws-field border-sky-500/30 bg-gradient-to-br from-sky-950/50 to-slate-950/30 text-sm leading-relaxed text-sky-100/95">' +
+            '<p class="m-0"><i class="fa-solid fa-lightbulb mr-2 inline-block text-sky-400" aria-hidden="true"></i>Günlük kullanım hesabı yönetici olmamalı; güncellemeler ve güvenlik duvarı profilleri tutarlı olmalı; hassas klasörlerde “Herkes” tam yetkisi bulunmamalıdır.</p></div>';
           return;
         }
 
@@ -389,14 +671,14 @@
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-500/90">Görev</p>' +
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Kullanıcı hesabı kontrolü</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Gereksiz yönetici hesabını tespit et; misafir hesabını devre dışı bırak. <strong class="text-slate-200">personel01</strong> günlük çalışan hesabıdır — standart kullanıcı olarak doğru yapılandırılmış.</p>' +
-            '<div class="mt-5 overflow-x-auto rounded-xl border border-slate-600/50">' +
+            '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[480px] text-left">' +
             '<thead><tr><th>Kullanıcı</th><th>Yetki</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>' +
             rowAccount('admin', 'Yönetici', 'Aktif', 'Kurumsal yönetici — politika gereği tutulur', null) +
             rowAccount('personel01', 'Standart kullanıcı', 'Aktif', 'Günlük kullanım — uygun', null) +
             rowAccount('test_user', 'Yönetici', state.testUserDisabled ? 'Devre dışı' : 'Aktif', null, 'test') +
             rowAccount('guest', 'Misafir', state.guestDisabled ? 'Devre dışı' : 'Aktif', null, 'guest') +
-            '</tbody></table></div>' +
+            '</tbody></table></div></div>' +
             '<div class="mt-4 flex flex-wrap gap-2">' +
             '<button type="button" class="ws-btn ws-btn-danger" id="badAllAdmin">Tüm kullanıcıları yönetici yap</button>' +
             '</div>' +
@@ -430,13 +712,13 @@
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Görev</p>' +
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Güncelleme kontrolü</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Bilinen açıkların kapanması için yamalar ve otomatik güncelleme disiplini gerekir.</p>' +
-            '<div class="mt-5 overflow-x-auto rounded-xl border border-slate-600/50">' +
+            '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[420px]"><thead><tr><th>Bileşen</th><th>Durum</th></tr></thead><tbody>' +
             '<tr><td>İşletim sistemi güncellemesi</td><td>' + pill(state.patchesApplied ? 'ok' : 'bad', state.patchesApplied ? 'Güncel' : '18 gün gecikmiş') + '</td></tr>' +
             '<tr><td>Tarayıcı güncellemesi</td><td>' + pill(state.patchesApplied ? 'ok' : 'warn', state.patchesApplied ? 'Güncel' : 'Güncel değil') + '</td></tr>' +
             '<tr><td>Güvenlik yamaları</td><td>' + pill(state.patchesApplied ? 'ok' : 'bad', state.patchesApplied ? 'Uygulandı' : 'Eksik') + '</td></tr>' +
             '<tr><td>Otomatik güncelleme</td><td>' + pill(state.autoUpdate ? 'ok' : 'bad', state.autoUpdate ? 'Açık' : 'Kapalı') + '</td></tr>' +
-            '</tbody></table></div>' +
+            '</tbody></table></div></div>' +
             '<div class="mt-4 flex flex-wrap gap-2">' +
             '<button type="button" class="ws-btn" id="btnPatch">' + (state.patchesApplied ? 'Yamalar uygulandı' : 'Kritik güvenlik yamalarını uygula') + '</button>' +
             '<button type="button" class="ws-btn ws-btn-primary" id="btnAutoUp">' + (state.autoUpdate ? 'Otomatik güncelleme: Açık' : 'Otomatik güncellemeyi aç') + '</button>' +
@@ -470,19 +752,19 @@
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Güvenlik duvarı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Genel ağ profili, dosya paylaşımı ve uzak masaüstü yüzeyini gözden geçir.</p>' +
             '<div class="mt-5 space-y-3">' +
-            '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+            '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
             '<div><p class="text-sm font-semibold text-white">Kurumsal ağ profili</p><p class="text-xs text-slate-500">Ofis VPN / iş ağı</p></div>' +
             '<span class="self-start rounded-full border border-emerald-500/40 bg-emerald-950/40 px-3 py-1 text-xs font-bold text-emerald-300">Açık</span></div>' +
-            '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+            '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
             '<div><p class="text-sm font-semibold text-white">Genel ağ profili</p><p class="text-xs text-slate-500">Kafe, havaalanı vb.</p></div>' +
             '<button type="button" class="ws-btn self-start" id="toggleFwPub">' + (state.fwPublic ? 'Güvenlik duvarı: Açık' : 'Güvenlik duvarı: Kapalı — aç') + '</button></div>' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/30 p-4">' +
+            '<div class="ws-field">' +
             '<p class="text-sm font-semibold text-white">Dosya paylaşımı</p>' +
             '<select class="ws-select mt-2" id="selShare">' +
             opt('everyone', 'Herkese açık (riskli)', state.fileShare) +
             opt('auth', 'Yalnızca yetkili kullanıcılar / gruplar', state.fileShare) +
             '</select></div>' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/30 p-4">' +
+            '<div class="ws-field">' +
             '<p class="text-sm font-semibold text-white">Uzak masaüstü</p>' +
             '<select class="ws-select mt-2" id="selRdp">' +
             opt('open', 'İnternete açık / sınırsız (riskli)', state.rdp) +
@@ -519,7 +801,7 @@
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400">Görev</p>' +
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Dosya ve klasör izinleri</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Hassas veride “Everyone / Herkes” tam yetkisi çoğu zaman hatalıdır; yedeklerin korunması planlanmalıdır.</p>' +
-            '<div class="mt-5 overflow-x-auto rounded-xl border border-slate-600/50">' +
+            '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[520px]"><thead><tr><th>Klasör</th><th>İzin özeti</th><th></th></tr></thead><tbody>' +
             '<tr><td class="font-jb text-xs">/Belgeler/Maaş_Listesi</td><td>' +
             (state.salaryAcl === 'hr_only'
@@ -539,7 +821,7 @@
               ? '—'
               : '<button type="button" class="ws-btn ws-btn-primary" id="planBackup">Yedek şifreleme planı ekle</button>') +
             '</td></tr>' +
-            '</tbody></table></div>' +
+            '</tbody></table></div></div>' +
             (sectionIzinlerOk()
               ? '<p class="mt-4 text-sm font-semibold text-emerald-400"><i class="fa-solid fa-circle-check mr-2"></i>Bu bölüm tamamlandı.</p>'
               : '');
@@ -563,7 +845,7 @@
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-rose-400">Görev</p>' +
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Uç nokta koruması</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Gerçek zamanlı koruma ve güncel imzalar erken tespit için temel savunmadır.</p>' +
-            '<div class="mt-5 overflow-x-auto rounded-xl border border-slate-600/50">' +
+            '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[400px]"><thead><tr><th>Özellik</th><th>Durum</th><th></th></tr></thead><tbody>' +
             '<tr><td>Gerçek zamanlı koruma</td><td>' + pill(state.avRealtime ? 'ok' : 'bad', state.avRealtime ? 'Açık' : 'Kapalı') + '</td><td>' +
             btnAv('btnRt', !state.avRealtime, state.avRealtime ? 'Aktif' : 'Aç') +
@@ -577,7 +859,7 @@
             '<tr><td>Son tarama</td><td>' + pill(state.avFullScan ? 'ok' : 'warn', state.avFullScan ? 'Tam sistem taraması çalışıyor/bitti' : '42 gün önce') + '</td><td>' +
             btnAv('btnScan', !state.avFullScan, state.avFullScan ? 'Başlatıldı' : 'Tam tarama başlat') +
             '</td></tr>' +
-            '</tbody></table></div>' +
+            '</tbody></table></div></div>' +
             '<div class="mt-4"><button type="button" class="ws-btn ws-btn-danger" id="badPerf">Korumayı performans için kapalı bırak</button></div>' +
             (sectionAvOk()
               ? '<p class="mt-4 text-sm font-semibold text-emerald-400"><i class="fa-solid fa-circle-check mr-2"></i>Bu bölüm tamamlandı.</p>'
@@ -615,13 +897,13 @@
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Görev</p>' +
             '<h3 class="font-sg mt-1 text-lg font-bold text-white">Log ve olay kaydı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Loglar tek başına kesin saldırı kanıtı değildir; olağan dışı davranışları fark etmek için iz sağlar. <strong class="text-slate-200">Yüksek riskli</strong> olayları inceleme listesine ekle.</p>' +
-            '<div class="mt-5 overflow-x-auto rounded-xl border border-slate-600/50">' +
+            '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[560px]"><thead><tr><th>Saat</th><th>Olay</th><th>Risk</th><th>İncele</th></tr></thead><tbody>' +
             logRow('fail_login', '09:12', 'Başarısız oturum açma denemesi', 'Orta') +
             logRow('guest_try', '09:15', 'Guest hesabı ile giriş denemesi', 'Yüksek') +
             logRow('fw_off', '10:02', 'Güvenlik duvarı kapatıldı', 'Yüksek') +
             logRow('patch_fail', '10:10', 'Güncelleme başarısız oldu', 'Orta') +
-            '</tbody></table></div>' +
+            '</tbody></table></div></div>' +
             '<p class="mt-4 text-xs text-slate-500">İpucu: Misafir hesabı denemesi ve güvenlik duvarının kapatılması çoğu kurumda öncelikli incelenir.</p>' +
             (sectionLoglarOk()
               ? '<p class="mt-4 text-sm font-semibold text-emerald-400"><i class="fa-solid fa-circle-check mr-2"></i>Bu bölüm tamamlandı.</p>'
@@ -651,13 +933,13 @@
             '<p class="mt-2 text-sm text-slate-400">Güvenlik skoru (tahmini)</p>' +
             '<p class="mx-auto mt-4 max-w-md text-xs leading-relaxed text-amber-200/90">Başlangıçta örnek bulgular: gereksiz <strong class="text-white">test_user</strong> yöneticisi, aktif <strong class="text-white">guest</strong>, gecikmiş yamalar, genel ağda kapalı güvenlik duvarı ve hassas klasörde geniş izinler. Bu rapor, simülasyondaki düzeltmelerden sonra hesaplanır.</p></div>' +
             '<div class="mt-6 grid gap-3 sm:grid-cols-2">' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/40 p-4">' +
+            '<div class="ws-kpi">' +
             '<p class="text-[11px] font-bold uppercase text-slate-500">Kapatılan risk alanları</p>' +
             '<p class="font-sg mt-1 text-2xl font-bold text-sky-400">' + closed + '</p></div>' +
-            '<div class="rounded-xl border border-slate-600/50 bg-slate-900/40 p-4">' +
+            '<div class="ws-kpi">' +
             '<p class="text-[11px] font-bold uppercase text-slate-500">Yanlış yapılandırma seçimi</p>' +
             '<p class="font-sg mt-1 text-2xl font-bold text-amber-400">' + mistakes + '</p></div></div>' +
-            '<div class="mt-6 rounded-xl border border-slate-600/50 bg-slate-900/50 p-4 text-sm leading-relaxed text-slate-300">' +
+            '<div class="mt-6 ws-field text-sm leading-relaxed text-slate-300">' +
             '<p class="font-semibold text-white">Eğitim özeti</p>' +
             '<p class="mt-2">Bu simülasyonda işletim sistemini güvenli hale getirmek için temel kontroller uygulandı: gereksiz yönetici ve misafir hesapları, parola/oturum disiplini, güncellemeler, güvenlik duvarı profilleri, dosya izinleri, uç nokta koruması ve logların yorumlanması. OS güvenliğinin yalnızca antivirüsten ibaret olmadığı; yetkiler, yamalar, erişim izinleri ve olay kayıtlarının birlikte değerlendirilmesi gerektiği vurgulandı.</p></div>' +
             '<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">' +
@@ -706,7 +988,7 @@
 
       function pill(kind, text) {
         var c = kind === 'ok' ? 'ws-pill-ok' : kind === 'warn' ? 'ws-pill-warn' : 'ws-pill-bad';
-        return '<span class="inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold ' + c + '">' + esc(text) + '</span>';
+        return '<span class="' + c + '">' + esc(text) + '</span>';
       }
 
       function opt(val, label, cur) {
@@ -720,7 +1002,7 @@
           opts += opt(k, optionsMap[k], state[key]);
         });
         return (
-          '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+          '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
           '<label class="text-sm font-semibold text-white" for="sel_' +
           key +
           '">' +
@@ -741,7 +1023,7 @@
           opt('5', '5 dakika', state.sessionTimeout) +
           opt('15', '15 dakika', state.sessionTimeout);
         return (
-          '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+          '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
           '<label class="text-sm font-semibold text-white" for="sel_to">Oturum zaman aşımı (kilit)</label>' +
           '<select class="ws-select" id="sel_to">' +
           opts +
@@ -752,7 +1034,7 @@
       function rowSelectReuse() {
         var opts = opt('free', 'Serbest (riskli)', state.passwordReuse) + opt('limited', 'Son 5 parolayı tekrarlama', state.passwordReuse);
         return (
-          '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+          '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
           '<label class="text-sm font-semibold text-white" for="sel_reuse">Parola geçmişi</label>' +
           '<select class="ws-select" id="sel_reuse">' +
           opts +
@@ -762,7 +1044,7 @@
 
       function rowToggle(key, label, offLabel, onLabel) {
         return (
-          '<div class="flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">' +
+          '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
           '<div><p class="text-sm font-semibold text-white">' +
           esc(label) +
           '</p><p class="text-xs text-slate-500">' +
@@ -879,6 +1161,8 @@
 
       document.getElementById('btnOpenDesk').addEventListener('click', function () {
         document.getElementById('missionOverlay').style.display = 'none';
+        var shell = document.getElementById('wsExperience');
+        if (shell) shell.classList.add('ws-experience--ready');
         startedAt = Date.now();
         if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
           window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
