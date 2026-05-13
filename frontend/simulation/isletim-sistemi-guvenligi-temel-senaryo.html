@@ -154,6 +154,8 @@
     }
 
     .chat-scroll {
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(71, 85, 105, 0.7) transparent;
     }
@@ -170,6 +172,10 @@
       font-size: 13px;
       line-height: 1.5;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      color: #f1f5f9;
+    }
+    .bubble p {
+      color: inherit;
     }
     .bubble-elif {
       background: linear-gradient(160deg, rgba(30, 58, 138, 0.55) 0%, rgba(15, 23, 42, 0.95) 100%);
@@ -204,6 +210,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      color: #e2e8f0;
     }
     @media (min-width: 1024px) {
       .sim-workspace-inner { min-height: min(48vh, 480px); }
@@ -385,6 +392,10 @@
       transition: border-color 0.15s, background 0.15s;
     }
     .sim-mdm label:hover { border-color: rgba(100, 116, 139, 0.65); }
+    .sim-mdm label strong {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
     .sim-mdm input[type='radio'] {
       margin-top: 0.2rem;
       accent-color: #38bdf8;
@@ -396,10 +407,8 @@
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      background: linear-gradient(105deg, #f8fafc 0%, #cbd5e1 40%, #f1f5f9 55%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #f8fafc;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
     }
 
     .intro-cta {
@@ -521,10 +530,10 @@
       </div>
 
       <div
-        class="flex min-h-0 flex-col gap-4 lg:grid lg:min-h-[min(72vh,640px)] lg:grid-cols-[minmax(12.5rem,14rem)_minmax(15rem,20rem)_minmax(0,1fr)] lg:items-stretch lg:gap-4 xl:gap-5"
+        class="flex min-h-0 flex-col gap-4 overflow-hidden lg:grid lg:min-h-[min(72vh,640px)] lg:grid-cols-[minmax(12.5rem,14rem)_minmax(15rem,20rem)_minmax(0,1fr)] lg:items-stretch lg:gap-4 xl:gap-5"
       >
-        <div class="order-2 flex min-h-0 flex-col lg:order-1 lg:h-full">
-          <div class="sim-panel flex max-h-[min(42vh,320px)] flex-col p-4 sm:p-5 lg:max-h-none lg:h-full lg:min-h-0">
+        <div class="order-2 flex min-h-0 flex-col lg:order-1 lg:h-full lg:min-h-0 lg:overflow-hidden">
+          <div class="sim-panel flex max-h-[min(42vh,320px)] flex-col p-4 sm:p-5 lg:h-full lg:max-h-none lg:min-h-0">
             <div class="flex items-center justify-between gap-2">
               <h2 class="font-sg text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Bilet kuyruğu</h2>
               <span class="font-jb text-[10px] text-slate-600">JIRA-lite</span>
@@ -533,36 +542,35 @@
           </div>
         </div>
 
-        <div class="order-1 flex min-h-0 flex-col scroll-mt-20 lg:order-2 lg:h-full">
-          <div class="sim-panel flex max-h-[min(40vh,340px)] min-h-[200px] flex-1 flex-col overflow-hidden p-0 sm:min-h-[220px] lg:max-h-none lg:h-full lg:min-h-0">
-            <div class="flex items-center gap-2 border-b border-slate-700/60 bg-slate-950/50 px-3 py-2.5">
+        <div class="order-1 flex min-h-0 flex-col scroll-mt-20 lg:order-2 lg:h-full lg:min-h-0 lg:overflow-hidden">
+          <div
+            class="sim-panel flex h-[min(38vh,360px)] min-h-[200px] shrink-0 flex-col overflow-hidden p-0 sm:min-h-[220px] lg:h-full lg:min-h-0 lg:max-h-full"
+          >
+            <div class="flex shrink-0 items-center gap-2 border-b border-slate-700/60 bg-slate-950/50 px-3 py-2.5">
               <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-700 text-xs font-bold text-white shadow-md">EY</div>
               <div class="min-w-0">
                 <p class="truncate text-sm font-bold text-white">Elif Yılmaz</p>
                 <p class="truncate text-[11px] text-slate-500">Mentör · #it-staj-2026</p>
               </div>
             </div>
-            <div id="chatThread" class="chat-scroll flex-1 space-y-3 overflow-y-auto px-3 py-3" role="log" aria-live="polite"></div>
+            <div id="chatThread" class="chat-scroll min-h-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden px-3 py-3" role="log" aria-live="polite"></div>
           </div>
         </div>
 
-        <div class="order-3 flex min-h-0 flex-col lg:order-3 lg:h-full">
+        <div class="order-3 flex min-h-0 flex-col lg:order-3 lg:h-full lg:min-h-0">
           <div class="sim-panel flex min-h-[min(52vh,520px)] flex-1 flex-col overflow-hidden p-0 lg:min-h-0">
             <div class="sim-desk-head">
               <div class="min-w-0">
                 <p id="deskTitleLine" class="font-sg text-sm font-bold leading-snug text-white sm:text-[15px]">Çalışma masası</p>
-                <p id="deskSubLine" class="mt-0.5 text-[11px] leading-relaxed text-slate-500"></p>
+                <p id="deskSubLine" class="mt-0.5 text-[11px] leading-relaxed text-slate-300"></p>
               </div>
-              <span id="activeTicketBadge" class="font-jb shrink-0 rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-slate-400"></span>
+              <span id="activeTicketBadge" class="font-jb shrink-0 rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-slate-200"></span>
             </div>
             <div id="taskCueWrap" class="sim-task-cue sim-task-cue--active px-3 py-2.5 sm:px-4">
-              <p id="taskCue" class="text-[11px] leading-relaxed text-slate-400"></p>
+              <p id="taskCue" class="text-[12px] leading-relaxed text-slate-200"></p>
             </div>
             <div class="flex min-h-0 flex-1 flex-col p-3 sm:p-4">
               <div id="workspace" class="sim-workspace-inner flex min-h-0 flex-1 flex-col overflow-auto p-3 sm:p-4"></div>
-            </div>
-            <div class="border-t border-slate-800/90 bg-slate-950/80 p-3 sm:px-4 sm:py-3">
-              <button type="button" id="btnNextTask" class="focus-ring sim-btn-next hidden">Sonraki görev</button>
             </div>
           </div>
         </div>
@@ -841,12 +849,12 @@
           '<div class="flex items-start gap-3">' +
           '<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0078d4] text-lg text-white shadow-md"><i class="fa-brands fa-windows"></i></div>' +
           '<div class="min-w-0"><p class="text-base font-bold leading-snug">Yeniden başlatma planlanıyor</p>' +
-          '<p class="mt-1.5 text-[13px] leading-relaxed text-slate-600">Güvenlik güncellemeleri bekliyor. Demo ekibi “şimdi olmaz” diyor.</p></div></div>' +
+          '<p class="mt-1.5 text-[13px] leading-relaxed text-slate-700">Güvenlik güncellemeleri bekliyor. Demo ekibi “şimdi olmaz” diyor.</p></div></div>' +
           '<div class="mt-5 grid gap-2.5">' +
-          '<button type="button" data-s="0" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Güvenlik güncellemelerini kapat; iş bitince açarız.</button>' +
           '<button type="button" data-s="8" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">7 gün ertele, sonra öğle arası restart.</button>' +
-          '<button type="button" data-s="3" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Demo bitene kadar restart yok; hatırlatmayı hep snooze.</button>' +
           '<button type="button" data-s="10" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Bugün 30 dk bakım penceresi; demo öncesi bitsin.</button>' +
+          '<button type="button" data-s="0" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Güvenlik güncellemelerini kapat; iş bitince açarız.</button>' +
+          '<button type="button" data-s="3" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Demo bitene kadar restart yok; hatırlatmayı hep snooze.</button>' +
           '</div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -886,12 +894,12 @@
           '<div class="flex flex-1 flex-col">' +
           '<div class="teams-bar"><i class="fa-brands fa-microsoft text-lg opacity-90"></i><span>Teams · doğrudan mesaj</span></div>' +
           '<div class="rounded-b-xl border border-t-0 border-slate-700/80 bg-slate-900/50 p-4">' +
-          '<p class="mb-3 text-center text-[11px] text-slate-500">Yanıtını seç</p>' +
+          '<p class="mb-3 text-center text-[11px] text-slate-400">Yanıtını seç</p>' +
           '<div class="space-y-2.5">' +
-          '<button type="button" data-s="0" class="sim-btn-ghost w-full">Yönetici şifresini Slack’ten yazarım.</button>' +
-          '<button type="button" data-s="10" class="sim-btn-ghost w-full">JIT/PAM veya kısa admin oturumu + log; bitince yetki düşsün.</button>' +
           '<button type="button" data-s="4" class="sim-btn-ghost w-full">Hesabı cuma akşama kadar yerel yönetici yapayım.</button>' +
           '<button type="button" data-s="9" class="sim-btn-ghost w-full">Ben uzaktan kurarım; Berk standart kullanıcıda kalsın.</button>' +
+          '<button type="button" data-s="0" class="sim-btn-ghost w-full">Yönetici şifresini Slack’ten yazarım.</button>' +
+          '<button type="button" data-s="10" class="sim-btn-ghost w-full">Kısa süreli ayrıcalıklı oturum (JIT/PAM) + oturum kaydı; bitince yetki düşsün.</button>' +
           '</div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -903,7 +911,7 @@
                   ? ['Haftalık yerel admin riski yüksek; tercih etmeyiz.']
                   : ['Slack’ten admin şifresi asla.'];
           var short = 'Yanıt gönderdim.';
-          if (s === 10) short = 'JIT/PAM önerdim.';
+          if (s === 10) short = 'Süreli ayrıcalıklı oturum önerdim.';
           if (s === 9) short = 'Uzak kurulum ben yaparım dedim.';
           if (s === 0) short = 'Slack’ten şifre önerisini reddettim.';
           if (s === 4) short = 'Geçici yerel admin önerdim.';
@@ -919,8 +927,8 @@
           '<table class="sim-table">' +
           '<thead><tr><th>Host</th><th>Uyarı</th><th class="min-w-[200px]">Aksiyon</th></tr></thead>' +
           '<tbody><tr class="bg-rose-950/35"><td class="font-jb text-rose-100">FIN-042</td><td class="text-rose-200">SMB1 etkin</td><td class="nat-row flex flex-wrap gap-1.5">' +
-          '<button type="button" data-s="10" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">SMB1 kapat + plan</button>' +
           '<button type="button" data-s="0" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Olduğu gibi</button>' +
+          '<button type="button" data-s="10" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">SMB1 kapat + plan</button>' +
           '<button type="button" data-s="3" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Sadece FW</button>' +
           '</td></tr></tbody></table></div></div>';
         bindScoreButtons(ws, ph, function (s) {
@@ -938,11 +946,11 @@
       function renderUsbDesk(ws, ph) {
         ws.innerHTML =
           '<div class="flex flex-1 flex-col items-center justify-center gap-5 py-2">' +
-          '<p class="max-w-md text-center text-xs leading-relaxed text-slate-500">USB’yi <strong class="text-slate-400">sürükleyip</strong> bırak veya hedef kutuya <strong class="text-slate-400">dokun</strong>.</p>' +
+          '<p class="max-w-md text-center text-xs leading-relaxed text-slate-400">USB’yi <strong class="text-slate-300">sürükleyip</strong> bırak veya hedef kutuya <strong class="text-slate-300">dokun</strong>.</p>' +
           '<div id="usbDrag" draggable="true" class="usb-stick flex h-[4.5rem] w-[3.75rem] flex-col items-center justify-center rounded-xl border-2 border-amber-400/70 bg-gradient-to-b from-amber-600 to-amber-950 text-2xl shadow-xl ring-2 ring-amber-500/20">💾<span class="mt-1 font-jb text-[8px] font-bold uppercase tracking-wider text-amber-100">USB</span></div>' +
           '<div class="grid w-full max-w-lg grid-cols-1 gap-3 sm:grid-cols-2">' +
-          '<div data-zone="lab" tabindex="0" role="button" class="drop-zone flex flex-col items-center justify-center gap-1 p-4 text-center text-xs text-slate-400 outline-none focus-visible:ring-2 focus-visible:ring-sky-500"><i class="fa-solid fa-flask text-xl text-sky-400"></i><span class="font-semibold text-slate-300">İzole test PC</span><span class="text-[10px] text-slate-600">VM / air-gap</span></div>' +
-          '<div data-zone="laptop" tabindex="0" role="button" class="drop-zone flex flex-col items-center justify-center gap-1 p-4 text-center text-xs text-slate-400 outline-none focus-visible:ring-2 focus-visible:ring-sky-500"><i class="fa-solid fa-laptop text-xl text-slate-500"></i><span class="font-semibold text-slate-300">İş dizüstüsü</span><span class="text-[10px] text-slate-600">Üretim profili</span></div>' +
+          '<div data-zone="laptop" tabindex="0" role="button" class="drop-zone flex flex-col items-center justify-center gap-1 p-4 text-center text-xs text-slate-400 outline-none focus-visible:ring-2 focus-visible:ring-sky-500"><i class="fa-solid fa-laptop text-xl text-slate-400"></i><span class="font-semibold text-slate-300">İş dizüstüsü</span><span class="text-[10px] text-slate-500">Üretim profili</span></div>' +
+          '<div data-zone="lab" tabindex="0" role="button" class="drop-zone flex flex-col items-center justify-center gap-1 p-4 text-center text-xs text-slate-400 outline-none focus-visible:ring-2 focus-visible:ring-sky-500"><i class="fa-solid fa-flask text-xl text-slate-400"></i><span class="font-semibold text-slate-300">İzole test PC</span><span class="text-[10px] text-slate-500">VM / air-gap</span></div>' +
           '</div></div>';
         var usb = document.getElementById('usbDrag');
         var zones = ws.querySelectorAll('[data-zone]');
@@ -960,7 +968,7 @@
           usb.setAttribute('draggable', 'false');
           usb.style.opacity = '0.35';
           zones.forEach(function (z) {
-            z.classList.add('pointer-events-none', 'opacity-45');
+            z.classList.add('pointer-events-none', 'opacity-40');
           });
           completePhase(s, short, lines, ph.max);
         }
@@ -1002,11 +1010,11 @@
           '<div class="chrome-url">chrome://settings/help</div></div>' +
           '<div class="bg-slate-950 p-4 sm:p-5">' +
           '<div class="rounded-xl border border-amber-500/45 bg-gradient-to-r from-amber-950/80 to-amber-950/40 px-4 py-3 text-sm text-amber-50">' +
-          '<p class="font-bold">Güvenlik güncellemesi bekleniyor</p><p class="mt-1 text-[13px] text-amber-200/90">Kritik. İşletim sistemi güncel; tarayıcı değil.</p></div>' +
+          '<p class="font-bold">Güvenlik güncellemesi bekleniyor</p><p class="mt-1 text-[13px] text-amber-100/95">Kritik. İşletim sistemi güncel; tarayıcı değil.</p></div>' +
           '<div class="mt-4 flex flex-wrap gap-2">' +
-          '<button type="button" data-s="10" class="sim-btn-ghost">24 saat içinde tüm cihazlar</button>' +
           '<button type="button" data-s="2" class="sim-btn-ghost">Haftaya bırak</button>' +
           '<button type="button" data-s="5" class="sim-btn-ghost">Sadece dev ekibi zorunlu</button>' +
+          '<button type="button" data-s="10" class="sim-btn-ghost">24 saat içinde tüm cihazlar</button>' +
           '</div></div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -1028,9 +1036,9 @@
           '<table class="sim-table">' +
           '<thead><tr><th>Kural</th><th class="min-w-[220px]">İşlem</th></tr></thead>' +
           '<tbody><tr class="bg-rose-950/30"><td class="font-jb text-rose-100">TCP 3389 → 192.168.1.50</td><td class="nat-row flex flex-wrap gap-1.5">' +
-          '<button type="button" data-s="2" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Portu 13389 yap</button>' +
           '<button type="button" data-s="10" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Kuralı kaldır</button>' +
           '<button type="button" data-s="3" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Parolayı güçlendir</button>' +
+          '<button type="button" data-s="2" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Portu 13389 yap</button>' +
           '</td></tr></tbody></table></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -1044,14 +1052,14 @@
         ws.innerHTML =
           '<div class="flex flex-1 flex-col py-1 font-jb text-[11px]">' +
           '<div class="rounded-xl border border-slate-700 bg-black/55 p-4 text-emerald-400 shadow-inner">' +
-          '<p class="text-slate-500">deniz@dev-04:~$ <span class="text-slate-400">systemctl status telnet.socket</span></p>' +
-          '<p class="mt-1">● telnet.socket — Telnet</p>' +
+          '<p class="text-slate-400">deniz@dev-04:~$ <span class="text-slate-300">systemctl status telnet.socket</span></p>' +
+          '<p class="mt-1 text-slate-200">● telnet.socket — Telnet</p>' +
           '<p class="text-amber-400">Active: active (listening)</p></div>' +
-          '<p class="mt-3 text-xs text-slate-500">Komutu çalıştır:</p>' +
+          '<p class="mt-3 text-xs text-slate-400">Komutu çalıştır:</p>' +
           '<div class="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">' +
+          '<button type="button" data-s="0" class="sim-btn-ghost flex-1 sm:flex-none"># iç ağ güvenli, dokunma</button>' +
           '<button type="button" data-s="4" class="sim-btn-ghost flex-1 sm:flex-none">ufw deny telnet</button>' +
           '<button type="button" data-s="10" class="sim-btn-ghost flex-1 sm:flex-none">sudo systemctl disable --now telnet.socket</button>' +
-          '<button type="button" data-s="0" class="sim-btn-ghost flex-1 sm:flex-none"># iç ağ güvenli, dokunma</button>' +
           '</div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -1070,9 +1078,9 @@
           '<div class="sim-mdm flex flex-1 flex-col py-1">' +
           '<p class="text-xs font-medium text-slate-500">Microsoft Intune · kurgu — SLS-09</p>' +
           '<form autocomplete="off" class="mt-3 space-y-2.5" onsubmit="return false">' +
-          '<label><input type="radio" name="mdmPolicy" value="10" /><span><strong class="text-slate-200">TPM + BitLocker zorunlu + wipe/reimage</strong><span class="mt-0.5 block text-[11px] text-slate-500">Tam disk şifreleme + kayıp cihaz senaryosu</span></span></label>' +
-          '<label><input type="radio" name="mdmPolicy" value="0" /><span><strong class="text-slate-200">Uyarı e-postası</strong><span class="mt-0.5 block text-[11px] text-slate-500">Teknik kontrol yok</span></span></label>' +
-          '<label><input type="radio" name="mdmPolicy" value="3" /><span><strong class="text-slate-200">Ekran kilidi süresi</strong><span class="mt-0.5 block text-[11px] text-slate-500">FDE yok</span></span></label>' +
+          '<label><input type="radio" name="mdmPolicy" value="3" /><span><strong>Ekran ve oturum kilidi sıkılaştırma</strong><span class="mt-0.5 block text-[11px] text-slate-500">FDE olmadan; hızlı uygulama</span></span></label>' +
+          '<label><input type="radio" name="mdmPolicy" value="0" /><span><strong>Uyarı / farkındalık e-postası</strong><span class="mt-0.5 block text-[11px] text-slate-500">Yalnızca iletişim</span></span></label>' +
+          '<label><input type="radio" name="mdmPolicy" value="10" /><span><strong>Şifreleme + yeniden dağıtım paketi</strong><span class="mt-0.5 block text-[11px] text-slate-500">TPM bağımlı; kayıp cihaz senaryosu</span></span></label>' +
           '</form>' +
           '<button type="button" id="mdmSave" class="focus-ring sim-btn-next mt-5">Politikayı kaydet</button></div>';
         document.getElementById('mdmSave').addEventListener('click', function () {
@@ -1085,7 +1093,7 @@
           var s = parseInt(r.value, 10);
           var lines =
             s === 10
-              ? ['FDE + yeniden kurulum — kayıp cihazda doğru çerçeve.']
+              ? ['Şifreleme + yeniden dağıtım paketi kayıp cihaz senaryosunu doğru kapatır.']
               : s === 3
                 ? ['Kilitleme oturumu yetmez; disk okunabilir.']
                 : ['Mail ile risk kapanmaz.'];
