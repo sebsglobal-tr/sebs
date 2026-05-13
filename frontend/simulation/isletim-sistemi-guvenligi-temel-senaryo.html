@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <base href="/" />
+  <title>Masaüstü krizi — İşletim sistemi güvenliği (temel) | SEBS</title>
+  <meta name="description" content="Küçük yazılım şirketinde güncelleme, yetki, servis ve uç nokta kararları. İşletim Sistemi Güvenliği (Temel) modülü ile uyumlu senaryo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
+  <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    .os-card { box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.06); }
+    .choice-btn { transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease; }
+    .choice-btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .feedback-enter { animation: fe 0.35s ease-out; }
+    @keyframes fe { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="landing-site-body min-h-screen bg-slate-100 font-sans text-slate-800 antialiased">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/90 bg-white/95 backdrop-blur-xl">
+    <div class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-3 px-4 sm:h-16">
+      <div class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
+        <a href="/modules/isletim-sistemi-guvenligi.html" class="font-semibold text-blue-700 hover:text-blue-900 focus-ring rounded">← Modül</a>
+        <span class="hidden text-slate-300 sm:inline" aria-hidden="true">|</span>
+        <a href="/simulations.html" class="font-medium text-slate-600 hover:text-slate-900 focus-ring rounded">Simülasyonlar</a>
+      </div>
+      <span id="stepBadge" class="shrink-0 rounded-md bg-slate-200 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-700 sm:text-xs">Hazır</span>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-4 pb-24 pt-20 sm:pt-24">
+    <div class="os-card rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-8">
+      <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Vurgu Yazılım · İstanbul · kurgu</p>
+      <h1 class="mt-2 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Masaüstü krizi</h1>
+      <p class="mt-2 text-sm leading-relaxed text-slate-600">
+        On beş kişilik ekip; çoğu Windows 11 dizüstü, iki Linux geliştirici makinesi. Siz <strong>IT &amp; güvenlik koordinatörü</strong>sünüz — teknik doğruluk değil, <strong>işletim sistemi güvenliği (temel)</strong> dersindeki öncelik sırasına yakın kararlar verin.
+      </p>
+
+      <div id="introBlock" class="mt-6">
+        <p class="rounded-xl border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+          Sekiz kısa durum; her birinde bir seçim. Toplam <strong>80 puan</strong> üzerinden değerlendirilirsiniz; <strong>56+</strong> pratikte “güvenli yeter” çizgisi sayılır.
+        </p>
+        <button type="button" id="btnStart" class="focus-ring mt-5 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 sm:text-base">
+          Senaryoyu başlat
+        </button>
+      </div>
+
+      <div id="gameBlock" class="mt-6 hidden">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div class="h-2 flex-1 min-w-[120px] max-w-xs overflow-hidden rounded-full bg-slate-200">
+            <div id="progressFill" class="h-full w-0 rounded-full bg-blue-600 transition-[width] duration-300" style="width:0%"></div>
+          </div>
+          <p class="text-xs font-semibold tabular-nums text-slate-600"><span id="scoreLabel">0</span> / 80</p>
+        </div>
+        <h2 id="sceneTitle" class="text-lg font-bold text-slate-900"></h2>
+        <p id="sceneBody" class="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700"></p>
+        <div id="choicesWrap" class="mt-5 flex flex-col gap-2.5"></div>
+        <div id="feedbackBox" class="mt-4 hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 feedback-enter" role="status"></div>
+        <button type="button" id="btnNext" class="focus-ring mt-4 hidden w-full rounded-xl border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50">
+          Devam
+        </button>
+      </div>
+
+      <div id="endBlock" class="mt-6 hidden border-t border-slate-100 pt-6">
+        <h2 class="text-lg font-bold text-slate-900">Özet</h2>
+        <p id="endScoreLine" class="mt-2 text-sm text-slate-700"></p>
+        <p id="endBlurb" class="mt-3 text-sm leading-relaxed text-slate-600"></p>
+        <div class="mt-6 flex flex-col gap-2 sm:flex-row">
+          <button type="button" id="btnAgain" class="focus-ring rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">Baştan</button>
+          <a href="/modules/isletim-sistemi-guvenligi.html" class="focus-ring rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-blue-700">Modüle dön</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var SIM_ID = 'isletim-sistemi-guvenligi-temel-senaryo';
+      var SIM_NAME = 'İşletim Sistemi Güvenliği (Temel) — masaüstü krizi';
+      var MODULE_NAME = 'İşletim Sistemleri Güvenliği (Temel)';
+
+      var STEPS = [
+        {
+          title: '1 · Güncelleme penceresi',
+          body:
+            'Salı 10:00 — Windows “yeniden başlatma planı” uyarısı var; geliştiricilerden biri “şimdi restart olursa demo bozulur” diyor. Otomatik güncellemeler açık.',
+          choices: [
+            {
+              text: 'Güvenlik güncellemelerini kapatıp “iş bitince” açarız.',
+              score: 0,
+              feedback: 'Bilinen zafiyet penceresi uzar; WannaCry tarzı toplu riskler tam da böyle başlar.'
+            },
+            {
+              text: 'Yeniden başlatmayı 7 gün ertele; ardından yemek arasında planlı restart.',
+              score: 8,
+              feedback: 'Kısa erteleme + planlı uygulama makul; yine de gecikmeyi takvimde kilitlemek iyi olur.'
+            },
+            {
+              text: 'Demo bitene kadar hiç restart yok; kullanıcılar “Hatırlatma”yı sürekli snooze eder.',
+              score: 3,
+              feedback: 'Snooze sonsuz olunca yama gecikir; kritik yamalar özellikle SMB/RDP sınıfında acıtır.'
+            },
+            {
+              text: 'Bugün öğleden sonra 30 dk “bakım penceresi” ilan et; demo kaydı öncesinde bitir.',
+              score: 10,
+              feedback: 'İletişim + sabit pencere: hem iş sürekliliği hem yama disiplini için en temiz çizgi.'
+            }
+          ]
+        },
+        {
+          title: '2 · Stajyer ve yönetici hesabı',
+          body:
+            'Stajyer “bir kerelik kurulum için yönetici lazım” diyor. Şirkette standart kullanıcı politikası var ama IT tek kişi.',
+          choices: [
+            {
+              text: 'Şirket yöneticisi şifresini Slack’ten yaz; iş bitsin.',
+              score: 0,
+              feedback: 'Paylaşılan admin şifresi denetlenemez; sızdığında tüm uç nokta aynı anda yanar.'
+            },
+            {
+              text: 'Stajyer hesabını geçici “Yerel yönetici” yap; cuma sonu kapatırız.',
+              score: 4,
+              feedback: 'Hafta boyunca o makine yüksek yetkiyle çalışır; zararlı veya yanlışlıkla silinen sistem dosyası riski artar.'
+            },
+            {
+              text: 'JIT / PAM veya kısa süreli ayrı yönetici oturumu + işlem kaydı; iş bitince yetki düşür.',
+              score: 10,
+              feedback: 'En az ayrıcalık ilkesiyle uyumlu; modüldeki “yetkiyi süreyle sınırlama” yaklaşımına yakın.'
+            },
+            {
+              text: 'Uzak masaüstüyle sen bağlanıp kurulumu kendin yap; stajyer standart kullanıcıda kalsın.',
+              score: 9,
+              feedback: 'İyi pratik; sadece uzak bağlantı kanalının da güvenli (MFA, kayıtlı cihaz) olduğundan emin olun.'
+            }
+          ]
+        },
+        {
+          title: '3 · Eski protokol (SMB1)',
+          body:
+            'Envanter taramasında bir dizüstünde SMB1 özelliği açık görünüyor. Muhasebe “eski yazıcı sürücüsü” demişti.',
+          choices: [
+            {
+              text: 'SMB1 açık kalsın; yazıcı çalışsın yeter.',
+              score: 0,
+              feedback: 'SMB1, yaygın istismar zincirlerinde hâlâ referans gösterilen yüzeylerden.'
+            },
+            {
+              text: 'SMB1 kapat; yazıcı için üretici güncellemesi veya güvenli alternatif (ağ yazıcısı / print server) planla.',
+              score: 10,
+              feedback: 'Saldırı yüzeyini küçültür; “legacy”yi kalıcı olarak taşımak yerine teknik borcu kapatırsınız.'
+            },
+            {
+              text: 'Sadece Windows güvenlik duvarında SMB girişini kapat; SMB1 açık kalsın.',
+              score: 3,
+              feedback: 'Yerel ağda veya VPN içinde yanlışlıkla açılan portlar yine risk taşır; protokolü kapatmak asıl hedef.'
+            }
+          ]
+        },
+        {
+          title: '4 · Tedarikçi USB’si',
+          body:
+            'Donanım tedarikçisi “sürücü + tanıtım” diye etiketsiz USB bıraktı. Ofiste heyecan var.',
+          choices: [
+            {
+              text: 'Kendi dizüstüne tak; içeriği hemen bakalım.',
+              score: 0,
+              feedback: 'Bilinmeyen USB, otorun ve kötü amaçlı yazılım için klasik vektör.'
+            },
+            {
+              text: 'IT’de izole VM veya “air-gapped” test makinesinde aç; logla; sonra imha veya arşiv politikası.',
+              score: 10,
+              feedback: 'Üretim OS’inden ayırma — modüldeki “güvenilmeyen medya” disiplinine uygun.'
+            },
+            {
+              text: 'USB girişlerini BIOS’ta tamamen kapat; kimse kullanmasın.',
+              score: 5,
+              feedback: 'Bazı ekiplerde işe yarar ama politika ve muafiyet olmadan iş sürekliliğini kırabilir; önce risk analizi.'
+            }
+          ]
+        },
+        {
+          title: '5 · Tarayıcı yaması',
+          body:
+            'İşletim sistemi güncel; Chrome için “kritik” güvenlik güncellemesi bekliyor. Bir ekip üyesi “tarayıcı önemli değil” diyor.',
+          choices: [
+            {
+              text: 'OS güncelse tarayıcıyı haftaya bırakırız.',
+              score: 2,
+              feedback: 'Sızma yollarının çoğu tarayıcı + bellek açıkları üzerinden; OS ile aynı disiplinde yamalayın.'
+            },
+            {
+              text: 'Kurumsal güncelleme kanalıyla tarayıcıyı aynı gün veya 24 saat içinde standardize et.',
+              score: 10,
+              feedback: 'Uygulama katmanı da saldırı yüzeyi; patch yönetimi yalnızca “kernel” değil.'
+            },
+            {
+              text: 'Sadece geliştiricilere zorunlu yap; diğerleri isteğe bağlı.',
+              score: 5,
+              feedback: 'Phishing ve kimlik çalma her role gider; mümkünse tek politika + istisna süreci.'
+            }
+          ]
+        },
+        {
+          title: '6 · RDP internete açık mı?',
+          body:
+            'Uzaktan destek için bir zamanlar modemden 3389 yönlendirilmiş. Kimse hatırlamıyor; dış tarama loglarında deneme var.',
+          choices: [
+            {
+              text: 'Portu 13389 yap; brute-force bitsin.',
+              score: 2,
+              feedback: 'Güvenlik gizliliği ≠ güvenlik; port tarama ile yine bulunursunuz.'
+            },
+            {
+              text: 'NAT’tan port yönlendirmeyi kapat; kurumsal VPN veya SASE üzerinden iç RDP.',
+              score: 10,
+              feedback: 'Sınırda expose etmek yerine kimlik doğrulamalı tünel — temel sertleştirme ile uyumlu.'
+            },
+            {
+              text: 'Güçlü parola yeter; MFA yok ama şifre uzun.',
+              score: 3,
+              feedback: 'Parola + internete açık RDP kombinasyonu hâlâ yüksek risk; MFA ve sınır şart.'
+            }
+          ]
+        },
+        {
+          title: '7 · Gereksiz servis',
+          body:
+            'Linux geliştirici makinesinde eski bir test için Telnet servisi açılmış; firewall “geliştirici makinesi” diye gevşek.',
+          choices: [
+            {
+              text: 'Telnet kapat; SSH ile sınırla; gereksiz unit’leri devre dışı bırak.',
+              score: 10,
+              feedback: 'Saldırı yüzeyi küçültme ve şifresiz/ zayıf protokolleri kaldırma — doğru öncelik.'
+            },
+            {
+              text: 'Telnet kalsın; iç ağ “zaten güvenli”.',
+              score: 0,
+              feedback: 'İç lateral movement senaryolarında “güvenilir iç ağ” varsayımı sık kırılır.'
+            },
+            {
+              text: 'Sadece firewall’da dışarı kapat; içeride telnet açık kalsın.',
+              score: 4,
+              feedback: 'İyileştirme ama içerdeki tehdüde yetmez; servisi kapatmak daha net.'
+            }
+          ]
+        },
+        {
+          title: '8 · Kayıp dizüstü',
+          body:
+            'Satış ekibinden biri toplantıda çantayı unutmuş; cihaz şifreli değil (BitLocker/LUKS kapalı).',
+          choices: [
+            {
+              text: 'Kullanıcıya kınama maili at; bir daha dikkat etsin.',
+              score: 0,
+              feedback: 'Davranış önemli ama teknik kontrol (FDE) olmadan veri fiziksel olarak çıkar.'
+            },
+            {
+              text: 'Şirket politikası: TPM + tam disk şifreleme zorunlu; bu cihazı emniyetli biçimde sıfırla ve yeniden kur.',
+              score: 10,
+              feedback: 'Fiziksel kayıpta gizlilik ve düzenleyici beklentiler için temel savunma hattı.'
+            },
+            {
+              text: 'Sadece ekran kilidi süresini kısalt.',
+              score: 3,
+              feedback: 'Oturum kilidi hırsızlık anında yardımcı; disk şifresi olmayan cihazda disk okunabilir.'
+            }
+          ]
+        }
+      ];
+
+      var stepIndex = 0;
+      var score = 0;
+      var bestPickCount = 0;
+      var startedAt = 0;
+      var awaitingNext = false;
+
+      function maxForStep(step) {
+        var m = 0;
+        step.choices.forEach(function (c) {
+          if (c.score > m) m = c.score;
+        });
+        return m;
+      }
+
+      function renderStep() {
+        var step = STEPS[stepIndex];
+        document.getElementById('stepBadge').textContent = 'Adım ' + (stepIndex + 1) + ' / ' + STEPS.length;
+        document.getElementById('sceneTitle').textContent = step.title;
+        document.getElementById('sceneBody').textContent = step.body;
+        document.getElementById('progressFill').style.width = Math.round((stepIndex / STEPS.length) * 100) + '%';
+        document.getElementById('feedbackBox').classList.add('hidden');
+        document.getElementById('btnNext').classList.add('hidden');
+        awaitingNext = false;
+
+        var wrap = document.getElementById('choicesWrap');
+        wrap.innerHTML = '';
+        var maxS = maxForStep(step);
+        step.choices.forEach(function (ch, idx) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className =
+            'choice-btn rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 hover:border-blue-300 hover:bg-blue-50/50';
+          btn.textContent = ch.text;
+          btn.addEventListener('click', function () {
+            if (awaitingNext) return;
+            score += ch.score;
+            if (ch.score >= maxS) bestPickCount += 1;
+            document.getElementById('scoreLabel').textContent = String(score);
+            wrap.querySelectorAll('button').forEach(function (b) {
+              b.disabled = true;
+            });
+            var fb = document.getElementById('feedbackBox');
+            fb.textContent = ch.feedback;
+            fb.classList.remove('hidden');
+            document.getElementById('btnNext').classList.remove('hidden');
+            awaitingNext = true;
+          });
+          wrap.appendChild(btn);
+        });
+      }
+
+      function finish() {
+        document.getElementById('gameBlock').classList.add('hidden');
+        document.getElementById('endBlock').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('endScoreLine').textContent = 'Puanınız: ' + score + ' / 80';
+        var pass = score >= 56;
+        var blurb = pass
+          ? 'Çizgiyi geçtiniz. Modüldeki güncelleme, yetki, gereksiz servis, ağ yüzeyi ve disk şifreleme başlıklarıyla tutarlı bir dizi karar verdiniz.'
+          : 'Birkaç kritik noktada yüzeyi büyüten veya yamayı erteleyen seçimler vardı. Modüldeki “patch disiplini” ve “en az ayrıcalık” bölümlerine göz atmanız iyi olur.';
+        document.getElementById('endBlurb').textContent = blurb;
+
+        var elapsed = startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+        var wrong = STEPS.length - bestPickCount;
+        if (window.SimulationTracker && typeof window.SimulationTracker.saveCompletion === 'function') {
+          window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+            score: score,
+            maxScore: 80,
+            timeSpentSeconds: elapsed,
+            correctCount: bestPickCount,
+            wrongCount: wrong,
+            passed: pass,
+            moduleName: MODULE_NAME
+          });
+        }
+      }
+
+      function wireStart() {
+        document.getElementById('btnStart').addEventListener('click', function () {
+          document.getElementById('introBlock').classList.add('hidden');
+          document.getElementById('gameBlock').classList.remove('hidden');
+          startedAt = Date.now();
+          stepIndex = 0;
+          score = 0;
+          bestPickCount = 0;
+          document.getElementById('scoreLabel').textContent = '0';
+          if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+            window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+          }
+          renderStep();
+        });
+
+        document.getElementById('btnNext').addEventListener('click', function () {
+          if (!awaitingNext) return;
+          stepIndex += 1;
+          if (stepIndex >= STEPS.length) {
+            finish();
+          } else {
+            renderStep();
+          }
+        });
+
+        document.getElementById('btnAgain').addEventListener('click', function () {
+          document.getElementById('endBlock').classList.add('hidden');
+          document.getElementById('introBlock').classList.remove('hidden');
+          document.getElementById('stepBadge').textContent = 'Hazır';
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', wireStart);
+    })();
+  </script>
+</body>
+</html>
