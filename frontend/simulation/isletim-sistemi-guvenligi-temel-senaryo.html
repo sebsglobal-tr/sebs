@@ -247,18 +247,6 @@
       opacity: 0.45;
       cursor: not-allowed;
     }
-    .sim-btn-next--attention {
-      animation: sim-next-pulse 1.8s ease-in-out 2;
-    }
-    @keyframes sim-next-pulse {
-      0%,
-      100% {
-        box-shadow: 0 8px 24px -8px rgba(56, 189, 248, 0.35);
-      }
-      50% {
-        box-shadow: 0 8px 32px -4px rgba(56, 189, 248, 0.55), 0 0 0 1px rgba(56, 189, 248, 0.35);
-      }
-    }
 
     .sim-task-cue {
       border-bottom: 1px solid rgba(30, 41, 59, 0.85);
@@ -503,7 +491,7 @@
         </dl>
         <p class="mt-5 flex gap-3 rounded-xl border border-slate-700/50 bg-slate-950/35 p-4 text-sm text-slate-400">
           <i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-sky-400"></i>
-          <span><strong class="text-slate-300">Mobilde</strong> önce Elif ile sohbet üstte; <strong class="text-slate-300">geniş ekranda</strong> sohbet ortada, solda biletler, sağda görev masası. Masada seçim yaptıktan sonra sohbette geri bildirim gelir ve <strong class="text-slate-300">Sonraki görev</strong> açılır. Senaryolar modüldeki <strong class="text-slate-300">yama, yetki ve yüzey küçültme</strong> konularıyla hizalıdır.</span>
+          <span><strong class="text-slate-300">Mobilde</strong> önce Elif ile sohbet üstte (mesajlar panel içinde kayar); <strong class="text-slate-300">geniş ekranda</strong> sohbet ortada, solda biletler, sağda görev masası. Seçim yaptıktan sonra sohbette geri bildirim gelir ve <strong class="text-slate-300">kısa süre içinde</strong> otomatik olarak sonraki bilete geçilir. Senaryolar modüldeki <strong class="text-slate-300">yama, yetki ve yüzey küçültme</strong> konularıyla hizalıdır.</span>
         </p>
         <button type="button" id="btnStart" class="focus-ring intro-cta mt-7 w-full sm:mt-8">
           <span class="relative z-[1] inline-flex items-center justify-center gap-2">
@@ -612,6 +600,8 @@
       var bestCount = 0;
       var startedAt = 0;
       var locked = false;
+      var advanceTimer = null;
+      var ADVANCE_MS = 520;
 
       var PHASES = [
         {
@@ -702,7 +692,29 @@
       ];
 
       var DEFAULT_TASK_CUE =
-        'Önce mentör sohbetini oku; masada kararını ver. Sohbette geri bildirimden sonra alttaki Sonraki görev düğmesi açılır.';
+        'Önce mentör sohbetini oku; masada kararını ver. Sohbet paneli içinde kaydırarak geçmiş mesajlara bakabilirsin. Seçiminden sonra otomatik olarak sonraki bilete geçilir.';
+
+      function clearAdvance() {
+        if (advanceTimer) {
+          clearTimeout(advanceTimer);
+          advanceTimer = null;
+        }
+      }
+
+      function scheduleAdvanceAfterAnswer() {
+        clearAdvance();
+        advanceTimer = setTimeout(function () {
+          advanceTimer = null;
+          phaseIndex += 1;
+          var el = document.getElementById('progressFill');
+          if (phaseIndex >= PHASES.length) {
+            if (el) el.style.width = '100%';
+            finishShift();
+          } else {
+            mountPhase();
+          }
+        }, ADVANCE_MS);
+      }
 
       function setTaskCue(active, text) {
         var el = document.getElementById('taskCue');
@@ -803,25 +815,6 @@
         document.getElementById('scoreLabel').textContent = String(score);
       }
 
-      function showNext(show) {
-        var b = document.getElementById('btnNextTask');
-        b.classList.remove('sim-btn-next--attention');
-        b.classList.toggle('hidden', !show);
-        b.disabled = !show;
-        if (show) {
-          requestAnimationFrame(function () {
-            b.classList.add('sim-btn-next--attention');
-            b.addEventListener(
-              'animationend',
-              function () {
-                b.classList.remove('sim-btn-next--attention');
-              },
-              { once: true }
-            );
-          });
-        }
-      }
-
       function completePhase(points, denizLine, elifLines, maxP) {
         if (locked) return;
         locked = true;
@@ -831,15 +824,14 @@
         (elifLines || []).forEach(function (t) {
           pushChat({ who: 'elif', text: t });
         });
-        updateProgress();
         document.getElementById('scoreLabel').textContent = String(score);
+        var bar = document.getElementById('progressFill');
+        if (bar) bar.style.width = Math.round(((phaseIndex + 1) / PHASES.length) * 100) + '%';
         setTaskCue(
           false,
-          phaseIndex + 1 >= PHASES.length
-            ? 'Son görev tamam. Sonraki göreve basarak vardiya özetine geç.'
-            : 'Elif sohbette geri bildirdi. Alttaki Sonraki görev ile bir sonraki bilete geç.'
+          phaseIndex + 1 >= PHASES.length ? 'Vardiya özeti açılıyor…' : 'Bir sonraki bilete geçiliyor…'
         );
-        showNext(true);
+        scheduleAdvanceAfterAnswer();
       }
 
       function renderWinUpdate(ws, ph) {
@@ -1104,8 +1096,8 @@
       }
 
       function mountPhase() {
+        clearAdvance();
         locked = false;
-        showNext(false);
         var ph = PHASES[phaseIndex];
         document.getElementById('deskTitleLine').textContent = ph.desk;
         document.getElementById('deskSubLine').textContent = ph.dial;
@@ -1120,6 +1112,7 @@
       }
 
       function finishShift() {
+        clearAdvance();
         document.getElementById('gameBlock').classList.add('hidden');
         document.getElementById('endBlock').classList.remove('hidden');
         var pass = score >= 56;
@@ -1156,6 +1149,7 @@
         document.getElementById('introBlock').classList.add('hidden');
         document.getElementById('gameBlock').classList.remove('hidden');
         document.getElementById('gameBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        clearAdvance();
         document.getElementById('chatThread').innerHTML = '';
         phaseIndex = 0;
         score = 0;
@@ -1171,13 +1165,8 @@
         mountPhase();
       });
 
-      document.getElementById('btnNextTask').addEventListener('click', function () {
-        phaseIndex += 1;
-        if (phaseIndex >= PHASES.length) finishShift();
-        else mountPhase();
-      });
-
       document.getElementById('btnAgain').addEventListener('click', function () {
+        clearAdvance();
         document.getElementById('endBlock').classList.add('hidden');
         document.getElementById('introBlock').classList.remove('hidden');
       });
