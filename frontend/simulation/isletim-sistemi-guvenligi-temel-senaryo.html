@@ -5,79 +5,480 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
-  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="theme-color" content="#0f172a" />
   <base href="/" />
   <title>Masaüstü krizi — İşletim sistemi güvenliği (temel) | SEBS</title>
-  <meta name="description" content="Küçük yazılım şirketinde güncelleme, yetki, servis ve uç nokta kararları. İşletim Sistemi Güvenliği (Temel) modülü ile uyumlu senaryo." />
+  <meta name="description" content="Küçük yazılım şirketinde güncelleme, yetki, servis ve uç nokta kararları. İşletim Sistemi Güvenliği (Temel) modülü ile uyumlu etkileşimli senaryo." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
   <script src="/utils/simulation-tracker.js"></script>
   <style>
-    .os-card { box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.06); }
-    .choice-btn { transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease; }
-    .choice-btn:hover:not(:disabled) { transform: translateY(-1px); }
-    .feedback-enter { animation: fe 0.35s ease-out; }
-    @keyframes fe { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .os-sim-root {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 100% 80% at 50% -30%, rgba(59, 130, 246, 0.22), transparent 50%),
+        radial-gradient(ellipse 60% 50% at 100% 50%, rgba(139, 92, 246, 0.12), transparent 45%),
+        radial-gradient(ellipse 50% 40% at 0% 80%, rgba(14, 165, 233, 0.1), transparent 40%),
+        linear-gradient(165deg, #0b1220 0%, #111827 38%, #0f172a 100%);
+    }
+
+    .os-glow-card {
+      position: relative;
+      border-radius: 1.35rem;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 42, 0.5) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 24px 60px -20px rgba(0, 0, 0, 0.55),
+        0 0 80px -30px rgba(59, 130, 246, 0.15);
+    }
+    .os-glow-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(130deg, rgba(96, 165, 250, 0.45), rgba(167, 139, 250, 0.2), rgba(34, 211, 238, 0.25));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.65;
+    }
+
+    .os-live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fecaca;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+    }
+    .os-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 12px #ef4444;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .os-live-dot {
+        animation: osPulse 1.4s ease-in-out infinite;
+      }
+      .os-title-shine {
+        background-size: 200% auto;
+        animation: osShine 5s linear infinite;
+      }
+      .os-dial-spin {
+        animation: osDial 12s linear infinite;
+      }
+    }
+    @keyframes osPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.92); }
+    }
+    @keyframes osShine {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes osDial {
+      to { transform: rotate(360deg); }
+    }
+
+    .os-title-shine {
+      background-image: linear-gradient(105deg, #f8fafc 0%, #94a3b8 35%, #e2e8f0 50%, #94a3b8 65%, #f8fafc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .os-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.55);
+      color: #cbd5e1;
+    }
+
+    .os-step-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(71, 85, 105, 0.9);
+      border: 1px solid rgba(100, 116, 139, 0.5);
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .os-step-dot--done {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+    }
+    .os-step-dot--current {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border-color: rgba(129, 140, 248, 0.6);
+      box-shadow: 0 0 14px rgba(59, 130, 246, 0.55);
+      transform: scale(1.25);
+    }
+
+    .os-score-ring {
+      --p: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: conic-gradient(#3b82f6 calc(var(--p) * 1%), rgba(51, 65, 85, 0.85) 0);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .os-score-ring span {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0f172a;
+      display: grid;
+      place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .os-choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      width: 100%;
+      text-align: left;
+      padding: 0.95rem 1rem;
+      border-radius: 0.95rem;
+      border: 1px solid rgba(71, 85, 105, 0.55);
+      background: linear-gradient(165deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.85) 100%);
+      color: #e2e8f0;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+    }
+    .os-choice:hover:not(:disabled) {
+      border-color: rgba(96, 165, 250, 0.55);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.15), 0 12px 32px -12px rgba(0, 0, 0, 0.45);
+      transform: translateY(-2px);
+    }
+    .os-choice:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+    .os-choice--picked {
+      opacity: 1 !important;
+      border-width: 2px;
+    }
+    .os-choice--picked-good {
+      border-color: rgba(34, 197, 94, 0.65);
+      box-shadow: 0 0 24px -8px rgba(34, 197, 94, 0.35);
+    }
+    .os-choice--picked-mid {
+      border-color: rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 20px -8px rgba(250, 204, 21, 0.2);
+    }
+    .os-choice--picked-bad {
+      border-color: rgba(248, 113, 113, 0.55);
+      box-shadow: 0 0 24px -8px rgba(239, 68, 68, 0.25);
+    }
+
+    .os-choice-key {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 0.5rem;
+      display: grid;
+      place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .os-feedback {
+      border-radius: 0.95rem;
+      padding: 1rem 1.1rem;
+      font-size: 0.875rem;
+      line-height: 1.55;
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      background: rgba(15, 23, 42, 0.75);
+    }
+    .os-feedback--good {
+      border-color: rgba(34, 197, 94, 0.45);
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.35) 0%, rgba(15, 23, 42, 0.85) 100%);
+      color: #bbf7d0;
+    }
+    .os-feedback--mid {
+      border-color: rgba(250, 204, 21, 0.4);
+      background: linear-gradient(135deg, rgba(113, 63, 18, 0.25) 0%, rgba(15, 23, 42, 0.85) 100%);
+      color: #fef08a;
+    }
+    .os-feedback--bad {
+      border-color: rgba(248, 113, 113, 0.45);
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.3) 0%, rgba(15, 23, 42, 0.85) 100%);
+      color: #fecaca;
+    }
+    .feedback-pop {
+      animation: osFb 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes osFb {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .os-term {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      line-height: 1.55;
+      color: #4ade80;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.85rem;
+      overflow: hidden;
+    }
+    .os-term-dim {
+      color: #64748b;
+    }
+
+    .os-dial-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 140px;
+      margin: 0 auto;
+    }
+    .os-dial {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 220deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.35), rgba(14, 165, 233, 0.45), rgba(59, 130, 246, 0.5));
+      opacity: 0.35;
+    }
+    .os-dial-spin {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+    .os-dial-cap {
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      background: #0f172a;
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .os-btn-start {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #0891b2 100%);
+      box-shadow: 0 4px 24px -4px rgba(59, 130, 246, 0.55);
+    }
+    .os-btn-start::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+      transform: translateX(-100%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .os-btn-start::after {
+        animation: osSweep 2.5s ease-in-out infinite;
+      }
+    }
+    @keyframes osSweep {
+      0% { transform: translateX(-100%); }
+      50%, 100% { transform: translateX(100%); }
+    }
+
+    .os-end-burst {
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      left: -10%;
+      top: -10%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .font-sg {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+    }
+    .font-jb {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .os-live-dot,
+      .os-title-shine,
+      .os-dial-spin,
+      .os-btn-start::after {
+        animation: none !important;
+      }
+      .feedback-pop {
+        animation: none !important;
+      }
+    }
   </style>
 </head>
-<body class="landing-site-body min-h-screen bg-slate-100 font-sans text-slate-800 antialiased">
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/90 bg-white/95 backdrop-blur-xl">
-    <div class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-3 px-4 sm:h-16">
+<body class="landing-site-body os-sim-root font-sans text-slate-200 antialiased">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-700/60 bg-slate-950/85 backdrop-blur-xl">
+    <div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:h-16">
       <div class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
-        <a href="/modules/isletim-sistemi-guvenligi.html" class="font-semibold text-blue-700 hover:text-blue-900 focus-ring rounded">← Modül</a>
-        <span class="hidden text-slate-300 sm:inline" aria-hidden="true">|</span>
-        <a href="/simulations.html" class="font-medium text-slate-600 hover:text-slate-900 focus-ring rounded">Simülasyonlar</a>
+        <a href="/modules/isletim-sistemi-guvenligi.html" class="font-semibold text-sky-400 hover:text-sky-300 focus-ring rounded">← Modül</a>
+        <span class="hidden text-slate-600 sm:inline" aria-hidden="true">|</span>
+        <a href="/simulations.html" class="font-medium text-slate-400 hover:text-white focus-ring rounded">Simülasyonlar</a>
       </div>
-      <span id="stepBadge" class="shrink-0 rounded-md bg-slate-200 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-700 sm:text-xs">Hazır</span>
+      <div class="flex items-center gap-2">
+        <span id="stepBadge" class="hidden rounded-md border border-slate-600 bg-slate-900 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-300 sm:inline sm:text-xs">Hazır</span>
+        <span class="os-live-pill" id="livePill" title="Eğitim simülasyonu">
+          <span class="os-live-dot" aria-hidden="true"></span>
+          CANLI
+        </span>
+      </div>
     </div>
   </header>
 
-  <main class="mx-auto max-w-3xl px-4 pb-24 pt-20 sm:pt-24">
-    <div class="os-card rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-8">
-      <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Vurgu Yazılım · İstanbul · kurgu</p>
-      <h1 class="mt-2 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Masaüstü krizi</h1>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600">
-        On beş kişilik ekip; çoğu Windows 11 dizüstü, iki Linux geliştirici makinesi. Siz <strong>IT &amp; güvenlik koordinatörü</strong>sünüz — teknik doğruluk değil, <strong>işletim sistemi güvenliği (temel)</strong> dersindeki öncelik sırasına yakın kararlar verin.
-      </p>
-
-      <div id="introBlock" class="mt-6">
-        <p class="rounded-xl border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
-          Sekiz kısa durum; her birinde bir seçim. Toplam <strong>80 puan</strong> üzerinden değerlendirilirsiniz; <strong>56+</strong> pratikte “güvenli yeter” çizgisi sayılır.
-        </p>
-        <button type="button" id="btnStart" class="focus-ring mt-5 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 sm:text-base">
-          Senaryoyu başlat
-        </button>
-      </div>
-
-      <div id="gameBlock" class="mt-6 hidden">
-        <div class="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div class="h-2 flex-1 min-w-[120px] max-w-xs overflow-hidden rounded-full bg-slate-200">
-            <div id="progressFill" class="h-full w-0 rounded-full bg-blue-600 transition-[width] duration-300" style="width:0%"></div>
+  <main class="relative mx-auto max-w-5xl px-4 pb-28 pt-20 sm:pt-24">
+    <div class="grid gap-5 lg:grid-cols-[1fr_260px] lg:items-start">
+      <div class="os-glow-card relative overflow-hidden p-5 sm:p-8">
+        <div class="relative z-[1]">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="os-pill"><i class="fa-solid fa-building text-sky-400" aria-hidden="true"></i> Vurgu Yazılım</span>
+            <span class="os-pill"><i class="fa-solid fa-location-dot text-rose-400" aria-hidden="true"></i> İstanbul · kurgu</span>
+            <span class="os-pill"><i class="fa-solid fa-graduation-cap text-amber-300" aria-hidden="true"></i> OS güvenliği (temel)</span>
           </div>
-          <p class="text-xs font-semibold tabular-nums text-slate-600"><span id="scoreLabel">0</span> / 80</p>
+
+          <h1 class="font-sg mt-4 text-2xl font-bold tracking-tight sm:text-3xl md:text-[2.1rem]">
+            <span class="os-title-shine">Masaüstü krizi</span>
+          </h1>
+          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-[0.9375rem]">
+            On beş kişilik ekip; çoğu <strong class="text-slate-200">Windows 11</strong> dizüstü, iki <strong class="text-slate-200">Linux</strong> geliştirici makinesi.
+            Siz <strong class="text-sky-300">IT &amp; güvenlik koordinatörü</strong>sünüz — her adımda <strong class="text-slate-200">tek bir karar</strong>; ekran sağ üstteki skor halkası ve yan konsol seni takip eder.
+          </p>
+
+          <div id="introBlock" class="mt-7">
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="rounded-xl border border-slate-600/50 bg-slate-900/50 px-4 py-3 text-center">
+                <p class="font-sg text-2xl font-bold text-white">8</p>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">durum</p>
+              </div>
+              <div class="rounded-xl border border-slate-600/50 bg-slate-900/50 px-4 py-3 text-center">
+                <p class="font-sg text-2xl font-bold text-emerald-400">80</p>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">puan</p>
+              </div>
+              <div class="rounded-xl border border-slate-600/50 bg-slate-900/50 px-4 py-3 text-center">
+                <p class="font-sg text-2xl font-bold text-amber-400">56+</p>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">geçer</p>
+              </div>
+            </div>
+            <p class="mt-4 flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-950/30 px-4 py-3 text-sm text-amber-100/95">
+              <i class="fa-solid fa-bolt mt-0.5 text-amber-400" aria-hidden="true"></i>
+              <span>Her turda <strong>geri bildirim</strong> görürsün; en iyi yanıtlar yeşil, riskli seçimler kırmızı tonla vurgulanır. Süre tutulmaz — dikkatini dağıtmadan oyna.</span>
+            </p>
+            <button type="button" id="btnStart" class="os-btn-start focus-ring relative mt-5 w-full rounded-xl py-4 text-sm font-bold text-white sm:text-base">
+              <span class="relative z-[1] inline-flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                Senaryoyu başlat
+              </span>
+            </button>
+          </div>
+
+          <div id="gameBlock" class="mt-2 hidden">
+            <div class="mb-5 flex flex-col gap-4 border-b border-slate-700/60 pb-5 sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex flex-1 flex-wrap items-center gap-2" id="stepDots" aria-hidden="true"></div>
+              <div class="flex items-center gap-3">
+                <div class="h-2 flex-1 min-w-[100px] overflow-hidden rounded-full bg-slate-800 sm:max-w-[140px]">
+                  <div id="progressFill" class="h-full rounded-full bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-400 transition-[width] duration-500" style="width:0%"></div>
+                </div>
+                <div class="os-score-ring" id="scoreRing" style="--p: 0">
+                  <span id="scoreRingLabel" class="font-jb">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-start gap-3">
+              <div id="stepEmoji" class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-slate-600 bg-slate-900 text-2xl shadow-lg shadow-blue-900/20" aria-hidden="true">🖥️</div>
+              <div class="min-w-0 flex-1">
+                <p id="sceneUrgency" class="text-[11px] font-bold uppercase tracking-[0.2em] text-rose-400/90"></p>
+                <h2 id="sceneTitle" class="font-sg mt-1 text-lg font-bold text-white sm:text-xl"></h2>
+                <p id="sceneBody" class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-400"></p>
+              </div>
+            </div>
+
+            <div class="os-term mt-4 text-[10px] leading-relaxed lg:hidden" id="sideTerminalMobile" role="presentation"></div>
+
+            <div id="choicesWrap" class="mt-6 flex flex-col gap-2.5"></div>
+
+            <div id="feedbackBox" class="os-feedback mt-5 hidden" role="status"></div>
+
+            <button type="button" id="btnNext" class="focus-ring mt-5 hidden w-full rounded-xl border border-sky-500/40 bg-sky-500/15 py-3.5 text-sm font-bold text-sky-200 transition hover:bg-sky-500/25">
+              Devam <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div id="endBlock" class="relative mt-4 hidden overflow-hidden rounded-2xl border border-slate-600/50 bg-slate-900/80 p-6 sm:p-8">
+            <div class="os-end-burst" aria-hidden="true"></div>
+            <div class="relative z-[1] text-center">
+              <div id="endIconWrap" class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-600 bg-slate-950 text-3xl"></div>
+              <h2 class="font-sg text-xl font-bold text-white sm:text-2xl">Senaryo tamam</h2>
+              <p id="endScoreLine" class="font-jb mt-3 text-lg text-sky-300"></p>
+              <p id="endGrade" class="mt-2 text-sm font-bold uppercase tracking-widest text-slate-400"></p>
+              <p id="endBlurb" class="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-slate-400"></p>
+              <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                <button type="button" id="btnAgain" class="focus-ring rounded-xl border border-slate-600 bg-slate-950 px-6 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900">
+                  <i class="fa-solid fa-rotate-right mr-2" aria-hidden="true"></i>Baştan
+                </button>
+                <a href="/modules/isletim-sistemi-guvenligi.html" class="focus-ring inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/30 hover:opacity-95">
+                  Modüle dön
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2 id="sceneTitle" class="text-lg font-bold text-slate-900"></h2>
-        <p id="sceneBody" class="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700"></p>
-        <div id="choicesWrap" class="mt-5 flex flex-col gap-2.5"></div>
-        <div id="feedbackBox" class="mt-4 hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 feedback-enter" role="status"></div>
-        <button type="button" id="btnNext" class="focus-ring mt-4 hidden w-full rounded-xl border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-900 shadow-sm hover:bg-slate-50">
-          Devam
-        </button>
       </div>
 
-      <div id="endBlock" class="mt-6 hidden border-t border-slate-100 pt-6">
-        <h2 class="text-lg font-bold text-slate-900">Özet</h2>
-        <p id="endScoreLine" class="mt-2 text-sm text-slate-700"></p>
-        <p id="endBlurb" class="mt-3 text-sm leading-relaxed text-slate-600"></p>
-        <div class="mt-6 flex flex-col gap-2 sm:flex-row">
-          <button type="button" id="btnAgain" class="focus-ring rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">Baştan</button>
-          <a href="/modules/isletim-sistemi-guvenligi.html" class="focus-ring rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-blue-700">Modüle dön</a>
+      <aside class="os-glow-card relative hidden overflow-hidden p-4 lg:block" aria-label="Durum paneli">
+        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">NOC görünümü</p>
+        <div class="os-dial-wrap mt-3">
+          <div class="os-dial" aria-hidden="true"></div>
+          <div class="os-dial-spin" aria-hidden="true"></div>
+          <div class="os-dial-cap">
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">tehdit yüzeyi</p>
+            <p id="dialHint" class="mt-1 text-[11px] font-semibold leading-snug text-slate-300">Başlamayı bekle</p>
+          </div>
         </div>
-      </div>
+        <div class="os-term mt-4" id="sideTerminal" role="presentation"></div>
+        <p class="mt-3 text-[10px] leading-relaxed text-slate-600">
+          Gösterge tamamen eğitim amaçlıdır; gerçek tarama veya üretim verisi yoktur.
+        </p>
+      </aside>
     </div>
   </main>
 
@@ -87,11 +488,17 @@
       var SIM_NAME = 'İşletim Sistemi Güvenliği (Temel) — masaüstü krizi';
       var MODULE_NAME = 'İşletim Sistemleri Güvenliği (Temel)';
 
+      var CHOICE_KEYS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
       var STEPS = [
         {
+          emoji: '🔄',
+          urgency: 'Yama penceresi · yüksek gürültü',
           title: '1 · Güncelleme penceresi',
           body:
             'Salı 10:00 — Windows “yeniden başlatma planı” uyarısı var; geliştiricilerden biri “şimdi restart olursa demo bozulur” diyor. Otomatik güncellemeler açık.',
+          term: '[patchd] pending_reboot=1 critical=2 demo_window=active',
+          dial: 'Güncelleme ertelenirse yüzey genişler',
           choices: [
             {
               text: 'Güvenlik güncellemelerini kapatıp “iş bitince” açarız.',
@@ -116,9 +523,13 @@
           ]
         },
         {
+          emoji: '👤',
+          urgency: 'Yetki talebi · stajyer',
           title: '2 · Stajyer ve yönetici hesabı',
           body:
             'Stajyer “bir kerelik kurulum için yönetici lazım” diyor. Şirkette standart kullanıcı politikası var ama IT tek kişi.',
+          term: '[auth] user=intern_std priv=low request=admin_install',
+          dial: 'Paylaşılan admin = tek noktadan çöküş',
           choices: [
             {
               text: 'Şirket yöneticisi şifresini Slack’ten yaz; iş bitsin.',
@@ -143,9 +554,13 @@
           ]
         },
         {
+          emoji: '🔗',
+          urgency: 'Protokol · envanter alarmı',
           title: '3 · Eski protokol (SMB1)',
           body:
             'Envanter taramasında bir dizüstünde SMB1 özelliği açık görünüyor. Muhasebe “eski yazıcı sürücüsü” demişti.',
+          term: '[smb] feat.smb1=ENABLED host=FIN-042',
+          dial: 'Eski SMB yüzeyi lateral hareketi besler',
           choices: [
             {
               text: 'SMB1 açık kalsın; yazıcı çalışsın yeter.',
@@ -165,9 +580,13 @@
           ]
         },
         {
+          emoji: '💾',
+          urgency: 'Fiziksel vektör · USB',
           title: '4 · Tedarikçi USB’si',
           body:
             'Donanım tedarikçisi “sürücü + tanıtım” diye etiketsiz USB bıraktı. Ofiste heyecan var.',
+          term: '[usb] vendor=unknown label=none inserted=0',
+          dial: 'Bilinmeyen medya = otorun riski',
           choices: [
             {
               text: 'Kendi dizüstüne tak; içeriği hemen bakalım.',
@@ -187,9 +606,13 @@
           ]
         },
         {
+          emoji: '🌐',
+          urgency: 'Uygulama katmanı',
           title: '5 · Tarayıcı yaması',
           body:
             'İşletim sistemi güncel; Chrome için “kritik” güvenlik güncellemesi bekliyor. Bir ekip üyesi “tarayıcı önemli değil” diyor.',
+          term: '[browser] chrome pending=critical os_patch=ok',
+          dial: 'Tarayıcı = sızdırma için ana kapı',
           choices: [
             {
               text: 'OS güncelse tarayıcıyı haftaya bırakırız.',
@@ -209,9 +632,13 @@
           ]
         },
         {
+          emoji: '🖥️',
+          urgency: 'Sınır · dış tarama izi',
           title: '6 · RDP internete açık mı?',
           body:
             'Uzaktan destek için bir zamanlar modemden 3389 yönlendirilmiş. Kimse hatırlamıyor; dış tarama loglarında deneme var.',
+          term: '[edge] nat_tcp/3389=OPEN hits_last24h=elevated',
+          dial: 'Expose RDP = otomatik saldırı hedefi',
           choices: [
             {
               text: 'Portu 13389 yap; brute-force bitsin.',
@@ -231,9 +658,13 @@
           ]
         },
         {
+          emoji: '⚙️',
+          urgency: 'Linux servis · iç ağ',
           title: '7 · Gereksiz servis',
           body:
             'Linux geliştirici makinesinde eski bir test için Telnet servisi açılmış; firewall “geliştirici makinesi” diye gevşek.',
+          term: '[unit] telnet.socket=active fw=RELAX_DEV',
+          dial: 'Telnet = düz metin + lateral risk',
           choices: [
             {
               text: 'Telnet kapat; SSH ile sınırla; gereksiz unit’leri devre dışı bırak.',
@@ -253,9 +684,13 @@
           ]
         },
         {
+          emoji: '💻',
+          urgency: 'Fiziksel kayıp · veri',
           title: '8 · Kayıp dizüstü',
           body:
             'Satış ekibinden biri toplantıda çantayı unutmuş; cihaz şifreli değil (BitLocker/LUKS kapalı).',
+          term: '[fde] bitlocker=off luks=off asset=SLS-09',
+          dial: 'Disk şifresi yok = veri çıplak',
           choices: [
             {
               text: 'Kullanıcıya kınama maili at; bir daha dikkat etsin.',
@@ -290,12 +725,69 @@
         return m;
       }
 
+      function buildStepDots() {
+        var host = document.getElementById('stepDots');
+        host.innerHTML = '';
+        for (var i = 0; i < STEPS.length; i++) {
+          var d = document.createElement('span');
+          d.className = 'os-step-dot';
+          if (i < stepIndex) d.classList.add('os-step-dot--done');
+          if (i === stepIndex) d.classList.add('os-step-dot--current');
+          d.title = 'Durum ' + (i + 1);
+          host.appendChild(d);
+        }
+      }
+
+      function updateScoreVisual() {
+        var pct = Math.min(100, Math.round((score / 80) * 100));
+        document.getElementById('scoreRing').style.setProperty('--p', String(pct));
+        document.getElementById('scoreRingLabel').textContent = String(score);
+        document.getElementById('progressFill').style.width = Math.round((stepIndex / STEPS.length) * 100) + '%';
+      }
+
+      function renderSidePanel(step) {
+        document.getElementById('dialHint').textContent = step.dial || '—';
+        var lines = [
+          '$ sebs-watch --mode edu',
+          '<span class="os-term-dim">[' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) + ']</span> tick=+' + (stepIndex + 1),
+          step.term || '',
+          '<span class="os-term-dim">// seçimini beklemeden log üretilmez</span>'
+        ];
+        var html = lines.join('\n');
+        var t = document.getElementById('sideTerminal');
+        if (t) t.innerHTML = html;
+        var tm = document.getElementById('sideTerminalMobile');
+        if (tm) tm.innerHTML = html;
+      }
+
+      function feedbackClass(scoreVal, maxS) {
+        if (maxS <= 0) return 'os-feedback--mid';
+        var r = scoreVal / maxS;
+        if (r >= 0.85) return 'os-feedback--good';
+        if (r >= 0.45) return 'os-feedback--mid';
+        return 'os-feedback--bad';
+      }
+
+      function pickClass(scoreVal, maxS) {
+        if (maxS <= 0) return 'os-choice--picked-mid';
+        var r = scoreVal / maxS;
+        if (r >= 0.85) return 'os-choice--picked-good';
+        if (r >= 0.45) return 'os-choice--picked-mid';
+        return 'os-choice--picked-bad';
+      }
+
       function renderStep() {
         var step = STEPS[stepIndex];
-        document.getElementById('stepBadge').textContent = 'Adım ' + (stepIndex + 1) + ' / ' + STEPS.length;
+        document.getElementById('stepBadge').classList.remove('hidden');
+        document.getElementById('stepBadge').textContent = 'Adım ' + (stepIndex + 1) + '/' + STEPS.length;
+        document.getElementById('stepEmoji').textContent = step.emoji || '🖥️';
+        document.getElementById('sceneUrgency').textContent = step.urgency || '';
         document.getElementById('sceneTitle').textContent = step.title;
         document.getElementById('sceneBody').textContent = step.body;
-        document.getElementById('progressFill').style.width = Math.round((stepIndex / STEPS.length) * 100) + '%';
+        buildStepDots();
+        updateScoreVisual();
+        renderSidePanel(step);
+
         document.getElementById('feedbackBox').classList.add('hidden');
         document.getElementById('btnNext').classList.add('hidden');
         awaitingNext = false;
@@ -306,19 +798,31 @@
         step.choices.forEach(function (ch, idx) {
           var btn = document.createElement('button');
           btn.type = 'button';
-          btn.className =
-            'choice-btn rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-800 hover:border-blue-300 hover:bg-blue-50/50';
-          btn.textContent = ch.text;
+          var letter = CHOICE_KEYS.charAt(idx);
+          btn.className = 'os-choice choice-btn focus-ring';
+          btn.innerHTML =
+            '<span class="os-choice-key" aria-hidden="true">' +
+            letter +
+            '</span><span class="min-w-0 flex-1">' +
+            escapeHtml(ch.text) +
+            '</span>';
           btn.addEventListener('click', function () {
             if (awaitingNext) return;
             score += ch.score;
             if (ch.score >= maxS) bestPickCount += 1;
-            document.getElementById('scoreLabel').textContent = String(score);
+            updateScoreVisual();
+
             wrap.querySelectorAll('button').forEach(function (b) {
               b.disabled = true;
             });
+            btn.classList.add('os-choice--picked', pickClass(ch.score, maxS));
+
             var fb = document.getElementById('feedbackBox');
-            fb.textContent = ch.feedback;
+            fb.className = 'os-feedback mt-5 feedback-pop ' + feedbackClass(ch.score, maxS);
+            fb.innerHTML =
+              '<span class="mb-1 flex items-center gap-2 font-bold text-white/90"><i class="fa-solid fa-message" aria-hidden="true"></i> Geri bildirim</span><p class="mt-1 text-[0.9375rem] leading-relaxed">' +
+              escapeHtml(ch.feedback) +
+              '</p>';
             fb.classList.remove('hidden');
             document.getElementById('btnNext').classList.remove('hidden');
             awaitingNext = true;
@@ -327,15 +831,38 @@
         });
       }
 
+      function escapeHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
       function finish() {
         document.getElementById('gameBlock').classList.add('hidden');
         document.getElementById('endBlock').classList.remove('hidden');
+        document.getElementById('stepBadge').classList.add('hidden');
         document.getElementById('progressFill').style.width = '100%';
-        document.getElementById('endScoreLine').textContent = 'Puanınız: ' + score + ' / 80';
+        document.getElementById('scoreRing').style.setProperty('--p', '100');
+        document.getElementById('scoreRingLabel').textContent = String(score);
+
         var pass = score >= 56;
+        var pct = Math.round((score / 80) * 100);
+        document.getElementById('endScoreLine').textContent = score + ' / 80 puan · %' + pct;
+        var grade = pass ? (score >= 72 ? 'SERTİFİKASYON: GÜÇLÜ' : 'SERTİFİKASYON: YETER') : 'SERTİFİKASYON: TEKRAR';
+        document.getElementById('endGrade').textContent = grade;
+        var icon = document.getElementById('endIconWrap');
+        if (pass) {
+          icon.innerHTML = '<i class="fa-solid fa-shield-halved text-emerald-400" aria-hidden="true"></i>';
+          icon.className =
+            'mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/40 bg-emerald-950/50 text-3xl shadow-lg shadow-emerald-900/30';
+        } else {
+          icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400" aria-hidden="true"></i>';
+          icon.className =
+            'mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-500/40 bg-amber-950/40 text-3xl shadow-lg shadow-amber-900/20';
+        }
         var blurb = pass
-          ? 'Çizgiyi geçtiniz. Modüldeki güncelleme, yetki, gereksiz servis, ağ yüzeyi ve disk şifreleme başlıklarıyla tutarlı bir dizi karar verdiniz.'
-          : 'Birkaç kritik noktada yüzeyi büyüten veya yamayı erteleyen seçimler vardı. Modüldeki “patch disiplini” ve “en az ayrıcalık” bölümlerine göz atmanız iyi olur.';
+          ? 'Çizgiyi geçtiniz. Güncelleme disiplini, yetki sınırı, protokol temizliği ve disk şifreleme birbirini tamamlıyor — modüldeki zinciri hatırlayın.'
+          : 'Birkaç kritik seçimde saldırı yüzeyini büyüttün veya yamayı zayıflattın. Modüldeki “patch + least privilege + yüzey küçültme” üçlüsüne dön.';
         document.getElementById('endBlurb').textContent = blurb;
 
         var elapsed = startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
@@ -361,7 +888,8 @@
           stepIndex = 0;
           score = 0;
           bestPickCount = 0;
-          document.getElementById('scoreLabel').textContent = '0';
+          document.getElementById('scoreRingLabel').textContent = '0';
+          document.getElementById('scoreRing').style.setProperty('--p', '0');
           if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
             window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
           }
