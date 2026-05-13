@@ -803,11 +803,13 @@
         if (show) {
           requestAnimationFrame(function () {
             b.classList.add('sim-btn-next--attention');
-            function onEnd() {
-              b.classList.remove('sim-btn-next--attention');
-              b.removeEventListener('animationend', onEnd);
-            }
-            b.addEventListener('animationend', onEnd);
+            b.addEventListener(
+              'animationend',
+              function () {
+                b.classList.remove('sim-btn-next--attention');
+              },
+              { once: true }
+            );
           });
         }
       }
@@ -1026,9 +1028,9 @@
           '<table class="sim-table">' +
           '<thead><tr><th>Kural</th><th class="min-w-[220px]">İşlem</th></tr></thead>' +
           '<tbody><tr class="bg-rose-950/30"><td class="font-jb text-rose-100">TCP 3389 → 192.168.1.50</td><td class="nat-row flex flex-wrap gap-1.5">' +
-          '<button type="button" data-s="10" class="rounded-lg bg-emerald-600 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-emerald-500">Kuralı kaldır</button>' +
-          '<button type="button" data-s="2" class="rounded-lg bg-slate-700 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-slate-600">Portu 13389 yap</button>' +
-          '<button type="button" data-s="3" class="rounded-lg bg-slate-700 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-slate-600">Parolayı güçlendir</button>' +
+          '<button type="button" data-s="2" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Portu 13389 yap</button>' +
+          '<button type="button" data-s="10" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Kuralı kaldır</button>' +
+          '<button type="button" data-s="3" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Parolayı güçlendir</button>' +
           '</td></tr></tbody></table></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -1047,8 +1049,8 @@
           '<p class="text-amber-400">Active: active (listening)</p></div>' +
           '<p class="mt-3 text-xs text-slate-500">Komutu çalıştır:</p>' +
           '<div class="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">' +
-          '<button type="button" data-s="10" class="sim-btn-ghost sim-btn-ghost--good flex-1 sm:flex-none">sudo systemctl disable --now telnet.socket</button>' +
           '<button type="button" data-s="4" class="sim-btn-ghost flex-1 sm:flex-none">ufw deny telnet</button>' +
+          '<button type="button" data-s="10" class="sim-btn-ghost flex-1 sm:flex-none">sudo systemctl disable --now telnet.socket</button>' +
           '<button type="button" data-s="0" class="sim-btn-ghost flex-1 sm:flex-none"># iç ağ güvenli, dokunma</button>' +
           '</div></div>';
         bindScoreButtons(ws, ph, function (s) {
@@ -1067,16 +1069,20 @@
         ws.innerHTML =
           '<div class="sim-mdm flex flex-1 flex-col py-1">' +
           '<p class="text-xs font-medium text-slate-500">Microsoft Intune · kurgu — SLS-09</p>' +
-          '<div class="mt-3 space-y-2.5">' +
-          '<label><input type="radio" name="mdm" value="0" /><span><strong class="text-slate-200">Uyarı e-postası</strong><span class="mt-0.5 block text-[11px] text-slate-500">Teknik kontrol yok</span></span></label>' +
-          '<label><input type="radio" name="mdm" value="3" /><span><strong class="text-slate-200">Ekran kilidi süresi</strong><span class="mt-0.5 block text-[11px] text-slate-500">FDE yok</span></span></label>' +
-          '<label><input type="radio" name="mdm" value="10" /><span><strong class="text-emerald-200">TPM + BitLocker zorunlu + wipe/reimage</strong><span class="mt-0.5 block text-[11px] text-slate-500">Önerilen politika</span></span></label>' +
-          '</div>' +
+          '<form autocomplete="off" class="mt-3 space-y-2.5" onsubmit="return false">' +
+          '<label><input type="radio" name="mdmPolicy" value="10" /><span><strong class="text-slate-200">TPM + BitLocker zorunlu + wipe/reimage</strong><span class="mt-0.5 block text-[11px] text-slate-500">Tam disk şifreleme + kayıp cihaz senaryosu</span></span></label>' +
+          '<label><input type="radio" name="mdmPolicy" value="0" /><span><strong class="text-slate-200">Uyarı e-postası</strong><span class="mt-0.5 block text-[11px] text-slate-500">Teknik kontrol yok</span></span></label>' +
+          '<label><input type="radio" name="mdmPolicy" value="3" /><span><strong class="text-slate-200">Ekran kilidi süresi</strong><span class="mt-0.5 block text-[11px] text-slate-500">FDE yok</span></span></label>' +
+          '</form>' +
           '<button type="button" id="mdmSave" class="focus-ring sim-btn-next mt-5">Politikayı kaydet</button></div>';
         document.getElementById('mdmSave').addEventListener('click', function () {
           if (locked) return;
-          var r = ws.querySelector('input[name="mdm"]:checked');
-          var s = r ? parseInt(r.value, 10) : 0;
+          var r = ws.querySelector('input[name="mdmPolicy"]:checked');
+          if (!r) {
+            pushChat({ who: 'elif', text: 'Önce bir politika seç, sonra Kaydet — boş gönderim sayılmaz.' });
+            return;
+          }
+          var s = parseInt(r.value, 10);
           var lines =
             s === 10
               ? ['FDE + yeniden kurulum — kayıp cihazda doğru çerçeve.']
@@ -1102,6 +1108,7 @@
         flushOpenChat(ph.openChat);
         ph.render(document.getElementById('workspace'), ph);
         updateProgress();
+        setTaskCue(true, ph.cue || DEFAULT_TASK_CUE);
       }
 
       function finishShift() {
@@ -1140,6 +1147,7 @@
       document.getElementById('btnStart').addEventListener('click', function () {
         document.getElementById('introBlock').classList.add('hidden');
         document.getElementById('gameBlock').classList.remove('hidden');
+        document.getElementById('gameBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
         document.getElementById('chatThread').innerHTML = '';
         phaseIndex = 0;
         score = 0;
@@ -1148,7 +1156,10 @@
         if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
           window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
         }
-        pushChat({ who: 'sys', text: 'Oturum açıldı. Tüm arayüzler kurgudur; canlı üretim verisi yoktur.' });
+        pushChat({
+          who: 'sys',
+          text: 'Oturum açıldı. Arayüzler kurgudur; senaryolar modüldeki yama disiplini, ayrıcalıklı hesap, yüzey küçültme ve tam disk şifreleme başlıklarıyla örtüşür.'
+        });
         mountPhase();
       });
 
