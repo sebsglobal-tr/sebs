@@ -158,11 +158,24 @@
       overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(71, 85, 105, 0.7) transparent;
+      -webkit-overflow-scrolling: touch;
     }
     .chat-scroll::-webkit-scrollbar { width: 5px; }
     .chat-scroll::-webkit-scrollbar-thumb {
       background: rgba(100, 116, 139, 0.55);
       border-radius: 6px;
+    }
+
+    /* Sohbet sütunu: yükseklik sabit kalır; eski mesajlar panel içinde yukarı kayar */
+    .sim-chat-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #simChatGrid .sim-chat-thread {
+      flex: 1 1 0;
+      min-height: 0;
     }
 
     .bubble {
@@ -518,9 +531,10 @@
       </div>
 
       <div
-        class="flex min-h-0 flex-col gap-4 overflow-hidden lg:grid lg:min-h-[min(72vh,640px)] lg:grid-cols-[minmax(12.5rem,14rem)_minmax(15rem,20rem)_minmax(0,1fr)] lg:items-stretch lg:gap-4 xl:gap-5"
+        id="simChatGrid"
+        class="flex min-h-0 flex-col gap-4 overflow-hidden lg:grid lg:h-[min(72vh,640px)] lg:max-h-[min(72vh,640px)] lg:grid-cols-[minmax(12.5rem,14rem)_minmax(15rem,20rem)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)] lg:items-stretch lg:gap-4 xl:gap-5"
       >
-        <div class="order-2 flex min-h-0 flex-col lg:order-1 lg:h-full lg:min-h-0 lg:overflow-hidden">
+        <div class="order-2 flex min-h-0 flex-col lg:order-1 lg:h-full lg:max-h-full lg:min-h-0 lg:overflow-hidden">
           <div class="sim-panel flex max-h-[min(42vh,320px)] flex-col p-4 sm:p-5 lg:h-full lg:max-h-none lg:min-h-0">
             <div class="flex items-center justify-between gap-2">
               <h2 class="font-sg text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Bilet kuyruğu</h2>
@@ -530,9 +544,9 @@
           </div>
         </div>
 
-        <div class="order-1 flex min-h-0 flex-col scroll-mt-20 lg:order-2 lg:h-full lg:min-h-0 lg:overflow-hidden">
+        <div class="order-1 flex min-h-0 flex-col scroll-mt-20 lg:order-2 lg:h-full lg:max-h-full lg:min-h-0 lg:overflow-hidden">
           <div
-            class="sim-panel flex h-[min(38vh,360px)] min-h-[200px] shrink-0 flex-col overflow-hidden p-0 sm:min-h-[220px] lg:h-full lg:min-h-0 lg:max-h-full"
+            class="sim-chat-shell sim-panel flex h-[min(38vh,360px)] min-h-[200px] shrink-0 flex-col overflow-hidden p-0 sm:min-h-[220px] lg:h-full lg:max-h-full lg:min-h-0"
           >
             <div class="flex shrink-0 items-center gap-2 border-b border-slate-700/60 bg-slate-950/50 px-3 py-2.5">
               <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-700 text-xs font-bold text-white shadow-md">EY</div>
@@ -541,12 +555,12 @@
                 <p class="truncate text-[11px] text-slate-500">Mentör · #it-staj-2026</p>
               </div>
             </div>
-            <div id="chatThread" class="chat-scroll min-h-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden px-3 py-3" role="log" aria-live="polite"></div>
+            <div id="chatThread" class="sim-chat-thread chat-scroll space-y-3 overflow-y-auto overflow-x-hidden px-3 py-3" role="log" aria-live="polite"></div>
           </div>
         </div>
 
-        <div class="order-3 flex min-h-0 flex-col lg:order-3 lg:h-full lg:min-h-0">
-          <div class="sim-panel flex min-h-[min(52vh,520px)] flex-1 flex-col overflow-hidden p-0 lg:min-h-0">
+        <div class="order-3 flex min-h-0 flex-col lg:order-3 lg:h-full lg:max-h-full lg:min-h-0 lg:overflow-hidden">
+          <div class="sim-panel flex min-h-[min(48vh,440px)] flex-1 flex-col overflow-hidden p-0 lg:h-full lg:max-h-full lg:min-h-0">
             <div class="sim-desk-head">
               <div class="min-w-0">
                 <p id="deskTitleLine" class="font-sg text-sm font-bold leading-snug text-white sm:text-[15px]">Çalışma masası</p>
@@ -727,6 +741,22 @@
         var d = document.createElement('div');
         d.textContent = s;
         return d.innerHTML;
+      }
+
+      function scrollChatToEnd(instant) {
+        var wrap = document.getElementById('chatThread');
+        if (!wrap) return;
+        function run() {
+          var max = wrap.scrollHeight - wrap.clientHeight;
+          if (instant) {
+            wrap.scrollTop = max > 0 ? max : 0;
+          } else {
+            wrap.scrollTo({ top: wrap.scrollHeight, left: 0, behavior: 'smooth' });
+          }
+        }
+        requestAnimationFrame(function () {
+          requestAnimationFrame(run);
+        });
       }
 
       function pushChat(msg) {

@@ -65,18 +65,16 @@
     }
 
     .ws-title-shine {
-      background: linear-gradient(105deg, #f8fafc 0%, #94a3b8 40%, #e2e8f0 50%, #94a3b8 60%, #f8fafc 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #f8fafc;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .ws-title-shine { animation: wsShine 6s linear infinite; }
-    }
-    @keyframes wsShine {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
+
+    .ws-panel-kicker {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #cbd5e1;
     }
 
     .ws-desk-chrome {
@@ -96,7 +94,7 @@
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 0.65rem;
       letter-spacing: 0.06em;
-      color: #94a3b8;
+      color: #cbd5e1;
     }
 
     .ws-nav-wrap {
@@ -119,7 +117,7 @@
       border: 1px solid transparent;
       font-size: 0.8125rem;
       font-weight: 600;
-      color: #cbd5e1;
+      color: #e8eef5;
       background: transparent;
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
       min-height: 2.75rem;
@@ -168,8 +166,11 @@
       font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: #94a3b8;
+      color: #cbd5e1;
       background: rgba(15, 23, 42, 0.9);
+    }
+    .ws-table tbody td {
+      color: #e8eef5;
     }
 
     .ws-pill-bad { background: rgba(220, 38, 38, 0.18); color: #fecaca; border: 1px solid rgba(248, 113, 113, 0.35); }
@@ -208,14 +209,15 @@
     }
     .ws-btn:active:not(:disabled) { transform: translateY(0); }
     .ws-btn:disabled { opacity: 0.45; cursor: default; }
+    /* Vurgulu eylem — “doğru cevap yeşili” yerine nötr gökyüzü tonu */
     .ws-btn-primary {
-      border-color: rgba(34, 197, 94, 0.5);
-      background: linear-gradient(180deg, rgba(22, 163, 74, 0.35) 0%, rgba(21, 128, 61, 0.25) 100%);
-      color: #ecfdf5;
+      border-color: rgba(56, 189, 248, 0.45);
+      background: linear-gradient(180deg, rgba(14, 116, 144, 0.32) 0%, rgba(30, 58, 138, 0.38) 100%);
+      color: #f0f9ff;
     }
     .ws-btn-primary:hover:not(:disabled) {
-      border-color: rgba(74, 222, 128, 0.55);
-      box-shadow: 0 8px 28px -10px rgba(34, 197, 94, 0.4);
+      border-color: rgba(125, 211, 252, 0.55);
+      box-shadow: 0 8px 28px -10px rgba(56, 189, 248, 0.35);
     }
     .ws-btn-danger {
       border-color: rgba(248, 113, 113, 0.45);
@@ -382,7 +384,6 @@
     @media (prefers-reduced-motion: reduce) {
       .ws-toast { transition: none; }
       .ws-experience { transition: none; }
-      .ws-title-shine { animation: none !important; }
     }
   </style>
 </head>
@@ -400,7 +401,7 @@
         </div>
         <div class="flex flex-col items-end">
           <span class="rounded-md border border-slate-600/80 bg-slate-900/90 px-2 py-0.5 font-jb text-[10px] font-semibold tracking-wide text-slate-300 sm:text-xs" id="progressLabel">0/7 bölüm</span>
-          <span class="mt-0.5 hidden font-jb text-[10px] text-slate-500 sm:block" id="scorePreview">Skor: —</span>
+          <span class="mt-0.5 hidden font-jb text-[10px] text-slate-400 sm:block" id="scorePreview">Skor: —</span>
         </div>
         <span class="ws-badge-premium hidden sm:inline-flex" title="Kurumsal içerik"><i class="fa-solid fa-crown text-amber-300/90" style="font-size:0.55rem" aria-hidden="true"></i> Premium</span>
       </div>
@@ -414,7 +415,7 @@
           <span class="ws-badge-premium"><i class="fa-solid fa-gem text-amber-200/90" style="font-size:0.55rem" aria-hidden="true"></i> Premium senaryo</span>
           <span class="rounded-full border border-sky-500/30 bg-sky-950/50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300">Savunma</span>
         </div>
-        <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-400/90">Görev mesajı</p>
+        <p class="ws-panel-kicker mt-5 tracking-[0.22em]">Görev mesajı</p>
         <h1 id="missionTitle" class="font-sg mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">Kurumsal iş istasyonu hazırlığı</h1>
         <p class="mt-4 text-sm leading-relaxed text-slate-400">
           Şirkete yeni katılan bir çalışan için <strong class="text-slate-100">Windows/Linux tabanlı</strong> bir iş istasyonu hazırlanacak. Bu cihazda
@@ -436,7 +437,7 @@
   <main id="wsExperience" class="ws-experience relative mx-auto max-w-6xl px-4 pb-28 pt-20 sm:pt-24">
     <div class="mb-6 flex flex-col gap-4 border-b border-white/5 pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">İşletim sistemi güvenliği (temel)</p>
+        <p class="ws-panel-kicker">İşletim sistemi güvenliği (temel)</p>
         <h2 class="font-sg mt-2 text-2xl font-bold tracking-tight sm:text-3xl"><span class="ws-title-shine">Güvenli İş İstasyonu</span></h2>
         <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">Kurumsal kontrol panelinden ayarları inceleyin, riskli yapılandırmaları düzeltin. Her bölüm tamamlandığında menüde onay belirir; tüm denetimler bitince sonuç raporu açılır.</p>
       </div>
@@ -446,7 +447,7 @@
           <i class="fa-solid fa-shield-halved text-emerald-400/90" aria-hidden="true"></i>
           <div>
             <p class="font-jb text-lg font-bold leading-none text-white" id="heroScore">—</p>
-            <p class="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">güvenlik skoru</p>
+            <p class="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">güvenlik skoru</p>
           </div>
         </div>
       </div>
@@ -461,7 +462,7 @@
       </div>
       <div class="flex flex-col gap-3 p-3 sm:p-4 lg:flex-row lg:items-stretch lg:gap-0">
         <nav class="ws-nav-wrap flex w-full shrink-0 snap-x snap-mandatory gap-1.5 overflow-x-auto pb-1 lg:w-60 lg:flex-col lg:overflow-y-auto lg:overflow-x-visible lg:border-r lg:border-slate-800/80 lg:pr-3 lg:pb-0" aria-label="Masaüstü bölgeleri">
-          <p class="mb-1 hidden pl-1 text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600 lg:block">Denetim</p>
+          <p class="ws-panel-kicker mb-1 hidden pl-1 text-[9px] tracking-[0.2em] lg:block">Denetim</p>
           <button type="button" class="ws-nav-btn ws-nav-btn--active shrink-0 snap-start" data-panel="durum"><i class="fa-solid fa-gauge-high w-5 shrink-0 text-center text-sky-400" aria-hidden="true"></i><span class="truncate">Sistem durumu</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
           <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="hesaplar"><i class="fa-solid fa-users w-5 shrink-0 text-center text-amber-400" aria-hidden="true"></i><span class="truncate">Hesaplar</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
           <button type="button" class="ws-nav-btn shrink-0 snap-start" data-panel="parola"><i class="fa-solid fa-key w-5 shrink-0 text-center text-violet-400" aria-hidden="true"></i><span class="truncate">Parola / oturum</span><i class="fa-solid fa-check check" aria-hidden="true"></i></button>
@@ -648,19 +649,19 @@
         var risks = 7 - countSectionsDone();
         if (currentPanel === 'durum') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Özet</p>' +
+            '<p class="ws-panel-kicker">Özet</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Sistem durumu</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Sol menüden her alanı sırayla veya istediğin sırayla aç. Riskli ayarları düzelttiğinde bu özet güncellenir.</p>' +
             '<div class="mt-6 grid gap-3 sm:grid-cols-3">' +
             '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold ' + (risks === 0 ? 'text-emerald-400' : 'text-amber-400') + '">' + risks + '</p>' +
-            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">açık risk alanı</p></div>' +
+            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">açık risk alanı</p></div>' +
             '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold text-sky-400">' + countSectionsDone() + '</p>' +
-            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">tamamlanan bölüm</p></div>' +
+            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">tamamlanan bölüm</p></div>' +
             '<div class="ws-kpi">' +
             '<p class="font-jb text-2xl font-bold text-slate-200">' + (startedAt ? computeScore() : '—') + '</p>' +
-            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">tahmini skor</p></div></div>' +
+            '<p class="mt-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">tahmini skor</p></div></div>' +
             '<div class="mt-6 ws-field border-sky-500/30 bg-gradient-to-br from-sky-950/50 to-slate-950/30 text-sm leading-relaxed text-sky-100/95">' +
             '<p class="m-0"><i class="fa-solid fa-lightbulb mr-2 inline-block text-sky-400" aria-hidden="true"></i>Günlük kullanım hesabı yönetici olmamalı; güncellemeler ve güvenlik duvarı profilleri tutarlı olmalı; hassas klasörlerde “Herkes” tam yetkisi bulunmamalıdır.</p></div>';
           return;
@@ -668,9 +669,9 @@
 
         if (currentPanel === 'hesaplar') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-500/90">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Kullanıcı hesabı kontrolü</h3>' +
-            '<p class="mt-2 text-sm text-slate-400">Gereksiz yönetici hesabını tespit et; misafir hesabını devre dışı bırak. <strong class="text-slate-200">personel01</strong> günlük çalışan hesabıdır — standart kullanıcı olarak doğru yapılandırılmış.</p>' +
+            '<p class="mt-2 text-sm leading-relaxed text-slate-300">Gereksiz yönetici hesabını tespit et; misafir hesabını devre dışı bırak. <strong class="text-white">personel01</strong> günlük çalışan hesabıdır — standart kullanıcı olarak doğru yapılandırılmış.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[480px] text-left">' +
             '<thead><tr><th>Kullanıcı</th><th>Yetki</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>' +
@@ -691,7 +692,7 @@
 
         if (currentPanel === 'parola') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Parola ve oturum güvenliği</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Komut ezberletmeden karar mantığı: uzaklaşıldığında oturum kilitlenmeli; zayıf parola politikası ve sınırsız yeniden kullanım risk oluşturur.</p>' +
             '<div class="mt-5 space-y-3">' +
@@ -709,7 +710,7 @@
 
         if (currentPanel === 'guncelleme') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güncelleme kontrolü</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Bilinen açıkların kapanması için yamalar ve otomatik güncelleme disiplini gerekir.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
@@ -748,7 +749,7 @@
 
         if (currentPanel === 'duvar') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güvenlik duvarı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Genel ağ profili, dosya paylaşımı ve uzak masaüstü yüzeyini gözden geçir.</p>' +
             '<div class="mt-5 space-y-3">' +
@@ -798,7 +799,7 @@
 
         if (currentPanel === 'izinler') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Dosya ve klasör izinleri</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Hassas veride “Everyone / Herkes” tam yetkisi çoğu zaman hatalıdır; yedeklerin korunması planlanmalıdır.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
@@ -842,7 +843,7 @@
 
         if (currentPanel === 'av') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-rose-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Uç nokta koruması</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Gerçek zamanlı koruma ve güncel imzalar erken tespit için temel savunmadır.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
@@ -894,7 +895,7 @@
 
         if (currentPanel === 'loglar') {
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Görev</p>' +
+            '<p class="ws-panel-kicker">Görev</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Log ve olay kaydı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Loglar tek başına kesin saldırı kanıtı değildir; olağan dışı davranışları fark etmek için iz sağlar. <strong class="text-slate-200">Yüksek riskli</strong> olayları inceleme listesine ekle.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
@@ -925,7 +926,7 @@
           var score = computeScore();
           var closed = countSectionsDone();
           host.innerHTML =
-            '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">Simülasyon sonucu</p>' +
+            '<p class="ws-panel-kicker">Simülasyon sonucu</p>' +
             '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güvenlik raporu</h3>' +
             '<div class="mt-6 rounded-2xl border border-emerald-500/35 bg-gradient-to-b from-emerald-950/35 to-slate-950/40 p-6 text-center shadow-lg shadow-emerald-900/10">' +
             '<p class="text-sm font-semibold text-emerald-200">Simülasyon Sonucu: Başarılı</p>' +
@@ -972,15 +973,15 @@
         if (kind === 'test') {
           cells +=
             state.testUserDisabled
-              ? '<span class="text-xs text-slate-500">İşlem tamam</span>'
-              : '<button type="button" class="ws-btn ws-btn-primary btn-disable-test">Devre dışı bırak</button> <button type="button" class="ws-btn btn-downgrade-test">Standarta indir</button>';
+              ? '<span class="text-xs text-slate-400">İşlem tamam</span>'
+              : '<button type="button" class="ws-btn btn-downgrade-test">Standarta indir</button> <button type="button" class="ws-btn btn-disable-test">Devre dışı bırak</button>';
         } else if (kind === 'guest') {
           cells +=
             state.guestDisabled
-              ? '<span class="text-xs text-slate-500">İşlem tamam</span>'
-              : '<button type="button" class="ws-btn ws-btn-primary btn-disable-guest">Devre dışı bırak</button>';
+              ? '<span class="text-xs text-slate-400">İşlem tamam</span>'
+              : '<button type="button" class="ws-btn btn-disable-guest">Devre dışı bırak</button>';
         } else {
-          cells += '<span class="text-xs text-slate-500">' + esc(note) + '</span>';
+          cells += '<span class="text-xs text-slate-400">' + esc(note) + '</span>';
         }
         cells += '</td>';
         return '<tr>' + cells + '</tr>';
