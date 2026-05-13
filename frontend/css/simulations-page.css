@@ -126,49 +126,11 @@
     linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
 }
 
-#simulationsCategoriesExplore .simulations-category-tabs {
+#simulationsCategoriesExplore .simulations-category-tabs:not(.sebs-accordion-stack) {
   display: grid;
   gap: 0.78rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-
-#simulationsCategoriesExplore .sebs-accordion-item {
-  border-radius: var(--sebs-radius-lg);
-  border: 1px solid var(--sebs-border-medium);
-  background: #ffffff;
-  box-shadow: var(--sebs-shadow-card);
-  overflow: hidden;
-  transition: transform 0.25s var(--sebs-ease-out), box-shadow 0.25s var(--sebs-ease-out),
-    border-color 0.25s var(--sebs-ease-out);
-}
-
-#simulationsCategoriesExplore .sebs-accordion-item:hover {
-  transform: translateY(-2px);
-  border-color: rgba(59, 130, 246, 0.45);
-  box-shadow: var(--sebs-shadow-card-hover);
-}
-
-#simulationsCategoriesExplore .sebs-accordion-item.is-open {
-  border-color: rgba(37, 99, 235, 0.48);
-  box-shadow: 0 24px 36px -24px rgba(37, 99, 235, 0.38);
-}
-
-#simulationsCategoriesExplore .sebs-acc-block {
-  background: transparent;
-}
-
-#simulationsCategoriesExplore .sebs-acc-btn {
-  padding: 0.92rem var(--sebs-space-4);
-  background: linear-gradient(180deg, #ffffff, #f8fbff);
-  border: none;
-}
-
-#simulationsCategoriesExplore .sebs-accordion-item.is-open .sebs-acc-btn {
-  background:
-    linear-gradient(135deg, var(--sebs-accent-soft), rgba(99, 102, 241, 0.14)),
-    linear-gradient(180deg, #ffffff, #f8fbff);
-}
-
 #simulationsCategoriesExplore .sebs-acc-icon {
   width: 2.05rem;
   height: 2.05rem;

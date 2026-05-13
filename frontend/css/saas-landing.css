@@ -222,6 +222,64 @@ html {
   margin-top: 0.5rem;
 }
 
+/* —— Alan seçimi (modüller / simülasyonlar): tek çerçeveli kompakt liste —— */
+.modules-category-tabs.sebs-accordion-stack,
+.simulations-category-tabs.sebs-accordion-stack {
+  margin-top: 0;
+  border-radius: 0.95rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.modules-category-tabs.sebs-accordion-stack > .sebs-accordion-item + .sebs-accordion-item,
+.simulations-category-tabs.sebs-accordion-stack > .sebs-accordion-item + .sebs-accordion-item {
+  margin-top: 0 !important;
+}
+
+.modules-category-tabs.sebs-accordion-stack .sebs-accordion-item + .sebs-accordion-item,
+.simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item + .sebs-accordion-item {
+  margin-top: 0;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item {
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.modules-category-tabs.sebs-accordion-stack .sebs-acc-block,
+.simulations-category-tabs.sebs-accordion-stack .sebs-acc-block {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.modules-category-tabs.sebs-accordion-stack .sebs-accordion-item:not(:last-child) .sebs-acc-block,
+.simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item:not(:last-child) .sebs-acc-block {
+  border-bottom: 1px solid #e2e8f0;
+}
+
 .sebs-acc-block {
   border-radius: 0.85rem;
   border: 1px solid #e2e8f0;
@@ -230,9 +288,16 @@ html {
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+.modules-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-block,
+.simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-block {
+  border-color: #e2e8f0;
+  border-bottom-color: #e2e8f0;
+  box-shadow: none;
+}
+
 .sebs-accordion-item.is-open .sebs-acc-block {
-  border-color: rgba(127, 29, 29, 0.35);
-  box-shadow: 0 16px 36px -18px rgba(92, 42, 42, 0.45);
+  border-color: rgba(37, 99, 235, 0.22);
+  box-shadow: 0 10px 28px -18px rgba(30, 64, 175, 0.22);
 }
 
 .sebs-acc-btn {
@@ -247,22 +312,33 @@ html {
   cursor: pointer;
   font: inherit;
   color: #0f172a;
-  transition: color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.modules-category-tabs.sebs-accordion-stack .sebs-acc-btn,
+.simulations-category-tabs.sebs-accordion-stack .sebs-acc-btn {
+  align-items: center;
+  padding: 0.72rem 0.85rem;
 }
 
 .sebs-accordion-item.is-open .sebs-acc-btn {
-  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
-  color: #fff;
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr) 1.75rem;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), rgba(99, 102, 241, 0.05));
+  color: #0f172a;
+  display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 1rem;
-  text-align: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  box-shadow: inset 3px 0 0 0 #2563eb;
+}
+
+.modules-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-btn,
+.simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-btn {
+  padding: 0.72rem 0.85rem 0.72rem 0.82rem;
 }
 
 .sebs-accordion-item.is-open .sebs-acc-btn .min-w-0.flex-1 {
-  text-align: center;
+  text-align: left;
 }
 
 .modules-category-tabs .sebs-acc-btn.tab-btn::before,
@@ -275,24 +351,25 @@ html {
 .modules-category-tabs .sebs-acc-btn.tab-btn.active,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn,
 .simulations-category-tabs .sebs-acc-btn.tab-btn.active {
-  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
-  color: #fff !important;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.14), rgba(99, 102, 241, 0.06)) !important;
+  color: #0f172a !important;
   border-color: transparent !important;
-  box-shadow: none !important;
+  box-shadow: inset 3px 0 0 0 #2563eb !important;
   transform: none !important;
 }
 
 .modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn:hover,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-btn.tab-btn:hover {
-  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
-  color: #fff !important;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.18), rgba(99, 102, 241, 0.08)) !important;
+  color: #0f172a !important;
   transform: none !important;
-  box-shadow: none !important;
+  box-shadow: inset 3px 0 0 0 #1d4ed8 !important;
 }
 
 .modules-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover,
 .simulations-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover {
   color: #0f172a !important;
+  background: rgba(241, 245, 249, 0.85);
   transform: none !important;
   box-shadow: none !important;
   border-color: transparent !important;
@@ -312,9 +389,8 @@ html {
 }
 
 .sebs-accordion-item.is-open .sebs-acc-icon {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  justify-self: center;
+  background: rgba(37, 99, 235, 0.14);
+  color: #1d4ed8;
 }
 
 .sebs-acc-chevron {
@@ -325,14 +401,13 @@ html {
 }
 
 .sebs-accordion-item.is-open .sebs-acc-chevron {
-  margin-left: 0;
-  justify-self: end;
+  margin-left: auto;
   transform: rotate(180deg);
-  color: rgba(255, 255, 255, 0.85);
+  color: #64748b;
 }
 
 .sebs-accordion-item.is-open [data-sebs-summary] {
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: #475569 !important;
 }
 
 .sebs-acc-panel {
@@ -347,61 +422,92 @@ html {
 .sebs-accordion-item.is-open .sebs-acc-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 0.85rem 1.25rem 1.35rem;
-  background: linear-gradient(180deg, #5c2a2a 0%, #7f1d1d 100%);
-  color: rgba(255, 255, 255, 0.92);
-  border-top-color: rgba(255, 255, 255, 0.12);
+  align-items: stretch;
+  text-align: left;
+  padding: 0.55rem 0.85rem 0.75rem 3.35rem;
+  background: #f8fafc;
+  color: #475569;
+  border-top: 1px solid #e2e8f0;
 }
 
 .sebs-accordion-item.is-open .sebs-acc-panel p {
-  max-width: 36rem;
+  max-width: none;
   margin: 0;
 }
 
 .modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+  min-height: 0;
+  padding: 0.55rem 0.85rem 0.75rem 3.35rem;
+  justify-content: space-between;
+}
+
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel {
+  flex-direction: column;
   align-items: stretch;
-  justify-items: center;
-  min-height: clamp(7.5rem, 14vw, 11rem);
-  padding-top: 1.1rem;
-  padding-bottom: 1.35rem;
-  gap: 0;
+  justify-content: flex-start;
+  gap: 0.55rem;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-panel {
+  background: #f8fafc !important;
+  border-top-style: solid !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+#simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-acc-panel p {
+  font-size: 0.875rem;
+  line-height: 1.55;
 }
 
 .modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel p,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel p {
-  grid-row: 1;
+  flex: 1 1 14rem;
   align-self: center;
-  justify-self: center;
+}
+
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel p {
+  flex: none;
+  align-self: stretch;
 }
 
 .modules-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel .sebs-acc-cta,
 .simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel .sebs-acc-cta {
-  grid-row: 2;
-  margin-top: 0.9rem;
+  margin-top: 0;
+  margin-left: auto;
+  align-self: center;
+}
+
+.simulations-category-tabs .sebs-accordion-item.is-open .sebs-acc-panel .sebs-acc-cta {
+  margin-left: 0;
+  align-self: flex-end;
 }
 
 .sebs-acc-cta {
-  margin-top: 1rem;
+  margin-top: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 999px;
-  background: #fff;
-  color: #7f1d1d;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transition: transform 0.2s ease;
+  border: 1px solid rgba(37, 99, 235, 0.28);
+  background: #ffffff;
+  color: #1d4ed8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .sebs-acc-cta:hover {
-  transform: scale(1.05);
+  transform: translateX(2px);
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
 }
 
 .sebs-visual-stage {

@@ -6,25 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <meta name="theme-color" content="#0f172a" />
-  <title>SEBS Blog | Kariyer Başarı Hikayeleri</title>
-  <meta name="description" content="Geçiş hikayeleri, stajdan tam zamanlı role, mentorlük ve eğitim sonrası yerleşme: ilham veren composite kariyer başarı hikayeleri.">
+  <title>Blog | SEBS — siber güvenlik rehberleri ve kariyer notları</title>
+  <meta name="description" content="Kısa teknik rehberler (SOC, bulut, web güvenliği, CTF) ile eğitim ve iş geçişine dair okunabilir notlar.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://sebsglobal.com/blog">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sebsglobal.com/blog">
-  <meta property="og:title" content="SEBS Blog | Kariyer Başarı Hikayeleri">
-  <meta property="og:description" content="Gerçek hayattan esinlenilmiş composite profillerle kariyer dönüm noktaları ve çıkarımlar.">
+  <meta property="og:title" content="Blog | SEBS">
+  <meta property="og:description" content="Siber güvenlik kılavuzları ve kariyer notları — modüllerle uyumlu, doğrudan yazılar.">
   <meta property="og:image" content="https://sebsglobal.com/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SEBS Blog | Kariyer Başarı Hikayeleri">
-  <meta name="twitter:description" content="Geçiş hikayeleri ve ilk işe yerleşme deneyimleri.">
+  <meta name="twitter:title" content="Blog | SEBS">
+  <meta name="twitter:description" content="Rehber yazılar ve kariyer notları.">
   <meta name="twitter:image" content="https://sebsglobal.com/og-image.jpg">
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://sebsglobal.com/blog"}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/saas-landing.css">
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5">
-  <link rel="stylesheet" href="/css/blog-premium.css?v=5">
+  <link rel="stylesheet" href="/css/blog-premium.css?v=6">
 </head>
 <body class="landing-site-body blog-premium-page font-sans text-slate-800 antialiased bg-white">
     <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -119,139 +119,134 @@
   </header>
 
 <main class="blog-shell blog-shell--listing">
-    <section class="blog-hero">
-      <div class="blog-hero-grid">
-        <div class="blog-hero-copy">
-          <p class="blog-hero-eyebrow">Kariyer hikayeleri</p>
-          <h1>Kariyer başarı hikayeleri</h1>
-          <p class="blog-hero-lead">Stajdan tam zamanlı role, İK'dan ürüne, bootcamp sonrası yerleşmeye kadar composite profiller ve net çıkarımlar — teknik alana odaklı değil, kariyer yolculuğuna odaklı içerikler.</p>
-        </div>
-        <div class="blog-hero-art" aria-hidden="true">
-          <div class="blog-hero-orb blog-hero-orb--a"></div>
-          <div class="blog-hero-orb blog-hero-orb--b"></div>
-          <div class="blog-hero-gridlines"></div>
-        </div>
+    <section class="blog-hero blog-hero--editorial" aria-labelledby="blog-index-title">
+      <div class="blog-hero-copy">
+        <p class="blog-hero-eyebrow blog-hero-eyebrow--muted">SEBS blog</p>
+        <h1 id="blog-index-title" class="blog-index-headline">Okuma listesi</h1>
+        <p class="blog-hero-lead blog-hero-lead--on-light">Burada iki tür yazı var: siber güvenliğe dair kısa rehberler ve eğitim ile iş hayatı arasındaki geçişlere dair notlar. Uzun tanıtım metni yok; modüllerde gördüğünüz kavramların yanına koyabileceğiniz referans metinler.</p>
+        <nav class="blog-index-skip" aria-label="Bölümlere git">
+          <a href="#rehberler">Teknik rehberler</a>
+          <a href="#kariyer">Kariyer notları</a>
+          <a href="/modules.html">Eğitim modülleri</a>
+        </nav>
       </div>
-      <div class="blog-kpi-grid">
-        <div class="blog-kpi-card">
-          <span class="blog-kpi-value">6</span>
-          <span class="blog-kpi-label">Başarı hikayesi</span>
-        </div>
-        <div class="blog-kpi-card">
-          <span class="blog-kpi-value">Composite</span>
-          <span class="blog-kpi-label">Görüşme ve deneyimden esinlenmiş profiller</span>
-        </div>
-        <div class="blog-kpi-card">
-          <span class="blog-kpi-value">Çıkarım odaklı</span>
-          <span class="blog-kpi-label">Uygulanabilir dersler</span>
-        </div>
-      </div>
+      <p class="blog-index-note" role="note">Kariyer bölümündeki yazılar tek bir kişinin birebir öyküsü değil; eğitim ve mentorlukta sık duyduğumuz sorulardan türetilmiş, anonimleştirilmiş örneklerdir. Yine de içlerindeki ritim ve hazırlık adımları gerçek mülakat ve işe giriş süreçlerine paralel.</p>
     </section>
 
-    <h2 class="blog-section-title"><span class="blog-section-title-text">Öne Çıkan Hikayeler</span></h2>
-    <section class="blog-card-grid" aria-label="Başarı hikayesi kartları">
-      <a href="/blog/basari-staj-veri-analisti" class="blog-card blog-card--interactive">
+    <h2 id="rehberler" class="blog-section-title blog-section-title--anchor"><span class="blog-section-title-text">Siber güvenlik — kısa rehberler</span></h2>
+    <p class="blog-section-lead">SOC, bulut, web güvenliği ve CTF gibi konularda tek seferde okunup kenara not alınabilecek yazılar.</p>
+    <ul class="blog-index-list" aria-label="Teknik rehber yazıları">
+      <li>
+        <a href="/blog/siber-guvenlige-nereden-baslanir" class="blog-index-list-hit"><span class="blog-index-list-title">Siber güvenliğe nereden başlanır?</span><span class="blog-index-list-meta">~8 dk</span></a>
+        <p class="blog-index-list-dek">Alan seçimi, ilk araçlar ve “her şeyi aynı anda” tuzağından kaçınmak.</p>
+      </li>
+      <li>
+        <a href="/blog/yeni-baslayanlar-icin-siber-guvenlik-yol-haritasi" class="blog-index-list-hit"><span class="blog-index-list-title">Yeni başlayanlar için yol haritası</span><span class="blog-index-list-meta">~10 dk</span></a>
+        <p class="blog-index-list-dek">Sıfırdan SOC veya ofansif güvenlik tarafına giderken haftalık tempoya dair iskelet plan.</p>
+      </li>
+      <li>
+        <a href="/blog/siber-guvenlik-ogrenmek-icin-temel-kavramlar" class="blog-index-list-hit"><span class="blog-index-list-title">Öğrenmek için temel kavramlar</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">CIA üçlüsü, tehdit modeli ve erişim katmanları — sonrasında her şey buna bağlanıyor.</p>
+      </li>
+      <li>
+        <a href="/blog/soc-analisti-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">SOC analisti nedir?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Günlük iş, SIEM ve playbook tarafı; role hazırlanırken nelere bakılır.</p>
+      </li>
+      <li>
+        <a href="/blog/blue-team-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Blue team nedir?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Savunma hattı, olay müdahalesi ve iz sürmeyi kimin yürüttüğü.</p>
+      </li>
+      <li>
+        <a href="/blog/red-team-ve-blue-team-farki" class="blog-index-list-hit"><span class="blog-index-list-title">Red team ve blue team farkı</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">İki tarafın hedefi; purple team ile birlikte pratik yapmanın anlamı.</p>
+      </li>
+      <li>
+        <a href="/blog/web-uygulama-guvenligi-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Web uygulama güvenliği nedir?</span><span class="blog-index-list-meta">~8 dk</span></a>
+        <p class="blog-index-list-dek">Geliştirici ve güvenlik tarafı için OWASP çerçevesinde kısa özet.</p>
+      </li>
+      <li>
+        <a href="/blog/cloud-security-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Cloud security nedir?</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">Paylaşılan sorumluluk modeli ve yapılandırma hatalarının gerçek dünyadaki yeri.</p>
+      </li>
+      <li>
+        <a href="/blog/ctf-nedir-ve-nasil-baslanir" class="blog-index-list-hit"><span class="blog-index-list-title">CTF nedir, nasıl başlanır?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Yarışma formatı ve pratik beceriyi birlikte götürmenin yolu.</p>
+      </li>
+      <li>
+        <a href="/blog/uygulamali-siber-guvenlik-egitimi-neden-onemlidir" class="blog-index-list-hit"><span class="blog-index-list-title">Uygulamalı eğitim neden önemli?</span><span class="blog-index-list-meta">~5 dk</span></a>
+        <p class="blog-index-list-dek">Teori ile laboratuvar / simülasyon arasında kopukluk kalmaması.</p>
+      </li>
+    </ul>
+
+    <h2 id="kariyer" class="blog-section-title blog-section-title--anchor"><span class="blog-section-title-text">Kariyer notları</span></h2>
+    <p class="blog-section-lead">Stajdan tam zamanlı işe, bootcamp sonrası yerleşmeye veya rol değişimine dair senaryolar — her birinde mülakat ve hazırlık ritmi ön planda.</p>
+    <section class="blog-card-grid blog-card-grid--career" aria-label="Kariyer yazıları">
+      <a href="/blog/basari-staj-veri-analisti" class="blog-card blog-card--plain">
         <span class="blog-card-tag">Staj</span>
         <h3 class="blog-card-title">Stajdan veri analisti rolüne</h3>
-        <p class="blog-card-excerpt">Stajda ölçülü bir kanıt paketi sunumu ile tam zamanlı teklife uzanan composite bir yolculuk.</p>
+        <p class="blog-card-excerpt">Stajda ürettiğin çıktıları tek bir “kanıt paketi” gibi sunmanın tam zamanlı teklifle nasıl bağlandığına dair örnek bir akış.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 4 dk</span>
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
-      <a href="/blog/basari-gecis-urun-yonetimi" class="blog-card blog-card--interactive">
-        <span class="blog-card-tag">Kariyer geçişi</span>
+      <a href="/blog/basari-gecis-urun-yonetimi" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Geçiş</span>
         <h3 class="blog-card-title">İK'dan ürün koordinasyonuna</h3>
-        <p class="blog-card-excerpt">İç paydaş deneyiminden ürün ekibine yan yetkinliklerle geçiş.</p>
+        <p class="blog-card-excerpt">İç iletişim ve paydaş yönetimini ürün ekibinin diline çevirmek; hangi projelerin CV’de işe yaradığı.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 4 dk</span>
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
-      <a href="/blog/basari-bootcamp-is-yerlesimi" class="blog-card blog-card--interactive">
-        <span class="blog-card-tag">Eğitim sonrası</span>
-        <h3 class="blog-card-title">Bootcamp sonrası 90 günde işe yerleşmek</h3>
-        <p class="blog-card-excerpt">Portfolyo, hedefli başvuru ve mülakat provası rutini.</p>
+      <a href="/blog/basari-bootcamp-is-yerlesimi" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Yerleşme</span>
+        <h3 class="blog-card-title">Bootcamp sonrası 90 gün</h3>
+        <p class="blog-card-excerpt">Portfolyo, hedefli başvuru ve haftalık mülakat provası için sıkı ama sürdürülebilir bir tempo.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 4 dk</span>
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
-      <a href="/blog/basari-yurtdisi-donus" class="blog-card blog-card--interactive">
-        <span class="blog-card-tag">Uluslararası</span>
-        <h3 class="blog-card-title">Yurtdışı stajından Türkiye'de ilk işe dönüş</h3>
-        <p class="blog-card-excerpt">Global deneyimi yerel mülakat diline çevirmek.</p>
+      <a href="/blog/basari-yurtdisi-donus" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Deneyim</span>
+        <h3 class="blog-card-title">Yurtdışı stajından Türkiye'de ilk iş</h3>
+        <p class="blog-card-excerpt">Global projeyi yerel işverenin anlayacağı dilde özetlemek; referans ve zaman çizelgesi.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 3 dk</span>
+          <span class="blog-card-meta">Yaklaşık 3 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
-      <a href="/blog/basari-mba-denge" class="blog-card blog-card--interactive">
-        <span class="blog-card-tag">Eğitim ve denge</span>
-        <h3 class="blog-card-title">MBA ve iş yaşamı dengesi</h3>
-        <p class="blog-card-excerpt">Tam zamanlı çalışma ile yoğun eğitimi sürdürülebilir kılan yapılar.</p>
+      <a href="/blog/basari-mba-denge" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Denge</span>
+        <h3 class="blog-card-title">MBA ile tam zamanlı iş</h3>
+        <p class="blog-card-excerpt">Haftayı bloklamak, okuma yükünü gerçekçi parçalara bölmek ve yöneticiye ne zaman haber vermek.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 4 dk</span>
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
-      <a href="/blog/basari-mentorluk-ilk-yil" class="blog-card blog-card--interactive">
-        <span class="blog-card-tag">Mentorlük</span>
-        <h3 class="blog-card-title">Mentorlük ve ilk yıl kariyer planı</h3>
-        <p class="blog-card-excerpt">Çeyrek bazlı hedefler ve mentor geri bildirimi ile ilk 12 ay.</p>
+      <a href="/blog/basari-mentorluk-ilk-yil" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">İlk yıl</span>
+        <h3 class="blog-card-title">Mentorlük ve on iki ay planı</h3>
+        <p class="blog-card-excerpt">Çeyrek çeyrek hedef, düzenli geri bildirim ve “ne öğrendim” günlüğünün mülakatta karşılığı.</p>
         <div class="blog-card-footer">
-          <span class="blog-card-meta">Okuma süresi: 4 dk</span>
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
           <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
         </div>
       </a>
     </section>
 
-    <h2 class="blog-section-title"><span class="blog-section-title-text">Temalar</span></h2>
-    <section class="blog-table-wrap" aria-label="Tema özeti">
-      <table class="blog-table">
-        <thead>
-          <tr>
-            <th>Tema</th>
-            <th>Odak</th>
-            <th>Kime uygun</th>
-            <th>Sonraki adım</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>İlk işe ve staj</td>
-            <td>Kanıt oluşturma, iletişim</td>
-            <td>Okuldan işe veya staja geçenler</td>
-            <td><a href="/blog/basari-staj-veri-analisti">Örnek hikayeyi oku</a></td>
-          </tr>
-          <tr>
-            <td>Rol değişimi</td>
-            <td>Yan yetkinlik ve paydaş dilini taşıma</td>
-            <td>Sektörel veya fonksiyonel geçiş düşünenler</td>
-            <td><a href="/blog/basari-gecis-urun-yonetimi">Hikayeyi oku</a></td>
-          </tr>
-          <tr>
-            <td>Eğitim sonrası yerleşme</td>
-            <td>Rutin, portfolyo, mülakat</td>
-            <td>Bootcamp veya yoğun program sonrası</td>
-            <td><a href="/blog/basari-bootcamp-is-yerlesimi">Rehber</a></td>
-          </tr>
-          <tr>
-            <td>Uzun soluklu plan</td>
-            <td>Zaman blokları, mentorlük</td>
-            <td>Eğitim-iş dengesi veya ilk yıl planı arayanlar</td>
-            <td><a href="/pricing.html">Kariyer yolları</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <aside class="blog-index-closing" aria-label="Devam">
+      <p>Yapılandırılmış eğitim ve simülasyonlarla bu yazıların arkasındaki konuları derinleştirmek için <a href="/modules.html">modül kataloğuna</a> veya <a href="/pricing.html">kariyer yolları</a> sayfasına geçebilirsiniz.</p>
+    </aside>
   </main>
 
   <footer class="blog-footer">
     <div class="blog-footer-inner">
       <div class="blog-footer-brand">
-        <strong>SEBS Blog</strong>
-        <p>Kariyer başarı hikayeleri ve gelişim için ilham veren composite içerikler.</p>
+        <strong>SEBS blog</strong>
+        <p>Teknik rehberler ve kariyer notları; modüllerle uyumlu, gereksiz süsleme olmadan.</p>
       </div>
       <nav class="blog-footer-links" aria-label="Hızlı bağlantılar">
         <a href="/modules.html">Eğitim modülleri</a>
@@ -260,7 +255,6 @@
       </nav>
     </div>
   </footer>
-  <script src="/js/blog-cards-interactive.js?v=1" defer></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <script src="/js/supabase-env.js?v=2"></script>
