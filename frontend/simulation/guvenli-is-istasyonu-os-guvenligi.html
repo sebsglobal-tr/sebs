@@ -649,7 +649,7 @@
         if (currentPanel === 'durum') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Özet</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Sistem durumu</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Sistem durumu</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Sol menüden her alanı sırayla veya istediğin sırayla aç. Riskli ayarları düzelttiğinde bu özet güncellenir.</p>' +
             '<div class="mt-6 grid gap-3 sm:grid-cols-3">' +
             '<div class="ws-kpi">' +
@@ -669,7 +669,7 @@
         if (currentPanel === 'hesaplar') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-500/90">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Kullanıcı hesabı kontrolü</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Kullanıcı hesabı kontrolü</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Gereksiz yönetici hesabını tespit et; misafir hesabını devre dışı bırak. <strong class="text-slate-200">personel01</strong> günlük çalışan hesabıdır — standart kullanıcı olarak doğru yapılandırılmış.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[480px] text-left">' +
@@ -692,7 +692,7 @@
         if (currentPanel === 'parola') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Parola ve oturum güvenliği</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Parola ve oturum güvenliği</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Komut ezberletmeden karar mantığı: uzaklaşıldığında oturum kilitlenmeli; zayıf parola politikası ve sınırsız yeniden kullanım risk oluşturur.</p>' +
             '<div class="mt-5 space-y-3">' +
             rowSelect('minPasswordLen', 'Minimum parola uzunluğu', { 6: '6 karakter (zayıf)', 8: '8 karakter', 12: '12 karakter (önerilen)', 14: '14+ karakter' }) +
@@ -710,7 +710,7 @@
         if (currentPanel === 'guncelleme') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Güncelleme kontrolü</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güncelleme kontrolü</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Bilinen açıkların kapanması için yamalar ve otomatik güncelleme disiplini gerekir.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[420px]"><thead><tr><th>Bileşen</th><th>Durum</th></tr></thead><tbody>' +
@@ -749,7 +749,7 @@
         if (currentPanel === 'duvar') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Güvenlik duvarı</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güvenlik duvarı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Genel ağ profili, dosya paylaşımı ve uzak masaüstü yüzeyini gözden geçir.</p>' +
             '<div class="mt-5 space-y-3">' +
             '<div class="ws-field flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
@@ -799,7 +799,7 @@
         if (currentPanel === 'izinler') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Dosya ve klasör izinleri</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Dosya ve klasör izinleri</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Hassas veride “Everyone / Herkes” tam yetkisi çoğu zaman hatalıdır; yedeklerin korunması planlanmalıdır.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[520px]"><thead><tr><th>Klasör</th><th>İzin özeti</th><th></th></tr></thead><tbody>' +
@@ -843,7 +843,7 @@
         if (currentPanel === 'av') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-rose-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Uç nokta koruması</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Uç nokta koruması</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Gerçek zamanlı koruma ve güncel imzalar erken tespit için temel savunmadır.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[400px]"><thead><tr><th>Özellik</th><th>Durum</th><th></th></tr></thead><tbody>' +
@@ -895,7 +895,7 @@
         if (currentPanel === 'loglar') {
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Görev</p>' +
-            '<h3 class="font-sg mt-1 text-lg font-bold text-white">Log ve olay kaydı</h3>' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Log ve olay kaydı</h3>' +
             '<p class="mt-2 text-sm text-slate-400">Loglar tek başına kesin saldırı kanıtı değildir; olağan dışı davranışları fark etmek için iz sağlar. <strong class="text-slate-200">Yüksek riskli</strong> olayları inceleme listesine ekle.</p>' +
             '<div class="mt-5 overflow-x-auto"><div class="ws-table-wrap">' +
             '<table class="ws-table w-full min-w-[560px]"><thead><tr><th>Saat</th><th>Olay</th><th>Risk</th><th>İncele</th></tr></thead><tbody>' +
@@ -926,8 +926,8 @@
           var closed = countSectionsDone();
           host.innerHTML =
             '<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">Simülasyon sonucu</p>' +
-            '<h3 class="font-sg mt-1 text-xl font-bold text-white">Güvenlik raporu</h3>' +
-            '<div class="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 p-6 text-center">' +
+            '<h3 class="font-sg mt-1 border-b border-white/10 pb-3 text-xl font-bold tracking-tight text-white">Güvenlik raporu</h3>' +
+            '<div class="mt-6 rounded-2xl border border-emerald-500/35 bg-gradient-to-b from-emerald-950/35 to-slate-950/40 p-6 text-center shadow-lg shadow-emerald-900/10">' +
             '<p class="text-sm font-semibold text-emerald-200">Simülasyon Sonucu: Başarılı</p>' +
             '<p class="font-jb mt-3 text-3xl font-bold text-white">' + score + '<span class="text-lg text-slate-400">/100</span></p>' +
             '<p class="mt-2 text-sm text-slate-400">Güvenlik skoru (tahmini)</p>' +
@@ -944,7 +944,7 @@
             '<p class="mt-2">Bu simülasyonda işletim sistemini güvenli hale getirmek için temel kontroller uygulandı: gereksiz yönetici ve misafir hesapları, parola/oturum disiplini, güncellemeler, güvenlik duvarı profilleri, dosya izinleri, uç nokta koruması ve logların yorumlanması. OS güvenliğinin yalnızca antivirüsten ibaret olmadığı; yetkiler, yamalar, erişim izinleri ve olay kayıtlarının birlikte değerlendirilmesi gerektiği vurgulandı.</p></div>' +
             '<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">' +
             '<button type="button" class="ws-btn" id="btnReplay">Yeniden başlat</button>' +
-            '<a href="/modules/isletim-sistemi-guvenligi.html" class="focus-ring inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-600 to-sky-600 px-6 py-3 text-sm font-bold text-white">Modüle dön</a></div>';
+            '<a href="/modules/isletim-sistemi-guvenligi.html" class="focus-ring inline-flex min-h-[2.75rem] min-w-[10rem] items-center justify-center rounded-xl bg-gradient-to-r from-emerald-600 to-sky-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/30 transition hover:opacity-95">Modüle dön</a></div>';
 
           document.getElementById('btnReplay').onclick = function () {
             location.reload();

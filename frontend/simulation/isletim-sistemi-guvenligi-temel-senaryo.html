@@ -43,11 +43,20 @@
 
     .os-sim-shell {
       min-height: 100vh;
+      position: relative;
       background:
         radial-gradient(ellipse 85% 55% at 15% -10%, rgba(56, 189, 248, 0.12), transparent 50%),
         radial-gradient(ellipse 60% 45% at 95% 20%, rgba(129, 140, 248, 0.1), transparent 42%),
         radial-gradient(ellipse 50% 40% at 50% 100%, rgba(212, 168, 83, 0.06), transparent 45%),
         linear-gradient(180deg, var(--sim-bg-deep) 0%, var(--sim-bg-mid) 45%, #0a0f1a 100%);
+    }
+    .os-sim-shell::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     }
 
     .font-sg { font-family: 'Space Grotesk', system-ui, sans-serif; }
@@ -56,7 +65,7 @@
     .sim-topbar {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 60;
       border-bottom: 1px solid var(--sim-border);
       background: rgba(5, 8, 16, 0.88);
       backdrop-filter: blur(16px);
@@ -191,13 +200,13 @@
       border-radius: var(--sim-radius-sm);
       background: linear-gradient(180deg, rgba(8, 12, 22, 0.55) 0%, rgba(15, 23, 42, 0.35) 100%);
       border: 1px solid rgba(51, 65, 85, 0.45);
-      min-height: min(52vh, 420px);
+      min-height: min(40vh, 320px);
       flex: 1;
       display: flex;
       flex-direction: column;
     }
     @media (min-width: 1024px) {
-      .sim-workspace-inner { min-height: min(62vh, 560px); }
+      .sim-workspace-inner { min-height: min(48vh, 480px); }
     }
 
     .sim-desk-head {
@@ -230,6 +239,27 @@
     .sim-btn-next:disabled {
       opacity: 0.45;
       cursor: not-allowed;
+    }
+    .sim-btn-next--attention {
+      animation: sim-next-pulse 1.8s ease-in-out 2;
+    }
+    @keyframes sim-next-pulse {
+      0%,
+      100% {
+        box-shadow: 0 8px 24px -8px rgba(56, 189, 248, 0.35);
+      }
+      50% {
+        box-shadow: 0 8px 32px -4px rgba(56, 189, 248, 0.55), 0 0 0 1px rgba(56, 189, 248, 0.35);
+      }
+    }
+
+    .sim-task-cue {
+      border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+      background: rgba(2, 6, 23, 0.35);
+    }
+    .sim-task-cue--active {
+      border-bottom-color: rgba(14, 165, 233, 0.22);
+      background: rgba(12, 74, 110, 0.12);
     }
 
     .sim-btn-ghost {
@@ -464,7 +494,7 @@
         </dl>
         <p class="mt-5 flex gap-3 rounded-xl border border-slate-700/50 bg-slate-950/35 p-4 text-sm text-slate-400">
           <i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-sky-400"></i>
-          <span>Sol sütunda biletler ve mentör sohbeti; sağda her görev için ayrı <strong class="text-slate-300">masaüstü arayüzü</strong> açılır. Kararını verdikten sonra <strong class="text-slate-300">Sonraki görev</strong> ile ilerlersin.</span>
+          <span><strong class="text-slate-300">Mobilde</strong> önce Elif ile sohbet üstte; <strong class="text-slate-300">geniş ekranda</strong> sohbet ortada, solda biletler, sağda görev masası. Masada seçim yaptıktan sonra sohbette geri bildirim gelir ve <strong class="text-slate-300">Sonraki görev</strong> açılır. Senaryolar modüldeki <strong class="text-slate-300">yama, yetki ve yüzey küçültme</strong> konularıyla hizalıdır.</span>
         </p>
         <button type="button" id="btnStart" class="focus-ring intro-cta mt-7 w-full sm:mt-8">
           <span class="relative z-[1] inline-flex items-center justify-center gap-2">
@@ -490,16 +520,21 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-stretch lg:gap-5">
-        <div class="flex flex-col gap-4 lg:min-h-0">
-          <div class="sim-panel p-4 sm:p-5">
+      <div
+        class="flex min-h-0 flex-col gap-4 lg:grid lg:min-h-[min(72vh,640px)] lg:grid-cols-[minmax(12.5rem,14rem)_minmax(15rem,20rem)_minmax(0,1fr)] lg:items-stretch lg:gap-4 xl:gap-5"
+      >
+        <div class="order-2 flex min-h-0 flex-col lg:order-1 lg:h-full">
+          <div class="sim-panel flex max-h-[min(42vh,320px)] flex-col p-4 sm:p-5 lg:max-h-none lg:h-full lg:min-h-0">
             <div class="flex items-center justify-between gap-2">
               <h2 class="font-sg text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Bilet kuyruğu</h2>
               <span class="font-jb text-[10px] text-slate-600">JIRA-lite</span>
             </div>
-            <ul id="ticketList" class="mt-3 max-h-[280px] space-y-2 overflow-y-auto pr-1 sm:max-h-[320px]"></ul>
+            <ul id="ticketList" class="mt-3 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 lg:max-h-none"></ul>
           </div>
-          <div class="sim-panel flex min-h-[240px] flex-1 flex-col overflow-hidden p-0 sm:min-h-[280px] lg:max-h-[min(52vh,480px)]">
+        </div>
+
+        <div class="order-1 flex min-h-0 flex-col scroll-mt-20 lg:order-2 lg:h-full">
+          <div class="sim-panel flex max-h-[min(40vh,340px)] min-h-[200px] flex-1 flex-col overflow-hidden p-0 sm:min-h-[220px] lg:max-h-none lg:h-full lg:min-h-0">
             <div class="flex items-center gap-2 border-b border-slate-700/60 bg-slate-950/50 px-3 py-2.5">
               <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-700 text-xs font-bold text-white shadow-md">EY</div>
               <div class="min-w-0">
@@ -511,19 +546,24 @@
           </div>
         </div>
 
-        <div class="sim-panel flex min-h-[min(68vh,620px)] flex-col overflow-hidden p-0 lg:min-h-0">
-          <div class="sim-desk-head">
-            <div class="min-w-0">
-              <p id="deskTitleLine" class="font-sg text-sm font-bold leading-snug text-white sm:text-[15px]">Çalışma masası</p>
-              <p id="deskSubLine" class="mt-0.5 text-[11px] leading-relaxed text-slate-500"></p>
+        <div class="order-3 flex min-h-0 flex-col lg:order-3 lg:h-full">
+          <div class="sim-panel flex min-h-[min(52vh,520px)] flex-1 flex-col overflow-hidden p-0 lg:min-h-0">
+            <div class="sim-desk-head">
+              <div class="min-w-0">
+                <p id="deskTitleLine" class="font-sg text-sm font-bold leading-snug text-white sm:text-[15px]">Çalışma masası</p>
+                <p id="deskSubLine" class="mt-0.5 text-[11px] leading-relaxed text-slate-500"></p>
+              </div>
+              <span id="activeTicketBadge" class="font-jb shrink-0 rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-slate-400"></span>
             </div>
-            <span id="activeTicketBadge" class="font-jb shrink-0 rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-slate-400"></span>
-          </div>
-          <div class="flex flex-1 flex-col p-3 sm:p-4">
-            <div id="workspace" class="sim-workspace-inner flex flex-1 flex-col overflow-auto p-3 sm:p-4"></div>
-          </div>
-          <div class="border-t border-slate-800/90 bg-slate-950/80 p-3 sm:px-4 sm:py-3">
-            <button type="button" id="btnNextTask" class="focus-ring sim-btn-next hidden">Sonraki görev</button>
+            <div id="taskCueWrap" class="sim-task-cue sim-task-cue--active px-3 py-2.5 sm:px-4">
+              <p id="taskCue" class="text-[11px] leading-relaxed text-slate-400"></p>
+            </div>
+            <div class="flex min-h-0 flex-1 flex-col p-3 sm:p-4">
+              <div id="workspace" class="sim-workspace-inner flex min-h-0 flex-1 flex-col overflow-auto p-3 sm:p-4"></div>
+            </div>
+            <div class="border-t border-slate-800/90 bg-slate-950/80 p-3 sm:px-4 sm:py-3">
+              <button type="button" id="btnNextTask" class="focus-ring sim-btn-next hidden">Sonraki görev</button>
+            </div>
           </div>
         </div>
       </div>
@@ -577,6 +617,7 @@
               text: 'Günaydın Deniz. Demo ekibi restart istemiyor; kritik yama bekliyor. Windows tarafını sen yönet — politikaya en uygun kararı ver.'
             }
           ],
+          cue: 'Windows güncelleme kartından yama ve yeniden başlatma dengesini seç (modül: yama yönetimi).',
           render: renderWinUpdate
         },
         {
@@ -588,6 +629,7 @@
             { who: 'elif', text: 'Berk kurulum için yetki istiyor. Slack’ten şifre paylaşmak yok. Nasıl yanıtlıyorsun?' },
             { who: 'berk', text: 'Selam, 5 dk admin ya da kurulumu sen uzaktan yap. Ne diyorsun?' }
           ],
+          cue: 'Teams yanıtında süreli yetki / güvenli uzak kurulum seç; düz metin şifre ve kalıcı yerel admin yok (modül: ayrıcalıklı hesap).',
           render: renderTeamsChips
         },
         {
@@ -596,6 +638,7 @@
           dial: 'Eski protokol lateral hareket için yüzey bırakır.',
           max: 10,
           openChat: [{ who: 'elif', text: 'FIN-042’de SMB1 açık. Muhasebe yazıcı diyor — satırda doğru aksiyonu seç.' }],
+          cue: 'FIN-042 satırında SMB1 yüzeyini kapatıp planı yazan aksiyonu seç (modül: saldırı yüzeyi).',
           render: renderAssetRow
         },
         {
@@ -609,6 +652,7 @@
               text: 'Tedarikçi etiketsiz USB bıraktı. USB’yi izole test ortamına taşı — sürükleyebilir veya hedefe dokunabilirsin.'
             }
           ],
+          cue: 'USB’yi üretim dizüstüsü yerine izole test PC’ye taşı (modül: donanım / removable medya).',
           render: renderUsbDesk
         },
         {
@@ -617,6 +661,7 @@
           dial: 'Tarayıcı yaması OS yamasının tamamlayıcısıdır.',
           max: 10,
           openChat: [{ who: 'elif', text: 'Chrome kritik yama bekliyor. Sarı şeritten kararını ver.' }],
+          cue: 'Chrome güvenlik şeridinde yama kapsamı ve süreyi seç (modül: uygulama yüzeyi + yama).',
           render: renderChromeBanner
         },
         {
@@ -625,6 +670,7 @@
           dial: 'RDP’yi internete açma; sınır + tünel.',
           max: 10,
           openChat: [{ who: 'elif', text: 'Dış taramada 3389 denemesi var. NAT satırında ne yapıyorsun?' }],
+          cue: 'RDP (3389) internet yüzeyini küçültecek NAT kararını seç (modül: ağ sınırı).',
           render: renderNatTable
         },
         {
@@ -633,6 +679,7 @@
           dial: 'Telnet kapat; SSH ile yetin.',
           max: 10,
           openChat: [{ who: 'elif', text: 'telnet.socket hâlâ active. Aşağıdan bir komut seç — çalıştırmış gibi düşün.' }],
+          cue: 'Telnet soketini servis düzeyinde kapatacak komutu seç; yalnızca güvenlik duvarı yetmez (modül: Linux servisleri).',
           render: renderTermPalette
         },
         {
@@ -641,9 +688,20 @@
           dial: 'Tam disk şifreleme olmadan disk okunabilir.',
           max: 10,
           openChat: [{ who: 'elif', text: 'SLS-09 kayıp; şifreleme kapalı. Portaldan politikayı seç ve kaydet.' }],
+          cue: 'Intune’da bir politika seçip Kaydet’e bas; seçim puanlanır (modül: BitLocker / TPM / kayıp cihaz).',
           render: renderMdmForm
         }
       ];
+
+      var DEFAULT_TASK_CUE =
+        'Önce mentör sohbetini oku; masada kararını ver. Sohbette geri bildirimden sonra alttaki Sonraki görev düğmesi açılır.';
+
+      function setTaskCue(active, text) {
+        var el = document.getElementById('taskCue');
+        var wrap = document.getElementById('taskCueWrap');
+        if (el) el.textContent = text || '';
+        if (wrap) wrap.classList.toggle('sim-task-cue--active', !!active);
+      }
 
       function escapeHtml(s) {
         var d = document.createElement('div');
@@ -672,11 +730,23 @@
           escapeHtml(msg.text) +
           '</p></div>';
         wrap.appendChild(row);
-        wrap.scrollTop = wrap.scrollHeight;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            wrap.scrollTop = wrap.scrollHeight;
+          });
+        });
       }
 
       function flushOpenChat(msgs) {
-        msgs.forEach(function (m) { pushChat(m); });
+        msgs.forEach(function (m) {
+          pushChat(m);
+        });
+        var wrap = document.getElementById('chatThread');
+        if (wrap) {
+          requestAnimationFrame(function () {
+            wrap.scrollTop = wrap.scrollHeight;
+          });
+        }
       }
 
       function updateClock() {
@@ -727,8 +797,19 @@
 
       function showNext(show) {
         var b = document.getElementById('btnNextTask');
+        b.classList.remove('sim-btn-next--attention');
         b.classList.toggle('hidden', !show);
         b.disabled = !show;
+        if (show) {
+          requestAnimationFrame(function () {
+            b.classList.add('sim-btn-next--attention');
+            function onEnd() {
+              b.classList.remove('sim-btn-next--attention');
+              b.removeEventListener('animationend', onEnd);
+            }
+            b.addEventListener('animationend', onEnd);
+          });
+        }
       }
 
       function completePhase(points, denizLine, elifLines, maxP) {
@@ -742,6 +823,12 @@
         });
         updateProgress();
         document.getElementById('scoreLabel').textContent = String(score);
+        setTaskCue(
+          false,
+          phaseIndex + 1 >= PHASES.length
+            ? 'Son görev tamam. Sonraki göreve basarak vardiya özetine geç.'
+            : 'Elif sohbette geri bildirdi. Alttaki Sonraki görev ile bir sonraki bilete geç.'
+        );
         showNext(true);
       }
 
@@ -757,7 +844,7 @@
           '<button type="button" data-s="0" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Güvenlik güncellemelerini kapat; iş bitince açarız.</button>' +
           '<button type="button" data-s="8" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">7 gün ertele, sonra öğle arası restart.</button>' +
           '<button type="button" data-s="3" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Demo bitene kadar restart yok; hatırlatmayı hep snooze.</button>' +
-          '<button type="button" data-s="10" class="w11-btn bg-[#0078d4] text-left font-semibold text-white shadow-md hover:bg-[#006cbe]">Bugün 30 dk bakım penceresi; demo öncesi bitsin.</button>' +
+          '<button type="button" data-s="10" class="w11-btn border border-slate-300/90 bg-white text-left text-slate-800 shadow-sm">Bugün 30 dk bakım penceresi; demo öncesi bitsin.</button>' +
           '</div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -800,8 +887,8 @@
           '<p class="mb-3 text-center text-[11px] text-slate-500">Yanıtını seç</p>' +
           '<div class="space-y-2.5">' +
           '<button type="button" data-s="0" class="sim-btn-ghost w-full">Yönetici şifresini Slack’ten yazarım.</button>' +
+          '<button type="button" data-s="10" class="sim-btn-ghost w-full">JIT/PAM veya kısa admin oturumu + log; bitince yetki düşsün.</button>' +
           '<button type="button" data-s="4" class="sim-btn-ghost w-full">Hesabı cuma akşama kadar yerel yönetici yapayım.</button>' +
-          '<button type="button" data-s="10" class="sim-btn-ghost sim-btn-ghost--good w-full">JIT/PAM veya kısa admin oturumu + log; bitince yetki düşsün.</button>' +
           '<button type="button" data-s="9" class="sim-btn-ghost w-full">Ben uzaktan kurarım; Berk standart kullanıcıda kalsın.</button>' +
           '</div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
@@ -830,9 +917,9 @@
           '<table class="sim-table">' +
           '<thead><tr><th>Host</th><th>Uyarı</th><th class="min-w-[200px]">Aksiyon</th></tr></thead>' +
           '<tbody><tr class="bg-rose-950/35"><td class="font-jb text-rose-100">FIN-042</td><td class="text-rose-200">SMB1 etkin</td><td class="nat-row flex flex-wrap gap-1.5">' +
-          '<button type="button" data-s="0" class="rounded-lg bg-slate-700 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-slate-600">Olduğu gibi</button>' +
-          '<button type="button" data-s="3" class="rounded-lg bg-slate-700 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-slate-600">Sadece FW</button>' +
-          '<button type="button" data-s="10" class="rounded-lg bg-emerald-600 px-2.5 py-1.5 text-[10px] font-bold text-white hover:bg-emerald-500">SMB1 kapat + plan</button>' +
+          '<button type="button" data-s="10" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">SMB1 kapat + plan</button>' +
+          '<button type="button" data-s="0" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Olduğu gibi</button>' +
+          '<button type="button" data-s="3" class="rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-1.5 text-[10px] font-bold text-slate-100 hover:bg-slate-700">Sadece FW</button>' +
           '</td></tr></tbody></table></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
@@ -915,9 +1002,9 @@
           '<div class="rounded-xl border border-amber-500/45 bg-gradient-to-r from-amber-950/80 to-amber-950/40 px-4 py-3 text-sm text-amber-50">' +
           '<p class="font-bold">Güvenlik güncellemesi bekleniyor</p><p class="mt-1 text-[13px] text-amber-200/90">Kritik. İşletim sistemi güncel; tarayıcı değil.</p></div>' +
           '<div class="mt-4 flex flex-wrap gap-2">' +
+          '<button type="button" data-s="10" class="sim-btn-ghost">24 saat içinde tüm cihazlar</button>' +
           '<button type="button" data-s="2" class="sim-btn-ghost">Haftaya bırak</button>' +
           '<button type="button" data-s="5" class="sim-btn-ghost">Sadece dev ekibi zorunlu</button>' +
-          '<button type="button" data-s="10" class="sim-btn-ghost sim-btn-ghost--good">24 saat içinde tüm cihazlar</button>' +
           '</div></div></div></div>';
         bindScoreButtons(ws, ph, function (s) {
           var lines =
