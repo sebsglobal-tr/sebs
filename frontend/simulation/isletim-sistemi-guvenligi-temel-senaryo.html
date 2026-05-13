@@ -759,7 +759,7 @@
         });
       }
 
-      function pushChat(msg) {
+      function pushChat(msg, opts) {
         var wrap = document.getElementById('chatThread');
         var row = document.createElement('div');
         var who = msg.who;
@@ -780,23 +780,14 @@
           escapeHtml(msg.text) +
           '</p></div>';
         wrap.appendChild(row);
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            wrap.scrollTop = wrap.scrollHeight;
-          });
-        });
+        if (!opts || !opts.noScroll) scrollChatToEnd(false);
       }
 
       function flushOpenChat(msgs) {
         msgs.forEach(function (m) {
-          pushChat(m);
+          pushChat(m, { noScroll: true });
         });
-        var wrap = document.getElementById('chatThread');
-        if (wrap) {
-          requestAnimationFrame(function () {
-            wrap.scrollTop = wrap.scrollHeight;
-          });
-        }
+        scrollChatToEnd(true);
       }
 
       function updateClock() {
