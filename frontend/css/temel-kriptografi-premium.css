@@ -298,6 +298,149 @@ body.module-page--temel-kriptografi main .kr-table-scroll {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Metin akışına gömülü paneller (ör. Temel Güvenlik Hedefleri) */
+body.module-page--temel-kriptografi main .kr-inline-breakout {
+  margin: 1.75rem 0;
+  padding: 1.15rem 1.25rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+}
+
+body.module-page--temel-kriptografi main .kr-inline-breakout__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.35rem;
+}
+
+body.module-page--temel-kriptografi main .kr-inline-breakout__head i {
+  color: #7f1d1d;
+}
+
+body.module-page--temel-kriptografi main .kr-inline-breakout__hint {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+body.module-page--temel-kriptografi main .kr-cia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+  gap: 0.75rem;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal[open] {
+  border-color: rgba(127, 29, 29, 0.35);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #0f172a;
+  user-select: none;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal > summary::-webkit-details-marker {
+  display: none;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal > summary::after {
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal > summary:hover {
+  background: rgba(127, 29, 29, 0.04);
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal__icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(30, 64, 175, 0.08);
+  color: #1e40af;
+  flex-shrink: 0;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal__title {
+  flex: 1;
+  text-align: left;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal__body {
+  padding: 0 0.85rem 0.9rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #334155;
+  border-top: 1px solid #f1f5f9;
+}
+
+body.module-page--temel-kriptografi main .kr-authz-embed-wrap {
+  margin: 1.75rem 0;
+  padding: 1rem 1.15rem 1.15rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #fafafa;
+}
+
+body.module-page--temel-kriptografi main .kr-authz-embed__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+body.module-page--temel-kriptografi main .kr-authz-embed__title i {
+  color: #7f1d1d;
+}
+
+body.module-page--temel-kriptografi main .kr-authz-embed-wrap .kr-table-premium {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+body.module-page--temel-kriptografi main .kr-exp-goal > summary:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
 @media print {
   body.module-page--temel-kriptografi main .kr-table-cards {
     display: none;

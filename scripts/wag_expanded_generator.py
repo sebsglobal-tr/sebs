@@ -316,12 +316,34 @@ M0 = f"""<h1>MODÜL 0 — Etik, Yetki ve Güvenli Çalışma Çerçevesi</h1>
 )
 
 # --- MOD 1 ---
-M1 = f"""<h1>MODÜL 1 — Web Uygulama Mimarisi ve Güvenlik Bakış Açısı</h1>
+M1 = f"""<h1>MODÜL 1 — Giriş, mimari ve saldırı yüzeyi <span class="curriculum-map">(müfredat 1 · 5)</span></h1>
 {img_block("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=90", "Sunucu odası ve ağ", "İstek yolu: tarayıcı → uç noktalar → iş mantığı → veri ve yan hizmetler.")}
+<h2>Web uygulama güvenliğine giriş: kavramları ve katmanları ayırmak</h2>
+<p>Günlük dilde “internet”, “web” ve “tarayıcı” sıkça birbirinin yerine kullanılır. Güvenlik analizinde bu ayrım kritiktir; çünkü her biri farklı saldırı yüzeyi ve farklı kontrol beklentisi taşır. <strong>İnternet</strong>, IP tabanlı protokoller üzerinden birbirine bağlı cihaz ve ağların oluşturduğu küresel iletişim altyapısıdır. <strong>Web</strong>, bu altyapının üzerinde çoğunlukla HTTP/HTTPS ile çalışan içerik ve uygulama dağıtım modelidir. <strong>Tarayıcı</strong>, HTML, CSS ve JavaScript’i yürüten; cookie, depolama ve güvenlik politikalarını uygulayan istemci yazılımıdır. <strong>Sunucu</strong>, gelen HTTP isteklerini karşılayan katmandır. <strong>Uygulama</strong> ise iş mantığının çalıştığı, veri tabanı ve servislerle konuşan, kararları üreten bileşendir. Bir zafiyet ağ katmanında değil, tarayıcı yorumlamasında veya uygulama mantığında olabilir; kök nedeni doğru katmanda aramak hem doğru savunmayı hem de geliştirici ekiple net iletişimi sağlar.</p>
+<p><strong>Web sitesi</strong> ile <strong>web uygulaması</strong> da aynı kefeye konmamalıdır: klasik site çoğunlukla statik veya az etkileşimli içerik sunar; <strong>web uygulaması</strong> ise oturum, işlem, durum değişimi ve veri tabanıyla konuşan dinamik sistemdir. Risk yalnızca “ölçek” değil <em>tür</em> olarak değişir: statik sitede yüzey çoğunlukla barındırma, içerik bütünlüğü ve üçüncü taraf script’lerle sınırlı kalırken; uygulamada her form alanı, parametre, endpoint, dosya yükleme ve arama kutusu ayrı bir giriş noktasıdır. Kimlik doğrulama, yetkilendirme, sorgu üretimi, dosya işleme ve iş kurallarının her biri ayrı hata kaynağı olabilir. “Sadece bilgi gösteriyoruz” iddiası; iletişim formu, yorum alanı, arama, admin paneli veya üçüncü taraf embed varsa yeniden değerlendirilmelidir.</p>
+<p><strong>API</strong>, uygulamaların veya istemcinin sunucuyla yapılandırılmış biçimde konuştuğu arayüzdür; <strong>servis</strong> belirli bir işi yapan ve genelde API üzerinden erişilen bileşendir. Modern mimaride arayüz arka planda REST/GraphQL çağrıları yapar; çağrılar iç servislere veya dış sağlayıcılara yayılır. Bu zincirin her halkası ayrı güven sınırıdır: ekranda görünmeyen bir iç endpoint bazen daha az test edilmiş veya gevşek yetkili kalabilir. Analist yalnızca görünen düğmelere değil, ağ sekmesindeki istek–yanıt akışlarına da bakar.</p>
+<p>Bir isteğin yolculuğu günlük bakışta “kullanıcı butona bastı” ile biter; güvenlik bakışında ise en az şu roller birlikte düşünülür: <strong>kullanıcı</strong> (niyet iyi veya kötü olabilir), <strong>istemci</strong> (saldırgan için tamamen kontrol edilebilir alan), <strong>sunucu</strong> (doğrulama ve yetki kararının çoğu burada verilmelidir), <strong>veri tabanı</strong> (kalıcı durum ve çoğu saldırının hedefi), <strong>üçüncü taraf servisler</strong> (ödeme, e-posta, kimlik, analitik) yeni çıkış ve güven sınırı taşır. <strong>Gizlilik, bütünlük ve erişilebilirlik</strong> (CIA) web bağlamında somutlaşır: hangi yanıt hangi veriyi sızdırır, hangi işlem başka bir kullanıcının verisini değiştirir, hangi hata veya yoğunluk hizmeti keser? “<strong>Kullanıcıdan gelen her veri güvenilmezdir</strong>” ilkesi, istemci tarafı doğrulamanın UX için kullanılabileceğini ama <em>güvenlik kararının sunucuda tekrarlanması gerektiğini</em> hatırlatır.</p>
+<p>Aynı teknik olaya <strong>saldırgan</strong>, <strong>meşru kullanıcı</strong>, <strong>geliştirici</strong> ve <strong>güvenlik analisti</strong> farklı açılardan bakar: saldırgan zayıf kontrol ve tutarsızlık arar; kullanıcı güvenilirlik ve hız bekler; geliştirici iş teslimi ve regresyon riskini tartar; analist kanıt, kapsam ve öncelik üretir. Bu modül ve devamı, bu bakışları birbirine bağlayarak “neden bu kadar çok yerden temas var?” sorusuna mimari ve insan davranışı zemininde yanıt verir.</p>
+{table(["Terim", "Kısa anlam (web güvenliği)"], [
+    ["Saldırı yüzeyi", "Saldırganın dokunabildiği uçlar, parametreler ve yan entegrasyonlar"],
+    ["Güven sınırı (trust boundary)", "Güvenilen ve güvenilmeyen bileşenler arasındaki çizgi"],
+    ["Zafiyet", "Sömürülebilir güvenlik açığı; genelde tasarım/kod veya eksik kontrol"],
+    ["Yanlış yapılandırma", "Güvenli varsayılanların gevşetilmesi; kod hatası olmadan risk"],
+    ["Tasarım / iş mantığı hatası", "Kod “çalışıyor” olsa bile güvenlik özelliği eksik veya yanlış"],
+])}
+{info_box("Yanlış bilinen", [
+    "“Sitemiz sadece tanıtım, güvenlik yok.” — Form, arama, yorum, script veya admin varsa yüzey genişler; değerlendirme sadeleştirilmez.",
+    "“Tek katman savunma yeter.” — WAF, TLS veya CDN tek başına uygulama mantığı veya yetki hatasını çözmez; katmanlar birbirini tamamlar.",
+])}
+<p><strong>Yetkili güvenlik testi</strong> ile izinsiz müdahale arasındaki çizgi; yazılı kapsam, ortam ayrımı (test/staging/production), veri minimizasyonu ve zarar vermeme ilkesiyle çizilir. Bu çerçeve MODÜL 0’da ayrıntılandırılır; burada zihinsel olarak “her teknik adım önce yetki ve kapsam” sorusuna bağlanır.</p>
 <p>Web uygulamasını yalnızca “ön yüz–arka yüz–veritabanı” üçgeni olarak okumak, saldırganın gördüğü gerçek yüzeyi gizler. Saldırgan (eğitim perspektifi) çoğu zaman <strong>uç noktaları</strong> (login, şifre sıfırlama, dosya yükleme, arama, dışa aktarma, webhook), <strong>kimlik/oturum mekanizmasını</strong>, <strong>API sözleşmesini</strong> ve <strong>sunucunun güvendiği yan hizmetleri</strong> (ödeme, e-posta, depolama, mesaj kuyruğu) birlikte değerlendirir. Savunmacı mimari okuma; bu bileşenlerin her birinde “kim doğruluyor, kim yetkilendiriyor, nerede loglanıyor?” sorularını zorunlu kılar.</p>
 <p>Dağıtık mimaride aynı “ürün” birden fazla çalışma biriminden oluşur: <strong>mikro servisler</strong>, <strong>BFF (backend for frontend)</strong>, ayrı <strong>kimlik sağlayıcı</strong> katmanı, <strong>mesaj kuyruğu</strong> ve <strong>zamanlanmış işler</strong>. Her parça farklı dil çerçevesi ve farklı log şeması taşıyabilir; bu da SOC için “tek zaman çizelgesi” kurmayı zorlaştırır. Mimari okumanın operasyonel karşılığı, olay anında hangi ekibin hangi panoyu açacağını ve hangi <code>trace_id</code> alanının uçtan uca taşındığını önceden bilmektir.</p>
 <p>Dönüşüm (legacy + yeni stack) dönemlerinde saldırgan sıkça ana ürün kadar gözden geçirilmemiş <strong>yedek yönetim arayüzleri</strong>, eski API sürümleri veya “sadece iç ağa” bırakılmış ama DNS’ten erişilebilen uçları hedefler. Bu yüzden envanter yalnızca ana alan adıyla bitmemeli; DNS bölgesindeki tüm kayıtlar, CDN kökenleri ve üçüncü taraf <strong>embed</strong> (ödeme çerçevesi, destek widget’ı, analitik) aynı tehdit modeli dosyasında yer almalıdır.</p>
 {lo("Modül hedefleri", [
+    "Web, internet, tarayıcı, sunucu ve uygulama kavramlarını saldırı yüzeyi açısından birbirinden ayırabilirim.",
+    "Web sitesi ile web uygulamasını risk türü üzerinden ayırt edebilirim.",
+    "Web uygulama güvenliğini ağ, yazılım ve veri güvenliği kapsamlarıyla ilişkilendirip doğru çerçevede konumlandırabilirim.",
+    "CIA ilkelerini somut uç ve işlem davranışlarıyla eşleştirebilirim.",
     "İstemci, API ağ geçidi, uygulama sunucusu, veri katmanı ve entegrasyonları tek şemada konumlandırabilirim.",
     "Trust boundary noktalarını ve saldırganın güven sınırını aşma stratejilerini (eğitim düzeyinde) tarif edebilirim.",
     "Saldırı yüzeyini işlev + veri + kimlik üçlüsüyle envanterleyebilirim.",
@@ -396,8 +418,80 @@ M1 = f"""<h1>MODÜL 1 — Web Uygulama Mimarisi ve Güvenlik Bakış Açısı</h
     ]
 )
 
+# --- MOD 1B (müfredat 2) ---
+M1B = f"""<h1>MODÜL 1B — Web teknolojileri temeli <span class="curriculum-map">(müfredat 2)</span></h1>
+{img_block("https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=90", "Küre ve ağ", "DNS, TLS ve istek yolu: analistin ‘haritayı’ çizdiği katmanlar.")}
+<p>Bu bölüm, güvenlik analizi yapmadan önce <strong>teknik zemini</strong> aynı dilde konuşmak içindir: alan adı çözümlemesi, TLS oturumu, ters vekil ve uygulama sunucusu, statik varlıklar ve çalışma zamanı (runtime) davranışı. Amaç RFC ezberi değil; bir bulgu raporunda “sorun DNS katmanında mı, edge’de mi, uygulama mantığında mı?” ayrımını savunulabilir yazabilmektir.</p>
+<p><strong>DNS</strong> kayıtları (A/AAAA, CNAME, MX, TXT) saldırı yüzeyini genişletir veya daraltır: unutulmuş alt alan adı, yanlış delegasyon veya dışarı açılmış “geçici” kayıt, keşif ve takeover sınıfı riskleri doğurur. <strong>TLS</strong> el sıkışması sertifika zinciri ve sunucu adı (SNI) ile bağlanır; analist sertifika geçerliliği, yenileme süreci ve ara katmanda sonlandırma (termination) noktasını bilir.</p>
+<p>Tarayıcı tarafında <strong>document</strong>, <strong>same-origin</strong>, <strong>JavaScript çalışma zamanı</strong> ve <strong>depolama</strong> (cookie, localStorage, IndexedDB) ayrı ayrı güvenlik politikalarına tabidir. Sunucu tarafında ise <strong>reverse proxy</strong>, <strong>uygulama sunucusu</strong> ve <strong>iş süreçleri</strong> (kuyruk, zamanlanmış iş) aynı isteğin farklı aşamalarında farklı log üretir.</p>
+{lo("Modül hedefleri", [
+    "DNS ve TLS’yi saldırı yüzeyi ve kanıt bağlamında tarif edebilirim.",
+    "Edge / origin ayrımını güvenlik analizinde kullanabilirim.",
+    "Tarayıcı depolama ve same-origin kavramlarını tehdit modeline bağlayabilirim.",
+])}
+{key_concepts_grid([
+    ("fa-globe", "DNS = yönlendirme", "Kayıtlar yanlış veya unutulmuşsa trafik beklenmeyen uca gider; envanter DNS bölgesiyle başlar."),
+    ("fa-lock", "TLS = taşıma", "Gizlilik ve bütünlük sağlar; uygulama yetkisinin yerine geçmez."),
+    ("fa-server", "Origin", "Şema + host + port birlikte düşünülür; alt alan ayrı köken olabilir."),
+    ("fa-network-wired", "Proxy zinciri", "İstemci → CDN → WAF → LB → uygulama: her atlama farklı başlık ve log üretir."),
+])}
+{table(["Kavram", "Analist için pratik soru"], [
+    ["CNAME/A", "Bu kayıt gerçekten hangi IP’ye ve hangi ekibe ait?"],
+    ["SNI / sertifika", "İstemci doğru sanal host ile mi konuşuyor?"],
+    ["Cache", "Bu yanıt edge’de mi yoksa origin’de mi üretildi?"],
+    ["WebSocket / SSE", "Kalıcı kanalda kimlik ve yetki nasıl taşınıyor?"],
+])}
+{info_box("Mini örnek (kurgusal)", [
+    "app.example.com bir CDN arkasında; api.example.com doğrudan kaynak sunucuya gider. İkinci uç WAF görmeyebilir — aynı kurum içinde bile farklı tehdit modeli yazılır.",
+])}
+""" + quiz(
+    [
+        {"q": "Aynı şirkette app.* ve api.* farklı köken sayılır mı?", "choices": ["Hayır, her zaman aynı", "Evet; şema/host/port farkı same-origin’i değiştirir", "Sadece mobilde", "Sadece GET", "Sadece DNS yoksa"], "correct": "B", "reason": "Köken ayrımı tarayıcı güvenlik modelinin temelidir."},
+        {"q": "TLS hangi riski tek başına çözmez?", "choices": ["Dinleme", "Uygulama düzeyi yetki hatası", "MITM (doğru kurulumda)", "Sertifika doğrulama ihtiyacı", "Taşıma bütünlüğü"], "correct": "B", "reason": "Kimlik ve yetki uygulama mantığında kalır."},
+        {"q": "DNS envanterinin güvenlikteki birincil faydası nedir?", "choices": ["Tema seçmek", "Unutulmuş veya yanlış yönlendirilmiş yüzeyleri görmek", "CPU soğutmak", "JPEG", "Font"], "correct": "B", "reason": "Görünmeyen uçlar sık test edilmez."},
+        {"q": "Reverse proxy’nin tipik rolü nedir?", "choices": ["Veritabanı", "TLS sonlandırma, yönlendirme ve rate limit gibi edge politikaları", "Sadece CSS", "Sadece DNS", "Sadece SMTP"], "correct": "B", "reason": "İstemci ile uygulama arasında politika uygular."},
+    ]
+)
+
+# --- MOD 1C (müfredat 3) ---
+M1C = f"""<h1>MODÜL 1C — OWASP, standartlar ve risk dili <span class="curriculum-map">(müfredat 3)</span></h1>
+{img_block("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=900&q=90", "Güvenlik dokümantasyonu", "OWASP Top 10 bir harita; ASVS ve CWE ise kontrol listesi ve sınıflandırma dili.")}
+<p><strong>OWASP Top 10</strong> en sık görülen risk kategorilerinin özet haritasıdır; “tek başına uyumluluk listesi” değildir. Kurumsal projelerde sıkça <strong>ASVS</strong> (uygulama doğrulama standardı) ile birlikte kullanılır: ASVS seviye 1/2/3, kontrollerin olgunluk ve kapsamını müzakere etmek için dil sağlar.</p>
+<p><strong>CVE</strong> belirli bir ürün ve sürümdeki kamuya açık kimliklendirilmiş hatadır; <strong>CWE</strong> ise zafiyet <em>sınıfını</em> tarif eder. <strong>CVSS</strong> şiddet skorudur; önceliklendirme için faydalıdır fakat iş etkisi, veri hassasiyeti ve exposure ile birlikte okunmalıdır. Raporlarda “CVSS yüksek” tek başına yönetici kararı verdirmez.</p>
+<p><strong>Bulgu</strong> (finding) tekrar üretilebilir, etkisi anlaşılmış ve kapsam içi kanıta dayanır; <strong>gözlem</strong> (observation) henüz doğrulanmamış ilginç sinyaldir. <strong>Kök neden</strong> (root cause) düzeltmenin nereye yapılacağını belirler. Bu ayrımlar SOC ↔ AppSec ↔ geliştirici arasında yanlış beklentiyi azaltır.</p>
+{lo("Modül hedefleri", [
+    "OWASP Top 10 ve ASVS’yi birbirinden ayırt edip doğru kullanım alanı söyleyebilirim.",
+    "CVE, CWE ve CVSS’yi rapor ve öncelik dilinde konumlandırabilirim.",
+    "Bulgu / gözlem / kök neden ayrımını raporda uygulayabilirim.",
+])}
+{table(["Kimlik", "Ne işe yarar?", "Dikkat"], [
+    ["OWASP Top 10", "Sık risk sınıfları haritası", "Ürüne özel tehdit modelinin yerine geçmez"],
+    ["ASVS", "Kontrol seviyeleri", "Seviye seçimi risk iştahıyla hizalanmalı"],
+    ["CWE-XX", "Zafiyet sınıfı", "Aynı CWE birden çok kök nedene inebilir"],
+    ["CVE-YYYY-NNNN", "Ürün/sürüm hatası", "Sürüm envanteri olmadan anlamı eksik kalır"],
+    ["CVSS v3.x", "Şiddet skoru", "Bağlam olmadan öncelik tek başına olmamalı"],
+])}
+{key_concepts_grid([
+    ("fa-map", "Tehdit modeli çıktısı", "Varlık, güven sınırı, kontrol önceliği ve varsayılan saldırgan: dokümantasyonun kalbidir."),
+    ("fa-bug", "False positive", "Araç veya kural gürültüsü; bağlam ve tekrar üretilebilirlik ile süzülür."),
+    ("fa-eye-slash", "False negative", "Gerçek tehdit görünmedi; görünürlük ve test kapsamı sorgulanır."),
+    ("fa-scale-balanced", "Risk iletişimi", "Teknik etki + iş etkisi + exposure; CVSS tek başına yetmez."),
+])}
+{info_box("Bug bounty / açık bildirimi (kısa)", [
+    "Program kapsamı (scope) ve güvenli liman (safe harbor) metnini okumadan test yoktur.",
+    "Duplicate / informative / valid sonuçları program politikasına göre değişir; duygusal değil yazılı kurala bakın.",
+])}
+""" + quiz(
+    [
+        {"q": "ASVS ile OWASP Top 10 arasındaki tipik fark nedir?", "choices": ["Aynı belgedir", "ASVS doğrulanabilir kontrol seviyeleri sunar; Top 10 özet risk haritasıdır", "Top 10 yalnızca mobil içindir", "ASVS yalnızca ağ içindir", "İkisi de CVE üretir"], "correct": "B", "reason": "Biri derin kontrol listesi, diğeri özet sınıflandırma."},
+        {"q": "CVE hangi bilgiyi taşır?", "choices": ["Sadece CWE sınıfı", "Belirli ürün/sürümdeki kamuya açık kimlikli zafiyet", "Sadece CVSS", "Sadece log satırı", "Sadece tema"], "correct": "B", "reason": "Sürüm ve ürün bağlantılıdır."},
+        {"q": "CVSS yüksek ama exposure düşükse öncelik nasıl tartışılır?", "choices": ["Her zaman P0", "İş etkisi ve exposure ile birlikte müzakere edilir", "Yok sayılır", "Sadece DNS ile", "Sadece favicon ile"], "correct": "B", "reason": "Bağlamsal risk skorlaması gerekir."},
+        {"q": "Henüz doğrulanmamış ilginç sinyal raporda ne olarak adlandırılır?", "choices": ["Kapatıldı", "Gözlem (observation)", "CVE", "CWE", "Retest"], "correct": "B", "reason": "Doğrulanınca bulguya dönüşebilir."},
+    ]
+)
+
 # --- MOD 2 ---
-M2 = f"""<h1>MODÜL 2 — HTTP, Cookie, Session ve Tarayıcı Güvenlik Modeli</h1>
+M2 = f"""<h1>MODÜL 2 — HTTP, HTTPS ve tarayıcı güvenlik modeli <span class="curriculum-map">(müfredat 4)</span></h1>
 {img_block("https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=900&q=90", "Ağ ve güvenlik", "HTTP katmanı: saldırganın en çok oynadığı oyun tahtası; savunmacının en çok log ürettiği katman.")}
 <p>HTTP’yi “sadece taşıma” sanmak yanılgıdır. Oturum çerezleri, yönlendirmeler, önbellek başlıkları, içerik müzakere satırları ve CORS yanıtları birlikte <strong>güvenlik politikası</strong> oluşturur. Saldırgan (eğitim düzeyinde) çoğu zaman oturumu çalmaya, tarayıcıyı kandırarak işlem yaptırmaya veya sunucuyu yanlış yorumlamaya zorlayan istek dizileri kurar; savunmacı ise bu dizileri logda <strong>özgün imza</strong> olarak arar.</p>
 <p>HTTP/2 ve HTTP/3 ile çoklu istek tek bağlantıda birleşir; bu da “hangi yanıt hangi isteğe ait?” sorusunu ara katmanlarda karmaşıklaştırır. Yönlendirme zincirleri (301/302) ve <strong>Host</strong> başlığı tutarsızlıkları bazen önbellek zehirlenmesi veya yanlış sanal host bağlama gibi ikinci derece risklere yol açar. Bu modülde amaç protokol RFC’si ezberletmek değil; her başlığın ve durum kodunun <em>güvenlik kararı</em> veya <em>kanıt</em> olarak nasıl okunacağını oturtmaktır.</p>
@@ -459,7 +553,7 @@ M2 = f"""<h1>MODÜL 2 — HTTP, Cookie, Session ve Tarayıcı Güvenlik Modeli</
 )
 
 # --- MOD 3 ---
-M3 = f"""<h1>MODÜL 3 — Kimlik Doğrulama ve Oturum Güvenliği</h1>
+M3 = f"""<h1>MODÜL 3 — Kimlik doğrulama; oturum ve CSRF <span class="curriculum-map">(müfredat 6 · 7)</span></h1>
 {img_block("https://images.unsplash.com/photo-1633265486064-086b219458ec?w=900&q=90", "Kimlik doğrulama", "Oturum ve kimlik: saldırganın en çok parola denediği; savunmacının en çok log topladığı alan.")}
 <p><strong>Kimlik doğrulama</strong> “kimsin?” sorusudur; <strong>yetkilendirme</strong> “ne yapabilirsin?” sorusudur. Oturum güvenliği zayıfsa kimlik doğrulama gücü (uzun parola bile) boşa gider çünkü saldırgan artık sizin yerinize oturumu taşır. Bu modülde saldırganın tipik <strong>hedefleri</strong> ve savunmacının <strong>gözlediği sinyaller</strong> ayrıntılı anlatılır: kimlik bilgisi doldurma (credential stuffing), parola püskürtme (password spraying), oturum çalma, MFA yorgunluğu ve kurtarma akışı suistimali gibi başlıklar; savunma karşılıkları ve kanıt üretimiyle birlikte ele alınır. İçeriği yalnızca yetkili ve yasal çerçevede kullanın; kötüye kullanımdan içerik sağlayıcıları sorumlu tutulamaz.</p>
 <p>Parola tabanlı oturumlar giderek <strong>passkey / WebAuthn</strong> ve kurumsal SSO ile desteklenmektedir; fakat geçiş dönemlerinde aynı hesap için birden fazla kimlik kanalı (eski parola + yeni cihaz anahtarı) birlikte yaşar. Bu “hibrit” dönemde saldırgan zayıf kanalı seçer: örneğin passkey aktifken bile açık bırakılmış “yedek OTP SMS” veya eski API anahtarı ile giriş. Savunma tarafında her kanal için ayrı risk skoru ve kapatma prosedürü yazılır.</p>
