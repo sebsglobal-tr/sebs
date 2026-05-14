@@ -2348,7 +2348,8 @@
             const token = localStorage.getItem('authToken');
             if (token && window.ModuleProgressTracker?.initializeModule) {
                 try {
-                    await window.ModuleProgressTracker.initializeModule(moduleName, 60);
+                    const totalLessons = moduleName === 'Orta Seviye Network Güvenliği' ? 7 : 60;
+                    await window.ModuleProgressTracker.initializeModule(moduleName, totalLessons);
                 } catch (err) { console.warn('Modül başlatma:', err); }
             }
             // Siber Güvenliğe Giriş için localStorage kaydı oluştur (Dashboard fallback için)
