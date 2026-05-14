@@ -21,28 +21,28 @@ TRANSCRIPT = (
 OUT = ROOT / "frontend" / "modules" / "parts" / "web-uygulama-guvenligi-mufredat-tam.html"
 NAV_JSON = ROOT / "frontend" / "modules" / "parts" / "wag-nav-titles.json"
 
-# Müfredat modül numarası → derste kullanılan bölüm id (birden fazla modül aynı derse bağlanabilir)
+# Müfredat modül numarası → tek ders sayfası id (wag-l01…wag-l20); build ile DOM sırası uyumlu
 SECTION_BY_MOD: dict[int, str] = {
-    1: "wag-m1-mimari",
-    2: "wag-m1b-teknoloji",
-    3: "wag-m1c-owasp",
-    4: "wag-m2-http",
-    5: "wag-m1-mimari",
-    6: "wag-m3-auth",
-    7: "wag-m3-auth",
-    8: "wag-m3b-oauth-jwt",
-    9: "wag-m4-authz",
-    10: "wag-m5-veri",
-    11: "wag-m6-zafiyet",
-    12: "wag-m6-zafiyet",
-    13: "wag-m6-zafiyet",
-    14: "wag-m6b-is-mantigi",
-    15: "wag-m7-api",
-    16: "wag-m5b-veri-koruma",
-    17: "wag-m8-headers",
-    18: "wag-m10-sdlc",
-    19: "wag-m9-log",
-    20: "wag-m11-rapor",
+    1: "wag-l01",
+    2: "wag-l02",
+    3: "wag-l03",
+    4: "wag-l04",
+    5: "wag-l05",
+    6: "wag-l06",
+    7: "wag-l07",
+    8: "wag-l08",
+    9: "wag-l09",
+    10: "wag-l10",
+    11: "wag-l11",
+    12: "wag-l12",
+    13: "wag-l13",
+    14: "wag-l14",
+    15: "wag-l15",
+    16: "wag-l16",
+    17: "wag-l17",
+    18: "wag-l18",
+    19: "wag-l19",
+    20: "wag-l20",
 }
 
 
@@ -112,7 +112,7 @@ def main() -> None:
         )
 
     inner = "\n".join(blocks)
-    section = f'''<section class="content-section docx-content" id="wag-m13-mufredat-tam" data-section="wag-m13-mufredat-tam">
+    section = f'''<section class="content-section docx-content" id="wag-l22" data-section="wag-l22">
 <div class="section-inner module-2-enhanced">
 <h1>Resmî müfredat — tam metin (Modül 1–20)</h1>
 <p>Bu bölüm, eğitim tasarımına kaynak teşkil eden müfredat metninin <strong>eksiksiz</strong> kopyasıdır. Uygulamalı alıştırmalar, laboratuvar komutları ve genişletilmiş anlatım üstteki ders bölümlerindedir; burada metin bütünlüğü korunmuştur.</p>
@@ -131,7 +131,7 @@ def main() -> None:
     print("Wrote", OUT, "bytes", OUT.stat().st_size)
 
     nav_rows: list[dict] = [
-        {"mod": 0, "label": "Önkoşul — Etik, yetki ve güvenli çalışma", "section": "wag-m0-etik"},
+        {"mod": 0, "label": "Önkoşul — Etik, yetki ve güvenli çalışma", "section": "wag-l00"},
     ]
     for n, chunk in parts:
         title_line = chunk.split("\n", 1)[0].strip()
@@ -140,14 +140,14 @@ def main() -> None:
         {
             "mod": None,
             "label": "Sözlük ve eğitim kapanışı",
-            "section": "wag-m12-sozluk",
+            "section": "wag-l21",
         }
     )
     nav_rows.append(
         {
             "mod": None,
             "label": "Ek — Resmî müfredat tam metni (Modül 1–20)",
-            "section": "wag-m13-mufredat-tam",
+            "section": "wag-l22",
         }
     )
     NAV_JSON.write_text(json.dumps(nav_rows, ensure_ascii=False, indent=2), encoding="utf-8")

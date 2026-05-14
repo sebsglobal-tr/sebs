@@ -139,11 +139,11 @@ def main() -> None:
     # Network-only DOM enhancements (safe no-ops if sections missing)
     tail = tail.replace(
         "const section = document.getElementById('modul-1-guvenlik-temelleri-risk-saldr-yuzeyi-mimari');",
-        "const section = document.getElementById('wag-m1-mimari');",
+        "const section = document.getElementById('wag-l01');",
     )
     tail = tail.replace(
         "if (!section || section.id !== 'modul-0-etik-ve-yasal-cerceve') return;",
-        "if (!section || section.id !== 'wag-m0-etik') return;",
+        "if (!section || section.id !== 'wag-l00') return;",
     )
 
     OUT.write_text(

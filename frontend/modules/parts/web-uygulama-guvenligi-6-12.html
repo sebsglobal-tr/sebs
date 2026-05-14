@@ -1,4 +1,4 @@
-<section class="content-section docx-content" id="wag-m6-zafiyet" data-section="wag-m6-zafiyet">
+<section class="content-section docx-content" id="wag-l11" data-section="wag-l11">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 11 — Cross-Site Scripting, Clickjacking ve Client-Side Güvenlik</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=900&amp;q=90" alt="Siber güvenlik ekranı" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Zafiyet sınıfları: saldırganın motoru ve savunmacının kontrol + görünürlük katmanları.</p></div>
@@ -37,6 +37,11 @@
 <p>Çift çerez (double submit) veya özel başlık (<code>X-Requested-With</code> vb.) kalıpları tek başına gümüş kurşun değildir: tarayıcı ve istemci çeşitliliği, CORS ve önbellek etkileşimi yüzünden sunucuda <strong>origin kontrolü + niyet belirteci</strong> birlikte değerlendirilir. Kritik işlemlerde (şifre değişikliği, MFA ekleme/çıkarma) ek adım olarak yeniden kimlik doğrulama en güçlü dengeleyicidir.</p>
 <div class="info-box"><p><strong>SameSite=Lax vs Strict (kavram)</strong></p><p>Strict: kullanıcı doğrudan sitedeyken çerez taşınır; bazı derin link senaryolarında UX maliyeti doğurabilir.</p><p>Lax: güvenli HTTP metodlarında siteler arası top-level navigasyonda sınırlı taşınır; uygulama davranışına göre seçilir.</p></div>
 <p><em>Müfredat uyumu:</em> Modül 12 (açık yönlendirme, dosya ve path) ile Modül 13 (SSRF, deserialization ve smuggling) aşağıdaki alt başlıklarda işlenir; sıra pedagojik akışa göredir.</p>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-l12" data-section="wag-l12">
+<div class="section-inner module-2-enhanced">
+<h1>Modül 12 — Open Redirect, Dosya İşleme, Path Traversal ve İçerik Güvenliği</h1>
 <h2>SSRF: sunucuyu “proxy silahına” çevirme</h2>
 <p>Uygulama kullanıcıdan URL alıp sunucu tarafında fetch yapıyorsa, saldırgan iç ağ uçlarını (metadata servisleri, yönetim arayüzleri, iç API’ler) hedeflemek isteyebilir. Savunma: hedef allowlist, özel ağların bloklanması, çıkış trafiği izleme, “ham IP” yerine DNS politikası ve ayrı egress güvenliği.</p>
 <p>DNS rebinding ve açık yönlendirme zincirleri (eğitim düzeyinde) “allowlist var ama yine de yanlış hedefe gidildi” hikâyelerini üretir; bu yüzden çözüm yalnızca string kontrolü değil, <strong>çözümlenmiş IP’nin özel ağ aralığında olmaması</strong> gibi katmanlar içerir.</p>
@@ -54,6 +59,11 @@
 <h2>Dosya yükleme ve path traversal</h2>
 <p>Yükleme uçlarında saldırgan çift uzantı, MIME sahteciliği veya polyglot dosya fikirleriyle (eğitim düzeyinde) uygulamayı yanıltmeye çalışır. Path traversal ise dosya yolu birleştirme ve normalizasyon hatalarında ortaya çıkar. Savunma: içerik imzası/allowlist, web kökünden ayrı depolama, rastgele dosya adı, yürütme engeli, güvenli path join.</p>
 <p>Depolama bucket’ı ile CDN arasındaki <strong>imza URL’si</strong> süresi ve “liste dizin” kapalı olduğunun doğrulanması rapora yapılandırma kanıtı olarak girer.</p>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-l13" data-section="wag-l13">
+<div class="section-inner module-2-enhanced">
+<h1>Modül 13 — SSRF, Deserialization ve HTTP Request Smuggling</h1>
 <h2>Yanlış yapılandırma: saldırganın hızlı kazanım alanı</h2>
 <p>Örnek hesaplar, açık dizin listelemeleri, gereksiz HTTP verb’leri, aşırı ayrıntılı hata sayfaları ve “geçici olarak açılmış” debug bayrakları saldırganın <strong>keşif maliyetini düşürür</strong>. Savunma tarafında bu başlık, yapılandırma drift’ini (zamanla gevşeme) ve dağıtım boru hattındaki <strong>ortam karışıklığını</strong> hedefler. Üretim doğrulamasında “staging ile diff” en güçlü kanıt yaklaşımlarından biridir.</p>
 <div class="linux-terminal"><div class="term-header"><span class="term-dot red"></span><span class="term-dot yellow"></span><span class="term-dot green"></span><span class="term-title">config-diff-snippet.txt — staging vs prod (kurgusal)</span></div><div class="term-body"><span class="term-prompt">devops@sebs:~$</span> <span class="term-cmd">diff -u staging.env prod.env | head -n 20</span>
@@ -135,7 +145,7 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m6b-is-mantigi" data-section="wag-m6b-is-mantigi">
+<section class="content-section docx-content" id="wag-l14" data-section="wag-l14">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 14 — İş Mantığı Zafiyetleri, Race Condition ve Abuse Prevention</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=900&amp;q=90" alt="Kod inceleme" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Aynı anda iki istek: veritabanı tutarlılığı ve iş kuralları.</p></div>
@@ -179,7 +189,7 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m7-api" data-section="wag-m7-api">
+<section class="content-section docx-content" id="wag-l15" data-section="wag-l15">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 15 — API Güvenliği</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&amp;q=90" alt="Sunucu ve API" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">REST/GraphQL: otomasyonla taranan uçlar; nesne düzeyi yetki ve veri sözleşmesi kritik.</p></div>
@@ -273,7 +283,57 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m8-headers" data-section="wag-m8-headers">
+<section class="content-section docx-content" id="wag-l16" data-section="wag-l16">
+<div class="section-inner module-2-enhanced">
+<h1>Modül 16 — Web Uygulamalarında Veri Koruma ve Hassas Veri Sızıntısı</h1>
+<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900&amp;q=90" alt="Veri güvenliği" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Sınıflandırma, minimizasyon ve taşıma: aynı HTTP 200 farklı hassasiyet taşıyabilir.</p></div>
+<p>Bu bölüm MODÜL 5’teki doğrulama ve kodlama disiplinini <strong>veri yaşam döngüsü</strong>ne taşır: toplama, işleme, saklama, aktarma ve silme. Regülasyon isimleri değişse de ortak soru şudur: “Bu veri gerçekten gerekli mi, nerede duruyor, kim görebiliyor, loga düşüyor mu?”</p>
+<p><strong>Veri sınıflandırması</strong> (halka açık / iç / gizli / kişisel veri vb.) saklama süresi, şifreleme zorunluluğu, maskeleme ve olay bildirimi eşiklerine bağlanır. Aynı endpoint bir müşteri için anonim sayfa iken başka bir müşteri için sağlık veya finans verisi taşıyabilir; güvenlik kontrolü uç bazında yazılmalıdır.</p>
+<p><strong>Maruziyet</strong> sıklıkla “hack” değil <em>fazla alan</em>, önbellek, yedek, hata ayıklama ekranı veya yanlış ACL ile oluşur. API yanıtında gereksiz kolon, GraphQL’de derin ağaç, mobil önbellek ve CDN yanlış yapılandırması aynı kök nedene bağlanabilir: <strong>veri minimizasyonu eksikliği</strong>.</p>
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül hedefleri</h3><ul><li>Veri sınıflandırmasını kontrol ve saklama politikasına bağlayabilirim.</li><li>PII ve sırların log, önbellek ve yedekte sızma yollarını listeleyebilirim.</li><li>Şifreleme (at rest / in transit) ve anahtar yönetimini tehdit modelinde konumlandırabilirim.</li></ul></div>
+<div class="key-concepts">
+<div class="key-concept-card"><h4><i class="fas fa-eye-slash"></i> Minimizasyon</h4><p>Toplanmayan veri sızmaz; alan ve süre azaltımı birincil kontroldür.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-database"></i> At rest</h4><p>Disk/backup şifreleme ve KMS ile anahtar ayrımı; erişim audit’i.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-shield-halved"></i> In transit</h4><p>TLS ve iç segmentasyon; fakat uçta yetki hatasını çözmez.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-eraser"></i> Silme / unutulma</h4><p>Kopyalar (replica, log, analitik) silinmeden talep tamamlanmış sayılmaz.</p></div>
+</div>
+<table class="comparison-table"><thead><tr><th>Sızıntı yüzeyi</th><th>Tipik kök neden</th><th>Kanıt</th></tr></thead><tbody><tr><td>Log / SIEM</td><td>Ham Authorization, gövde</td><td>Maskeleme politikası, örnek satır</td></tr><tr><td>Önbellek</td><td>Hassas yanıtta no-store eksik</td><td>Başlık diff, CDN kuralı</td></tr><tr><td>Hata ekranı</td><td>Stack + nesne dökümü</td><td>Ekran görüntüsü + genel mesaj karşılaştırması</td></tr><tr><td>Yedek</td><td>Şifresiz snapshot</td><td>Yedekleme politikası ve erişim matrisi</td></tr></tbody></table>
+<div class="info-box"><p><strong>DLP ve iç tehdit (kısa)</strong></p><p>Veri kaybı önleme (DLP) kanalları e-posta, web upload ve çıkış trafiğini izler; yanlış alarm yönetimi olmadan ekip yorgunluğu üretir.</p><p>İç tehdit senaryolarında en sık görülen vektör: aşırı yetki + veri dışa aktarma uçları + zayıf denetim.</p></div>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, saldırı yüzeyi okuması, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Veri minimizasyonunun birincil faydası nedir?</li></ol>
+<p>A) Daha çok log</p>
+<p>B) Maruziyet yüzeyini ve uyum yükünü azaltmak</p>
+<p>C) Daha zayıf TLS</p>
+<p>D) Daha fazla favicon</p>
+<p>E) Daha uzun JWT</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Olmayan veri sızmaz ve taşınmaz.</li></ul>
+<ol><li>Hassas veri için üretim hata mesajında ne tercih edilir?</li></ol>
+<p>A) Tam stack trace</p>
+<p>B) Genel mesaj + ayrıntı yalnız yetkili logda</p>
+<p>C) Ham SQL</p>
+<p>D) Tüm tablo dökümü</p>
+<p>E) Oturum çerezi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İç yapı ve PII sızıntısı önlenir.</li></ul>
+<ol><li>API’de gereksiz kolon dönüşü hangi bulgu sınıfına yakındır?</li></ol>
+<p>A) Sadece DNS</p>
+<p>B) Aşırı veri maruziyeti / minimizasyon ihlali</p>
+<p>C) Sadece tema</p>
+<p>D) Sadece CPU</p>
+<p>E) Sadece font</p>
+<ul><li>Doğru: B</li><li>Gerekçe: DTO ve alan seçme ile giderilir.</li></ul>
+<ol><li>At-rest şifreleme tek başına neyi çözmez?</li></ol>
+<p>A) Disk hırsızlığı riskini azaltmayı</p>
+<p>B) Uygulama düzeyinde yetkisiz okumayı</p>
+<p>C) Yedek medya kaybını</p>
+<p>D) Fiziksel erişim</p>
+<p>E) Depolama şifreleme ihtiyacını</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Uygulama yetkisi ve sorgu kontrolü ayrıdır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-l17" data-section="wag-l17">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 17 — Güvenli Yapılandırma, HTTP Güvenlik Başlıkları, Cache ve WAF</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&amp;q=90" alt="Analiz ve güvenlik" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Header ve CORS: tarayıcıya verilen güvenlik sözleşmesi; yanlışsa saldırgan tarayıcıyı ikna eder.</p></div>
@@ -374,7 +434,97 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m9-log" data-section="wag-m9-log">
+<section class="content-section docx-content" id="wag-l18" data-section="wag-l18">
+<div class="section-inner module-2-enhanced">
+<h1>Modül 18 — Güvenli Web Geliştirme, Bağımlılık Güvenliği ve AppSec Otomasyonu</h1>
+<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=900&amp;q=90" alt="Geliştirme" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Güvenlik: sprint sonunda değil; tehdit modelinden dağıtıma kadar süreç içi.</p></div>
+<p>Saldırganın avantajı sıklıkla <strong>hız</strong> ve <strong>tekdüze otomasyon</strong>dır. Savunmanın karşılığı, hızı düşürmeden riski düşüren <strong>otomatik kontroller</strong> ve <strong>erken tehdit modellemesidir</strong>. Bu modül AppSec, DevSecOps ve SOC ilişkisini netleştirir.</p>
+<p>Güvenlik kapıları (merge blokları) çok gürültülü olunca geliştirici “acil bypass” ister; bu da tedarik zinciri riskini geri getirir. Sürdürülebilir model: kural sahipliği, gürültü bütçesi ve false positive SLA’sı yazılı olur.</p>
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül hedefleri</h3><ul><li>Tehdit modellemeye giriş yapabilirim.</li><li>Güvenli kabul kriterleri ve CI kontrollerini listeleyebilirim.</li><li>Secret scanning ve bağımlılık riskini sürece bağlayabilirim.</li><li>Değişiklik sonrası doğrulama ve rollback disiplinini açıklayabilirim.</li></ul></div>
+<div class="key-concepts">
+<div class="key-concept-card"><h4><i class="fas fa-shield-virus"></i> Erken tehdit</h4><p>STRIDE soruları PR açıklamasına ‘hangi varlık?’ diye eklenir.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-gears"></i> CI kapısı</h4><p>Kırmızı build = merge yok; ama kural gürültüsü yönetilmezse ekip kapıyı bypass eder.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-boxes-stacked"></i> Tedarik zinciri</h4><p>İmzalı commit, imzalı artefakt, bağımlılık SBOM birbirini tamamlar.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-headset"></i> SOC köprüsü</h4><p>Kritik uç listesi ve entegrasyon riski alarm önceliğini besler.</p></div>
+</div>
+<div class="process-flow" aria-label="İş akışı">
+<div class="process-step"><i class="fas fa-lightbulb"></i> Tehdit modeli</div>
+<div class="process-step"><i class="fas fa-code"></i> Güvenli kod</div>
+<div class="process-step"><i class="fas fa-vial"></i> Test</div>
+<div class="process-step"><i class="fas fa-rocket"></i> Dağıtım</div>
+<div class="process-step"><i class="fas fa-eye"></i> İzleme</div>
+</div>
+<h2>Threat modeling (STRIDE kısa)</h2>
+<table class="comparison-table"><thead><tr><th>STRIDE</th><th>Soru</th><th>Örnek web kontrolü</th></tr></thead><tbody><tr><td>Spoofing</td><td>Kimlik sahteciliği?</td><td>MFA, oturum bağlama</td></tr><tr><td>Tampering</td><td>Veri bütünlüğü?</td><td>İmza, CSRF token</td></tr><tr><td>Repudiation</td><td>İnkâr edilemezlik?</td><td>Denetim logu</td></tr><tr><td>Information disclosure</td><td>Sızıntı?</td><td>Hata mesajı, API alanları</td></tr><tr><td>DoS</td><td>Erişilebilirlik?</td><td>Oran sınırlama, autoscale</td></tr><tr><td>Elevation</td><td>Yetki yükseltme?</td><td>RBAC + object checks</td></tr></tbody></table>
+<h2>CI/CD güvenlik kontrolleri</h2>
+<p>SAST/DAST, bağımlılık taraması, IaC taraması, secret scan ve imzalı artefakt; her biri farklı hata sınıfını erken keser. “Yeşil build” güvenli demek değildir; kural kalitesi ve false positive yönetimi gerekir.</p>
+<p>Özellikle DAST/aktif tarama adımları yanlışlıkla staging yerine canlıyı vurabilir; bu yüzden pipeline değişkenleri ve hedef URL’ler ayrı onaylı olmalıdır. SOC ile anlaşma: build sırasında üretilen anormal trafik “saldırı” değil test olarak etiketlenir.</p>
+<h2>SOC ile köprü</h2>
+<p>SDLC çıktıları (hangi uç kritik, hangi entegrasyon riskli) SOC’un alarm önceliklendirmesini besler.</p>
+<p>Tehdit modelinden çıkan “kritik işlem listesi” doğrudan SIEM use case’lerine yazılır: örneğin “yönetici rol ataması + yeni cihaz + kısa sürede API aşırı veri” gibi bileşik korelasyonlar. Böylece güvenlik testi ile operasyon birbirini besler.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular saldırı mekaniği okuması, savunma ve kanıt yorumunu ölçer.</p>
+<ol><li>Tehdit modellemenin doğrudan çıktısı nedir?</li></ol>
+<p>A) Logo</p>
+<p>B) Öncelikli kontroller ve test soruları</p>
+<p>C) DNS</p>
+<p>D) Font</p>
+<p>E) Tema</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Erken risk tartışması.</li></ul>
+<ol><li>Secret scanning ne arar?</li></ol>
+<p>A) Font</p>
+<p>B) Repoda sızmış sırlar</p>
+<p>C) JPEG</p>
+<p>D) CPU</p>
+<p>E) DNS</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Erken uyarı.</li></ul>
+<ol><li>Değişiklik sonrası doğrulama neden şart?</li></ol>
+<p>A) Log silmek</p>
+<p>B) Regresyon ve kapanış kriteri</p>
+<p>C) TLS kapatmak</p>
+<p>D) Tema</p>
+<p>E) WAF</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Düzeltme doğrulanmalıdır.</li></ul>
+<ol><li>STRIDE’de “Information disclosure” webde neye örnek?</li></ol>
+<p>A) CPU</p>
+<p>B) Hassas alanların API’de dönmesi</p>
+<p>C) DNS</p>
+<p>D) Font</p>
+<p>E) Tema</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Veri minimizasyonu ihlali.</li></ul>
+<ol><li>İmzalı artefakt neyi azaltır?</li></ol>
+<p>A) Tema</p>
+<p>B) Supply chain manipülasyonu</p>
+<p>C) DNS</p>
+<p>D) Font</p>
+<p>E) JPEG</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Bütünlük ve kaynak güveni.</li></ul>
+<ol><li>SOC’un SDLC’den beklediği fayda?</li></ol>
+<p>A) Tema</p>
+<p>B) Daha iyi öncelik ve bağlam</p>
+<p>C) DNS</p>
+<p>D) Font</p>
+<p>E) Favicon</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kritik uç bilgisi.</li></ul>
+<ol><li>Güvenli kabul kriteri ne işe yarar?</li></ol>
+<p>A) Geciktirmek</p>
+<p>B) Ölçülebilir “tamam” tanımı</p>
+<p>C) Log silmek</p>
+<p>D) TLS kapatmak</p>
+<p>E) WAF</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Çıkış koşulu.</li></ul>
+<ol><li>Bağımlılık riski neden “sürekli”dir?</li></ol>
+<p>A) Bir kez taranır</p>
+<p>B) CVE’ler zamanla ortaya çıkar</p>
+<p>C) DNS</p>
+<p>D) Font</p>
+<p>E) Tema</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Zincir güncellenir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-l19" data-section="wag-l19">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 19 — Web Uygulamalarında Loglama, İzleme ve Hata Yönetimi</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&amp;q=90" alt="İzleme panosu" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Çoklu log kaynağı: saldırganın zinciri; savunmacının hikâyesi.</p></div>
@@ -467,97 +617,7 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m10-sdlc" data-section="wag-m10-sdlc">
-<div class="section-inner module-2-enhanced">
-<h1>Modül 18 — Güvenli Web Geliştirme, Bağımlılık Güvenliği ve AppSec Otomasyonu</h1>
-<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=900&amp;q=90" alt="Geliştirme" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Güvenlik: sprint sonunda değil; tehdit modelinden dağıtıma kadar süreç içi.</p></div>
-<p>Saldırganın avantajı sıklıkla <strong>hız</strong> ve <strong>tekdüze otomasyon</strong>dır. Savunmanın karşılığı, hızı düşürmeden riski düşüren <strong>otomatik kontroller</strong> ve <strong>erken tehdit modellemesidir</strong>. Bu modül AppSec, DevSecOps ve SOC ilişkisini netleştirir.</p>
-<p>Güvenlik kapıları (merge blokları) çok gürültülü olunca geliştirici “acil bypass” ister; bu da tedarik zinciri riskini geri getirir. Sürdürülebilir model: kural sahipliği, gürültü bütçesi ve false positive SLA’sı yazılı olur.</p>
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül hedefleri</h3><ul><li>Tehdit modellemeye giriş yapabilirim.</li><li>Güvenli kabul kriterleri ve CI kontrollerini listeleyebilirim.</li><li>Secret scanning ve bağımlılık riskini sürece bağlayabilirim.</li><li>Değişiklik sonrası doğrulama ve rollback disiplinini açıklayabilirim.</li></ul></div>
-<div class="key-concepts">
-<div class="key-concept-card"><h4><i class="fas fa-shield-virus"></i> Erken tehdit</h4><p>STRIDE soruları PR açıklamasına ‘hangi varlık?’ diye eklenir.</p></div>
-<div class="key-concept-card"><h4><i class="fas fa-gears"></i> CI kapısı</h4><p>Kırmızı build = merge yok; ama kural gürültüsü yönetilmezse ekip kapıyı bypass eder.</p></div>
-<div class="key-concept-card"><h4><i class="fas fa-boxes-stacked"></i> Tedarik zinciri</h4><p>İmzalı commit, imzalı artefakt, bağımlılık SBOM birbirini tamamlar.</p></div>
-<div class="key-concept-card"><h4><i class="fas fa-headset"></i> SOC köprüsü</h4><p>Kritik uç listesi ve entegrasyon riski alarm önceliğini besler.</p></div>
-</div>
-<div class="process-flow" aria-label="İş akışı">
-<div class="process-step"><i class="fas fa-lightbulb"></i> Tehdit modeli</div>
-<div class="process-step"><i class="fas fa-code"></i> Güvenli kod</div>
-<div class="process-step"><i class="fas fa-vial"></i> Test</div>
-<div class="process-step"><i class="fas fa-rocket"></i> Dağıtım</div>
-<div class="process-step"><i class="fas fa-eye"></i> İzleme</div>
-</div>
-<h2>Threat modeling (STRIDE kısa)</h2>
-<table class="comparison-table"><thead><tr><th>STRIDE</th><th>Soru</th><th>Örnek web kontrolü</th></tr></thead><tbody><tr><td>Spoofing</td><td>Kimlik sahteciliği?</td><td>MFA, oturum bağlama</td></tr><tr><td>Tampering</td><td>Veri bütünlüğü?</td><td>İmza, CSRF token</td></tr><tr><td>Repudiation</td><td>İnkâr edilemezlik?</td><td>Denetim logu</td></tr><tr><td>Information disclosure</td><td>Sızıntı?</td><td>Hata mesajı, API alanları</td></tr><tr><td>DoS</td><td>Erişilebilirlik?</td><td>Oran sınırlama, autoscale</td></tr><tr><td>Elevation</td><td>Yetki yükseltme?</td><td>RBAC + object checks</td></tr></tbody></table>
-<h2>CI/CD güvenlik kontrolleri</h2>
-<p>SAST/DAST, bağımlılık taraması, IaC taraması, secret scan ve imzalı artefakt; her biri farklı hata sınıfını erken keser. “Yeşil build” güvenli demek değildir; kural kalitesi ve false positive yönetimi gerekir.</p>
-<p>Özellikle DAST/aktif tarama adımları yanlışlıkla staging yerine canlıyı vurabilir; bu yüzden pipeline değişkenleri ve hedef URL’ler ayrı onaylı olmalıdır. SOC ile anlaşma: build sırasında üretilen anormal trafik “saldırı” değil test olarak etiketlenir.</p>
-<h2>SOC ile köprü</h2>
-<p>SDLC çıktıları (hangi uç kritik, hangi entegrasyon riskli) SOC’un alarm önceliklendirmesini besler.</p>
-<p>Tehdit modelinden çıkan “kritik işlem listesi” doğrudan SIEM use case’lerine yazılır: örneğin “yönetici rol ataması + yeni cihaz + kısa sürede API aşırı veri” gibi bileşik korelasyonlar. Böylece güvenlik testi ile operasyon birbirini besler.</p>
-<h2>Kendini Değerlendir</h2>
-<div class="eval-quiz-section">
-<p>Aşağıdaki sorular saldırı mekaniği okuması, savunma ve kanıt yorumunu ölçer.</p>
-<ol><li>Tehdit modellemenin doğrudan çıktısı nedir?</li></ol>
-<p>A) Logo</p>
-<p>B) Öncelikli kontroller ve test soruları</p>
-<p>C) DNS</p>
-<p>D) Font</p>
-<p>E) Tema</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Erken risk tartışması.</li></ul>
-<ol><li>Secret scanning ne arar?</li></ol>
-<p>A) Font</p>
-<p>B) Repoda sızmış sırlar</p>
-<p>C) JPEG</p>
-<p>D) CPU</p>
-<p>E) DNS</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Erken uyarı.</li></ul>
-<ol><li>Değişiklik sonrası doğrulama neden şart?</li></ol>
-<p>A) Log silmek</p>
-<p>B) Regresyon ve kapanış kriteri</p>
-<p>C) TLS kapatmak</p>
-<p>D) Tema</p>
-<p>E) WAF</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Düzeltme doğrulanmalıdır.</li></ul>
-<ol><li>STRIDE’de “Information disclosure” webde neye örnek?</li></ol>
-<p>A) CPU</p>
-<p>B) Hassas alanların API’de dönmesi</p>
-<p>C) DNS</p>
-<p>D) Font</p>
-<p>E) Tema</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Veri minimizasyonu ihlali.</li></ul>
-<ol><li>İmzalı artefakt neyi azaltır?</li></ol>
-<p>A) Tema</p>
-<p>B) Supply chain manipülasyonu</p>
-<p>C) DNS</p>
-<p>D) Font</p>
-<p>E) JPEG</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Bütünlük ve kaynak güveni.</li></ul>
-<ol><li>SOC’un SDLC’den beklediği fayda?</li></ol>
-<p>A) Tema</p>
-<p>B) Daha iyi öncelik ve bağlam</p>
-<p>C) DNS</p>
-<p>D) Font</p>
-<p>E) Favicon</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Kritik uç bilgisi.</li></ul>
-<ol><li>Güvenli kabul kriteri ne işe yarar?</li></ol>
-<p>A) Geciktirmek</p>
-<p>B) Ölçülebilir “tamam” tanımı</p>
-<p>C) Log silmek</p>
-<p>D) TLS kapatmak</p>
-<p>E) WAF</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Çıkış koşulu.</li></ul>
-<ol><li>Bağımlılık riski neden “sürekli”dir?</li></ol>
-<p>A) Bir kez taranır</p>
-<p>B) CVE’ler zamanla ortaya çıkar</p>
-<p>C) DNS</p>
-<p>D) Font</p>
-<p>E) Tema</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Zincir güncellenir.</li></ul>
-</div>
-</div>
-</section>
-<section class="content-section docx-content" id="wag-m11-rapor" data-section="wag-m11-rapor">
+<section class="content-section docx-content" id="wag-l20" data-section="wag-l20">
 <div class="section-inner module-2-enhanced">
 <h1>Modül 20 — Web Uygulama Güvenlik Testi, Araç Okuryazarlığı ve Raporlama</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&amp;q=90" alt="Profesyonel rapor" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Rapor: teknik doğruluk + iş dili + kanıt zinciri.</p></div>
@@ -656,7 +716,7 @@
 </div>
 </div>
 </section>
-<section class="content-section docx-content" id="wag-m12-sozluk" data-section="wag-m12-sozluk">
+<section class="content-section docx-content" id="wag-l21" data-section="wag-l21">
 <div class="section-inner module-2-enhanced">
 <h1>Sözlük ve eğitim kapanışı</h1>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&amp;q=90" alt="Kitap ve notlar" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Ortak dil: ekip içi iletişim ve raporların denetlenebilirliği.</p></div>
