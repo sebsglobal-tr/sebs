@@ -81,8 +81,9 @@ def main() -> None:
         '"name":"Web Uygulama Guvenligi","item":"https://sebsglobal.com/egitimler/web-uygulama-guvenligi"',
     )
 
-    # Mobil menüden sonra bitir; module-layout + aside yalnızca `sidebar` içinde (çift etiket yok)
-    body_prefix = "".join(net_lines[3861:3910])
+    # </head> sonrası: </script> + linkler + header + mobil menü toggle'a kadar (kapanmamış <details> bırakma)
+    # Önceki [3861:3910] dilimi "Bize ulaşın" satırında kesildiği için module-layout header içine kaçıyordu.
+    body_prefix = "".join(net_lines[3861:3918])
 
     sidebar = f"""    <div class="module-layout">
         <aside class="module-sidebar">
