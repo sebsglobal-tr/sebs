@@ -2009,6 +2009,7 @@
             const moduleIcons = {
                 'Temel Siber Güvenlik': 'fas fa-shield-alt',
                 'Temel Network Eğitimi': 'fas fa-network-wired',
+                'Orta Seviye Network Güvenliği': 'fas fa-diagram-project',
                 'Network Güvenliği': 'fas fa-network-wired',
                 'Malware Analizi': 'fas fa-bug',
                 'Threat Hunting': 'fas fa-search',
@@ -2034,7 +2035,7 @@
             
             moduleArray.forEach(({ name: moduleName, progress, index }) => {
                 // Skip duplicates and wrong formats
-                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği')) {
+                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği' && moduleName !== 'Orta Seviye Network Güvenliği')) {
                     return;
                 }
 

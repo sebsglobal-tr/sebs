@@ -259,6 +259,7 @@ async function getCategoryModules(category) {
   const categoryMap = {
     'siber-guvenlik': [
       'Temel Siber Güvenlik',
+      'Orta Seviye Network Güvenliği',
       'Network Güvenliği',
       'Malware Analizi',
       'Threat Hunting',

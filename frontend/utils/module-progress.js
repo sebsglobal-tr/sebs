@@ -453,6 +453,7 @@ function getCategoryFromModule(moduleName) {
     const siberGuvenlikModules = [
         'Temel Siber Güvenlik',
         'Temel Network Eğitimi',
+        'Orta Seviye Network Güvenliği',
         'Network Güvenliği',
         'Malware Analizi',
         'Malware Analizi (Orta Seviye)',

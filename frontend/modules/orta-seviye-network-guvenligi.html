@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script>
+    (function(){try{var t=localStorage.getItem('sebs-theme')||localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);return;}if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+  </script>
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <base href="/">
+  <title>Orta Seviye Network Güvenliği Eğitimi | SEBS</title>
+  <meta name="description" content="SEBS Orta Seviye Network Güvenliği eğitimi; risk temelli ağ güvenliği, saldırı yüzeyi, segmentasyon, log-flow analizi, Wireshark okuryazarlığı ve kanıt temelli raporlama konularını kapsar.">
+  <link rel="canonical" href="https://sebsglobal.com/egitimler/orta-seviye-network-guvenligi">
+  <meta property="og:url" content="https://sebsglobal.com/egitimler/orta-seviye-network-guvenligi">
+  <meta property="og:title" content="Orta Seviye Network Güvenliği Eğitimi | SEBS">
+  <meta property="og:description" content="Risk temelli savunma mimarisi, görünürlük, kanıt disiplini ve güvenli operasyon odaklı orta seviye ağ güvenliği programı.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Orta Seviye Network Güvenliği",
+    "description": "Ağ güvenliğini risk, saldırı yüzeyi, görünürlük ve savunma mimarisi üzerinden ele alan; savunma ve kanıt temelli analiz odaklı orta seviye eğitim.",
+    "provider": {
+      "@type": "Organization",
+      "name": "SEBS Global",
+      "sameAs": "https://sebsglobal.com/"
+    },
+    "educationalLevel": "intermediate",
+    "timeRequired": "PT7H"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://sebsglobal.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Egitimler", "item": "https://sebsglobal.com/egitimler" },
+      { "@type": "ListItem", "position": 3, "name": "Orta Seviye Network Güvenliği", "item": "https://sebsglobal.com/egitimler/orta-seviye-network-guvenligi" }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/modules.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: { ink: '#0c1222', surface: '#f4f6fa' },
+          boxShadow: {
+            card: '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
+  <style>
+    .osn-wrap { max-width: 72rem; margin-left: auto; margin-right: auto; }
+    .osn-hero {
+      border-radius: 1.25rem;
+      border: 1px solid rgb(226 232 240 / 0.9);
+      background: linear-gradient(135deg, rgb(248 250 252) 0%, rgb(241 245 249) 45%, rgb(224 242 254 / 0.35) 100%);
+      box-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06);
+    }
+    html[data-theme="dark"] .osn-hero {
+      border-color: rgb(51 65 85 / 0.6);
+      background: linear-gradient(145deg, rgb(15 23 42) 0%, rgb(30 41 59) 50%, rgb(15 23 42) 100%);
+    }
+    .osn-tag {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      padding: 0.25rem 0.65rem;
+      border: 1px solid rgb(148 163 184 / 0.45);
+      color: rgb(71 85 105);
+      background: rgb(255 255 255 / 0.7);
+    }
+    html[data-theme="dark"] .osn-tag {
+      color: rgb(203 213 225);
+      border-color: rgb(71 85 105 / 0.7);
+      background: rgb(30 41 59 / 0.6);
+    }
+    .osn-acc summary {
+      list-style: none;
+      cursor: pointer;
+    }
+    .osn-acc summary::-webkit-details-marker { display: none; }
+    .osn-acc {
+      border-radius: 0.875rem;
+      border: 1px solid rgb(226 232 240);
+      background: rgb(255 255 255 / 0.85);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    html[data-theme="dark"] .osn-acc {
+      border-color: rgb(51 65 85);
+      background: rgb(15 23 42 / 0.65);
+    }
+    .osn-acc[open] {
+      box-shadow: 0 8px 24px -8px rgb(15 23 42 / 0.1);
+      border-color: rgb(148 163 184 / 0.55);
+    }
+    .osn-acc h3 { font-weight: 700; letter-spacing: -0.02em; }
+    .osn-li { padding-left: 1rem; position: relative; }
+    .osn-li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.35rem;
+      height: 0.35rem;
+      border-radius: 9999px;
+      background: rgb(59 130 246);
+    }
+    html[data-theme="dark"] .osn-li::before { background: rgb(96 165 250); }
+  </style>
+</head>
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white pb-16 pt-20">
+<header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+    <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
+      <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+      <span class="landing-brand-wordmark">SEBS</span>
+    </a>
+    <nav class="landing-nav--compact hidden flex items-center gap-5 xl:flex" aria-label="Ana menü">
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
+      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
+      <a href="/pricing.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Kariyer yolları</a>
+    </nav>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+      <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+      <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
+      <details class="relative xl:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">Menü</summary>
+        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <a href="/pricing.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Kariyer yolları</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main class="osn-wrap px-4 sm:px-6 lg:px-8">
+  <nav class="mb-6 text-xs font-medium text-slate-500 sm:text-sm" aria-label="Breadcrumb">
+    <a href="/" class="text-slate-600 hover:text-slate-900">Ana sayfa</a>
+    <span class="mx-1.5 opacity-60" aria-hidden="true">/</span>
+    <a href="/modules.html" class="text-slate-600 hover:text-slate-900">Eğitimler</a>
+    <span class="mx-1.5 opacity-60" aria-hidden="true">/</span>
+    <span class="text-slate-800">Orta Seviye Network Güvenliği</span>
+  </nav>
+
+  <section class="osn-hero px-5 py-8 sm:px-8 sm:py-10" aria-labelledby="osn-title">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <div class="min-w-0 flex-1">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Siber güvenlik · Kariyer yolu</p>
+        <h1 id="osn-title" class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.35rem]">Orta Seviye Network Güvenliği</h1>
+        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+          Ağ güvenliğini yalnızca cihaz ve kural yönetimi olarak değil; <strong class="font-semibold text-slate-800">risk</strong>, <strong class="font-semibold text-slate-800">saldırı yüzeyi</strong>, <strong class="font-semibold text-slate-800">görünürlük</strong>, <strong class="font-semibold text-slate-800">kanıt disiplini</strong> ve <strong class="font-semibold text-slate-800">savunma mimarisi</strong> üzerinden ele alan orta seviye eğitim modülü.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="osn-tag">Siber Güvenlik</span>
+          <span class="osn-tag">Orta Seviye</span>
+          <span class="osn-tag">Network Security</span>
+          <span class="osn-tag">Savunma Odaklı</span>
+          <span class="osn-tag">Kanıt Temelli Analiz</span>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+          <span class="level-badge intermediate">Orta Seviye</span>
+          <span class="inline-flex items-center gap-1.5"><i class="far fa-clock text-slate-400" aria-hidden="true"></i> 6–8 saat</span>
+          <span class="hidden sm:inline text-slate-300" aria-hidden="true">|</span>
+          <span class="text-slate-600"><i class="fas fa-route text-slate-400 mr-1" aria-hidden="true"></i> Önerilen sıra: <a href="/modules/temel-network-egitimi.html" class="font-semibold text-blue-700 hover:text-blue-900 underline-offset-2 hover:underline">Temel Network Eğitimi</a> sonrası</span>
+        </div>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Eğitime Başla</a>
+          <a href="#mufredat" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-400 hover:bg-slate-50 focus-ring">Müfredatı İncele</a>
+        </div>
+      </div>
+      <aside class="w-full shrink-0 rounded-xl border border-slate-200/80 bg-white/60 p-5 shadow-card sm:max-w-sm lg:w-80 dark:border-slate-600 dark:bg-slate-900/40" aria-label="Özet">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Program özeti</h2>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">
+          Bu eğitim, temel network bilgisine sahip kullanıcıların ağ güvenliğini profesyonel bir bakış açısıyla değerlendirmesini amaçlar. İçerik; yetkili çalışma ilkeleri, risk yönetimi, saldırı yüzeyi envanteri, network tehditleri, segmentasyon, güvenlik mimarisi, kanıt toplama, Wireshark okuryazarlığı ve raporlama standardını kapsar.
+        </p>
+        <p class="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/90 p-3 text-xs leading-relaxed text-amber-950">
+          <strong class="font-semibold">Güvenlik ve etik sınır:</strong> Bu program saldırı, istismar, bypass veya yetkisiz erişim öğretmez. Odak; savunma, gözlem, analiz, doğrulama, kanıt toplama ve raporlamadır.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="mt-10 grid gap-8 lg:grid-cols-2" aria-labelledby="osn-outcomes">
+    <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-6 dark:border-slate-600 dark:bg-slate-900/30">
+      <h2 id="osn-outcomes" class="text-lg font-bold text-slate-900">Öğrenme çıktıları</h2>
+      <ul class="mt-4 space-y-2.5 text-sm text-slate-700">
+        <li class="osn-li">Network güvenliğini risk temelli bir savunma mimarisi olarak değerlendirebilme</li>
+        <li class="osn-li">Yazılı yetki, RoE, kapsam, stop condition ve Do Not Harm ilkelerini anlayabilme</li>
+        <li class="osn-li">Saldırı yüzeyi envanteri ve risk register mantığını kullanabilme</li>
+        <li class="osn-li">Network tehditlerini mekanizma ve tespit sinyali üzerinden analiz edebilme</li>
+        <li class="osn-li">Log, flow, PCAP ve konfigürasyon çıktılarıyla kanıt temelli yorum yapabilme</li>
+        <li class="osn-li">Wireshark çıktısını gözlem ve yorum ayrımıyla değerlendirebilme</li>
+        <li class="osn-li">Bulguları Bulgu → Etki → Öneri → Kanıt formatında raporlayabilme</li>
+        <li class="osn-li">Segmentasyon, least privilege, default-deny ve management plane ayrımı ilkelerini uygulama düzeyinde kavrayabilme</li>
+      </ul>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-card dark:border-slate-600 dark:bg-slate-900/40">
+      <h2 class="text-lg font-bold text-slate-900">Kimler için</h2>
+      <ul class="mt-3 space-y-2 text-sm text-slate-700">
+        <li class="osn-li">Temel network bilgisini güvenlik seviyesine taşımak isteyen öğrenciler</li>
+        <li class="osn-li">SOC, network security, blue team veya cloud security alanına hazırlanmak isteyenler</li>
+        <li class="osn-li">Ağ güvenliği raporlaması ve kanıt temelli analiz öğrenmek isteyen kullanıcılar</li>
+        <li class="osn-li">SEBS kariyer yolunda temel seviyeyi tamamlamış kullanıcılar</li>
+      </ul>
+      <h3 class="mt-6 text-sm font-bold uppercase tracking-wide text-slate-500">Ön koşul</h3>
+      <p class="mt-2 text-sm text-slate-600">Temel network bilgisi, IP adresleme, port/protokol mantığı, temel firewall kavramları.</p>
+      <h3 class="mt-6 text-sm font-bold uppercase tracking-wide text-slate-500">Uygun olmayan profiller</h3>
+      <ul class="mt-2 space-y-2 text-sm text-slate-600">
+        <li class="osn-li">Network temellerini hiç bilmeyen kullanıcılar</li>
+        <li class="osn-li">Saldırı/istismar odaklı pratik arayan kullanıcılar</li>
+        <li class="osn-li">Yetkisiz test veya zarar verici işlem yapmak isteyenler</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="mufredat" class="mt-14 scroll-mt-24">
+    <div class="flex flex-col gap-2 border-b border-slate-200 pb-4 dark:border-slate-600">
+      <h2 class="text-xl font-bold text-slate-900 sm:text-2xl">Müfredat</h2>
+      <p class="text-sm text-slate-600">Yedi ana ünite; her ünite alt başlıklarla yapılandırılmıştır. Üniteleri açarak detayları görüntüleyin.</p>
+    </div>
+    <div class="mt-6 space-y-3">
+      <details class="osn-acc group px-4 py-3 sm:px-5" open>
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 1</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Etik ve Yasal Çerçeve</h3>
+            <p class="mt-1 text-sm text-slate-600">Yetkili çalışma, yazılı izin, RoE, kapsam/kapsam dışı ayrımı, Do Not Harm ilkesi, veri minimizasyonu, kanıt bütünlüğü ve raporlama standardı.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Yetkili çalışma ilkeleri</li>
+          <li class="osn-li">Risk yönetimi</li>
+          <li class="osn-li">Veri koruma ve kanıt bütünlüğü</li>
+          <li class="osn-li">Bulgu → Etki → Öneri → Kanıt raporlama standardı</li>
+          <li class="osn-li">RoE + Do Not Harm uygulama planı</li>
+          <li class="osn-li">Kanıt paketi ve manifest mantığı</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 2</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Güvenlik Temelleri: Risk, Saldırı Yüzeyi ve Mimari</h3>
+            <p class="mt-1 text-sm text-slate-600">Network güvenliğini varlık, akış, risk ve savunma mimarisi üzerinden ele alan temel orta seviye bölüm.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Network güvenliği hedefleri</li>
+          <li class="osn-li">CIA + görünürlük + hesap verebilirlik</li>
+          <li class="osn-li">Tehdit, zafiyet ve risk ilişkisi</li>
+          <li class="osn-li">Saldırı yüzeyi envanteri</li>
+          <li class="osn-li">Kritik varlıklar / crown jewels</li>
+          <li class="osn-li">Defense-in-depth</li>
+          <li class="osn-li">Least privilege</li>
+          <li class="osn-li">Default-deny</li>
+          <li class="osn-li">Management plane ayrımı</li>
+          <li class="osn-li">MITRE ATT&CK’in savunma amaçlı ortak dil olarak kullanımı</li>
+          <li class="osn-li">Risk Register + Saldırı Yüzeyi Envanteri çıktısı</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 3</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Network Tehditleri: Mekanizma, Etki ve Tespit Sinyalleri</h3>
+            <p class="mt-1 text-sm text-slate-600">Network tehditlerini savunma bakış açısıyla mekanizma, etki, iz/sinyal ve kontrol ilişkisiyle açıklar.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">MitM / eavesdropping farkındalığı</li>
+          <li class="osn-li">Spoofing sinyalleri</li>
+          <li class="osn-li">DoS / DDoS etkileri</li>
+          <li class="osn-li">Kablosuz ağ tehditleri</li>
+          <li class="osn-li">AI destekli tehdit eğilimleri</li>
+          <li class="osn-li">Belirti → hipotez → kanıt → karar döngüsü</li>
+          <li class="osn-li">Yanlış pozitif / yanlış negatif ayrımı</li>
+          <li class="osn-li">Güvenli triage yaklaşımı</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 4</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Segmentasyon ve Güvenli Ağ Mimarisi</h3>
+            <p class="mt-1 text-sm text-slate-600">Ağ bölgeleri, güven sınırları, yönetim düzlemi, DMZ, kullanıcı/server ayrımı ve kritik sistemlerin izolasyonu.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Network zone mantığı</li>
+          <li class="osn-li">User, server, DMZ, management ve guest segmentleri</li>
+          <li class="osn-li">East-west / north-south trafik ayrımı</li>
+          <li class="osn-li">Segmentasyon boşlukları</li>
+          <li class="osn-li">Firewall / ACL politika mantığı</li>
+          <li class="osn-li">Akış matrisi oluşturma</li>
+          <li class="osn-li">Yönetim arayüzlerinin korunması</li>
+          <li class="osn-li">Değişiklik sonrası doğrulama</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 5</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Log, Flow ve Trafik Analizi</h3>
+            <p class="mt-1 text-sm text-slate-600">Log, flow, PCAP ve metrikleri kanıt üretimi açısından ele alır.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Log nedir, flow nedir, PCAP nedir?</li>
+          <li class="osn-li">Hangi veri hangi soruyu cevaplar?</li>
+          <li class="osn-li">Zaman senkronizasyonu ve korelasyon</li>
+          <li class="osn-li">NetFlow / firewall log / DNS log / proxy log mantığı</li>
+          <li class="osn-li">Wireshark okuryazarlığı</li>
+          <li class="osn-li">Trafik kesiti alma ve veri minimizasyonu</li>
+          <li class="osn-li">Kanıt dosyasını hash ve manifest ile saklama</li>
+          <li class="osn-li">Gözlem ve yorum ayrımı</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 6</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Güvenlik Politikası ve Erişim Kontrolü</h3>
+            <p class="mt-1 text-sm text-slate-600">Ağ politikalarının okunabilir, gerekçeli, doğrulanabilir ve sürdürülebilir olması.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Allowlist / denylist mantığı</li>
+          <li class="osn-li">Default-deny yaklaşımı</li>
+          <li class="osn-li">Gereksiz geniş kuralların riski</li>
+          <li class="osn-li">Egress kontrolü</li>
+          <li class="osn-li">Yönetim erişimi kısıtları</li>
+          <li class="osn-li">Politika drift’i</li>
+          <li class="osn-li">Değişiklik yönetimi</li>
+          <li class="osn-li">Kural gerekçesi ve kapanış kriteri</li>
+        </ul>
+      </details>
+      <details class="osn-acc group px-4 py-3 sm:px-5">
+        <summary class="flex w-full items-start justify-between gap-3 text-left">
+          <div>
+            <span class="text-xs font-semibold text-blue-600">Ünite 7</span>
+            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Operasyonel Senaryolar ve Raporlama</h3>
+            <p class="mt-1 text-sm text-slate-600">Kavramları gerçekçi ve güvenli senaryolar üzerinden uygulama.</p>
+          </div>
+          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </summary>
+        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
+          <li class="osn-li">Hayalet varlık senaryosu</li>
+          <li class="osn-li">VPN kopma analizi senaryosu</li>
+          <li class="osn-li">Beklenmeyen egress trafiği senaryosu</li>
+          <li class="osn-li">Segmentasyon boşluğu senaryosu</li>
+          <li class="osn-li">Kanıt toplama ve karşı kanıt arama</li>
+          <li class="osn-li">Risk register güncelleme</li>
+          <li class="osn-li">Bulgu → Etki → Öneri → Kanıt formatında rapor üretme</li>
+        </ul>
+      </details>
+    </div>
+    <p class="mt-8 text-center text-xs text-slate-500">Komutlar ve pratikler yalnızca yerel lab, yetkili kurum içi ortam veya okuma/doğrulama/kanıt üretimi sınırında ele alınır.</p>
+  </section>
+
+  <section class="mt-12 rounded-xl border border-slate-200 bg-slate-50/60 p-6 text-center dark:border-slate-600 dark:bg-slate-900/30">
+    <p class="text-sm text-slate-600">İleride tam ders akışı ve ilerleme takibi platform hesabınızla bağlanacaktır.</p>
+    <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Eğitime Başla</a>
+      <a href="/contact.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900">Kurumsal bilgi</a>
+    </div>
+  </section>
+</main>
+
+<footer class="mt-16 border-t border-slate-200 bg-white py-10">
+  <div class="osn-wrap px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+      <p class="text-xs text-slate-500">© <span class="landing-footer-year"></span> SEBS Global</p>
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900">← Tüm eğitimler</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/api-base.js"></script>
+<script src="/config.js?v=1.0.2"></script>
+<script src="/js/api-integration.js?v=1.0.2"></script>
+<script src="/js/navigation.js"></script>
+<script>
+  (function () {
+    document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+      el.textContent = String(new Date().getFullYear());
+    });
+  })();
+</script>
+</body>
+</html>

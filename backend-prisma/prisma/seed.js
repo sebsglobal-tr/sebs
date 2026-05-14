@@ -31,10 +31,25 @@ const courses = [
     ]
   },
   {
+    title: 'Orta Seviye Network Güvenliği',
+    category: 'cybersecurity',
+    level: 'intermediate',
+    sortOrder: 3,
+    modules: [
+      { title: 'Etik ve Yasal Çerçeve', description: 'RoE, kanıt bütünlüğü, raporlama standardı', order: 0, type: 'lesson' },
+      { title: 'Risk, Saldırı Yüzeyi ve Mimari', description: 'Defense-in-depth, risk register, ATT&CK', order: 1, type: 'lesson' },
+      { title: 'Network Tehditleri ve Tespit Sinyalleri', description: 'Mekanizma, etki, triage', order: 2, type: 'lesson' },
+      { title: 'Segmentasyon ve Güvenli Ağ Mimarisi', description: 'Zone, DMZ, east-west, policy', order: 3, type: 'lesson' },
+      { title: 'Log, Flow ve Trafik Analizi', description: 'PCAP, NetFlow, Wireshark okuryazarlığı', order: 4, type: 'lesson' },
+      { title: 'Güvenlik Politikası ve Erişim Kontrolü', description: 'Default-deny, egress, drift', order: 5, type: 'lesson' },
+      { title: 'Operasyonel Senaryolar ve Raporlama', description: 'Güvenli senaryolar, BETA rapor formatı', order: 6, type: 'lesson' },
+    ]
+  },
+  {
     title: 'İşletim Sistemleri Güvenliği (Temel)',
     category: 'cybersecurity',
     level: 'beginner',
-    sortOrder: 3,
+    sortOrder: 4,
     modules: [
       { title: 'Windows Temel Güvenlik', description: 'Windows güvenlik ayarları', order: 0, type: 'lesson' },
       { title: 'Linux Temel Hardening', description: 'Linux temel güvenlik', order: 1, type: 'lesson' },
@@ -46,7 +61,7 @@ const courses = [
     title: 'Temel Kriptografi',
     category: 'cybersecurity',
     level: 'beginner',
-    sortOrder: 4,
+    sortOrder: 5,
     modules: [
       { title: 'Simetrik Şifreleme', description: 'AES, DES algoritmaları', order: 0, type: 'lesson' },
       { title: 'Asimetrik Şifreleme', description: 'RSA, ECC algoritmaları', order: 1, type: 'lesson' },
@@ -59,7 +74,7 @@ const courses = [
     title: 'Sosyal Mühendisliğe Giriş',
     category: 'cybersecurity',
     level: 'beginner',
-    sortOrder: 5,
+    sortOrder: 6,
     modules: [
       { title: 'Phishing Saldırıları', description: 'Phishing teknikleri', order: 0, type: 'lesson' },
       { title: 'Pretexting Teknikleri', description: 'Pretexting', order: 1, type: 'lesson' },
@@ -71,7 +86,7 @@ const courses = [
     title: 'Network Güvenliği',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 6,
+    sortOrder: 7,
     modules: [
       { title: 'Giriş ve Tanıtım', description: 'Network güvenliğine giriş', order: 0, type: 'lesson' },
       { title: 'Firewall Yapılandırması', description: 'Firewall yapılandırması', order: 1, type: 'lesson' },
@@ -85,7 +100,7 @@ const courses = [
     title: 'Web Uygulama Güvenliği',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 7,
+    sortOrder: 8,
     modules: [
       { title: 'OWASP Top 10', description: 'OWASP güvenlik açıkları', order: 0, type: 'lesson' },
       { title: 'SQL Injection', description: 'SQL injection saldırıları', order: 1, type: 'lesson' },
@@ -97,7 +112,7 @@ const courses = [
     title: 'Malware Analizi (Orta Seviye)',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 8,
+    sortOrder: 9,
     modules: [
       { title: 'Static Malware Analizi', description: 'Static analiz teknikleri', order: 0, type: 'lesson' },
       { title: 'Dynamic Analiz Teknikleri', description: 'Dynamic analiz', order: 1, type: 'lesson' },
@@ -109,7 +124,7 @@ const courses = [
     title: 'SOC (Security Operations Center) Eğitimi',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 9,
+    sortOrder: 10,
     modules: [
       { title: 'SIEM Sistemleri', description: 'SIEM teknolojileri', order: 0, type: 'lesson' },
       { title: 'Log Analysis', description: 'Log analizi', order: 1, type: 'lesson' },
@@ -121,7 +136,7 @@ const courses = [
     title: 'İşletim Sistemi Güvenliği (İleri Temel)',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 10,
+    sortOrder: 11,
     modules: [
       { title: 'Gelişmiş Windows Hardening', description: 'Windows ileri güvenlik', order: 0, type: 'lesson' },
       { title: 'Linux Güvenlik Yapılandırmaları', description: 'Linux ileri güvenlik', order: 1, type: 'lesson' },
@@ -133,7 +148,7 @@ const courses = [
     title: 'Temel Cloud Security',
     category: 'cybersecurity',
     level: 'intermediate',
-    sortOrder: 11,
+    sortOrder: 12,
     modules: [
       { title: 'Cloud Güvenlik Modelleri', description: 'Cloud güvenlik modelleri', order: 0, type: 'lesson' },
       { title: 'Identity and Access Management', description: 'IAM yapılandırması', order: 1, type: 'lesson' },
@@ -145,7 +160,7 @@ const courses = [
     title: 'İleri Malware Analizi & Reverse Engineering',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 12,
+    sortOrder: 13,
     modules: [
       { title: 'İleri Seviye Reverse Engineering', description: 'İleri reverse engineering', order: 0, type: 'lesson' },
       { title: 'Assembly ve Disassembly', description: 'Assembly programlama', order: 1, type: 'lesson' },
@@ -157,7 +172,7 @@ const courses = [
     title: 'Olay Müdahalesi & Digital Forensics',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 13,
+    sortOrder: 14,
     modules: [
       { title: 'Incident Response Plan', description: 'Olay müdahale planı', order: 0, type: 'lesson' },
       { title: 'Digital Forensics Metodolojisi', description: 'Dijital adli bilişim', order: 1, type: 'lesson' },
@@ -169,7 +184,7 @@ const courses = [
     title: 'İleri Kriptografi',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 14,
+    sortOrder: 15,
     modules: [
       { title: 'Kuantum Kriptografi', description: 'Kuantum şifreleme', order: 0, type: 'lesson' },
       { title: 'Homomorphic Encryption', description: 'Homomorphic şifreleme', order: 1, type: 'lesson' },
@@ -181,7 +196,7 @@ const courses = [
     title: 'Cloud Security (İleri)',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 15,
+    sortOrder: 16,
     modules: [
       { title: 'Multi-Cloud Security Architecture', description: 'Çoklu bulut güvenliği', order: 0, type: 'lesson' },
       { title: 'Container ve Kubernetes Güvenliği', description: 'Container güvenliği', order: 1, type: 'lesson' },
@@ -193,7 +208,7 @@ const courses = [
     title: 'Red Team & Pentest (İleri)',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 16,
+    sortOrder: 17,
     modules: [
       { title: 'İleri Seviye Penetrasyon Testi', description: 'İleri pentest', order: 0, type: 'lesson' },
       { title: 'Red Team Metodolojisi', description: 'Red team operasyonları', order: 1, type: 'lesson' },
@@ -205,7 +220,7 @@ const courses = [
     title: 'Threat Intelligence',
     category: 'cybersecurity',
     level: 'advanced',
-    sortOrder: 17,
+    sortOrder: 18,
     modules: [
       { title: 'Threat Intelligence Framework', description: 'Tehdit istihbarat çerçevesi', order: 0, type: 'lesson' },
       { title: 'IOC (Indicators of Compromise)', description: 'IOC analizi', order: 1, type: 'lesson' },
