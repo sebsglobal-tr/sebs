@@ -43,7 +43,18 @@ def load_curriculum_text() -> str:
     t = obj["message"]["content"][0]["text"]
     if "<user_query>" in t:
         t = t.split("<user_query>", 1)[1].split("</user_query>", 1)[0].strip()
-    return t
+    return strip_curriculum_noise(t)
+
+
+def strip_curriculum_noise(text: str) -> str:
+    """Transcript'e karışmış talimat satırlarını çıkarır."""
+    out: list[str] = []
+    for line in text.split("\n"):
+        low = line.lower()
+        if "temel kriptografi kartının içine bu modülü yaz" in low:
+            continue
+        out.append(line)
+    return "\n".join(out)
 
 
 def slice_module(full: str, n: int) -> str:
@@ -98,6 +109,16 @@ def is_learning_outcome(line: str) -> bool:
         "anlayacak",
         "kullanacak",
         "tanıyacak",
+        "açıklayabilir",
+        "ifade edebilir",
+        "tanıyabilir",
+        "yorumlayabilir",
+        "sıralayabilir",
+        "anlatabilir",
+        "söyleyebilir",
+        "değerlendirebilir",
+        "fark edebilir",
+        "kullanılabilir",
     )
     return any(k in s for k in keys)
 
@@ -106,6 +127,8 @@ def looks_like_h3_title(line: str) -> bool:
     """Bölüm başlığı (tek satır); cümle veya hizalı örnek satırı değildir."""
     s = line.strip()
     if not s or len(s) > 120:
+        return False
+    if re.fullmatch(r"[0-9a-fA-F]{32}", s.strip()):
         return False
     if "\t" in s:
         return False
@@ -319,6 +342,65 @@ def convert_body(lines: list[str], start_i: int) -> tuple[str, int]:
     return "".join(parts), i
 
 
+def wrap_h3_lessons(body_html: str, section_id: str) -> tuple[str, int]:
+    """Her <h3> bölümünü ayrı ders kartına sarar; ders tamamlama düğmesi ekler."""
+    body_html = body_html.strip()
+    if not body_html:
+        return "", 0
+    chunks = re.split(r"(?=<h3>)", body_html, flags=re.IGNORECASE)
+    parts: list[str] = []
+    idx = 0
+    first = chunks[0]
+    if first.strip():
+        lid = f"{section_id}-l{idx:02d}"
+        parts.append(
+            f'                    <div class="module-lesson" id="{lid}" data-lesson-title="Giriş">'
+        )
+        parts.append(first)
+        parts.append(
+            "                    <div class=\"lesson-step-controls\">\n"
+            f'                        <button type="button" class="btn-lesson-complete" '
+            f'data-lesson-id="{lid}" data-module-section="{section_id}">\n'
+            "                            <i class=\"fas fa-check\"></i> Dersi tamamla\n"
+            "                        </button>\n                    </div>\n"
+            "                    </div>"
+        )
+        idx += 1
+    for ch in chunks[1:]:
+        ch = ch.strip()
+        if not ch:
+            continue
+        lid = f"{section_id}-l{idx:02d}"
+        m = re.match(r"<h3>([\s\S]*?)</h3>", ch, re.IGNORECASE)
+        raw_plain = ""
+        if m:
+            raw_plain = re.sub(r"<[^>]+>", "", m.group(1)).strip()
+            raw_plain = html.unescape(raw_plain)
+        if not raw_plain:
+            raw_plain = f"Ders {idx + 1}"
+        tattr = esc(raw_plain)
+        parts.append(
+            f'                    <div class="module-lesson" id="{lid}" data-lesson-title="{tattr}">'
+        )
+        parts.append(ch)
+        parts.append(
+            "                    <div class=\"lesson-step-controls\">\n"
+            f'                        <button type="button" class="btn-lesson-complete" '
+            f'data-lesson-id="{lid}" data-module-section="{section_id}">\n'
+            "                            <i class=\"fas fa-check\"></i> Dersi tamamla\n"
+            "                        </button>\n                    </div>\n"
+            "                    </div>"
+        )
+        idx += 1
+    if idx == 0:
+        return "", 0
+    inner = "\n".join(parts)
+    return (
+        f'                    <div class="module-lessons">\n{inner}\n                    </div>',
+        idx,
+    )
+
+
 def parse_module(n: int, chunk: str, *, active: bool = False) -> str:
     lines = chunk.split("\n")
     if not lines:
@@ -384,17 +466,13 @@ def parse_module(n: int, chunk: str, *, active: bool = False) -> str:
 """
 
     body_html, _ = convert_body(lines, i)
-    controls = f"""                    <div class="lesson-controls">
-                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül {n}</span>
-                        <button type="button" class="btn-complete-lesson" data-section="kr-m{n}" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
-                    </div>
-"""
+    body_wrapped, _ = wrap_h3_lessons(body_html, f"kr-m{n}")
 
     section_cls = "content-section active" if active else "content-section"
     return f"""            <section class="{section_cls}" id="kr-m{n}">
 {header_html}
-{card_open}{extra_intro}{objectives_html}{body_html}
-{controls}                </div>
+{card_open}{extra_intro}{objectives_html}{body_wrapped}
+                </div>
             </section>
 
 """

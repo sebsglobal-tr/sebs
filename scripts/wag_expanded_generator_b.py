@@ -89,7 +89,7 @@ def terminal(title: str, body_inner: str) -> str:
 
 M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal ve Savunma</h1>
 {img_block("https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=900&q=90", "Siber güvenlik ekranı", "Zafiyet sınıfları: saldırganın motoru ve savunmacının kontrol + görünürlük katmanları.")}
-<p>Bu modül OWASP tarzı sınıfları <strong>ezberletmek</strong> için değil; her birinde saldırganın <em>neyi hedeflediğini</em>, uygulamanın <em>hangi hatayı yaptığını</em>, olayın <em>hangi logda nasıl görünebileceğini</em> ve <em>hangi kontrolün blast radius’u nasıl küçülttüğünü</em> birlikte okumak içindir. Aşağıda “gerçek hedefe uygulanabilir saldırı adımı” veya payload reçetesi <strong>bilerek yoktur</strong>; mekanizma ve savunma dili öğretilir.</p>
+<p>Bu modül OWASP tarzı sınıfları <strong>ezberletmek</strong> için değil; her birinde saldırganın <em>neyi hedeflediğini</em>, uygulamanın <em>hangi hatayı yaptığını</em>, olayın <em>hangi logda nasıl görünebileceğini</em> ve <em>hangi kontrolün blast radius’u nasıl küçülttüğünü</em> birlikte okumak içindir. Mekanizma, savunma dili ve gerektiğinde teknik örnekler birlikte verilir; bunları yalnızca yazılı yetki ve geçerli hukuk çerçevesinde kullanmak kullanıcının yükümlülüğüdür. İçeriğin kötüye kullanımından SEBS Academy ve materyalin yayıncıları sorumlu tutulamaz.</p>
 {lo("Modül hedefleri", [
     "SQLi/XSS/CSRF/SSRF sınıflarında saldırganın düşünce zincirini (eğitim) açıklayabilirim.",
     "Her sınıf için sinyal, savunma ve güvenli doğrulama kanıtını eşleştirebilirim.",
@@ -471,6 +471,36 @@ M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
     ("fa-book", "Ortak dil", "Aynı terimi farklı ekipler farklı anlarsa öncelik ve bütçe yanlış dağılır."),
     ("fa-language", "İngilizce kök", "Rapor ve CVE ile uyum için EN terim + TR açıklama birlikte tutulur."),
     ("fa-graduation-cap", "Öğrenme çıktısı", "Sözlük ezber değil; bulgu raporunda doğru kelimeyi seçmek içindir."),
+])}
+<h2>Öğretim tamamlayıcı: araçlar ve komutlar (B)</h2>
+<p>Modül 5’teki <strong>lab komut paleti</strong> ile birlikte okunmalıdır. Burada keşif ve otomatik tarama araçları yer alır; yalnızca yazılı yetki ve RoE kapsamındaki adreslerde çalıştırın.</p>
+{table(["Araç / komut", "Öğretimde rolü", "Güvenli kullanım notu"], [
+    ["Burp Suite / OWASP ZAP", "HTTP proxy ile istek düzenleme, tekrar, aktif tarama", "Tarayıcıyı proxy’ye kilitle; kapsam dışı domain’e trafik gönderme"],
+    ["nmap", "Açık port ve servis sürümü (banner)", "-T polite veya -T2; üretimde agresif tarama yasak olabilir"],
+    ["nikto", "Web sunucusu bilinen zayıflık imzaları", "Yalnız lab; çıktı gürültülü, manuel doğrulama şart"],
+    ["nuclei", "Şablon tabanlı CVE / misconfig taraması", "-rate-limit ve küçük şablon seti; false positive yüksek"],
+    ["mitmproxy", "TLS trafiğini (kendi cihazınızda) inceleme", "Kurumsal cihazda kök sertifika yüklemek politika ister"],
+    ["openssl s_client / x509", "TLS zinciri ve sertifika alanları", "Sunucu doğrulama ve süre kontrolü"],
+    ["git / trufflehog (ör.)", "Repoda sızmış sırlar", "Önce .gitignore ve secret policy; sonra tarama"],
+    ["docker / compose", "Zafiyetli lab ortamını izole ayağa kaldırma", "Host ağına bridge dikkat"],
+])}
+{terminal("lab-09-nmap.sh — servis keşfi (YOUR-LAB)", """<span class="term-prompt">student@lab:~$</span> <span class="term-cmd">nmap -sV -Pn --top-ports 200 -T2 YOUR-LAB</span>
+<span class="term-output">PORT    STATE SERVICE  VERSION</span>
+<span class="term-output">22/tcp  open  ssh      OpenSSH 8.x</span>
+<span class="term-output">443/tcp open  ssl/http nginx</span>
+<span class="term-comment"># -sC (script) agresif olabilir; labda bile RoE’ye yazılı değilse açmayın.</span>""")}
+{terminal("lab-10-nuclei.sh — şablon taraması (örnek)", """<span class="term-prompt">student@lab:~$</span> <span class="term-cmd">nuclei -u https://YOUR-LAB -tags exposure,misconfig -rate-limit 15 -c 10</span>
+<span class="term-output">[inf] found 3 results</span>
+<span class="term-comment"># Her bulguyu manuel tekrarlayın; nuclei ‘bilgi’ seviyesini bulgu sanmayın.</span>""")}
+{terminal("lab-11-mitmproxy.sh — yerel tarayıcı trafiği", """<span class="term-prompt">student@lab:~$</span> <span class="term-cmd">mitmproxy --listen-port 8080</span>
+<span class="term-comment"># Tarayıcı proxy: 127.0.0.1:8080; mitm.it ile CA kurulumu (yalnız kendi test hesabınız).</span>
+<span class="term-comment"># Başkasının trafiğini izlemek yasal değildir.</span>""")}
+{terminal("lab-12-zap-headless.sh — baseline (örnek)", """<span class="term-prompt">student@lab:~$</span> <span class="term-cmd">docker run --rm -t owasp/zap2docker-stable zap-baseline.py -t https://YOUR-LAB -r zap-report.html</span>
+<span class="term-output">PASS: 0 WARN: 12 FAIL: 1</span>
+<span class="term-comment"># FAIL her zaman kritik değildir; raporu uygulama sahibiyle birlikte okuyun.</span>""")}
+{info_box("Parola / kimlik denemesi araçları (hydra, medusa vb.)", [
+    "Bu eğitim metninde örnek komut satırı verilmez: yanlışlıkla canlı hesaba kilit veya hukuki ihlal riski çok yüksektir.",
+    "Kurum içi labda bile kullanıcı listesi ve deneme politikası ayrı onay ister; SOC ile önceden haberleşin.",
 ])}
 <h2>Eğitimin Kapanışı</h2>
 <p>Bu uzun eğitimde web uygulamasını hem <strong>savunmacı</strong> hem <strong>tehdit perspektifiyle (eğitim düzeyinde)</strong> okudunuz: HTTP ve oturum modeli, kimlik ve yetki, enjeksiyon ve mantık hataları, API ve header/CORS, log analizi, SDLC ve raporlama. Bir sonraki adım API Security ve Secure Code Review modüllerinde derinleşebilir; burada kurduğunuz dil ve kanıt disiplinini taşıyın.</p>
