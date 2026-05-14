@@ -1,0 +1,490 @@
+<section class="content-section docx-content" id="wag-m6-zafiyet" data-section="wag-m6-zafiyet">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Mekanizma, Etki ve Savunma</h1>
+<p>OWASP benzeri sınıflandırmalar farkındalık sağlar; amaç liste ezberi değil, her riski “nasıl ortaya çıkar, hangi sinyalle görülür, hangi kontrol azaltır, nasıl güvenli doğrulanır” çerçevesinde okumaktır. Aşağıdaki başlıklarda saldırı adımı veya payload verilmez.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Zafiyet sınıflarını etki ve kontrol diliyle özetleyebilirim.</li><li>Log ve yapılandırma kanıtlarıyla hipotez kurabilirim.</li></ul></div>
+<h2>SQL Injection farkındalığı</h2>
+<p><strong>Ne:</strong> Uygulama, kullanıcı girdisini sorgu yapısına güvensiz biçimde gömerse veritabanı motoru beklenmeyen komutları yorumlayabilir. <strong>Ortaya çıkış:</strong> Dinamik sorgu birleştirme, filtreleme eksikliği. <strong>Etki:</strong> Veri gizliliği ve bütünlüğü riski. <strong>Sinyal:</strong> Anormal sorgu süreleri, hata loglarında veritabanı mesajları, olağandışı tablo erişim logları. <strong>Savunma:</strong> Parametreli sorgular, hazırlıklı ifadeler, minimum ayrıcalık veritabanı hesabı, girdi doğrulama. <strong>Doğrulama:</strong> Kod incelemesi ve güvenli test veri setiyle birim testleri. <strong>Kanıt:</strong> İlgili kod yolu incelemesi, şema ve log özetleri (maskelemeyle).</p>
+<h2>XSS farkındalığı</h2>
+<p><strong>Ne:</strong> Uygulama, kullanıcı kontrollü veriyi çıktıda uygun kodlamadan geçirirse tarayıcı bağlamında istenmeyen komut dosyası çalışabilir. <strong>Etki:</strong> Oturum veya işlem bağlamının kötüye kullanımı riski. <strong>Sinyal:</strong> HTML içinde olağandışı etiket kalıpları, WAF uyarıları, kullanıcı şikâyetleri. <strong>Savunma:</strong> Bağlama uygun kodlama, içerik güvenlik politikası, HttpOnly çerezler. <strong>Doğrulama:</strong> Güvenli test ortamında üretim verisi kullanmadan şablon ve kod yolu gözden geçirme.</p>
+<h2>CSRF farkındalığı</h2>
+<p><strong>Ne:</strong> Tarayıcı, oturumu otomatik taşıdığı isteklerde kullanıcı niyeti olmadan durum değiştiren işlem tetiklenebilir. <strong>Savunma:</strong> Durum değiştiren işlemlerde anti-CSRF belirteci, SameSite çerez stratejisi, özel başlık doğrulaması ve kritik işlemlerde yeniden kimlik doğrulama.</p>
+<h2>SSRF farkındalığı</h2>
+<p><strong>Ne:</strong> Sunucu, kullanıcıdan gelen hedefe istek atarak iç kaynaklara köprü olabilir. <strong>Savunma:</strong> Hedef allowlist, ayrı ağ izolasyonu, metadata uçlarının kapatılması, çıkış trafiği izleme.</p>
+<h2>Dosya yükleme ve path traversal</h2>
+<p>Yükleme uçlarında içerik türü ve uzantı doğrulaması, depolama alanının uygulama kökünden ayrılması, rastgele dosya adı ve boyut sınırı gerekir. Path traversal, dosya yolu birleştirme hatalarında ortaya çıkar; güvenli birleştirme ve erişim kontrolü uygulanır.</p>
+<h2>Yanlış yapılandırma ve hassas veri maruziyeti</h2>
+<p>Varsayılan hesaplar, açık hata ayıklama, gereksiz servisler ve zayıf şifreleme yapılandırması risk üretir. Hassas veri, gereksiz alanlarda tutulmamalı ve taşınırken şifrelenmelidir.</p>
+<h2>İş mantığı zafiyetleri</h2>
+<p>İş kuralları (limit, onay, sıra) sunucuda zorlanmazsa tutarlılık bozulur. Sinyal: olağandışı işlem hacmi, çift harcama benzeri kayıtlar, kural ihlali uyarıları.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>SQL enjeksiyon riskini azaltmada temel mühendislik yaklaşımı hangisidir?</li></ol>
+<p>A) Daha uzun parola</p>
+<p>B) Parametreli/hazırlıklı sorgu ve ayrık veri ile sorgu yapısı</p>
+<p>C) Sadece HTTPS</p>
+<p>D) Sadece CDN</p>
+<p>E) Sadece robots.txt</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Yapı ile veriyi ayırmak temel savunmadır.</li></ul>
+<ol><li>XSS savunmasında çıktı kodlaması neden bağlama bağlıdır?</li></ol>
+<p>A) Tüm bağlamlar aynı kaçış kurallarına sahiptir</p>
+<p>B) HTML, JS ve URL farklı kurallar gerektirir</p>
+<p>C) Sadece veritabanı için geçerlidir</p>
+<p>D) Sadece mobil için geçerlidir</p>
+<p>E) Kaçış gerekmez</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Bağlama uygun kodlama şarttır.</li></ul>
+<ol><li>CSRF için durum değiştiren isteklerde hangi savunma sınıfı uygundur?</li></ol>
+<p>A) Sadece GET kullanmak</p>
+<p>B) Sunucuya özgü durum değiştirme belirteci veya eşdeğeri kontrol</p>
+<p>C) Sadece gzip</p>
+<p>D) Sadece DNS</p>
+<p>E) Sadece resim optimizasyonu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kullanıcı niyetini doğrulayan ek kanıt gerekir.</li></ul>
+<ol><li>SSRF analizi yaparken hangi soru önceliklidir?</li></ol>
+<p>A) Tema rengi</p>
+<p>B) Sunucu hangi hedeflere istek atabilir ve bu hedefler allowlist mi</p>
+<p>C) Favicon boyutu</p>
+<p>D) CPU markası</p>
+<p>E) Font ailesi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Çıkış yüzeyi ve hedef kısıtı kritiktir.</li></ul>
+<ol><li>Dosya yükleme güvenliğinde depolama konumu neden önemlidir?</li></ol>
+<p>A) SEO</p>
+<p>B) Web kökünde doğrudan çalıştırılabilir dosya riski</p>
+<p>C) TLS sürümü</p>
+<p>D) DNS TTL</p>
+<p>E) JPEG kalitesi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Yürütülebilir içerik yalıtımı gerekir.</li></ul>
+<ol><li>İş mantığı zafiyetinde kanıt ararken ne aranır?</li></ol>
+<p>A) Sadece CPU</p>
+<p>B) Kural ihlali ve olağandışı işlem örüntüleri</p>
+<p>C) Sadece CSS</p>
+<p>D) Sadece favicon</p>
+<p>E) Sadece TLS</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İşlem tutarlılığı ve kural zorlaması sorgulanır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m7-api" data-section="wag-m7-api">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 7 — API Güvenliği</h1>
+<p>Modern uygulamalar REST ve benzeri API’ler üzerinden konuşur. Güvenlik; uç doğrulama, nesne düzeyi yetki, veri minimizasyonu ve hız sınırları ile bütünleşir.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>REST uçlarını yetki ve veri maruziyeti açısından okuyabilirim.</li><li>Aşırı veri dönüşü ve toplu atama risklerini tanımlayabilirim.</li></ul></div>
+<h2>Uç ve model</h2>
+<p>Kaynak yolları ve HTTP yöntemleri bir matris olarak düşünülür: kim hangi yöntemi çağırabilir? Yanıt gövdesi iş ihtiyacından fazla alan döndürmemelidir.</p>
+<h2>Kimlik ve yetki</h2>
+<p>Bearer belirteçleri, başlık sızıntıları ve önbellekler risk taşır. Yetki, her uç için ayrı ayrı doğrulanır; yalnızca “giriş yapmış” olmak yeterli değildir.</p>
+<h2>Oran sınırlama ve hata mesajları</h2>
+<p>Oran sınırlama kötüye kullanımı yavaşlatır. Hata gövdeleri iç yapıyı ifşa etmemelidir.</p>
+<h2>Loglama ve API geçidi</h2>
+<p>API geçidi kimlik doğrulama, oran sınırlama ve merkezi loglama sağlayabilir. Korelasyon için istek kimliği taşınır.</p>
+<h2>Raporlama</h2>
+<p>Bulgu; hangi uçta hangi veri fazlası veya hangi yetki eksikliği gözlemlendiğini net yazar. Kanıt; maskelemiş örnek yanıt şeması ve politika özeti olabilir.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>API’de nesne düzeyi yetki eksikliği ne anlama gelir?</li></ol>
+<p>A) TLS yok</p>
+<p>B) Kimliği doğrulanmış kullanıcı başka kullanıcının kaydına erişebilir</p>
+<p>C) CDN kapalı</p>
+<p>D) Sadece GET vardır</p>
+<p>E) Log yok</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kaynak erişimi kullanıcıya özel doğrulanmalıdır.</li></ul>
+<ol><li>“Aşırı veri maruziyeti” için iyi bir savunma sorusu hangisidir?</li></ol>
+<p>A) Kaç çekirdek?</p>
+<p>B) İstemcinin ihtiyacı olan minimum alanlar dönüyor mu?</p>
+<p>C) Font nedir?</p>
+<p>D) Tema nedir?</p>
+<p>E) Favicon nedir?</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Minimizasyon ve sözleşme uyumu önemlidir.</li></ul>
+<ol><li>Mass assignment riski hangi tasarım hatasına işaret eder?</li></ol>
+<p>A) Çok uzun CSS</p>
+<p>B) İstemcinin gönderdiği alanların sunucuda filtresiz uygulanması</p>
+<p>C) TLS 1.3</p>
+<p>D) HTTP/2</p>
+<p>E) CDN önbelleği</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İzinli alan allowlist ile sınırlandırılmalıdır.</li></ul>
+<ol><li>API hız sınırlamasının birincil amacı nedir?</li></ol>
+<p>A) Log silmek</p>
+<p>B) Kötüye kullanım ve hizmet kesintisi riskini yönetmek</p>
+<p>C) Şifreyi kısaltmak</p>
+<p>D) DNS hızlandırmak</p>
+<p>E) Görüntü kalitesi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Oran kontrolü kötüye kullanımı sınırlar.</li></ul>
+<ol><li>API geçidinin güvenlik değeri hangi seçenekte özetlenir?</li></ol>
+<p>A) Yalnızca grafik üretir</p>
+<p>B) Merkezi kimlik, politika ve görünürlük noktası sağlayabilir</p>
+<p>C) Veritabanını siler</p>
+<p>D) TLS’i kapatır</p>
+<p>E) Kod yazmayı engeller</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Politika ve gözlemlenebilirlik merkezileşir.</li></ul>
+<ol><li>API loglarında korelasyon için hangi alan tipik olarak kullanılır?</li></ol>
+<p>A) Favicon hash</p>
+<p>B) İstek kimliği / iz düşümü (trace) ve zaman damgası</p>
+<p>C) JPEG çözünürlüğü</p>
+<p>D) CSS sınıfı</p>
+<p>E) CPU modeli</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İz sürme ve zaman çizelgesi için kimlik gerekir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m8-headers" data-section="wag-m8-headers">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS</h1>
+<p>Çerçevelerin varsayılanları, hata ayıklama modları ve gevşek CORS politikaları üretimde ciddi maruziyet oluşturur. Başlıklar, tarayıcıya ek güvenlik politikaları iletir.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Temel güvenlik başlıklarının rolünü açıklayabilirim.</li><li>CSP, HSTS ve frame kısıtlarını yüksek düzeyde okuyabilirim.</li><li>Gizli anahtarların yapılandırma ve ortam değişkenlerinde güvenli yönetimini tartışabilirim.</li></ul></div>
+<h2>İçerik Güvenlik Politikası (CSP)</h2>
+<p>Kaynak yüklemeyi kısıtlayarak enjeksiyon sonrası etkiyi azaltmaya yardım eder. Politika modları (raporlama üretimde dikkatle) devreye alınır.</p>
+<h2>Çerçeveleme ve taşıma güvenliği</h2>
+<p>X-Frame-Options veya CSP frame-ancestors tıklama çalıncağı yüzeyini daraltır. HSTS, uygun yapılandırmada HTTPS’e zorlamaya yardım eder.</p>
+<h2>Referrer-Policy ve Permissions-Policy</h2>
+<p>Sızıntıyı azaltır ve güçlü tarayıcı özelliklerini kapatır.</p>
+<h2>CORS</h2>
+<p>Erişim kontrolü başlıkları, hangi kökenlerin okuma/yazma yapabileceğini belirtir. Geniş ve joker izinler risklidir.</p>
+<h2>Gizli anahtar ve ortam</h2>
+<p>Gizli anahtarlar kodda veya genel depoda tutulmaz; gizli yönetim ve ayrıcalıklı erişim uygulanır. Üretim ve geliştirme ayrımı korunur.</p>
+<h2>HOW-TO: Güvenli konfigürasyonu savunma odaklı kontrol etmek</h2>
+<ol>
+<li>Üretim ve geliştirme yapılandırmalarını karşılaştır; hata ayıklama ve aşırı ayrıntı kapalı mı?</li>
+<li>Güvenlik başlıklarının varlığını ve değerlerini gözden geçir; raporlama modları varsa logları izle.</li>
+<li>CORS izin listelerini uç bazında doğrula; joker ve yansıtılan köken risklerini değerlendir.</li>
+<li>Gizli anahtarların kaynağını ve dönüşümünü incele; örnek anahtarların üretimde olmadığını doğrula.</li>
+<li>Varsayılan hesap ve örnek uygulamaların kapalı olduğunu kontrol et.</li>
+<li>Bulguları yapılandırma çıktısı veya güvenli özetlerle kanıtla.</li>
+</ol>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>CSP’nin birincil rolü hangisine en yakındır?</li></ol>
+<p>A) DNS hızlandırma</p>
+<p>B) Kaynak yükleme ve komut dosyası yüzeyini kısıtlama</p>
+<p>C) Veritabanı şifreleme</p>
+<p>D) CPU governor</p>
+<p>E) JPEG optimizasyonu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: CSP tarayıcıda yürütme yüzeyini daraltır.</li></ul>
+<ol><li>HSTS yanlış yapılandırıldığında tipik risk nedir?</li></ol>
+<p>A) Daha iyi SEO</p>
+<p>B) HTTPS beklentisi ve geri dönüş planı olmadan erişim sorunları veya zayıf taşıma</p>
+<p>C) Daha hızlı DNS</p>
+<p>D) Daha kısa parola</p>
+<p>E) Daha az log</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Taşıma politikası dikkatle yuvarlanmalıdır.</li></ul>
+<ol><li>Üretimde hata ayıklama açık kalması neden risklidir?</li></ol>
+<p>A) Performans artar</p>
+<p>B) İç yığın ve yapılandırma bilgisi sızabilir</p>
+<p>C) TLS güçlenir</p>
+<p>D) WAF kapanır</p>
+<p>E) CDN hızlanır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Ayrıntılı hata çıktısı bilgi sızdırır.</li></ul>
+<ol><li>Gizli anahtarı kod deposunda tutmak neden kötü pratiktir?</li></ol>
+<p>A) Daha hızlı derleme</p>
+<p>B) Geniş erişim ve sızıntı yüzeyi</p>
+<p>C) Daha iyi tema</p>
+<p>D) Daha az log</p>
+<p>E) Daha kısa DNS</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Sürüm kontrolü geniş kitleye açılabilir.</li></ul>
+<ol><li>CORS’ta joker veya aşırı geniş izin riski nedir?</li></ol>
+<p>A) Yok</p>
+<p>B) İstenmeyen kökenlerin tarayıcı üzerinden veri erişimini kolaylaştırması</p>
+<p>C) Sadece mobil</p>
+<p>D) Sadece GET</p>
+<p>E) Sadece CDN</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Köken kontrolü gevşer.</li></ul>
+<ol><li>Permissions-Policy tipik olarak neyi sınırlar?</li></ol>
+<p>A) SQL indeksleri</p>
+<p>B) Güçlü tarayıcı özelliklerinin (ör. kamera, mikrofon) kullanımını</p>
+<p>C) DNS kayıtlarını</p>
+<p>D) CPU çekirdek sayısını</p>
+<p>E) Veritabanı boyutunu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Özellik yüzeyini daraltır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m9-log" data-section="wag-m9-log">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi</h1>
+<p>Web güvenliği yalnızca uygulama kodunda değil; görünürlükte yaşar. Erişim, kimlik ve uygulama logları birlikte yorumlandığında hikâye oluşur.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Log türlerini ve korelasyon ihtiyacını açıklayabilirim.</li><li>Yanlış pozitif/negatif ayrımı için hipotez kurabilirim.</li><li>Zaman senkronizasyonunun analizdeki rolünü tanımlayabilirim.</li></ul></div>
+<h2>Log türleri</h2>
+<p>Erişim günlükleri (web sunucusu), uygulama günlükleri, kimlik sağlayıcı logları, yönetim işlem kayıtları, API geçidi ve WAF logları farklı ayrıntı taşır.</p>
+<h2>Zaman ve korelasyon</h2>
+<p>NTP senkronizasyonu olay sırasını güvenilir kılar. Aynı kullanıcı oturumu, IP ve istek kimliği üzerinden birleştirme yapılır.</p>
+<h2>Yanlış pozitif ve negatif</h2>
+<p>Alarm, beklenen iş yükü, bakım penceresi veya hatalı kural nedeniyle yanlış olabilir. Hiç alarm üretmeyen gerçek olay ise yanlış negatiftir; kontrol boşluğu araştırılır.</p>
+<h2>Kanıt toplama</h2>
+<p>Zaman çizelgesi, maskelemiş kesitler ve yapılandırma özeti bir arada tutulur. Gözlem ve yorum ayrı ayrı yazılır.</p>
+<h2>Operasyonel senaryo: Şüpheli oturum ve API erişimi</h2>
+<p><strong>Belirti:</strong> Aynı hesaptan kısa sürede farklı ülkelerden API çağrıları ve yönetim uçlarına artan trafik.</p>
+<p><strong>Hipotezler:</strong> Hesap ele geçirimi, paylaşılan oturum, VPN değişimi, otomasyon hatası.</p>
+<p><strong>Toplanacak kanıt:</strong> Kimlik logları, API geçidi logları, başarılı/başarısız oturumlar, cihaz parmak izi özetleri (varsa), değişiklik kayıtları.</p>
+<p><strong>Analiz:</strong> Zaman çizelgesi çıkar; her hipotez için destekleyen ve çürüten kanıt listelenir.</p>
+<p><strong>Karar:</strong> Risk ve iş etkisine göre geçici kontrol veya şifre sıfırlama gibi süreç kararları (kurum politikasına uygun).</p>
+<p><strong>Rapor:</strong> Bulgu → Etki → Öneri → Kanıt formatında; belirsizlikler açık yazılır.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Olay analizinde NTP sapması en çok neyi bozar?</li></ol>
+<p>A) SEO</p>
+<p>B) Olay sırası ve korelasyon güveni</p>
+<p>C) JPEG kalitesi</p>
+<p>D) Font seçimi</p>
+<p>E) CDN fiyatı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Zaman tutarlılığı korelasyon için şarttır.</li></ul>
+<ol><li>WAF alarmını tek başına kesin teşhis saymak neden zayıftır?</li></ol>
+<p>A) WAF her zaman yanlıştır</p>
+<p>B) Bağlam ve birden fazla bağımsız kanıt olmadan yanlış pozitif riski yüksektir</p>
+<p>C) WAF log tutmaz</p>
+<p>D) WAF sadece mobilde çalışır</p>
+<p>E) WAF TLS kapatır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Korelasyon ve bağlam gerekir.</li></ul>
+<ol><li>Yanlış negatif hangi durumu tanımlar?</li></ol>
+<p>A) Çok alarm</p>
+<p>B) Gerçek tehdit görünür sinyal üretmedi</p>
+<p>C) Bakım penceresi</p>
+<p>D) Başarılı giriş</p>
+<p>E) 403 yanıtı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Görünürlük veya kural boşluğu olabilir.</li></ul>
+<ol><li>API geçidi loglarının SOC için değeri nedir?</li></ol>
+<p>A) Yok</p>
+<p>B) Uç bazlı erişim ve kimlik bilgisini merkezileştirir</p>
+<p>C) Sadece tema</p>
+<p>D) Sadece favicon</p>
+<p>E) Sadece CPU</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İz sürme ve politika denetimi kolaylaşır.</li></ul>
+<ol><li>Kanıt paketinde “gözlem” ile “yorum” ayrımının amacı nedir?</li></ol>
+<p>A) Raporu uzatmak</p>
+<p>B) Denetlenebilirlik ve itirazlara dayanıklılık</p>
+<p>C) Log silmek</p>
+<p>D) Kullanıcıyı suçlamak</p>
+<p>E) Şifreyi kısaltmak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kanıt ve çıkarım karışmamalıdır.</li></ul>
+<ol><li>Uygulama logları ile web erişim loglarını birleştirmenin faydası nedir?</li></ol>
+<p>A) Tema üretmek</p>
+<p>B) İstek yolunu işlem olayıyla eşleştirmek</p>
+<p>C) DNS silmek</p>
+<p>D) CPU modeli öğrenmek</p>
+<p>E) JPEG üretmek</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Uçtan uca hikâye kurulur.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m10-sdlc" data-section="wag-m10-sdlc">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
+<p>Web güvenliği tek seferlik tarama değil; gereksinimden üretime uzanan süreçtir. AppSec, geliştirme ve SOC birbirini tamamlar.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Tehdit modellemeye giriş seviyesinde yaklaşabilirim.</li><li>Güvenli kabul kriterleri ve değişiklik sonrası doğrulama fikrini uygulayabilirim.</li></ul></div>
+<h2>Secure SDLC</h2>
+<p>Güvenlik; tasarım, kodlama, bağımlılık yönetimi, inceleme, test ve dağıtım aşamalarında tekrarlanan kontrollerle gömülür.</p>
+<h2>Tehdit modelleme</h2>
+<p>Varlık, güven sınırı ve muhtemel tehdit senaryoları şema üzerinde tartışılır. Çıktı, kontrol ve test önceliklerini besler.</p>
+<h2>Kod incelemesi ve bağımlılıklar</h2>
+<p>İnsan gözü güvenlik açısından desen arar; otomasyon bilinen zayıflıkları tarar. Gizli anahtar taraması yanlışlıkla işlenmiş sırları bulur.</p>
+<h2>CI/CD ve ortamlar</h2>
+<p>Boru hattında statik analiz, bağımlılık denetimi ve yapılandırma testleri konumlandırılır. Üretim dağıtımı sonrası sağlık kontrolü ve geri alma planı hazırdır.</p>
+<h2>AppSec, DevSecOps ve SOC</h2>
+<p>AppSec riski önceden azaltır; DevSecOps kontrolleri hızlı akışa gömülür; SOC üretilen sinyalleri izler ve olayları doğrular.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Tehdit modellemenin doğrudan çıktısı en çok nedir?</li></ol>
+<p>A) Yeni logo</p>
+<p>B) Öncelikli kontrol ve test soruları</p>
+<p>C) DNS TTL</p>
+<p>D) CPU modeli</p>
+<p>E) Tema rengi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Tehditler kontrol tasarımını yönlendirir.</li></ul>
+<ol><li>Bağımlılık taraması hangi risk sınıfını hedefler?</li></ol>
+<p>A) Favicon</p>
+<p>B) Bilinen güvensiz bileşen sürümleri</p>
+<p>C) JPEG çözünürlüğü</p>
+<p>D) CSS sırası</p>
+<p>E) Font lisansı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Zincirde üçüncü parti riskleri.</li></ul>
+<ol><li>Değişiklik sonrası doğrulama neden şarttır?</li></ol>
+<p>A) Log silmek için</p>
+<p>B) Düzeltmenin gerçekten etkisini ve yan etkisini görmek için</p>
+<p>C) CDN fiyatı için</p>
+<p>D) DNS silmek için</p>
+<p>E) Tema için</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Regresyon ve kapanış kriteri için gerekir.</li></ul>
+<ol><li>Güvenli kabul kriterleri ne işe yarar?</li></ol>
+<p>A) Tasarımı geciktirmek</p>
+<p>B) “Tamam” tanımını güvenlik açısından ölçülebilir kılar</p>
+<p>C) Logları kapatır</p>
+<p>D) TLS’i kapatır</p>
+<p>E) WAF’ı devre dışı bırakır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Ölçülebilir çıkış koşulu sağlar.</li></ul>
+<ol><li>Secret scanning hangi hatayı yakalamaya çalışır?</li></ol>
+<p>A) Yanlış font</p>
+<p>B) Depoya yanlışlıkla giren gizli anahtarlar</p>
+<p>C) Yavaş CPU</p>
+<p>D) DNS adı uzunluğu</p>
+<p>E) JPEG boyutu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Sızıntı öncesi erken uyarı.</li></ul>
+<ol><li>SOC’un SDLC çıktılarından beklediği tipik fayda nedir?</li></ol>
+<p>A) Tema</p>
+<p>B) Daha anlamlı alarm ve korelasyon alanları</p>
+<p>C) Favicon</p>
+<p>D) CSS minify</p>
+<p>E) CPU governor</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Görünürlük ve sınıflandırma iyileşir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m11-rapor" data-section="wag-m11-rapor">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 11 — Web Uygulama Güvenliği Raporlama ve Operasyonel Senaryolar</h1>
+<p>Bulguların teknik doğruluğu yetmez; karar verilebilir, kanıtlı ve ölçeklenebilir olması gerekir. Bu modül önceki başlıkları rapor diline bağlar.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Bulgu → Etki → Öneri → Kanıt formatında yazabilirim.</li><li>Belirsizlik dilini ve karşı kanıt aramayı kullanabilirim.</li><li>Risk önceliklendirme ve kapanış kriterini tanımlayabilirim.</li></ul></div>
+<h2>Bulgu yazımı</h2>
+<p>Bulgu gözlemi açık yazar; spekülasyon ayrı bölümde veya hipotez olarak etiketlenir. Teknik ek ile yönetici özeti farklı okuyucu ihtiyaçlarına hizmet eder.</p>
+<h2>Kanıtın sınırları</h2>
+<p>Kanıt yoksa güçlü iddia yazılmaz; “gözlemlenemedi” ifadesi dürüstçe kullanılır. Karşı kanıt aramak (ör. bakım penceresi, bilinen trafik) yanlış pozitifleri düşürür.</p>
+<h2>Risk skoru ve kapanış</h2>
+<p>Öncelik; etki, olasılık ve kontrol durumu ile gerekçelendirilir. Düzeltme sonrası doğrulama ve kapanış kriteri (ör. tekrarlayan test veya log doğrulaması) yazılır.</p>
+<h2>Lessons learned</h2>
+<p>Olay veya değerlendirme sonrası süreç ve görünürlük iyileştirmeleri kayda geçirilir.</p>
+
+<h2>Operasyonel senaryolar (özet format)</h2>
+<p>Her senaryoda aynı omurga kullanılır: belirti → hipotezler → kanıt → analiz → karar → rapor (Bulgu → Etki → Öneri → Kanıt).</p>
+<h3>1) Şüpheli giriş aktivitesi</h3>
+<p>Belirti: kısa sürede çok sayıda başarısız deneme ve ardından başarılı oturum. Kanıt: kimlik sağlayıcı logları, IP ve coğrafi tutarsızlık. Karar: risk temelli MFA zorlama veya hesap incelemesi (politikaya göre).</p>
+<h3>2) Yetkisiz yönetim erişimi şüphesi</h3>
+<p>Belirti: olağandışı yönetici uç çağrıları. Kanıt: rol değişiklik kayıtları, oturum ve API logları. Karar: yetki geri alma ve kök neden incelemesi.</p>
+<h3>3) API’den gereğinden fazla veri</h3>
+<p>Belirti: büyük yanıt gövdeleri veya hassas alanların istemci modelinde görünmesi. Kanıt: sözleşme karşılaştırması, örnek yanıt şeması (maskeli). Karar: alan kırpma ve sunum katmanı ayrımı.</p>
+<h3>4) Üretimde hata ayıklama açık</h3>
+<p>Belirti: ayrıntılı yığın izleri. Kanıt: yanıt başlıkları ve yapılandırma. Karar: mod kapatma ve dağıtım doğrulaması.</p>
+<h3>5) Hatalı CORS</h3>
+<p>Belirti: beklenmeyen kökenlerden okuma başarıları. Kanıt: başlık politikası ve geçmiş değişiklikler. Karar: allowlist sıkılaştırma.</p>
+<h3>6) Dosya yükleme tasarım riski</h3>
+<p>Belirti: yürütülebilir içerik veya yol birleştirme hatası endişesi. Kanıt: kod yolu ve depolama konumu. Karar: içerik doğrulama ve yalıtılmış depolama.</p>
+<h3>7) Hata mesajında hassas bilgi</h3>
+<p>Belirti: SQL veya iç yapı ipuçları. Kanıt: ekran görüntüsü (maskeli) ve log. Karar: hata genelleştirme ve güvenli log politikası.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Raporda “kesin olarak saldırıldı” demeden önce hangi disiplin beklenir?</li></ol>
+<p>A) Spekülasyon</p>
+<p>B) Birden fazla bağımsız kanıt ve tutarlı zaman çizelgesi</p>
+<p>C) Sadece duyum</p>
+<p>D) Sadece tek 403</p>
+<p>E) Sadece favicon</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kesin hüküm kanıt yükü ister.</li></ul>
+<ol><li>Yönetici özeti ile teknik ek ayrımının amacı nedir?</li></ol>
+<p>A) Log silmek</p>
+<p>B) Farklı paydaşların karar ihtiyacına uygun bilgi sunmak</p>
+<p>C) TLS kapatmak</p>
+<p>D) DNS silmek</p>
+<p>E) Tema seçmek</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Okuma düzeyi ve eylem öğeleri farklıdır.</li></ul>
+<ol><li>Karşı kanıt aramak neden profesyoneldir?</li></ol>
+<p>A) Raporu kısaltır</p>
+<p>B) Yanlış pozitifleri azaltır ve güvenilirliği artırır</p>
+<p>C) Kullanıcıyı suçlar</p>
+<p>D) WAF’ı kapatır</p>
+<p>E) Şifreyi sıfırlar</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Eleştirel değerlendirme parçasıdır.</li></ul>
+<ol><li>Kapanış kriteri neyi tanımlar?</li></ol>
+<p>A) Tema rengi</p>
+<p>B) Düzeltmenin tamamlandığını nasıl doğrulayacağınızı</p>
+<p>C) CPU modeli</p>
+<p>D) DNS TTL</p>
+<p>E) JPEG kalitesi</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Ölçülebilir tamamlanma şartıdır.</li></ul>
+<ol><li>“Etki” bölümünde yazılması gereken temel unsur nedir?</li></ol>
+<p>A) Sadece teknik jargon</p>
+<p>B) İş ve güvenlik sonuçları</p>
+<p>C) Sadece logo</p>
+<p>D) Sadece font</p>
+<p>E) Sadece CDN</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Karar için iş bağlamı gerekir.</li></ul>
+<ol><li>Belirsizlik dili ne zaman kullanılır?</li></ol>
+<p>A) Her zaman kesin iddia için</p>
+<p>B) Kanıt yetersizken olasılıkları dürüstçe çerçevelemek için</p>
+<p>C) Log silmek için</p>
+<p>D) Kullanıcıyı suçlamak için</p>
+<p>E) WAF kapatmak için</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kanıt sınırını yönetir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m12-sozluk" data-section="wag-m12-sozluk">
+<div class="section-inner module-2-enhanced">
+
+<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
+<p>Bu sözlük modüllerde geçen kavramları tek yerde toplar. Tablo, eğitim görünümünde otomatik biçimlenebilir.</p>
+<h2>Terimler Sözlüğü</h2>
+<p>Terim	Türkçe karşılığı / açıklama</p>
+<p>Authentication	Kimlik doğrulama: kullanıcı iddiasını kanıtlama</p>
+<p>Authorization	Yetkilendirme: kimliğe hangi işlem ve kaynakların açık olduğu</p>
+<p>Session	Oturum: sunucunun veya servisin tanıdığı etkileşim durumu</p>
+<p>Cookie	Çerez: tarayıcıda saklanan küçük veri; oturum veya tercih taşıyabilir</p>
+<p>Token	Belirteç: kimlik veya yetki iddiasını taşıyan değer (durumsuz senaryolarda sık)</p>
+<p>CSRF	Siteler arası istek sahteciliği: tarayıcının oturumu kötüye kullanarak durum değiştirme riski</p>
+<p>XSS	Siteler arası komut dosyası: bağlamda güvensiz verinin komut olarak yorumlanma riski</p>
+<p>SQL Injection	SQL enjeksiyonu: sorgu yapısına güvensiz veri gömülmesi riski</p>
+<p>SSRF	Sunucu tarafı istek sahteciliği: sunucunun istenmeyen hedeflere köprü olması riski</p>
+<p>CORS	Kökenler arası paylaşım: tarayıcı köken kontrolü ile ilgili başlık politikası</p>
+<p>CSP	İçerik güvenlik politikası: kaynak yükleme ve komut dosyası yüzeyini kısıtlama</p>
+<p>HSTS	HTTP sıkı taşıma güvenliği: HTTPS kullanımını teşvik eden başlık</p>
+<p>API	Uygulama programlama arayüzü: makineyle konuşan uçlar</p>
+<p>Rate limit	Oran sınırlama: belirli sürede istek sayısını kısıtlama</p>
+<p>WAF	Web uygulama güvenlik duvarı: uygulama trafiğine özgü filtreleme katmanı</p>
+<p>Secure SDLC	Güvenli yazılım yaşam döngüsü: güvenliğin sürece gömülmesi</p>
+<p>Threat modeling	Tehdit modelleme: varlık ve sınırlar üzerinde tehdit senaryolarını erken tartma</p>
+<p>Input validation	Girdi doğrulama: beklenen tür/format sınırları</p>
+<p>Output encoding	Çıktı kodlama: hedef bağlamda güvenli temsil</p>
+<p>Sensitive data exposure	Hassas veri maruziyeti: korunması gereken verinin gereksiz ifşası</p>
+<p>Business logic flaw	İş mantığı hatası: kuralın sunucuda zorlanmamasından doğan tutarsızlık</p>
+<p>Evidence	Kanıt: yorumdan ayrı gözlemlenebilir dayanak</p>
+<p>False positive	Yanlış pozitif: alarmın gerçek tehdit olmaması</p>
+<p>False negative	Yanlış negatif: tehdidin sinyal üretmemesi</p>
+<p>Risk	Risk: olasılık ve etkinin birlikte değerlendirilmesi</p>
+<p>Impact	Etki: olayın iş ve güvenlik sonuçları</p>
+<p>Mitigation	Azaltma: riski düşüren kontrol veya süreç</p>
+<p>Verification	Doğrulama: iddianın kanıtla test edilmesi</p>
+<h2>Eğitimin Kapanışı</h2>
+<p>Bu eğitimde web uygulamasını varlık ve akış üzerinden okumayı; HTTP ve oturum modelini; kimlik ve yetkiyi; veri işleme ve API kontrollerini; başlık ve yapılandırmayı; loglarla kanıt temelli analizi; süreç içi güvenliği ve rapor omurgasını birleştirdik. Bir sonraki adım olarak API Security ve Secure Code Review modüllerinde derinleşebilir; burada kurduğunuz savunma ve raporlama disiplinini taşıyabilirsiniz.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>“Evidence” ile “Impact” arasındaki fark en doğru nasıldır?</li></ol>
+<p>A) Aynıdır</p>
+<p>B) Evidence gözlem; Impact sonuç</p>
+<p>C) Impact log satırıdır</p>
+<p>D) Evidence risk skorudur</p>
+<p>E) Impact token’dır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kanıt ve etki farklı rapor bileşenleridir.</li></ul>
+<ol><li>Mitigation ifadesi raporda neyi temsil eder?</li></ol>
+<p>A) Sadece CVE adı</p>
+<p>B) Riski azaltan kontrol veya süreç değişikliği</p>
+<p>C) Sadece tema</p>
+<p>D) Sadece DNS</p>
+<p>E) Sadece favicon</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Azaltma eylemini tanımlar.</li></ul>
+<ol><li>Verification aşamasında beklenen çıktı nedir?</li></ol>
+<p>A) Spekülasyon</p>
+<p>B) Düzeltmenin kanıtla doğrulanmış olması</p>
+<p>C) Log silme</p>
+<p>D) Kullanıcıyı kilitleme</p>
+<p>E) WAF kapatma</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kapanış için ölçülebilir doğrulama gerekir.</li></ul>
+<ol><li>Threat modeling çıktısı doğrudan neyi besler?</li></ol>
+<p>A) Favicon seçimi</p>
+<p>B) Kontrol ve test öncelikleri</p>
+<p>C) JPEG kalitesi</p>
+<p>D) CPU governor</p>
+<p>E) DNS TTL</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Erken risk tartışması önceliklendirmeyi yönlendirir.</li></ul>
+<ol><li>False negative operasyonel olarak ne anlama gelir?</li></ol>
+<p>A) Çok alarm</p>
+<p>B) Görünürlük veya kural boşluğu olabilir</p>
+<p>C) Başarılı giriş yok</p>
+<p>D) 403 çok</p>
+<p>E) CDN hızlı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Gerçek olay görünmüyor olabilir.</li></ul>
+<ol><li>Secure SDLC yaklaşımının özü nedir?</li></ol>
+<p>A) Sadece son gün tarama</p>
+<p>B) Güvenliğin yaşam döngüsüne yayılması</p>
+<p>C) Sadece WAF</p>
+<p>D) Sadece TLS</p>
+<p>E) Sadece CDN</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Süreç boyunca tekrarlayan güvenlik çalışmasıdır.</li></ul>
+</div>
+</div>
+</section>

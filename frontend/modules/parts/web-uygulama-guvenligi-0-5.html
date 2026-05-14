@@ -1,0 +1,376 @@
+<section class="content-section docx-content active" id="wag-m0-etik" data-section="wag-m0-etik">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 0 — Etik, Yetki ve Güvenli Çalışma Çerçevesi</h1>
+<p>Bu modül, web uygulaması güvenliği çalışmalarını profesyonel zemine oturtur. Teknik olarak mümkün olan her işlem izinli değildir; yazılı yetki, net kapsam, veri minimizasyonu ve kanıt disiplini olmadan yapılan çalışma kurumsal ve hukuki risk taşır. Odak, zarar vermemek ve raporun karar vericiye taşınabilir olmasıdır.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Yetkisiz test yapmadan önce yazılı izin ve kapsam gereksinimini açıklayabilirim.</li><li>RoE ve ortam ayrımını (test/staging/üretim) güvenlik çalışmasına bağlayabilirim.</li><li>Kanıt türlerini seçer ve Bulgu → Etki → Öneri → Kanıt formatında düşünebilirim.</li><li>Kişisel ve hassas veri için minimizasyon ve saklama sınırlarını tanımlayabilirim.</li></ul></div>
+<h2>Yetkili çalışma ve kapsam</h2>
+<p>Web uygulaması üzerinde trafik gözlemlemek, yapılandırma doğrulamak veya uçtan uca davranış incelemek bile kurum politikası ve sözleşme kapsamında değerlendirilir. Yazılı izin; kimlerin hangi sistemlere, hangi yöntemlerle ve hangi zaman penceresinde dokunabileceğini netleştirir. Kapsam içi ve dışı alanlar somut tanımlanmalıdır: DNS adları, ortamlar, veri türleri ve raporlama kanalı belirsiz kalırsa “kapsam kayması” oluşur.</p>
+<p><strong>Etki:</strong> İzinsiz veya belirsiz kapsamlı çalışma, hizmet kesintisi, veri ihlali algısı ve yaptırım riski doğurur. <strong>Kanıt:</strong> İmzalı yetki belgesi, güncel RoE, değişiklik/onay kayıtları. <strong>Savunma:</strong> Çalışma öncesi kontrol listesi, durdurma koşulları ve paydaş bilgilendirmesi. <strong>Doğrulama:</strong> Kapsam maddelerinin tek tek işaretlenmesi ve kanıt paketine eklenmesi.</p>
+<h2>Test, staging ve üretim ayrımı</h2>
+<p>Üretim ortamında doğrudan deneme yapmak yerine, izole test ortamında aynı sürüm ve yapılandırma ile doğrulama tercih edilir. Üretimde yapılacak en küçük kontrol bile değişiklik yönetimi ve geri alma planı gerektirir.</p>
+<h2>Veri minimizasyonu ve hassas veri</h2>
+<p>Kanıt toplarken soruyu yanıtlamak için gereken minimum veriyi seçmek gerekir. Log kesitleri, ekran görüntüleri ve istek/yanıt özetleri kişisel veri içeriyorsa maskeleme ve erişim sınırlaması uygulanır.</p>
+<h2>Kanıt bütünlüğü ve rapor standardı</h2>
+<p>Ham log, yapılandırma çıktısı veya trafik özeti ile yorum ayrılmalıdır. Rapor omurgası: <strong>Bulgu</strong> (ne görüldü), <strong>Etki</strong> (hangi iş ve güvenlik riski), <strong>Öneri</strong> (nasıl düzeltilir ve nasıl doğrulanır), <strong>Kanıt</strong> (hangi kayıt bunu destekliyor). Hash ve manifest, dosya bütünlüğü için kullanılabilir.</p>
+<h2>Do Not Harm</h2>
+<p>Çalışma, kullanıcı deneyimini ve veri bütünlüğünü riske atmadan tasarlanır. Yoğunluk sınırları, acil durdurma ve iletişim hattı RoE’nin parçasıdır. Bu modülde saldırı senaryosu anlatılmaz; çerçeve ve raporlama disiplini esastır.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Üretimde izinsiz “hızlı kontrol” yapmak profesyonel sayılır mı?</li></ol>
+<p>A) Evet, kısa süreli olduğu sürece her zaman uygundur</p>
+<p>B) Hayır; yazılı izin, kapsam ve ortam ayrımı olmadan uygun değildir</p>
+<p>C) Sadece GET istekleri serbesttir</p>
+<p>D) Sadece iç ağda serbesttir</p>
+<p>E) Yalnızca yöneticinin sözlü onayı yeterlidir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Profesyonellik yazılı yetki ve net kapsam ister; yöntem ve süre tek başına yeterli değildir.</li></ul>
+<ol><li>Bulgu → Etki → Öneri → Kanıt akışında “Kanıt” neyi temsil eder?</li></ol>
+<p>A) Analistin tahmini</p>
+<p>B) Ham veri veya izlenebilir çıktı</p>
+<p>C) Yalnızca risk skoru</p>
+<p>D) Yalnızca yönetici özeti</p>
+<p>E) CVE numarası</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kanıt, yorumdan ayrılan gözlemlenebilir dayanaktır.</li></ul>
+<ol><li>Veri minimizasyonunun temel amacı nedir?</li></ol>
+<p>A) Daha fazla log toplamak</p>
+<p>B) Gereksiz kişisel/hassas veri taşımadan soruyu yanıtlamak</p>
+<p>C) Tüm trafiği süresiz saklamak</p>
+<p>D) Şifrelemeyi devre dışı bırakmak</p>
+<p>E) Raporu kısaltmak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Minimizasyon gereksiz veri maruziyetini ve hukuki yükü azaltır.</li></ul>
+<ol><li>Kapsam belgesinde en kritik eksiklik hangisidir?</li></ol>
+<p>A) Logo kullanımı</p>
+<p>B) Kapsam dışı sistemlerin tanımsız kalması</p>
+<p>C) Font boyutu</p>
+<p>D) Sunucu markası</p>
+<p>E) Eğitim saati</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kapsam dışı belirsizliği yanlışlıkla teması ve hesap verilemezliği artırır.</li></ul>
+<ol><li>Staging ile üretim ayrımının savunma katkısı nedir?</li></ol>
+<p>A) Staging her zaman internete açıktır</p>
+<p>B) Üretim riskini izole doğrulama ve geri alma imkânı sunar</p>
+<p>C) Üretimde test yasaklar</p>
+<p>D) Logları siler</p>
+<p>E) TLS’i kapatır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İzole ortamda doğrulama, üretim kesintisi ve veri riskini düşürür.</li></ul>
+<ol><li>Kanıt paketinde hash kullanımının doğrudan faydası nedir?</li></ol>
+<p>A) Şifreleme sağlar</p>
+<p>B) Dosyanın sonradan değiştirilmediğini doğrulamaya yardım eder</p>
+<p>C) Erişimi hızlandırır</p>
+<p>D) WAF kuralı üretir</p>
+<p>E) Kullanıcı şifresini kurtarır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Hash bütünlük doğrulaması için kullanılır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m1-mimari" data-section="wag-m1-mimari">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 1 — Web Uygulama Mimarisi ve Güvenlik Bakış Açısı</h1>
+<p>Web uygulamasını yalnızca “ön yüz–arka yüz–veritabanı” üçlüsü olarak değil; varlık, veri akışı, kimlik, oturum, rol, API ve güven sınırları üzerinden okumak gerekir. Güvenli tasarım, sonradan eklenen bir katman değil, mimarinin parçasıdır.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Korunan varlıkları ve veri kaynaklarını haritalayabilirim.</li><li>Trust boundary ve sunucu tarafı doğrulama noktalarını işaretleyebilirim.</li><li>Saldırı yüzeyini işlev ve veri akışına bağlayabilirim.</li><li>Log ve yetki kontrollerinin hangi katmanda üretildiğini sorabilirim.</li></ul></div>
+<h2>İstemci, sunucu, veri deposu ve API</h2>
+<p>Tarayıcı veya mobil istemci kullanıcı arayüzünü sunar; iş kurallarının büyük kısmı sunucuda veya ayrı API katmanında yürür. Veritabanı ve mesajlaşma gibi yardımcı bileşenler de güven sınırının parçasıdır.</p>
+<h2>Korunacak varlıklar</h2>
+<p>Hesaplar, oturum belirteçleri, işlem kayıtları, kişisel veri, ticari sırlar, yapılandırma ve kriptografik anahtarlar farklı hassasiyet düzeylerine sahiptir. Aynı uygulamada “kullanıcı verisi” ile “işlem kaydı” farklı erişim ve saklama politikaları gerektirebilir.</p>
+<h2>Trust boundary ve doğrulama katmanları</h2>
+<p>İstemciden gelen her veri güvenilmez kabul edilir; güven sınırını geçtikten sonra sunucu tarafında yeniden doğrulanmalıdır. Yalnızca arayüzde gizlenen yönetim menüleri yetki sağlamaz.</p>
+<h2>Saldırı yüzeyi</h2>
+<p>Kimlik doğrulama uçları, dosya yükleme, yönetim panelleri, webhook’lar ve üçüncü parti entegrasyonlar yüzeyi genişletir. Her yüzey için “kim, neyi, hangi kanıtla yapıyor?” sorusu sorulur.</p>
+<h2>Okuma alıştırması</h2>
+<p>Basit bir akış için şu sorular kullanılır: Veri nereden geliyor? Kim hangi kaynağa erişiyor? Hangi işlem sunucuda doğrulanıyor? Hangi noktada log üretiliyor? Yetki kontrolü hangi katmanda?</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Arayüzde gizlenmiş bir “admin” bağlantası güvenlik sağlar mı?</li></ol>
+<p>A) Evet, URL bilinmiyorsa güvenlidir</p>
+<p>B) Hayır; yetki sunucu tarafında zorunludur</p>
+<p>C) Sadece HTTPS ise yeterlidir</p>
+<p>D) Sadece VPN ile erişiliyorsa yeterlidir</p>
+<p>E) Evet, çünkü kullanıcı görmez</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Gizlilik yerine güvenlik için sunucu tarafı yetkilendirme şarttır.</li></ul>
+<ol><li>Trust boundary ifadesi en iyi neyi tanımlar?</li></ol>
+<p>A) Sadece TLS sertifikası</p>
+<p>B) Güvenilen ve güvenilmeyen bileşenler arasındaki sınır</p>
+<p>C) Sadece veritabanı portu</p>
+<p>D) CDN önbelleği</p>
+<p>E) CSS dosyası</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Güven sınırı, doğrulama ve güven değerlendirmesinin geçtiği çizgidir.</li></ul>
+<ol><li>“Saldırı yüzeyi” için en doğru tanım hangisidir?</li></ol>
+<p>A) Sadece dış IP sayısı</p>
+<p>B) Saldırganın etkileşebileceği giriş noktaları ve kontrollerin birlikte düşünülmesi</p>
+<p>C) Sadece şifre politikası</p>
+<p>D) Sadece WAF markası</p>
+<p>E) Sadece CPU kullanımı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Yüzey; erişilebilen uçlar ve zayıf kontrollerle birlikte ele alınır.</li></ul>
+<ol><li>Oturum çerezi ile iş verisi aynı güvenlik modelinde mi ele alınmalıdır?</li></ol>
+<p>A) Evet, her zaman aynıdır</p>
+<p>B) Hayır; yaşam süresi, erişim kanalı ve tehdit modeli farklı olabilir</p>
+<p>C) Sadece mobilde farklıdır</p>
+<p>D) Sadece GET ile taşınıyorsa aynıdır</p>
+<p>E) Evet, çünkü ikisi de cookie’dir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Farklı varlıklar farklı kontrol ve loglama gerektirir.</li></ul>
+<ol><li>İş mantığı güvenlikten hangi ilişkiyle doğru kurulur?</li></ol>
+<p>A) İş mantığı güvenliği dışlar</p>
+<p>B) Güvenlik, iş kurallarının ihlal edilemeyeceği şekilde tasarıma gömülür</p>
+<p>C) Sadece pentest sonunda eklenir</p>
+<p>D) Sadece loglama ile çözülür</p>
+<p>E) Sadece CDN ile çözülür</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kuralların sunucuda zorlanması güvenliğin parçasıdır.</li></ul>
+<ol><li>Hangi soru log görünürlüğünü değerlendirir?</li></ol>
+<p>A) Hangi font kullanılıyor?</p>
+<p>B) Hangi güvenlik olayı hangi katmanda kayda geçiyor?</p>
+<p>C) Tema rengi nedir?</p>
+<p>D) Kaç satır CSS var?</p>
+<p>E) Favicon boyutu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Olayın tespiti için kayıt noktaları bilinmelidir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m2-http" data-section="wag-m2-http">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 2 — HTTP, Cookie, Session ve Tarayıcı Güvenlik Modeli</h1>
+<p>HTTP trafiği saldırı aracı değil; uygulamanın nasıl davrandığını ve kontrollerin nerede işlediğini anlamanın aracıdır. Durum kodları, başlıklar ve çerez politikaları savunma kararlarını şekillendirir.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>İstek/yanıt ve yöntemleri güvenlik açısından yorumlayabilirim.</li><li>Çerez bayraklarının etkisini açıklayabilirim.</li><li>TLS’nin koruduğu ve koruymadığı sınırları ayırt edebilirim.</li><li>CORS ve same-origin farkını temel düzeyde okuyabilirim.</li></ul></div>
+<h2>İstek ve yanıt</h2>
+<p>Yöntem (GET, POST, PUT, PATCH, DELETE) işlemin niyetini gösterir; sunucunun idempotent beklentisi ve önbellek davranışı buna bağlıdır. Durum kodları (2xx, 3xx, 4xx, 5xx) hata sınıfını ve olası yapılandırma sorunlarını işaret edebilir.</p>
+<h2>Çerez, oturum ve belirteç</h2>
+<p>Çerez tarayıcıda taşınan küçük veri parçasıdır; oturum kimliği veya durumsuz belirteç taşıyabilir. HttpOnly, JavaScript ile okunmayı kısıtlar; Secure yalnızca HTTPS’te gönderimi zorunlu kılar; SameSite, siteler arası isteklerde taşınmayı sınırlamaya yardım eder.</p>
+<h2>HTTPS / TLS</h2>
+<p>TLS taşıma sırasında gizlilik ve bütünlük sağlar; uygulama mantığı hatalarını veya zayıf yetkilendirmeyi tek başına çözmez.</p>
+<h2>Tarayıcı güvenlik modeli</h2>
+<p>Aynı köken politikası, farklı kökenler arasında veri okumayı kısıtlar. CORS, sunucunun hangi kökenlerden gelen isteklere bilinçli izin verdiğini başlıklarla ifade eder; yanlış yapılandırma risk oluşturur.</p>
+<h2>Kanıt olarak istek/yanıt kesiti</h2>
+<p>Geliştirici araçları veya sunucu erişim günlükleri, başlık ve gövde özetleriyle birlikte maskeleme kurallarına uygun şekilde rapora eklenebilir.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>HttpOnly çerez bayrağının birincil amacı nedir?</li></ol>
+<p>A) Çerezi şifrelemek</p>
+<p>B) Çereze JavaScript erişimini kısıtlamak</p>
+<p>C) CSRF’i tek başına engellemek</p>
+<p>D) GET isteğini yasaklamak</p>
+<p>E) CDN’i devre dışı bırakmak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: HttpOnly, XSS sonrası belirteç okuma riskini azaltmaya yardım eder.</li></ul>
+<ol><li>SameSite=Lax/Strict yaklaşımı neyle ilişkilidir?</li></ol>
+<p>A) SQL sorgu planı</p>
+<p>B) Siteler arası isteklerde çerezin taşınması</p>
+<p>C) Disk şifreleme</p>
+<p>D) DNSSEC</p>
+<p>E) JPEG sıkıştırma</p>
+<ul><li>Doğru: B</li><li>Gerekçe: SameSite, çapraz site bağlamında çerez taşımayı sınırlar.</li></ul>
+<ol><li>TLS hangi sınıfı tek başına çözmez?</li></ol>
+<p>A) Taşıma sırasında dinleme riskini</p>
+<p>B) Sunucu tarafı yetkisiz nesne erişimi</p>
+<p>C) Sertifika doğrulama ihtiyacını</p>
+<p>D) Şifreli kanal ihtiyacını</p>
+<p>E) MITM riskini (doğru kurulumla)</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Uygulama düzeyi yetki hataları TLS ile otomatik düzelmez.</li></ul>
+<ol><li>4xx ve 5xx kodlarını ayırt etmenin operasyonel faydası nedir?</li></ol>
+<p>A) Renk paleti seçmek</p>
+<p>B) İstemci mi sunucu mu kaynaklı hata sınıfını ayırarak araştırmayı odaklamak</p>
+<p>C) CSS minify</p>
+<p>D) Veritabanı şeması</p>
+<p>E) CDN fiyatı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Hata sınıfı kök neden analizini yönlendirir.</li></ul>
+<ol><li>CORS başlıkları neyi ifade eder?</li></ol>
+<p>A) Veritabanı indeksi</p>
+<p>B) Tarayıcının köken kontrolünde sunucunun verdiği izin politikası</p>
+<p>C) Disk kotası</p>
+<p>D) Şifre karma algoritması</p>
+<p>E) CPU çekirdek sayısı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: CORS, kökenler arası okuma/yazma izinlerini yönetir.</li></ul>
+<ol><li>İstemci tarafı doğrulamanın sunucu tarafıyla ilişkisi doğru nasıl kurulur?</li></ol>
+<p>A) İstemci yeterlidir</p>
+<p>B) Sunucu doğrulaması asla gerekmez</p>
+<p>C) İstemci UX içindir; güvenlik kararı sunucuda tekrarlanır</p>
+<p>D) Sadece mobilde sunucu gerekir</p>
+<p>E) Sadece POST için sunucu gerekir</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Güvenilir doğrulama sunucuda tekrarlanmalıdır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m3-auth" data-section="wag-m3-auth">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 3 — Kimlik Doğrulama ve Oturum Güvenliği</h1>
+<p>Kimlik doğrulama, kullanıcı iddiasını kanıtlamaktır; yetkilendirme ise kanıtlanmış kimliğin ne yapabileceğidir. Oturum yönetimi zayıfsa kimlik doğrulama gücü boşa gider. Bu modül savunma ve log yorumuna odaklanır; saldırı tekniği öğretilmez.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Parola ve MFA risklerini iş bağlamında tartabilirim.</li><li>Oturum zaman aşımı, yenileme ve şüpheli oturum sinyallerini listeleyebilirim.</li><li>Kimlik günlüklerini savunma odaklı okuyabilirim.</li></ul></div>
+<h2>Parola ve MFA</h2>
+<p>Uzun ve benzersiz parolalar, güvenli saklama (ör. uygun password hashing) ve çok faktörlü kimlik doğrulama hesap ele geçirme riskini azaltır. MFA, sosyal mühendislik ve cihaz ele geçirme senaryolarında ek sınır sağlar; yine de kullanıcı deneyimi ve kurtarma akışları tasarlanmalıdır.</p>
+<h2>Oturum yaşam döngüsü</h2>
+<p>Zaman aşımı, yenileme belirteçlerinin güvenli saklanması ve “beni hatırla” seçeneklerinin risk profili netleştirilir. Oturum sabitleme farkındalığı: oturum tanımlayıcısı öngörülebilir veya yeniden kullanılabilir olmamalıdır.</p>
+<h2>Oran sınırlama ve kilitlenme</h2>
+<p>Deneme sayısını sınırlamak ve gecikme eklemek brute force riskini azaltır; kilitlenme ise hizmet reddi ve hesap kilitleme saldırısı riskini artırabilir; denge iş gereksinimiyle kurulur.</p>
+<h2>Şüpheli oturum sinyalleri</h2>
+<p>Ani ülke değişimi, bilinmeyen cihaz, kısa sürede çok sayıda başarısız deneme sonrası başarı, olağandışı saatlerde yönetici oturumu gibi sinyaller hipotez üretir; kesin hüküm için birden fazla kanıt gerekir.</p>
+<h2>HOW-TO: Şüpheli giriş aktivitesini savunma odaklı analiz etmek</h2>
+<ol>
+<li>Zaman aralığını ve ilgili kullanıcı hesabını netleştir.</li>
+<li>IP, user-agent, konum ve cihaz sinyallerini birlikte değerlendir; tek sinyal genelde yetersizdir.</li>
+<li>Başarılı ve başarısız oturum açma olaylarını karşılaştır.</li>
+<li>MFA iddiasını ve sonuç kodlarını doğrula.</li>
+<li>Hesabın kritikliğini (rol, veri erişimi) iş etkisine bağla.</li>
+<li>Kanıtları (log satırları, korelasyon özeti) rapora bağla; belirsizlik dilini koru.</li>
+</ol>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Kimlik doğrulama ile yetkilendirme arasındaki fark en doğru nasıl ifade edilir?</li></ol>
+<p>A) Aynı kavramdır</p>
+<p>B) Kimlik “kimsin”; yetki “ne yapabilirsin”</p>
+<p>C) Yetki paroladır</p>
+<p>D) Kimlik rol atamadır</p>
+<p>E) İkisi de sadece loglarda bulunur</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İki kontrol ayrı ayrı uygulanmalıdır.</li></ul>
+<ol><li>Yalnızca başarılı oturum açma loguna bakmak neden yetersiz kalabilir?</li></ol>
+<p>A) Çünkü başarısız denemeler kök neden için ipucu verebilir</p>
+<p>B) Çünkü log boyutu küçülür</p>
+<p>C) Çünkü MFA kaldırılır</p>
+<p>D) Çünkü TLS kapanır</p>
+<p>E) Çünkü WAF devre dışı kalır</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Başarısız denemeler brute force veya hesap keşfi hakkında bilgi verir.</li></ul>
+<ol><li>Hesap kilitleme politikası tasarlarken dikkat edilmesi gereken risk nedir?</li></ol>
+<p>A) Kullanıcıların parola uzunluğu</p>
+<p>B) Kilitlenmenin hizmet reddi veya kötüye kullanımı kolaylaştırması</p>
+<p>C) CDN önbelleği</p>
+<p>D) JPEG kalitesi</p>
+<p>E) DNS TTL</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kilit politikası denge ister.</li></ul>
+<ol><li>MFA’nın savunma katkısı hangi sınıfta en görünür?</li></ol>
+<p>A) Statik dosya önbelleği</p>
+<p>B) Kimlik bilgisi çalınmış olsa bile ek faktör gereksinimi</p>
+<p>C) Veritabanı indeksi</p>
+<p>D) CSS sıralaması</p>
+<p>E) Görüntü çözünürlüğü</p>
+<ul><li>Doğru: B</li><li>Gerekçe: MFA ikinci bir kanıt katmanı ekler.</li></ul>
+<ol><li>Şüpheli oturum analizinde “hipotez” dilinin amacı nedir?</li></ol>
+<p>A) Kesin suçlamada bulunmak</p>
+<p>B) Kanıt sınırlıyken olasılıkları dürüstçe çerçevelemek</p>
+<p>C) Log silmek</p>
+<p>D) Kullanıcıyı kilitlemek</p>
+<p>E) Raporu kısaltmak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Belirsizlikte profesyonel dil, kanıt sınırlarını açık eder.</li></ul>
+<ol><li>Oturum zaman aşımının birincil güvenlik gerekçesi nedir?</li></ol>
+<p>A) Sayfa yükünü artırmak</p>
+<p>B) Çalınmış oturum penceresini sınırlamak</p>
+<p>C) CDN maliyetini düşürmek</p>
+<p>D) Veritabanını silmek</p>
+<p>E) Çerezleri yasaklamak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Süre, ele geçirilmiş oturumun yararlanma süresini kısaltır.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m4-authz" data-section="wag-m4-authz">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 4 — Yetkilendirme ve Erişim Kontrolü</h1>
+<p>Yetkilendirme, kimliği doğrulanmış kullanıcının hangi işlemleri ve hangi nesneleri yönetebileceğini belirler. Web güvenliğinde en sık görülen hatalardan biri, kontrollerin yalnızca arayüzde veya yalnızca bazı uçlarda uygulanmasıdır.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Rol tabanlı ve nesne düzeyi yetkiyi ayırt edebilirim.</li><li>Sunucu tarafı kontrol ve loglama ihtiyacını gerekçelendirebilirim.</li><li>Kırık erişim kontrolü riskini iş etkisine bağlayabilirim.</li></ul></div>
+<h2>Rol ve nesne düzeyi</h2>
+<p>Rol tabanlı erişim, işlevleri gruplar; nesne düzeyi yetkilendirme ise “bu kaydı bu kullanıcı yönetebilir mi?” sorusunu yanıtlar. İkisi birlikte düşünülmeden IDOR benzeri riskler artar.</p>
+<h2>Fonksiyon ve yönetim paneli</h2>
+<p>Yönetici işlevleri ayrı uçlarda ve ayrı denetimle korunmalıdır. Ön yüzde gizlenmiş düğmeler yetki değildir.</p>
+<h2>Sunucu tarafı kontrol ve log</h2>
+<p>Her kritik işlemde sunucu, kullanıcının rolünü ve kaynak ilişkisini doğrular. Reddedilen erişim denemeleri güvenlik izleme için değerlidir.</p>
+<h2>Yanlış pozitif/negatif yorumu</h2>
+<p>Bir alarm yalnızca “403” veya anomali gösterebilir; iş kuralı mı, hata mı, kötüye kullanım mı ayrımı için bağlam gerekir.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Ön uçta gizlenmiş yönetim bağlantısı yetki kontrolü yerine geçer mi?</li></ol>
+<p>A) Evet</p>
+<p>B) Hayır</p>
+<p>C) Sadece dahili ağda evet</p>
+<p>D) Sadece HTTPS ise evet</p>
+<p>E) Sadece admin rolünde hayır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Yetki sunucuda zorlanmalıdır.</li></ul>
+<ol><li>Nesne düzeyi yetkilendirme hangi soruyu yanıtlar?</li></ol>
+<p>A) Parola kaç karakter?</p>
+<p>B) Bu kullanıcı bu kaynağa erişebilir mi?</p>
+<p>C) TLS sürümü?</p>
+<p>D) CDN var mı?</p>
+<p>E) Kaç çekirdek?</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kaynak sahipliği ve ilişki sorgulanır.</li></ul>
+<ol><li>403 loglarının izleme değeri nedir?</li></ol>
+<p>A) Yoktur</p>
+<p>B) Reddedilen erişim denemeleri ve yanlış yapılandırma ipuçları sağlayabilir</p>
+<p>C) Sadece estetiktir</p>
+<p>D) Sadece SEO içindir</p>
+<p>E) Sadece mobilde anlamlıdır</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Redler politika ve saldırı yüzeyi hakkında bilgi verir.</li></ul>
+<ol><li>Rol ataması yapılırken sık risk nedir?</li></ol>
+<p>A) Çok küçük rol kümeleri</p>
+<p>B) Aşırı geniş “superuser” rolleri ve ayrıntısız devretme</p>
+<p>C) Çok sık log</p>
+<p>D) Çok kısa oturum</p>
+<p>E) Çok uzun parola</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Geniş roller blast radius’u büyütür.</li></ul>
+<ol><li>İşlev düzeyi yetki eksikliği neyi artırır?</li></ol>
+<p>A) Font yükleme hızını</p>
+<p>B) Yetkisiz işlem çağrılarının başarılabilme olasılığını</p>
+<p>C) DNS hızını</p>
+<p>D) Görüntü kalitesini</p>
+<p>E) TLS el sıkışmasını</p>
+<ul><li>Doğru: B</li><li>Gerekçe: İşlev kontrolü olmadan uçlar kötüye kullanılabilir.</li></ul>
+<ol><li>Kaynak sahipliği bilgisi neden kritiktir?</li></ol>
+<p>A) Tema seçimi için</p>
+<p>B) Nesne düzeyi kararların doğru verilmesi için</p>
+<p>C) CDN için</p>
+<p>D) Favicon için</p>
+<p>E) CPU governor için</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Sahiplik, yetki kararının girdisidir.</li></ul>
+</div>
+</div>
+</section>
+<section class="content-section docx-content" id="wag-m5-veri" data-section="wag-m5-veri">
+<div class="section-inner module-2-enhanced">
+<h1>MODÜL 5 — Input Validation, Output Encoding ve Güvenli Veri İşleme</h1>
+<p>Kullanıcı ve entegrasyon girdileri güvenilmez kabul edilir. Savunma; beklenen tür, uzunluk ve biçim için doğrulama ile çıktının bağlamına uygun kodlamayı birleştirir. Bu modül enjeksiyon “payload” öğretmez; mekanizma ve kontrol odaklıdır.</p><div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Hedefler</h3><ul><li>Allowlist ve denylist yaklaşımlarının sınırlarını tartabilirim.</li><li>Bağlam duyarlı çıktı kodlamasının gerekliliğini açıklayabilirim.</li><li>Hata mesajı ve loglarda bilgi sızıntısı riskini tanımlayabilirim.</li></ul></div>
+<h2>Girdi doğrulama</h2>
+<p>Uzunluk sınırı, tür dönüşümü, format ve iş kuralı uyumu sunucuda uygulanır. Allowlist, bilinen iyi desenleri kabul eder; denylist ise kaçırılabilir varyasyonlara karşı zayıftır.</p>
+<h2>Çıktı kodlama ve bağlam</h2>
+<p>HTML, JavaScript, URL, SQL ve JSON bağlamları farklı kaçış kuralları gerektirir. Yanlış bağlamda kodlama, kontrol edilmiş verinin yan etki üretmesine yol açabilir.</p>
+<h2>Hata ve loglarda sızıntı</h2>
+<p>İç yığın izleri, sorgu parçaları veya kullanıcı kayıtları hata sayfalarında görünmemelidir. Loglara ham parola veya tam kart verisi yazılmamalıdır.</p>
+<h2>Güvenli doğrulama</h2>
+<p>Üretim dışı ortamda, üretim verisine dokunmadan ve izinli veri setleriyle test edilir. Kanıt olarak güvenli örnek girdi ve beklenen reddetme davranışı dokümante edilir.</p>
+<h2>Kendini Değerlendir</h2>
+<div class="eval-quiz-section">
+<p>Aşağıdaki sorular savunma, risk ve kanıt yorumunu ölçer.</p>
+<ol><li>Sunucu tarafı doğrulama neden zorunludur?</li></ol>
+<p>A) İstemci her zaman doğrudur</p>
+<p>B) İstemci manipüle edilebilir; güven kararı sunucuda verilmelidir</p>
+<p>C) Sadece mobilde gerekir</p>
+<p>D) Sadece GET için gerekir</p>
+<p>E) Performans için</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Güvenilir sınır sunucudur.</li></ul>
+<ol><li>Denylist tabanlı filtrelemenin temel zayıflığı nedir?</li></ol>
+<p>A) Çok hızlı olması</p>
+<p>B) Tüm kötü varyasyonları öngönmek zorunda kalması</p>
+<p>C) Log üretmemesi</p>
+<p>D) TLS gerektirmesi</p>
+<p>E) Çok kısa parola zorunluluğu</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kaçırılan örüntüler kontrolü deler.</li></ul>
+<ol><li>Bağlam duyarlı çıktı kodlamanın amacı nedir?</li></ol>
+<p>A) Veriyi sıkıştırmak</p>
+<p>B) Verinin hedef bağlamda yalnızca veri olarak kalmasını sağlamak</p>
+<p>C) DNS hızlandırmak</p>
+<p>D) CPU sıcaklığını düşürmek</p>
+<p>E) CDN seçmek</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kaçış kuralları bağlama göre değişir.</li></ul>
+<ol><li>Hata mesajında iç yığın izinin görünmesi hangi riski artırır?</li></ol>
+<p>A) SEO riski</p>
+<p>B) Bilgi sızıntısı ve saldırı yüzeyi keşfi</p>
+<p>C) Font riski</p>
+<p>D) CDN riski</p>
+<p>E) Tema riski</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Uygulama iç yapısı hakkında bilgi verir.</li></ul>
+<ol><li>Uygulama loglarına hassas veri yazılması neden sakıncalıdır?</li></ol>
+<p>A) Disk boyutu küçülür</p>
+<p>B) Log görünürlüğü genişlediği için maruziyet ve uyum riski artar</p>
+<p>C) TLS kapanır</p>
+<p>D) WAF hızlanır</p>
+<p>E) CPU boşa çıkar</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Loglar çoğu zaman daha geniş erişime açıktır.</li></ul>
+<ol><li>Güvenli doğrulama yaklaşımı hangi ilkeyi içerir?</li></ol>
+<p>A) Üretim verisiyle rast deneme</p>
+<p>B) İzinli ortam, minimizasyon ve kanıt disiplini</p>
+<p>C) Payload paylaşımı</p>
+<p>D) Yetkisiz erişim</p>
+<p>E) Kapsam dışı hedef</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Doğrulama yetkili ve kontrollü yapılmalıdır.</li></ul>
+</div>
+</div>
+</section>

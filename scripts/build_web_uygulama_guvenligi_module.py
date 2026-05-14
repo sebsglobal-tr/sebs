@@ -29,6 +29,12 @@ def main() -> None:
         head,
         count=1,
     )
+    if 'rel="canonical"' not in head:
+        head = head.replace(
+            '<meta name="theme-color"',
+            '<link rel="canonical" href="https://sebsglobal.com/egitimler/web-uygulama-guvenligi" />\n    <meta name="theme-color"',
+            1,
+        )
     head = head.replace(
         '"name":"Network Guvenligi Egitimi"',
         '"name":"Web Uygulama Guvenligi Egitimi"',
@@ -36,6 +42,12 @@ def main() -> None:
     head = head.replace(
         "Network güvenliği prensipleri, segmentasyon, izleme ve savunma yaklaşımları.",
         "Web uygulaması güvenliği: mimari okuma, HTTP/oturum modeli, yetkilendirme, güvenli veri işleme, API ve raporlama.",
+    )
+    head = re.sub(
+        r'"description":"Ag guvenligi prensipleri[^"]*"',
+        '"description":"Web uygulamasi guvenligi: mimari, kimlik ve oturum, yetkilendirme, API, guvenli konfigurasyon, log analizi ve kanit temelli raporlama."',
+        head,
+        count=1,
     )
     head = head.replace(
         '"name":"Network Guvenligi","item":"https://sebsglobal.com/modules/network-guvenligi.html"',
