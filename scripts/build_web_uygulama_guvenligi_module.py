@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Assemble frontend/modules/web-uygulama-guvenligi.html from network template + HTML fragments."""
+"""Assemble frontend/modules/web-uygulama-guvenligi.html from network template + HTML fragments.
+
+İçerik parçalarını yeniden üretmek için (önce parçalar, sonra birleştirme):
+  python3 scripts/wag_expanded_generator.py
+  python3 scripts/wag_expanded_generator_b.py
+  python3 scripts/build_web_uygulama_guvenligi_module.py
+"""
 from __future__ import annotations
 
 import pathlib
