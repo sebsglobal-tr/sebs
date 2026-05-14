@@ -454,6 +454,8 @@ function getCategoryFromModule(moduleName) {
         'Temel Siber Güvenlik',
         'Temel Network Eğitimi',
         'Orta Seviye Network Güvenliği',
+        'SOC Analistliği ve Olay İzleme',
+        'SOC (Security Operations Center) Eğitimi',
         'Network Güvenliği',
         'Malware Analizi',
         'Malware Analizi (Orta Seviye)',

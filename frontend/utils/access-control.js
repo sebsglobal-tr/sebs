@@ -180,6 +180,7 @@ function getModuleLevel(moduleName) {
         'network-guvenligi': 'intermediate',
         'web-uygulama-guvenligi': 'intermediate',
         'malware-analizi': 'intermediate',
+        'soc-analistligi-ve-olay-izleme': 'intermediate',
         'soc': 'intermediate',
         'isletim-sistemi-guvenligi-ileri': 'intermediate',
         'temel-cloud-security': 'intermediate',

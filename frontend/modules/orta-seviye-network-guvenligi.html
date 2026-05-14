@@ -187,7 +187,7 @@
           <span class="text-slate-600"><i class="fas fa-route text-slate-400 mr-1" aria-hidden="true"></i> Önerilen sıra: <a href="/modules/temel-network-egitimi.html" class="font-semibold text-blue-700 hover:text-blue-900 underline-offset-2 hover:underline">Temel Network Eğitimi</a> sonrası</span>
         </div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Eğitime Başla</a>
+          <a href="#mufredat" class="osn-cta-egitim inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Eğitime Başla</a>
           <a href="#mufredat" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-400 hover:bg-slate-50 focus-ring">Müfredatı İncele</a>
         </div>
       </div>
@@ -387,10 +387,11 @@
   </section>
 
   <section class="mt-12 rounded-xl border border-slate-200 bg-slate-50/60 p-6 text-center dark:border-slate-600 dark:bg-slate-900/30">
-    <p class="text-sm text-slate-600">İleride tam ders akışı ve ilerleme takibi platform hesabınızla bağlanacaktır.</p>
-    <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Eğitime Başla</a>
-      <a href="/contact.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900">Kurumsal bilgi</a>
+    <p class="text-sm text-slate-600">Bu eğitimin ders içeriği aşağıdaki <strong class="font-semibold text-slate-800">müfredat ünitelerinde</strong> yer alır. İlerleme takibi ve kişisel kayıt için isteğe bağlı olarak hesap oluşturabilirsiniz.</p>
+    <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
+      <a href="#mufredat" class="osn-cta-egitim inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 focus-ring">Eğitime Başla</a>
+      <a href="/contact.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900 focus-ring rounded px-2 py-1">Kurumsal bilgi</a>
+      <a href="/signup.html" class="text-sm font-semibold text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline focus-ring rounded px-2 py-1">İlerleme için kayıt</a>
     </div>
   </section>
 </main>
@@ -412,6 +413,16 @@
   (function () {
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {
       el.textContent = String(new Date().getFullYear());
+    });
+    document.querySelectorAll('a.osn-cta-egitim[href="#mufredat"]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        var el = document.getElementById('mufredat');
+        if (!el) return;
+        requestAnimationFrame(function () {
+          var first = el.querySelector('details.osn-acc');
+          if (first) first.open = true;
+        });
+      });
     });
   })();
 </script>
