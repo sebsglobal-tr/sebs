@@ -2278,12 +2278,12 @@
             }
         }
 
-        /* Modül içi ders adımları: her h3 = bir ders; yalnızca aktif ders görünür */
+        /* Modül içi ders adımları: her h3 = bir ders; yalnızca aktif ders görünür (sonradan yüklenen CSS ile çakışmayı önlemek için !important) */
         .module-lessons .module-lesson {
-            display: none;
+            display: none !important;
         }
         .module-lessons .module-lesson.is-active {
-            display: block;
+            display: block !important;
         }
         .lesson-step-controls {
             margin-top: 2rem;
