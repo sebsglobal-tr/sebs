@@ -139,3 +139,181 @@ body.module-page--temel-kriptografi main .accordion-content-inner .learning-obje
   margin: 0;
   border-radius: 12px;
 }
+
+/* --- Modül şema şeridi (SVG) --- */
+body.module-page--temel-kriptografi main .kr-crypto-visual {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+body.module-page--temel-kriptografi main .kr-crypto-visual__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 112px;
+}
+
+/* --- Tablo → kart ızgarası --- */
+body.module-page--temel-kriptografi main .kr-table-premium {
+  margin: 1.75rem 0;
+}
+
+body.module-page--temel-kriptografi main .kr-table-cards-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+body.module-page--temel-kriptografi main .kr-table-cards-ribbon i {
+  color: #7f1d1d;
+  font-size: 0.95rem;
+}
+
+body.module-page--temel-kriptografi main .kr-table-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card {
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card:hover {
+  border-color: rgba(127, 29, 29, 0.25);
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__head {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #7f1d1d;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__body {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #334155;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__mono {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__row {
+  display: grid;
+  grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+  gap: 0.35rem 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__k {
+  color: #64748b;
+  font-weight: 600;
+}
+
+body.module-page--temel-kriptografi main .kr-data-card__v {
+  color: #0f172a;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source {
+  margin-top: 1rem;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.65rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  user-select: none;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source > summary::-webkit-details-marker {
+  display: none;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source > summary::after {
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  float: right;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+body.module-page--temel-kriptografi main .kr-table-source > summary:hover {
+  background: rgba(127, 29, 29, 0.04);
+  color: #0f172a;
+}
+
+body.module-page--temel-kriptografi main .kr-table-source > summary:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+body.module-page--temel-kriptografi main .kr-table-scroll {
+  padding: 0 0.75rem 0.75rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media print {
+  body.module-page--temel-kriptografi main .kr-table-cards {
+    display: none;
+  }
+
+  body.module-page--temel-kriptografi main .kr-table-source {
+    border: none;
+    background: transparent;
+  }
+
+  body.module-page--temel-kriptografi main .kr-table-source > summary {
+    display: none;
+  }
+
+  body.module-page--temel-kriptografi main .kr-table-scroll {
+    padding: 0;
+    overflow: visible;
+  }
+}
