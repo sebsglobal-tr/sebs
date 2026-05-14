@@ -306,7 +306,6 @@
         const siberGuvenlikModules = [
             'Temel Siber Güvenlik',
             'Siber Güvenliğe Giriş',
-            'Orta Seviye Network Güvenliği',
             'Network Güvenliği',
             'Malware Analizi',
             'Threat Hunting',

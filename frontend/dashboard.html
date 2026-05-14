@@ -793,9 +793,6 @@
             'red team ve pentest (ileri)': '/modules/penetration-testing.html',
             'olay müdahalesi ve dijital adli bilişim (ileri)': '/modules/incident-response.html',
             'olay müdahalesi & digital forensics': '/modules/incident-response.html',
-            'orta seviye network güvenliği': '/egitimler/orta-seviye-network-guvenligi',
-            'soc analistliği ve olay izleme': '/egitimler/soc-analistligi-ve-olay-izleme',
-            'soc analistligi ve olay izleme': '/egitimler/soc-analistligi-ve-olay-izleme',
             'network güvenliği': '/modules/network-guvenligi.html',
             'işletim sistemi güvenliği': '/modules/isletim-sistemi-guvenligi.html',
             'işletim sistemleri güvenliği (temel)': '/modules/isletim-sistemi-guvenligi.html',
@@ -804,8 +801,8 @@
             'ileri malware analizi & reverse engineering': '/modules/ileri-malware-analizi.html',
             'threat hunting': '/modules/threat-hunting.html',
             'threat intelligence': '/modules/threat-hunting.html',
-            'soc (security operations center) eğitimi': '/egitimler/soc-analist',
-            'soc': '/egitimler/soc-analist',
+            'soc (security operations center) eğitimi': '/modules/soc.html',
+            'soc': '/modules/soc.html',
             'aws temelleri': '/modules/aws-temelleri.html',
             'azure temelleri': '/modules/azure-cloud.html',
             'microsoft azure': '/modules/azure-cloud.html',
@@ -2012,8 +2009,6 @@
             const moduleIcons = {
                 'Temel Siber Güvenlik': 'fas fa-shield-alt',
                 'Temel Network Eğitimi': 'fas fa-network-wired',
-                'Orta Seviye Network Güvenliği': 'fas fa-diagram-project',
-                'SOC Analistliği ve Olay İzleme': 'fas fa-chart-line',
                 'Network Güvenliği': 'fas fa-network-wired',
                 'Malware Analizi': 'fas fa-bug',
                 'Threat Hunting': 'fas fa-search',
@@ -2039,7 +2034,7 @@
             
             moduleArray.forEach(({ name: moduleName, progress, index }) => {
                 // Skip duplicates and wrong formats
-                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği' && moduleName !== 'Orta Seviye Network Güvenliği' && moduleName !== 'SOC Analistliği ve Olay İzleme')) {
+                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği')) {
                     return;
                 }
 

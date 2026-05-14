@@ -2,63 +2,198 @@
 <html lang="tr" class="scroll-smooth">
 <head>
   <script src="/js/gtag.js"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <script>
-    (function(){try{var t=localStorage.getItem('sebs-theme')||localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);return;}if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <meta name="theme-color" content="#0f172a" />
-  <base href="/">
-  <title>Web Uygulama Güvenliği Eğitimi | SEBS</title>
-  <meta name="description" content="SEBS Web Uygulama Güvenliği eğitimi; HTTP güvenliği, kimlik doğrulama, erişim kontrolü, input validation, yaygın web zafiyetleri, API güvenliği, loglama ve kanıt temelli raporlama konularını kapsar.">
-  <link rel="canonical" href="https://sebsglobal.com/egitimler/web-uygulama-guvenligi">
-  <meta property="og:url" content="https://sebsglobal.com/egitimler/web-uygulama-guvenligi">
-  <meta property="og:title" content="Web Uygulama Güvenliği Eğitimi | SEBS">
-  <meta property="og:description" content="Savunma odaklı web uygulama güvenliği: güvenli tasarım, doğrulama, log yorumu ve Bulgu → Etki → Öneri → Kanıt raporlama disiplini.">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    "name": "Web Uygulama Güvenliği",
-    "description": "Kimlik doğrulama, oturum yönetimi, erişim kontrolü, input validation, API güvenliği ve kanıt temelli analiz; savunma ve güvenli geliştirme odaklı orta seviye program.",
-    "provider": {
-      "@type": "Organization",
-      "name": "SEBS Global",
-      "sameAs": "https://sebsglobal.com/"
-    },
-    "educationalLevel": "intermediate",
-    "timeRequired": "PT11H"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://sebsglobal.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Eğitimler", "item": "https://sebsglobal.com/egitimler" },
-      { "@type": "ListItem", "position": 3, "name": "Web Uygulama Güvenliği", "item": "https://sebsglobal.com/egitimler/web-uygulama-guvenligi" }
-    ]
-  }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/modules.css">
+    <base href="/">
+    <title>Web Uygulama Guvenligi Egitimi | SEBS Global</title>
+    <meta name="description" content="SEBS Web Uygulama Guvenligi Egitimi ile HTTP, kimlik dogrulama, XSS, SQL injection, guvenli oturum yonetimi ve uygulamali guvenlik senaryolarini ogrenin.">
+    <link rel="canonical" href="https://sebsglobal.com/egitimler/web-uygulama-guvenligi">
+    <meta property="og:url" content="https://sebsglobal.com/egitimler/web-uygulama-guvenligi">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Web Uygulama Guvenligi Egitimi",
+      "description": "HTTP, kimlik dogrulama, XSS, SQL injection ve guvenli oturum yonetimi odakli uygulamali egitim.",
+      "provider": {
+        "@type": "Organization",
+        "name": "SEBS Global",
+        "sameAs": "https://sebsglobal.com/"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://sebsglobal.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Egitimler", "item": "https://sebsglobal.com/egitimler" },
+        { "@type": "ListItem", "position": 3, "name": "Web Uygulama Guvenligi", "item": "https://sebsglobal.com/egitimler/web-uygulama-guvenligi" }
+      ]
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    
+    <link rel="stylesheet" href="/css/modules.css">
+    <link rel="stylesheet" href="/css/premium-lesson.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --text-color: #1e293b;
+            --primary-color: #667eea;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --light-text-color: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+            --danger-color: #ef4444;
+        }
+
+        .coming-soon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 2rem;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .coming-soon-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .coming-soon-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .coming-soon-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .coming-soon-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .coming-soon-title {
+                font-size: 2rem;
+            }
+            
+            .coming-soon-subtitle {
+                font-size: 1rem;
+            }
+            
+            .coming-soon-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: ['selector', '[data-theme="dark"]'],
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          colors: { ink: '#0c1222', surface: '#f4f6fa' },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0c1222',
+            surface: '#f4f6fa',
+          },
           boxShadow: {
-            card: '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card': '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
             'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+            'glow': '0 0 0 1px rgb(15 23 42 / 0.06)',
           },
         },
       },
@@ -66,69 +201,10 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <style>
-    .wug-wrap { max-width: 72rem; margin-left: auto; margin-right: auto; }
-    .wug-hero {
-      border-radius: 1.25rem;
-      border: 1px solid rgb(226 232 240 / 0.9);
-      background: linear-gradient(135deg, rgb(248 250 252) 0%, rgb(241 245 249) 40%, rgb(224 231 255 / 0.35) 100%);
-      box-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06);
-    }
-    html[data-theme="dark"] .wug-hero {
-      border-color: rgb(51 65 85 / 0.6);
-      background: linear-gradient(145deg, rgb(15 23 42) 0%, rgb(30 41 59) 50%, rgb(15 23 42) 100%);
-    }
-    .wug-tag {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border-radius: 9999px;
-      padding: 0.25rem 0.65rem;
-      border: 1px solid rgb(148 163 184 / 0.45);
-      color: rgb(71 85 105);
-      background: rgb(255 255 255 / 0.7);
-    }
-    html[data-theme="dark"] .wug-tag {
-      color: rgb(203 213 225);
-      border-color: rgb(71 85 105 / 0.7);
-      background: rgb(30 41 59 / 0.6);
-    }
-    .wug-acc summary {
-      list-style: none;
-      cursor: pointer;
-    }
-    .wug-acc summary::-webkit-details-marker { display: none; }
-    .wug-acc {
-      border-radius: 0.875rem;
-      border: 1px solid rgb(226 232 240);
-      background: rgb(255 255 255 / 0.85);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    html[data-theme="dark"] .wug-acc {
-      border-color: rgb(51 65 85);
-      background: rgb(15 23 42 / 0.65);
-    }
-    .wug-acc[open] {
-      box-shadow: 0 8px 24px -8px rgb(15 23 42 / 0.1);
-      border-color: rgb(148 163 184 / 0.55);
-    }
-    .wug-acc h3 { font-weight: 700; letter-spacing: -0.02em; }
-    .wug-li { padding-left: 1rem; position: relative; }
-    .wug-li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 0.35rem;
-      height: 0.35rem;
-      border-radius: 9999px;
-      background: rgb(79 70 229);
-    }
-    html[data-theme="dark"] .wug-li::before { background: rgb(165 180 252); }
-  </style>
+  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
+
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white pb-16 pt-20">
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -138,409 +214,148 @@
     <nav class="landing-nav--compact hidden flex items-center gap-5 xl:flex" aria-label="Ana menü">
       <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
       <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
-      <a href="/pricing.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Kariyer yolları</a>
+      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
     </nav>
     <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
       <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
       <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
-      <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
+      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+      </div>
+      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
       <details class="relative xl:hidden">
-        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">Menü</summary>
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          Menü
+        </summary>
         <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
           <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
           <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
-          <a href="/pricing.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Kariyer yolları</a>
+          <hr class="my-1 border-slate-100" />
+          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <hr class="my-1 border-slate-100" />
+          <div id="mobileGuestLinks">
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+          </div>
+          <div id="mobileUserLinks" style="display: none;">
+                        <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+          </div>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
         </div>
       </details>
     </div>
   </div>
 </header>
+    
 
-<main class="wug-wrap px-4 sm:px-6 lg:px-8">
-  <nav class="mb-6 text-xs font-medium text-slate-500 sm:text-sm" aria-label="Breadcrumb">
-    <a href="/" class="text-slate-600 hover:text-slate-900">Ana sayfa</a>
-    <span class="mx-1.5 opacity-60" aria-hidden="true">/</span>
-    <a href="/modules.html" class="text-slate-600 hover:text-slate-900">Eğitimler</a>
-    <span class="mx-1.5 opacity-60" aria-hidden="true">/</span>
-    <span class="text-slate-800">Web Uygulama Güvenliği</span>
-  </nav>
+    <div class="container">
+        <div class="coming-soon-container">
+            <div class="coming-soon-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            
+            <h1 class="coming-soon-title">Web Uygulama Güvenliği Modülü</h1>
+            
+            <p class="coming-soon-subtitle">
+                Web uygulamaları güvenlik açıkları, OWASP Top 10 ve güvenli kodlama teknikleri yakında yüklenecek. Web güvenliği, penetration testing ve güvenli geliştirme konularında detaylı içerikler hazırlanıyor.
+            </p>
+            
+            <div class="coming-soon-features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="feature-title">OWASP Top 10</h3>
+                    <p class="feature-description">En kritik web uygulaması güvenlik açıkları</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Güvenli Kodlama</h3>
+                    <p class="feature-description">Güvenli yazılım geliştirme teknikleri</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Web Güvenliği</h3>
+                    <p class="feature-description">Web uygulamaları güvenlik kontrolleri</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="feature-title">Penetration Testing</h3>
+                    <p class="feature-description">Web uygulamaları güvenlik testleri</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <section class="wug-hero px-5 py-8 sm:px-8 sm:py-10" aria-labelledby="wug-title">
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-      <div class="min-w-0 flex-1">
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Siber güvenlik · Application Security / Web Security</p>
-        <h1 id="wug-title" class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.35rem]">Web Uygulama Güvenliği</h1>
-        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-          Web uygulamalarında <strong class="font-semibold text-slate-800">kimlik doğrulama</strong>, <strong class="font-semibold text-slate-800">oturum yönetimi</strong>, <strong class="font-semibold text-slate-800">erişim kontrolü</strong>, <strong class="font-semibold text-slate-800">input validation</strong>, <strong class="font-semibold text-slate-800">güvenli API kullanımı</strong>, <strong class="font-semibold text-slate-800">loglama</strong> ve <strong class="font-semibold text-slate-800">temel zafiyet sınıflarını</strong> savunma odaklı ele alan orta seviye güvenlik eğitimi.
-        </p>
-        <div class="mt-5 flex flex-wrap gap-2">
-          <span class="wug-tag">Siber Güvenlik</span>
-          <span class="wug-tag">Web Security</span>
-          <span class="wug-tag">Application Security</span>
-          <span class="wug-tag">Orta Seviye</span>
-          <span class="wug-tag">Secure Coding</span>
-          <span class="wug-tag">API Security</span>
-          <span class="wug-tag">OWASP Farkındalığı</span>
-          <span class="wug-tag">Kanıt Temelli Analiz</span>
+  <footer class="border-t border-slate-200 bg-white py-14">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
+            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
+          </div>
+          <p class="mt-4 max-w-xs text-sm text-slate-500">
+            Simülasyon tabanlı siber güvenlik eğitimi ve mentor desteği—yapmacık ilerleme yerine ölçülebilir sonuç.
+          </p>
         </div>
-        <div class="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600">
-          <span class="level-badge intermediate">Orta Seviye</span>
-          <span class="inline-flex items-center gap-1.5"><i class="far fa-clock text-slate-400" aria-hidden="true"></i> 10–12 saat</span>
-          <span class="hidden sm:inline text-slate-300" aria-hidden="true">|</span>
-          <span class="max-w-xl text-slate-600 sm:max-w-none"><i class="fas fa-route text-slate-400 mr-1 shrink-0" aria-hidden="true"></i> Önerilen sıra: <a href="/modules/temel-network-egitimi.html" class="font-semibold text-blue-700 hover:text-blue-900 underline-offset-2 hover:underline">Temel Network</a>, <a href="/egitimler/orta-seviye-network-guvenligi" class="font-semibold text-blue-700 hover:text-blue-900 underline-offset-2 hover:underline">Orta Network Güvenliği</a> ve <a href="/egitimler/soc-analistligi-ve-olay-izleme" class="font-semibold text-blue-700 hover:text-blue-900 underline-offset-2 hover:underline">SOC Analistliği</a> sonrası</span>
-        </div>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Eğitime Başla</a>
-          <a href="#mufredat" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-400 hover:bg-slate-50 focus-ring">Müfredatı İncele</a>
+        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
+              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
+              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-      <aside class="w-full shrink-0 rounded-xl border border-slate-200/80 bg-white/60 p-5 shadow-card sm:max-w-sm lg:w-80 dark:border-slate-600 dark:bg-slate-900/40" aria-label="Özet">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Program özeti</h2>
-        <p class="mt-3 text-sm leading-relaxed text-slate-600">
-          Bu eğitim, temel web geliştirme ve siber güvenlik bilgisine sahip kullanıcıların uygulamaları güvenlik bakış açısıyla değerlendirmesini hedefler. HTTP yapısı, kimlik ve oturum riskleri, erişim kontrolü, doğrulama, güvenli hata yönetimi, API güvenliği, güvenli SDLC ve kanıt temelli raporlama bir bütün olarak ele alınır.
-        </p>
-        <p class="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/90 p-3 text-xs leading-relaxed text-amber-950">
-          <strong class="font-semibold">Güvenlik ve etik sınır:</strong> İçerik saldırı, istismar, bypass, yetkisiz erişim veya exploit zinciri öğretmez. Örnekler yerel lab, eğitim ortamı, kurumsal yetkili kapsam veya uydurma senaryolarla sınırlıdır.
-        </p>
-      </aside>
+      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
+        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p class="text-xs text-slate-400">Sivas · Türkiye</p>
+      </div>
     </div>
-  </section>
-
-  <section class="mt-10 grid gap-8 lg:grid-cols-2" aria-labelledby="wug-outcomes">
-    <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-6 dark:border-slate-600 dark:bg-slate-900/30">
-      <h2 id="wug-outcomes" class="text-lg font-bold text-slate-900">Öğrenme çıktıları</h2>
-      <ul class="mt-4 space-y-2.5 text-sm text-slate-700">
-        <li class="wug-li">Web uygulama mimarisini güvenlik bakış açısıyla açıklayabilme</li>
-        <li class="wug-li">HTTP, istek, yanıt, başlık, çerez ve oturum kavramlarını güvenlik açısından yorumlayabilme</li>
-        <li class="wug-li">Kimlik doğrulama (authentication) ve yetkilendirme (authorization) farkını ayırt edebilme</li>
-        <li class="wug-li">Kırık erişim kontrolü risklerini savunma perspektifiyle değerlendirebilme</li>
-        <li class="wug-li">Input validation, çıktı kodlama ve sunucu tarafı kontrol mantığını anlayabilme</li>
-        <li class="wug-li">SQL Injection, XSS, CSRF, SSRF gibi sınıfları saldırı öğretmeden; mekanizma, etki, sinyal ve savunma kontrolü üzerinden kavrayabilme</li>
-        <li class="wug-li">API güvenliğinde token, rate limit, yetkilendirme ve veri sızıntısı risklerini değerlendirebilme</li>
-        <li class="wug-li">Güvenli hata yönetimi, loglama ve izleme prensiplerini uygulama düzeyinde anlayabilme</li>
-        <li class="wug-li">Bulguları Bulgu → Etki → Öneri → Kanıt formatında raporlayabilme</li>
-        <li class="wug-li">Güvenli yazılım geliştirme yaşam döngüsü içinde temel güvenlik kontrollerini konumlandırabilme</li>
-      </ul>
-    </div>
-    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-card dark:border-slate-600 dark:bg-slate-900/40">
-      <h2 class="text-lg font-bold text-slate-900">Kimler için</h2>
-      <ul class="mt-3 space-y-2 text-sm text-slate-700">
-        <li class="wug-li">Web uygulama güvenliği öğrenmek isteyen öğrenciler</li>
-        <li class="wug-li">AppSec, Blue Team, SOC veya güvenli yazılım geliştirme alanına yönelmek isteyen kullanıcılar</li>
-        <li class="wug-li">Web geliştiriciliğini güvenlik bakış açısıyla güçlendirmek isteyenler</li>
-        <li class="wug-li">API güvenliği ve güvenli kodlama farkındalığı kazanmak isteyenler</li>
-        <li class="wug-li">SEBS kariyer yolunda temel web ve temel güvenlik modüllerini tamamlayan kullanıcılar</li>
-      </ul>
-      <h3 class="mt-6 text-sm font-bold uppercase tracking-wide text-slate-500">Ön koşul</h3>
-      <p class="mt-2 text-sm text-slate-600">Temel web geliştirme bilgisi (HTML/CSS/JavaScript), HTTP mantığına başlangıç düzeyinde aşinalık, temel siber güvenlik ve temel network bilgisi.</p>
-      <h3 class="mt-6 text-sm font-bold uppercase tracking-wide text-slate-500">Kimler için uygun değil</h3>
-      <ul class="mt-2 space-y-2 text-sm text-slate-600">
-        <li class="wug-li">Web geliştirme temellerini hiç bilmeyen kullanıcılar</li>
-        <li class="wug-li">Yetkisiz test, exploit veya bypass pratiği arayan kullanıcılar</li>
-        <li class="wug-li">Savunma ve güvenli geliştirme yerine saldırı odaklı içerik arayan kullanıcılar</li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="mufredat" class="mt-14 scroll-mt-24">
-    <div class="flex flex-col gap-2 border-b border-slate-200 pb-4 dark:border-slate-600">
-      <h2 class="text-xl font-bold text-slate-900 sm:text-2xl">Müfredat</h2>
-      <p class="text-sm text-slate-600">On bir ana ünite; alt başlıklar savunma ve doğrulama odaklıdır. Zafiyet anlatımlarında <strong class="font-semibold text-slate-800">ad → anlam → oluşum → etki → sinyaller → önleme → doğrulama → rapor kanıtı</strong> çerçevesi kullanılır; exploit zinciri veya yetkisiz test anlatılmaz.</p>
-    </div>
-    <div class="mt-6 space-y-3">
-      <details class="wug-acc group px-4 py-3 sm:px-5" open>
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 1</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Web Uygulama Güvenliğine Giriş</h3>
-            <p class="mt-1 text-sm text-slate-600">Web uygulama güvenliğinin neden kritik olduğunu, modern mimaride hangi katmanların risk taşıdığını ve güvenliğin yalnızca kod değil tasarım ve operasyon konusu olduğunu açıklar.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Web uygulaması nedir?</li>
-          <li class="wug-li">İstemci, sunucu, veritabanı ve API ilişkisi</li>
-          <li class="wug-li">Web güvenliği neden gereklidir?</li>
-          <li class="wug-li">Güvenli geliştirme ve güvenli operasyon farkı</li>
-          <li class="wug-li">Ön uç ve arka uç güvenliği ayrımı</li>
-          <li class="wug-li">Kullanıcı verisi, iş mantığı ve güvenlik ilişkisi</li>
-          <li class="wug-li">Web uygulama güvenliğinde etik sınırlar</li>
-          <li class="wug-li">Yetkili test, kapsam ve güvenli çalışma ilkeleri</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 2</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">HTTP, Cookie, Session ve Temel Web Trafiği</h3>
-            <p class="mt-1 text-sm text-slate-600">Veri akışını ve güvenlik kontrollerinin hangi noktalarda devreye girdiğini öğretir.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">HTTP istek ve yanıt mantığı</li>
-          <li class="wug-li">Method kavramı: GET, POST, PUT, DELETE</li>
-          <li class="wug-li">Durum kodları (status code) mantığı</li>
-          <li class="wug-li">Başlık (header) kavramı</li>
-          <li class="wug-li">Cookie nedir?</li>
-          <li class="wug-li">Session nedir?</li>
-          <li class="wug-li">Token mantığına giriş</li>
-          <li class="wug-li">HTTPS ve TLS rolü</li>
-          <li class="wug-li">Güvenli cookie ayarları: HttpOnly, Secure, SameSite</li>
-          <li class="wug-li">Trafik gözleminde kanıt ve veri minimizasyonu</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 3</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Kimlik Doğrulama ve Oturum Güvenliği</h3>
-            <p class="mt-1 text-sm text-slate-600">Kimlik doğrulama, oturum ve hesap güvenliği risklerini savunma odaklı ele alır.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Authentication nedir?</li>
-          <li class="wug-li">Authorization nedir?</li>
-          <li class="wug-li">Authentication ve authorization farkı</li>
-          <li class="wug-li">Parola güvenliği</li>
-          <li class="wug-li">MFA mantığı</li>
-          <li class="wug-li">Session fixation farkındalığı</li>
-          <li class="wug-li">Session timeout</li>
-          <li class="wug-li">Remember me riskleri</li>
-          <li class="wug-li">Token saklama hataları</li>
-          <li class="wug-li">Giriş denemelerinde rate limit mantığı</li>
-          <li class="wug-li">Şüpheli oturum sinyalleri</li>
-          <li class="wug-li">Güvenli oturum yönetimi kontrolleri</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 4</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Erişim Kontrolü ve Yetkilendirme Hataları</h3>
-            <p class="mt-1 text-sm text-slate-600">Kullanıcının yalnızca yetkili kaynaklara erişmesini sağlayan kontroller ve yaygın tasarım hataları.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Access control nedir?</li>
-          <li class="wug-li">Role-based access control</li>
-          <li class="wug-li">Nesne düzeyinde yetkilendirme mantığı</li>
-          <li class="wug-li">İşlev düzeyinde yetkilendirme mantığı</li>
-          <li class="wug-li">Kullanıcı rolü ve kaynak sahipliği ayrımı</li>
-          <li class="wug-li">Broken access control riski</li>
-          <li class="wug-li">IDOR farkındalığı</li>
-          <li class="wug-li">Yönetim paneli güvenliği</li>
-          <li class="wug-li">Sunucu tarafı yetkilendirme zorunluluğu</li>
-          <li class="wug-li">Ön uç kontrolünün tek başına güvenlik sağlamaması</li>
-          <li class="wug-li">Yetki kontrolünde kanıt temelli doğrulama</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 5</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Input Validation ve Output Encoding</h3>
-            <p class="mt-1 text-sm text-slate-600">Kullanıcı girdisinin güvenilmez kabul edilmesi ve güvenli veri işleme prensipleri.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Kullanıcı girdisi neden risklidir?</li>
-          <li class="wug-li">Input validation nedir?</li>
-          <li class="wug-li">Allowlist yaklaşımı</li>
-          <li class="wug-li">Denylist yaklaşımının sınırları</li>
-          <li class="wug-li">Sunucu tarafı doğrulama</li>
-          <li class="wug-li">İstemci tarafı doğrulamanın tek başına yeterli olmaması</li>
-          <li class="wug-li">Output encoding nedir?</li>
-          <li class="wug-li">Bağlam kavramı: HTML, JavaScript, URL, SQL</li>
-          <li class="wug-li">Güvenli veri işleme prensipleri</li>
-          <li class="wug-li">Hata mesajlarının bilgi sızdırmaması</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 6</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Yaygın Web Zafiyetleri: Mekanizma, Etki ve Savunma</h3>
-            <p class="mt-1 text-sm text-slate-600">Yaygın sınıfları saldırı adımı öğretmeden; oluşum, etki, sinyal ve kontroller üzerinden açıklar.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">SQL Injection farkındalığı</li>
-          <li class="wug-li">XSS farkındalığı</li>
-          <li class="wug-li">CSRF farkındalığı</li>
-          <li class="wug-li">SSRF farkındalığı</li>
-          <li class="wug-li">Dosya yükleme riskleri</li>
-          <li class="wug-li">Path traversal farkındalığı</li>
-          <li class="wug-li">Security misconfiguration</li>
-          <li class="wug-li">Sensitive data exposure</li>
-          <li class="wug-li">Business logic flaws</li>
-          <li class="wug-li">Zafiyetleri isim ezberi değil, mekanizma ve kontrol ilişkisiyle anlama</li>
-          <li class="wug-li">Güvenli sınır: exploit zinciri, bypass veya yetkisiz test anlatımı yapılmaz</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 7</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">API Güvenliği</h3>
-            <p class="mt-1 text-sm text-slate-600">Modern web uygulamalarında API’lerin güvenlik açısından değerlendirilmesi.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">API nedir?</li>
-          <li class="wug-li">REST API mantığı</li>
-          <li class="wug-li">Endpoint güvenliği</li>
-          <li class="wug-li">Token tabanlı erişim</li>
-          <li class="wug-li">API authentication ve authorization</li>
-          <li class="wug-li">Rate limiting</li>
-          <li class="wug-li">Excessive data exposure riski</li>
-          <li class="wug-li">Mass assignment farkındalığı</li>
-          <li class="wug-li">Object-level authorization</li>
-          <li class="wug-li">API hata mesajları</li>
-          <li class="wug-li">API loglama ve monitoring</li>
-          <li class="wug-li">Güvenli API tasarımı</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 8</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Güvenli Konfigürasyon ve Güvenlik Header’ları</h3>
-            <p class="mt-1 text-sm text-slate-600">Sunucu, çatı (framework) ve tarayıcı güvenlik kontrollerinin temel mantığı.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Security header nedir?</li>
-          <li class="wug-li">Content-Security-Policy mantığı</li>
-          <li class="wug-li">X-Frame-Options / frame-ancestors mantığı</li>
-          <li class="wug-li">Strict-Transport-Security</li>
-          <li class="wug-li">Referrer-Policy</li>
-          <li class="wug-li">Permissions-Policy</li>
-          <li class="wug-li">CORS mantığı ve yanlış yapılandırma riskleri</li>
-          <li class="wug-li">Hata sayfalarının bilgi sızdırması</li>
-          <li class="wug-li">Debug mode riskleri</li>
-          <li class="wug-li">Ortam değişkenleri ve secret yönetimi</li>
-          <li class="wug-li">Üretim ve geliştirme ortam farkı</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 9</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Loglama, Monitoring ve Kanıt Temelli Analiz</h3>
-            <p class="mt-1 text-sm text-slate-600">Olayları tespit etmek, yorumlamak ve raporlamak için log ve kanıt disiplini.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Web uygulama logları</li>
-          <li class="wug-li">Access log ve error log farkı</li>
-          <li class="wug-li">Authentication logları</li>
-          <li class="wug-li">Yönetici işlem logları</li>
-          <li class="wug-li">API erişim logları</li>
-          <li class="wug-li">Şüpheli davranış sinyalleri</li>
-          <li class="wug-li">Zaman senkronizasyonu</li>
-          <li class="wug-li">Loglarda kişisel veri minimizasyonu</li>
-          <li class="wug-li">Kanıt toplama ve hash/manifest mantığı</li>
-          <li class="wug-li">Gözlem ve yorum ayrımı</li>
-          <li class="wug-li">False positive ve false negative farkı</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 10</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Güvenli Yazılım Geliştirme Yaşam Döngüsü</h3>
-            <p class="mt-1 text-sm text-slate-600">Güvenliğin yalnızca test sonunda değil, tasarımdan izlemeye kadar tüm yaşam döngüsünde ele alınması.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Secure SDLC nedir?</li>
-          <li class="wug-li">Threat modeling’e giriş</li>
-          <li class="wug-li">Güvenli kodlama standartları</li>
-          <li class="wug-li">Dependency güvenliği</li>
-          <li class="wug-li">Secret scanning farkındalığı</li>
-          <li class="wug-li">Kod incelemesinde güvenlik kontrolü</li>
-          <li class="wug-li">Test ortamı ve üretim ayrımı</li>
-          <li class="wug-li">CI/CD güvenlik kontrolleri</li>
-          <li class="wug-li">Güvenlik checklist’i</li>
-          <li class="wug-li">Değişiklik sonrası doğrulama</li>
-          <li class="wug-li">Rollback ve olay hazırlığı</li>
-        </ul>
-      </details>
-      <details class="wug-acc group px-4 py-3 sm:px-5">
-        <summary class="flex w-full items-start justify-between gap-3 text-left">
-          <div class="min-w-0">
-            <span class="text-xs font-semibold text-indigo-600">Ünite 11</span>
-            <h3 class="mt-0.5 text-base text-slate-900 sm:text-lg">Web Uygulama Güvenliği Senaryoları</h3>
-            <p class="mt-1 text-sm text-slate-600">Kavramları güvenli, savunma odaklı ve uydurma senaryolarla pekiştirme.</p>
-          </div>
-          <span class="mt-1 shrink-0 text-slate-400 transition group-open:rotate-180" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </summary>
-        <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-600">
-          <li class="wug-li">Şüpheli giriş aktivitesi senaryosu</li>
-          <li class="wug-li">Yetkisiz yönetici erişimi şüphesi</li>
-          <li class="wug-li">API’den fazla veri dönmesi senaryosu</li>
-          <li class="wug-li">Hatalı CORS yapılandırması senaryosu</li>
-          <li class="wug-li">Güvensiz dosya yükleme tasarım riski</li>
-          <li class="wug-li">Debug mode açık kalması senaryosu</li>
-          <li class="wug-li">Hassas bilginin hata mesajında görünmesi</li>
-          <li class="wug-li">Loglardan olay zaman çizelgesi çıkarma</li>
-          <li class="wug-li">Kanıt toplama ve karşı kanıt arama</li>
-          <li class="wug-li">Bulgu → Etki → Öneri → Kanıt formatında rapor üretme</li>
-        </ul>
-      </details>
-    </div>
-    <p class="mt-8 text-center text-xs text-slate-500">Tüm örnekler yerel lab, eğitim ortamı, kurumsal yetkili ortam veya tamamen uydurma güvenli senaryolar üzerinden anlatılır.</p>
-  </section>
-
-  <section class="mt-12 rounded-xl border border-slate-200 bg-slate-50/70 p-6 dark:border-slate-600 dark:bg-slate-900/30" aria-labelledby="wug-next">
-    <h2 id="wug-next" class="text-lg font-bold text-slate-900">Önerilen sonraki adımlar</h2>
-    <p class="mt-2 max-w-3xl text-sm text-slate-600">Bu eğitimden sonra derinleşmek için aşağıdaki konular sıralanabilir. Henüz ayrı sayfası olmayan başlıklar için katalog güncellenene dek bilgilendirme sayfasına yönlendirilirsiniz.</p>
-    <div class="mt-5 flex flex-wrap gap-2">
-      <a href="/modules/coming-soon.html?module=API%20Security" class="wug-tag normal-case tracking-normal hover:border-indigo-400 hover:text-indigo-800">API Security</a>
-      <a href="/modules/coming-soon.html?module=Secure%20Code%20Review" class="wug-tag normal-case tracking-normal hover:border-indigo-400 hover:text-indigo-800">Secure Code Review</a>
-      <a href="/modules/coming-soon.html?module=DevSecOps" class="wug-tag normal-case tracking-normal hover:border-indigo-400 hover:text-indigo-800">DevSecOps</a>
-      <a href="/modules/coming-soon.html?module=%C4%B0leri%20Application%20Security" class="wug-tag normal-case tracking-normal hover:border-indigo-400 hover:text-indigo-800">İleri Application Security</a>
-      <a href="/modules/penetration-testing.html" class="wug-tag normal-case tracking-normal hover:border-indigo-400 hover:text-indigo-800">Penetration Testing Hazırlık</a>
-    </div>
-  </section>
-
-  <section class="mt-12 rounded-xl border border-slate-200 bg-slate-50/60 p-6 text-center dark:border-slate-600 dark:bg-slate-900/30">
-    <p class="text-sm text-slate-600">İlerleme takibi ve tam ders akışı platform hesabınızla bağlanacaktır.</p>
-    <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href="/signup.html" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Eğitime Başla</a>
-      <a href="/contact.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900">Kurumsal bilgi</a>
-    </div>
-  </section>
-</main>
-
-<footer class="mt-16 border-t border-slate-200 bg-white py-10">
-  <div class="wug-wrap px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-      <p class="text-xs text-slate-500">© <span class="landing-footer-year"></span> SEBS Global</p>
-      <a href="/modules.html" class="text-sm font-semibold text-blue-700 hover:text-blue-900">← Tüm eğitimler</a>
-    </div>
-  </div>
-</footer>
-
-<script src="/js/api-base.js"></script>
-<script src="/config.js?v=1.0.2"></script>
-<script src="/js/api-integration.js?v=1.0.2"></script>
-<script src="/js/navigation.js"></script>
+  </footer>
 <script>
-  (function () {
-    document.querySelectorAll('.landing-footer-year').forEach(function (el) {
-      el.textContent = String(new Date().getFullYear());
-    });
-  })();
-</script>
+    (function () {
+      document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+        el.textContent = '2025';
+      });
+    })();
+  </script>
+    <script src="../js/navigation.js"></script>
+    <script src="../utils/access-control.js"></script>
+    <script src="module-access-check.js"></script>
 </body>
+    <script src="../config.js?v=1.0.2"></script>
+    <script src="../js/api-integration.js?v=1.0.2"></script>
 </html>
