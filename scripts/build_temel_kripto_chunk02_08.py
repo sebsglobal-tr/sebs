@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-Transcript'teki kullanıcı müfredatından Modül 2–8 gövdesini üretir:
-frontend/modules/parts/temel-kripto-chunk02-08.html
+Transcript'teki kullanıcı müfredatından Temel Kriptografi HTML parçalarını üretir:
+- frontend/modules/parts/temel-kripto-chunk01.html (Modül 1, active)
+- frontend/modules/parts/temel-kripto-chunk02-08.html (Modül 2–8)
+- frontend/modules/parts/temel-kripto-nav-ul.html (tam modül başlıklı yan menü <ul>)
 """
 from __future__ import annotations
 
@@ -14,9 +16,12 @@ TRANSCRIPT = Path(
     "/Users/apple/.cursor/projects/Users-apple-Desktop-sebs/agent-transcripts/"
     "c91f4e8e-75b8-4aa8-a44f-01b48b5d355d/c91f4e8e-75b8-4aa8-a44f-01b48b5d355d.jsonl"
 )
-OUT = Path("/Users/apple/Desktop/sebs/frontend/modules/parts/temel-kripto-chunk02-08.html")
+OUT_M1 = Path("/Users/apple/Desktop/sebs/frontend/modules/parts/temel-kripto-chunk01.html")
+OUT_M2_8 = Path("/Users/apple/Desktop/sebs/frontend/modules/parts/temel-kripto-chunk02-08.html")
+OUT_NAV = Path("/Users/apple/Desktop/sebs/frontend/modules/parts/temel-kripto-nav-ul.html")
 
 ICON = {
+    1: "fa-shield-alt",
     2: "fa-microchip",
     3: "fa-scroll",
     4: "fa-lock",
@@ -90,6 +95,9 @@ def is_learning_outcome(line: str) -> bool:
         "ayırt edecek",
         "ilişkilendirecek",
         "içselleştirecek",
+        "anlayacak",
+        "kullanacak",
+        "tanıyacak",
     )
     return any(k in s for k in keys)
 
@@ -311,7 +319,7 @@ def convert_body(lines: list[str], start_i: int) -> tuple[str, int]:
     return "".join(parts), i
 
 
-def parse_module(n: int, chunk: str) -> str:
+def parse_module(n: int, chunk: str, *, active: bool = False) -> str:
     lines = chunk.split("\n")
     if not lines:
         return ""
@@ -339,8 +347,9 @@ def parse_module(n: int, chunk: str) -> str:
         hp1, hp2, header_rest = "", None, []
 
     header_html = f"""                <div class="section-header">
-                    <h2><i class="fas {ICON[n]}"></i> {esc(title_line)}</h2>
-                    <p>{esc(hp1)}</p>"""
+                    <h2><i class="fas {ICON[n]}"></i> {esc(title_line)}</h2>"""
+    if hp1:
+        header_html += f"\n                    <p>{esc(hp1)}</p>"
     if hp2:
         header_html += f'\n                    <p class="section-intro">{esc(hp2)}</p>'
     header_html += "\n                </div>"
@@ -381,7 +390,8 @@ def parse_module(n: int, chunk: str) -> str:
                     </div>
 """
 
-    return f"""            <section class="content-section" id="kr-m{n}">
+    section_cls = "content-section active" if active else "content-section"
+    return f"""            <section class="{section_cls}" id="kr-m{n}">
 {header_html}
 {card_open}{extra_intro}{objectives_html}{body_html}
 {controls}                </div>
@@ -390,15 +400,51 @@ def parse_module(n: int, chunk: str) -> str:
 """
 
 
+def build_nav_ul(full: str) -> str:
+    """Tam modül başlıklarıyla yan menü <ul> içeriği."""
+    lis: list[str] = []
+    for n in range(1, 9):
+        title = slice_module(full, n).split("\n", 1)[0].strip()
+        ic = ICON[n]
+        active = " active" if n == 1 else ""
+        lis.append(
+            f'                        <li><a href="#" class="nav-link-section{active}" '
+            f'data-section="kr-m{n}"><i class="fas {ic}"></i> {esc(title)}</a></li>'
+        )
+    return (
+        '                    <ul class="nav-list nav-section-list">\n'
+        + "\n".join(lis)
+        + "\n                    </ul>"
+    )
+
+
+def sidebar_tagline_paragraph(full: str) -> str:
+    """Modül 1 girişinin ilk paragrafı — özet slogan yerine müfredat metni."""
+    ch = slice_module(full, 1).split("\n")
+    i = 1
+    while i < len(ch) and not ch[i].strip():
+        i += 1
+    para = ch[i].strip() if i < len(ch) else ""
+    return para
+
+
 def main() -> None:
     full = load_curriculum_text()
-    chunks: list[str] = []
-    for n in range(2, 9):
-        raw = slice_module(full, n)
-        chunks.append(parse_module(n, raw))
-    out = "".join(chunks)
-    OUT.write_text(out, encoding="utf-8")
-    print("Wrote", OUT, "bytes", OUT.stat().st_size)
+    m1 = parse_module(1, slice_module(full, 1), active=True)
+    OUT_M1.write_text(m1, encoding="utf-8")
+    chunks = [parse_module(n, slice_module(full, n)) for n in range(2, 9)]
+    out28 = "".join(chunks)
+    OUT_M2_8.write_text(out28, encoding="utf-8")
+    OUT_NAV.write_text(build_nav_ul(full) + "\n", encoding="utf-8")
+    OUT_TAG = Path("/Users/apple/Desktop/sebs/frontend/modules/parts/temel-kripto-sidebar-tagline.html")
+    OUT_TAG.write_text(
+        "                <p>" + esc(sidebar_tagline_paragraph(full)) + "</p>\n",
+        encoding="utf-8",
+    )
+    print("Wrote", OUT_M1, "bytes", OUT_M1.stat().st_size)
+    print("Wrote", OUT_M2_8, "bytes", OUT_M2_8.stat().st_size)
+    print("Wrote", OUT_NAV, "bytes", OUT_NAV.stat().st_size)
+    print("Wrote", OUT_TAG, "bytes", OUT_TAG.stat().st_size)
 
 
 if __name__ == "__main__":

@@ -143,7 +143,8 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 <span class="term-output">url=https://hooks.slack.com/... status=200 bytes=42</span>
 <span class="term-comment"># İkinci satır meşru entegrasyon da olabilir; allowlist ve iş gerekçesi ile eşleştirilir.</span>""")}
 <h2>Dosya yükleme ve path traversal</h2>
-<p>Yükleme uçlarında saldırgan çift uzantı, MIME sahteciliği veya polyglot dosya fikirleriyle (eğitim düzeyinde) uygulamayı yanıltmaya çalışır. Path traversal ise dosya yolu birleştirme ve normalizasyon hatalarında ortaya çıkar. Savunma: içerik imzası/allowlist, web kökünden ayrı depolama, rastgele dosya adı, yürütme engeli, güvenli path join.</p>
+<p>Yükleme uçlarında saldırgan çift uzantı, MIME sahteciliği veya polyglot dosya fikirleriyle (eğitim düzeyinde) uygulamayı yanıltmeye çalışır. Path traversal ise dosya yolu birleştirme ve normalizasyon hatalarında ortaya çıkar. Savunma: içerik imzası/allowlist, web kökünden ayrı depolama, rastgele dosya adı, yürütme engeli, güvenli path join.</p>
+<p>Depolama bucket’ı ile CDN arasındaki <strong>imza URL’si</strong> süresi ve “liste dizin” kapalı olduğunun doğrulanması rapora yapılandırma kanıtı olarak girer.</p>
 <h2>Yanlış yapılandırma: saldırganın hızlı kazanım alanı</h2>
 <p>Örnek hesaplar, açık dizin listelemeleri, gereksiz HTTP verb’leri, aşırı ayrıntılı hata sayfaları ve “geçici olarak açılmış” debug bayrakları saldırganın <strong>keşif maliyetini düşürür</strong>. Savunma tarafında bu başlık, yapılandırma drift’ini (zamanla gevşeme) ve dağıtım boru hattındaki <strong>ortam karışıklığını</strong> hedefler. Üretim doğrulamasında “staging ile diff” en güçlü kanıt yaklaşımlarından biridir.</p>
 {terminal("config-diff-snippet.txt — staging vs prod (kurgusal)", """<span class="term-prompt">devops@sebs:~$</span> <span class="term-cmd">diff -u staging.env prod.env | head -n 20</span>
@@ -157,7 +158,7 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 {table(["Alan sızıntısı", "Nerede birikir?", "Savunma"], [
     ["Gereksiz kolonlar", "Mobil cache, tarayıcı önbelleği", "DTO ve alan seçme"],
     ["Hata gövdesi", "Log taşıyıcıları", "Genel mesaj + ayrıntılı iç log"],
-    ["GraphQL derin sorgu", "Tek istekte geniş ağaç", "Maliyit limiti ve persisted query"],
+    ["GraphQL derin sorgu", "Tek istekte geniş ağaç", "Maliyet limiti ve persisted query"],
 ])}
 <h2>İş mantığı zafiyetleri: saldırganın “kuralları atlama” oyunu</h2>
 <p>Burada exploit genelde klasik enjeksiyon değildir; fiyat, limit, kupon, onay sırası, iade ve stok gibi kuralların <strong>sunucuda zorlanmaması</strong>dır. Sinyaller: belirli kullanıcıda olağandışı işlem hacmi, kısa sürede çok adım, aynı ödeme akışında tutarsız durumlar.</p>
@@ -189,6 +190,12 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
     "Oran sınırlama ve hata gövdesi sızdırmasını değerlendirebilirim.",
     "API geçidi loglarıyla uygulama logunu korele edebilirim.",
 ])}
+{key_concepts_grid([
+    ("fa-robot", "Otomasyon", "Makine istemcileri insan hızından emin değildir; oran sınırı ve anomali eşikleri API’de daha sert olmalıdır."),
+    ("fa-diagram-project", "Sözleşme", "OpenAPI/GraphQL şeması ne vaat ediyorsa log ve test de o çizgide yoğunlaşır."),
+    ("fa-user-lock", "Nesne yetkisi", "Bearer token var diye kayıt sahipliği doğrulanmış sayılmaz."),
+    ("fa-file-lines", "DTO", "İstemciye giden her alan bilinçli seçilir; ‘fazla alan’ bulgusu şema diff ile kanıtlanır."),
+])}
 <h2>Saldırganın API keşfi (eğitim)</h2>
 <p>Saldırgan; OpenAPI/Swagger sızıntısı, JS paketleri, hata mesajları veya tahmin edilebilir kaynak adlarıyla uç listesi çıkarır. Ardından kimlik doğrulaması olan uçlarda <strong>nesne kimliği değiştirme</strong>, yetkisiz method (DELETE) veya fazla veri dönüşü dener.</p>
 {table(["Risk", "Saldırgan görüşü (eğitim)", "Savunma kontrolü"], [
@@ -204,6 +211,10 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
 {risk_card('<p><strong>Hata mesajları</strong> stack trace veya SQL parçası döndürürse saldırgan şema çıkarır. Üretimde genelleştirilmiş hata ve korelasyon kimliği (trace id) kullanıcıya, detay ise güvenli log kanalına gider.</p>')}
 <h2>API geçidi ve SOC</h2>
 <p>Geçit; kimlik, oran sınırlama, şema doğrulama ve merkezi log üretir. SOC için değer: tek yerden <strong>istek kimliği</strong> ile uygulama içi trace’e köprü.</p>
+{terminal("correlate.sh — gateway ↔ app (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">grep 'req=7c4b9e2a' gateway.jsonl app.jsonl</span>
+<span class="term-output">gateway: status=200 route=/api/v1/orders/4412</span>
+<span class="term-output">app: authz=deny reason=not_owner user=alice resource=4412</span>
+<span class="term-comment"># Aynı id ile çelişki: gateway policy mi app policy mi? ikisi de incelenir.</span>""")}
 """ + quiz(
     [
         {"q": "API’de kimlik var ama yetki yoksa sonuç nedir?", "choices": ["Güvenli", "BOLA/IDOR riski devam eder", "TLS kapanır", "WAF kapanır", "DNS silinir"], "correct": "B", "reason": "Yetki her uçta ayrı doğrulanmalıdır."},
@@ -225,6 +236,9 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
     "CORS yanlış yapılandırmasını köken politikası üzerinden okuyabilirim.",
     "Gizli anahtar ve ortam değişkeni yönetiminde yaygın hataları listeleyebilirim.",
     "Üretim doğrulama checklist’i ile güvenli denetim yapabilirim.",
+])}
+{info_box("Header + CORS birlikte okunur", [
+    "Zayıf CORS, XSS veya veri sızıntısı sonrası tarayıcıda etkiyi büyütür; CSP ise script yüzeyini daraltır. Tek başına ‘CSP var’ demek yetmez; report-only aşaması ve istisna yönetimi planlanmalıdır.",
 ])}
 <h2>CSP: enjeksiyon sonrası “yangın söndürme” katmanı</h2>
 {table(["Direktif sınıfı", "Amaç (kısa)", "Yanlış yapılandırma riski"], [
@@ -248,6 +262,11 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
 <li>Secret scan ve dependency bilgisi (bir sonraki modülle örtüşür).</li>
 <li>Bulguları yapılandırma çıktısı veya güvenli özetle kanıtla.</li>
 </ol>
+{terminal("curl-headers.sh — üretim başlık kesiti (kurgusal)", """<span class="term-prompt">appsec@sebs:~$</span> <span class="term-cmd">curl -sI https://app.example.com/ | grep -iE '^(strict-transport|content-security|x-frame|permissions|referrer-policy):'</span>
+<span class="term-output">strict-transport-security: max-age=31536000; includeSubDomains</span>
+<span class="term-output">content-security-policy: default-src 'self'; frame-ancestors 'none'</span>
+<span class="term-output">referrer-policy: strict-origin-when-cross-origin</span>
+<span class="term-comment"># Eksik başlık ‘bulgu’ değil önce envanter; sonra tehdit modeli ile öncelenir.</span>""")}
 """ + quiz(
     [
         {"q": "CSP’nin birincil rolü nedir?", "choices": ["DNS hızı", "Kaynak yükleme ve script yüzeyini kısıtlamak", "DB şifreleme", "CPU governor", "JPEG"], "correct": "B", "reason": "XSS sonrası etkiyi sınırlar."},
@@ -270,6 +289,12 @@ M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi
     "NTP/zaman senkronizasyonunun analizdeki rolünü savunabilirim.",
     "Şüpheli oturum + API senaryosunu rapora dökebilirim.",
 ])}
+{key_concepts_grid([
+    ("fa-clock", "Zaman", "NTP ve tek kaynaklı saat; aksi halde saldırgan ‘önce/sonra’ hikâyesi kuramaz."),
+    ("fa-link", "Korelasyon", "request_id / trace_id tüm katmanda yoksa olay parçalanır."),
+    ("fa-filter", "Örnekleme", "Log maliyeti için sampling varsa kritik güvenlik olayları dışarıda bırakılmamalıdır."),
+    ("fa-user-secret", "PII", "Logda maskeleme; analist ekranında tam metin ayrı yetki."),
+])}
 <h2>Log katmanları ve saldırganın izleri</h2>
 {table(["Kaynak", "Ne görür?", "Tipik saldırgan sinyali (eğitim)"], [
     ["Web access", "URL, status, byte", "Çok 404/403, anormal parametre uzunluğu"],
@@ -279,6 +304,11 @@ M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi
 ])}
 <h2>Korelasyon ve zaman</h2>
 <p>Zaman kayması analizi öldürür. İstek kimliği (X-Request-Id) uçtan uca taşınırsa olay birleştirilir.</p>
+{terminal("join-logs.sh — tek satırda birleştirme (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">jq -c 'select(.request_id==\"7c4b9e2a\")' waf.jsonl app.jsonl db.jsonl</span>
+<span class="term-output">{"request_id":"7c4b9e2a","waf_action":"allow","rule":"-"}</span>
+<span class="term-output">{"request_id":"7c4b9e2a","path":"/api/v1/orders","status":200}</span>
+<span class="term-output">{"request_id":"7c4b9e2a","db":"select ...","duration_ms":940}</span>
+<span class="term-comment"># Üç kaynak aynı id: hikâye tamamlanır; biri eksikse kör nokta.</span>""")}
 {risk_card('<p><strong>Yanlış pozitif:</strong> bakım penceresi, yeni özellik trafiği, kötü kural. <strong>Yanlış negatif:</strong> log yok, örnekleme, aşırı filtre.</p>')}
 <h2>Operasyonel senaryo: şüpheli oturum + API</h2>
 <p><strong>Belirti:</strong> Aynı hesaptan kısa sürede farklı ülkeler; ardından yönetim API uçlarına artan 200’ler.</p>
@@ -309,6 +339,12 @@ M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
     "Secret scanning ve bağımlılık riskini sürece bağlayabilirim.",
     "Değişiklik sonrası doğrulama ve rollback disiplinini açıklayabilirim.",
 ])}
+{key_concepts_grid([
+    ("fa-shield-virus", "Erken tehdit", "STRIDE soruları PR açıklamasına ‘hangi varlık?’ diye eklenir."),
+    ("fa-gears", "CI kapısı", "Kırmızı build = merge yok; ama kural gürültüsü yönetilmezse ekip kapıyı bypass eder."),
+    ("fa-boxes-stacked", "Tedarik zinciri", "İmzalı commit, imzalı artefakt, bağımlılık SBOM birbirini tamamlar."),
+    ("fa-headset", "SOC köprüsü", "Kritik uç listesi ve entegrasyon riski alarm önceliğini besler."),
+])}
 {process_flow([("fa-lightbulb", "Tehdit modeli"), ("fa-code", "Güvenli kod"), ("fa-vial", "Test"), ("fa-rocket", "Dağıtım"), ("fa-eye", "İzleme")])}
 <h2>Threat modeling (STRIDE kısa)</h2>
 {table(["STRIDE", "Soru", "Örnek web kontrolü"], [
@@ -336,23 +372,34 @@ M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
     ]
 )
 
-SCEN = """
+SCEN = f"""
 <h2>Operasyonel senaryolar (genişletilmiş özet)</h2>
-<p>Her senaryo aynı omurga ile yazılır: belirti → hipotezler → kanıt → analiz → karar → rapor (Bulgu → Etki → Öneri → Kanıt).</p>
+<p>Her senaryo aynı omurga ile yazılır: belirti → hipotezler → kanıt → analiz → karar → rapor (Bulgu → Etki → Öneri → Kanıt). Aşağıdaki özetler <strong>kurgusal</strong> isimler içerir; gerçek olay incelemesinde veri sınıflandırması ve yetki çerçevesi her zaman önce gelir.</p>
+{key_concepts_grid([
+    ("fa-stethoscope", "Belirti", "Ölçülebilir gözlem: status dağılımı, coğrafya, yanıt süresi, hata kodu patlaması."),
+    ("fa-flask", "Hipotez", "Birden fazla tutulur; favori hipotez kanıt olmadan seçilmez."),
+    ("fa-folder-open", "Kanıt paketi", "Log kesiti, yapılandırma diff, maskelemiş ekran görüntüsü, hash manifesti."),
+    ("fa-gavel", "Karar", "Kontainment ve iletişim kurum politikasına bağlıdır; teknik ekip tek başına ‘hesap kapat’ kararı vermez."),
+])}
 <h3>1) Şüpheli giriş</h3>
-<p>Spraying/brute force veya sızdırılmış parola sonrası oturum. Kanıt: auth log + risk skoru + coğrafya.</p>
+<p>Spraying/brute force veya sızdırılmış parola sonrası oturum. Kanıt: auth log + risk skoru + coğrafya. Ek olarak: aynı ASN’den çok hesap denemesi, başarıdan hemen sonra şifre değişikliği veya MFA kaldırma girişimi gibi <strong>zincir</strong> adımları zaman çizelgesine işlenir.</p>
 <h3>2) Yetkisiz admin şüphesi</h3>
-<p>403→200 deseni veya yeni rol ataması. Kanıt: IAM değişiklik kaydı + admin API.</p>
+<p>403→200 deseni veya yeni rol ataması. Kanıt: IAM değişiklik kaydı + admin API. Yorum: otomasyon (CI) mi insan mı ayırt etmek için pipeline kullanıcısı ve IP allowlist’i kontrol edilir.</p>
 <h3>3) API aşırı veri</h3>
-<p>İstemci modelinde görülen hassas alanlar. Kanıt: sözleşme diff + maskelemiş örnek yanıt.</p>
+<p>İstemci modelinde görülen hassas alanlar. Kanıt: sözleşme diff + maskelemiş örnek yanıt. İş etkisi: KVKK/GDPR süreleri, müşteri bildirimi ihtiyacı.</p>
 <h3>4) Debug açık</h3>
-<p>Yığın izi kullanıcıya. Kanıt: yanıt gövdesi + config diff.</p>
+<p>Yığın izi kullanıcıya. Kanıt: yanıt gövdesi + config diff. Yan etki: saldırgan keşfi hızlanır; aynı zamanda loglara iç yapı düşebilir.</p>
 <h3>5) Hatalı CORS</h3>
-<p>Beklenmeyen kökenle başarılı okuma. Kanıt: başlık yakalama + tarayıcı politikası.</p>
+<p>Beklenmeyen kökenle başarılı okuma. Kanıt: başlık yakalama + tarayıcı politikası. Düzeltme sonrası regression: preflight ve mobil WebView ayrı test edilir.</p>
 <h3>6) Dosya yükleme riski</h3>
-<p>Çalıştırılabilir içerik veya path birleştirme. Kanıt: kod yolu + depolama kökü.</p>
+<p>Çalıştırılabilir içerik veya path birleştirme. Kanıt: kod yolu + depolama kökü + CDN imza URL politikası.</p>
 <h3>7) Hata mesajında hassas bilgi</h3>
-<p>SQL/şema ipucu. Kanıt: ekran görüntüsü (maskeli) + log policy.</p>
+<p>SQL/şema ipucu. Kanıt: ekran görüntüsü (maskeli) + log policy. Öneri: genel kullanıcı mesajı + iç trace id.</p>
+{info_box("Rapor dilinde kaçınılacaklar", [
+    "Kesin saldırgan kimliği iddiası (kanıtsız),",
+    "Üretimde tekrarlanmamış ‘staging’ bulgusunu aynen taşımak,",
+    "Ham PII içeren ekran görüntüsü paylaşımı.",
+])}
 """
 
 M11 = f"""<h1>MODÜL 11 — Raporlama ve Operasyonel Senaryolar</h1>
@@ -390,35 +437,41 @@ M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
 {img_block("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&q=90", "Kitap ve notlar", "Ortak dil: ekip içi iletişim ve raporların denetlenebilirliği.")}
 <p>Bu sözlük modüllerde geçen kavramları tek yerde toplar. Tablo görünümü, sayfadaki otomatik biçimlendirme ile zenginleşebilir.</p>
 <h2>Terimler Sözlüğü</h2>
-<p>Terim	Türkçe karşılığı / açıklama</p>
-<p>Authentication	Kimlik doğrulama: kullanıcı iddiasını kanıtlama</p>
-<p>Authorization	Yetkilendirme: izin verilen işlem ve kaynaklar</p>
-<p>Session	Oturum: sunucunun tanıdığı etkileşim durumu</p>
-<p>Cookie	Çerez: tarayıcıda taşınan küçük veri; oturum taşıyabilir</p>
-<p>Token	Belirteç: kimlik/yetki iddiasını taşıyan değer</p>
-<p>CSRF	Siteler arası istek sahteciliği: oturum çerezinin otomatik taşınmasıyla durum değiştirme riski</p>
-<p>XSS	Siteler arası komut dosyası: güvensiz verinin tarayıcıda komut gibi yorumlanması riski</p>
-<p>SQL Injection	SQL enjeksiyonu: sorgu yapısına güvensiz veri gömülmesi</p>
-<p>SSRF	Sunucu tarafı istek sahteciliği: sunucunun istenmeyen hedeflere köprü olması</p>
-<p>CORS	Kökenler arası paylaşım politikası</p>
-<p>CSP	İçerik güvenlik politikası</p>
-<p>HSTS	HTTP sıkı taşıma güvenliği</p>
-<p>API	Uygulama programlama arayüzü</p>
-<p>Rate limit	Oran sınırlama</p>
-<p>WAF	Web uygulama güvenlik duvarı</p>
-<p>Secure SDLC	Güvenli yazılım yaşam döngüsü</p>
-<p>Threat modeling	Tehdit modelleme</p>
-<p>Input validation	Girdi doğrulama</p>
-<p>Output encoding	Çıktı kodlama</p>
-<p>Sensitive data exposure	Hassas veri maruziyeti</p>
-<p>Business logic flaw	İş mantığı hatası</p>
-<p>Evidence	Kanıt</p>
-<p>False positive	Yanlış pozitif</p>
-<p>False negative	Yanlış negatif</p>
-<p>Risk	Risk</p>
-<p>Impact	Etki</p>
-<p>Mitigation	Azaltma</p>
-<p>Verification	Doğrulama</p>
+{table(["Terim (EN)", "Türkçe / açıklama"], [
+    ["Authentication", "Kimlik doğrulama: kullanıcı iddiasını kanıtlama"],
+    ["Authorization", "Yetkilendirme: izin verilen işlem ve kaynaklar"],
+    ["Session", "Oturum: sunucunun tanıdığı etkileşim durumu"],
+    ["Cookie", "Çerez: tarayıcıda taşınan küçük veri; oturum taşıyabilir"],
+    ["Token", "Belirteç: kimlik veya yetki iddiasını taşıyan değer"],
+    ["CSRF", "Siteler arası istek sahteciliği: çerezin otomatik taşınmasıyla durum değiştirme riski"],
+    ["XSS", "Siteler arası komut dosyası: güvensiz verinin tarayıcıda komut gibi yorumlanması riski"],
+    ["SQL Injection", "SQL enjeksiyonu: sorgu yapısına güvensiz veri gömülmesi"],
+    ["SSRF", "Sunucu tarafı istek sahteciliği: sunucunun istenmeyen hedeflere köprü olması"],
+    ["CORS", "Kökenler arası paylaşım politikası"],
+    ["CSP", "İçerik güvenlik politikası"],
+    ["HSTS", "HTTP sıkı taşıma güvenliği"],
+    ["API", "Uygulama programlama arayüzü"],
+    ["Rate limit", "Oran sınırlama"],
+    ["WAF", "Web uygulama güvenlik duvarı"],
+    ["Secure SDLC", "Güvenli yazılım yaşam döngüsü"],
+    ["Threat modeling", "Tehdit modelleme"],
+    ["Input validation", "Girdi doğrulama"],
+    ["Output encoding", "Çıktı kodlama"],
+    ["Sensitive data exposure", "Hassas veri maruziyeti"],
+    ["Business logic flaw", "İş mantığı hatası"],
+    ["Evidence", "Kanıt"],
+    ["False positive", "Yanlış pozitif"],
+    ["False negative", "Yanlış negatif"],
+    ["Risk", "Olasılık ve etkinin birleşimi (kurumsal tanıma göre)"],
+    ["Impact", "Etki: iş, veri veya itibar sonucu"],
+    ["Mitigation", "Azaltma: kontrol veya süreçle risk düşürme"],
+    ["Verification", "Doğrulama: düzeltmenin kanıtla teyidi"],
+])}
+{key_concepts_grid([
+    ("fa-book", "Ortak dil", "Aynı terimi farklı ekipler farklı anlarsa öncelik ve bütçe yanlış dağılır."),
+    ("fa-language", "İngilizce kök", "Rapor ve CVE ile uyum için EN terim + TR açıklama birlikte tutulur."),
+    ("fa-graduation-cap", "Öğrenme çıktısı", "Sözlük ezber değil; bulgu raporunda doğru kelimeyi seçmek içindir."),
+])}
 <h2>Eğitimin Kapanışı</h2>
 <p>Bu uzun eğitimde web uygulamasını hem <strong>savunmacı</strong> hem <strong>tehdit perspektifiyle (eğitim düzeyinde)</strong> okudunuz: HTTP ve oturum modeli, kimlik ve yetki, enjeksiyon ve mantık hataları, API ve header/CORS, log analizi, SDLC ve raporlama. Bir sonraki adım API Security ve Secure Code Review modüllerinde derinleşebilir; burada kurduğunuz dil ve kanıt disiplinini taşıyın.</p>
 """ + quiz(
