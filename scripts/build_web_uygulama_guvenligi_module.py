@@ -60,9 +60,11 @@ def main() -> None:
         '"name":"Web Uygulama Guvenligi","item":"https://sebsglobal.com/egitimler/web-uygulama-guvenligi"',
     )
 
-    body_prefix = "".join(net_lines[3861:3912])
+    # Mobil menüden sonra bitir; module-layout + aside yalnızca `sidebar` içinde (çift etiket yok)
+    body_prefix = "".join(net_lines[3861:3910])
 
-    sidebar = """        <aside class="module-sidebar">
+    sidebar = """    <div class="module-layout">
+        <aside class="module-sidebar">
             <div class="sidebar-header">
                 <h1>WEB UYGULAMA GÜVENLİĞİ</h1>
                 <p>Orta seviye · Savunma ve kanıt temelli analiz</p>
@@ -75,7 +77,7 @@ def main() -> None:
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <h4>İçindekiler</h4>
+                    <h4 class="nav-module-header">İçindekiler</h4>
                     <ul class="nav-list nav-section-list">
                         <li><a href="#" class="nav-link-section active" data-section="wag-m0-etik"><i class="fas fa-book"></i> MODÜL 0 — Etik, Yetki ve Güvenli Çalışma</a></li>
                         <li><a href="#" class="nav-link-section" data-section="wag-m1-mimari"><i class="fas fa-book"></i> MODÜL 1 — Mimari ve Güvenlik Bakış Açısı</a></li>

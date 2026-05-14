@@ -3149,41 +3149,36 @@
             margin-right: 0.5rem;
         }
 
-        .lesson-complete-footer {
+        /* Dersi Tamamla — Temel Network eğitimi ile aynı yapı */
+        .lesson-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
             margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 1rem;
         }
-        .lesson-complete-btn {
-            display: inline-flex;
+        .lesson-status {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .btn-complete-lesson {
+            padding: 0.5rem 1rem;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--accent-gradient);
-            color: #1a1a2e;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: var(--shadow-sm);
+            font-size: 0.9rem;
+            transition: transform 0.2s;
         }
-        .lesson-complete-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .lesson-complete-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .lesson-complete-btn .fa-check {
-            font-size: 1rem;
+        .btn-complete-lesson:hover {
+            transform: translateY(-1px);
         }
 
         .success-box {
@@ -3911,6 +3906,10 @@
     <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü Aç/Kapat">
         <i class="fas fa-bars"></i>
     </button>
+
+    
+
+    <div class="module-layout">
         <aside class="module-sidebar">
             <div class="sidebar-header">
                 <h1>WEB UYGULAMA GÜVENLİĞİ</h1>
@@ -3924,7 +3923,7 @@
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <h4>İçindekiler</h4>
+                    <h4 class="nav-module-header">İçindekiler</h4>
                     <ul class="nav-list nav-section-list">
                         <li><a href="#" class="nav-link-section active" data-section="wag-m0-etik"><i class="fas fa-book"></i> MODÜL 0 — Etik, Yetki ve Güvenli Çalışma</a></li>
                         <li><a href="#" class="nav-link-section" data-section="wag-m1-mimari"><i class="fas fa-book"></i> MODÜL 1 — Mimari ve Güvenlik Bakış Açısı</a></li>
@@ -5439,13 +5438,13 @@
     <script>
         const MODULE_NAME = 'Web Uygulama Güvenliği';
         const STORAGE_KEY = 'module_progress_web_uygulama_guvenligi';
-        window.MODULE_TOTAL_LESSONS = 0; // set after navLinks defined
+        window.MODULE_TOTAL_LESSONS = 0;
 
-        // Section navigation - show/hide sections
+        // Temel Network ile aynı: toplam ders = .content-section sayısı
         const sections = document.querySelectorAll('.content-section');
         const navLinks = document.querySelectorAll('.nav-link-section');
         const navSectionList = document.querySelector('.nav-section-list');
-        window.MODULE_TOTAL_LESSONS = navLinks.length;
+        window.MODULE_TOTAL_LESSONS = sections.length;
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
 
@@ -5548,7 +5547,7 @@
                     if (lessons.length) {
                         localStorage.setItem(STORAGE_KEY, JSON.stringify({
                             completedLessons: lessons,
-                            totalLessons: step.totalLessons || navLinks.length,
+                            totalLessons: step.totalLessons || sections.length,
                             lastUpdated: new Date().toISOString()
                         }));
                     }
@@ -5560,8 +5559,7 @@
         }
 
         function saveProgressLocal(completedLessons) {
-            const total = navLinks.length;
-            const pct = total ? Math.round((completedLessons.length / total) * 100) : 0;
+            const total = sections.length;
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 completedLessons,
                 totalLessons: total,
@@ -5571,7 +5569,7 @@
         }
 
         function updateProgressUI(completedCount) {
-            const total = navLinks.length;
+            const total = sections.length;
             const pct = total ? Math.round((completedCount / total) * 100) : 0;
             if (progressFill) progressFill.style.width = pct + '%';
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
@@ -5895,18 +5893,38 @@
             });
         })();
 
-        // Inject "Dersi Tamamla" button at end of each section
+        function lessonStatusLabelForSection(sectionEl) {
+            const h1 = sectionEl.querySelector('.section-inner h1');
+            if (h1 && h1.textContent.trim()) return h1.textContent.trim();
+            const link = document.querySelector('.nav-link-section[data-section="' + sectionEl.id + '"]');
+            if (link) return link.textContent.replace(/\s+/g, ' ').trim();
+            return sectionEl.id;
+        }
+
         sections.forEach(sec => {
             const inner = sec.querySelector('.section-inner');
             if (!inner) return;
-            const footer = document.createElement('div');
-            footer.className = 'lesson-complete-footer';
+            const wrap = document.createElement('div');
+            wrap.className = 'lesson-controls';
+            const status = document.createElement('span');
+            status.className = 'lesson-status';
+            status.innerHTML = '<i class="fas fa-book-open"></i> ' + lessonStatusLabelForSection(sec);
             const btn = document.createElement('button');
-            btn.className = 'lesson-complete-btn';
-            btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
-            btn.onclick = () => completeLesson(sec.id);
-            footer.appendChild(btn);
-            inner.appendChild(footer);
+            btn.type = 'button';
+            btn.className = 'btn-complete-lesson';
+            btn.setAttribute('data-section', sec.id);
+            btn.setAttribute('aria-label', 'Dersi tamamla');
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Dersi Tamamla';
+            wrap.appendChild(status);
+            wrap.appendChild(btn);
+            inner.appendChild(wrap);
+        });
+
+        document.querySelectorAll('.btn-complete-lesson').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) completeLesson(sectionId);
+            });
         });
 
         (async function initProgress() {
@@ -5921,7 +5939,7 @@
                 localStorage.getItem('authToken');
             if (!t) return;
             if (window.ModuleProgressTracker?.initializeModule) {
-                window.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(() => {});
+                window.ModuleProgressTracker.initializeModule(MODULE_NAME, sections.length).catch(() => {});
             }
             if (window.TimeTracker && window.getModuleIdFromName) {
                 try {
