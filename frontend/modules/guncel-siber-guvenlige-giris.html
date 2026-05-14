@@ -2134,6 +2134,16 @@
 <h1 id="modül-1-siber-güvenliğin-temelleri-ve-vizyonu"><strong>MODÜL 1 — Siber Güvenliğin Temelleri ve Vizyonu</strong></h1>
 <h2 id="modül-özeti"><strong>Modül Özeti</strong></h2>
 <p>Bu modül, siber güvenliğe giriş yaparak temel kavramsal çerçeveyi kurar ve “neyi, neden ve neye karşı koruyoruz?” sorularını sistematik biçimde yanıtlar. Siber güvenliğin kapsamı ile bilgi güvenliği arasındaki ilişki netleştirilir; güvenliğin üç temel direği olan CIA Üçlüsü (Gizlilik–Bütünlük–Erişilebilirlik) açıklanır. Ardından varlık, tehdit, zafiyet, risk, exploit, payload ve zero-day gibi temel terimler birbiriyle ilişkilendirilir ve saldırıların çoğu zaman bir “zincir” halinde ilerlediği kavramsal olarak gösterilir. Bu modülde kazanılan dil ve bakış açısı, bir sonraki modülde tehdit aktörlerini ve saldırı türlerini anlamanın temelini oluşturur.</p>
+<div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="CIA ve temel dil">
+<div class="kr-inline-breakout__head"><i class="fas fa-shield-alt" aria-hidden="true"></i><span>CIA + risk dili — kartlar</span></div>
+<p class="kr-inline-breakout__hint">Modülün geri kalanını okurken her örnekte “hangi CIA boyutu?” ve “tehdit mi zafiyet mi risk mi?” sorularını bu kartlarla hizalayın.</p>
+<div class="kr-cia-grid">
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-user-secret"></i></span><span class="kr-exp-goal__title">Gizlilik</span></summary><div class="kr-exp-goal__body">Yetkisiz <strong>okuma / ifşa</strong>. Şifreleme ve erişim kontrolü sık araçlardır; süreç ve veri sınıflandırması da parçadır.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-check-double"></i></span><span class="kr-exp-goal__title">Bütünlük</span></summary><div class="kr-exp-goal__body">Verinin veya yazılımın <strong>izinsiz değiştirilmediğinin</strong> güvencesi. Checksum, imza, süreç kontrolü örnekleridir.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-plug"></i></span><span class="kr-exp-goal__title">Erişilebilirlik</span></summary><div class="kr-exp-goal__body">Hizmetin <strong>yetkili kullanıcılar için ulaşılabilir</strong> kalması. DoS ve kesinti riskleri buraya girer.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-project-diagram"></i></span><span class="kr-exp-goal__title">Tehdit · zafiyet · risk</span></summary><div class="kr-exp-goal__body">Tehdit <strong>motivasyon/kaynak</strong>; zafiyet <strong>zayıf nokta</strong>; risk olasılık ve etkinin birleşimidir. Birbirinin yerine kullanılmaz.</div></details>
+</div>
+</div>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=320&q=90" alt="Öğrenme hedefleri" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Modül kazanımları ileriki konuların temelini oluşturur.</p></div>
 <h2 id="modül-amaçları"><strong>Modül Amaçları</strong></h2>
 <p>Bu modülü tamamlayan bir öğrenci:</p>
@@ -6314,6 +6324,7 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
     <script src="/js/navigation.js?v=2.3"></script>
 
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

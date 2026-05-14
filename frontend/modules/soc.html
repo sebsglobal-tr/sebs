@@ -815,6 +815,16 @@
                         <h5><i class="fas fa-question-circle"></i> SOC Neden Kritik?</h5>
                         <p>Siber saldırıların sürekli artması ve karmaşıklaşması, organizasyonların 7/24 güvenlik izlemesi yapmasını zorunlu kılmaktadır. SOC, bu ihtiyacı karşılayan ve siber tehditlere karşı proaktif savunma sağlayan kritik bir bileşendir.</p>
                     </div>
+
+                    <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="SOC analist kartları">
+                        <div class="kr-inline-breakout__head"><i class="fas fa-headset" aria-hidden="true"></i><span>Operasyon hattı — üç soru</span></div>
+                        <p class="kr-inline-breakout__hint">Alarm geldiğinde önce sınıflandırma; sonra kanıt; en son eskalasyon. Kartları açıp kendi runbook’unuzla eşleyin.</p>
+                        <div class="kr-cia-grid">
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-filter"></i></span><span class="kr-exp-goal__title">Triage</span></summary><div class="kr-exp-goal__body">Olay mı, gürültü mü? <strong>Kaynak, zaman çizelgesi, etkilenen varlık</strong> ve korelasyon öncesi tek satırlık özet yazın.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-balance-scale"></i></span><span class="kr-exp-goal__title">FP / FN</span></summary><div class="kr-exp-goal__body"><strong>Yanlış pozitif</strong> maliyeti; <strong>yanlış negatif</strong> görünürlük riski. Kural ayarı ile iş etkisi arasında denge SOC mühendisliğidir.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-level-up-alt"></i></span><span class="kr-exp-goal__title">Eskalasyon</span></summary><div class="kr-exp-goal__body">Ne zaman IR’a, ne zaman ürüne? <strong>SLA, iletişim kanalı ve sorumlu rol</strong> yazılı değilse gece vardiyasında gecikme kaçınılmazdır.</div></details>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="lesson-section">
@@ -3621,6 +3631,7 @@
     </script>
     <script src="../utils/access-control.js"></script>
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

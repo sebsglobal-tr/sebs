@@ -87,7 +87,7 @@ def terminal(title: str, body_inner: str) -> str:
     return f'''<div class="linux-terminal"><div class="term-header"><span class="term-dot red"></span><span class="term-dot yellow"></span><span class="term-dot green"></span><span class="term-title">{esc(title)}</span></div><div class="term-body">{body_inner}</div></div>'''
 
 
-M6 = f"""<h1>MODÜL 6 — XSS, clickjacking, injection, SSRF ve ilişkili sınıflar <small>(müfredat 11 · 12 · 13)</small></h1>
+M6 = f"""<h1>Modül 11 — Cross-Site Scripting, Clickjacking ve Client-Side Güvenlik</h1>
 {img_block("https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=900&q=90", "Siber güvenlik ekranı", "Zafiyet sınıfları: saldırganın motoru ve savunmacının kontrol + görünürlük katmanları.")}
 <p>Bu modül OWASP tarzı sınıfları <strong>ezberletmek</strong> için değil; her birinde saldırganın <em>neyi hedeflediğini</em>, uygulamanın <em>hangi hatayı yaptığını</em>, olayın <em>hangi logda nasıl görünebileceğini</em> ve <em>hangi kontrolün blast radius’u nasıl küçülttüğünü</em> birlikte okumak içindir. Mekanizma, savunma dili ve gerektiğinde teknik örnekler birlikte verilir; bunları yalnızca yazılı yetki ve geçerli hukuk çerçevesinde kullanmak kullanıcının yükümlülüğüdür. İçeriğin kötüye kullanımından SEBS Academy ve materyalin yayıncıları sorumlu tutulamaz.</p>
 <p>Zafiyet sınıfları üretimde nadiren tek başına görünür: aynı olayda <strong>zayıf yetkilendirme + aşırı veri dönüşü + yetersiz log</strong> bir arada bulunur. Bu yüzden modülü okurken her bulguyu “hangi kontrol eksik?” yerine “hangi <em>zincir</em> eksik?” diye sorun: WAF bir şeyi kesmiş olsa bile uygulama mantığı aynı hatayı başka parametreyle tekrar ediyor olabilir.</p>
@@ -139,6 +139,7 @@ M6 = f"""<h1>MODÜL 6 — XSS, clickjacking, injection, SSRF ve ilişkili sını
     "Strict: kullanıcı doğrudan sitedeyken çerez taşınır; bazı derin link senaryolarında UX maliyeti doğurabilir.",
     "Lax: güvenli HTTP metodlarında siteler arası top-level navigasyonda sınırlı taşınır; uygulama davranışına göre seçilir.",
 ])}
+<p><em>Müfredat uyumu:</em> Modül 12 (açık yönlendirme, dosya ve path) ile Modül 13 (SSRF, deserialization ve smuggling) aşağıdaki alt başlıklarda işlenir; sıra pedagojik akışa göredir.</p>
 <h2>SSRF: sunucuyu “proxy silahına” çevirme</h2>
 <p>Uygulama kullanıcıdan URL alıp sunucu tarafında fetch yapıyorsa, saldırgan iç ağ uçlarını (metadata servisleri, yönetim arayüzleri, iç API’ler) hedeflemek isteyebilir. Savunma: hedef allowlist, özel ağların bloklanması, çıkış trafiği izleme, “ham IP” yerine DNS politikası ve ayrı egress güvenliği.</p>
 <p>DNS rebinding ve açık yönlendirme zincirleri (eğitim düzeyinde) “allowlist var ama yine de yanlış hedefe gidildi” hikâyelerini üretir; bu yüzden çözüm yalnızca string kontrolü değil, <strong>çözümlenmiş IP’nin özel ağ aralığında olmaması</strong> gibi katmanlar içerir.</p>
@@ -187,7 +188,7 @@ M6 = f"""<h1>MODÜL 6 — XSS, clickjacking, injection, SSRF ve ilişkili sını
     ]
 )
 
-M6B = f"""<h1>MODÜL 6B — İş mantığı, yarış durumu ve kötüye kullanım <small>(müfredat 14)</small></h1>
+M6B = f"""<h1>Modül 14 — İş Mantığı Zafiyetleri, Race Condition ve Abuse Prevention</h1>
 {img_block("https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=900&q=90", "Kod inceleme", "Aynı anda iki istek: veritabanı tutarlılığı ve iş kuralları.")}
 <p>Bu bölüm klasik enjeksiyon dışında kalan <strong>iş kuralları</strong> hatalarına odaklanır: fiyat, stok, kupon, iade, onay adımları ve çift harcama (double spend) benzeri senaryolar. Saldırgan çoğu zaman “tek istekle görünmeyen” ama <strong>iki istek arasında açılan pencerede</strong> yarışan durumları hedefler (TOCTOU).</p>
 <p><strong>Idempotency key</strong> ve <strong>atomik işlem</strong> (transaction + doğru izolasyon) aynı işlemin iki kez uygulanmasını engeller. Ödeme ve stok gibi kritik zincirlerde <strong>optimistic concurrency</strong> (sürüm alanı) veya veritabanı kısıtları sık kullanılır.</p>
@@ -215,7 +216,7 @@ M6B = f"""<h1>MODÜL 6B — İş mantığı, yarış durumu ve kötüye kullanı
     ]
 )
 
-M7 = f"""<h1>MODÜL 7 — API güvenliği <small>(müfredat 15)</small></h1>
+M7 = f"""<h1>Modül 15 — API Güvenliği</h1>
 {img_block("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=90", "Sunucu ve API", "REST/GraphQL: otomasyonla taranan uçlar; nesne düzeyi yetki ve veri sözleşmesi kritik.")}
 <p>API’ler makineye yönelik olduğu için saldırgan otomasyonla <strong>uç keşfi</strong> ve <strong>parametre fuzzing</strong> yapabilir. Kimlik doğrulama (Bearer, API key, mTLS) olsa bile <strong>yetkilendirme</strong> atlantı kalabilir. Ayrıca “yanlışlıkla fazla alan dönen” yanıtlar, istemciye sızdırılmış iş alanlarını geri taşır.</p>
 <p>Bu modülde “API güvenliği” yalnızca OAuth akışı veya JWT imzası değildir; asıl mesele <strong>kaynak sahipliği</strong> ve <strong>işlem bütünlüğüdür</strong>. Aynı token ile başka bir kullanıcının kaydına erişmek (BOLA), aynı token ile yönetici işlevini çağırmak veya aşırı geniş GraphQL ağacıyla tek istekte veri madenciliği yapmak farklı saldırı sınıflarıdır; hepsinde ortak nokta, sunucunun “kim olduğunu bildiği” ama “bu işlemi yapmaya <em>haklı mı</em>?” sorusunu her satırda tekrarlamamasıdır.</p>
@@ -268,7 +269,7 @@ M7 = f"""<h1>MODÜL 7 — API güvenliği <small>(müfredat 15)</small></h1>
     ]
 )
 
-M8 = f"""<h1>MODÜL 8 — Güvenli yapılandırma, güvenlik başlıkları, önbellek ve WAF <small>(müfredat 17)</small></h1>
+M8 = f"""<h1>Modül 17 — Güvenli Yapılandırma, HTTP Güvenlik Başlıkları, Cache ve WAF</h1>
 {img_block("https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=90", "Analiz ve güvenlik", "Header ve CORS: tarayıcıya verilen güvenlik sözleşmesi; yanlışsa saldırgan tarayıcıyı ikna eder.")}
 <p>Üretimde açık hata ayıklama, gevşek CORS ve eksik CSP; saldırganın <strong>keşif maliyetini düşürür</strong> ve XSS sonrası <strong>etki yüzeyini büyütür</strong>. Bu modülde başlıkların anlamı, yanlış yapılandırma örüntüleri ve güvenli doğrulama yöntemi bir arada verilir.</p>
 <p>Güvenlik başlıkları “bir kez ayarla unut” değildir: CDN’de override, yeni mikro site, A/B test sayfası veya PDF indirme uçları farklı başlık seti taşıyabilir. Bu yüzden kontrol <strong>köken (origin) bazlı</strong> envanter + periyodik otomasyon ile yapılır.</p>
@@ -323,7 +324,7 @@ M8 = f"""<h1>MODÜL 8 — Güvenli yapılandırma, güvenlik başlıkları, önb
     ]
 )
 
-M9 = f"""<h1>MODÜL 9 — Loglama, izleme ve hata yönetimi <small>(müfredat 19)</small></h1>
+M9 = f"""<h1>Modül 19 — Web Uygulamalarında Loglama, İzleme ve Hata Yönetimi</h1>
 {img_block("https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=90", "İzleme panosu", "Çoklu log kaynağı: saldırganın zinciri; savunmacının hikâyesi.")}
 <p>Web olayları tek logda çözülmez. Kimlik sağlayıcı, uygulama, API geçidi, WAF, web sunucusu ve veritabanı denetimi birlikte <strong>zaman çizelgesi</strong> üretir. Saldırganın otomasyonu düşük gürültülü olabilir; bu yüzden baseline ve eşikler önemlidir.</p>
 <p>Log hacmi büyüdükçe ekipler “daha az log” ister; fakat güvenlik olayında eksik satır bazen <strong>kanıt zincirinin kopması</strong> demektir. Çözüm yalnızca kesmek değil: örnekleme politikasında güvenlik sınıflarını dışarıda bırakmama, kritik uçlarda tam kayıt, diğerlerinde özet metrik.</p>
@@ -375,7 +376,7 @@ M9 = f"""<h1>MODÜL 9 — Loglama, izleme ve hata yönetimi <small>(müfredat 19
     ]
 )
 
-M10 = f"""<h1>MODÜL 10 — Güvenli SDLC, bağımlılık güvenliği ve AppSec otomasyonu <small>(müfredat 18)</small></h1>
+M10 = f"""<h1>Modül 18 — Güvenli Web Geliştirme, Bağımlılık Güvenliği ve AppSec Otomasyonu</h1>
 {img_block("https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=900&q=90", "Geliştirme", "Güvenlik: sprint sonunda değil; tehdit modelinden dağıtıma kadar süreç içi.")}
 <p>Saldırganın avantajı sıklıkla <strong>hız</strong> ve <strong>tekdüze otomasyon</strong>dır. Savunmanın karşılığı, hızı düşürmeden riski düşüren <strong>otomatik kontroller</strong> ve <strong>erken tehdit modellemesidir</strong>. Bu modül AppSec, DevSecOps ve SOC ilişkisini netleştirir.</p>
 <p>Güvenlik kapıları (merge blokları) çok gürültülü olunca geliştirici “acil bypass” ister; bu da tedarik zinciri riskini geri getirir. Sürdürülebilir model: kural sahipliği, gürültü bütçesi ve false positive SLA’sı yazılı olur.</p>
@@ -451,7 +452,7 @@ SCEN = f"""
 ])}
 """
 
-M11 = f"""<h1>MODÜL 11 — Güvenlik testi, araç okuryazarlığı ve raporlama <small>(müfredat 20)</small></h1>
+M11 = f"""<h1>Modül 20 — Web Uygulama Güvenlik Testi, Araç Okuryazarlığı ve Raporlama</h1>
 {img_block("https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=90", "Profesyonel rapor", "Rapor: teknik doğruluk + iş dili + kanıt zinciri.")}
 <p>Bulgularınız ne kadar doğru olursa olsun, karar verici “ne olur, ne kadar sürer, ne maliyet” sorularına yanıt bulamazsa eylem gecikir. Bu modülde teknik ek ile yönetici özetini ayırma, belirsizlik dili, karşı kanıt ve risk skoru bağlamı uzatılır.</p>
 <p>İyi raporlar “suçlu bulma” değil <strong>ölçülebilir risk</strong> anlatır: etki senaryoları (en kötü / olası / en iyi), her senaryo için önkoşullar ve mevcut kontroller. Bu yapı denetim ve sigorta sorularında da tekrar kullanılır.</p>
@@ -483,7 +484,7 @@ M11 = f"""<h1>MODÜL 11 — Güvenlik testi, araç okuryazarlığı ve raporlama
     ]
 )
 
-M12 = f"""<h1>MODÜL 12 — Terimler, özet ve kapanış <small>(tüm müfredat)</small></h1>
+M12 = f"""<h1>Sözlük ve eğitim kapanışı</h1>
 {img_block("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&q=90", "Kitap ve notlar", "Ortak dil: ekip içi iletişim ve raporların denetlenebilirliği.")}
 <p>Bu sözlük modüllerde geçen kavramları tek yerde toplar. Tablo görünümü, sayfadaki otomatik biçimlendirme ile zenginleşebilir.</p>
 <p>Sözlük amacı ezber değil, ekipler arası <strong>çeviri hatasını</strong> azaltmaktır: aynı kelimenin geliştirmede “özellik”, hukuk’ta “veri işleme”, SOC’ta “olay” olarak anlaşılması gibi sapmalar bulgu önceliğini kaydırır.</p>

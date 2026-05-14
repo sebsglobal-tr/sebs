@@ -2459,6 +2459,15 @@
                     <p>Ağ yönetimi, analizi veya güvenliği çalışmaları; teknik beceri kadar yasal ve etik sınırları ciddiye almayı gerektirir. Bu ders, açık ve tartışmasız yetkinin neden ilk kural olduğunu işler.</p>
                     <p class="section-intro">İster kurum içi bir bağlantı sorununu teşhis ediyor olun, ister izinli bir güvenlik testi yürütün — yapacağınız her adımın bir “yetki çerçevesi” içinde kalması gerekir. Bu çerçeve yoksa, iyi niyetli bile olsanız teknik faaliyetler hukuki ve etik risklere dönüşebilir. Aşağıdaki başlıklar, bu çerçeveyi nasıl kuracağınızı ve günlük kararlarda nasıl kullanacağınızı adım adım açıklar.</p>
                 </div>
+                <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Ağ çalışması yetki kartları">
+                    <div class="kr-inline-breakout__head"><i class="fas fa-gavel" aria-hidden="true"></i><span>Yetkili ağ çalışması</span></div>
+                    <p class="kr-inline-breakout__hint">Paket yakalama veya tarama öncesi bu üç kutuyu işaretleyin.</p>
+                    <div class="kr-cia-grid">
+                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-file-signature"></i></span><span class="kr-exp-goal__title">Yazılı izin</span></summary><div class="kr-exp-goal__body">Sistem sahibi ve <strong>zaman penceresi</strong> belgesinde yoksa trafik üretmeyin.</div></details>
+                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-ban"></i></span><span class="kr-exp-goal__title">Kapsam dışı</span></summary><div class="kr-exp-goal__body">Komşu VLAN veya misafir ağ “görünüyor” diye <strong>analiz konusu değildir</strong>.</div></details>
+                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-heart-pulse"></i></span><span class="kr-exp-goal__title">Do not harm</span></summary><div class="kr-exp-goal__body">Yoğunluk ve geri alma; <strong>üretim saati</strong> ve değişiklik penceresiyle hizalayın.</div></details>
+                    </div>
+                </div>
                 <div class="content-card">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
@@ -4870,6 +4879,7 @@
     <script src="/js/navigation.js?v=2.3"></script>
 
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

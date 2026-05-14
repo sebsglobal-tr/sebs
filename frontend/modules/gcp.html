@@ -605,6 +605,16 @@
                         <h3>Google Cloud Platform Nedir?</h3>
                         <p>Google Cloud Platform (GCP), Google tarafından sunulan kapsamlı bir bulut bilişim platformudur. GCP ile veri analizi, makine öğrenmesi, uygulama geliştirme ve altyapı yönetimi yapabilirsiniz.</p>
 
+                        <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="GCP güvenlik hatırlatıcıları">
+                            <div class="kr-inline-breakout__head"><i class="fab fa-google" aria-hidden="true"></i><span>GCP — üç pratik kontrol</span></div>
+                            <p class="kr-inline-breakout__hint">Proje ve klasör ayrımını güvenlik sınırı gibi düşünün.</p>
+                            <div class="kr-cia-grid">
+                                <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-sitemap"></i></span><span class="kr-exp-goal__title">IAM</span></summary><div class="kr-exp-goal__body">Predefined roller + <strong>service account</strong> kapsamı; “Editor” yayılımını bilinçli daraltın.</div></details>
+                                <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-network-wired"></i></span><span class="kr-exp-goal__title">VPC</span></summary><div class="kr-exp-goal__body">Private Google Access ve firewall kuralları; <strong>0.0.0.0/0</strong> varsayılanını sorgulayın.</div></details>
+                                <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-database"></i></span><span class="kr-exp-goal__title">Veri</span></summary><div class="kr-exp-goal__body">Bucket uniform access ve CMEK/CSEK kararı; <strong>etiketleme</strong> ile veri sınıfı eşleyin.</div></details>
+                            </div>
+                        </div>
+
                         <div class="info-box">
                             <h4>💡 GCP'nin Avantajları</h4>
                             <ul>
@@ -1920,6 +1930,7 @@ endpoint = model.deploy(
     <script src="../js/navigation.js"></script>
     <script src="../utils/access-control.js"></script>
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
 </body>
     <script src="../config.js?v=1.0.2"></script>
     <script src="../js/api-integration.js?v=1.0.2"></script>

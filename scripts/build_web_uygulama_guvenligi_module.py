@@ -3,12 +3,15 @@
 """Assemble frontend/modules/web-uygulama-guvenligi.html from network template + HTML fragments.
 
 İçerik parçalarını yeniden üretmek için (önce parçalar, sonra birleştirme):
+  python3 scripts/export_wag_mufredat_html.py   # transcript → tam müfredat + wag-nav-titles.json
   python3 scripts/wag_expanded_generator.py
   python3 scripts/wag_expanded_generator_b.py
   python3 scripts/build_web_uygulama_guvenligi_module.py
 """
 from __future__ import annotations
 
+import html
+import json
 import pathlib
 import re
 
@@ -16,10 +19,28 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOD_DIR = ROOT / "frontend" / "modules"
 NET = MOD_DIR / "network-guvenligi.html"
 OUT = MOD_DIR / "web-uygulama-guvenligi.html"
+NAV_JSON = MOD_DIR / "parts" / "wag-nav-titles.json"
 PARTS = [
     MOD_DIR / "parts" / "web-uygulama-guvenligi-0-5.html",
     MOD_DIR / "parts" / "web-uygulama-guvenligi-6-12.html",
+    MOD_DIR / "parts" / "web-uygulama-guvenligi-mufredat-tam.html",
 ]
+
+
+def render_sidebar_nav() -> str:
+    if not NAV_JSON.exists():
+        raise SystemExit(f"Missing {NAV_JSON}; run scripts/export_wag_mufredat_html.py")
+    rows = json.loads(NAV_JSON.read_text(encoding="utf-8"))
+    lis: list[str] = []
+    for i, row in enumerate(rows):
+        label = html.escape(row["label"])
+        sid = html.escape(row["section"])
+        active = " active" if i == 0 else ""
+        lis.append(
+            f'                        <li><a href="#" class="nav-link-section{active}" data-section="{sid}">'
+            f'<i class="fas fa-book"></i> {label}</a></li>'
+        )
+    return "\n".join(lis)
 
 
 def main() -> None:
@@ -63,7 +84,7 @@ def main() -> None:
     # Mobil menüden sonra bitir; module-layout + aside yalnızca `sidebar` içinde (çift etiket yok)
     body_prefix = "".join(net_lines[3861:3910])
 
-    sidebar = """    <div class="module-layout">
+    sidebar = f"""    <div class="module-layout">
         <aside class="module-sidebar">
             <div class="sidebar-header">
                 <h1>WEB UYGULAMA GÜVENLİĞİ</h1>
@@ -79,24 +100,7 @@ def main() -> None:
                 <div class="nav-section">
                     <h4 class="nav-module-header">İçindekiler</h4>
                     <ul class="nav-list nav-section-list">
-                        <li><a href="#" class="nav-link-section active" data-section="wag-m0-etik"><i class="fas fa-book"></i> MODÜL 0 — Etik ve güvenli çalışma</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m1-mimari"><i class="fas fa-book"></i> MODÜL 1 — Giriş ve mimari <small>(1·5)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m1b-teknoloji"><i class="fas fa-book"></i> MODÜL 1B — Web teknolojileri temeli <small>(2)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m1c-owasp"><i class="fas fa-book"></i> MODÜL 1C — OWASP ve risk dili <small>(3)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m2-http"><i class="fas fa-book"></i> MODÜL 2 — HTTP/HTTPS ve tarayıcı <small>(4)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m3-auth"><i class="fas fa-book"></i> MODÜL 3 — Kimlik, oturum, CSRF <small>(6·7)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m3b-oauth-jwt"><i class="fas fa-book"></i> MODÜL 3B — OAuth, OIDC, JWT <small>(8)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m4-authz"><i class="fas fa-book"></i> MODÜL 4 — Erişim kontrolü <small>(9)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m5-veri"><i class="fas fa-book"></i> MODÜL 5 — Input, parser, injection <small>(10)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m5b-veri-koruma"><i class="fas fa-book"></i> MODÜL 5B — Veri koruma ve sızıntı <small>(16)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m6-zafiyet"><i class="fas fa-book"></i> MODÜL 6 — XSS, SSRF, dosya… <small>(11·13)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m6b-is-mantigi"><i class="fas fa-book"></i> MODÜL 6B — İş mantığı ve yarış <small>(14)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m7-api"><i class="fas fa-book"></i> MODÜL 7 — API güvenliği <small>(15)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m8-headers"><i class="fas fa-book"></i> MODÜL 8 — Konfig, header, WAF <small>(17)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m9-log"><i class="fas fa-book"></i> MODÜL 9 — Loglama ve izleme <small>(19)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m10-sdlc"><i class="fas fa-book"></i> MODÜL 10 — SDLC ve bağımlılık <small>(18)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m11-rapor"><i class="fas fa-book"></i> MODÜL 11 — Test ve raporlama <small>(20)</small></a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m12-sozluk"><i class="fas fa-book"></i> MODÜL 12 — Terimler ve kapanış</a></li>
+{render_sidebar_nav()}
                     </ul>
                 </div>
             </nav>

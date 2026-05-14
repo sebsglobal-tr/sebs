@@ -89,7 +89,7 @@ def terminal(title: str, body_inner: str) -> str:
 
 
 # --- MOD 0 ---
-M0 = f"""<h1>MODÜL 0 — Etik, Yetki ve Güvenli Çalışma Çerçevesi</h1>
+M0 = f"""<h1>Önkoşul — Etik, Yetki ve Güvenli Çalışma Çerçevesi</h1>
 {img_block("https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=900&q=90", "Hukuk ve siber güvenlik", "Profesyonel web güvenliği çalışması: yazılı yetki, kapsam ve denetlenebilir kanıt.")}
 <p>Bu modül bir “giriş engeli”dir (gating): Burada çerçeve oturmadan teknik başarı sayılmaz. Web uygulaması güvenliği eğitiminde saldırganın <em>hedeflediği değerleri</em> (hesaplar, oturumlar, veri, işlem bütünlüğü, itibar) anlamak; aynı zamanda bu değerlere <strong>yetkisiz veya ölçüsüz</strong> temasın neden kurumsal felaket olduğunu anlamaktır. Savunmacı ve güvenli test uzmanı tehdidi modellemek zorundadır; sahadaki profesyonellik ise yazılı yetki, kapsam ve <strong>denetlenebilir kanıt</strong> ile ölçülür—kapsam dışına çıkmak ve kanıtı manipüle etmek kabul edilemez. Ders metinleri ve örnekler, savunma ve yetkili güvenlik çalışması için gereken teknik düzeyi karşılayacak şekilde sunulur; yasal ve etik kullanım yükümlülüğü tamamen size aittir (aşağıdaki sorumluluk reddi).</p>
 <p>Tehdit tarafı perspektifi (eğitim düzeyinde): saldırganın motivasyonu çoğu zaman <strong>erişim</strong>, <strong>kalıcılık</strong>, <strong>veri toplama</strong> veya <strong>hizmet aksatma</strong> üzerinedir. Web uygulaması bu zincirde sıkça ilk temas veya kalıcı erişim noktasıdır. Bu nedenle “sadece teknik kontrol listesi” yetmez; <strong>hangi varlığa dokunduğunuz</strong> ve <strong>hangi veriyi taşıdığınız</strong> her adımda sorulur.</p>
@@ -316,7 +316,7 @@ M0 = f"""<h1>MODÜL 0 — Etik, Yetki ve Güvenli Çalışma Çerçevesi</h1>
 )
 
 # --- MOD 1 ---
-M1 = f"""<h1>MODÜL 1 — Giriş, mimari ve saldırı yüzeyi <small>(müfredat 1 · 5)</small></h1>
+M1 = f"""<h1>Modül 1 — Web Uygulama Güvenliğine Temel Giriş: Web, Güvenlik ve Uygulama Mantığını Anlamak</h1>
 {img_block("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=90", "Sunucu odası ve ağ", "İstek yolu: tarayıcı → uç noktalar → iş mantığı → veri ve yan hizmetler.")}
 <h2>Web uygulama güvenliğine giriş: kavramları ve katmanları ayırmak</h2>
 <p>Günlük dilde “internet”, “web” ve “tarayıcı” sıkça birbirinin yerine kullanılır. Güvenlik analizinde bu ayrım kritiktir; çünkü her biri farklı saldırı yüzeyi ve farklı kontrol beklentisi taşır. <strong>İnternet</strong>, IP tabanlı protokoller üzerinden birbirine bağlı cihaz ve ağların oluşturduğu küresel iletişim altyapısıdır. <strong>Web</strong>, bu altyapının üzerinde çoğunlukla HTTP/HTTPS ile çalışan içerik ve uygulama dağıtım modelidir. <strong>Tarayıcı</strong>, HTML, CSS ve JavaScript’i yürüten; cookie, depolama ve güvenlik politikalarını uygulayan istemci yazılımıdır. <strong>Sunucu</strong>, gelen HTTP isteklerini karşılayan katmandır. <strong>Uygulama</strong> ise iş mantığının çalıştığı, veri tabanı ve servislerle konuşan, kararları üreten bileşendir. Bir zafiyet ağ katmanında değil, tarayıcı yorumlamasında veya uygulama mantığında olabilir; kök nedeni doğru katmanda aramak hem doğru savunmayı hem de geliştirici ekiple net iletişimi sağlar.</p>
@@ -336,6 +336,7 @@ M1 = f"""<h1>MODÜL 1 — Giriş, mimari ve saldırı yüzeyi <small>(müfredat 
     "“Tek katman savunma yeter.” — WAF, TLS veya CDN tek başına uygulama mantığı veya yetki hatasını çözmez; katmanlar birbirini tamamlar.",
 ])}
 <p><strong>Yetkili güvenlik testi</strong> ile izinsiz müdahale arasındaki çizgi; yazılı kapsam, ortam ayrımı (test/staging/production), veri minimizasyonu ve zarar vermeme ilkesiyle çizilir. Bu çerçeve MODÜL 0’da ayrıntılandırılır; burada zihinsel olarak “her teknik adım önce yetki ve kapsam” sorusuna bağlanır.</p>
+<h2>Modül 5 — Web Mimarisi, Saldırı Yüzeyi ve Güvenli Tasarım</h2>
 <p>Web uygulamasını yalnızca “ön yüz–arka yüz–veritabanı” üçgeni olarak okumak, saldırganın gördüğü gerçek yüzeyi gizler. Saldırgan (eğitim perspektifi) çoğu zaman <strong>uç noktaları</strong> (login, şifre sıfırlama, dosya yükleme, arama, dışa aktarma, webhook), <strong>kimlik/oturum mekanizmasını</strong>, <strong>API sözleşmesini</strong> ve <strong>sunucunun güvendiği yan hizmetleri</strong> (ödeme, e-posta, depolama, mesaj kuyruğu) birlikte değerlendirir. Savunmacı mimari okuma; bu bileşenlerin her birinde “kim doğruluyor, kim yetkilendiriyor, nerede loglanıyor?” sorularını zorunlu kılar.</p>
 <p>Dağıtık mimaride aynı “ürün” birden fazla çalışma biriminden oluşur: <strong>mikro servisler</strong>, <strong>BFF (backend for frontend)</strong>, ayrı <strong>kimlik sağlayıcı</strong> katmanı, <strong>mesaj kuyruğu</strong> ve <strong>zamanlanmış işler</strong>. Her parça farklı dil çerçevesi ve farklı log şeması taşıyabilir; bu da SOC için “tek zaman çizelgesi” kurmayı zorlaştırır. Mimari okumanın operasyonel karşılığı, olay anında hangi ekibin hangi panoyu açacağını ve hangi <code>trace_id</code> alanının uçtan uca taşındığını önceden bilmektir.</p>
 <p>Dönüşüm (legacy + yeni stack) dönemlerinde saldırgan sıkça ana ürün kadar gözden geçirilmemiş <strong>yedek yönetim arayüzleri</strong>, eski API sürümleri veya “sadece iç ağa” bırakılmış ama DNS’ten erişilebilen uçları hedefler. Bu yüzden envanter yalnızca ana alan adıyla bitmemeli; DNS bölgesindeki tüm kayıtlar, CDN kökenleri ve üçüncü taraf <strong>embed</strong> (ödeme çerçevesi, destek widget’ı, analitik) aynı tehdit modeli dosyasında yer almalıdır.</p>
@@ -419,7 +420,7 @@ M1 = f"""<h1>MODÜL 1 — Giriş, mimari ve saldırı yüzeyi <small>(müfredat 
 )
 
 # --- MOD 1B (müfredat 2) ---
-M1B = f"""<h1>MODÜL 1B — Web teknolojileri temeli <small>(müfredat 2)</small></h1>
+M1B = f"""<h1>Modül 2 — Web Teknolojileri Temelleri: Güvenlik Analizi İçin Gerekli Teknik Zemin</h1>
 {img_block("https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=90", "Küre ve ağ", "DNS, TLS ve istek yolu: analistin ‘haritayı’ çizdiği katmanlar.")}
 <p>Bu bölüm, güvenlik analizi yapmadan önce <strong>teknik zemini</strong> aynı dilde konuşmak içindir: alan adı çözümlemesi, TLS oturumu, ters vekil ve uygulama sunucusu, statik varlıklar ve çalışma zamanı (runtime) davranışı. Amaç RFC ezberi değil; bir bulgu raporunda “sorun DNS katmanında mı, edge’de mi, uygulama mantığında mı?” ayrımını savunulabilir yazabilmektir.</p>
 <p><strong>DNS</strong> kayıtları (A/AAAA, CNAME, MX, TXT) saldırı yüzeyini genişletir veya daraltır: unutulmuş alt alan adı, yanlış delegasyon veya dışarı açılmış “geçici” kayıt, keşif ve takeover sınıfı riskleri doğurur. <strong>TLS</strong> el sıkışması sertifika zinciri ve sunucu adı (SNI) ile bağlanır; analist sertifika geçerliliği, yenileme süreci ve ara katmanda sonlandırma (termination) noktasını bilir.</p>
@@ -454,7 +455,7 @@ M1B = f"""<h1>MODÜL 1B — Web teknolojileri temeli <small>(müfredat 2)</small
 )
 
 # --- MOD 1C (müfredat 3) ---
-M1C = f"""<h1>MODÜL 1C — OWASP, standartlar ve risk dili <small>(müfredat 3)</small></h1>
+M1C = f"""<h1>Modül 3 — OWASP, Standartlar ve Web Risk Dili: Zafiyet Haritasını Kurmak</h1>
 {img_block("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=900&q=90", "Güvenlik dokümantasyonu", "OWASP Top 10 bir harita; ASVS ve CWE ise kontrol listesi ve sınıflandırma dili.")}
 <p><strong>OWASP Top 10</strong> en sık görülen risk kategorilerinin özet haritasıdır; “tek başına uyumluluk listesi” değildir. Kurumsal projelerde sıkça <strong>ASVS</strong> (uygulama doğrulama standardı) ile birlikte kullanılır: ASVS seviye 1/2/3, kontrollerin olgunluk ve kapsamını müzakere etmek için dil sağlar.</p>
 <p><strong>CVE</strong> belirli bir ürün ve sürümdeki kamuya açık kimliklendirilmiş hatadır; <strong>CWE</strong> ise zafiyet <em>sınıfını</em> tarif eder. <strong>CVSS</strong> şiddet skorudur; önceliklendirme için faydalıdır fakat iş etkisi, veri hassasiyeti ve exposure ile birlikte okunmalıdır. Raporlarda “CVSS yüksek” tek başına yönetici kararı verdirmez.</p>
@@ -491,7 +492,7 @@ M1C = f"""<h1>MODÜL 1C — OWASP, standartlar ve risk dili <small>(müfredat 3)
 )
 
 # --- MOD 2 ---
-M2 = f"""<h1>MODÜL 2 — HTTP, HTTPS ve tarayıcı güvenlik modeli <small>(müfredat 4)</small></h1>
+M2 = f"""<h1>Modül 4 — HTTP, HTTPS ve Tarayıcı Güvenlik Modeli</h1>
 {img_block("https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=900&q=90", "Ağ ve güvenlik", "HTTP katmanı: saldırganın en çok oynadığı oyun tahtası; savunmacının en çok log ürettiği katman.")}
 <p>HTTP’yi “sadece taşıma” sanmak yanılgıdır. Oturum çerezleri, yönlendirmeler, önbellek başlıkları, içerik müzakere satırları ve CORS yanıtları birlikte <strong>güvenlik politikası</strong> oluşturur. Saldırgan (eğitim düzeyinde) çoğu zaman oturumu çalmaya, tarayıcıyı kandırarak işlem yaptırmaya veya sunucuyu yanlış yorumlamaya zorlayan istek dizileri kurar; savunmacı ise bu dizileri logda <strong>özgün imza</strong> olarak arar.</p>
 <p>HTTP/2 ve HTTP/3 ile çoklu istek tek bağlantıda birleşir; bu da “hangi yanıt hangi isteğe ait?” sorusunu ara katmanlarda karmaşıklaştırır. Yönlendirme zincirleri (301/302) ve <strong>Host</strong> başlığı tutarsızlıkları bazen önbellek zehirlenmesi veya yanlış sanal host bağlama gibi ikinci derece risklere yol açar. Bu modülde amaç protokol RFC’si ezberletmek değil; her başlığın ve durum kodunun <em>güvenlik kararı</em> veya <em>kanıt</em> olarak nasıl okunacağını oturtmaktır.</p>
@@ -553,8 +554,10 @@ M2 = f"""<h1>MODÜL 2 — HTTP, HTTPS ve tarayıcı güvenlik modeli <small>(mü
 )
 
 # --- MOD 3 ---
-M3 = f"""<h1>MODÜL 3 — Kimlik doğrulama; oturum ve CSRF <small>(müfredat 6 · 7)</small></h1>
+M3 = f"""<h1>Modül 6 — Kimlik Doğrulama Güvenliği</h1>
 {img_block("https://images.unsplash.com/photo-1633265486064-086b219458ec?w=900&q=90", "Kimlik doğrulama", "Oturum ve kimlik: saldırganın en çok parola denediği; savunmacının en çok log topladığı alan.")}
+<h2>Modül 7 — Oturum Yönetimi ve CSRF Güvenliği</h2>
+<p>Aşağıdaki bölümde oturum çerezleri, yenileme belirteçleri ve siteler arası istek sahteciliği (CSRF) birlikte ele alınır; müfredatta Modül 7 bu ders notunun devamıdır.</p>
 <p><strong>Kimlik doğrulama</strong> “kimsin?” sorusudur; <strong>yetkilendirme</strong> “ne yapabilirsin?” sorusudur. Oturum güvenliği zayıfsa kimlik doğrulama gücü (uzun parola bile) boşa gider çünkü saldırgan artık sizin yerinize oturumu taşır. Bu modülde saldırganın tipik <strong>hedefleri</strong> ve savunmacının <strong>gözlediği sinyaller</strong> ayrıntılı anlatılır: kimlik bilgisi doldurma (credential stuffing), parola püskürtme (password spraying), oturum çalma, MFA yorgunluğu ve kurtarma akışı suistimali gibi başlıklar; savunma karşılıkları ve kanıt üretimiyle birlikte ele alınır. İçeriği yalnızca yetkili ve yasal çerçevede kullanın; kötüye kullanımdan içerik sağlayıcıları sorumlu tutulamaz.</p>
 <p>Parola tabanlı oturumlar giderek <strong>passkey / WebAuthn</strong> ve kurumsal SSO ile desteklenmektedir; fakat geçiş dönemlerinde aynı hesap için birden fazla kimlik kanalı (eski parola + yeni cihaz anahtarı) birlikte yaşar. Bu “hibrit” dönemde saldırgan zayıf kanalı seçer: örneğin passkey aktifken bile açık bırakılmış “yedek OTP SMS” veya eski API anahtarı ile giriş. Savunma tarafında her kanal için ayrı risk skoru ve kapatma prosedürü yazılır.</p>
 <p>Destek masası ve “hesabım çalındı” süreçleri teknik olarak kimlik sisteminin parçasıdır: müşteri temsilcisi yanlışlıkla MFA’yı kaldırırsa veya yeni cihaz eklerse saldırgan <strong>insan üzerinden</strong> aynı sonuca ulaşır. Bu yüzden kimlik güvenliği yalnızca geliştirici kodu değil; prosedür, eğitim ve denetim loglarıyla birlikte okunur.</p>
@@ -621,7 +624,7 @@ M3 = f"""<h1>MODÜL 3 — Kimlik doğrulama; oturum ve CSRF <small>(müfredat 6 
 )
 
 # --- MOD 3B (müfredat 8) ---
-M3B = f"""<h1>MODÜL 3B — OAuth 2.0, OpenID Connect ve JWT <small>(müfredat 8)</small></h1>
+M3B = f"""<h1>Modül 8 — OAuth, OpenID Connect, JWT ve Token Güvenliği</h1>
 {img_block("https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=900&q=90", "Kimlik ve anahtar", "Yetkilendirme sunucusu, istemci ve kaynak sunucu: token’ların yaşam döngüsü.")}
 <p><strong>OAuth 2.0</strong> bir <em>yetkilendirme çerçevesi</em>dir: kullanıcı adına üçüncü taraf uygulamanın kaynağa sınırlı erişim almasını modellemek için tasarlanmıştır. <strong>OpenID Connect</strong> ise kimlik katmanını OAuth üzerine ekler; <code>id_token</code> genelde kullanıcı iddiasını taşır, <code>access_token</code> ise kaynak sunucuya gider. Bu ayrım rapor ve log okumada sürekli karıştırılır; analist her tokenın <strong>hedef kitlesini</strong> (audience) ve <strong>doğrulama noktasını</strong> yazar.</p>
 <p><strong>Authorization code</strong> akışında PKCE (code verifier/challenge), public istemcilerde yetkilendirme kodunun çalınmasına karşı standart savunmadır. <strong>Implicit</strong> akış modern rehberlerde yeni uygulama için önerilmez; mevcut sistemlerde görülürse risk değerlendirmesi ayrı yapılır.</p>
@@ -656,7 +659,7 @@ M3B = f"""<h1>MODÜL 3B — OAuth 2.0, OpenID Connect ve JWT <small>(müfredat 8
 )
 
 # --- MOD 4 ---
-M4 = f"""<h1>MODÜL 4 — Yetkilendirme ve erişim kontrolü <small>(müfredat 9)</small></h1>
+M4 = f"""<h1>Modül 9 — Erişim Kontrolü ve Yetkilendirme Zafiyetleri</h1>
 {img_block("https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=900&q=90", "Erişim kontrolü", "Yetki: saldırganın ‘başkasının kaydına’ dokunmaya çalıştığı yer; savunmacının her uçta tekrarladığı kontrol.")}
 <p>Kimlik doğrulandıktan sonra asıl oyun <strong>yetkilendirme</strong>dedir. Saldırgan (eğitim düzeyinde) sıkça “aynı uç, farklı kimlik” veya “tahmin edilebilir kaynak kimliği” ile yetkisiz nesneye erişmeyi dener. Modern literatürde BOLA/BFLA (Broken Object / Function Level Authorization) bu sınıfın parçasıdır. Savunma: her istek için <strong>kaynak sahipliği</strong> ve <strong>işlev izni</strong> sunucuda yeniden hesaplanır; ön yüzde gizli düğme güvenlik değildir.</p>
 <p>Çok kiracılı (multi-tenant) SaaS’ta yatay ayrıcalık yükseltme riski özellikle yüksektir: <code>tenant_id</code> veya organizasyon kimliği tek bir sütunda tutuluyorsa ve sorgu katmanında unutulabiliyorsa, aynı API sözleşmesiyle komşu kiracının verisine geçiş mümkün olabilir. Kod incelemesinde “tenant filtresi her repository metodunda mı?” sorusu tekrarlanır.</p>
@@ -710,7 +713,7 @@ M4 = f"""<h1>MODÜL 4 — Yetkilendirme ve erişim kontrolü <small>(müfredat 9
 )
 
 # --- MOD 5 ---
-M5 = f"""<h1>MODÜL 5 — Input validation, parser güvenliği ve injection <small>(müfredat 10)</small></h1>
+M5 = f"""<h1>Modül 10 — Input Validation, Parser Güvenliği ve Injection Saldırıları</h1>
 {img_block("https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=90", "Kod ve veri", "Girdi ve çıktı: saldırganın enjeksiyon ve kaçış oyunu; savunmacının bağlam ve şema disiplini.")}
 <p>Saldırganın klasik stratejisi: uygulamanın <strong>veriyi komut olarak yorumlayacağı</strong> bir bağlama veri sokmaktır (SQL, OS komutu, HTML/JS, başlık). Savunma iki bacaktır: <strong>girdi doğrulama</strong> (beklenen şema, uzunluk, tip) ve <strong>çıktı kodlama</strong> (hedef bağlama uygun kaçış). Enjeksiyon ve kaçışın anlaşılması için örnekler ve bağlamlar ders ihtiyacına göre sunulur; saldırganın <em>düşünce modeli</em> (veriyi nerede birleştiriyor, hangi motor yorumluyor) her zaman savunma kararı ve güvenli doğrulama ile birlikte okunur. Yetkisiz sistemlerde deneme yapmak yasaktır; içeriğin kötüye kullanımından SEBS Academy ve materyalin yayıncıları sorumlu tutulamaz.</p>
 <p>Unicode normalizasyonu (NFC vs NFD), sağdan-sola karakterler ve “görünüşte aynı” Unicode eş görünümleri (homoglyph) allowlist’leri delmek için kullanılabilir. Bu yüzden “güvenli karakter kümesi” tanımı yalnızca ASCII ile sınırlı değilse, normalizasyon adımının <strong>nerede</strong> uygulandığı (girişte mi, depoda mı, sorguda mı) net yazılmalıdır.</p>
@@ -874,7 +877,7 @@ M5 = f"""<h1>MODÜL 5 — Input validation, parser güvenliği ve injection <sma
 )
 
 # --- MOD 5B (müfredat 16) ---
-M5B = f"""<h1>MODÜL 5B — Veri koruma ve hassas veri sızıntısı <small>(müfredat 16)</small></h1>
+M5B = f"""<h1>Modül 16 — Web Uygulamalarında Veri Koruma ve Hassas Veri Sızıntısı</h1>
 {img_block("https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900&q=90", "Veri güvenliği", "Sınıflandırma, minimizasyon ve taşıma: aynı HTTP 200 farklı hassasiyet taşıyabilir.")}
 <p>Bu bölüm MODÜL 5’teki doğrulama ve kodlama disiplinini <strong>veri yaşam döngüsü</strong>ne taşır: toplama, işleme, saklama, aktarma ve silme. Regülasyon isimleri değişse de ortak soru şudur: “Bu veri gerçekten gerekli mi, nerede duruyor, kim görebiliyor, loga düşüyor mu?”</p>
 <p><strong>Veri sınıflandırması</strong> (halka açık / iç / gizli / kişisel veri vb.) saklama süresi, şifreleme zorunluluğu, maskeleme ve olay bildirimi eşiklerine bağlanır. Aynı endpoint bir müşteri için anonim sayfa iken başka bir müşteri için sağlık veya finans verisi taşıyabilir; güvenlik kontrolü uç bazında yazılmalıdır.</p>

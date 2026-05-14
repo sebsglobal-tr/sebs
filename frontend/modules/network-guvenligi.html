@@ -3947,6 +3947,15 @@
 <div class="section-inner module-2-enhanced">
 <h1>MODÜL 0 — Etik ve Yasal Çerçeve</h1>
 <p>Bu modül, orta/ileri seviye network güvenliği çalışmalarını “teknik yapılabilirlik”ten çıkarıp profesyonel, denetlenebilir ve zarar vermeyen bir zemine oturtur. Ağ güvenliği denetimleri; yazılı yetki, açık kapsam, operasyon kuralları (RoE), risk/yoğunluk limitleri, veri minimizasyonu ve kanıt bütünlüğü yoksa teknik olarak doğru görünse bile hukuki/etik/operasyonel hata üretir. Bu yüzden odak, “ne yapabilirim?” değil; “ne yapmalıyım ve neyi asla yapmamalıyım?” refleksidir. Modül ayrıca raporlama çıktını Bulgu → Etki → Öneri → Kanıt (rapor formatı) standardına taşır: kanıt–yorum ayrımını korur, belirsizliği dürüstçe yönetir ve izlenebilir süreç izi bırakır. Sonuçta, herhangi bir çalışmaya başlamadan önce RoE + Do Not Harm planını yazıp uygulayabilecek; veri/kanıt disiplinini teknik adımların önüne koyabileceksin. Bu modül “gating”tir: doğru geçilmezse sonraki modüller uygulanmaz.</p>
+<div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Ağ güvenliği — etik hat">
+<div class="kr-inline-breakout__head"><i class="fas fa-network-wired" aria-hidden="true"></i><span>Profesyonel ağ çalışması</span></div>
+<p class="kr-inline-breakout__hint">Tarama ve doğrulama adımlarından önce bu üç soruya cevap yazın.</p>
+<div class="kr-cia-grid">
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-file-signature"></i></span><span class="kr-exp-goal__title">Yazılı yetki</span></summary><div class="kr-exp-goal__body">IP aralığı ve yöntem sınıfı <strong>imzalı belgede</strong> değilse varsayılan cevap “hayır”dır.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-gauge-high"></i></span><span class="kr-exp-goal__title">Yoğunluk &amp; durdurma</span></summary><div class="kr-exp-goal__body"><strong>Rate limit</strong>, pencere, stop condition. Üretim veya paylaşımlı ortamda “bir tur daha” çoğu zaman ihlal riskidir.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-box-archive"></i></span><span class="kr-exp-goal__title">Kanıt &amp; veri</span></summary><div class="kr-exp-goal__body">Paket yakalama ve loglarda <strong>PII minimizasyonu</strong>; hash + metadata ile yetinme kararı.</div></details>
+</div>
+</div>
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=900&q=90" alt="Etik ve yasal çerçeve" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Etik ve yasal çerçeve: yazılı yetki, kapsam ve denetlenebilirlik.</p></div>
 <div class="learning-objectives">
 <h3><i class="fas fa-bullseye"></i> Bu Dersin Hedefleri</h3>
@@ -14065,6 +14074,7 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
     <script src="/js/navigation.js?v=2.3"></script>
 
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

@@ -3315,6 +3315,15 @@
                         </div>
                     </div>
                     <p>Bu giriş, "hoş geldiniz" konuşması gibi davranmaz; ileri seviye DFIR'in zihinsel omurgasını kurar. Burada teknik analiz bir hedef değil, <b>doğru karar üretebilmenin aracı</b>dır. Amaç; bir olayın belirsizliklerini sistematik biçimde azaltarak <b>doğrulanabilir bulgular</b> üretmek, bu bulguları <b>denetlenebilir bir delil paketi</b> hâline getirmek ve sonunda onları <b>operasyonel kararlara</b> (containment/eradication/recovery) dönüştürebilmektir. DFIR'in uçtan uca akışı (tespit → müdahale → delil → analiz → rapor) bu yüzden bir diyagram değil; her adımda "ne kanıtladın, neyi dışladın, hangi riski aldın?" sorularını yöneten bir düşünme disiplinidir.</p>
+                    <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="DFIR fazları">
+                        <div class="kr-inline-breakout__head"><i class="fas fa-diagram-project" aria-hidden="true"></i><span>DFIR — üç katman</span></div>
+                        <p class="kr-inline-breakout__hint">Olay çağrısı geldiğinde bu kartlar “şimdi hangi fazdayım?” sorusuna hızlı cevap verir.</p>
+                        <div class="kr-cia-grid">
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-eye"></i></span><span class="kr-exp-goal__title">Gözlem</span></summary><div class="kr-exp-goal__body">Log, disk artefaktı, ağ. <strong>Yorum yok</strong> önce; sadece kaydedilen ve tekrar üretilebilen.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-lightbulb"></i></span><span class="kr-exp-goal__title">Hipotez</span></summary><div class="kr-exp-goal__body">Alternatif açıklamaları <strong>dışlama</strong> sırası. Belirsizlik dürüstçe yazılır.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-shield-virus"></i></span><span class="kr-exp-goal__title">Müdahale</span></summary><div class="kr-exp-goal__body">Containment kararı <strong>etki ve kanıt</strong> ile; geri dönüş planı ve iletişim hattı hazır olmadan sıkılaştırma yapılmaz.</div></details>
+                        </div>
+                    </div>
                     <div class="learning-objectives">
                         <h3><i class="fas fa-bullseye"></i>Bu Modülde Hedeflenen Yetkinlikler</h3>
                         <ul>
@@ -8725,6 +8734,7 @@ assessment="suspicious, continue containment-ready monitoring"</pre>
     <script src="/js/navigation.js?v=2.3"></script>
 
     <script src="module-access-check.js"></script>
+    <script src="/js/module-inline-cards.js"></script>
     <footer class="border-t border-slate-200 bg-white py-14">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col gap-10 md:flex-row md:justify-between">
