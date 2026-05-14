@@ -1,0 +1,27 @@
+/* Big Five test — complements Tailwind utilities */
+.bf-page {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 40%, #eef2ff 100%);
+  min-height: 100vh;
+}
+.bf-hero-mesh {
+  background:
+    radial-gradient(900px 400px at 10% -10%, rgba(59, 130, 246, 0.12), transparent 55%),
+    radial-gradient(700px 320px at 90% 0%, rgba(99, 102, 241, 0.1), transparent 50%);
+}
+.bf-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.bf-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: bf-spin 0.75s linear infinite;
+}
+@keyframes bf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
