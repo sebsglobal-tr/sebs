@@ -1,6 +1,8 @@
 import { MODEL_INPUT_MODE } from './constants.js';
 
-const MODEL_URL = '/models/big-five/model.json';
+/** Yeni model.json deploy edildiğinde tarayıcı/CDN önbelleğini kırmak için artırın. */
+const MODEL_ASSET_VERSION = 'inputfix-2';
+const MODEL_URL = `/models/big-five/model.json?v=${MODEL_ASSET_VERSION}`;
 
 let loadPromise = null;
 
