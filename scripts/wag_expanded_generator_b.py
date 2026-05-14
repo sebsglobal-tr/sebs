@@ -87,7 +87,7 @@ def terminal(title: str, body_inner: str) -> str:
     return f'''<div class="linux-terminal"><div class="term-header"><span class="term-dot red"></span><span class="term-dot yellow"></span><span class="term-dot green"></span><span class="term-title">{esc(title)}</span></div><div class="term-body">{body_inner}</div></div>'''
 
 
-M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal ve Savunma</h1>
+M6 = f"""<h1>MODÜL 6 — XSS, clickjacking, injection, SSRF ve ilişkili sınıflar <small>(müfredat 11 · 12 · 13)</small></h1>
 {img_block("https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=900&q=90", "Siber güvenlik ekranı", "Zafiyet sınıfları: saldırganın motoru ve savunmacının kontrol + görünürlük katmanları.")}
 <p>Bu modül OWASP tarzı sınıfları <strong>ezberletmek</strong> için değil; her birinde saldırganın <em>neyi hedeflediğini</em>, uygulamanın <em>hangi hatayı yaptığını</em>, olayın <em>hangi logda nasıl görünebileceğini</em> ve <em>hangi kontrolün blast radius’u nasıl küçülttüğünü</em> birlikte okumak içindir. Mekanizma, savunma dili ve gerektiğinde teknik örnekler birlikte verilir; bunları yalnızca yazılı yetki ve geçerli hukuk çerçevesinde kullanmak kullanıcının yükümlülüğüdür. İçeriğin kötüye kullanımından SEBS Academy ve materyalin yayıncıları sorumlu tutulamaz.</p>
 <p>Zafiyet sınıfları üretimde nadiren tek başına görünür: aynı olayda <strong>zayıf yetkilendirme + aşırı veri dönüşü + yetersiz log</strong> bir arada bulunur. Bu yüzden modülü okurken her bulguyu “hangi kontrol eksik?” yerine “hangi <em>zincir</em> eksik?” diye sorun: WAF bir şeyi kesmiş olsa bile uygulama mantığı aynı hatayı başka parametreyle tekrar ediyor olabilir.</p>
@@ -187,7 +187,35 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
     ]
 )
 
-M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
+M6B = f"""<h1>MODÜL 6B — İş mantığı, yarış durumu ve kötüye kullanım <small>(müfredat 14)</small></h1>
+{img_block("https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=900&q=90", "Kod inceleme", "Aynı anda iki istek: veritabanı tutarlılığı ve iş kuralları.")}
+<p>Bu bölüm klasik enjeksiyon dışında kalan <strong>iş kuralları</strong> hatalarına odaklanır: fiyat, stok, kupon, iade, onay adımları ve çift harcama (double spend) benzeri senaryolar. Saldırgan çoğu zaman “tek istekle görünmeyen” ama <strong>iki istek arasında açılan pencerede</strong> yarışan durumları hedefler (TOCTOU).</p>
+<p><strong>Idempotency key</strong> ve <strong>atomik işlem</strong> (transaction + doğru izolasyon) aynı işlemin iki kez uygulanmasını engeller. Ödeme ve stok gibi kritik zincirlerde <strong>optimistic concurrency</strong> (sürüm alanı) veya veritabanı kısıtları sık kullanılır.</p>
+<p><strong>Kötüye kullanım (abuse)</strong> önleme; hız sınırının ötesinde iş kuralı düzeyinde “bu kullanıcı bu kadar kuponu bu sürede kullanabilir” gibi kurallar ister. SOC sinyali: kısa sürede olağandışı işlem hacmi, aynı hesapta çoklu oturumdan gelen çakışan işlemler, iade sonrası tekrar gönderim denemeleri.</p>
+{lo("Modül hedefleri", [
+    "İş mantığı zafiyeti ile enjeksiyonu ayırt edebilirim.",
+    "Race / TOCTOU için atomiklik ve idempotency stratejilerini açıklayabilirim.",
+    "Abuse senaryolarında oran ve iş kuralı kontrollerini birlikte tasarlayabilirim.",
+])}
+{table(["Örüntü", "Risk", "Savunma ipucu"], [
+    ["Kupon + iade yarışı", "Aynı indirim iki kez", "Durum makinesi ve tekilleştirilmiş işlem kimliği"],
+    ["Stok düşürme", "Eksi stok veya oversell", "Transaction + satır kilidi / sürüm alanı"],
+    ["Transfer onayı", "TOCTOU", "Tek atomik blokta doğrula ve düş"],
+    ["API otomasyonu", "Scraping / spam", "Bot yönetimi + iş kuralı limiti"],
+])}
+{info_box("Test (yetkili ortam)", [
+    "Yarış testleri için eşzamanlı istekler üretilir; üretimde rastgele yüklemek yerine load test ortamı ve RoE şarttır.",
+])}
+""" + quiz(
+    [
+        {"q": "Idempotency key ne işe yarar?", "choices": ["DNS çözer", "Aynı işlemin yanlışlıkla iki kez uygulanmasını engeller", "TLS kapatır", "WAF kaldırır", "Sadece mobil"], "correct": "B", "reason": "Tekrarlı gönderimlerde tutarlılık sağlar."},
+        {"q": "TOCTOU sınıfı hangi fikri içerir?", "choices": ["Sadece XSS", "Kontrol zamanı ile kullanım zamanı arasındaki yarış", "Sadece SQL", "Sadece DNS", "Sadece favicon"], "correct": "B", "reason": "Durum iki istek arasında değişebilir."},
+        {"q": "İş mantığı bulgusunda SOC için güçlü sinyal hangisidir?", "choices": ["Tek 404", "Kural ihlali + anormal hacim + kısa süreli tekrar", "JPEG boyutu", "Font", "Tema"], "correct": "B", "reason": "Davranış ve iş olayı birlikte okunur."},
+        {"q": "Stok tutarlılığı için hangi yaklaşım sık kullanılır?", "choices": ["Sadece log", "Transaction / kilitleme / sürüm alanı ile atomik güncelleme", "Sadece CDN", "Sadece robots.txt", "Sadece tema"], "correct": "B", "reason": "Eşzamanlı güncellemelerde yarış azaltılır."},
+    ]
+)
+
+M7 = f"""<h1>MODÜL 7 — API güvenliği <small>(müfredat 15)</small></h1>
 {img_block("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=90", "Sunucu ve API", "REST/GraphQL: otomasyonla taranan uçlar; nesne düzeyi yetki ve veri sözleşmesi kritik.")}
 <p>API’ler makineye yönelik olduğu için saldırgan otomasyonla <strong>uç keşfi</strong> ve <strong>parametre fuzzing</strong> yapabilir. Kimlik doğrulama (Bearer, API key, mTLS) olsa bile <strong>yetkilendirme</strong> atlantı kalabilir. Ayrıca “yanlışlıkla fazla alan dönen” yanıtlar, istemciye sızdırılmış iş alanlarını geri taşır.</p>
 <p>Bu modülde “API güvenliği” yalnızca OAuth akışı veya JWT imzası değildir; asıl mesele <strong>kaynak sahipliği</strong> ve <strong>işlem bütünlüğüdür</strong>. Aynı token ile başka bir kullanıcının kaydına erişmek (BOLA), aynı token ile yönetici işlevini çağırmak veya aşırı geniş GraphQL ağacıyla tek istekte veri madenciliği yapmak farklı saldırı sınıflarıdır; hepsinde ortak nokta, sunucunun “kim olduğunu bildiği” ama “bu işlemi yapmaya <em>haklı mı</em>?” sorusunu her satırda tekrarlamamasıdır.</p>
@@ -240,7 +268,7 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
     ]
 )
 
-M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS</h1>
+M8 = f"""<h1>MODÜL 8 — Güvenli yapılandırma, güvenlik başlıkları, önbellek ve WAF <small>(müfredat 17)</small></h1>
 {img_block("https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=90", "Analiz ve güvenlik", "Header ve CORS: tarayıcıya verilen güvenlik sözleşmesi; yanlışsa saldırgan tarayıcıyı ikna eder.")}
 <p>Üretimde açık hata ayıklama, gevşek CORS ve eksik CSP; saldırganın <strong>keşif maliyetini düşürür</strong> ve XSS sonrası <strong>etki yüzeyini büyütür</strong>. Bu modülde başlıkların anlamı, yanlış yapılandırma örüntüleri ve güvenli doğrulama yöntemi bir arada verilir.</p>
 <p>Güvenlik başlıkları “bir kez ayarla unut” değildir: CDN’de override, yeni mikro site, A/B test sayfası veya PDF indirme uçları farklı başlık seti taşıyabilir. Bu yüzden kontrol <strong>köken (origin) bazlı</strong> envanter + periyodik otomasyon ile yapılır.</p>
@@ -295,7 +323,7 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
     ]
 )
 
-M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi</h1>
+M9 = f"""<h1>MODÜL 9 — Loglama, izleme ve hata yönetimi <small>(müfredat 19)</small></h1>
 {img_block("https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=90", "İzleme panosu", "Çoklu log kaynağı: saldırganın zinciri; savunmacının hikâyesi.")}
 <p>Web olayları tek logda çözülmez. Kimlik sağlayıcı, uygulama, API geçidi, WAF, web sunucusu ve veritabanı denetimi birlikte <strong>zaman çizelgesi</strong> üretir. Saldırganın otomasyonu düşük gürültülü olabilir; bu yüzden baseline ve eşikler önemlidir.</p>
 <p>Log hacmi büyüdükçe ekipler “daha az log” ister; fakat güvenlik olayında eksik satır bazen <strong>kanıt zincirinin kopması</strong> demektir. Çözüm yalnızca kesmek değil: örnekleme politikasında güvenlik sınıflarını dışarıda bırakmama, kritik uçlarda tam kayıt, diğerlerinde özet metrik.</p>
@@ -347,7 +375,7 @@ M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi
     ]
 )
 
-M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
+M10 = f"""<h1>MODÜL 10 — Güvenli SDLC, bağımlılık güvenliği ve AppSec otomasyonu <small>(müfredat 18)</small></h1>
 {img_block("https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=900&q=90", "Geliştirme", "Güvenlik: sprint sonunda değil; tehdit modelinden dağıtıma kadar süreç içi.")}
 <p>Saldırganın avantajı sıklıkla <strong>hız</strong> ve <strong>tekdüze otomasyon</strong>dır. Savunmanın karşılığı, hızı düşürmeden riski düşüren <strong>otomatik kontroller</strong> ve <strong>erken tehdit modellemesidir</strong>. Bu modül AppSec, DevSecOps ve SOC ilişkisini netleştirir.</p>
 <p>Güvenlik kapıları (merge blokları) çok gürültülü olunca geliştirici “acil bypass” ister; bu da tedarik zinciri riskini geri getirir. Sürdürülebilir model: kural sahipliği, gürültü bütçesi ve false positive SLA’sı yazılı olur.</p>
@@ -423,7 +451,7 @@ SCEN = f"""
 ])}
 """
 
-M11 = f"""<h1>MODÜL 11 — Raporlama ve Operasyonel Senaryolar</h1>
+M11 = f"""<h1>MODÜL 11 — Güvenlik testi, araç okuryazarlığı ve raporlama <small>(müfredat 20)</small></h1>
 {img_block("https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=90", "Profesyonel rapor", "Rapor: teknik doğruluk + iş dili + kanıt zinciri.")}
 <p>Bulgularınız ne kadar doğru olursa olsun, karar verici “ne olur, ne kadar sürer, ne maliyet” sorularına yanıt bulamazsa eylem gecikir. Bu modülde teknik ek ile yönetici özetini ayırma, belirsizlik dili, karşı kanıt ve risk skoru bağlamı uzatılır.</p>
 <p>İyi raporlar “suçlu bulma” değil <strong>ölçülebilir risk</strong> anlatır: etki senaryoları (en kötü / olası / en iyi), her senaryo için önkoşullar ve mevcut kontroller. Bu yapı denetim ve sigorta sorularında da tekrar kullanılır.</p>
@@ -455,7 +483,7 @@ M11 = f"""<h1>MODÜL 11 — Raporlama ve Operasyonel Senaryolar</h1>
     ]
 )
 
-M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
+M12 = f"""<h1>MODÜL 12 — Terimler, özet ve kapanış <small>(tüm müfredat)</small></h1>
 {img_block("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&q=90", "Kitap ve notlar", "Ortak dil: ekip içi iletişim ve raporların denetlenebilirliği.")}
 <p>Bu sözlük modüllerde geçen kavramları tek yerde toplar. Tablo görünümü, sayfadaki otomatik biçimlendirme ile zenginleşebilir.</p>
 <p>Sözlük amacı ezber değil, ekipler arası <strong>çeviri hatasını</strong> azaltmaktır: aynı kelimenin geliştirmede “özellik”, hukuk’ta “veri işleme”, SOC’ta “olay” olarak anlaşılması gibi sapmalar bulgu önceliğini kaydırır.</p>
@@ -545,6 +573,7 @@ M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
 def main() -> None:
     html = (
         sec("wag-m6-zafiyet", False, M6)
+        + sec("wag-m6b-is-mantigi", False, M6B)
         + sec("wag-m7-api", False, M7)
         + sec("wag-m8-headers", False, M8)
         + sec("wag-m9-log", False, M9)

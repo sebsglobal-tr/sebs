@@ -79,19 +79,24 @@ def main() -> None:
                 <div class="nav-section">
                     <h4 class="nav-module-header">İçindekiler</h4>
                     <ul class="nav-list nav-section-list">
-                        <li><a href="#" class="nav-link-section active" data-section="wag-m0-etik"><i class="fas fa-book"></i> MODÜL 0 — Etik, Yetki ve Güvenli Çalışma</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m1-mimari"><i class="fas fa-book"></i> MODÜL 1 — Mimari ve Güvenlik Bakış Açısı</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m2-http"><i class="fas fa-book"></i> MODÜL 2 — HTTP, Cookie, Session, Tarayıcı</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m3-auth"><i class="fas fa-book"></i> MODÜL 3 — Kimlik Doğrulama ve Oturum</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m4-authz"><i class="fas fa-book"></i> MODÜL 4 — Yetkilendirme ve Erişim Kontrolü</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m5-veri"><i class="fas fa-book"></i> MODÜL 5 — Input, Output ve Güvenli Veri İşleme</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m6-zafiyet"><i class="fas fa-book"></i> MODÜL 6 — Yaygın Zafiyet Sınıfları</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m7-api"><i class="fas fa-book"></i> MODÜL 7 — API Güvenliği</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m8-headers"><i class="fas fa-book"></i> MODÜL 8 — Konfigürasyon, Header’lar, CORS</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m9-log"><i class="fas fa-book"></i> MODÜL 9 — Loglama ve Olay Analizi</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m10-sdlc"><i class="fas fa-book"></i> MODÜL 10 — Secure SDLC</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m11-rapor"><i class="fas fa-book"></i> MODÜL 11 — Raporlama ve Senaryolar</a></li>
-                        <li><a href="#" class="nav-link-section" data-section="wag-m12-sozluk"><i class="fas fa-book"></i> Genel Terimler ve Kapanış</a></li>
+                        <li><a href="#" class="nav-link-section active" data-section="wag-m0-etik"><i class="fas fa-book"></i> MODÜL 0 — Etik ve güvenli çalışma</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m1-mimari"><i class="fas fa-book"></i> MODÜL 1 — Giriş ve mimari <small>(1·5)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m1b-teknoloji"><i class="fas fa-book"></i> MODÜL 1B — Web teknolojileri temeli <small>(2)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m1c-owasp"><i class="fas fa-book"></i> MODÜL 1C — OWASP ve risk dili <small>(3)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m2-http"><i class="fas fa-book"></i> MODÜL 2 — HTTP/HTTPS ve tarayıcı <small>(4)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m3-auth"><i class="fas fa-book"></i> MODÜL 3 — Kimlik, oturum, CSRF <small>(6·7)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m3b-oauth-jwt"><i class="fas fa-book"></i> MODÜL 3B — OAuth, OIDC, JWT <small>(8)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m4-authz"><i class="fas fa-book"></i> MODÜL 4 — Erişim kontrolü <small>(9)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m5-veri"><i class="fas fa-book"></i> MODÜL 5 — Input, parser, injection <small>(10)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m5b-veri-koruma"><i class="fas fa-book"></i> MODÜL 5B — Veri koruma ve sızıntı <small>(16)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m6-zafiyet"><i class="fas fa-book"></i> MODÜL 6 — XSS, SSRF, dosya… <small>(11·13)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m6b-is-mantigi"><i class="fas fa-book"></i> MODÜL 6B — İş mantığı ve yarış <small>(14)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m7-api"><i class="fas fa-book"></i> MODÜL 7 — API güvenliği <small>(15)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m8-headers"><i class="fas fa-book"></i> MODÜL 8 — Konfig, header, WAF <small>(17)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m9-log"><i class="fas fa-book"></i> MODÜL 9 — Loglama ve izleme <small>(19)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m10-sdlc"><i class="fas fa-book"></i> MODÜL 10 — SDLC ve bağımlılık <small>(18)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m11-rapor"><i class="fas fa-book"></i> MODÜL 11 — Test ve raporlama <small>(20)</small></a></li>
+                        <li><a href="#" class="nav-link-section" data-section="wag-m12-sozluk"><i class="fas fa-book"></i> MODÜL 12 — Terimler ve kapanış</a></li>
                     </ul>
                 </div>
             </nav>
