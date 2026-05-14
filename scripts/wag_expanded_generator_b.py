@@ -184,6 +184,8 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
 {img_block("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=90", "Sunucu ve API", "REST/GraphQL: otomasyonla taranan uçlar; nesne düzeyi yetki ve veri sözleşmesi kritik.")}
 <p>API’ler makineye yönelik olduğu için saldırgan otomasyonla <strong>uç keşfi</strong> ve <strong>parametre fuzzing</strong> yapabilir. Kimlik doğrulama (Bearer, API key, mTLS) olsa bile <strong>yetkilendirme</strong> atlantı kalabilir. Ayrıca “yanlışlıkla fazla alan dönen” yanıtlar, istemciye sızdırılmış iş alanlarını geri taşır.</p>
+<p>Bu modülde “API güvenliği” yalnızca OAuth akışı veya JWT imzası değildir; asıl mesele <strong>kaynak sahipliği</strong> ve <strong>işlem bütünlüğüdür</strong>. Aynı token ile başka bir kullanıcının kaydına erişmek (BOLA), aynı token ile yönetici işlevini çağırmak veya aşırı geniş GraphQL ağacıyla tek istekte veri madenciliği yapmak farklı saldırı sınıflarıdır; hepsinde ortak nokta, sunucunun “kim olduğunu bildiği” ama “bu işlemi yapmaya <em>haklı mı</em>?” sorusunu her satırda tekrarlamamasıdır.</p>
+<p>SOC ve AppSec birlikte çalıştığında API olaylarında sık görülen tablo şudur: API geçidi 401/403 üretirken uygulama 200 döner (veya tersi), ya da oran sınırlayıcı sadece edge’de varken iç serviste yoktur. Bu tutarsızlıklar olay müdahalesinde zaman kaybettirir; bu yüzden modül boyunca log korelasyonu ve “tek doğru kaynak” (policy enforcement point) fikri tekrarlanır.</p>
 {lo("Modül hedefleri", [
     "REST matrisinde (kaynak × method) yetki okuyabilirim.",
     "BOLA ve mass assignment risklerini örnek senaryolarla tartışabilirim.",
