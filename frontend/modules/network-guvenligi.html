@@ -3148,15 +3148,26 @@
             margin-right: 0.5rem;
         }
 
-        /* Dersi Tamamla — Temel Network eğitimi ile aynı yapı */
+        /* Dersi Tamamla — Temel Kriptografi ile aynı mantık (tamamla → sonraki ders) */
         .lesson-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .lesson-controls-row {
             display: flex;
             align-items: center;
             gap: 1rem;
             flex-wrap: wrap;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
+        }
+        .lesson-complete-hint {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.35;
         }
         .lesson-status {
             font-size: 0.9rem;
@@ -13713,20 +13724,11 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const sectionId = this.getAttribute('data-section');
-                sections.forEach(sec => sec.classList.toggle('active', sec.id === sectionId));
-                link.parentElement.parentElement.querySelectorAll('.nav-link-section').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.nav-link-sub').forEach(l => l.classList.remove('active'));
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
-                }
-
-                const parentLi = this.closest('.nav-section-item');
-                if (parentLi) {
-                    const shouldOpen = !parentLi.classList.contains('is-open');
-                    document.querySelectorAll('.nav-section-item').forEach(li => li.classList.remove('is-open'));
-                    if (shouldOpen) parentLi.classList.add('is-open');
+                const idx = Array.from(sections).findIndex(sec => sec.id === sectionId);
+                if (idx >= 0) goToSectionByIndex(idx);
+                if (window.innerWidth <= 1024) {
+                    const sidebar = document.querySelector('.module-sidebar');
+                    if (sidebar) sidebar.classList.remove('open');
                 }
             });
         });
@@ -13753,11 +13755,7 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
         });
 
         if (sections.length) {
-            sections.forEach((s,i) => s.classList.toggle('active', i === 0));
-            const firstLink = document.querySelector('.nav-link-section');
-            if (firstLink) firstLink.classList.add('active');
-            const firstSectionItem = firstLink ? firstLink.closest('.nav-section-item') : null;
-            if (firstSectionItem) firstSectionItem.classList.add('is-open');
+            goToSectionByIndex(0);
         }
 
         // Style "Dikkat:" and "Ipucu:" paragraphs as callouts
@@ -13976,6 +13974,11 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
             if (!inner) return;
             const wrap = document.createElement('div');
             wrap.className = 'lesson-controls';
+            const hint = document.createElement('span');
+            hint.className = 'lesson-complete-hint';
+            hint.textContent = 'İlerlemeyi kaydetmek ve sonraki derse geçmek için aşağıdaki düğmeye tıklayın.';
+            const row = document.createElement('div');
+            row.className = 'lesson-controls-row';
             const status = document.createElement('span');
             status.className = 'lesson-status';
             status.innerHTML = '<i class="fas fa-book-open"></i> ' + lessonStatusLabelForSection(sec);
@@ -13983,10 +13986,12 @@ tar -czf evidence_bundle.tar.gz ./evidence</pre>
             btn.type = 'button';
             btn.className = 'btn-complete-lesson';
             btn.setAttribute('data-section', sec.id);
-            btn.setAttribute('aria-label', 'Dersi tamamla');
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> Dersi Tamamla';
-            wrap.appendChild(status);
-            wrap.appendChild(btn);
+            btn.setAttribute('aria-label', 'Eğitimi tamamla ve sonraki derse geç');
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Eğitimi tamamla';
+            row.appendChild(status);
+            row.appendChild(btn);
+            wrap.appendChild(hint);
+            wrap.appendChild(row);
             inner.appendChild(wrap);
         });
 

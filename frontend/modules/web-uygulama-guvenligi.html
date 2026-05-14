@@ -3149,15 +3149,26 @@
             margin-right: 0.5rem;
         }
 
-        /* Dersi Tamamla — Temel Network eğitimi ile aynı yapı */
+        /* Dersi Tamamla — Temel Kriptografi ile aynı mantık (tamamla → sonraki ders) */
         .lesson-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .lesson-controls-row {
             display: flex;
             align-items: center;
             gap: 1rem;
             flex-wrap: wrap;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
+        }
+        .lesson-complete-hint {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.35;
         }
         .lesson-status {
             font-size: 0.9rem;
@@ -3898,17 +3909,6 @@
                         <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
           </div>
           <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
-        </div>
-      </details>
-    </div>
-  </div>
-</header>
-    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü Aç/Kapat">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    
-
     <div class="module-layout">
         <aside class="module-sidebar">
             <div class="sidebar-header">
@@ -3960,15 +3960,6 @@
 <div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=900&amp;q=90" alt="Hukuk ve siber güvenlik" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Profesyonel web güvenliği çalışması: yazılı yetki, kapsam ve denetlenebilir kanıt.</p></div>
 <p>Bu modül bir “giriş engeli”dir (gating): Burada çerçeve oturmadan teknik başarı sayılmaz. Web uygulaması güvenliği eğitiminde saldırganın <em>hedeflediği değerleri</em> (hesaplar, oturumlar, veri, işlem bütünlüğü, itibar) anlamak; aynı zamanda bu değerlere <strong>yetkisiz veya ölçüsüz</strong> temasın neden kurumsal felaket olduğunu anlamaktır. Savunmacı ve güvenli test uzmanı tehdidi modellemek zorundadır; sahadaki profesyonellik ise yazılı yetki, kapsam ve <strong>denetlenebilir kanıt</strong> ile ölçülür—kapsam dışına çıkmak ve kanıtı manipüle etmek kabul edilemez. Ders metinleri ve örnekler, savunma ve yetkili güvenlik çalışması için gereken teknik düzeyi karşılayacak şekilde sunulur; yasal ve etik kullanım yükümlülüğü tamamen size aittir (aşağıdaki sorumluluk reddi).</p>
 <p>Tehdit tarafı perspektifi (eğitim düzeyinde): saldırganın motivasyonu çoğu zaman <strong>erişim</strong>, <strong>kalıcılık</strong>, <strong>veri toplama</strong> veya <strong>hizmet aksatma</strong> üzerinedir. Web uygulaması bu zincirde sıkça ilk temas veya kalıcı erişim noktasıdır. Bu nedenle “sadece teknik kontrol listesi” yetmez; <strong>hangi varlığa dokunduğunuz</strong> ve <strong>hangi veriyi taşıdığınız</strong> her adımda sorulur.</p>
-<div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Yetkili test — üç hat">
-<div class="kr-inline-breakout__head"><i class="fas fa-gavel" aria-hidden="true"></i><span>Etik çerçeve — hızlı kartlar</span></div>
-<p class="kr-inline-breakout__hint">RoE ve kapsam metnini okurken bu üç başlığı yan yana tutun; teknik adım öncesi “izin var mı?” sorusuna cevap verir.</p>
-<div class="kr-cia-grid">
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-file-signature"></i></span><span class="kr-exp-goal__title">Yazılı yetki</span></summary><div class="kr-exp-goal__body">“Yapılabiliyor” değil, <strong>sözleşme / imzalı RoE</strong> ile yapılmasına izin veriliyor olmalı. Tarih aralığı, ortam ve imza sürümü denetimde sorulur.</div></details>
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-draw-polygon"></i></span><span class="kr-exp-goal__title">Kapsam çizgisi</span></summary><div class="kr-exp-goal__body">URL + API + kimlik + veri sınıfı + <strong>negatif liste</strong>. Gri alan bilinçli bırakılmamalı; belirsizlik hem hukuk hem operasyon riskidir.</div></details>
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-fingerprint"></i></span><span class="kr-exp-goal__title">Kanıt disiplini</span></summary><div class="kr-exp-goal__body">Ne topladınız, neden gerekli, <strong>maskeleme</strong> yeterli mi, zincirde kim görür? Kanıt minimizasyonu ve kişisel veri için not düşün.</div></details>
-</div>
-</div>
 <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül hedefleri</h3><ul><li>Yetkisiz test ile yetkili güvenlik çalışması arasındaki çizgiyi kurumsal dilde açıklayabilirim.</li><li>RoE, kapsam, ortam ayrımı ve kill-switch kavramlarını web bağlamında uygulayabilirim.</li><li>Kanıt minimizasyonu ve kişisel/hassas veri için maskeleme kararı verebilirim.</li><li>Bulgu → Etki → Öneri → Kanıt omurgasında rapor üretebilirim.</li><li>Saldırganın hedeflediği değerleri (varlık) savunma kararlarına bağlayabilirim.</li></ul></div>
 <div class="key-concepts">
 <div class="key-concept-card"><h4><i class="fas fa-scale-balanced"></i> Yetki ve merak ayrımı</h4><p>Profesyonel güvenlik çalışması merakla değil, yazılı yetkiyle başlar. “Şunu denesek ne olur?” sorusu RoE içinde cevaplanmadıysa cevap yoktur: önce sahip ve risk sahibiyle netleştirme.</p></div>
@@ -4319,16 +4310,6 @@
 <p><strong>OWASP Top 10</strong> en sık görülen risk kategorilerinin özet haritasıdır; “tek başına uyumluluk listesi” değildir. Kurumsal projelerde sıkça <strong>ASVS</strong> (uygulama doğrulama standardı) ile birlikte kullanılır: ASVS seviye 1/2/3, kontrollerin olgunluk ve kapsamını müzakere etmek için dil sağlar.</p>
 <p><strong>CVE</strong> belirli bir ürün ve sürümdeki kamuya açık kimliklendirilmiş hatadır; <strong>CWE</strong> ise zafiyet <em>sınıfını</em> tarif eder. <strong>CVSS</strong> şiddet skorudur; önceliklendirme için faydalıdır fakat iş etkisi, veri hassasiyeti ve exposure ile birlikte okunmalıdır. Raporlarda “CVSS yüksek” tek başına yönetici kararı verdirmez.</p>
 <p><strong>Bulgu</strong> (finding) tekrar üretilebilir, etkisi anlaşılmış ve kapsam içi kanıta dayanır; <strong>gözlem</strong> (observation) henüz doğrulanmamış ilginç sinyaldir. <strong>Kök neden</strong> (root cause) düzeltmenin nereye yapılacağını belirler. Bu ayrımlar SOC ↔ AppSec ↔ geliştirici arasında yanlış beklentiyi azaltır.</p>
-                <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Risk ve rapor dili">
-                    <div class="kr-inline-breakout__head"><i class="fas fa-book-atlas" aria-hidden="true"></i><span>OWASP · CVE · CWE — kartlar</span></div>
-                    <p class="kr-inline-breakout__hint">Aşağıdaki kartları açıp tablodaki satırlarla eşleştirin; rapor şablonunuzda hangi kimliği kullanacağınız netleşir.</p>
-                    <div class="kr-cia-grid">
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span><span class="kr-exp-goal__title">Top 10 vs ASVS</span></summary><div class="kr-exp-goal__body"><strong>Top 10</strong> sık risk sınıflarının haritası; <strong>ASVS</strong> doğrulanabilir kontrol seviyeleri. Biri diğerinin yerine geçmez; tehdit modeli ve ürün bağlamı hâlâ sizdedir.</div></details>
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-bug"></i></span><span class="kr-exp-goal__title">CVE</span></summary><div class="kr-exp-goal__body">Belirli <strong>ürün + sürüm</strong> için kamuya açık kimlikli hata. Sürüm envanteri yoksa CVE tek başına öncelik üretmez.</div></details>
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-sitemap"></i></span><span class="kr-exp-goal__title">CWE</span></summary><div class="kr-exp-goal__body">Zafiyet <strong>sınıfı</strong> (ör. enjeksiyon ailesi). Aynı CWE birden fazla kök nedene inebilir; kök neden analizi şarttır.</div></details>
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span><span class="kr-exp-goal__title">CVSS</span></summary><div class="kr-exp-goal__body">Şiddet skoru; <strong>iş etkisi ve exposure</strong> ile birlikte okunmalı. “Skor yüksek = hemen P0” refleksini yöneticiyle tartışırken bağlam ekleyin.</div></details>
-                    </div>
-                </div>
 <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül hedefleri</h3><ul><li>OWASP Top 10 ve ASVS’yi birbirinden ayırt edip doğru kullanım alanı söyleyebilirim.</li><li>CVE, CWE ve CVSS’yi rapor ve öncelik dilinde konumlandırabilirim.</li><li>Bulgu / gözlem / kök neden ayrımını raporda uygulayabilirim.</li></ul></div>
 <table class="comparison-table"><thead><tr><th>Kimlik</th><th>Ne işe yarar?</th><th>Dikkat</th></tr></thead><tbody><tr><td>OWASP Top 10</td><td>Sık risk sınıfları haritası</td><td>Ürüne özel tehdit modelinin yerine geçmez</td></tr><tr><td>ASVS</td><td>Kontrol seviyeleri</td><td>Seviye seçimi risk iştahıyla hizalanmalı</td></tr><tr><td>CWE-XX</td><td>Zafiyet sınıfı</td><td>Aynı CWE birden çok kök nedene inebilir</td></tr><tr><td>CVE-YYYY-NNNN</td><td>Ürün/sürüm hatası</td><td>Sürüm envanteri olmadan anlamı eksik kalır</td></tr><tr><td>CVSS v3.x</td><td>Şiddet skoru</td><td>Bağlam olmadan öncelik tek başına olmamalı</td></tr></tbody></table>
 <div class="key-concepts">
@@ -14301,20 +14282,11 @@ Bug bounty ve koordineli bildirim açısından program kapsamının nasıl okuna
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const sectionId = this.getAttribute('data-section');
-                sections.forEach(sec => sec.classList.toggle('active', sec.id === sectionId));
-                link.parentElement.parentElement.querySelectorAll('.nav-link-section').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.nav-link-sub').forEach(l => l.classList.remove('active'));
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
-                }
-
-                const parentLi = this.closest('.nav-section-item');
-                if (parentLi) {
-                    const shouldOpen = !parentLi.classList.contains('is-open');
-                    document.querySelectorAll('.nav-section-item').forEach(li => li.classList.remove('is-open'));
-                    if (shouldOpen) parentLi.classList.add('is-open');
+                const idx = Array.from(sections).findIndex(sec => sec.id === sectionId);
+                if (idx >= 0) goToSectionByIndex(idx);
+                if (window.innerWidth <= 1024) {
+                    const sidebar = document.querySelector('.module-sidebar');
+                    if (sidebar) sidebar.classList.remove('open');
                 }
             });
         });
@@ -14341,11 +14313,7 @@ Bug bounty ve koordineli bildirim açısından program kapsamının nasıl okuna
         });
 
         if (sections.length) {
-            sections.forEach((s,i) => s.classList.toggle('active', i === 0));
-            const firstLink = document.querySelector('.nav-link-section');
-            if (firstLink) firstLink.classList.add('active');
-            const firstSectionItem = firstLink ? firstLink.closest('.nav-section-item') : null;
-            if (firstSectionItem) firstSectionItem.classList.add('is-open');
+            goToSectionByIndex(0);
         }
 
         // Style "Dikkat:" and "Ipucu:" paragraphs as callouts
@@ -14564,6 +14532,11 @@ Bug bounty ve koordineli bildirim açısından program kapsamının nasıl okuna
             if (!inner) return;
             const wrap = document.createElement('div');
             wrap.className = 'lesson-controls';
+            const hint = document.createElement('span');
+            hint.className = 'lesson-complete-hint';
+            hint.textContent = 'İlerlemeyi kaydetmek ve sonraki derse geçmek için aşağıdaki düğmeye tıklayın.';
+            const row = document.createElement('div');
+            row.className = 'lesson-controls-row';
             const status = document.createElement('span');
             status.className = 'lesson-status';
             status.innerHTML = '<i class="fas fa-book-open"></i> ' + lessonStatusLabelForSection(sec);
@@ -14571,10 +14544,12 @@ Bug bounty ve koordineli bildirim açısından program kapsamının nasıl okuna
             btn.type = 'button';
             btn.className = 'btn-complete-lesson';
             btn.setAttribute('data-section', sec.id);
-            btn.setAttribute('aria-label', 'Dersi tamamla');
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> Dersi Tamamla';
-            wrap.appendChild(status);
-            wrap.appendChild(btn);
+            btn.setAttribute('aria-label', 'Eğitimi tamamla ve sonraki derse geç');
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Eğitimi tamamla';
+            row.appendChild(status);
+            row.appendChild(btn);
+            wrap.appendChild(hint);
+            wrap.appendChild(row);
             inner.appendChild(wrap);
         });
 
