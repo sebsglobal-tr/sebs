@@ -1,0 +1,157 @@
+            <section class="content-section" id="kr-m2">
+                <div class="section-header">
+                    <h2><i class="fas fa-microchip"></i> Modül 2 — Kriptografi İçin Gerekli Temel Bilgiler</h2>
+                    <p>Kriptografi bit ve bayt dizileri üzerinde çalışır. Hex gösterim, XOR mantığı, encoding ile encryption ayrımı ve modüler aritmetik sezgisi olmadan ilerleyen modüllerde boşluk oluşur.</p>
+                    <p class="section-intro">Bu modülde “128 bit güvenlik”, anahtar uzayı, brute force maliyetinin üstel büyümesi ve CSPRNG ile sıradan rastgele üreteç farkı ele alınır. CyberChef ile encoding, hash ve şifreleme çıktılarını yalnızca uydurma verilerle karşılaştırın.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>Bit, byte, binary ve hexadecimal ilişkisini ve araç çıktılarında hex dizelerini yorumlarsınız.</li>
+                        <li>XOR’un terslenebilirliğini ve güvenliğin tek başına XOR’dan gelmediğini açıklarsınız.</li>
+                        <li>Encoding, hashing ve encryption çıktılarını ayırt edersiniz.</li>
+                        <li>Modüler aritmetik ve asal sayıların RSA/DH sezgilerindeki yerini tanımlarsınız.</li>
+                        <li>Anahtar uzayı ve bit güvenliği ile DES’in neden yetmediğini yorumlarsınız.</li>
+                        <li>CSPRNG ve nonce/IV gereksinimlerinin moda bağlılığını ifade edersiniz.</li>
+                    </ul></div>
+                    <h3>Veri gösterimi</h3>
+                    <p>AES-256 ifadesi 256 bit anahtar; AES bloğu 128 bittir (NIST AES). İki hex karakter bir baytı temsil eder. XOR: aynı işlem tekrarlandığında orijinal geri gelir; güvenlik anahtar akışının tahmin edilemezliğinden gelir.</p>
+                    <h3>Hesaplama ve güvenlik seviyesi</h3>
+                    <table class="comparison-table"><thead><tr><th>Anahtar uzunluğu</th><th>Olası değer (yaklaşık)</th></tr></thead><tbody>
+                        <tr><td>8 bit</td><td>256</td></tr>
+                        <tr><td>128 bit</td><td>2¹²⁸</td></tr>
+                        <tr><td>256 bit</td><td>2²⁵⁶</td></tr>
+                    </tbody></table>
+                    <p>RSA ve AES anahtar uzunlukları aynı matematiksel problemi temsil etmez; doğrudan “hangisi daha uzun” diye karşılaştırılmaz.</p>
+                    <h3>Rastgelelik</h3>
+                    <p><code>random()</code> güvenlik için yeterli değildir. Python’da <code>secrets</code>, OS CSPRNG, güvenli kütüphane API’leri kullanılmalıdır. Nonce için çoğu bağlamda asıl şart: aynı anahtar altında tekrar etmemesi.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 2</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m2" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m3">
+                <div class="section-header">
+                    <h2><i class="fas fa-scroll"></i> Modül 3 — Klasik Şifreleme Yöntemleri ve Modern Kriptoya Geçiş</h2>
+                    <p>Amaç klasik şifreleri üretimde kullanmak değil; neden yetersiz kaldıklarını ve Kerckhoffs ilkesinin modern tasarımdaki yerini kavramaktır.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>Yerine koyma ve transpozisyon mantığını ve frekans analizi riskini açıklarsınız.</li>
+                        <li>Sezar, Vigenère, Beaufort ve OTP ile anahtar tekrarı dersini ilişkilendirirsiniz.</li>
+                        <li>Kasiski testinin “anahtar uzunluğu adayı” ürettiğini tanımlarsınız.</li>
+                        <li>Klasik araçların yalnızca eğitim amaçlı olduğunu savunursunuz.</li>
+                    </ul></div>
+                    <p>OTP mükemmel gizlilik için mesaj kadar uzun, gerçekten rastgele, tek kullanımlik ve gizli anahtar ister; pratikte anahtar dağıtımı ve tekrar kullanım riskleri (ör. Venona) nedeniyle nadiren ölçeklenir. Anahtar tekrarı: C1 XOR C2 = P1 XOR P2 ile anahtar düşer; modern CTR/GCM nonce tekrarıyla aynı sezgisel uyarıdır.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 3</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m3" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m4">
+                <div class="section-header">
+                    <h2><i class="fas fa-lock"></i> Modül 4 — Simetrik Kriptografi</h2>
+                    <p>Simetrik şifreleme büyük veri akışı için verimlidir; anahtar paylaşımı ve mod seçimi kritiktir. “AES kullandım, güvendeyim” yanılgısı mod, IV/nonce ve AEAD doğrulaması olmadan geçerli değildir.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>Blok şifre ve akış şifresi farkını, AES’in blok boyutu ve anahtar uzunluklarını açıklarsınız.</li>
+                        <li>ECB’nin örüntü sızdırdığını; CBC/CTR’nin IV/nonce disiplini gerektirdiğini bilirsiniz.</li>
+                        <li>AEAD (ör. AES-GCM, ChaCha20-Poly1305) ve tag doğrulamasının zorunluluğunu ifade edersiniz.</li>
+                        <li>OpenSSL <code>enc</code> ile GCM/CCM’nin uygun olmadığını; AEAD için EVP/kütüphane seviyesi gerektiğini hatırlarsınız.</li>
+                    </ul></div>
+                    <p>DES/3DES yeni tasarımlarda kullanılmamalıdır (3DES NIST geri çekme bağlamı). RC4 TLS’ten kaldırılmıştır (RFC 7465). Parola tabanlı <code>openssl enc</code> çıktısında <code>Salted__</code> öneki salt meta verisidir; PBKDF2 ve uygun iterasyon tercih edilir.</p>
+                    <div class="callout-box warning"><span class="callout-icon"><i class="fas fa-exclamation-triangle"></i></span><div class="callout-body"><h5>ECB bulgusu</h5><p>Aynı plaintext blokları aynı ciphertext bloklarını üretir; veri yapısı sızabilir. AEAD ve benzersiz nonce/IV ile geçilir.</p></div></div>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 4</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m4" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m5">
+                <div class="section-header">
+                    <h2><i class="fas fa-fingerprint"></i> Modül 5 — Hash, MAC, KDF ve Parola Saklama</h2>
+                    <p>Hash, MAC, KDF ve parola hashleme farklı problemler içindir; birbirinin yerine konmamalıdır.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>Kriptografik hash özelliklerini (sabit uzunluk, deterministik, tek yönlü) ve şifrelemeden ayırırsınız.</li>
+                        <li>MD5/SHA-1’in güvenlik kararlarında terk edildiğini; SHA-2/SHA-3 tercihini savunursunuz.</li>
+                        <li>HMAC’in paylaşılan sırla kaynak doğrulaması sağladığını; plain hash’in sahte mesajda yeniden hesaplanabileceğini bilirsiniz.</li>
+                        <li>HKDF (yüksek entropi sırdan materyal) ile PBKDF2/Argon2 (paroladan yavaş türetme) ayrımını yaparsınız.</li>
+                        <li>Argon2id, bcrypt, scrypt ve salt/pepper rollerini açıklarsınız.</li>
+                    </ul></div>
+                    <p>Parolayı SHA-256 ile “saklamak” saldırgan için hızlıdır; Argon2id veya iyi yapılandırılmış bcrypt/scrypt ve benzersiz salt kullanılmalıdır. hashcat/John yalnızca izinli ortamda zayıf yapılandırmayı göstermek içindir.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 5</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m5" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m6">
+                <div class="section-header">
+                    <h2><i class="fas fa-key"></i> Modül 6 — Asimetrik Kriptografi</h2>
+                    <p>Açık/özel anahtar çifti anahtar anlaşması, küçük veri koruması ve dijital imza için kullanılır; büyük veri yükü simetrik ve AEAD ile taşınır (hibrit model, TLS 1.3).</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>RSA sezgisini (çarpanlara ayırma zorluğu), DH/ECDH’nin anahtar anlaşması olduğunu ve kimlik doğrulama olmadan MITM riskini açıklarsınız.</li>
+                        <li>RSA-OAEP, RSA-PSS ve minimum RSA-2048 / ECC eğri seçimi farkındalığı kazanırsınız.</li>
+                        <li>PEM başlıkları (<code>BEGIN PRIVATE KEY</code> vb.) ve özel anahtarın depoda tutulmaması gerektiğini bilirsiniz.</li>
+                    </ul></div>
+                    <p>Curve25519/X25519 ve P-256 gibi iyi incelenmiş eğriler kullanılmalı; “kendi eğrinizi” seçmekten kaçınılır.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 6</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m6" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m7">
+                <div class="section-header">
+                    <h2><i class="fas fa-certificate"></i> Modül 7 — Dijital İmzalar, PKI ve TLS</h2>
+                    <p>İmza gizlilik sağlamaz; bütünlük ve (doğru güven modelinde) inkâr edememeye katkı sağlar. PKI, açık anahtarın kime ait olduğunu doğrulanabilir kılar. TLS bu yapıları taşıyarak kanal gizliliği, bütünlük ve sunucu kimliği sunar.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>İmzalama/doğrulama yönlerini ve hash+imza ilişkisini açıklarsınız.</li>
+                        <li>X.509 alanları: SAN, issuer, geçerlilik, imza algoritması, basic constraints.</li>
+                        <li>TLS 1.3’te forward secrecy ve RSA key exchange’in kalktığını özetlersiniz.</li>
+                        <li>Kilit simgesinin siteyi “güvenilir içerik” olarak kanıtlamadığını bilirsiniz.</li>
+                    </ul></div>
+                    <p>Self-signed test ortamında anlaşılır olabilir; üretimde güvenilir CA, doğru SAN ve güncel imza algoritması (SHA-256+) gerekir. Wireshark yalnızca izinli lab ağında kullanılmalıdır.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 7</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m7" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="kr-m8">
+                <div class="section-header">
+                    <h2><i class="fas fa-check-double"></i> Modül 8 — Güvenli Kriptografi Kullanımı ve Yaygın Hatalar</h2>
+                    <p>Kapanış modülü: tehdit modeli, pasif/aktif saldırgan, MITM, ECB, sabit IV, nonce tekrarı, hardcoded key, zayıf RNG, deprecated API ve anahtar yaşam döngüsü.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Kazanımlar</h3><ul>
+                        <li>Tehdit modeli ve güven varsayımlarını sorarsınız.</li>
+                        <li>Yaygın hataları tanır ve “Bulgu — Etki — Öneri — Kanıt” diline yaklaştırırsınız.</li>
+                        <li>Python cryptography recipes vs hazmat ve libsodium yüksek seviye API mesajını içselleştirirsiniz.</li>
+                    </ul></div>
+                    <p>OWASP kripto hataları: zayıf algoritma, hatalı IV/nonce, AEAD eksikliği, sır sızıntısı. Debian OpenSSL RNG olayı rastgelelik hatalarının sonuçlarını gösterir. Anahtar üretim, saklama, rotasyon, imha ve KMS/HSM entegrasyonu dokümante edilmelidir.</p>
+                    <h3>Raporlama formatı</h3>
+                    <p><strong>Bulgu:</strong> Ne görüldü? <strong>Etki:</strong> Hangi risk? <strong>Öneri:</strong> Güvenli alternatif ve doğrulama. <strong>Kanıt:</strong> Log, konfigürasyon, sertifika çıktısı veya kod kesiti.</p>
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 8 — Eğitim özeti</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m8" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>

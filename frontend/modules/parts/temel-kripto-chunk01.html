@@ -1,0 +1,55 @@
+            <section class="content-section active" id="kr-m1">
+                <div class="section-header">
+                    <h2><i class="fas fa-shield-alt"></i> Modül 1 — Kriptografiye Giriş ve Güvenlik Hedefleri</h2>
+                    <p>Kriptografi, günümüz dijital sistemlerinin sessiz omurgalarından biridir. Bir mesaj gönderdiğinizde, bir web sitesine bağlandığınızda, bankacılık uygulamasında işlem yaptığınızda ya da bir dosyayı buluta yüklediğinizde arka planda pek çok kriptografik mekanizma devreye girer; ancak bunların büyük çoğunluğu kullanıcının gözünden tamamen gizlidir. Bu modül, kriptografinin ne olduğunu, ne işe yaradığını ve modern dijital sistemlerde neden bu kadar merkezi bir rol oynadığını anlamak için bir başlangıç noktası sunar.</p>
+                    <p class="section-intro">Kriptografi yalnızca “şifreleme” demek değildir. Gizliliği sağlamak, verinin değiştirilmediğini doğrulamak, bir kimliği kanıtlamak ve bir tarafın belirli bir işlemi sonradan inkâr etmesini zorlaştıracak teknik koşulları oluşturmak kriptografinin ilgilendiği farklı güvenlik problemleridir. Bu ayrımı erken kavramak, ilerideki tüm teknik konuların üzerine oturduğu zemini sağlamlaştırır. Modül boyunca tarihsel bir ilerleme çizgisi izlenecek; asıl odak tarih değil, kriptografinin bugünkü sistemlerde nasıl konumlandığıdır. Bu modülün sonunda “kriptografi neyi çözer, neyi çözmez?” sorusuna sade ama doğru bir cevap verebilmeniz beklenir.</p>
+                </div>
+                <div class="content-card docx-content">
+                    <div class="learning-objectives">
+                        <h3><i class="fas fa-bullseye"></i> Kazanımlar</h3>
+                        <ul>
+                            <li>Kriptografi, kriptanaliz ve kriptoloji kavramlarını ayırt edebilir ve siber güvenlikteki yerlerini açıklayabilirsiniz.</li>
+                            <li>Kriptografinin yazılım, ağ, mobil ve web güvenliğindeki rolünü somut örneklerle ilişkilendirebilirsiniz.</li>
+                            <li>Tarihsel gelişimi ana hatlarıyla kavrar; “gizli yöntemden matematiksel güvenliğe” geçişin neden gerekli olduğunu açıklayabilirsiniz.</li>
+                            <li>Gizlilik, bütünlük, kimlik doğrulama ve inkâr edememe hedeflerini tanımlar; hangi mekanizmalarla desteklendiklerini temel düzeyde ifade edebilirsiniz.</li>
+                            <li>Düz metin, şifreli metin, anahtar, algoritma ve protokol terimlerini doğru bağlamda kullanabilirsiniz.</li>
+                            <li>Kriptografik yapı taşı, algoritma, protokol ve sistem ayrımını açıklayabilirsiniz.</li>
+                            <li>OpenSSL, GnuPG, CyberChef ve Wireshark gibi araçların kategorilerini ve eğitimde güvenli kullanım sınırlarını değerlendirebilirsiniz.</li>
+                            <li>Hassas verilerin çevrimiçi araçlara girilmemesi gerektiğini ve araç kullanımının komut ezberi olmadığını içselleştirirsiniz.</li>
+                            <li>Kriptografinin tek başına güvenlik garantisi olmadığını; yanlış kullanımın ciddi risk doğurduğunu fark edersiniz.</li>
+                        </ul>
+                    </div>
+
+                    <h3>Kriptografinin tanımı ve kapsamı</h3>
+                    <p>Kriptografi, bilgiyi ve dijital işlemleri gizlilik, bütünlük, kimlik doğrulama ve inkâr edememe gibi güvenlik hedefleri doğrultusunda korumak için matematiksel yöntemler kullanan disiplindir. Modern kriptografi yalnızca mesajı okunamaz yapmakla sınırlı değildir: verinin yetkisiz okunmasını engellemek, değişip değişmediğini doğrulamak, iletişim kurulan tarafın kimliğini kanıtlamak ve belirli işlemlerin inkârını zorlaştırmak için kullanılır.</p>
+                    <p><strong>Kriptanaliz</strong>, kriptografik sistemlerin güvenliğini analiz eden, zayıflıklarını araştıran alandır. <strong>Kriptoloji</strong> her ikisini birden kapsar. Güvenli sistem tasarlamak için sistemin hangi koşullarda zayıflayabileceğini düşünmek gerekir.</p>
+                    <p>HTTPS, uçtan uca mesajlaşma, yazılım güncelleme imzaları, parola saklama (salt ve uygun maliyet faktörü ile Argon2/bcrypt vb.), dosya bütünlüğü için hash karşılaştırması — hepsi günlük hayatta kriptografiyle ilişkilidir. Hash değeri güvenilir kaynaktan alınmazsa veya saldırgan hem dosyayı hem hash’i değiştirebiliyorsa çıplak hash tek başına yeterli değildir; dijital imza veya MAC gibi kimliği doğrulanabilir bütünlük gerekir.</p>
+                    <p>Kriptografi her güvenlik problemini çözmez. Kötü yapılandırma, zayıf anahtar yönetimi, yanlış mod veya protokol kullanımı, uygulama mantığı hataları korumayı işlevsiz kılabilir. Kriptografi doğru kurulduğunda temel taşlardan biridir; tek başına sihirli çözüm değildir.</p>
+
+                    <h3>Tarihsel gelişim</h3>
+                    <p>Sezar ve Vigenère gibi klasik yöntemler eğitimsel değer taşır; modern güvenlik için yeterli değildir. Enigma güçlü bir sistemdi; güvenlik açıkları yalnızca matematikten değil, kullanım hatalarından ve operasyonel ihmalden kaynaklanabiliyordu — bu ders bugün de geçerlidir.</p>
+                    <p>Modern kriptografide <strong>Kerckhoffs İlkesi</strong> esastır: algoritma düşman tarafından bilinse bile anahtar gizli kaldığı sürece sistem güvenli olmalıdır. AES, RSA/ECC, SHA-2/SHA-3 ve post-quantum standartları (ör. NIST PQC süreci) açık biçimde yayımlanır ve topluluk incelemesinden geçer.</p>
+
+                    <h3>Temel güvenlik hedefleri</h3>
+                    <p><strong>Gizlilik:</strong> Verinin yalnızca yetkililerce okunması; çoğunlukla şifreleme ile desteklenir; anahtar yönetimi, mod ve kimlik doğrulaması olmadan eksik kalır.</p>
+                    <p><strong>Bütünlük:</strong> Verinin değiştirilmediğinin doğrulanması; hash, MAC veya imza ile ilişkilidir. Hash tek başına kaynak doğrulamaz.</p>
+                    <p><strong>Kimlik doğrulama:</strong> Karşı tarafın iddia ettiği kimlik olduğunun doğrulanması (ör. TLS’te sunucu sertifikası). Şifreleme olmadan kimlik veya tam tersi yanıltıcı olabilir.</p>
+                    <p><strong>Yetkilendirme</strong> “neye erişir?” sorusudur; kimlik doğrulamadan farklıdır.</p>
+                    <p><strong>İnkâr edememe:</strong> Dijital imza katkı sağlar; özel anahtar koruması, PKI, zaman damgası ve hukuki süreçle birlikte değerlendirilir.</p>
+
+                    <h3>Temel terminoloji</h3>
+                    <p><strong>Düz metin / şifreli metin:</strong> Okunabilir veri ile algoritma çıktısı. <strong>Anahtar:</strong> İşlemi kontrol eden parametre; simetrikte tek gizli anahtar, asimetrikte public/private çifti. <strong>Algoritma</strong> tek işlemi tanımlar; <strong>protokol</strong> (ör. TLS) birden fazla adımı koordine eder. <strong>Kriptografik yapı taşı</strong> hash, simetrik şifre, MAC, imzadır.</p>
+
+                    <h3>Araçlara genel bakış</h3>
+                    <p>OpenSSL (komut satırı), GnuPG (imza ve anahtar), CyberChef (encoding/hash görselleştirme), Wireshark (TLS akışını üst düzey gözlem) farklı amaçlara hizmet eder. Çevrimiçi araçlara gerçek parola, anahtar veya token girilmez. Araç listesinde görünen her algoritma “güvenli öneri” değildir.</p>
+                    <p><strong>Encoding ile şifreleme:</strong> Base64 anahtar gerektirmez, geri çevrilebilir, gizlilik sağlamaz. <code>bWVyaGFiYQ==</code> “merhaba”nın Base64’üdür; şifreli metin değildir.</p>
+
+                    <h3>Analitik senaryo (Base64 “şifreleme”)</h3>
+                    <p>Oturum token’ının yalnızca Base64 ile cookie’de saklanması ve bunun “şifreleme” diye belgelenmesi: token kolayca çözülür; gizlilik ve bütünlük sağlanmaz. Gerekirse AEAD (ör. AES-GCM) uygun nonce/tag ile veya sunucu tarafı opaque oturum kullanılmalıdır. JWT imzası payload’ı gizlemez; gizlilik için JWE veya farklı tasarım gerekir.</p>
+
+                    <div class="lesson-controls">
+                        <span class="lesson-status"><i class="fas fa-book-open"></i> Modül 1 tamamlandığında Modül 2’ye geçebilirsiniz</span>
+                        <button type="button" class="btn-complete-lesson" data-section="kr-m1" aria-label="Modülü tamamla"><i class="fas fa-check-circle"></i> Modülü Tamamla</button>
+                    </div>
+                </div>
+            </section>
