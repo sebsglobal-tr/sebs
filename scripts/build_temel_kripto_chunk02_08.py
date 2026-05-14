@@ -536,7 +536,7 @@ def sidebar_tagline_paragraph(full: str) -> str:
 
 
 def splice_temel_kriptografi_page(nav_inner: str, main_inner: str) -> None:
-    """Yan menü: yalnızca module-sidebar içindeki sidebar-nav (üst header </nav> ile karışmaz)."""
+    """Yan menü: module-sidebar içindeki sidebar-nav. Ana içerik: <main>…</main> tam değişir."""
     raw = MAIN_HTML.read_text(encoding="utf-8")
 
     def nav_sub(m: re.Match[str]) -> str:
@@ -549,12 +549,9 @@ def splice_temel_kriptografi_page(nav_inner: str, main_inner: str) -> None:
         count=1,
     )
 
-    def main_sub(m: re.Match[str]) -> str:
-        return m.group(1) + "\n" + main_inner + "\n        " + m.group(2)
-
     raw = re.sub(
-        r"(<main[^>]*>)\s*([\s\S]*?)(</main>)",
-        main_sub,
+        r"(<main[^>]*>)\s*[\s\S]*?(</main>)",
+        lambda m: m.group(1) + "\n" + main_inner + "\n        " + m.group(2),
         raw,
         count=1,
     )

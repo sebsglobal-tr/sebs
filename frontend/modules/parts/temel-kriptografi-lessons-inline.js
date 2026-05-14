@@ -1,80 +1,24 @@
         const MODULE_NAME = 'Temel Kriptografi';
         const STORAGE_KEY = 'module_progress_temel_kriptografi';
+        window.MODULE_TOTAL_LESSONS = 0;
 
         const sections = document.querySelectorAll('.content-section');
-        const navModuleLinks = document.querySelectorAll('.nav-link-section');
+        const navLinks = document.querySelectorAll('.nav-link-section');
+        window.MODULE_TOTAL_LESSONS = sections.length;
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
-
-        function allLessonElements() {
-            return Array.from(document.querySelectorAll('.content-section .module-lesson'));
-        }
-
-        function totalLessonCount() {
-            return allLessonElements().length;
-        }
-
-        function lessonIdsForSection(sectionId) {
-            const sec = document.getElementById(sectionId);
-            if (!sec) return [];
-            return Array.from(sec.querySelectorAll('.module-lesson')).map((el) => el.id);
-        }
-
-        function buildLessonNav() {
-            document.querySelectorAll('.nav-lesson-list').forEach((u) => u.remove());
-            navModuleLinks.forEach((moduleLink) => {
-                const sid = moduleLink.getAttribute('data-section');
-                const sec = document.getElementById(sid);
-                if (!sec) return;
-                const lessons = sec.querySelectorAll('.module-lessons .module-lesson');
-                if (!lessons.length) return;
-                const parentLi = moduleLink.closest('li');
-                if (!parentLi) return;
-                parentLi.classList.add('nav-section-with-lessons');
-                const ul = document.createElement('ul');
-                ul.className = 'nav-lesson-list';
-                lessons.forEach((les) => {
-                    const tit = les.getAttribute('data-lesson-title') || les.id;
-                    const li = document.createElement('li');
-                    const a = document.createElement('a');
-                    a.href = '#';
-                    a.className = 'nav-link-lesson';
-                    a.setAttribute('data-lesson-id', les.id);
-                    a.setAttribute('data-section', sid);
-                    a.textContent = tit;
-                    li.appendChild(a);
-                    ul.appendChild(li);
-                });
-                parentLi.appendChild(ul);
-            });
-        }
-
-        function activateLesson(lessonEl) {
-            if (!lessonEl) return;
-            const section = lessonEl.closest('.content-section');
-            if (!section) return;
-            const sid = section.id;
-            sections.forEach((s) => s.classList.toggle('active', s.id === sid));
-            section.querySelectorAll('.module-lesson').forEach((l) => {
-                l.classList.toggle('is-active', l === lessonEl);
-            });
-            navModuleLinks.forEach((l) => l.classList.toggle('active', l.getAttribute('data-section') === sid));
-            document.querySelectorAll('.nav-link-lesson').forEach((a) => {
-                a.classList.toggle('active', a.getAttribute('data-lesson-id') === lessonEl.id);
-            });
-            lessonEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
 
         async function loadProgress() {
             const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             const token =
                 (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
                 localStorage.getItem('authToken');
-            const total = totalLessonCount() || navModuleLinks.length;
-            if (!token || !window.getModuleIdFromName) return local.completedLessons || [];
+            if (!token || !window.getModuleIdFromName) {
+                return Array.isArray(local.completedLessons) ? local.completedLessons : [];
+            }
             try {
                 const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                if (!moduleId) return local.completedLessons || [];
+                if (!moduleId) return Array.isArray(local.completedLessons) ? local.completedLessons : [];
                 const apiBase =
                     typeof window.getSebsApiBase === 'function'
                         ? window.getSebsApiBase()
@@ -84,14 +28,17 @@
                 });
                 if (r.ok) {
                     const d = await r.json();
-                    const step = typeof d.data?.lastStep === 'string' ? JSON.parse(d.data.lastStep || '{}') : (d.data?.lastStep || {});
+                    const step =
+                        typeof d.data?.lastStep === 'string'
+                            ? JSON.parse(d.data.lastStep || '{}')
+                            : d.data?.lastStep || {};
                     const lessons = step.completedLessons || [];
                     if (lessons.length) {
                         localStorage.setItem(
                             STORAGE_KEY,
                             JSON.stringify({
                                 completedLessons: lessons,
-                                totalLessons: step.totalLessons || total,
+                                totalLessons: step.totalLessons || sections.length,
                                 lastUpdated: new Date().toISOString()
                             })
                         );
@@ -101,11 +48,11 @@
             } catch (e) {
                 console.warn('Load progress from API failed:', e);
             }
-            return local.completedLessons || [];
+            return Array.isArray(local.completedLessons) ? local.completedLessons : [];
         }
 
         function saveProgressLocal(completedLessons) {
-            const total = totalLessonCount() || navModuleLinks.length;
+            const total = sections.length;
             localStorage.setItem(
                 STORAGE_KEY,
                 JSON.stringify({
@@ -114,112 +61,86 @@
                     lastUpdated: new Date().toISOString()
                 })
             );
-            updateProgressUI(completedLessons.length, total);
+            updateProgressUI(completedLessons.length);
         }
 
-        function updateProgressUI(completedCount, totalOverride) {
-            const total = totalOverride || totalLessonCount() || navModuleLinks.length;
-            window.MODULE_TOTAL_LESSONS = total;
+        function updateProgressUI(completedCount) {
+            const total = sections.length;
             const pct = total ? Math.round((completedCount / total) * 100) : 0;
             if (progressFill) progressFill.style.width = pct + '%';
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
         }
 
-        function markSidebarProgress(completedLessons) {
-            document.querySelectorAll('.nav-link-lesson').forEach((a) => {
-                const lid = a.getAttribute('data-lesson-id');
-                a.classList.toggle('completed', completedLessons.includes(lid));
-            });
-            navModuleLinks.forEach((link) => {
-                const sid = link.getAttribute('data-section');
-                const ids = lessonIdsForSection(sid);
-                const done = ids.length > 0 && ids.every((id) => completedLessons.includes(id));
-                link.classList.toggle('completed', done);
+        function markCompletedInSidebar(completedLessons) {
+            navLinks.forEach((link) => {
+                const id = link.getAttribute('data-section');
+                link.classList.toggle('completed', completedLessons.includes(id));
             });
         }
 
-        async function completeCurrentLesson(lessonEl) {
-            const lessonId = lessonEl.id;
-            let completed = await loadProgress();
-            if (!completed.includes(lessonId)) {
-                completed.push(lessonId);
-                saveProgressLocal(completed);
-                markSidebarProgress(completed);
-                if (window.ModuleProgressTracker?.saveLessonProgress) {
-                    try {
-                        await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, lessonId);
-                    } catch (e) {
-                        console.warn('API save failed:', e);
-                    }
-                }
-            } else {
-                markSidebarProgress(completed);
+        function goToSectionByIndex(sectionIndex) {
+            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
+            const target = sections[sectionIndex];
+            const link = Array.from(navLinks).find((l) => l.getAttribute('data-section') === target.id);
+            if (link) {
+                navLinks.forEach((l) => l.classList.remove('active'));
+                link.classList.add('active');
             }
-
-            const all = allLessonElements();
-            const ix = all.indexOf(lessonEl);
-            const next = all[ix + 1] || null;
-            if (next) {
-                activateLesson(next);
-                const nsid = next.closest('.content-section').id;
-                navModuleLinks.forEach((l) => l.classList.toggle('active', l.getAttribute('data-section') === nsid));
-            }
-        }
-
-        document.querySelector('.nav-list.nav-section-list')?.addEventListener('click', function (e) {
-            const sub = e.target.closest('.nav-link-lesson');
-            if (!sub) return;
-            e.preventDefault();
-            const lid = sub.getAttribute('data-lesson-id');
-            const el = document.getElementById(lid);
-            if (el) activateLesson(el);
+            sections.forEach((sec) => sec.classList.toggle('active', sec === target));
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (window.innerWidth <= 1024) {
                 document.querySelector('.module-sidebar')?.classList.remove('open');
             }
-        });
+        }
 
-        navModuleLinks.forEach((link) => {
+        async function completeLesson(sectionId) {
+            let completed = await loadProgress();
+            if (!Array.isArray(completed)) completed = [];
+            const currentIdx = Array.from(sections).findIndex((sec) => sec.id === sectionId);
+            if (completed.includes(sectionId)) {
+                if (currentIdx >= 0 && currentIdx + 1 < sections.length) goToSectionByIndex(currentIdx + 1);
+                return;
+            }
+            completed.push(sectionId);
+            saveProgressLocal(completed);
+            markCompletedInSidebar(completed);
+            if (window.ModuleProgressTracker?.saveLessonProgress) {
+                try {
+                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
+                } catch (e) {
+                    console.warn('API save failed:', e);
+                }
+            }
+            if (currentIdx >= 0 && currentIdx + 1 < sections.length) goToSectionByIndex(currentIdx + 1);
+        }
+
+        document.querySelectorAll('.nav-link-section').forEach((link) => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
-                const sid = this.getAttribute('data-section');
-                const sec = document.getElementById(sid);
-                const first = sec?.querySelector('.module-lessons .module-lesson');
-                navModuleLinks.forEach((l) => l.classList.remove('active'));
-                this.classList.add('active');
-                if (first) activateLesson(first);
-                else if (sec) {
-                    sections.forEach((s) => s.classList.toggle('active', s.id === sid));
-                }
+                const sectionId = this.getAttribute('data-section');
+                const idx = Array.from(sections).findIndex((sec) => sec.id === sectionId);
+                if (idx >= 0) goToSectionByIndex(idx);
                 if (window.innerWidth <= 1024) {
                     document.querySelector('.module-sidebar')?.classList.remove('open');
                 }
             });
         });
 
-        document.querySelector('.module-layout')?.addEventListener('click', function (e) {
-            const btn = e.target.closest('.btn-lesson-complete');
-            if (!btn) return;
-            const lid = btn.getAttribute('data-lesson-id');
-            const le = document.getElementById(lid);
-            if (le) completeCurrentLesson(le);
+        document.querySelectorAll('.btn-complete-lesson').forEach((btn) => {
+            btn.addEventListener('click', function () {
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) completeLesson(sectionId);
+            });
         });
 
-        buildLessonNav();
-        window.MODULE_TOTAL_LESSONS = totalLessonCount() || navModuleLinks.length;
-
-        const firstLesson = document.querySelector('.content-section .module-lesson');
-        if (firstLesson) {
-            sections.forEach((s, i) => s.classList.toggle('active', s === firstLesson.closest('.content-section')));
-            activateLesson(firstLesson);
-        } else if (sections.length) {
-            sections.forEach((s, i) => s.classList.toggle('active', i === 0));
+        if (sections.length) {
+            goToSectionByIndex(0);
         }
 
         (async function initProgress() {
             const completed = await loadProgress();
-            const total = totalLessonCount() || navModuleLinks.length;
-            updateProgressUI(completed.length, total);
-            markSidebarProgress(completed);
+            updateProgressUI(completed.length);
+            markCompletedInSidebar(completed);
         })();
 
         (async function initTrackerIfLoggedIn() {
@@ -227,9 +148,8 @@
                 (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
                 localStorage.getItem('authToken');
             if (!t) return;
-            const nLessons = totalLessonCount() || navModuleLinks.length;
             if (window.ModuleProgressTracker?.initializeModule) {
-                window.ModuleProgressTracker.initializeModule(MODULE_NAME, nLessons).catch(() => {});
+                window.ModuleProgressTracker.initializeModule(MODULE_NAME, sections.length).catch(() => {});
             }
             if (window.TimeTracker && window.getModuleIdFromName) {
                 try {
