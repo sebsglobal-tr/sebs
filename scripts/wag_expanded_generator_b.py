@@ -90,6 +90,8 @@ def terminal(title: str, body_inner: str) -> str:
 M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal ve Savunma</h1>
 {img_block("https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=900&q=90", "Siber güvenlik ekranı", "Zafiyet sınıfları: saldırganın motoru ve savunmacının kontrol + görünürlük katmanları.")}
 <p>Bu modül OWASP tarzı sınıfları <strong>ezberletmek</strong> için değil; her birinde saldırganın <em>neyi hedeflediğini</em>, uygulamanın <em>hangi hatayı yaptığını</em>, olayın <em>hangi logda nasıl görünebileceğini</em> ve <em>hangi kontrolün blast radius’u nasıl küçülttüğünü</em> birlikte okumak içindir. Mekanizma, savunma dili ve gerektiğinde teknik örnekler birlikte verilir; bunları yalnızca yazılı yetki ve geçerli hukuk çerçevesinde kullanmak kullanıcının yükümlülüğüdür. İçeriğin kötüye kullanımından SEBS Academy ve materyalin yayıncıları sorumlu tutulamaz.</p>
+<p>Zafiyet sınıfları üretimde nadiren tek başına görünür: aynı olayda <strong>zayıf yetkilendirme + aşırı veri dönüşü + yetersiz log</strong> bir arada bulunur. Bu yüzden modülü okurken her bulguyu “hangi kontrol eksik?” yerine “hangi <em>zincir</em> eksik?” diye sorun: WAF bir şeyi kesmiş olsa bile uygulama mantığı aynı hatayı başka parametreyle tekrar ediyor olabilir.</p>
+<p>SOC için pratik çıktı: her sınıf için en az bir <strong>ölçülebilir sinyal</strong> (ör. belirli SQL süresi dağılımı, belirli path’te 403 artışı, belirli user-agent ile POST patlaması) ve bir <strong>yanlış pozitif</strong> senaryosu (ör. bakım, yeni sürüm, meşru batch job) yazın. Böylece playbook gerçek operasyon diline yaklaşır.</p>
 {lo("Modül hedefleri", [
     "SQLi/XSS/CSRF/SSRF sınıflarında saldırganın düşünce zincirini (eğitim) açıklayabilirim.",
     "Her sınıf için sinyal, savunma ve güvenli doğrulama kanıtını eşleştirebilirim.",
@@ -109,6 +111,7 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 <h2>SQL Injection: sorgu motorunun “ikinci dili”</h2>
 <p>Uygulama kullanıcı girdisini SQL ifadesinin <strong>yapısal parçası</strong> gibi birleştirirse, veritabanı motoru beklenmeyen komutları ayırt etmekte zorlanabilir. Saldırganın hedefi tipik olarak veri okumak, yetki yükseltmek veya bütünlüğü bozmaktır. “Kör” (blind) senaryolarda yanıt gövdesi yerine <strong>zamanlama veya doğru/yanlış dallanması</strong> üzerinden bilgi çıkarımı fikri yürütülür; savunmacı burada anormallik için <strong>istatistiksel baseline</strong> ve <strong>yavaş sorgu izleme</strong> arar.</p>
 <p>Uygulama ekibi için pratik okuma: ORM kullanımı bile <strong>ham SQL</strong> veya dinamik ORDER BY gibi kaçış noktalarında risk taşıyabilir. Kod incelemesinde “kullanıcı string’i SQL parçası olmadan tek parametre olarak mı gidiyor?” sorusu her PR’da tekrarlanır.</p>
+<p>Veritabanı motoru tarafında <strong>en az yetki</strong> yalnızca tablo izinleri değildir: stored procedure, linked server, dosya okuma ve dış ağa çıkış gibi yan özellikler de kapatılır. Saldırgan bazen doğrudan veri yerine yürütme yüzeylerini hedefler; bu yüzün savunması işletim sistemi ve DB sertleştirme checklist’idir.</p>
 {table(["Savunma katmanı", "Ne azaltır?", "Kanıt/izleme"], [
     ["Parametreli sorgu", "Yapı ile veriyi ayırır", "Kod incelemesi, ORM kullanımı"],
     ["Least privilege DB user", "Yazma/RCE yüzeyini daraltır", "DB yetki matrisi, audit log"],
@@ -122,6 +125,7 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 <h2>XSS: tarayıcıyı ikna etme sanatı</h2>
 <p>XSS’de saldırganın amacı, kurban tarayıcısında <strong>kendi JavaScript bağlamını</strong> çalıştırmaktır; böylece oturum çerezine erişim (HttpOnly yoksa), DOM üzerinden eylem tetikleme veya keylogger benzeri yan etkiler hedeflenir. Türler (yansıtılmış, depolanmış, DOM tabanlı) farklı <strong>giriş noktaları</strong> ve <strong>kalıcılık</strong> profili taşır. Savunma: bağlama uygun çıktı kodlama, CSP, HttpOnly/Secure çerez politikası ve şablon disiplini.</p>
 <p>Depolanmış XSS’de saldırgan bir kez yazar, çok kullanıcı okur; bu nedenle <strong>içerik moderasyonu</strong> ve <strong>HTML sanitizasyonu</strong> politikası da devreye girer. DOM XSS’de ise suç genelde istemci tarafı yönlendirme veya güvensiz innerHTML kullanımıdır; statik analiz ve güvenli DOM API’leri kanıt üretir.</p>
+<p>Content Security Policy (CSP) “her XSS’i sıfırlar” değildir; fakat enjeksiyon sonrası <strong>etki</strong>ni kısıtlar ve saldırganın dış domain’den script çekmesini zorlaştırır. Politika sıkılaştırılırken üretimde kırılan işlevler (inline script, eski analitik) için istisna yönetimi ve report-only aşaması planlanmazsa ekip CSP’yi gevşeterek riski geri getirir.</p>
 {risk_card('<p><strong>Sinyal örnekleri:</strong> WAF’te “script” kalıpları, kullanıcı profilinde beklenmeyen iframe, anormal uzunluklu input alanları, tarayıcı konsolunda tekrarlayan eval benzeri hatalar (üretimde detay sızdırmadan).</p>')}
 {terminal("csp-report-sample.json — politika ihlali (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">jq '.blocked-uri, .violated-directive' csp-report-sample.json</span>
 <span class="term-output">inline</span>
@@ -130,6 +134,7 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 <h2>CSRF: tarayıcının “otomatik kimlik taşıyıcı” doğası</h2>
 <p>Tarayıcı, oturum çerezini uygun isteklerde otomatik ekler. Saldırgan, kurbanı kendi sitesinde bir forma veya otomatik gönderilen isteğe yönlendirerek <strong>kullanıcı niyeti olmadan</strong> durum değiştiren işlem tetikletmek ister. Savunma: anti-CSRF belirteci, SameSite stratejisi, kritik işlemlerde ek doğrulama, durum değiştiren işlemlerde POST+özel başlık.</p>
 <p>Çift gönderim ve “geri/ileri” tuşu ile tekrarlanan POST gibi UX kenarları da CSRF test planına dahil edilir. Savunmacı raporda “hangi uç durum değiştiriyor?” tablosu, saldırganın otomasyon haritasıyla aynı formatta yazılır.</p>
+<p>Çift çerez (double submit) veya özel başlık (<code>X-Requested-With</code> vb.) kalıpları tek başına gümüş kurşun değildir: tarayıcı ve istemci çeşitliliği, CORS ve önbellek etkileşimi yüzünden sunucuda <strong>origin kontrolü + niyet belirteci</strong> birlikte değerlendirilir. Kritik işlemlerde (şifre değişikliği, MFA ekleme/çıkarma) ek adım olarak yeniden kimlik doğrulama en güçlü dengeleyicidir.</p>
 {info_box("SameSite=Lax vs Strict (kavram)", [
     "Strict: kullanıcı doğrudan sitedeyken çerez taşınır; bazı derin link senaryolarında UX maliyeti doğurabilir.",
     "Lax: güvenli HTTP metodlarında siteler arası top-level navigasyonda sınırlı taşınır; uygulama davranışına göre seçilir.",
@@ -137,6 +142,7 @@ M6 = f"""<h1>MODÜL 6 — Yaygın Web Zafiyetleri: Saldırı Mekaniği, Sinyal v
 <h2>SSRF: sunucuyu “proxy silahına” çevirme</h2>
 <p>Uygulama kullanıcıdan URL alıp sunucu tarafında fetch yapıyorsa, saldırgan iç ağ uçlarını (metadata servisleri, yönetim arayüzleri, iç API’ler) hedeflemek isteyebilir. Savunma: hedef allowlist, özel ağların bloklanması, çıkış trafiği izleme, “ham IP” yerine DNS politikası ve ayrı egress güvenliği.</p>
 <p>DNS rebinding ve açık yönlendirme zincirleri (eğitim düzeyinde) “allowlist var ama yine de yanlış hedefe gidildi” hikâyelerini üretir; bu yüzden çözüm yalnızca string kontrolü değil, <strong>çözümlenmiş IP’nin özel ağ aralığında olmaması</strong> gibi katmanlar içerir.</p>
+<p>SSRF olaylarında SOC’un gördüğü sinyal çoğu zaman “tek uygulama sunucusundan” çok <strong>egress proxy</strong> veya güvenlik duvarı loglarında belirir: iç RFC1918 hedefine giden TLS SNI, metadata IP’si veya beklenmeyen DNS çözümlemesi. Bu yüzün playbook’u yalnızca uygulama ekibine değil ağ ekibine de yazılır.</p>
 {process_flow([("fa-link", "Kullanıcı URL’si"), ("fa-server", "Sunucu fetch"), ("fa-network-wired", "Dış iç ağ"), ("fa-eye", "Egress log")])}
 {terminal("egrep-egress.log — iç hedef denemesi (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">grep 'egress-fetch' app.log | tail -n 4</span>
 <span class="term-output">url=http://169.254.169.254/latest/meta-data blocked=1</span>
@@ -200,6 +206,7 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
 ])}
 <h2>Saldırganın API keşfi (eğitim)</h2>
 <p>Saldırgan; OpenAPI/Swagger sızıntısı, JS paketleri, hata mesajları veya tahmin edilebilir kaynak adlarıyla uç listesi çıkarır. Ardından kimlik doğrulaması olan uçlarda <strong>nesne kimliği değiştirme</strong>, yetkisiz method (DELETE) veya fazla veri dönüşü dener.</p>
+<p>REST’te kaynak adları çoğu zaman işlevin kendisini ele verir (<code>/users/{{id}}/orders</code> gibi); bu da saldırganın “hangi ID aralığı canlı?” sorusunu hızlıca test etmesine yardım eder. Bu nedenle API tasarımında hem isimlendirme hem de <strong>hata gövdesinin sıkılığı</strong> (404 mü 403 mü, tutarlı mı) keşif hızını etkiler.</p>
 {table(["Risk", "Saldırgan görüşü (eğitim)", "Savunma kontrolü"], [
     ["BOLA/IDOR", "Başkasının kaydına erişim", "Her kaynak için sahiplik kontrolü"],
     ["Mass assignment", "Ek alanlarla yetki yükseltme", "Allowlist alan bağlama"],
@@ -208,11 +215,14 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
 ])}
 <h2>Oran sınırlama ve brute force</h2>
 <p>API anahtarı veya login uçları otomasyonla yıpratılabilir. Oran sınırlama; kullanıcı, IP, API key veya kombinasyon bazında katmanlanır. Yan etki: meşru trafik kesintisi; bu yüzden geri bırakma ve allowlist’ler planlanır.</p>
+<p>Dağıtık mimaride “tek sayaç” tutmak zordur; bu yüzden oran sınırlama genelde Redis gibi paylaşımlı durum katmanında veya API geçidinde merkezileştirilir. Yanlış yapılandırma: her uygulama pod’unda ayrı bellek içi sayaç—saldırgan yükü pod’lar arasında böldüğünde limit fiilen delinir.</p>
 <h2>GraphQL yüzeyi (kısa)</h2>
 <p>Derin sorgular ve introspection (açıksa) keşfi kolaylaştırır. Savunma: sorgu derinliği/karmaşıklığı limiti, persisted query, yetki middleware ve maliyetli alanlar için ayrı izin.</p>
+<p>GraphQL’de “alan adı” gizlense bile <strong>resolver</strong> katmanında yetki atlama yaşanabilir; çünkü asıl veri çekme orada yapılır. Bu yüzden AppSec incelemesi şema dosyasından çok resolver koduna odaklanır. Batch ve alias özellikleri (N+1 veya paralel sızıntı) rate limit ile birlikte test edilmelidir.</p>
 {risk_card('<p><strong>Hata mesajları</strong> stack trace veya SQL parçası döndürürse saldırgan şema çıkarır. Üretimde genelleştirilmiş hata ve korelasyon kimliği (trace id) kullanıcıya, detay ise güvenli log kanalına gider.</p>')}
 <h2>API geçidi ve SOC</h2>
 <p>Geçit; kimlik, oran sınırlama, şema doğrulama ve merkezi log üretir. SOC için değer: tek yerden <strong>istek kimliği</strong> ile uygulama içi trace’e köprü.</p>
+<p>Geçit politikası ile uygulama politikası çeliştiğinde olay müdahalesi takılır: örneğin geçit “JWT geçerli” derken uygulama “tenant uyuşmuyor” diyebilir. Bu yüzden alarm tasarımında <code>policy_outcome</code> benzeri ayrı alanlar ve tutarlı hata kodları şarttır.</p>
 {terminal("correlate.sh — gateway ↔ app (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">grep 'req=7c4b9e2a' gateway.jsonl app.jsonl</span>
 <span class="term-output">gateway: status=200 route=/api/v1/orders/4412</span>
 <span class="term-output">app: authz=deny reason=not_owner user=alice resource=4412</span>
@@ -233,6 +243,7 @@ M7 = f"""<h1>MODÜL 7 — API Güvenliği: Saldırganın Uç Haritası</h1>
 M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS</h1>
 {img_block("https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=90", "Analiz ve güvenlik", "Header ve CORS: tarayıcıya verilen güvenlik sözleşmesi; yanlışsa saldırgan tarayıcıyı ikna eder.")}
 <p>Üretimde açık hata ayıklama, gevşek CORS ve eksik CSP; saldırganın <strong>keşif maliyetini düşürür</strong> ve XSS sonrası <strong>etki yüzeyini büyütür</strong>. Bu modülde başlıkların anlamı, yanlış yapılandırma örüntüleri ve güvenli doğrulama yöntemi bir arada verilir.</p>
+<p>Güvenlik başlıkları “bir kez ayarla unut” değildir: CDN’de override, yeni mikro site, A/B test sayfası veya PDF indirme uçları farklı başlık seti taşıyabilir. Bu yüzden kontrol <strong>köken (origin) bazlı</strong> envanter + periyodik otomasyon ile yapılır.</p>
 {lo("Modül hedefleri", [
     "CSP, HSTS, frame kısıtları ve Referrer-Policy’yi tehdit modeline bağlayabilirim.",
     "CORS yanlış yapılandırmasını köken politikası üzerinden okuyabilirim.",
@@ -251,6 +262,7 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
 ])}
 <h2>HSTS, X-Frame-Options / frame-ancestors</h2>
 <p>HSTS downgrade saldırılarına karşı taşıma tarafında zorunluluk oluşturur; ancak uygulama hâlâ HTTP link üretiyorsa kırılganlık devam eder. Frame kısıtları, siteler arası UI hilelerine karşı ek sınır sağlar.</p>
+<p><code>includeSubDomains</code> ve <code>preload</code> bayrakları geri alınması zor kararlar içerir; yanlışlıkla eski alt alan adları HTTPS’e geçirilemezse kesinti yaşanır. Bu yüzden HSTS genişletmesi önce envanter, sonra pilot alt alan, en son üretim genişlemesi sırasıyla yapılır.</p>
 {risk_card('<p><strong>Saldırgan bakışı:</strong> zayıf CORS + XSS birleşince tarayıcı üzerinden veri okuma/yazma kanalı genişler. Bu nedenle CORS “sadece geliştirici kolaylığı” değil güvenlik kararıdır.</p>')}
 <h2>Gizli anahtar ve ortam değişkenleri</h2>
 <p>Sırlar kod deposunda, önbelleğe alınmış build artefaktında veya aşırı ayrıntılı hata sayfasında görünebilir. Çözüm: gizli yönetim, kısa ömürlü kimlik bilgisi, ayrıcalıklı erişim ve rotasyon.</p>
@@ -264,6 +276,7 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
 <li>Secret scan ve dependency bilgisi (bir sonraki modülle örtüşür).</li>
 <li>Bulguları yapılandırma çıktısı veya güvenli özetle kanıtla.</li>
 </ol>
+<p>Checklist’i otomasyona dökerken dikkat: bazı başlıklar CDN’de, bazıları origin’de üretilir; aynı isimli başlığın iki kez ve çelişkili değerle gelmesi “hangisi geçerli?” sorusunu doğurur. Raporlarda hangi katmanın “kazandığını” not edin.</p>
 {terminal("curl-headers.sh — üretim başlık kesiti (kurgusal)", """<span class="term-prompt">appsec@sebs:~$</span> <span class="term-cmd">curl -sI https://app.example.com/ | grep -iE '^(strict-transport|content-security|x-frame|permissions|referrer-policy):'</span>
 <span class="term-output">strict-transport-security: max-age=31536000; includeSubDomains</span>
 <span class="term-output">content-security-policy: default-src 'self'; frame-ancestors 'none'</span>
@@ -285,6 +298,7 @@ M8 = f"""<h1>MODÜL 8 — Güvenli Konfigürasyon, Security Header’lar ve CORS
 M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi</h1>
 {img_block("https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=90", "İzleme panosu", "Çoklu log kaynağı: saldırganın zinciri; savunmacının hikâyesi.")}
 <p>Web olayları tek logda çözülmez. Kimlik sağlayıcı, uygulama, API geçidi, WAF, web sunucusu ve veritabanı denetimi birlikte <strong>zaman çizelgesi</strong> üretir. Saldırganın otomasyonu düşük gürültülü olabilir; bu yüzden baseline ve eşikler önemlidir.</p>
+<p>Log hacmi büyüdükçe ekipler “daha az log” ister; fakat güvenlik olayında eksik satır bazen <strong>kanıt zincirinin kopması</strong> demektir. Çözüm yalnızca kesmek değil: örnekleme politikasında güvenlik sınıflarını dışarıda bırakmama, kritik uçlarda tam kayıt, diğerlerinde özet metrik.</p>
 {lo("Modül hedefleri", [
     "Log türlerini ve korelasyon ihtiyacını açıklayabilirim.",
     "False positive/negative ayrımını yönetebilirim.",
@@ -306,6 +320,7 @@ M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi
 ])}
 <h2>Korelasyon ve zaman</h2>
 <p>Zaman kayması analizi öldürür. İstek kimliği (X-Request-Id) uçtan uca taşınırsa olay birleştirilir.</p>
+<p>Korelasyon kimliği yoksa analist “hikâye anlatımına” düşer; bu da raporda kanıtsız iddia riskini artırır. Pratik minimum set: edge request id, uygulama trace id, kullanıcı/oturum id (maskeli), hedef kaynak id ve işlem adı (ör. <code>ORDER_REFUND</code>).</p>
 {terminal("join-logs.sh — tek satırda birleştirme (kurgusal)", """<span class="term-prompt">soc@sebs:~$</span> <span class="term-cmd">jq -c 'select(.request_id==\"7c4b9e2a\")' waf.jsonl app.jsonl db.jsonl</span>
 <span class="term-output">{"request_id":"7c4b9e2a","waf_action":"allow","rule":"-"}</span>
 <span class="term-output">{"request_id":"7c4b9e2a","path":"/api/v1/orders","status":200}</span>
@@ -335,6 +350,7 @@ M9 = f"""<h1>MODÜL 9 — Loglama, Monitoring ve Kanıt Temelli Web Olay Analizi
 M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
 {img_block("https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=900&q=90", "Geliştirme", "Güvenlik: sprint sonunda değil; tehdit modelinden dağıtıma kadar süreç içi.")}
 <p>Saldırganın avantajı sıklıkla <strong>hız</strong> ve <strong>tekdüze otomasyon</strong>dır. Savunmanın karşılığı, hızı düşürmeden riski düşüren <strong>otomatik kontroller</strong> ve <strong>erken tehdit modellemesidir</strong>. Bu modül AppSec, DevSecOps ve SOC ilişkisini netleştirir.</p>
+<p>Güvenlik kapıları (merge blokları) çok gürültülü olunca geliştirici “acil bypass” ister; bu da tedarik zinciri riskini geri getirir. Sürdürülebilir model: kural sahipliği, gürültü bütçesi ve false positive SLA’sı yazılı olur.</p>
 {lo("Modül hedefleri", [
     "Tehdit modellemeye giriş yapabilirim.",
     "Güvenli kabul kriterleri ve CI kontrollerini listeleyebilirim.",
@@ -359,8 +375,10 @@ M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
 ])}
 <h2>CI/CD güvenlik kontrolleri</h2>
 <p>SAST/DAST, bağımlılık taraması, IaC taraması, secret scan ve imzalı artefakt; her biri farklı hata sınıfını erken keser. “Yeşil build” güvenli demek değildir; kural kalitesi ve false positive yönetimi gerekir.</p>
+<p>Özellikle DAST/aktif tarama adımları yanlışlıkla staging yerine canlıyı vurabilir; bu yüzden pipeline değişkenleri ve hedef URL’ler ayrı onaylı olmalıdır. SOC ile anlaşma: build sırasında üretilen anormal trafik “saldırı” değil test olarak etiketlenir.</p>
 <h2>SOC ile köprü</h2>
 <p>SDLC çıktıları (hangi uç kritik, hangi entegrasyon riskli) SOC’un alarm önceliklendirmesini besler.</p>
+<p>Tehdit modelinden çıkan “kritik işlem listesi” doğrudan SIEM use case’lerine yazılır: örneğin “yönetici rol ataması + yeni cihaz + kısa sürede API aşırı veri” gibi bileşik korelasyonlar. Böylece güvenlik testi ile operasyon birbirini besler.</p>
 """ + quiz(
     [
         {"q": "Tehdit modellemenin doğrudan çıktısı nedir?", "choices": ["Logo", "Öncelikli kontroller ve test soruları", "DNS", "Font", "Tema"], "correct": "B", "reason": "Erken risk tartışması."},
@@ -377,6 +395,7 @@ M10 = f"""<h1>MODÜL 10 — Secure SDLC ve Güvenli Geliştirme Süreci</h1>
 SCEN = f"""
 <h2>Operasyonel senaryolar (genişletilmiş özet)</h2>
 <p>Her senaryo aynı omurga ile yazılır: belirti → hipotezler → kanıt → analiz → karar → rapor (Bulgu → Etki → Öneri → Kanıt). Aşağıdaki özetler <strong>kurgusal</strong> isimler içerir; gerçek olay incelemesinde veri sınıflandırması ve yetki çerçevesi her zaman önce gelir.</p>
+<p>Bu özetler “tek doğru hikâye” sunmaz; amaç, triage sırasında zihninizde açılacak <strong>şube ağacını</strong> önceden doldurmaktır. Her dal için bir cümle “çürütme denemesi” (hangi log bu hipotezi öldürür?) yazmayı alışkanlık edinin.</p>
 {key_concepts_grid([
     ("fa-stethoscope", "Belirti", "Ölçülebilir gözlem: status dağılımı, coğrafya, yanıt süresi, hata kodu patlaması."),
     ("fa-flask", "Hipotez", "Birden fazla tutulur; favori hipotez kanıt olmadan seçilmez."),
@@ -407,6 +426,7 @@ SCEN = f"""
 M11 = f"""<h1>MODÜL 11 — Raporlama ve Operasyonel Senaryolar</h1>
 {img_block("https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=90", "Profesyonel rapor", "Rapor: teknik doğruluk + iş dili + kanıt zinciri.")}
 <p>Bulgularınız ne kadar doğru olursa olsun, karar verici “ne olur, ne kadar sürer, ne maliyet” sorularına yanıt bulamazsa eylem gecikir. Bu modülde teknik ek ile yönetici özetini ayırma, belirsizlik dili, karşı kanıt ve risk skoru bağlamı uzatılır.</p>
+<p>İyi raporlar “suçlu bulma” değil <strong>ölçülebilir risk</strong> anlatır: etki senaryoları (en kötü / olası / en iyi), her senaryo için önkoşullar ve mevcut kontroller. Bu yapı denetim ve sigorta sorularında da tekrar kullanılır.</p>
 {lo("Modül hedefleri", [
     "Bulgu → Etki → Öneri → Kanıt formatında uzun form rapor yazabilirim.",
     "Karşı kanıt ve false positive ayrımını rapora gömebilirim.",
@@ -438,6 +458,7 @@ M11 = f"""<h1>MODÜL 11 — Raporlama ve Operasyonel Senaryolar</h1>
 M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
 {img_block("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&q=90", "Kitap ve notlar", "Ortak dil: ekip içi iletişim ve raporların denetlenebilirliği.")}
 <p>Bu sözlük modüllerde geçen kavramları tek yerde toplar. Tablo görünümü, sayfadaki otomatik biçimlendirme ile zenginleşebilir.</p>
+<p>Sözlük amacı ezber değil, ekipler arası <strong>çeviri hatasını</strong> azaltmaktır: aynı kelimenin geliştirmede “özellik”, hukuk’ta “veri işleme”, SOC’ta “olay” olarak anlaşılması gibi sapmalar bulgu önceliğini kaydırır.</p>
 <h2>Terimler Sözlüğü</h2>
 {table(["Terim (EN)", "Türkçe / açıklama"], [
     ["Authentication", "Kimlik doğrulama: kullanıcı iddiasını kanıtlama"],
@@ -506,6 +527,7 @@ M12 = f"""<h1>Genel Terimler Sözlüğü ve Eğitim Kapanışı</h1>
 ])}
 <h2>Eğitimin Kapanışı</h2>
 <p>Bu uzun eğitimde web uygulamasını hem <strong>savunmacı</strong> hem <strong>tehdit perspektifiyle (eğitim düzeyinde)</strong> okudunuz: HTTP ve oturum modeli, kimlik ve yetki, enjeksiyon ve mantık hataları, API ve header/CORS, log analizi, SDLC ve raporlama. Bir sonraki adım API Security ve Secure Code Review modüllerinde derinleşebilir; burada kurduğunuz dil ve kanıt disiplinini taşıyın.</p>
+<p>Kapanış ödevi olarak kendi ortamınız için tek sayfalık bir <strong>“kritik uç ve log köprüsü”</strong> taslağı yazın: hangi işlem hangi üç log satırında görünmeli? Eksik köprüyü bulduğunuzda bu eğitimin en değerli çıktısını üretmiş olursunuz.</p>
 """ + quiz(
     [
         {"q": "Evidence ile Impact farkı?", "choices": ["Aynı", "Gözlem vs sonuç", "DNS", "Font", "Tema"], "correct": "B", "reason": "Kanıt ve etki ayrıdır."},

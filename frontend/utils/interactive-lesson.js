@@ -19,7 +19,7 @@
   function initFlipCardsFromGlossary() {
     const blocks = document.querySelectorAll('.terimler-block');
     blocks.forEach(block => {
-      const table = block.querySelector('.info-table-compact');
+      const table = block.querySelector('.info-table-compact') || block.querySelector('table.comparison-table');
       if (!table) return;
       const rows = table.querySelectorAll('tbody tr');
       if (rows.length < 2) return;
@@ -51,6 +51,10 @@
       header.innerHTML = '<span><i class="fas fa-th-large"></i> <strong>Etkileşimli terim kartları</strong> — Tıkla, açıklamayı gör</span>';
       block.insertBefore(header, table);
       block.insertBefore(grid, table);
+      if (grid.childElementCount > 0) {
+        table.style.display = 'none';
+        table.setAttribute('aria-hidden', 'true');
+      }
     });
   }
 
