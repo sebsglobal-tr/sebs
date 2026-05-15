@@ -244,51 +244,18 @@
         });
     }
 
-    function lessonTitleInCard(card, sec, idx) {
-        var h2 = card.querySelector(':scope > h2');
-        if (h2) return h2;
-        var h1 = card.querySelector(':scope > h1');
-        if (h1) {
-            if (!h1.id) {
-                h1.id = sec.id + '-' + (slugifyAnchor(h1.textContent) || 'lesson-' + idx);
-            }
-            return h1;
-        }
-        var stub = document.createElement('h2');
-        stub.className = 'lesson-route-stub-title';
-        stub.textContent =
-            (sec.querySelector('.section-header h2') && sec.querySelector('.section-header h2').textContent) ||
-            'Ders ' + (idx + 1);
-        stub.id = sec.id + '-lesson-' + idx;
-        card.insertBefore(stub, card.firstChild);
-        return stub;
-    }
-
-    /** Bölümde H2 yoksa (yalnızca paragraf/liste) tek kart + ders anahtarı üret */
-    function ensureSectionRootCards() {
-        document.querySelectorAll('.content-section').forEach(function (sec) {
-            var inner = sec.querySelector('.section-inner');
-            if (!inner || inner.querySelector(':scope > .content-card')) return;
-            var card = document.createElement('div');
-            card.className = 'content-card';
-            while (inner.firstChild) {
-                card.appendChild(inner.firstChild);
-            }
-            inner.appendChild(card);
-        });
-    }
-
     function collectLessonKeysOrdered() {
         var keys = [];
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) return;
             inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
-                var titleEl = lessonTitleInCard(card, sec, idx);
-                if (!titleEl.id) {
-                    titleEl.id = sec.id + '-' + (slugifyAnchor(titleEl.textContent) || 'lesson-' + idx);
+                var h2 = card.querySelector(':scope > h2');
+                if (!h2) return;
+                if (!h2.id) {
+                    h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
                 }
-                keys.push(sec.id + '::' + titleEl.id);
+                keys.push(sec.id + '::' + h2.id);
             });
         });
         return keys;
@@ -357,7 +324,6 @@
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
-        ensureSectionRootCards();
 
         function getSectionIdsSet() {
             return new Set(Array.from(sections).map(function (s) {
@@ -660,11 +626,12 @@
             var inner = sec.querySelector('.section-inner');
             if (!inner) return;
             inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
-                var titleEl = lessonTitleInCard(card, sec, idx);
-                if (!titleEl.id) {
-                    titleEl.id = sec.id + '-' + (slugifyAnchor(titleEl.textContent) || 'lesson-' + idx);
+                var h2 = card.querySelector(':scope > h2');
+                if (!h2) return;
+                if (!h2.id) {
+                    h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
                 }
-                var lessonKey = sec.id + '::' + titleEl.id;
+                var lessonKey = sec.id + '::' + h2.id;
                 card.setAttribute('data-lesson-key', lessonKey);
                 var footer = document.createElement('div');
                 footer.className = 'lesson-complete-footer';
