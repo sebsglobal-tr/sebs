@@ -1,5 +1,9 @@
+@import url('module-content-theme.css');
+@import url('module-placeholder.css');
 
 body.landing-site-body {
+  background: #ffffff !important;
+  color: #0f172a !important;
   --primary-gradient: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
   --primary-gradient-hover: linear-gradient(135deg, #6b3030 0%, #991b1b 100%);
   --primary: #7f1d1d;
@@ -1016,10 +1020,10 @@ body.landing-site-body main .lesson-hero-image {
 
 /* -------------------------------------------------------------------------- */
 /* Premium modül kabuğu (sidebar + ana gövde + ders kartları)                  */
-/* Temel Kriptografi: body.module-page--temel-kriptografi — ayrı premium CSS */
+/* Modül içerik premium yüzey: temel-kriptografi-premium.css + module-content-theme.css */
 /* -------------------------------------------------------------------------- */
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main {
+body.landing-site-body:has(.module-layout) main {
   background:
     linear-gradient(168deg, #e4eaf2 0%, #eef2f8 22%, #f8fafc 58%, #ffffff 100%) !important;
   padding-top: 1rem !important;
@@ -1028,8 +1032,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) 
   padding-right: clamp(0.65rem, 2.2vw, 1.35rem) !important;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content {
   background: transparent !important;
   margin-bottom: 1.35rem !important;
@@ -1037,8 +1040,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   box-shadow: none !important;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:has(> .section-inner)
   > .section-inner {
   position: relative;
@@ -1052,8 +1054,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   overflow: hidden;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:has(> .section-inner)
   > .section-inner::before {
   content: '';
@@ -1067,8 +1068,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   border-radius: 20px 20px 0 0;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:not(:has(> .section-inner)) {
   position: relative;
   background: #ffffff !important;
@@ -1081,8 +1081,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   overflow: hidden;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:not(:has(> .section-inner))::before {
   content: '';
   position: absolute;
@@ -1096,8 +1095,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   pointer-events: none;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section
   > .section-header {
   position: relative;
@@ -1114,8 +1112,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   overflow: hidden;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section
   > .section-header::before {
   content: '';
@@ -1130,8 +1127,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
 }
 
 /* Tek panel modüller (SOC vb.): section docx-content değil, yalnızca biri .active */
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section:not(.docx-content).active {
   background: #ffffff !important;
   border-radius: 20px !important;
@@ -1182,11 +1178,11 @@ body.landing-site-body:has(.module-layout) .nav-link-sub.active {
 }
 
 /* === module-visual-enrichment (görsel ritim) === */
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main {
+body.landing-site-body:has(.module-layout) main {
   position: relative;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main::before {
+body.landing-site-body:has(.module-layout) main::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -1205,14 +1201,13 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) 
     22px 22px;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main > * {
+body.landing-site-body:has(.module-layout) main > * {
   position: relative;
   z-index: 1;
 }
 
 /* Bölümler arası renk varyasyonu (konu yazmadan çeşitlilik) */
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n + 1)
   .section-inner {
   --sebs-strip-a: #7f1d1d;
@@ -1220,8 +1215,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   --sebs-strip-c: #1e40af;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n + 2)
   .section-inner {
   --sebs-strip-a: #0f766e;
@@ -1229,8 +1223,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   --sebs-strip-c: #1e3a8a;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n)
   .section-inner {
   --sebs-strip-a: #9a3412;
@@ -1238,8 +1231,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   --sebs-strip-c: #7c3aed;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:has(> .section-inner)
   > .section-inner::before {
   background: linear-gradient(
@@ -1250,8 +1242,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   ) !important;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:not(:has(> .section-inner))::before {
   background: linear-gradient(
     90deg,
@@ -1261,24 +1252,21 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
   ) !important;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n + 1) {
   --sebs-strip-a: #7f1d1d;
   --sebs-strip-b: #d4a853;
   --sebs-strip-c: #1e40af;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n + 2) {
   --sebs-strip-a: #0f766e;
   --sebs-strip-b: #2dd4bf;
   --sebs-strip-c: #1e3a8a;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   > .content-section.docx-content:nth-child(3n) {
   --sebs-strip-a: #9a3412;
   --sebs-strip-b: #f59e0b;
@@ -1286,8 +1274,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
 }
 
 /* İç kart: hafif desen + hover */
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:has(> .section-inner)
   > .section-inner {
   background-image:
@@ -1300,8 +1287,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
     border-color 0.25s ease;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-  main
+body.landing-site-body:has(.module-layout)  main
   .content-section.docx-content:has(> .section-inner)
   > .section-inner:hover {
   box-shadow:
@@ -1312,8 +1298,7 @@ body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
-    main
+  body.landing-site-body:has(.module-layout)    main
     .content-section.docx-content:has(> .section-inner)
     > .section-inner:hover {
     transform: none;
@@ -1514,14 +1499,14 @@ body.landing-site-body main .linux-terminal {
 }
 
 /* SOC / tek panel: program şeridi + kartlar */
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main .program-intro {
+body.landing-site-body:has(.module-layout) main .program-intro {
   border-radius: 18px !important;
   box-shadow: 0 14px 44px rgba(15, 23, 42, 0.15) !important;
   position: relative;
   overflow: hidden;
 }
 
-body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main .program-intro::after {
+body.landing-site-body:has(.module-layout) main .program-intro::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1613,4 +1598,24 @@ body.landing-site-body main .key-concept-card.sebs-in-view {
   body.landing-site-body main .key-concept-card.sebs-in-view {
     animation: none;
   }
+}
+
+/* AWS / Azure / GCP: eski mor sidebar vurgusunu modül temasına çek */
+body.landing-site-body .content-sidebar .sidebar a:hover,
+body.landing-site-body .content-sidebar .sidebar a.active {
+  background: rgba(127, 29, 29, 0.1) !important;
+  color: #7f1d1d !important;
+  border-left-color: #7f1d1d !important;
+}
+
+body.landing-site-body .content-sidebar .sidebar {
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
+}
+
+body.landing-site-body .main-content {
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
 }

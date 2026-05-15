@@ -1,4 +1,4 @@
-import { DIMENSION_ORDER, DIMENSION_LABELS } from './constants.js';
+import { DIMENSION_ORDER, DIMENSION_LABELS, MODEL_INPUT_MODE } from './constants.js';
 
 export function escapeHtml(text) {
   if (text == null || text === '') return '';
@@ -100,9 +100,11 @@ export function buildPlainReportText(classicalScores, modelOutput, modelError, t
   lines.push('');
   lines.push(`Önerilen öğrenme modu: ${learningMode}`);
   lines.push('');
+  lines.push(`Model girdi modu: ${MODEL_INPUT_MODE}`);
+  lines.push('');
   if (modelOutput && modelOutput.length === 5) {
     lines.push('Model çıktısı (ek bağlam — olasılık dağılımı):');
-    lines.push(modelOutput.map((v, i) => `${DIMENSION_ORDER[i]}: ${(v * 100).toFixed(1)}%`).join(', '));
+    lines.push(modelOutput.map((v, i) => `${DIMENSION_ORDER[i]}: ${(v * 100).toFixed(2)}%`).join(', '));
   } else if (modelError) {
     lines.push('Model çıktısı alınamadı: ' + modelError);
   }
@@ -151,15 +153,21 @@ export function buildReportHtml(classicalScores, modelOutput, modelError, topTwo
 
   let modelBlock = '';
   if (modelOutput && modelOutput.length === 5) {
+    const modeLabel =
+      MODEL_INPUT_MODE === 'normalized_0_1'
+        ? 'Likert cevapları 0–1 aralığına normalize edilerek modele verildi ((cevap−1)/4).'
+        : 'Likert cevapları 1–5 aralığında doğrudan modele verildi.';
     const rows = DIMENSION_ORDER.map((d, i) => {
       const v = modelOutput[i];
-      const pct = Math.round(v * 1000) / 10;
-      return `<tr><td class="py-2 pr-4 text-slate-700">${escapeHtml(DIMENSION_LABELS[d])}</td><td class="py-2 font-mono text-xs text-slate-600">${pct}%</td></tr>`;
+      const pct = (v * 100).toFixed(2);
+      const prob = v.toFixed(4);
+      return `<tr><td class="py-2 pr-4 text-slate-700">${escapeHtml(DIMENSION_LABELS[d])}</td><td class="py-2 text-right font-mono text-xs text-slate-700">${pct}% <span class="text-slate-400">(${prob})</span></td></tr>`;
     }).join('');
     modelBlock = `
       <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-5">
         <h3 class="text-lg font-bold text-slate-900">Model çıktısı (yardımcı)</h3>
-        <p class="mt-1 text-sm text-slate-600">Yapay sinir ağı, cevaplarından türetilen <em>yoğunluk</em> dağılımı üretir. Klinik anlam taşımaz; klasik skorlarla birlikte değerlendirilir.</p>
+        <p class="mt-1 text-sm text-slate-600">Yapay sinir ağı softmax çıktısı; <em>olasılık benzeri yoğunluk</em> verir. Klinik anlam taşımaz. Ana yorum için üstteki <strong>klasik yüzdeleri</strong> kullanın.</p>
+        <p class="mt-2 text-xs text-slate-500">${escapeHtml(modeLabel)} Küçük farklar ondalıkta görünür; ağ eğitimine göre bazı cevap kalıpları benzer çıktı üretebilir.</p>
         <table class="mt-3 w-full text-sm">${rows}</table>
       </div>`;
   } else if (modelError) {

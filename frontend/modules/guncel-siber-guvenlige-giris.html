@@ -42,6 +42,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/premium-lesson.css">
+<link rel="stylesheet" href="/css/module-shell-base.css" />
     
     <script src="/js/api-base.js"></script>
     <script src="../utils/module-progress.js"></script>
@@ -1946,7 +1947,6 @@
             }
         }
     </style>
-    
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -1970,7 +1970,8 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css" />
+<link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -2129,6 +2130,14 @@
         </aside>
 
         <main style="margin-left: 320px; width: calc(100% - 320px); max-width: calc(100vw - 320px); overflow-x: hidden; overflow-y: visible; box-sizing: border-box; position: relative;">
+            <div id="lesson-route-hero" class="lesson-route-hero" aria-live="polite" hidden>
+                <p class="lesson-route-hero-module"></p>
+                <p class="lesson-route-hero-lesson"></p>
+                <div class="lesson-route-hero-img-wrap">
+                    <img class="lesson-route-hero-img" src="" alt="" loading="lazy" decoding="async" />
+                </div>
+            </div>
+
             <section class="content-section active docx-content" id="modül-1-siber-güvenliğin-temelleri-ve-vizyonu" data-section="modül-1-siber-güvenliğin-temelleri-ve-vizyonu">
 <div class="section-inner">
 <h1 id="modül-1-siber-güvenliğin-temelleri-ve-vizyonu"><strong>MODÜL 1 — Siber Güvenliğin Temelleri ve Vizyonu</strong></h1>
@@ -6101,223 +6110,15 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
         </main>
     </div>
 
+        <script src="/js/sebs-premium-module-lessons.js"></script>
     <script>
-        const MODULE_NAME = 'Siber Güvenliğe Giriş';
-        const STORAGE_KEY = 'module_progress_siber_guvenlik_giris';
-        window.MODULE_TOTAL_LESSONS = 0; // set after navLinks defined
-
-        // Section navigation - show/hide sections
-        const sections = document.querySelectorAll('.content-section');
-        const navLinks = document.querySelectorAll('.nav-link-section');
-        window.MODULE_TOTAL_LESSONS = navLinks.length;
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-
-        // Load progress (API when logged in, else localStorage)
-        async function loadProgress() {
-            const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const token =
-                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
-                localStorage.getItem('authToken');
-            if (!token || !window.getModuleIdFromName) return local.completedLessons || [];
-            try {
-                const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                if (!moduleId) return local.completedLessons || [];
-                const apiBase =
-                    typeof window.getSebsApiBase === 'function'
-                        ? window.getSebsApiBase()
-                        : (window.location?.origin || '') + '/api';
-                const r = await fetch(apiBase + '/progress/module/' + moduleId, {
-                    headers: { Authorization: 'Bearer ' + token }
-                });
-                if (r.ok) {
-                    const d = await r.json();
-                    const step = typeof d.data?.lastStep === 'string' ? JSON.parse(d.data.lastStep || '{}') : (d.data?.lastStep || {});
-                    const lessons = step.completedLessons || [];
-                    if (lessons.length) {
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                            completedLessons: lessons,
-                            totalLessons: step.totalLessons || navLinks.length,
-                            lastUpdated: new Date().toISOString()
-                        }));
-                    }
-                    return lessons;
-                }
-            } catch (e) { console.warn('Load progress from API failed:', e); }
-            return local.completedLessons || [];
-        }
-
-        function saveProgressLocal(completedLessons) {
-            const total = navLinks.length;
-            const pct = total ? Math.round((completedLessons.length / total) * 100) : 0;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                completedLessons,
-                totalLessons: total,
-                lastUpdated: new Date().toISOString()
-            }));
-            updateProgressUI(completedLessons.length);
-        }
-
-        function updateProgressUI(completedCount) {
-            const total = navLinks.length;
-            const pct = total ? Math.round((completedCount / total) * 100) : 0;
-            if (progressFill) progressFill.style.width = pct + '%';
-            if (progressText) progressText.textContent = pct + '% Tamamlandı';
-        }
-
-        // Mark completed sections in sidebar
-        function markCompletedInSidebar(completedLessons) {
-            navLinks.forEach(link => {
-                const id = link.getAttribute('data-section');
-                link.classList.toggle('completed', completedLessons.includes(id));
-            });
-        }
-
-        // Navigate to section by section element (sections array index)
-        function goToSectionByIndex(sectionIndex) {
-            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
-            const target = sections[sectionIndex];
-            sections.forEach(sec => sec.classList.remove('active'));
-            target.classList.add('active');
-            navLinks.forEach(l => l.classList.remove('active'));
-            const link = Array.from(navLinks).find(l => l.getAttribute('data-section') === target.id);
-            if (link) link.classList.add('active');
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (window.innerWidth <= 1024) {
-                const sidebar = document.querySelector('.module-sidebar');
-                if (sidebar) sidebar.classList.remove('open');
-            }
-        }
-
-        // Dersi Tamamla - save & go to next
-        async function completeLesson(sectionId) {
-            let completed = await loadProgress();
-            const currentIdx = Array.from(sections).findIndex(sec => sec.id === sectionId);
-            if (completed.includes(sectionId)) {
-                if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
-                    goToSectionByIndex(currentIdx + 1);
-                }
-                return;
-            }
-            completed.push(sectionId);
-            saveProgressLocal(completed);
-            markCompletedInSidebar(completed);
-
-            if (window.ModuleProgressTracker?.saveLessonProgress) {
-                try {
-                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
-                } catch (e) {
-                    console.warn('API save failed, progress saved locally:', e);
-                }
-            }
-
-            // Sonraki derse geç (sections dizisinden)
-            if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
-                goToSectionByIndex(currentIdx + 1);
-            }
-        }
-
-        document.querySelectorAll('.nav-link-section').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const sectionId = this.getAttribute('data-section');
-                sections.forEach(sec => sec.classList.toggle('active', sec.id === sectionId));
-                link.parentElement.parentElement.querySelectorAll('.nav-link-section').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
+        window.SebsPremiumModuleLessons.run({
+            moduleName: 'Siber Güvenliğe Giriş',
+            storageKey: 'module_progress_siber_guvenlik_giris',
+            basePath: '/modules/guncel-siber-guvenlige-giris.html'
         });
-
-        if (sections.length) {
-            sections.forEach((s,i) => s.classList.toggle('active', i === 0));
-            const firstLink = document.querySelector('.nav-link-section');
-            if (firstLink) firstLink.classList.add('active');
-        }
-
-        // Inject "Dersi Tamamla" button at end of each section
-        sections.forEach(sec => {
-            const inner = sec.querySelector('.section-inner');
-            if (!inner) return;
-            const footer = document.createElement('div');
-            footer.className = 'lesson-complete-footer';
-            const btn = document.createElement('button');
-            btn.className = 'lesson-complete-btn';
-            btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
-            btn.onclick = () => completeLesson(sec.id);
-            footer.appendChild(btn);
-            inner.appendChild(footer);
-        });
-
-        (async function initProgress() {
-            const completed = await loadProgress();
-            updateProgressUI(completed.length);
-            markCompletedInSidebar(completed);
-        })();
-
-        (async function initTrackerIfLoggedIn() {
-            const t =
-                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
-                localStorage.getItem('authToken');
-            if (!t) return;
-            if (window.ModuleProgressTracker?.initializeModule) {
-                window.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(() => {});
-            }
-            if (window.TimeTracker && window.getModuleIdFromName) {
-                try {
-                    const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                    if (moduleId) window.TimeTracker.start(MODULE_NAME, moduleId);
-                } catch (e) {
-                    console.warn('TimeTracker başlatılamadı:', e);
-                }
-            }
-        })();
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const moduleSidebar = document.querySelector('.module-sidebar');
-        
-        if (mobileMenuToggle && moduleSidebar) {
-            mobileMenuToggle.addEventListener('click', function() {
-                moduleSidebar.classList.toggle('open');
-                const icon = mobileMenuToggle.querySelector('i');
-                if (moduleSidebar.classList.contains('open')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 1024) {
-                    if (!moduleSidebar.contains(event.target) && 
-                        !mobileMenuToggle.contains(event.target) &&
-                        moduleSidebar.classList.contains('open')) {
-                        moduleSidebar.classList.remove('open');
-                        const icon = mobileMenuToggle.querySelector('i');
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                }
-            });
-
-            // Close sidebar when clicking on nav link on mobile
-            document.querySelectorAll('.nav-link-section').forEach(item => {
-                item.addEventListener('click', function() {
-                    if (window.innerWidth <= 1024) {
-                        moduleSidebar.classList.remove('open');
-                        const icon = mobileMenuToggle.querySelector('i');
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                });
-            });
-        }
-
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
     <script src="/js/supabase-env.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js?v=2.1"></script>

@@ -1,5 +1,5 @@
 import { BIG_FIVE_QUESTIONS } from './questions.js';
-import { LIKERT_OPTIONS } from './constants.js';
+import { LIKERT_OPTIONS, MODEL_INPUT_MODE } from './constants.js';
 import { computeClassicalScores, validateAnswersComplete } from './scoring.js';
 import { predictBigFiveSoftmax } from './model.js';
 import {
@@ -197,6 +197,7 @@ async function runAnalysis() {
   const payload = {
     test_type: 'big_five_learning',
     created_at: new Date().toISOString(),
+    model_input_mode: MODEL_INPUT_MODE,
     answers: answersById,
     answersOrdered,
     classical_scores: classical,

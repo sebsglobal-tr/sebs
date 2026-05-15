@@ -31,6 +31,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/premium-lesson.css">
+<link rel="stylesheet" href="/css/module-shell-base.css" />
     <link rel="stylesheet" href="/css/temel-kriptografi-premium.css">
     
     <script src="/js/api-base.js"></script>
@@ -2307,10 +2308,11 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css" />
+<link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
 </head>
-<body class="landing-site-body module-page--temel-kriptografi font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -2541,6 +2543,14 @@
         </aside>
 
         <main style="margin-left: 320px; width: calc(100% - 320px); max-width: calc(100vw - 320px); overflow-x: hidden; overflow-y: visible; box-sizing: border-box; position: relative;">
+            <div id="lesson-route-hero" class="lesson-route-hero" aria-live="polite" hidden>
+                <p class="lesson-route-hero-module"></p>
+                <p class="lesson-route-hero-lesson"></p>
+                <div class="lesson-route-hero-img-wrap">
+                    <img class="lesson-route-hero-img" src="" alt="" loading="lazy" decoding="async" />
+                </div>
+            </div>
+
             <section class="content-section active" id="kr-m1-l00">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> Kriptografinin Tanımı ve Kapsamı</h2>
@@ -4441,188 +4451,15 @@ C2 = P2 XOR K</pre><p>Bu iki şifreli metin birbiriyle XOR’landığında anaht
     
     
     
+        <script src="/js/sebs-premium-module-lessons.js"></script>
     <script>
-        const MODULE_NAME = 'Temel Kriptografi';
-        const STORAGE_KEY = 'module_progress_temel_kriptografi';
-        window.MODULE_TOTAL_LESSONS = 0;
-
-        const sections = document.querySelectorAll('.content-section');
-        const navLinks = document.querySelectorAll('.nav-link-section');
-        window.MODULE_TOTAL_LESSONS = sections.length;
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-
-        async function loadProgress() {
-            const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const token =
-                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
-                localStorage.getItem('authToken');
-            if (!token || !window.getModuleIdFromName) {
-                return Array.isArray(local.completedLessons) ? local.completedLessons : [];
-            }
-            try {
-                const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                if (!moduleId) return Array.isArray(local.completedLessons) ? local.completedLessons : [];
-                const apiBase =
-                    typeof window.getSebsApiBase === 'function'
-                        ? window.getSebsApiBase()
-                        : (window.location?.origin || '') + '/api';
-                const r = await fetch(apiBase + '/progress/module/' + moduleId, {
-                    headers: { Authorization: 'Bearer ' + token }
-                });
-                if (r.ok) {
-                    const d = await r.json();
-                    const step =
-                        typeof d.data?.lastStep === 'string'
-                            ? JSON.parse(d.data.lastStep || '{}')
-                            : d.data?.lastStep || {};
-                    const lessons = step.completedLessons || [];
-                    if (lessons.length) {
-                        localStorage.setItem(
-                            STORAGE_KEY,
-                            JSON.stringify({
-                                completedLessons: lessons,
-                                totalLessons: step.totalLessons || sections.length,
-                                lastUpdated: new Date().toISOString()
-                            })
-                        );
-                    }
-                    return lessons;
-                }
-            } catch (e) {
-                console.warn('Load progress from API failed:', e);
-            }
-            return Array.isArray(local.completedLessons) ? local.completedLessons : [];
-        }
-
-        function saveProgressLocal(completedLessons) {
-            const total = sections.length;
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify({
-                    completedLessons,
-                    totalLessons: total,
-                    lastUpdated: new Date().toISOString()
-                })
-            );
-            updateProgressUI(completedLessons.length);
-        }
-
-        function updateProgressUI(completedCount) {
-            const total = sections.length;
-            const pct = total ? Math.round((completedCount / total) * 100) : 0;
-            if (progressFill) progressFill.style.width = pct + '%';
-            if (progressText) progressText.textContent = pct + '% Tamamlandı';
-        }
-
-        function markCompletedInSidebar(completedLessons) {
-            navLinks.forEach((link) => {
-                const id = link.getAttribute('data-section');
-                link.classList.toggle('completed', completedLessons.includes(id));
-            });
-        }
-
-        function goToSectionByIndex(sectionIndex) {
-            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
-            const target = sections[sectionIndex];
-            const link = Array.from(navLinks).find((l) => l.getAttribute('data-section') === target.id);
-            if (link) {
-                navLinks.forEach((l) => l.classList.remove('active'));
-                link.classList.add('active');
-            }
-            sections.forEach((sec) => sec.classList.toggle('active', sec === target));
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (window.innerWidth <= 1024) {
-                document.querySelector('.module-sidebar')?.classList.remove('open');
-            }
-        }
-
-        async function completeLesson(sectionId) {
-            let completed = await loadProgress();
-            if (!Array.isArray(completed)) completed = [];
-            const currentIdx = Array.from(sections).findIndex((sec) => sec.id === sectionId);
-            if (completed.includes(sectionId)) {
-                if (currentIdx >= 0 && currentIdx + 1 < sections.length) goToSectionByIndex(currentIdx + 1);
-                return;
-            }
-            completed.push(sectionId);
-            saveProgressLocal(completed);
-            markCompletedInSidebar(completed);
-            if (window.ModuleProgressTracker?.saveLessonProgress) {
-                try {
-                    await window.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
-                } catch (e) {
-                    console.warn('API save failed:', e);
-                }
-            }
-            if (currentIdx >= 0 && currentIdx + 1 < sections.length) goToSectionByIndex(currentIdx + 1);
-        }
-
-        document.querySelectorAll('.nav-link-section').forEach((link) => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const sectionId = this.getAttribute('data-section');
-                const idx = Array.from(sections).findIndex((sec) => sec.id === sectionId);
-                if (idx >= 0) goToSectionByIndex(idx);
-                if (window.innerWidth <= 1024) {
-                    document.querySelector('.module-sidebar')?.classList.remove('open');
-                }
-            });
+        window.SebsPremiumModuleLessons.run({
+            moduleName: 'Temel Kriptografi',
+            storageKey: 'module_progress_temel_kriptografi',
+            basePath: '/modules/temel-kriptografi.html'
         });
-
-        document.querySelectorAll('.btn-complete-lesson').forEach((btn) => {
-            btn.addEventListener('click', function () {
-                const sectionId = this.getAttribute('data-section');
-                if (sectionId) completeLesson(sectionId);
-            });
-        });
-
-        if (sections.length) {
-            goToSectionByIndex(0);
-        }
-
-        (async function initProgress() {
-            const completed = await loadProgress();
-            updateProgressUI(completed.length);
-            markCompletedInSidebar(completed);
-        })();
-
-        (async function initTrackerIfLoggedIn() {
-            const t =
-                (window.getProgressAuthToken && (await window.getProgressAuthToken())) ||
-                localStorage.getItem('authToken');
-            if (!t) return;
-            if (window.ModuleProgressTracker?.initializeModule) {
-                window.ModuleProgressTracker.initializeModule(MODULE_NAME, sections.length).catch(() => {});
-            }
-            if (window.TimeTracker && window.getModuleIdFromName) {
-                try {
-                    const moduleId = await window.getModuleIdFromName(MODULE_NAME);
-                    if (moduleId) window.TimeTracker.start(MODULE_NAME, moduleId);
-                } catch (e) {
-                    console.warn('TimeTracker başlatılamadı:', e);
-                }
-            }
-        })();
-
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const moduleSidebar = document.querySelector('.module-sidebar');
-        if (mobileMenuToggle && moduleSidebar) {
-            mobileMenuToggle.addEventListener('click', function () {
-                moduleSidebar.classList.toggle('open');
-                const icon = mobileMenuToggle.querySelector('i');
-                if (moduleSidebar.classList.contains('open')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
-        }
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
     <script src="/js/supabase-env.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js?v=2.1"></script>

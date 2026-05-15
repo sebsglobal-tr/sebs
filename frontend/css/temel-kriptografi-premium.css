@@ -1,15 +1,15 @@
 /**
  * Temel Kriptografi — premium yüzey (görsellik, kartlar, tablolar, bölüm başlıkları).
- * Sadece body.module-page--temel-kriptografi ile kapsamlanır.
+ * Sadece body.landing-site-body:has(.module-layout) ile kapsamlanır.
  */
 
-body.module-page--temel-kriptografi main .module-layout,
-body.module-page--temel-kriptografi main {
+body.landing-site-body:has(.module-layout) main .module-layout,
+body.landing-site-body:has(.module-layout) main {
   position: relative;
 }
 
 /* Bölüm başlığı: ince desen + sol vurgu */
-body.module-page--temel-kriptografi main .content-section .section-header {
+body.landing-site-body:has(.module-layout) main .content-section .section-header {
   position: relative;
   padding: 1.35rem 1.5rem 1.35rem 1.25rem;
   border-radius: 16px;
@@ -23,7 +23,7 @@ body.module-page--temel-kriptografi main .content-section .section-header {
   overflow: hidden;
 }
 
-body.module-page--temel-kriptografi main .content-section .section-header::before {
+body.landing-site-body:has(.module-layout) main .content-section .section-header::before {
   content: '';
   position: absolute;
   left: 0;
@@ -34,18 +34,18 @@ body.module-page--temel-kriptografi main .content-section .section-header::befor
   background: linear-gradient(180deg, #7f1d1d 0%, #b45309 50%, #1e40af 100%);
 }
 
-body.module-page--temel-kriptografi main .content-section .section-header h2 {
+body.landing-site-body:has(.module-layout) main .content-section .section-header h2 {
   font-family: 'Space Grotesk', system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
 
-body.module-page--temel-kriptografi main .content-section .section-header .section-intro {
+body.landing-site-body:has(.module-layout) main .content-section .section-header .section-intro {
   color: #64748b;
   font-size: 0.95rem;
 }
 
 /* İçerik kartı: üst altın-mavi çizgi */
-body.module-page--temel-kriptografi main .content-card.docx-content {
+body.landing-site-body:has(.module-layout) main .content-card.docx-content {
   position: relative;
   border-radius: 18px;
   border: 1px solid rgba(226, 232, 240, 0.95);
@@ -53,7 +53,7 @@ body.module-page--temel-kriptografi main .content-card.docx-content {
   overflow: hidden;
 }
 
-body.module-page--temel-kriptografi main .content-card.docx-content::before {
+body.landing-site-body:has(.module-layout) main .content-card.docx-content::before {
   content: '';
   display: block;
   height: 3px;
@@ -62,7 +62,7 @@ body.module-page--temel-kriptografi main .content-card.docx-content::before {
   opacity: 0.92;
 }
 
-body.module-page--temel-kriptografi main .docx-content > h3 {
+body.landing-site-body:has(.module-layout) main .docx-content > h3 {
   margin-top: 2rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.9);
@@ -71,35 +71,35 @@ body.module-page--temel-kriptografi main .docx-content > h3 {
   color: #0f172a;
 }
 
-body.module-page--temel-kriptografi main .docx-content > h3:first-of-type {
+body.landing-site-body:has(.module-layout) main .docx-content > h3:first-of-type {
   margin-top: 0.5rem;
 }
 
 
-body.module-page--temel-kriptografi main .terimler-block table.comparison-table[aria-hidden='true'] {
+body.landing-site-body:has(.module-layout) main .terimler-block table.comparison-table[aria-hidden='true'] {
   display: none !important;
 }
 
 /* Terim bloğu: başlık altı açıklama */
-body.module-page--temel-kriptografi main .terimler-block > h3 {
+body.landing-site-body:has(.module-layout) main .terimler-block > h3 {
   margin-top: 0;
   margin-bottom: 0.35rem;
   font-family: 'Space Grotesk', system-ui, sans-serif;
   color: #0f172a;
 }
 
-body.module-page--temel-kriptografi main .terimler-block > h3 + div[style*='margin:1rem'] {
+body.landing-site-body:has(.module-layout) main .terimler-block > h3 + div[style*='margin:1rem'] {
   color: #475569 !important;
   font-size: 0.9rem !important;
 }
 
 /* Flip grid aralığı */
-body.module-page--temel-kriptografi main .terimler-block .flip-cards-grid {
+body.landing-site-body:has(.module-layout) main .terimler-block .flip-cards-grid {
   margin-top: 0.75rem;
 }
 
 /* Ders tamamla çubuğu */
-body.module-page--temel-kriptografi main .lesson-controls {
+body.landing-site-body:has(.module-layout) main .lesson-controls {
   margin-top: 2rem;
   padding: 1rem 1.25rem;
   border-radius: 14px;
@@ -112,25 +112,25 @@ body.module-page--temel-kriptografi main .lesson-controls {
   gap: 0.75rem;
 }
 
-body.module-page--temel-kriptografi main .btn-complete-lesson {
+body.landing-site-body:has(.module-layout) main .btn-complete-lesson {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(127, 29, 29, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-body.module-page--temel-kriptografi main .btn-complete-lesson:hover {
+body.landing-site-body:has(.module-layout) main .btn-complete-lesson:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(127, 29, 29, 0.22);
 }
 
 /* Kazanımlar akordeon içinde */
-body.module-page--temel-kriptografi main .accordion-content-inner .learning-objectives {
+body.landing-site-body:has(.module-layout) main .accordion-content-inner .learning-objectives {
   margin: 0;
   border-radius: 12px;
 }
 
 /* --- Modül şema şeridi (SVG) --- */
-body.module-page--temel-kriptografi main .kr-crypto-visual {
+body.landing-site-body:has(.module-layout) main .kr-crypto-visual {
   margin: 0 0 1.25rem;
   padding: 0;
   border: 1px solid #e2e8f0;
@@ -140,7 +140,7 @@ body.module-page--temel-kriptografi main .kr-crypto-visual {
   overflow: hidden;
 }
 
-body.module-page--temel-kriptografi main .kr-crypto-visual__svg {
+body.landing-site-body:has(.module-layout) main .kr-crypto-visual__svg {
   display: block;
   width: 100%;
   height: auto;
@@ -148,28 +148,28 @@ body.module-page--temel-kriptografi main .kr-crypto-visual__svg {
 }
 
 /* Kriptografi modülü — kırmızı-altın accent (module-inline-cards üzerine) */
-body.module-page--temel-kriptografi main .kr-inline-breakout__head i,
-body.module-page--temel-kriptografi main .kr-table-cards-ribbon i,
-body.module-page--temel-kriptografi main .kr-authz-embed__title i {
+body.landing-site-body:has(.module-layout) main .kr-inline-breakout__head i,
+body.landing-site-body:has(.module-layout) main .kr-table-cards-ribbon i,
+body.landing-site-body:has(.module-layout) main .kr-authz-embed__title i {
   color: #7f1d1d;
 }
 
-body.module-page--temel-kriptografi main .kr-data-card__head {
+body.landing-site-body:has(.module-layout) main .kr-data-card__head {
   color: #7f1d1d;
 }
 
-body.module-page--temel-kriptografi main .kr-data-card:hover {
+body.landing-site-body:has(.module-layout) main .kr-data-card:hover {
   border-color: rgba(127, 29, 29, 0.25);
 }
 
-body.module-page--temel-kriptografi main .kr-exp-goal[open] {
+body.landing-site-body:has(.module-layout) main .kr-exp-goal[open] {
   border-color: rgba(127, 29, 29, 0.35);
 }
 
-body.module-page--temel-kriptografi main .kr-exp-goal > summary:hover {
+body.landing-site-body:has(.module-layout) main .kr-exp-goal > summary:hover {
   background: rgba(127, 29, 29, 0.04);
 }
 
-body.module-page--temel-kriptografi main .kr-table-source > summary:hover {
+body.landing-site-body:has(.module-layout) main .kr-table-source > summary:hover {
   background: rgba(127, 29, 29, 0.04);
 }

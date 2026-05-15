@@ -1,7 +1,9 @@
 /** @typedef {'raw_1_5' | 'normalized_0_1'} ModelInputMode */
 
-/** Model eğitiminde kullanılan girdi biçimi (buradan değiştirin). */
-export const MODEL_INPUT_MODE = /** @type {ModelInputMode} */ ('raw_1_5');
+/** Model eğitiminde kullanılan girdi biçimi (buradan değiştirin).
+ * `raw_1_5`: doğrudan 1–5. Bazı ağlarda doyum nedeniyle çıktı az değişir.
+ * `normalized_0_1`: (cevap−1)/4 ile [0,1] — eğitim bu ölçekteyse daha duyarlıdır. */
+export const MODEL_INPUT_MODE = /** @type {ModelInputMode} */ ('normalized_0_1');
 
 /** Klasik puan ve rapor sırası (model softmax ile aynı). */
 export const DIMENSION_ORDER = /** @type {const} */ ([
