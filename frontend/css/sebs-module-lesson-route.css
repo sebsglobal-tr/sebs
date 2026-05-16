@@ -22,9 +22,23 @@ body.lesson-route-mode .section-inner > .content-card.lesson-route-current-card 
     animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Modül girişi (tema, kapak, kazanımlar): yalnızca bölümün ilk dersinde */
-body.lesson-route-mode .lesson-route-current-section .section-inner > *:not(.content-card) {
+/* Modül girişi (tema, kapak, kazanımlar): yalnızca kartlı bölümlerde gizle — eval / sözlük düz içerik kalır */
+body.lesson-route-mode .lesson-route-current-section:has(.section-inner > .content-card) .section-inner > *:not(.content-card) {
     display: none !important;
+}
+
+/* Değerlendirme ve düz metin bölümleri (content-card yok) */
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > h1,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > h2,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > h3,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > h4,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > p,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > ul,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > ol,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > table,
+body.lesson-route-mode .lesson-route-current-section.eval-quiz-section .section-inner > div:not(.content-card) {
+    display: block !important;
+    max-width: 100%;
 }
 
 body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > h1,
