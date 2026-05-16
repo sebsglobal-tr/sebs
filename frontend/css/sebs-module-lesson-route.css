@@ -72,3 +72,27 @@ body.lesson-route-mode .lesson-route-current-section .section-inner > .lesson-im
         transform: translateY(0) scale(1);
     }
 }
+
+/* Klasik bölüm modu: tam içerik, ?ders= / tek kart yok */
+body.sebs-module-progress-section #lesson-route-hero {
+    display: none !important;
+}
+
+body.sebs-module-progress-section .content-section.active .section-inner > h1,
+body.sebs-module-progress-section .content-section.active .section-inner > h2,
+body.sebs-module-progress-section .content-section.active .section-inner > h3,
+body.sebs-module-progress-section .content-section.active .section-inner > h4,
+body.sebs-module-progress-section .content-section.active .section-inner > p,
+body.sebs-module-progress-section .content-section.active .section-inner > ul,
+body.sebs-module-progress-section .content-section.active .section-inner > ol,
+body.sebs-module-progress-section .content-section.active .section-inner > div,
+body.sebs-module-progress-section .content-section.active .section-inner > table,
+body.sebs-module-progress-section .content-section.active .section-inner > pre {
+    display: block;
+    max-width: 100%;
+}
+
+body.sebs-module-progress-section .content-section.active .section-inner > ul,
+body.sebs-module-progress-section .content-section.active .section-inner > ol {
+    display: block;
+}

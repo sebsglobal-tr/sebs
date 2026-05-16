@@ -302,9 +302,293 @@
         });
     }
 
+    /** Eski modül akışı: tüm bölüm içeriği görünür, ?ders= / tek kart yok */
+    function runClassicSections(cfg) {
+        if (!cfg || !cfg.moduleName || !cfg.storageKey) {
+            console.warn('SebsPremiumModuleLessons.run: moduleName ve storageKey gerekli');
+            return;
+        }
+        var MODULE_NAME = cfg.moduleName;
+        var STORAGE_KEY = cfg.storageKey;
+        var subNavScroll = cfg.subNavScroll !== false;
+
+        document.body.classList.add('sebs-module-progress-section');
+        try {
+            var cleanUrl = new URL(global.location.href);
+            if (cleanUrl.searchParams.has('ders')) {
+                cleanUrl.searchParams.delete('ders');
+                global.history.replaceState({}, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+            }
+        } catch (eUrl) { /* ignore */ }
+
+        var sections = document.querySelectorAll('.content-section');
+        var navLinks = document.querySelectorAll('.nav-link-section');
+        var navSectionList = document.querySelector('.nav-section-list');
+        var progressFill = document.getElementById('progressFill');
+        var progressText = document.getElementById('progressText');
+
+        enhanceNotes();
+        enhanceMiniHeadings();
+        enhanceRunbookHeadings();
+        tableizeGlossaries();
+
+        if (subNavScroll) {
+            buildSubheadingNav(navSectionList);
+        }
+
+        global.MODULE_TOTAL_LESSONS = navLinks.length;
+
+        async function loadProgress() {
+            var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            var token =
+                (global.getProgressAuthToken && (await global.getProgressAuthToken())) ||
+                (typeof localStorage !== 'undefined' && localStorage.getItem('authToken'));
+            if (!token || !global.getModuleIdFromName) return local.completedLessons || [];
+            try {
+                var moduleId = await global.getModuleIdFromName(MODULE_NAME);
+                if (!moduleId) return local.completedLessons || [];
+                var apiBase =
+                    typeof global.getSebsApiBase === 'function'
+                        ? global.getSebsApiBase()
+                        : (global.location && global.location.origin ? global.location.origin : '') + '/api';
+                var r = await fetch(apiBase + '/progress/module/' + moduleId, {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (r.ok) {
+                    var d = await r.json();
+                    var step =
+                        d.data && typeof d.data.lastStep === 'string'
+                            ? JSON.parse(d.data.lastStep || '{}')
+                            : (d.data && d.data.lastStep) || {};
+                    var lessons = step.completedLessons || [];
+                    if (lessons.length) {
+                        localStorage.setItem(
+                            STORAGE_KEY,
+                            JSON.stringify({
+                                completedLessons: lessons,
+                                totalLessons: step.totalLessons || navLinks.length,
+                                lastUpdated: new Date().toISOString()
+                            })
+                        );
+                    }
+                    return lessons;
+                }
+            } catch (e) {
+                console.warn('Load progress from API failed:', e);
+            }
+            return local.completedLessons || [];
+        }
+
+        function saveProgressLocal(completedLessons) {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify({
+                    completedLessons: completedLessons,
+                    totalLessons: navLinks.length,
+                    lastUpdated: new Date().toISOString()
+                })
+            );
+            updateProgressUI(completedLessons.length);
+        }
+
+        function updateProgressUI(completedCount) {
+            var total = navLinks.length;
+            var pct = total ? Math.round((completedCount / total) * 100) : 0;
+            if (progressFill) progressFill.style.width = pct + '%';
+            if (progressText) progressText.textContent = pct + '% Tamamlandı';
+        }
+
+        function markCompletedInSidebar(completedLessons) {
+            var done = new Set(completedLessons);
+            navLinks.forEach(function (link) {
+                var id = link.getAttribute('data-section');
+                var sectionDone =
+                    done.has(id) ||
+                    Array.from(done).some(function (k) {
+                        return String(k).indexOf(id + '::') === 0;
+                    });
+                link.classList.toggle('completed', sectionDone);
+            });
+        }
+
+        function goToSectionByIndex(sectionIndex) {
+            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
+            var target = sections[sectionIndex];
+            sections.forEach(function (sec) {
+                sec.classList.toggle('active', sec === target);
+            });
+            navLinks.forEach(function (l) {
+                l.classList.toggle('active', l.getAttribute('data-section') === target.id);
+            });
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (global.innerWidth <= 1024) {
+                var sidebar = document.querySelector('.module-sidebar');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+        }
+
+        async function completeLesson(sectionId) {
+            var completed = await loadProgress();
+            var currentIdx = Array.from(sections).findIndex(function (sec) {
+                return sec.id === sectionId;
+            });
+            if (completed.includes(sectionId)) {
+                if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
+                    goToSectionByIndex(currentIdx + 1);
+                }
+                return;
+            }
+            completed.push(sectionId);
+            saveProgressLocal(completed);
+            markCompletedInSidebar(completed);
+            try {
+                if (global.syncModuleProgressBulk) {
+                    await global.syncModuleProgressBulk(MODULE_NAME, completed, navLinks.length);
+                } else if (global.ModuleProgressTracker && global.ModuleProgressTracker.saveLessonProgress) {
+                    await global.ModuleProgressTracker.saveLessonProgress(MODULE_NAME, sectionId);
+                }
+            } catch (e) {
+                console.warn('Sunucuya ilerleme yazılamadı:', e);
+            }
+            if (currentIdx >= 0 && currentIdx + 1 < sections.length) {
+                goToSectionByIndex(currentIdx + 1);
+            }
+        }
+
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                var sectionId = link.getAttribute('data-section');
+                sections.forEach(function (sec) {
+                    sec.classList.toggle('active', sec.id === sectionId);
+                });
+                navLinks.forEach(function (l) {
+                    l.classList.remove('active');
+                });
+                link.classList.add('active');
+                if (subNavScroll) {
+                    document.querySelectorAll('.nav-link-sub').forEach(function (l) {
+                        l.classList.remove('active');
+                    });
+                    var parentLi = link.closest('.nav-section-item');
+                    if (parentLi) {
+                        var shouldOpen = !parentLi.classList.contains('is-open');
+                        document.querySelectorAll('.nav-section-item').forEach(function (li) {
+                            li.classList.remove('is-open');
+                        });
+                        if (shouldOpen) parentLi.classList.add('is-open');
+                    }
+                }
+                var section = document.getElementById(sectionId);
+                if (section) {
+                    setTimeout(function () {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 40);
+                }
+            });
+        });
+
+        if (subNavScroll) {
+            document.querySelectorAll('.nav-link-sub').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var sectionId = link.getAttribute('data-section');
+                    var anchorId = link.getAttribute('data-anchor');
+                    sections.forEach(function (sec) {
+                        sec.classList.toggle('active', sec.id === sectionId);
+                    });
+                    navLinks.forEach(function (l) {
+                        l.classList.toggle('active', l.getAttribute('data-section') === sectionId);
+                    });
+                    document.querySelectorAll('.nav-link-sub').forEach(function (l) {
+                        l.classList.remove('active');
+                    });
+                    link.classList.add('active');
+                    var parentLi = link.closest('.nav-section-item');
+                    if (parentLi) {
+                        document.querySelectorAll('.nav-section-item').forEach(function (li) {
+                            li.classList.remove('is-open');
+                        });
+                        parentLi.classList.add('is-open');
+                    }
+                    var anchor = document.getElementById(anchorId);
+                    if (anchor) {
+                        setTimeout(function () {
+                            anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 40);
+                    }
+                });
+            });
+        }
+
+        if (sections.length) {
+            sections.forEach(function (s, i) {
+                s.classList.toggle('active', i === 0);
+            });
+            var firstLink = document.querySelector('.nav-link-section');
+            if (firstLink) {
+                firstLink.classList.add('active');
+                if (subNavScroll) {
+                    var firstSectionItem = firstLink.closest('.nav-section-item');
+                    if (firstSectionItem) firstSectionItem.classList.add('is-open');
+                }
+            }
+        }
+
+        sections.forEach(function (sec) {
+            var inner = sec.querySelector('.section-inner');
+            if (!inner) return;
+            if (inner.querySelector('.lesson-complete-footer')) return;
+            var footer = document.createElement('div');
+            footer.className = 'lesson-complete-footer';
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'lesson-complete-btn';
+            btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
+            btn.onclick = function () {
+                completeLesson(sec.id);
+            };
+            footer.appendChild(btn);
+            inner.appendChild(footer);
+        });
+
+        (async function initProgress() {
+            var completed = await loadProgress();
+            updateProgressUI(completed.length);
+            markCompletedInSidebar(completed);
+        })();
+
+        (async function initTrackerIfLoggedIn() {
+            var t =
+                (global.getProgressAuthToken && (await global.getProgressAuthToken())) ||
+                (typeof localStorage !== 'undefined' && localStorage.getItem('authToken'));
+            if (!t) return;
+            if (typeof global.flushPendingProgressQueue === 'function') {
+                global.flushPendingProgressQueue().catch(function () {});
+            }
+            if (global.ModuleProgressTracker && global.ModuleProgressTracker.initializeModule) {
+                global.ModuleProgressTracker.initializeModule(MODULE_NAME, navLinks.length).catch(function () {});
+            }
+            if (global.TimeTracker && global.getModuleIdFromName) {
+                try {
+                    var mid = await global.getModuleIdFromName(MODULE_NAME);
+                    if (mid) global.TimeTracker.start(MODULE_NAME, mid);
+                } catch (e) {
+                    console.warn('TimeTracker başlatılamadı:', e);
+                }
+            }
+        })();
+
+        wireMobileMenu();
+    }
+
     function run(cfg) {
         if (!cfg || !cfg.moduleName || !cfg.storageKey) {
             console.warn('SebsPremiumModuleLessons.run: moduleName ve storageKey gerekli');
+            return;
+        }
+        if (cfg.progressMode === 'section') {
+            runClassicSections(cfg);
             return;
         }
         var MODULE_NAME = cfg.moduleName;
