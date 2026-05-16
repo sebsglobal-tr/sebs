@@ -173,3 +173,201 @@ body.module-page--temel-kriptografi main .kr-exp-goal > summary:hover {
 body.module-page--temel-kriptografi main .kr-table-source > summary:hover {
   background: rgba(127, 29, 29, 0.04);
 }
+
+/* --- Sidebar: kriptografi teması --- */
+body.module-page--temel-kriptografi .module-sidebar {
+  background:
+    linear-gradient(180deg, #070b14 0%, #0f172a 38%, #111827 100%) !important;
+  border-right: 1px solid rgba(148, 163, 184, 0.14) !important;
+  box-shadow: 14px 0 48px rgba(2, 6, 23, 0.38) !important;
+}
+
+body.module-page--temel-kriptografi .module-sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.12) 0%, transparent 42%),
+    radial-gradient(circle at 82% 28%, rgba(212, 168, 83, 0.08) 0%, transparent 40%),
+    linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+  background-size: auto, auto, 20px 20px, 20px 20px;
+}
+
+body.module-page--temel-kriptografi .sidebar-header.kr-sidebar-header {
+  position: relative;
+  z-index: 1;
+  padding: 1.35rem 1.25rem 1.5rem !important;
+  text-align: left !important;
+  background:
+    linear-gradient(165deg, rgba(15, 23, 42, 0.55) 0%, rgba(30, 27, 75, 0.35) 55%, rgba(12, 74, 110, 0.2) 100%) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14) !important;
+  overflow: visible !important;
+}
+
+body.module-page--temel-kriptografi .sidebar-header.kr-sidebar-header::before {
+  display: none !important;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-hero {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow:
+    0 12px 32px rgba(2, 6, 23, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-hero__img {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-hero__badge {
+  position: absolute;
+  right: 0.55rem;
+  bottom: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fef3c7;
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(212, 168, 83, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-hero__badge i {
+  color: #fbbf24;
+  font-size: 0.62rem;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7dd3fc !important;
+  opacity: 1 !important;
+}
+
+body.module-page--temel-kriptografi .sidebar-header.kr-sidebar-header h1 {
+  margin: 0 0 0.5rem;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-transform: none !important;
+  color: #f8fafc !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-tagline {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #cbd5e1 !important;
+  opacity: 1 !important;
+  text-shadow: none;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-progress {
+  margin-top: 1.15rem !important;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-progress .progress-bar {
+  height: 7px !important;
+  background: rgba(15, 23, 42, 0.55) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 999px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-progress .progress-fill {
+  background: linear-gradient(90deg, #38bdf8 0%, #d4a853 48%, #fbbf24 100%) !important;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.45) !important;
+  animation: none !important;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-progress .progress-text {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.45rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  letter-spacing: 0.02em;
+}
+
+body.module-page--temel-kriptografi .kr-sidebar-progress .progress-text::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+  flex-shrink: 0;
+}
+
+body.module-page--temel-kriptografi .sidebar-nav {
+  position: relative;
+  z-index: 1;
+  padding-top: 0.85rem !important;
+}
+
+body.module-page--temel-kriptografi .module-sidebar .nav-module-header,
+body.module-page--temel-kriptografi .module-sidebar .nav-section h4.nav-module-header {
+  color: #fcd34d !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+body.module-page--temel-kriptografi .module-sidebar .nav-link-section {
+  border-radius: 10px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+body.module-page--temel-kriptografi .module-sidebar .nav-link-section:hover {
+  background: rgba(56, 189, 248, 0.1) !important;
+}
+
+body.module-page--temel-kriptografi .module-sidebar .nav-link-section.active {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.18) 0%, rgba(212, 168, 83, 0.12) 100%) !important;
+  border-left: 3px solid #38bdf8;
+}
+
+body.module-page--temel-kriptografi .module-sidebar .nav-link-section.active > i {
+  color: #7dd3fc !important;
+}
+
+body.module-page--temel-kriptografi .module-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.35) !important;
+}
+
+body.module-page--temel-kriptografi .module-sidebar {
+  scrollbar-color: rgba(56, 189, 248, 0.35) transparent !important;
+}
+
+body.module-page--temel-kriptografi .nav-section:first-child .nav-module-header:only-child {
+  display: none;
+}

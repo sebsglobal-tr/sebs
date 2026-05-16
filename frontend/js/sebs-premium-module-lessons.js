@@ -555,6 +555,7 @@
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
+        global.MODULE_NAME = MODULE_NAME;
         document.body.classList.add('sebs-module-progress-section');
         try {
             var cleanUrl = new URL(global.location.href);
@@ -833,6 +834,7 @@
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
+        global.MODULE_NAME = MODULE_NAME;
         var basePath = cfg.basePath || (global.location && global.location.pathname) || '/';
 
         var sections = document.querySelectorAll('.content-section');

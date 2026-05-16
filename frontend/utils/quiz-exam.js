@@ -1,46 +1,459 @@
-(function() {
+(function () {
   'use strict';
 
   const CORRECT_REGEX = /Doğru\s*(?:Cevap)?\s*:\s*([A-D])|Doğru:\s*([A-D])/i;
+  const RATIONALE_REGEX = /Gerekçe\s*:\s*(.+)/i;
 
   function parseCorrect(text) {
-    const m = text.match(CORRECT_REGEX);
+    const m = String(text || '').match(CORRECT_REGEX);
     return m ? (m[1] || m[2]).toUpperCase() : null;
+  }
+
+  function parseRationale(text) {
+    const m = String(text || '').match(RATIONALE_REGEX);
+    return m ? m[1].trim() : '';
+  }
+
+  function extractRationaleFromUl(ul) {
+    if (!ul) return '';
+    var out = '';
+    ul.querySelectorAll('li').forEach(function (li) {
+      var t = (li.textContent || '').trim();
+      if (/Gerekçe/i.test(t)) {
+        out = parseRationale(t) || t.replace(/^Gerekçe\s*:\s*/i, '').trim();
+      }
+    });
+    return out;
+  }
+
+  function createEvalQuestionBlock(qText, optLines, correct, extraClass, rationale) {
+    const wrap = document.createElement('div');
+    wrap.className = 'eval-question-block' + (extraClass ? ' ' + extraClass : '');
+
+    const qDiv = document.createElement('div');
+    qDiv.className = 'eval-question-text';
+    qDiv.textContent = qText;
+    wrap.appendChild(qDiv);
+
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'eval-options-wrap';
+    optsWrap.dataset.correct = correct;
+    if (rationale) optsWrap.dataset.rationale = rationale;
+
+    const optionTexts = {};
+    optLines.forEach(function (opt) {
+      const letter = (opt.letter || opt[1] || '').toUpperCase();
+      const txt = opt.text != null ? opt.text : opt[2];
+      if (letter) optionTexts[letter] = txt;
+    });
+    try {
+      optsWrap.dataset.optionTexts = JSON.stringify(optionTexts);
+    } catch (e) {
+      /* ignore */
+    }
+
+    const name = 'eval-' + Math.random().toString(36).slice(2, 10);
+    optLines.forEach(function (opt) {
+      const letter = (opt.letter || opt[1] || '').toUpperCase();
+      const txt = opt.text != null ? opt.text : opt[2];
+      const label = document.createElement('label');
+      label.className = 'eval-option';
+      label.dataset.letter = letter;
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = name;
+      radio.value = letter;
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(' ' + letter + ') ' + txt));
+      optsWrap.appendChild(label);
+    });
+    wrap.appendChild(optsWrap);
+
+    const feedback = document.createElement('div');
+    feedback.className = 'eval-question-feedback';
+    feedback.setAttribute('hidden', '');
+    wrap.appendChild(feedback);
+
+    return wrap;
+  }
+
+  function processSplitFormatQuestions(inner) {
+    const nodes = Array.from(inner.children);
+    let created = 0;
+    let i = 0;
+
+    while (i < nodes.length) {
+      const el = nodes[i];
+      if (
+        !el ||
+        el.classList.contains('eval-question-block') ||
+        el.classList.contains('eval-submit-btn') ||
+        el.classList.contains('eval-result')
+      ) {
+        i++;
+        continue;
+      }
+
+      if (el.tagName !== 'OL') {
+        i++;
+        continue;
+      }
+
+      const li = el.querySelector(':scope > li');
+      if (!li) {
+        i++;
+        continue;
+      }
+
+      const qText = (li.textContent || '').trim().replace(/^\d+\)\s*/, '');
+      const optLines = [];
+      let j = i + 1;
+
+      while (j < nodes.length && optLines.length < 4) {
+        const p = nodes[j];
+        if (!p || p.tagName !== 'P' || p.style.display === 'none') break;
+        const m = (p.textContent || '').trim().match(/^([A-D])\)\s*(.+)$/);
+        if (!m) break;
+        optLines.push({ letter: m[1].toUpperCase(), text: m[2] });
+        j++;
+      }
+
+      if (optLines.length !== 4) {
+        i++;
+        continue;
+      }
+
+      let correct = null;
+      let rationale = '';
+      if (j < nodes.length && nodes[j].tagName === 'UL') {
+        correct = parseCorrect(nodes[j].textContent || '');
+        rationale = extractRationaleFromUl(nodes[j]);
+        j++;
+      }
+      if (!correct) {
+        i++;
+        continue;
+      }
+
+      const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-split-format', rationale);
+      inner.insertBefore(block, el);
+      el.style.display = 'none';
+      for (let k = i + 1; k < j; k++) {
+        if (nodes[k]) nodes[k].style.display = 'none';
+      }
+      created++;
+      i = j;
+    }
+
+    return created;
+  }
+
+  /** <p><strong>1) Soru</strong><br />A) ... <strong>Doğru: X</strong> — gerekçe (Siber Giriş vb.) */
+  function processBrParagraphQuestions(inner) {
+    let created = 0;
+    inner.querySelectorAll('p').forEach(function (p) {
+      if (p.closest('.eval-question-block') || p.style.display === 'none') return;
+      const rawHtml = p.innerHTML || '';
+      if (!/<strong>\s*Doğru\s*:/i.test(rawHtml)) return;
+      if (!/[A-D]\)/.test(rawHtml)) return;
+
+      const fullText = p.textContent || '';
+      const correct = parseCorrect(fullText);
+      if (!correct) return;
+
+      const parts = rawHtml.split(/<br\s*\/?>/i).map(function (chunk) {
+        return chunk.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      }).filter(Boolean);
+
+      const optLines = [];
+      let qText = '';
+      let rationale = '';
+
+      parts.forEach(function (line) {
+        const optM = line.match(/^([A-D])\)\s*(.+)$/);
+        if (optM) {
+          optLines.push({ letter: optM[1].toUpperCase(), text: optM[2] });
+          return;
+        }
+        const ratM = line.match(/Gerekçe\s*:\s*(.+)/i);
+        if (ratM) {
+          rationale = ratM[1].trim();
+          return;
+        }
+        if (/^Doğru\s*:/i.test(line)) {
+          if (!rationale) {
+            rationale = line.replace(/^Doğru\s*:\s*[A-D]\s*[—–-]?\s*/i, '').trim();
+          }
+          return;
+        }
+        if (!qText && /^\d+\)/.test(line)) {
+          qText = line.replace(/^\d+\)\s*/, '');
+        } else if (!qText && line.length > 10) {
+          qText = line;
+        }
+      });
+
+      if (!rationale) {
+        rationale = fullText.replace(/^[\s\S]*?Doğru\s*:\s*[A-D]\s*[—–-]?\s*/i, '').trim();
+      }
+
+      if (optLines.length !== 4 || !qText) return;
+
+      const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-br-format', rationale);
+      p.parentNode.insertBefore(block, p);
+      p.style.display = 'none';
+      created++;
+    });
+    return created;
+  }
+
+  function getOptionTexts(optsWrap) {
+    try {
+      if (optsWrap.dataset.optionTexts) {
+        return JSON.parse(optsWrap.dataset.optionTexts);
+      }
+    } catch (e) {
+      /* ignore */
+    }
+    const map = {};
+    optsWrap.querySelectorAll('.eval-option').forEach(function (label) {
+      const letter = (label.dataset.letter || '').toUpperCase();
+      const t = label.textContent || '';
+      const m = t.match(/^[A-D]\)\s*(.+)$/);
+      if (letter && m) map[letter] = m[1].trim();
+    });
+    return map;
+  }
+
+  function gradeQuiz(inner) {
+    const blocks = inner.querySelectorAll('.eval-question-block');
+    let correctCount = 0;
+    const total = blocks.length;
+
+    blocks.forEach(function (block, idx) {
+      const optsWrap = block.querySelector('.eval-options-wrap');
+      const feedback = block.querySelector('.eval-question-feedback');
+      if (!optsWrap || !feedback) return;
+
+      const correctLetter = (optsWrap.dataset.correct || '').toUpperCase();
+      const rationale = optsWrap.dataset.rationale || '';
+      const optionTexts = getOptionTexts(optsWrap);
+      const selected = optsWrap.querySelector('input:checked');
+      const selectedLetter = selected ? selected.value.toUpperCase() : '';
+      const isCorrect = selectedLetter && selectedLetter === correctLetter;
+
+      if (isCorrect) correctCount++;
+
+      optsWrap.querySelectorAll('.eval-option').forEach(function (label) {
+        const letter = (label.dataset.letter || label.querySelector('input')?.value || '').toUpperCase();
+        label.classList.remove('eval-option--correct', 'eval-option--wrong', 'eval-option--missed');
+        const input = label.querySelector('input');
+        if (input) input.disabled = true;
+
+        if (letter === correctLetter) {
+          label.classList.add('eval-option--correct');
+        } else if (letter === selectedLetter) {
+          label.classList.add('eval-option--wrong');
+        }
+      });
+
+      block.classList.toggle('eval-question-block--correct', !!isCorrect);
+      block.classList.toggle('eval-question-block--wrong', !isCorrect);
+
+      let html =
+        '<div class="eval-question-feedback__title">' +
+        (isCorrect
+          ? '<i class="fas fa-check-circle"></i> Doğru'
+          : '<i class="fas fa-times-circle"></i> Yanlış') +
+        '</div>';
+
+      if (!isCorrect) {
+        const correctText = optionTexts[correctLetter] || '';
+        html +=
+          '<p class="eval-question-feedback__answer"><strong>Doğru cevap:</strong> ' +
+          correctLetter +
+          ') ' +
+          escapeHtml(correctText) +
+          '</div>';
+      }
+
+      if (rationale) {
+        html +=
+          '<p class="eval-question-feedback__rationale"><strong>Açıklama:</strong> ' +
+          escapeHtml(rationale) +
+          '</div>';
+      } else if (!isCorrect && selectedLetter) {
+        html +=
+          '<p class="eval-question-feedback__rationale">Seçiminiz: ' +
+          selectedLetter +
+          ') ' +
+          escapeHtml(optionTexts[selectedLetter] || '') +
+          '</div>';
+      }
+
+      feedback.innerHTML = html;
+      feedback.removeAttribute('hidden');
+    });
+
+    return { correctCount, total };
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function attachSubmitButton(inner) {
+    const allOpts = inner.querySelectorAll('.eval-options-wrap');
+    if (allOpts.length === 0) return;
+
+    let btn = inner.querySelector('.eval-submit-btn');
+    if (btn) btn.remove();
+    let res = inner.querySelector('.eval-result');
+    if (res) res.remove();
+
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'eval-submit-btn';
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Testi Gönder';
+
+    res = document.createElement('div');
+    res.className = 'eval-result';
+
+    btn.addEventListener('click', async function () {
+      const unanswered = Array.from(allOpts).filter(function (o) {
+        return !o.querySelector('input:checked');
+      });
+      if (unanswered.length) {
+        res.className = 'eval-result eval-result--warn';
+        res.innerHTML =
+          '<strong><i class="fas fa-exclamation-triangle"></i> Lütfen tüm soruları yanıtlayın.</strong> (' +
+          unanswered.length +
+          ' soru boş)';
+        res.style.display = 'block';
+        res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        return;
+      }
+
+      const { correctCount, total } = gradeQuiz(inner);
+      const wrong = total - correctCount;
+      const pct = total ? Math.round((correctCount / total) * 100) : 0;
+
+      res.className = 'eval-result';
+      res.innerHTML =
+        '<strong><i class="fas fa-chart-pie"></i> Sonuç: ' +
+        correctCount +
+        '/' +
+        total +
+        ' doğru (' +
+        pct +
+        '%)</strong>' +
+        '<p class="eval-result__hint">Her sorunun altında doğru/yanlış durumu ve gerekirse doğru cevap gösterilir.</p>';
+      res.style.display = 'block';
+      res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      const section = inner.closest('.eval-quiz-section') || inner.closest('.content-section');
+      const quizId =
+        section?.id || section?.getAttribute('data-section') || inner.id || 'quiz';
+      const moduleName =
+        typeof window.MODULE_NAME !== 'undefined' ? window.MODULE_NAME : null;
+      if (
+        localStorage.getItem('authToken') &&
+        window.APIClient?.saveQuizResult &&
+        moduleName &&
+        window.getModuleIdFromName
+      ) {
+        try {
+          const moduleId = await window.getModuleIdFromName(moduleName);
+          if (moduleId) {
+            const score = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            await window.APIClient.saveQuizResult(
+              moduleId,
+              quizId,
+              score,
+              correctCount,
+              wrong,
+              [],
+              0
+            );
+          }
+        } catch (e) {
+          console.warn('Quiz sonucu kaydedilemedi:', e);
+        }
+      }
+    });
+
+    inner.appendChild(btn);
+    inner.appendChild(res);
+  }
+
+  function enrichQuestionBlock(wrap, correct, rationale, optLines) {
+    const optsWrap = wrap.querySelector('.eval-options-wrap');
+    if (!optsWrap) return;
+    if (rationale && !optsWrap.dataset.rationale) optsWrap.dataset.rationale = rationale;
+    if (!optsWrap.dataset.optionTexts && optLines) {
+      const optionTexts = {};
+      optLines.forEach(function (pair) {
+        const letter = (pair[1] || pair.letter || '').toUpperCase();
+        const txt = pair[2] != null ? pair[2] : pair.text;
+        if (letter) optionTexts[letter] = txt;
+      });
+      try {
+        optsWrap.dataset.optionTexts = JSON.stringify(optionTexts);
+      } catch (e2) {
+        /* ignore */
+      }
+    }
+    optsWrap.querySelectorAll('.eval-option').forEach(function (label) {
+      const input = label.querySelector('input');
+      const letter = input ? input.value.toUpperCase() : '';
+      if (letter) label.dataset.letter = letter;
+    });
+    if (!wrap.querySelector('.eval-question-feedback')) {
+      const feedback = document.createElement('div');
+      feedback.className = 'eval-question-feedback';
+      feedback.setAttribute('hidden', '');
+      wrap.appendChild(feedback);
+    }
   }
 
   function processSection(section) {
     const inner = section.querySelector('.section-inner') || section;
 
-    inner.querySelectorAll('p').forEach(p => {
+    processSplitFormatQuestions(inner);
+    processBrParagraphQuestions(inner);
+
+    inner.querySelectorAll('p').forEach(function (p) {
       const t = (p.textContent || '').trim();
       if (t && (t.match(CORRECT_REGEX) || /^Açıklama\s*:/.test(t)) && t.length < 300) {
         p.style.display = 'none';
       }
     });
 
-    inner.querySelectorAll('h3').forEach(h3 => {
+    inner.querySelectorAll('h3').forEach(function (h3) {
       let p = h3.nextElementSibling;
       if (!p || p.tagName !== 'P') return;
       const text = p.textContent || '';
       if (!/[A-D]\)\s+/.test(text)) return;
       let correct = parseCorrect(text);
       let answerP = null;
+      let rationale = parseRationale(text);
       if (!correct) {
         const nextP = p.nextElementSibling;
         if (nextP && nextP.tagName === 'P') {
           correct = parseCorrect(nextP.textContent || '');
-          if (correct) answerP = nextP;
+          if (correct) {
+            answerP = nextP;
+            if (!rationale) rationale = parseRationale(nextP.textContent || '');
+          }
         }
       }
       if (!correct) return;
 
-      const wrap = document.createElement('div');
-      wrap.className = 'eval-question-block';
-      const qDiv = document.createElement('div');
-      qDiv.className = 'eval-question-text';
       const lines = text.split(/\n/);
-      let optLines = [];
-      let qParts = [];
+      const optLines = [];
+      const qParts = [];
       for (const line of lines) {
         const m = line.trim().match(/^([A-D])\)\s*(.+)$/);
         if (m) optLines.push(m);
@@ -48,191 +461,146 @@
           qParts.push(line.trim());
         }
       }
-      if (optLines.length !== 4) {
-        const chunks = text.split(/\s*(?=[A-D]\)\s)/).filter(Boolean);
-        optLines = [];
-        chunks.forEach((ch, i) => {
-          const m2 = ch.trim().match(/^([A-D])\)\s*(.+)$/);
-          if (m2 && optLines.length < 4) optLines.push(m2);
-          else if (i === 0 && !ch.trim().match(CORRECT_REGEX) && !/^Açıklama\s*:/.test(ch)) {
-            qParts = [ch.trim()];
-          }
-        });
-      }
       if (optLines.length !== 4) return;
-      qDiv.innerHTML = qParts.join('<br>').replace(/<strong>Doğru[^<]*<\/strong>.*/gi, '');
-      wrap.appendChild(qDiv);
 
-      const optsWrap = document.createElement('div');
-      optsWrap.className = 'eval-options-wrap';
-      optsWrap.dataset.correct = correct;
-      const name = 'eval-' + (h3.id || 'q') + '-' + Math.random().toString(36).slice(2, 8);
-      optLines.forEach(([_, letter, txt]) => {
-        const label = document.createElement('label');
-        label.className = 'eval-option';
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = name;
-        radio.value = letter;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(' ' + letter + ') ' + txt));
-        optsWrap.appendChild(label);
-      });
-      wrap.appendChild(optsWrap);
+      const wrap = createEvalQuestionBlock(
+        qParts.join(' ').replace(/<strong>Doğru[^<]*<\/strong>.*/gi, ''),
+        optLines.map(function (m) {
+          return { letter: m[1], text: m[2] };
+        }),
+        correct,
+        '',
+        rationale
+      );
       p.parentNode.insertBefore(wrap, p);
       p.style.display = 'none';
       if (answerP) answerP.style.display = 'none';
     });
 
-    inner.querySelectorAll('p').forEach(p => {
+    inner.querySelectorAll('p').forEach(function (p) {
       if (p.style.display === 'none' || p.closest('.eval-question-block')) return;
       const text = p.textContent || '';
-      if (!/^\s*\d+\)/.test(text) || !/[A-D]\)\s+/.test(text) || !CORRECT_REGEX.test(text)) return;
+      if (!/^\s*\d+\)/.test(text) || !/[A-D]\)\s+/.test(text) || !CORRECT_REGEX.test(text)) {
+        return;
+      }
       const correct = parseCorrect(text);
       if (!correct) return;
 
       const optLines = [];
       const parts = text.split(/\n/);
       let qText = '';
+      let rationale = '';
       for (const part of parts) {
         const m = part.trim().match(/^([A-D])\)\s*(.+)$/);
         if (m) optLines.push(m);
-        else if (part.trim() && !CORRECT_REGEX.test(part) && !/^Açıklama\s*:/.test(part)) qText += part.trim() + ' ';
+        else if (part.trim() && !CORRECT_REGEX.test(part) && !/^Açıklama\s*:/.test(part)) {
+          qText += part.trim() + ' ';
+        } else if (/Gerekçe/i.test(part)) {
+          rationale = parseRationale(part) || part.replace(/^Gerekçe\s*:\s*/i, '').trim();
+        }
       }
       if (optLines.length !== 4) return;
 
-      const wrap = document.createElement('div');
-      wrap.className = 'eval-question-block';
-      const qDiv = document.createElement('div');
-      qDiv.className = 'eval-question-text';
-      qDiv.textContent = qText.replace(/\s*$/, '').replace(/\s*Doğru.*$/i, '').replace(/\s*—\s*.*$/, '').trim();
-      wrap.appendChild(qDiv);
-
-      const optsWrap = document.createElement('div');
-      optsWrap.className = 'eval-options-wrap';
-      optsWrap.dataset.correct = correct;
-      const name = 'eval-p-' + Math.random().toString(36).slice(2, 10);
-      optLines.forEach(([_, letter, txt]) => {
-        const label = document.createElement('label');
-        label.className = 'eval-option';
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = name;
-        radio.value = letter;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(' ' + letter + ') ' + txt));
-        optsWrap.appendChild(label);
-      });
-      wrap.appendChild(optsWrap);
+      const wrap = createEvalQuestionBlock(
+        qText.replace(/\s*$/, '').replace(/\s*Doğru.*$/i, '').trim(),
+        optLines.map(function (m) {
+          return { letter: m[1], text: m[2] };
+        }),
+        correct,
+        '',
+        rationale
+      );
       p.parentNode.insertBefore(wrap, p);
       p.style.display = 'none';
     });
 
-    inner.querySelectorAll('ol li, ul li').forEach(li => {
+    inner.querySelectorAll('ol li, ul li').forEach(function (li) {
       const p = li.querySelector('p') || li;
       if (p.style.display === 'none' || p.querySelector('.eval-options-wrap')) return;
-      let text = (p.textContent || '').trim();
+      const text = (p.textContent || '').trim();
       if (!/[A-D]\)\s+/.test(text) || !CORRECT_REGEX.test(text)) return;
       const correct = parseCorrect(text);
       if (!correct) return;
 
       const optLines = [];
-      const rawLines = text.split(/\n/).map(s => s.trim()).filter(Boolean);
+      const rawLines = text.split(/\n/).map(function (s) {
+        return s.trim();
+      });
       let qText = '';
+      let rationale = '';
       for (const line of rawLines) {
         const m = line.match(/^([A-D])\)\s*(.+)$/);
         if (m) optLines.push(m);
-        else if (!line.match(CORRECT_REGEX) && !/^Açıklama\s*:/.test(line) && line) qText += line + ' ';
+        else if (!line.match(CORRECT_REGEX) && !/^Açıklama\s*:/.test(line) && line) {
+          qText += line + ' ';
+        } else if (/Gerekçe/i.test(line)) {
+          rationale = parseRationale(line);
+        }
       }
       if (optLines.length !== 4) {
         const chunks = text.split(/\s*(?=[A-D]\)\s)/).filter(Boolean);
-        chunks.forEach(ch => {
+        chunks.forEach(function (ch) {
           const m2 = ch.trim().match(/^([A-D])\)\s*(.+)$/);
           if (m2 && optLines.length < 4) optLines.push(m2);
         });
       }
       if (optLines.length !== 4) return;
 
-      const wrap = document.createElement('div');
-      wrap.className = 'eval-question-block eval-list-item';
-      const qDiv = document.createElement('div');
-      qDiv.className = 'eval-question-text';
-      qDiv.innerHTML = qText.replace(/\s*$/, '').trim();
-      wrap.appendChild(qDiv);
-
-      const optsWrap = document.createElement('div');
-      optsWrap.className = 'eval-options-wrap';
-      optsWrap.dataset.correct = correct;
-      const name = 'eval-li-' + Math.random().toString(36).slice(2, 10);
-      optLines.forEach(([_, letter, txt]) => {
-        const label = document.createElement('label');
-        label.className = 'eval-option';
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = name;
-        radio.value = letter;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(' ' + letter + ') ' + txt));
-        optsWrap.appendChild(label);
-      });
-      wrap.appendChild(optsWrap);
-
-      const oldContent = p.innerHTML;
+      const wrap = createEvalQuestionBlock(
+        qText.replace(/\s*$/, '').trim(),
+        optLines.map(function (m) {
+          return { letter: m[1], text: m[2] };
+        }),
+        correct,
+        'eval-list-item',
+        rationale
+      );
       p.innerHTML = '';
       p.appendChild(wrap);
     });
 
-    const allOpts = inner.querySelectorAll('.eval-options-wrap');
-    if (allOpts.length === 0) return;
-
-    let btn = inner.querySelector('.eval-submit-btn');
-    if (btn) return;
-    btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'eval-submit-btn';
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Testi Gönder';
-    const res = document.createElement('div');
-    res.className = 'eval-result';
-    btn.addEventListener('click', async () => {
-      let n = 0;
-      allOpts.forEach(o => {
-        const sel = o.querySelector('input:checked');
-        if (sel && sel.value.toUpperCase() === (o.dataset.correct || '').toUpperCase()) n++;
+    inner.querySelectorAll('.eval-question-block').forEach(function (block) {
+      const optsWrap = block.querySelector('.eval-options-wrap');
+      if (!optsWrap || block.querySelector('.eval-question-feedback')) return;
+      const feedback = document.createElement('div');
+      feedback.className = 'eval-question-feedback';
+      feedback.setAttribute('hidden', '');
+      block.appendChild(feedback);
+      optsWrap.querySelectorAll('.eval-option').forEach(function (label) {
+        const input = label.querySelector('input');
+        if (input) label.dataset.letter = input.value.toUpperCase();
       });
-      const total = allOpts.length;
-      const wrong = total - n;
-      res.innerHTML = '<strong>Sonuç: ' + n + '/' + total + ' doğru</strong>';
-      res.style.display = 'block';
-
-      const section = inner.closest('.eval-quiz-section');
-      const quizId = section?.id || section?.getAttribute('data-section') || 'quiz';
-      const moduleName = typeof window.MODULE_NAME !== 'undefined' ? window.MODULE_NAME : null;
-      if (localStorage.getItem('authToken') && window.APIClient?.saveQuizResult && moduleName && window.getModuleIdFromName) {
-        try {
-          const moduleId = await window.getModuleIdFromName(moduleName);
-          if (moduleId) {
-            const score = total > 0 ? Math.round((n / total) * 100) : 0;
-            await window.APIClient.saveQuizResult(moduleId, quizId, score, n, wrong, [], 0);
-          }
-        } catch (e) { console.warn('Quiz sonucu kaydedilemedi:', e); }
-      }
     });
-    inner.appendChild(btn);
-    inner.appendChild(res);
+
+    attachSubmitButton(inner);
   }
 
   function addStyles() {
+    if (document.getElementById('sebs-quiz-exam-styles')) return;
     const s = document.createElement('style');
+    s.id = 'sebs-quiz-exam-styles';
     s.textContent = `
-      .eval-question-block { margin: 1.25rem 0; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; }
+      .eval-question-block { margin: 1.25rem 0; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid transparent; }
+      .eval-question-block--correct { border-color: rgba(34, 197, 94, 0.45); background: rgba(34, 197, 94, 0.08); }
+      .eval-question-block--wrong { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.06); }
       .eval-question-text { margin-bottom: 0.75rem; font-weight: 500; }
       .eval-options-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
-      .eval-option { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; padding: 0.5rem 0.75rem; border-radius: 6px; }
+      .eval-option { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid transparent; }
       .eval-option:hover { background: rgba(255,255,255,0.08); }
       .eval-option input { margin-top: 0.2rem; flex-shrink: 0; }
+      .eval-option--correct { background: rgba(34, 197, 94, 0.18) !important; border-color: rgba(34, 197, 94, 0.5) !important; font-weight: 600; }
+      .eval-option--wrong { background: rgba(239, 68, 68, 0.15) !important; border-color: rgba(239, 68, 68, 0.45) !important; }
+      .eval-question-feedback { margin-top: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.9rem; line-height: 1.45; }
+      .eval-question-block--correct .eval-question-feedback { background: rgba(34, 197, 94, 0.12); color: #166534; }
+      .eval-question-block--wrong .eval-question-feedback { background: rgba(239, 68, 68, 0.1); color: #991b1b; }
+      .eval-question-feedback__title { font-weight: 700; margin-bottom: 0.35rem; }
+      .eval-question-feedback__answer { margin: 0.25rem 0; }
+      .eval-question-feedback__rationale { margin: 0.35rem 0 0; opacity: 0.95; }
       .eval-submit-btn { margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary, #1e40af); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
       .eval-submit-btn:hover { background: var(--primary-light, #2563eb); }
       .eval-result { margin-top: 1rem; padding: 1rem; background: rgba(34,197,94,0.15); border-radius: 8px; }
+      .eval-result--warn { background: rgba(251, 191, 36, 0.2); color: #92400e; }
+      .eval-result__hint { margin: 0.5rem 0 0; font-size: 0.88rem; opacity: 0.9; }
     `;
     document.head.appendChild(s);
   }
@@ -242,6 +610,15 @@
     document.querySelectorAll('.eval-quiz-section').forEach(processSection);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  window.SebsQuizExam = {
+    init: init,
+    processSection: processSection,
+    processAll: init
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
