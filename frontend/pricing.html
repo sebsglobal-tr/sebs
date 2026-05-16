@@ -416,6 +416,9 @@
 
         .purchase-modal {
             width: min(760px, 100%);
+            max-height: min(90vh, 720px);
+            display: flex;
+            flex-direction: column;
             border-radius: 20px;
             border: 1px solid rgba(148, 163, 184, 0.25);
             background: #0f172a;
@@ -451,6 +454,8 @@
 
         .purchase-modal-body {
             padding: 1rem 1.2rem 1.25rem;
+            overflow-y: auto;
+            flex: 1 1 auto;
         }
 
         .purchase-modal-grid {
@@ -505,6 +510,52 @@
         .btn-modal-confirm {
             background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
             color: #fff;
+        }
+
+        .btn-modal-confirm:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .purchase-modal-early-access {
+            margin-top: 0.85rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            background: rgba(251, 191, 36, 0.08);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: #fde68a;
+        }
+
+        .purchase-modal-early-access strong {
+            color: #fef3c7;
+        }
+
+        .purchase-modal-early-access ul {
+            margin: 0.5rem 0 0 1rem;
+            padding: 0;
+        }
+
+        .purchase-modal-legal {
+            margin-top: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+            cursor: pointer;
+        }
+
+        .purchase-modal-legal input {
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .purchase-modal-legal a {
+            color: #93c5fd;
+            text-decoration: underline;
         }
 
         @media (max-width: 760px) {
@@ -1088,6 +1139,25 @@
             box-shadow: 0 12px 26px rgba(22, 163, 74, 0.22);
         }
 
+        .road-stop-card.coming-soon {
+            border-color: rgba(251, 191, 36, 0.55);
+            opacity: 0.92;
+        }
+
+        .road-stop-badge {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #92400e;
+            background: rgba(251, 191, 36, 0.35);
+            border-radius: 999px;
+            vertical-align: middle;
+        }
+
         .road-stop-dot {
             position: absolute;
             top: 50%;
@@ -1637,7 +1707,7 @@
             { title: 'Isletim Sistemleri Guvenligi', stage: 'ilk-adim', hours: '35 saat', desc: 'Windows ve Linux temel hardening', topics: ['Windows', 'Linux', 'Hardening'] },
             { title: 'Temel Kriptografi', stage: 'ilk-adim', hours: '25 saat', desc: 'Sifreleme, hash ve dijital imza', topics: ['AES', 'Hash', 'PKI'] },
             { title: 'Sosyal Muhendislik Giris', stage: 'ilk-adim', hours: '20 saat', desc: 'Phishing, pretexting ve korunma', topics: ['Phishing', 'Pretexting', 'Awareness'] },
-            { title: 'Web Uygulama Guvenligi', stage: 'ilk-adim', hours: '42 saat', desc: 'OWASP Top 10 uygulama aciklari', topics: ['OWASP', 'Burp', 'Remediation'] },
+            { title: 'Web Uygulama Guvenligi', stage: 'ilk-adim', hours: '42 saat', desc: 'OWASP Top 10 uygulama aciklari', topics: ['OWASP', 'Burp', 'Remediation'], comingSoon: true },
             { title: 'Network Guvenligi', stage: 'yukselis', hours: '35 saat', desc: 'Evil Twin, PCAP analizi, raporlama', topics: ['Evil Twin', 'PCAP', 'Raporlama'] },
             { title: 'Malware Analizi', stage: 'yukselis', hours: '40 saat', desc: 'Static ve dynamic malware analizi', topics: ['Static', 'Dynamic', 'IOC'] },
             { title: 'SOC Egitimi', stage: 'yukselis', hours: '48 saat', desc: 'SIEM, log analizi, incident response', topics: ['SIEM', 'Logs', 'IR'] },
@@ -1840,12 +1910,16 @@
                         const purchaseCategory = isSingle ? 'single-stop' : category;
                         const purchaseLevel = isSingle ? 'single-stop' : mod.stage;
                         const purchasePrice = isSingle ? 120 : meta.price;
-                        const actionText = stageOwned && !isSingle
+                        const comingSoon = Boolean(mod.comingSoon);
+                        const actionText = comingSoon
+                            ? 'Yakında — erken erişim'
+                            : (stageOwned && !isSingle
                             ? 'Erisim Acik'
-                            : (isSingle ? 'Tekli Modülü Aç · 120 TL' : `${meta.name} Kilidini Aç · ${meta.price} TL`);
+                            : (isSingle ? 'Tekli Modülü Aç · 120 TL' : `${meta.name} Kilidini Aç · ${meta.price} TL`));
+                        const stopDisabled = comingSoon || (stageOwned && !isSingle);
                         return `
                             <article
-                                class="road-stop-card stage-${mod.stage} ${side} ${stageOwned ? 'open' : 'locked'} journey-reveal"
+                                class="road-stop-card stage-${mod.stage} ${side} ${comingSoon ? 'coming-soon' : stageOwned ? 'open' : 'locked'} journey-reveal"
                                 style="top:${top}px;"
                                 onclick="handleRoadStopClick(event)"
                                 ${hidden ? 'hidden' : ''}
@@ -1855,7 +1929,7 @@
                                     <span class="road-stop-level">${getLevelLabel(mod.stage)}</span>
                                     <span class="road-stop-hours">${mod.hours}</span>
                                 </div>
-                                <h5 class="road-stop-title">${mod.title}</h5>
+                                <h5 class="road-stop-title">${mod.title}${comingSoon ? ' <span class="road-stop-badge">Yakında</span>' : ''}</h5>
                                 <p class="road-stop-desc">${mod.desc}</p>
                                 <div class="road-stop-topics">${(mod.topics || []).map((t) => `<span>${t}</span>`).join('')}</div>
                                 <div class="road-stop-actions">
@@ -1865,8 +1939,8 @@
                                         data-level="${purchaseLevel}"
                                         data-price="${purchasePrice}"
                                         data-title="${mod.title}"
-                                        ${stageOwned && !isSingle ? 'disabled' : ''}
-                                        ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
+                                        ${stopDisabled ? 'disabled' : ''}
+                                        ${comingSoon ? '' : (!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"')}
                                     >
                                         ${actionText}
                                     </button>
@@ -2006,36 +2080,60 @@
             overlay.innerHTML = `
                 <div class="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
                     <div class="purchase-modal-head">
-                        <h3 id="purchaseModalTitle">Bu durak SEBS Yolunun bir parçası</h3>
+                        <h3 id="purchaseModalTitle">Satın alma onayı</h3>
                         <button type="button" class="purchase-modal-close" data-modal-close aria-label="Kapat">×</button>
                     </div>
                     <div class="purchase-modal-body">
                         <div class="purchase-modal-grid">
                             <article class="purchase-modal-card">
-                                <h4>Seçtiğin seçenek</h4>
-                                <p><strong>${packageTitle}</strong> · ₺${price}<br>${categoryTitle} içinde bu kilit açılacak.</p>
+                                <h4>Seçtiğin paket</h4>
+                                <p><strong>${packageTitle}</strong> · ₺${price}<br>${categoryTitle} erişim seviyesi.</p>
                             </article>
                             <article class="purchase-modal-card">
-                                <h4>Abonelik neden daha avantajlı?</h4>
-                                <p>Tekli satış içerik verir, plan ise sistemi açar: ilerleme takibi, aşamalar arası geçiş ve öneriler birlikte gelir.</p>
+                                <h4>Erken erişim</h4>
+                                <p>Ödediğiniz paket satın alma anında açık içerikleri kapsar; yol haritasındakiler ek ücret olmadan hesabınıza eklenecektir.</p>
                             </article>
                         </div>
+                        <div class="purchase-modal-early-access">
+                            <strong>Şimdi erişilebilir:</strong> Siber Güvenliğe Giriş, Temel Network, İşletim Sistemi, Temel Kripto, Sosyal Mühendislik, Network Güvenliği, Malware, SOC, İleri Malware, Olay Müdahalesi, İleri Kripto, Pentest, Threat Hunting ve yayında olan simülasyonlar.
+                            <ul><li><strong>Yakında:</strong> Web Uygulama Güvenliği, ek simülasyonlar ve katalogdaki diğer disiplinler sırayla eklenecektir.</li></ul>
+                        </div>
+                        <label class="purchase-modal-legal">
+                            <input type="checkbox" id="purchaseLegalAccept" />
+                            <span>
+                                <a href="/kullanim-sartlari" target="_blank" rel="noopener">Kullanım şartları</a> (erken erişim dahil),
+                                <a href="/gizlilik" target="_blank" rel="noopener">gizlilik</a> ve
+                                <a href="/kvkk" target="_blank" rel="noopener">KVKK</a> metnini okudum. Ödeme Iyzico üzerinden alınacaktır.
+                            </span>
+                        </label>
                         <div class="purchase-modal-actions">
                             <button type="button" class="btn-modal-cancel" data-modal-close>Vazgeç</button>
-                            <button type="button" class="btn-modal-confirm" data-modal-confirm>Kilidi Aç</button>
+                            <button type="button" class="btn-modal-confirm" data-modal-confirm disabled>Ödemeye devam et</button>
                         </div>
                     </div>
                 </div>
             `;
 
-            function close() { overlay.remove(); }
+            function close() {
+                overlay.remove();
+            }
+            const legalCb = overlay.querySelector('#purchaseLegalAccept');
+            const confirmBtn = overlay.querySelector('[data-modal-confirm]');
+            if (legalCb && confirmBtn) {
+                legalCb.addEventListener('change', function () {
+                    confirmBtn.disabled = !legalCb.checked;
+                });
+            }
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay || e.target.closest('[data-modal-close]')) close();
             });
-            overlay.querySelector('[data-modal-confirm]').addEventListener('click', () => {
-                close();
-                onConfirm();
-            });
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', () => {
+                    if (confirmBtn.disabled) return;
+                    close();
+                    onConfirm();
+                });
+            }
             document.body.appendChild(overlay);
         }
 
@@ -2083,6 +2181,24 @@
                         typeof window.getSebsApiBase === 'function'
                             ? window.getSebsApiBase()
                             : (window.location.origin || '') + '/api';
+
+                    const initResponse = await fetch(apiP + '/payments/iyzico/initialize', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            category: backendCategory,
+                            level: backendLevel
+                        })
+                    });
+                    const initResult = await initResponse.json();
+                    if (initResponse.ok && initResult.success && initResult.data?.paymentPageUrl) {
+                        window.location.href = initResult.data.paymentPageUrl;
+                        return;
+                    }
+
                     const response = await fetch(apiP + '/purchase', {
                         method: 'POST',
                         headers: {
@@ -2107,6 +2223,12 @@
                         await renderPricingCards(category);
 
                         alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi.');
+                    } else if (response.status === 503 && result.code === 'PAYMENT_PROVIDER_REQUIRED') {
+                        alert(
+                            'Ödeme altyapısı (Iyzico) bağlanıyor. Bu aşamada paket satın alımı kısa süreliğine yalnızca destek üzerinden yapılabilir. İletişim sayfasından bize ulaşabilirsiniz.'
+                        );
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
                     } else {
                         alert('❌ Satın alma işlemi başarısız: ' + (result.message || 'Bilinmeyen hata'));
                         button.disabled = false;
@@ -2201,8 +2323,8 @@
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
             <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
-              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
             </ul>
           </div>
         </div>

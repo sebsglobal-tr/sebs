@@ -43,10 +43,6 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/modules.css">
-    <link rel="stylesheet" href="/css/enhancements.css">
-    
     
     
     <style>
@@ -1618,8 +1614,8 @@
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
             <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
-              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
             </ul>
           </div>
         </div>
@@ -2225,18 +2221,6 @@
                 }
             });
 
-            // Direct module access - no purchase check
-            moduleLinks.forEach(link => {
-                link.addEventListener('click', async (e) => {
-                    // Allow default link behavior - no access control
-                    // Just proceed to module directly
-                    const href = link.getAttribute('href');
-                    if (href) {
-                        console.log('✅ Proceeding to module:', href);
-                        window.location.href = href;
-                    }
-                });
-            });
         });
 
         // Listen for storage changes (when user purchases a package)
@@ -2289,6 +2273,7 @@
             if (!href) return;
             // coming-soon sayfaları için başlangıç kaydı açma
             if (href.includes('/modules/coming-soon.html')) return;
+            if (href.includes('web-uygulama-guvenligi')) return;
 
             const card = btn.closest('.simulation-card-detailed');
             const titleEl = card ? card.querySelector('.simulation-info h3') : null;
@@ -2304,6 +2289,29 @@
                     }
                 }
             } catch (err) { /* sessizce devam */ }
+
+            const slugMatch = href.match(/\/modules\/([^?#]+)/);
+            const moduleSlug = slugMatch ? slugMatch[1].replace(/\.html$/, '') : '';
+            const category =
+                btn.getAttribute('data-module-category') ||
+                (card && card.dataset.category) ||
+                'cybersecurity';
+
+            if (window.AccessControl?.checkModuleAccess) {
+                const access = await window.AccessControl.checkModuleAccess(
+                    moduleSlug || moduleName,
+                    category
+                );
+                if (!access.hasAccess) {
+                    if (window.AccessControl.showAccessDeniedModal) {
+                        window.AccessControl.showAccessDeniedModal(access.message);
+                    } else {
+                        alert(access.message);
+                    }
+                    return;
+                }
+            }
+
             const token = localStorage.getItem('authToken');
             if (token && window.ModuleProgressTracker?.initializeModule) {
                 try {

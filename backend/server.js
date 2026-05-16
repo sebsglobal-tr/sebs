@@ -2490,8 +2490,24 @@ app.get('/api/user-achievements', authenticateToken, async (req, res) => {
 });
 
 
+const { registerIyzicoPaymentRoutes } = require('./routes/iyzico-payments');
+registerIyzicoPaymentRoutes(app, { pool, authenticateToken });
+
 app.post('/api/purchase', authenticateToken, async (req, res) => {
     try {
+        const allowFreePurchase =
+            process.env.ALLOW_FREE_PURCHASE === 'true' ||
+            process.env.ALLOW_FREE_PURCHASE === '1' ||
+            process.env.NODE_ENV !== 'production';
+        if (!allowFreePurchase) {
+            return res.status(503).json({
+                success: false,
+                code: 'PAYMENT_PROVIDER_REQUIRED',
+                message:
+                    'Ücretli paketler ödeme doğrulaması (Iyzico) tamamlanana kadar bu uç üzerinden açılamaz. Destek için iletişim sayfasını kullanın.'
+            });
+        }
+
         const userId = req.user.userId;
         const { category, level, price } = req.body;
 

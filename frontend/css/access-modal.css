@@ -1,0 +1,114 @@
+/* Erişim engeli modalı — access-control.js + module/simulation gates */
+.sebs-access-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(6px);
+  font-family: var(--sebs-font-sans, "Inter", system-ui, sans-serif);
+}
+
+.sebs-access-dialog {
+  width: min(440px, 100%);
+  padding: 2rem 1.75rem;
+  text-align: center;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: #ffffff;
+  box-shadow: 0 24px 48px -20px rgba(15, 23, 42, 0.28);
+}
+
+.sebs-access-dialog__icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.sebs-access-dialog__title {
+  margin: 0 0 0.75rem;
+  font-family: "Space Grotesk", var(--sebs-font-sans, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sebs-access-dialog__message {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.sebs-access-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.sebs-access-dialog__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sebs-access-dialog__btn--primary {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(37, 99, 235, 0.55);
+}
+
+.sebs-access-dialog__btn--primary:hover {
+  transform: translateY(-1px);
+}
+
+.sebs-access-dialog__btn--ghost {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.sebs-access-dialog__btn--ghost:hover {
+  background: #e2e8f0;
+}
+
+html[data-theme="dark"] .sebs-access-dialog {
+  background: #0f172a;
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="dark"] .sebs-access-dialog__title {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .sebs-access-dialog__message {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .sebs-access-dialog__btn--ghost {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+html.sebs-access-blocked .sebs-access-overlay,
+html.sebs-access-blocked .sebs-access-overlay * {
+  pointer-events: auto;
+}

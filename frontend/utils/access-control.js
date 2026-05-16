@@ -126,6 +126,18 @@ async function getUserAccessLevel() {
 
 const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
 
+/** Modüller satışta vaat edilir ama henüz içerik yayında değil */
+const MODULES_NOT_LIVE = ['web-uygulama-guvenligi', 'web-app-security'];
+
+function isLocalDevAccess() {
+    try {
+        const h = window.location.hostname;
+        return h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local');
+    } catch (e) {
+        return false;
+    }
+}
+
 async function hasAccess(requiredLevel, category = null) {
     const token = getBearerTokenFromStorage();
     if (!token) {
@@ -140,6 +152,9 @@ async function hasAccess(requiredLevel, category = null) {
     const purchases = await fetchUserPurchases();
 
     if (purchases.length === 0) {
+        if (!isLocalDevAccess()) {
+            return false;
+        }
         const userLevel = await getUserAccessLevel();
         return userMeetsRequiredLevel(userLevel, requiredLevel);
     }
@@ -202,6 +217,15 @@ function getModuleLevel(moduleName) {
 }
 
 async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') {
+    const rawSlug = String(moduleNameOrLevel || '').toLowerCase();
+    if (MODULES_NOT_LIVE.some((key) => rawSlug.includes(key))) {
+        return {
+            hasAccess: false,
+            message:
+                'Web Uygulama Güvenliği modülü erken erişim kapsamında yakında yayına alınacaktır. Şimdilik diğer modüllere devam edebilirsiniz.'
+        };
+    }
+
     let moduleLevel = moduleNameOrLevel;
     if (!['beginner', 'intermediate', 'advanced'].includes(moduleNameOrLevel)) {
         moduleLevel = getModuleLevel(moduleNameOrLevel);
@@ -263,92 +287,54 @@ async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersec
     };
 }
 
+function ensureAccessModalStyles() {
+    if (document.querySelector('link[data-sebs-access-modal="1"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/css/access-modal.css';
+    link.setAttribute('data-sebs-access-modal', '1');
+    document.head.appendChild(link);
+}
+
 function showAccessDeniedModal(message = '') {
+    ensureAccessModalStyles();
+    const existing = document.getElementById('accessDeniedModal');
+    if (existing) existing.remove();
+
+    const safeMessage = String(message || 'Bu içeriğe erişim için uygun paketi satın almanız gerekiyor.')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
     const modalHTML = `
-        <div id="accessDeniedModal" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            font-family: 'Inter', sans-serif;
-        ">
-            <div style="
-                background: white;
-                border-radius: 20px;
-                padding: 40px;
-                max-width: 500px;
-                width: 90%;
-                text-align: center;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            ">
-                <div style="
-                    width: 80px;
-                    height: 80px;
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin: 0 auto 20px;
-                    color: white;
-                    font-size: 2rem;
-                ">
+        <div id="accessDeniedModal" class="sebs-access-overlay" role="dialog" aria-modal="true" aria-labelledby="accessDeniedTitle">
+            <div class="sebs-access-dialog">
+                <div class="sebs-access-dialog__icon" aria-hidden="true">
                     <i class="fas fa-lock"></i>
                 </div>
-                <h2 style="
-                    font-family: 'Space Grotesk', sans-serif;
-                    font-size: 1.8rem;
-                    font-weight: 700;
-                    color: #1e293b;
-                    margin-bottom: 16px;
-                ">Erişim Engellendi</h2>
-                <p style="
-                    color: #64748b;
-                    line-height: 1.6;
-                    margin-bottom: 24px;
-                ">
-                    ${message || 'Bu içeriğe erişim için uygun paketi satın almanız gerekiyor.'}
-                </p>
-                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                    <a href="pricing.html" style="
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        border: none;
-                        border-radius: 12px;
-                        padding: 12px 24px;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        text-decoration: none;
-                        transition: all 0.3s ease;
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-shopping-cart"></i> Paketleri Görüntüle
+                <h2 id="accessDeniedTitle" class="sebs-access-dialog__title">Erişim engellendi</h2>
+                <p class="sebs-access-dialog__message">${safeMessage}</p>
+                <div class="sebs-access-dialog__actions">
+                    <a href="/fiyatlandirma" class="sebs-access-dialog__btn sebs-access-dialog__btn--primary">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i> Paketleri görüntüle
                     </a>
-                    <button onclick="document.getElementById('accessDeniedModal').remove()" style="
-                        background: #e2e8f0;
-                        color: #475569;
-                        border: none;
-                        border-radius: 12px;
-                        padding: 12px 24px;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    " onmouseover="this.style.background='#cbd5e0'" onmouseout="this.style.background='#e2e8f0'">
+                    <button type="button" class="sebs-access-dialog__btn sebs-access-dialog__btn--ghost" data-access-modal-close>
                         Kapat
                     </button>
                 </div>
             </div>
         </div>
     `;
-    
+
     document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const overlay = document.getElementById('accessDeniedModal');
+    if (!overlay) return;
+
+    overlay.querySelector('[data-access-modal-close]')?.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+    });
 }
+
 
 window.AccessControl = {
     getUserAccessLevel,
