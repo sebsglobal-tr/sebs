@@ -2,7 +2,7 @@
  * Tüm premium modülleri İşletim Sistemi Güvenliği (Temel) şablonuna yaklaştırır:
  * - module-2-enhanced içerik sınıfı
  * - Bölüm başına kapak görseli + concept-grid (yoksa)
- * - Yan menü alt başlıkları sebs-premium-module-lessons.js tarafından üretilir (silinmez)
+ * - Yan menü alt başlıkları isteğe bağlıdır (subNavScroll / autoSubheadingNav)
  */
 (function () {
     'use strict';

@@ -1,6 +1,6 @@
 /**
  * Siber Güvenliğe Giriş: Modül 2–8 görsel kartları (kr-inline-breakout).
- * Yan menüdeki konu başlıkları yeterli; ek alt başlık üretilmez (subNavScroll kapalı).
+ * Yan menüde bölüm başlıkları yeterli; h2 alt menü varsayılan olarak kapalıdır.
  */
 (function () {
   'use strict';

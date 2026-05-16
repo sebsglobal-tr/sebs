@@ -18,6 +18,10 @@ Her dosyada: `premium-lesson.css`, `module-access-check.js`, `sebs-premium-modul
 
 Bulut: `aws-temelleri.html`, `azure-cloud.html`, `gcp.html` → `sebs-module-lite.css` + yakında metni.
 
+## İçerik notu
+
+Modül HTML’inde her bölümde `h2` alt başlık zorunlu değildir. Yan menüde yalnızca bölüm linkleri yeterlidir; iç içe alt menü gerekiyorsa `SebsPremiumModuleLessons.run({ subNavScroll: true })` veya `autoSubheadingNav: true` kullanın.
+
 ## Manuel (5 dk)
 
 1. Giriş yapmadan modül URL’si → erişim modalı (prod) veya localhost’ta test kullanıcısı.
