@@ -2,8 +2,11 @@
 """Modül sonlarına 10 soruluk değerlendirme testi ekler (eval-quiz-section formatı)."""
 from __future__ import annotations
 
+import hashlib
+import random
 import re
 import html
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -309,27 +312,48 @@ NETWORK_EXTRA = {
 QUIZ_TOPICS.setdefault("network-guvenligi.html", {}).update(NETWORK_EXTRA)
 
 
-def build_questions(module_title: str, topics: list[str]) -> list[dict]:
+def balanced_correct_letters(seed: str, count: int = 10) -> list[str]:
+    """Her harften ~2–3 doğru cevap; modül başına deterministik karışık dağılım."""
+    rng = random.Random(hashlib.sha256(seed.encode("utf-8")).hexdigest())
+    bag = list("ABCD") * 2 + ["A", "B"]
+    rng.shuffle(bag)
+    return bag[:count]
+
+
+def build_questions(module_title: str, topics: list[str], seed: str = "") -> list[dict]:
     qs = []
-    labels = ["A", "B", "C", "D"]
-    for i, topic in enumerate(topics[:10]):
-        correct_idx = i % 4
-        opts = []
-        for j in range(4):
-            if j == correct_idx:
-                opts.append(f"{topic} — modül kazanımlarıyla doğrudan uyumludur.")
+    topic_list = topics[:10]
+    answer_key = balanced_correct_letters(seed or module_title, len(topic_list))
+    opt_seed = hashlib.sha256(f"{seed or module_title}:opts".encode()).hexdigest()
+    opt_rng = random.Random(opt_seed)
+
+    distractor_templates = [
+        "Bu ifade modül kapsamının dışındadır veya güvenlik açısından yanıltıcıdır.",
+        "Kavramlar karıştırılmıştır; güvenlik hedefi yanlış eşleştirilmiştir.",
+        "Uygulama adımı atlanmıştır; yalnızca teorik isim bilgisi yeterli değildir.",
+    ]
+
+    for i, topic in enumerate(topic_list):
+        correct_letter = answer_key[i]
+        correct_text = f"{topic} — modül kazanımlarıyla doğrudan uyumludur."
+
+        wrong_pool = [distractor_templates[(i + j) % 3] for j in range(3)]
+        opt_rng.shuffle(wrong_pool)
+
+        opts_by_letter: dict[str, str] = {}
+        wrong_i = 0
+        for letter in "ABCD":
+            if letter == correct_letter:
+                opts_by_letter[letter] = correct_text
             else:
-                distractors = [
-                    "Bu ifade modül kapsamının dışındadır veya güvenlik açısından yanıltıcıdır.",
-                    "Kavramlar karıştırılmıştır; güvenlik hedefi yanlış eşleştirilmiştir.",
-                    "Uygulama adımı atlanmıştır; yalnızca teorik isim bilgisi yeterli değildir.",
-                ]
-                opts.append(f"{distractors[j % 3]} ({module_title})")
+                opts_by_letter[letter] = f"{wrong_pool[wrong_i]} ({module_title})"
+                wrong_i += 1
+
         qs.append(
             {
                 "q": f"[{module_title}] Aşağıdakilerden hangisi «{topic}» konusunu en doğru yansıtır?",
-                "opts": opts,
-                "correct": labels[correct_idx],
+                "opts": [opts_by_letter[letter] for letter in "ABCD"],
+                "correct": correct_letter,
                 "rationale": f"Doğru cevap, «{topic}» ifadesinin bu modüldeki tanım ve kullanım bağlamına uygundur.",
             }
         )
@@ -373,6 +397,17 @@ def find_section(html_text: str, section_id: str) -> tuple[int, int] | None:
     return start, end
 
 
+INJECTED_QUIZ_BLOCK_RE = re.compile(
+    r"\n?<h2><i class=\"fas fa-clipboard-list\"></i> Kendini Değerlendir —[^<]*</h2>\s*"
+    r'<div class="eval-quiz-section" id="[^"]+-modul-testi"[^>]*>.*?</div>',
+    re.DOTALL | re.IGNORECASE,
+)
+
+
+def remove_injected_quiz(section_html: str) -> str:
+    return INJECTED_QUIZ_BLOCK_RE.sub("", section_html, count=1)
+
+
 def insert_marker_index(section_html: str) -> int:
     markers = [
         r'<h2[^>]*>\s*<i[^>]*fa-clipboard-list[^>]*>\s*</i>\s*Kendini Değerlendir',
@@ -389,7 +424,12 @@ def insert_marker_index(section_html: str) -> int:
     return len(section_html)
 
 
-def process_file(filename: str, mapping: dict[str, tuple[str, list[str]]]) -> int:
+def process_file(
+    filename: str,
+    mapping: dict[str, tuple[str, list[str]]],
+    *,
+    force: bool = False,
+) -> int:
     path = MODULES / filename
     if not path.exists():
         return 0
@@ -401,27 +441,38 @@ def process_file(filename: str, mapping: dict[str, tuple[str, list[str]]]) -> in
             continue
         s, e = span
         block = text[s:e]
-        if section_has_quiz(block):
+        if force:
+            prev_len = len(block)
+            block = remove_injected_quiz(block)
+            if len(block) == prev_len and section_has_quiz(block):
+                continue
+        elif section_has_quiz(block):
             continue
-        questions = build_questions(title, topics)
+        seed = f"{filename}:{section_id}"
+        questions = build_questions(title, topics, seed=seed)
         quiz_id = f"{section_id}-modul-testi"
         snippet = render_quiz_html(quiz_id, title, questions)
         idx = insert_marker_index(block)
         new_block = block[:idx] + snippet + block[idx:]
         text = text[:s] + new_block + text[e:]
         added += 1
-        print(f"  + {filename} :: {section_id} (10 soru)")
+        action = "↻" if force else "+"
+        letters = "".join(q["correct"] for q in questions)
+        print(f"  {action} {filename} :: {section_id} (10 soru, doğru: {letters})")
     if added:
         path.write_text(text, encoding="utf-8")
     return added
 
 
 def main() -> None:
+    force = "--force" in sys.argv or "--reshuffle" in sys.argv
+    if force:
+        print("Mevcut -modul-testi blokları yeniden üretiliyor (karışık doğru şık dağılımı)…\n")
     total = 0
     for filename, mapping in QUIZ_TOPICS.items():
         print(filename)
-        total += process_file(filename, mapping)
-    print(f"\nToplam {total} modüle test eklendi.")
+        total += process_file(filename, mapping, force=force)
+    print(f"\nToplam {total} modül testi {'güncellendi' if force else 'eklendi'}.")
 
 
 if __name__ == "__main__":
