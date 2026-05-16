@@ -1,5 +1,160 @@
 @import url('/css/module-content-theme.css');
 
+/* === Yan menü — tek tip görünüm (ikon + metin solda, aktif/tamamlandı tutarlı) === */
+body.landing-site-body .module-sidebar .nav-section-list {
+  padding: 0;
+  margin: 0;
+}
+
+body.landing-site-body .module-sidebar .nav-section-list > li {
+  list-style: none;
+  margin: 0 0 2px;
+}
+
+body.landing-site-body .module-sidebar li.nav-module-header {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fbbf24;
+  padding: 0.85rem 0.75rem 0.3rem;
+  margin-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  line-height: 1.35;
+}
+
+body.landing-site-body .module-sidebar li.nav-module-header:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0.25rem;
+}
+
+body.landing-site-body .module-sidebar .nav-section h4 {
+  color: #fbbf24 !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.65rem;
+  padding: 0 0.75rem;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section,
+body.landing-site-body .module-sidebar .nav-link-anchor {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 0.55rem !important;
+  padding: 0.5rem 0.75rem !important;
+  color: rgba(248, 250, 252, 0.9) !important;
+  font-size: 0.84rem !important;
+  line-height: 1.38 !important;
+  text-decoration: none !important;
+  border-radius: 8px !important;
+  border-left: 3px solid transparent !important;
+  word-break: break-word;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section > i.fas,
+body.landing-site-body .module-sidebar .nav-link-section > i.fab,
+body.landing-site-body .module-sidebar .nav-link-anchor > i.fas {
+  flex-shrink: 0 !important;
+  width: 1.05rem !important;
+  margin-top: 0.15rem !important;
+  text-align: center !important;
+  color: rgba(253, 224, 171, 0.88) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section .nav-label {
+  display: inline-flex !important;
+  align-items: flex-start !important;
+  gap: 0.55rem !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section .nav-label i {
+  flex-shrink: 0 !important;
+  width: 1.05rem !important;
+  margin-top: 0.15rem !important;
+  color: rgba(253, 224, 171, 0.88) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section .nav-expand-indicator {
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  align-self: center !important;
+  opacity: 0.75;
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-section-item > .nav-link-section:has(.nav-expand-indicator) {
+  justify-content: space-between !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section:hover,
+body.landing-site-body .module-sidebar .nav-link-anchor:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section:hover > i,
+body.landing-site-body .module-sidebar .nav-link-section:hover .nav-label i {
+  color: #fde68a !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section.active,
+body.landing-site-body .module-sidebar .nav-link-anchor.active {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.11) !important;
+  border-left-color: #d4a853 !important;
+  font-weight: 600 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section.active > i,
+body.landing-site-body .module-sidebar .nav-link-section.active .nav-label i {
+  color: #fef08a !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section.completed:not(.active) {
+  border-left-color: #4ade80 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-section:focus-visible,
+body.landing-site-body .module-sidebar .nav-link-sub:focus-visible {
+  outline: 2px solid rgba(212, 168, 83, 0.85) !important;
+  outline-offset: 2px !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-sub {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.5rem !important;
+  padding: 0.4rem 0.75rem 0.4rem 1.65rem !important;
+  color: rgba(226, 232, 240, 0.88) !important;
+  font-size: 0.8rem !important;
+  line-height: 1.35 !important;
+  border-radius: 8px !important;
+  border-left: 3px solid transparent !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-sub:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-sub.active {
+  color: #fef9c3 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-left-color: #d4a853 !important;
+  font-weight: 600 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-link-sub i {
+  color: rgba(253, 224, 171, 0.8) !important;
+  margin-top: 0.1rem !important;
+}
+
 /* İşletim Sistemi Güvenliği (Temel) ile aynı içerik ritmi — tüm module-layout sayfaları */
 body.landing-site-body .module-layout .section-inner.module-2-enhanced {
     max-width: 1100px;
@@ -52,4 +207,53 @@ body.landing-site-body .content-card .glossary-table td {
 
 body.landing-site-body.lesson-route-mode .content-card .sg-isletim-intro {
     display: none !important;
+}
+
+/* Dersi Tamamla — landing + klasik bölüm modu */
+body.landing-site-body .lesson-complete-footer,
+body.landing-site-body .lesson-controls {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(127, 29, 29, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+body.landing-site-body .lesson-complete-btn,
+body.landing-site-body .btn-complete-lesson {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(127, 29, 29, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+body.landing-site-body .lesson-complete-btn:hover:not(:disabled),
+body.landing-site-body .btn-complete-lesson:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(127, 29, 29, 0.35);
+}
+
+body.landing-site-body .lesson-complete-btn:disabled,
+body.landing-site-body .btn-complete-lesson:disabled,
+body.landing-site-body .lesson-complete-btn.is-done,
+body.landing-site-body .btn-complete-lesson.is-done {
+    opacity: 0.72;
+    cursor: default;
+    transform: none;
+}
+
+body.landing-site-body.lesson-route-mode .content-section.lesson-route-whole-section .section-inner > :not(.lesson-complete-footer) {
+    display: block;
 }

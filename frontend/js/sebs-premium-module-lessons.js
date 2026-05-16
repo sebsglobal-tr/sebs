@@ -279,21 +279,190 @@
         });
     }
 
+    function getCardLessonHeading(card) {
+        if (!card) return null;
+        return (
+            card.querySelector(':scope > h2') ||
+            card.querySelector(':scope > h3') ||
+            card.querySelector(':scope > h4')
+        );
+    }
+
+    function ensureHeadingId(heading, sectionId, idx) {
+        if (!heading) return '';
+        if (!heading.id) {
+            heading.id =
+                sectionId + '-' + (slugifyAnchor(heading.textContent) || 'lesson-' + idx);
+        }
+        return heading.id;
+    }
+
+    function makeLessonKey(sectionId, headingId) {
+        if (!headingId || headingId === sectionId) {
+            return sectionId;
+        }
+        return sectionId + '::' + headingId;
+    }
+
+    function parseLessonKey(lessonKey) {
+        var sep = String(lessonKey || '').indexOf('::');
+        if (sep === -1) {
+            return { sectionId: lessonKey, headingId: lessonKey };
+        }
+        return {
+            sectionId: lessonKey.slice(0, sep),
+            headingId: lessonKey.slice(sep + 2)
+        };
+    }
+
+    function appendLessonFooter(container, onComplete) {
+        if (!container || container.querySelector('.lesson-complete-footer')) return;
+        var footer = document.createElement('div');
+        footer.className = 'lesson-complete-footer';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'lesson-complete-btn';
+        btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
+        btn.addEventListener('click', onComplete);
+        footer.appendChild(btn);
+        container.appendChild(footer);
+    }
+
+    function refreshCompleteButtons(completedList) {
+        var done = new Set(Array.isArray(completedList) ? completedList : []);
+        document.querySelectorAll('.lesson-complete-btn, .btn-complete-lesson').forEach(function (btn) {
+            var card = btn.closest('.content-card');
+            var sec = btn.closest('.content-section');
+            var key =
+                btn.getAttribute('data-section') ||
+                (card && card.getAttribute('data-lesson-key')) ||
+                (sec && sec.id) ||
+                '';
+            var sid = sec ? sec.id : key;
+            var isDone =
+                done.has(key) ||
+                (sid &&
+                    (done.has(sid) ||
+                        Array.from(done).some(function (k) {
+                            return String(k) === sid || String(k).indexOf(sid + '::') === 0;
+                        })));
+            btn.disabled = !!isDone;
+            btn.classList.toggle('is-done', !!isDone);
+            if (btn.classList.contains('btn-complete-lesson')) {
+                btn.innerHTML = isDone
+                    ? '<i class="fas fa-check-circle"></i> Tamamlandı'
+                    : '<i class="fas fa-check-circle"></i> Dersi Tamamla';
+            } else {
+                btn.innerHTML = isDone
+                    ? '<i class="fas fa-check"></i> Tamamlandı'
+                    : '<i class="fas fa-check"></i> Dersi Tamamla';
+            }
+        });
+    }
+
     function collectLessonKeysOrdered() {
         var keys = [];
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) return;
-            inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
-                var h2 = card.querySelector(':scope > h2');
-                if (!h2) return;
-                if (!h2.id) {
-                    h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
+            var cards = inner.querySelectorAll(':scope > .content-card');
+            if (cards.length) {
+                cards.forEach(function (card, idx) {
+                    var head = getCardLessonHeading(card);
+                    if (!head) return;
+                    var hid = ensureHeadingId(head, sec.id, idx);
+                    keys.push(makeLessonKey(sec.id, hid));
+                });
+            } else {
+                var head = inner.querySelector(':scope > h2, :scope > h3');
+                if (head) {
+                    var hid = ensureHeadingId(head, sec.id, 0);
+                    keys.push(makeLessonKey(sec.id, hid));
+                } else {
+                    keys.push(sec.id);
                 }
-                keys.push(sec.id + '::' + h2.id);
-            });
+            }
         });
         return keys;
+    }
+
+    function installLessonCompleteControls(routeMode, completeHandler) {
+        document.querySelectorAll('.content-section').forEach(function (sec) {
+            var inner = sec.querySelector('.section-inner');
+            if (!inner) {
+                if (sec.querySelector('.btn-complete-lesson')) return;
+                var legacyCard = sec.querySelector('.content-card');
+                if (legacyCard && !legacyCard.querySelector('.lesson-complete-footer')) {
+                    legacyCard.setAttribute('data-lesson-key', sec.id);
+                    appendLessonFooter(legacyCard, function () {
+                        completeHandler(sec.id);
+                    });
+                }
+                return;
+            }
+            if (inner.querySelector('.btn-complete-lesson')) return;
+
+            var cards = inner.querySelectorAll(':scope > .content-card');
+            if (cards.length) {
+                cards.forEach(function (card, idx) {
+                    var head = getCardLessonHeading(card);
+                    if (!head) return;
+                    var hid = ensureHeadingId(head, sec.id, idx);
+                    var lessonKey = makeLessonKey(sec.id, hid);
+                    card.setAttribute('data-lesson-key', lessonKey);
+                    appendLessonFooter(card, function () {
+                        completeHandler(lessonKey);
+                    });
+                });
+            } else {
+                var head = inner.querySelector(':scope > h2, :scope > h3');
+                var lessonKey = head
+                    ? makeLessonKey(sec.id, ensureHeadingId(head, sec.id, 0))
+                    : sec.id;
+                appendLessonFooter(inner, function () {
+                    completeHandler(lessonKey);
+                });
+            }
+        });
+
+        document.querySelectorAll('.btn-complete-lesson').forEach(function (btn) {
+            if (btn.dataset.sebsWired === '1') return;
+            btn.dataset.sebsWired = '1';
+            var sid = btn.getAttribute('data-section');
+            if (!sid) return;
+            btn.addEventListener('click', function () {
+                if (!routeMode) {
+                    completeHandler(sid);
+                    return;
+                }
+                var sec = document.getElementById(sid);
+                var inner = sec ? sec.querySelector('.section-inner') : null;
+                var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
+                var head = firstCard
+                    ? getCardLessonHeading(firstCard)
+                    : inner
+                      ? inner.querySelector(':scope > h2, :scope > h3')
+                      : null;
+                var key = head
+                    ? makeLessonKey(sid, ensureHeadingId(head, sid, 0))
+                    : sid;
+                completeHandler(key);
+            });
+        });
+    }
+
+    function lessonKeyForSection(sectionId) {
+        var sec = document.getElementById(sectionId);
+        if (!sec) return sectionId;
+        var inner = sec.querySelector('.section-inner');
+        if (!inner) return sectionId;
+        var card = inner.querySelector(':scope > .content-card');
+        var head = card
+            ? getCardLessonHeading(card)
+            : inner.querySelector(':scope > h2, :scope > h3');
+        return head
+            ? makeLessonKey(sectionId, ensureHeadingId(head, sectionId, 0))
+            : sectionId;
     }
 
     function wireMobileMenu() {
@@ -476,6 +645,7 @@
             completed.push(sectionId);
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
+            refreshCompleteButtons(completed);
             try {
                 if (global.syncModuleProgressBulk) {
                     await global.syncModuleProgressBulk(MODULE_NAME, completed, navLinks.length);
@@ -570,27 +740,15 @@
             }
         }
 
-        sections.forEach(function (sec) {
-            var inner = sec.querySelector('.section-inner');
-            if (!inner) return;
-            if (inner.querySelector('.lesson-complete-footer')) return;
-            var footer = document.createElement('div');
-            footer.className = 'lesson-complete-footer';
-            var btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'lesson-complete-btn';
-            btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
-            btn.onclick = function () {
-                completeLesson(sec.id);
-            };
-            footer.appendChild(btn);
-            inner.appendChild(footer);
+        installLessonCompleteControls(false, function (key) {
+            completeLesson(parseLessonKey(key).sectionId);
         });
 
         (async function initProgress() {
             var completed = await loadProgress();
             updateProgressUI(completed.length);
             markCompletedInSidebar(completed);
+            refreshCompleteButtons(completed);
         })();
 
         (async function initTrackerIfLoggedIn() {
@@ -756,7 +914,7 @@
             navLinks.forEach(function (link) {
                 var sid = link.getAttribute('data-section');
                 var keysInSection = lessonKeysOrdered.filter(function (k) {
-                    return k.indexOf(sid + '::') === 0;
+                    return k === sid || k.indexOf(sid + '::') === 0;
                 });
                 var allDone =
                     keysInSection.length > 0 &&
@@ -805,18 +963,27 @@
             if (!lessonKey || lessonKeysOrdered.indexOf(lessonKey) === -1) return false;
             document.body.classList.add('lesson-route-mode');
             document.querySelectorAll('.content-section').forEach(function (sec) {
-                sec.classList.remove('lesson-route-current-section', 'active');
+                sec.classList.remove(
+                    'lesson-route-current-section',
+                    'lesson-route-whole-section',
+                    'active'
+                );
             });
             document.querySelectorAll('.content-card').forEach(function (c) {
                 c.classList.remove('lesson-route-current-card');
             });
-            var sep = lessonKey.indexOf('::');
-            var sid = lessonKey.slice(0, sep);
-            var h2id = lessonKey.slice(sep + 2);
+            var parsed = parseLessonKey(lessonKey);
+            var sid = parsed.sectionId;
+            var h2id = parsed.headingId;
             var section = document.getElementById(sid);
-            var h2 = document.getElementById(h2id);
-            var card = h2 ? h2.closest('.content-card') : null;
-            if (section) section.classList.add('lesson-route-current-section', 'active');
+            var head = document.getElementById(h2id);
+            var card = head ? head.closest('.content-card') : null;
+            if (section) {
+                section.classList.add('lesson-route-current-section', 'active');
+                if (!card) {
+                    section.classList.add('lesson-route-whole-section');
+                }
+            }
             if (card) {
                 card.classList.add('lesson-route-current-card');
                 card.setAttribute('data-lesson-key', lessonKey);
@@ -847,7 +1014,7 @@
                 var sidebar = document.querySelector('.module-sidebar');
                 if (sidebar) sidebar.classList.remove('open');
             }
-            updateLessonRouteHero(lessonKey, section, card, h2);
+            updateLessonRouteHero(lessonKey, section, card, head);
             return true;
         }
 
@@ -865,9 +1032,8 @@
                 }
             }
             try {
-                var s = lessonKey.indexOf('::');
-                var hid = lessonKey.slice(s + 2);
-                var hEl = document.getElementById(hid);
+                var parsedTitle = parseLessonKey(lessonKey);
+                var hEl = document.getElementById(parsedTitle.headingId);
                 var t = hEl ? String(hEl.textContent || '').trim() : '';
                 document.title = t ? t + ' — ' + MODULE_NAME : MODULE_NAME + ' | SEBS';
             } catch (e2) { /* ignore */ }
@@ -899,14 +1065,21 @@
             document.querySelectorAll('.nav-link-section').forEach(function (link) {
                 var sid = link.getAttribute('data-section');
                 var firstKey = lessonKeysOrdered.find(function (k) {
-                    return k.indexOf(sid + '::') === 0;
+                    return k === sid || k.indexOf(sid + '::') === 0;
                 });
+                if (!firstKey && sid) {
+                    firstKey = lessonKeyForSection(sid);
+                }
                 if (firstKey) {
                     link.setAttribute('href', hrefWithDersParam(firstKey));
                 }
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    if (firstKey) navigateToLesson(firstKey);
+                    var key =
+                        lessonKeysOrdered.find(function (k) {
+                            return k === sid || k.indexOf(sid + '::') === 0;
+                        }) || lessonKeyForSection(sid);
+                    navigateToLesson(key);
                 });
             });
         }
@@ -923,6 +1096,7 @@
             completed.push(lessonKey);
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
+            refreshCompleteButtons(completed);
             var totalLessons = lessonKeysOrdered.length || 1;
             try {
                 if (global.syncModuleProgressBulk) {
@@ -949,29 +1123,8 @@
         lessonKeysOrdered = collectLessonKeysOrdered();
         global.MODULE_TOTAL_LESSONS = lessonKeysOrdered.length;
 
-        document.querySelectorAll('.content-section').forEach(function (sec) {
-            var inner = sec.querySelector('.section-inner');
-            if (!inner) return;
-            inner.querySelectorAll(':scope > .content-card').forEach(function (card, idx) {
-                var h2 = card.querySelector(':scope > h2');
-                if (!h2) return;
-                if (!h2.id) {
-                    h2.id = sec.id + '-' + (slugifyAnchor(h2.textContent) || 'lesson-' + idx);
-                }
-                var lessonKey = sec.id + '::' + h2.id;
-                card.setAttribute('data-lesson-key', lessonKey);
-                var footer = document.createElement('div');
-                footer.className = 'lesson-complete-footer';
-                var btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'lesson-complete-btn';
-                btn.innerHTML = '<i class="fas fa-check"></i> Dersi Tamamla';
-                btn.onclick = function () {
-                    completeLesson(lessonKey);
-                };
-                footer.appendChild(btn);
-                card.appendChild(footer);
-            });
+        installLessonCompleteControls(true, function (key) {
+            completeLesson(key);
         });
 
         wireLessonNavigation();
@@ -996,6 +1149,7 @@
             var completed = await loadProgress();
             updateProgressUI(completed.length);
             markCompletedInSidebar(completed);
+            refreshCompleteButtons(completed);
         })();
 
         (async function initTrackerIfLoggedIn() {
