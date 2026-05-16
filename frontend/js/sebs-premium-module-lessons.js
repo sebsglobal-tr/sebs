@@ -147,6 +147,25 @@
         });
     }
 
+    /** Tüm modül yan menü linkleri (birden fazla .nav-section-list olduğunda hepsi) */
+    function getAllNavSectionLinks() {
+        var sidebar = document.querySelector('.module-sidebar') || document.querySelector('.sidebar-nav');
+        if (sidebar) {
+            var fromSidebar = sidebar.querySelectorAll('.nav-link-section');
+            if (fromSidebar.length) return fromSidebar;
+        }
+        return document.querySelectorAll('.nav-section-list .nav-link-section, .nav-link-section');
+    }
+
+    function getAllNavSubLinks() {
+        var sidebar = document.querySelector('.module-sidebar') || document.querySelector('.sidebar-nav');
+        if (sidebar) {
+            var fromSidebar = sidebar.querySelectorAll('.nav-link-sub');
+            if (fromSidebar.length) return fromSidebar;
+        }
+        return document.querySelectorAll('.nav-section-list .nav-link-sub, .nav-link-sub');
+    }
+
     function isFlatLessonSection(sec) {
         if (!sec || !sec.id) return false;
         return !sec.querySelector('.section-inner');
@@ -730,10 +749,7 @@
 
     function collectLessonKeysOrdered() {
         var fromNav = [];
-        var navRoot = document.querySelector('.nav-section-list');
-        var subLinks = navRoot
-            ? navRoot.querySelectorAll('.nav-link-sub')
-            : document.querySelectorAll('.nav-link-sub');
+        var subLinks = getAllNavSubLinks();
         subLinks.forEach(function (a) {
             var secId = a.getAttribute('data-section');
             var anchorId = a.getAttribute('data-anchor');
@@ -741,9 +757,7 @@
                 fromNav.push(makeLessonKey(secId, anchorId));
             }
         });
-        var sectionLinks = navRoot
-            ? navRoot.querySelectorAll('.nav-link-section')
-            : document.querySelectorAll('.nav-link-section');
+        var sectionLinks = getAllNavSectionLinks();
         sectionLinks.forEach(function (link) {
             var sid = link.getAttribute('data-section');
             if (!sid) return;
@@ -766,6 +780,14 @@
         if (domHasSub) return fromDom;
         if (fromNav.length) return fromNav;
         return fromDom;
+    }
+
+    function catalogLessonTotal(fallback) {
+        var n = getAllNavSectionLinks().length;
+        if (n > 0) return n;
+        var ordered = collectLessonKeysOrdered();
+        if (ordered.length) return ordered.length;
+        return Math.max(1, parseInt(String(fallback), 10) || 1);
     }
 
     function installLessonCompleteControls(routeMode, completeHandler) {
@@ -932,7 +954,7 @@
         document.body.classList.add('sebs-module-progress-section', 'module-section-pages');
 
         var sections = document.querySelectorAll('.content-section');
-        var navLinks = document.querySelectorAll('.nav-link-section');
+        var navLinks = getAllNavSectionLinks();
         var navSectionList = document.querySelector('.nav-section-list');
         var progressFill = document.getElementById('progressFill');
         var progressText = document.getElementById('progressText');
@@ -957,7 +979,7 @@
             stripSubheadingNav(navSectionList);
         }
 
-        global.MODULE_TOTAL_LESSONS = navLinks.length;
+        global.MODULE_TOTAL_LESSONS = catalogLessonTotal(navLinks.length);
 
         async function loadProgress() {
             var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -1197,7 +1219,7 @@
             if (isFlatLessonModule()) {
                 cfg = Object.assign({}, cfg, { progressMode: 'lesson' });
             } else {
-                var navCount = document.querySelectorAll('.nav-link-section').length;
+                var navCount = getAllNavSectionLinks().length;
                 if (navCount > 12 && !moduleHasSubheadingNav()) {
                     cfg.progressMode = 'section';
                 }
@@ -1223,7 +1245,7 @@
         var basePath = cfg.basePath || (global.location && global.location.pathname) || '/';
 
         var sections = document.querySelectorAll('.content-section');
-        var navLinks = document.querySelectorAll('.nav-link-section');
+        var navLinks = getAllNavSectionLinks();
         var navSectionList = document.querySelector('.nav-section-list');
         var lessonKeysOrdered = [];
         var progressFill = document.getElementById('progressFill');
@@ -1315,11 +1337,13 @@
                     var lessons = step.completedLessons || [];
                     var merged = normalizeCompletedLessons(lessons);
                     if (merged.length) {
+                        var catalogTotal = catalogLessonTotal(lessonKeysOrdered.length);
+                        var apiTotal = parseInt(String(step.totalLessons), 10) || 0;
                         localStorage.setItem(
                             STORAGE_KEY,
                             JSON.stringify({
                                 completedLessons: merged,
-                                totalLessons: step.totalLessons || lessonKeysOrdered.length || merged.length,
+                                totalLessons: Math.max(catalogTotal, apiTotal < catalogTotal ? 0 : apiTotal),
                                 lastUpdated: new Date().toISOString()
                             })
                         );
@@ -1333,7 +1357,13 @@
         }
 
         function saveProgressLocal(completedLessons) {
-            var total = lessonKeysOrdered.length || 1;
+            var total = catalogLessonTotal(lessonKeysOrdered.length);
+            if (lessonKeysOrdered.length && completedLessons.length) {
+                var valid = new Set(lessonKeysOrdered.map(canonicalLessonKey));
+                completedLessons = completedLessons.filter(function (k) {
+                    return valid.has(canonicalLessonKey(k));
+                });
+            }
             var pct = total ? Math.round((completedLessons.length / total) * 100) : 0;
             localStorage.setItem(
                 STORAGE_KEY,
@@ -1347,7 +1377,7 @@
         }
 
         function updateProgressUI(completedCount) {
-            var total = lessonKeysOrdered.length || 1;
+            var total = catalogLessonTotal(lessonKeysOrdered.length);
             var pct = total ? Math.round((completedCount / total) * 100) : 0;
             if (progressFill) progressFill.style.width = pct + '%';
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
@@ -1522,14 +1552,14 @@
         }
 
         function wireLessonNavigation() {
-            document.querySelectorAll('.nav-link-sub').forEach(function (a) {
+            getAllNavSubLinks().forEach(function (a) {
                 var secId = a.getAttribute('data-section');
                 var anchorId = a.getAttribute('data-anchor');
                 if (!secId || !anchorId) return;
                 var lk = secId + '::' + anchorId;
                 a.setAttribute('href', hrefWithDersParam(lk));
             });
-            document.querySelectorAll('.nav-link-section').forEach(function (link) {
+            getAllNavSectionLinks().forEach(function (link) {
                 var sid = link.getAttribute('data-section');
                 var firstKey = lessonKeysOrdered.find(function (k) {
                     return k === sid || k.indexOf(sid + '::') === 0;
@@ -1540,6 +1570,18 @@
                 if (firstKey) {
                     link.setAttribute('href', hrefWithDersParam(firstKey));
                 }
+                if (link.dataset.sebsNavWired === '1') return;
+                link.dataset.sebsNavWired = '1';
+                link.addEventListener('click', function (ev) {
+                    var key = firstKey || (sid ? lessonKeyForSection(sid) : '');
+                    key = canonicalLessonKey(key);
+                    if (!key || lessonKeysOrdered.indexOf(key) === -1) return;
+                    if (isFlatLessonModule()) {
+                        ev.preventDefault();
+                        navigateToLesson(key, { inPlace: true });
+                        syncLessonUrl(key, basePath, false);
+                    }
+                });
             });
         }
 
@@ -1568,7 +1610,7 @@
             saveProgressLocal(completed);
             markCompletedInSidebar(completed);
             refreshCompleteButtons(completed);
-            var totalLessons = lessonKeysOrdered.length || 1;
+            var totalLessons = catalogLessonTotal(lessonKeysOrdered.length);
             try {
                 if (global.syncModuleProgressBulk) {
                     await global.syncModuleProgressBulk(MODULE_NAME, completed, totalLessons);
@@ -1589,7 +1631,7 @@
         }
 
         lessonKeysOrdered = collectLessonKeysOrdered();
-        global.MODULE_TOTAL_LESSONS = lessonKeysOrdered.length;
+        global.MODULE_TOTAL_LESSONS = catalogLessonTotal(lessonKeysOrdered.length);
 
         installLessonCompleteControls(true, function (key) {
             completeLesson(key);
@@ -1631,6 +1673,22 @@
             updateProgressUI(completed.length);
             markCompletedInSidebar(completed);
             refreshCompleteButtons(completed);
+            var catalogTotal = catalogLessonTotal(lessonKeysOrdered.length);
+            if (
+                catalogTotal > 1 &&
+                completed.length > 0 &&
+                completed.length < catalogTotal &&
+                global.syncModuleProgressBulk
+            ) {
+                var authTok =
+                    (global.getProgressAuthToken && (await global.getProgressAuthToken())) ||
+                    (typeof localStorage !== 'undefined' && localStorage.getItem('authToken'));
+                if (authTok) {
+                    global
+                        .syncModuleProgressBulk(MODULE_NAME, completed, catalogTotal)
+                        .catch(function () {});
+                }
+            }
         })();
 
         (async function initTrackerIfLoggedIn() {

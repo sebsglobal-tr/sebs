@@ -103,6 +103,19 @@ async function getSupabaseAccessToken() {
     return getSupabaseAccessTokenFromStorage();
 }
 
+/** API modül başlığı eşlemesi (sayfa MODULE_NAME → veritabanı title) */
+const MODULE_NAME_LOOKUP_ALIASES = {
+    'İşletim Sistemleri Güvenliği (Temel)': [
+        'İşletim Sistemi Güvenliği',
+        'İşletim Sistemi Güvenliği (Temel)',
+        'İşletim Sistemleri Güvenliği'
+    ],
+    'İşletim Sistemi Güvenliği (İleri Temel)': [
+        'İşletim Sistemi Güvenliği (İleri)',
+        'İşletim Sistemleri Güvenliği (İleri Temel)'
+    ]
+};
+
 window.getModuleIdFromName = async function (rawName) {
     const moduleName = String(rawName || '')
         .trim()
@@ -152,6 +165,18 @@ window.getModuleIdFromName = async function (rawName) {
             function pickModuleIdFromFlatList(list) {
                 if (!list || !list.length) return null;
                 const want = normModuleTitleStr(moduleName);
+                const aliases = MODULE_NAME_LOOKUP_ALIASES[moduleName] || [];
+                const wantSet = new Set(
+                    [want]
+                        .concat(
+                            aliases.map((a) => normModuleTitleStr(a))
+                        )
+                        .filter(Boolean)
+                );
+                for (const m of list) {
+                    const t = normModuleTitleStr(m.title || m.name);
+                    if (t && wantSet.has(t)) return m.id;
+                }
                 for (const m of list) {
                     const t = normModuleTitleStr(m.title || m.name);
                     if (t && t === want) return m.id;
@@ -159,7 +184,17 @@ window.getModuleIdFromName = async function (rawName) {
                 const loose = [];
                 for (const m of list) {
                     const t = normModuleTitleStr(m.title || m.name);
-                    if (t && matchModuleTitleLoose(t, want)) loose.push(m);
+                    if (!t) continue;
+                    let matched = matchModuleTitleLoose(t, want);
+                    if (!matched) {
+                        for (const alias of aliases) {
+                            if (matchModuleTitleLoose(t, normModuleTitleStr(alias))) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (matched) loose.push(m);
                 }
                 if (loose.length === 1) return loose[0].id;
                 if (loose.length > 1) {
@@ -270,7 +305,11 @@ window.ModuleProgressTracker = {
                 completedLessons.push(lessonName);
             }
             
-            const totalLessons = currentProgress?.totalLessons || window.MODULE_TOTAL_LESSONS || 0;
+            const totalLessons = Math.max(
+                1,
+                parseInt(String(window.MODULE_TOTAL_LESSONS), 10) || 0,
+                parseInt(String(currentProgress?.totalLessons), 10) || 0
+            );
             const percentage = totalLessons > 0 
                 ? Math.round((completedLessons.length / totalLessons) * 100) 
                 : 0;
@@ -595,10 +634,14 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
         const clientList = Array.isArray(clientCompletedLessons)
             ? clientCompletedLessons.map((x) => String(x))
             : [];
+        const catalogHint = Math.max(
+            0,
+            parseInt(String(global.MODULE_TOTAL_LESSONS), 10) || 0
+        );
         const normalizedTotal = Math.max(
             1,
             parseInt(String(totalLessons), 10) || 0,
-            clientList.length
+            catalogHint
         );
         const token = await getSupabaseAccessToken();
         if (!token) {
@@ -635,12 +678,7 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
         }
 
         const merged = [...new Set([...serverList.map(String), ...clientList])];
-        const total = Math.max(
-            1,
-            normalizedTotal,
-            serverTotal,
-            merged.length
-        );
+        const total = Math.max(1, normalizedTotal, serverTotal > normalizedTotal ? serverTotal : 0);
         const pct = Math.min(100, Math.round((merged.length / total) * 100));
         const lastStepPayload = {
             completedLessons: merged,
