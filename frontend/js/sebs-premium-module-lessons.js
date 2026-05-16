@@ -1,11 +1,8 @@
 /**
- * Premium modül ilerleme modeli:
- * - content-card veya bölüm başına ders anahtarı (sectionId::h2Id)
+ * Sosyal mühendislik modülü ile aynı ilerleme modeli:
+ * - content-card başına ders anahtarı (sectionId::h2Id)
  * - syncModuleProgressBulk + yerel STORAGE_KEY
  * - ?ders= URL, TimeTracker, initializeModule(lesson sayısı)
- *
- * Alt başlık (h2) yan menüsü zorunlu değildir; varsayılan yalnızca bölüm linkleri.
- * İç içe alt menü için: subNavScroll: true veya autoSubheadingNav: true
  */
 (function (global) {
     'use strict';
@@ -143,9 +140,6 @@
             if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
                 return false;
             }
-            if (h.classList.contains('wireshark-subheading') || h.classList.contains('section-mini-heading')) {
-                return false;
-            }
             if (/^terimler\s+sözlüğü/i.test(t)) {
                 return false;
             }
@@ -195,8 +189,7 @@
     function resolveSubNavScroll(cfg) {
         if (cfg && cfg.subNavScroll === true) return true;
         if (cfg && cfg.subNavScroll === false) return false;
-        if (cfg && cfg.autoSubheadingNav === true) return moduleHasSubheadingNav();
-        return false;
+        return moduleHasSubheadingNav();
     }
 
     function buildSubheadingNav(navSectionList) {
@@ -859,7 +852,7 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg);
+        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
         if (subNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
         }
@@ -1149,7 +1142,7 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg);
+        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
         if (subNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
         }

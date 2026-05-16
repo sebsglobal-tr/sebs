@@ -18,6 +18,7 @@
     <!--
       Landing ders sayfası (Siber Güvenliğe Giriş modülü ile aynı hat):
       1) body.landing-site-body + sabit üst bar + landing footer
+      2)     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
 </head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
       3) premium-lesson + sayfa içi stiller (docx-content, linux-terminal, quiz-exam, interactive-lesson)
       4) </body> öncesi: Supabase CDN + supabase-env/client/auth + navigation.js (giriş durumu üst menüde)
@@ -27,14 +28,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/premium-lesson.css" />
+    <link rel="stylesheet" href="/css/premium-lesson.css">
+<link rel="stylesheet" href="/css/module-shell-base.css" />
     
     <script src="/js/api-base.js"></script>
-    <script src="/utils/module-progress.js"></script>
-    <script src="/utils/time-tracker.js"></script>
-    <script src="/utils/quiz-exam.js"></script>
-    <script src="/utils/interactive-lesson.js"></script>
+    <script src="../utils/module-progress.js"></script>
+    <script src="../utils/time-tracker.js"></script>
+    <script src="../utils/quiz-exam.js"></script>
+    <script src="../utils/interactive-lesson.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -56,7 +59,12 @@
       },
     };
   </script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css" />
+<link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
+    <link rel="stylesheet" href="/css/module-isletim-standard.css" />
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -3224,8 +3232,8 @@
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
             <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
-              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="#" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
             </ul>
           </div>
         </div>

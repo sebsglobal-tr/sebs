@@ -127,14 +127,7 @@ async function getUserAccessLevel() {
 const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
 
 /** Modüller satışta vaat edilir ama henüz içerik yayında değil */
-const MODULES_NOT_LIVE = [
-    'web-uygulama-guvenligi',
-    'web-app-security',
-    'aws-temelleri',
-    'azure-cloud',
-    'gcp',
-    'coming-soon'
-];
+const MODULES_NOT_LIVE = ['web-uygulama-guvenligi', 'web-app-security'];
 
 function isLocalDevAccess() {
     try {
