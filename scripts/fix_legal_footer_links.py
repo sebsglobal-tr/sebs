@@ -36,18 +36,6 @@ REPLACEMENTS: list[tuple[str, str]] = [
         r'<a href="/kvkk-aydinlatma.html">KVKK</a>',
         '<a href="/kvkk">KVKK</a>',
     ),
-    (
-        r'href="/gizlilik-politikasi.html"',
-        'href="/gizlilik"',
-    ),
-    (
-        r'href="/kullanim-sartlari.html"',
-        'href="/kullanim-sartlari"',
-    ),
-    (
-        r'href="/kvkk-aydinlatma.html"',
-        'href="/kvkk"',
-    ),
 ]
 
 
