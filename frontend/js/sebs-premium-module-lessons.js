@@ -579,27 +579,7 @@
         });
     }
 
-    function collectLessonKeysOrdered() {
-        var fromNav = [];
-        document.querySelectorAll('.nav-link-sub').forEach(function (a) {
-            var secId = a.getAttribute('data-section');
-            var anchorId = a.getAttribute('data-anchor');
-            if (secId && anchorId) {
-                fromNav.push(makeLessonKey(secId, anchorId));
-            }
-        });
-        document.querySelectorAll('.nav-link-section').forEach(function (link) {
-            var sid = link.getAttribute('data-section');
-            if (!sid) return;
-            var hasSub = fromNav.some(function (k) {
-                return k.indexOf(sid + '::') === 0;
-            });
-            if (hasSub) return;
-            var key = lessonKeyForSection(sid);
-            if (fromNav.indexOf(key) === -1) fromNav.push(key);
-        });
-        if (fromNav.length) return fromNav;
-
+    function collectLessonKeysFromDomWalk() {
         var keys = [];
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
@@ -607,7 +587,7 @@
                 var flatHead = flatSectionHeading(sec);
                 if (flatHead) {
                     keys.push(makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0)));
-                } else {
+                } else if (sec.id) {
                     keys.push(sec.id);
                 }
                 return;
@@ -620,17 +600,64 @@
                     var hid = ensureHeadingId(head, sec.id, idx);
                     keys.push(makeLessonKey(sec.id, hid));
                 });
-            } else {
-                var head = inner.querySelector(':scope > h2, :scope > h3');
-                if (head) {
-                    var hid = ensureHeadingId(head, sec.id, 0);
+                return;
+            }
+            var subHeadings = getSectionSubheadings(inner);
+            if (subHeadings.length) {
+                subHeadings.forEach(function (head, idx) {
+                    var hid = ensureHeadingId(head, sec.id, idx);
                     keys.push(makeLessonKey(sec.id, hid));
-                } else {
-                    keys.push(sec.id);
-                }
+                });
+                return;
+            }
+            var head = inner.querySelector(':scope > h2, :scope > h3');
+            if (head) {
+                keys.push(makeLessonKey(sec.id, ensureHeadingId(head, sec.id, 0)));
+            } else if (sec.id) {
+                keys.push(sec.id);
             }
         });
         return keys;
+    }
+
+    function collectLessonKeysOrdered() {
+        var fromNav = [];
+        var navRoot = document.querySelector('.nav-section-list');
+        var subLinks = navRoot
+            ? navRoot.querySelectorAll('.nav-link-sub')
+            : document.querySelectorAll('.nav-link-sub');
+        subLinks.forEach(function (a) {
+            var secId = a.getAttribute('data-section');
+            var anchorId = a.getAttribute('data-anchor');
+            if (secId && anchorId) {
+                fromNav.push(makeLessonKey(secId, anchorId));
+            }
+        });
+        var sectionLinks = navRoot
+            ? navRoot.querySelectorAll('.nav-link-section')
+            : document.querySelectorAll('.nav-link-section');
+        sectionLinks.forEach(function (link) {
+            var sid = link.getAttribute('data-section');
+            if (!sid) return;
+            var hasSub = fromNav.some(function (k) {
+                return k.indexOf(sid + '::') === 0;
+            });
+            if (hasSub) return;
+            var key = lessonKeyForSection(sid);
+            if (fromNav.indexOf(key) === -1) fromNav.push(key);
+        });
+
+        var fromDom = collectLessonKeysFromDomWalk();
+        var navHasSub = fromNav.some(function (k) {
+            return k.indexOf('::') !== -1;
+        });
+        var domHasSub = fromDom.some(function (k) {
+            return k.indexOf('::') !== -1;
+        });
+        if (navHasSub) return fromNav;
+        if (domHasSub) return fromDom;
+        if (fromNav.length) return fromNav;
+        return fromDom;
     }
 
     function installLessonCompleteControls(routeMode, completeHandler) {
@@ -806,8 +833,8 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg);
-        if (subNavScroll) {
+        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
+        if (subNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
         }
 
@@ -1096,8 +1123,8 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg);
-        if (subNavScroll) {
+        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
+        if (subNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
         }
 
