@@ -526,13 +526,20 @@
         var q = querySuffixFromBasePath(basePath);
         var parsed = parseLessonKey(canonicalLessonKey(lessonKey));
         if (isFlatLessonModule()) {
-            return (
-                '/modules/' +
-                slug +
-                '.html?bolum=' +
-                encodeURIComponent(parsed.sectionId) +
-                q
-            );
+            var flatParams = new URLSearchParams(q ? q.replace(/^\?/, '') : '');
+            flatParams.set('bolum', parsed.sectionId);
+            return '/modules/' + slug + '.html?' + flatParams.toString();
+        }
+        if (q) {
+            var params = new URLSearchParams(q.replace(/^\?/, ''));
+            if (String(lessonKey || '').indexOf('::') !== -1) {
+                params.set('ders', lessonKey);
+                params.delete('bolum');
+            } else {
+                params.set('bolum', parsed.sectionId);
+                params.delete('ders');
+            }
+            return '/modules/' + slug + '.html?' + params.toString();
         }
         var path;
         if (String(lessonKey || '').indexOf('::') !== -1) {

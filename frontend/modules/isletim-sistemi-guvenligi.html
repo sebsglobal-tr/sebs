@@ -20,6 +20,12 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/premium-lesson.css" />
+    <link rel="stylesheet" href="/css/module-shell-base.css" />
+    <link rel="stylesheet" href="/css/saas-landing.css" />
+    <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=3" />
+    <link rel="stylesheet" href="/css/module-lesson-landing.css" />
+    <link rel="stylesheet" href="/css/module-isletim-standard.css" />
 
     <script src="/js/api-base.js"></script>
     <!-- Module Progress Tracker -->
@@ -158,8 +164,7 @@
         </aside>
 
         <!-- Content Sections -->
-        <main
-            style="margin-left: 320px; width: calc(100% - 320px); max-width: calc(100vw - 320px); overflow-x: hidden; overflow-y: visible; box-sizing: border-box; position: relative;">
+        <main>
             <div id="lesson-route-hero" class="lesson-route-hero" aria-live="polite" hidden>
                 <p class="lesson-route-hero-module"></p>
                 <p class="lesson-route-hero-lesson"></p>
@@ -8012,25 +8017,48 @@ ssh.service                         <span style="color: #a6e3a1;">enabled</span>
     </div>
 
     <script>
+    (function persistTrackParam() {
+      var q = new URLSearchParams(location.search);
+      var tr = (q.get('track') || '').toLowerCase();
+      if (tr === 'ileri' || tr === 'ileri-temel' || tr === 'ileritemel') {
+        try { sessionStorage.setItem('sebs_isletim_track', 'ileri'); } catch (e) {}
+      } else if (tr === 'temel' || !tr) {
+        try { sessionStorage.setItem('sebs_isletim_track', tr || 'temel'); } catch (e2) {}
+      } else {
+        try {
+          var saved = sessionStorage.getItem('sebs_isletim_track');
+          if (saved && !q.has('track')) {
+            q.set('track', saved);
+            if (q.get('ders') || q.get('bolum')) {
+              history.replaceState(null, '', location.pathname + '?' + q.toString());
+            }
+          }
+        } catch (e3) {}
+      }
+    })();
     (function () {
       var q = new URLSearchParams(location.search);
-      var tr = (q.get('track') || 'temel').toLowerCase();
+      var tr = (q.get('track') || sessionStorage.getItem('sebs_isletim_track') || 'temel').toLowerCase();
       if (tr === 'ileri' || tr === 'ileri-temel' || tr === 'ileritemel') {
         window.__SEBS_ISLETIM_LESSON__ = {
           moduleName: 'İşletim Sistemi Güvenliği (İleri Temel)',
           storageKey: 'module_progress_isletim_sistemi_guvenligi_ileri_temel',
-          basePath: '/modules/isletim-sistemi-guvenligi.html?track=ileri'
+          basePath: '/modules/isletim-sistemi-guvenligi.html?track=ileri',
+          progressMode: 'lesson',
+          subNavScroll: true
         };
       } else {
         window.__SEBS_ISLETIM_LESSON__ = {
           moduleName: 'İşletim Sistemleri Güvenliği (Temel)',
           storageKey: 'module_progress_isletim_sistemleri_guvenligi_temel',
-          basePath: '/modules/isletim-sistemi-guvenligi.html?track=temel'
+          basePath: '/modules/isletim-sistemi-guvenligi.html?track=temel',
+          progressMode: 'lesson',
+          subNavScroll: true
         };
       }
     })();
     </script>
-    <script src="/js/sebs-premium-module-lessons.js"></script>
+    <script src="/js/sebs-premium-module-lessons.js?v=20260516b"></script>
     <script>
       if (window.SebsPremiumModuleLessons && window.__SEBS_ISLETIM_LESSON__) {
         window.SebsPremiumModuleLessons.run(window.__SEBS_ISLETIM_LESSON__);
