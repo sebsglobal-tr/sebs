@@ -310,7 +310,7 @@
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
-        var subNavScroll = cfg.subNavScroll !== false;
+        var subNavScroll = cfg.subNavScroll === true;
 
         document.body.classList.add('sebs-module-progress-section');
         try {

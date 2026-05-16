@@ -6080,16 +6080,90 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
 </div>
 </section>
 
-<section class="content-section docx-content" id="modül-9-değerlendirme" data-section="modül-9-değerlendirme">
+<section class="content-section docx-content eval-quiz-section" id="modül-9-değerlendirme" data-section="modül-9-değerlendirme">
 <div class="section-inner">
-<h2><strong>Modül 9 — Değerlendirme</strong></h2>
-<ol>
-<li><code>whoami</code> ne yapar? — Oturum kullanıcısını gösterir.</li>
-<li><code>nmap -sV</code> ne işe yarar? — Servis sürümü tespiti.</li>
-<li><code>chmod +x</code> ne yapar? — Çalıştırma izni verir.</li>
-<li>MSFconsole'da modül seçmek için? — <code>use</code></li>
-<li><code>sha256sum</code> ne için? — Dosya hash hesaplama.</li>
-</ol>
+<h2 id="modül-9-değerlendirme"><strong>Modül 9 — Değerlendirme Testi (10 Soru)</strong></h2>
+<p>Aşağıdaki sorular, Modül 9’da işlenen Linux komutları ve siber güvenlik araçlarının temel kullanımını ölçer.</p>
+<h3 id="m9-soru-1"><strong>Soru 1</strong></h3>
+<p><code>whoami</code> komutunun temel çıktısı nedir?<br />
+A) Dosya izinlerini listeler<br />
+B) Oturumdaki geçerli kullanıcı adını gösterir<br />
+C) Açık TCP portlarını tarar<br />
+D) Dosyanın SHA-256 özetini üretir</p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> <code>whoami</code> hangi kullanıcı bağlamında komut çalıştırdığınızı gösterir.</p>
+<h3 id="m9-soru-2"><strong>Soru 2</strong></h3>
+<p><code>chmod +x script.sh</code> ne yapar?<br />
+A) Dosyayı siler<br />
+B) Dosyaya çalıştırma (execute) izni ekler<br />
+C) Dosyayı root’a taşır<br />
+D) Ağ bağlantısını keser</p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> <code>+x</code> çalıştırma bitini ekler.</p>
+<h3 id="m9-soru-3"><strong>Soru 3</strong></h3>
+<p><code>nmap -sV 192.0.2.10</code> ifadesinde <code>-sV</code> ne sağlar?<br />
+A) Yalnızca ping atar<br />
+B) Açık portlarda servis ve sürüm tespiti yapar<br />
+C) DNS kayıtlarını değiştirir<br />
+D) Dosya hash’i hesaplar</p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> <code>-sV</code> servis fingerprinting ile sürüm bilgisi toplar.</p>
+<h3 id="m9-soru-4"><strong>Soru 4</strong></h3>
+<p>MSFconsole’da bir exploit modülünü seçmek için hangi komut kullanılır?<br />
+A) <code>run</code><br />
+B) <code>use</code><br />
+C) <code>search</code><br />
+D) <code>exit</code></p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> <code>use exploit/...</code> modülü aktif bağlama alır.</p>
+<h3 id="m9-soru-5"><strong>Soru 5</strong></h3>
+<p><code>sha256sum dosya.bin</code> çıktısı pratikte ne için kullanılır?<br />
+A) Dosyanın bütünlüğünü doğrulamak (hash karşılaştırma)<br />
+B) Dosyayı şifrelemek<br />
+C) Port taramak<br />
+D) Kullanıcı oluşturmak</p>
+<p><strong>Doğru cevap: A</strong><br />
+<strong>Açıklama:</strong> Hash, dosyanın değişip değişmediğini kontrol etmek için kullanılır.</p>
+<h3 id="m9-soru-6"><strong>Soru 6</strong></h3>
+<p><code>strings</code> aracının tipik kullanım amacı nedir?<br />
+A) İkili dosyadan okunabilir metin dizelerini çıkarmak<br />
+B) Ağ paketlerini yakalamak<br />
+C) Parola kırmak<br />
+D) DNS sunucusu kurmak</p>
+<p><strong>Doğru cevap: A</strong><br />
+<strong>Açıklama:</strong> Hızlı statik incelemede IP, URL veya komut ipuçları bulmaya yardımcı olur.</p>
+<h3 id="m9-soru-7"><strong>Soru 7</strong></h3>
+<p><code>curl</code> ile <code>wget</code> arasındaki temel fark hangisidir?<br />
+A) İkisi de yalnızca e-posta gönderir<br />
+B) <code>curl</code> çoğunlukla API/test; <code>wget</code> dosya indirmede yaygındır<br />
+C) <code>wget</code> yalnızca Windows’ta çalışır<br />
+D) <code>curl</code> hash üretmez</p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> Her ikisi de HTTP istemcisidir; kullanım bağlamı farklılaşır.</p>
+<h3 id="m9-soru-8"><strong>Soru 8</strong></h3>
+<p><code>tcpdump</code> ne tür bir araçtır?<br />
+A) Paket yakalama ve ağ trafiği analizi<br />
+B) Dosya şifreleme<br />
+C) Kullanıcı parolası sıfırlama<br />
+D) Yedekleme planlayıcı</p>
+<p><strong>Doğru cevap: A</strong><br />
+<strong>Açıklama:</strong> Ağ olaylarında trafik incelemesi için kullanılır.</p>
+<h3 id="m9-soru-9"><strong>Soru 9</strong></h3>
+<p><code>dig example.com</code> komutu öncelikle ne yapar?<br />
+A) DNS sorgusu yapar (kayıt bilgisi)<br />
+B) Disk biçimlendirir<br />
+C) MSF modülü yükler<br />
+D) Parola listesi üretir</p>
+<p><strong>Doğru cevap: A</strong><br />
+<strong>Açıklama:</strong> <code>dig</code> DNS kayıtlarını sorgulamak için kullanılır.</p>
+<h3 id="m9-soru-10"><strong>Soru 10</strong></h3>
+<p>Modül 9’daki araçlarla ilgili etik kullanım için en doğru ilke hangisidir?<br />
+A) Her ağda izinsiz tarama yapılabilir<br />
+B) Yalnızca yazılı yetki ve eğitim/lab ortamında kullanılmalıdır<br />
+C) Sonuçlar herkese açık paylaşılmalıdır<br />
+D) Üretim sistemlerinde test için yeterlidir</p>
+<p><strong>Doğru cevap: B</strong><br />
+<strong>Açıklama:</strong> Nmap, Metasploit ve paket yakalama araçları yalnızca yetkili kapsamda kullanılmalıdır.</p>
 </div>
 </section>
 
@@ -6128,6 +6202,7 @@ nc       5432  analyst  3u  IPv4  12345      0t0  TCP *:4444 (LISTEN)</span>
     <script src="module-access-check.js"></script>
     <script src="/js/module-inline-cards.js"></script>
     <script src="/js/module-visual-enrichment.js"></script>
+    <script src="/js/siber-giris-module-enhance.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
