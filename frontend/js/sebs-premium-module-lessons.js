@@ -18,6 +18,35 @@
             .replace(/-+/g, '-');
     }
 
+    /** Yan menü ve kahraman başlık: MODÜL 2 — … / 2.5 … öneklerini kaldırır */
+    function formatTopicTitle(text) {
+        var t = String(text || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        if (!t) return t;
+        t = t.replace(/^MODÜL\s*\d+\s*[—\-–:]\s*/iu, '');
+        t = t.replace(/^\d+(?:\.\d+)+\s+/u, '');
+        return t.trim();
+    }
+
+    function setNavLinkLabel(link, labelText, iconClass) {
+        if (!link) return;
+        var t = formatTopicTitle(labelText);
+        link.textContent = '';
+        var icon = document.createElement('i');
+        icon.className = iconClass || 'fas fa-book';
+        link.appendChild(icon);
+        link.appendChild(document.createTextNode(' ' + t));
+    }
+
+    function applyTopicTitleToHeading(el) {
+        if (!el) return;
+        if (!el.dataset.sebsRawTopic) {
+            el.dataset.sebsRawTopic = String(el.textContent || '').trim();
+        }
+        el.textContent = formatTopicTitle(el.dataset.sebsRawTopic);
+    }
+
     function getSubheadingIconClass(title) {
         var t = String(title || '').trim();
         if (t === 'Kendini Değerlendir' || /^kendini\s+değerlendir$/i.test(t)) return 'fa-clipboard-list';
@@ -92,6 +121,9 @@
             if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
                 return false;
             }
+            if (/^terimler\s+sözlüğü/i.test(t)) {
+                return false;
+            }
             return true;
         });
     }
@@ -133,11 +165,17 @@
             var subHeadings = getSectionSubheadings(inner);
             if (!subHeadings.length) {
                 parentLi.classList.remove('nav-section-item', 'is-open');
+                var topIconEl = moduleLink.querySelector('i.fas, i.fab');
+                setNavLinkLabel(
+                    moduleLink,
+                    moduleLink.textContent,
+                    topIconEl ? topIconEl.className : 'fas fa-book'
+                );
                 return;
             }
             parentLi.classList.add('nav-section-item');
             if (!moduleLink.querySelector('.nav-label')) {
-                var text = moduleLink.textContent.trim();
+                var text = formatTopicTitle(moduleLink.textContent);
                 var iconEl = moduleLink.querySelector('i.fas, i.fab');
                 var iconClass = iconEl ? iconEl.className : 'fas fa-book';
                 moduleLink.innerHTML =
@@ -146,7 +184,16 @@
                     '"></i> ' +
                     text +
                     '</span><i class="fas fa-chevron-right nav-expand-indicator"></i>';
-            } else if (!moduleLink.querySelector('.nav-expand-indicator')) {
+            } else {
+                var labelEl = moduleLink.querySelector('.nav-label');
+                if (labelEl) {
+                    var iconInLabel = labelEl.querySelector('i.fas, i.fab');
+                    var labelIcon = iconInLabel ? iconInLabel.className : 'fas fa-book';
+                    var labelText = formatTopicTitle(labelEl.textContent);
+                    labelEl.innerHTML = '<i class="' + labelIcon + '"></i> ' + labelText;
+                }
+            }
+            if (!moduleLink.querySelector('.nav-expand-indicator')) {
                 var chevron = document.createElement('i');
                 chevron.className = 'fas fa-chevron-right nav-expand-indicator';
                 moduleLink.appendChild(chevron);
@@ -160,17 +207,15 @@
                 }
                 var li = document.createElement('li');
                 li.className = 'nav-subitem';
-                var icon = getSubheadingIconClass(h2.textContent.trim());
-                li.innerHTML =
-                    '<a href="#" class="nav-link-sub" data-section="' +
-                    sectionId +
-                    '" data-anchor="' +
-                    h2.id +
-                    '"><i class="fas ' +
-                    icon +
-                    ' subtopic-icon"></i> ' +
-                    h2.textContent.trim() +
-                    '</a>';
+                var rawTitle = String(h2.textContent || '').trim();
+                var icon = getSubheadingIconClass(rawTitle);
+                var subLink = document.createElement('a');
+                subLink.href = '#';
+                subLink.className = 'nav-link-sub';
+                subLink.setAttribute('data-section', sectionId);
+                subLink.setAttribute('data-anchor', h2.id);
+                setNavLinkLabel(subLink, rawTitle, 'fas ' + icon + ' subtopic-icon');
+                li.appendChild(subLink);
                 subList.appendChild(li);
             });
         });
@@ -985,8 +1030,15 @@
             var elLes = host.querySelector('.lesson-route-hero-lesson');
             var heroImg = host.querySelector('.lesson-route-hero-img');
             var heroImgWrap = host.querySelector('.lesson-route-hero-img-wrap');
-            if (elMod) elMod.textContent = modTitleEl ? String(modTitleEl.textContent || '').trim() : '';
-            if (elLes) elLes.textContent = h2 ? String(h2.textContent || '').trim() : '';
+            if (elMod) {
+                elMod.textContent = '';
+                elMod.hidden = true;
+            }
+            if (elLes) {
+                elLes.textContent = h2
+                    ? formatTopicTitle(h2.dataset.sebsRawTopic || h2.textContent)
+                    : '';
+            }
             var src = '';
             var alt = '';
             if (isFirstLessonInModule && modBannerImg) {
@@ -1032,6 +1084,9 @@
             if (card) {
                 card.classList.add('lesson-route-current-card');
                 card.setAttribute('data-lesson-key', lessonKey);
+            }
+            if (head) {
+                applyTopicTitleToHeading(head);
             }
             navLinks.forEach(function (l) {
                 l.classList.toggle('active', l.getAttribute('data-section') === sid);
@@ -1079,7 +1134,9 @@
             try {
                 var parsedTitle = parseLessonKey(lessonKey);
                 var hEl = document.getElementById(parsedTitle.headingId);
-                var t = hEl ? String(hEl.textContent || '').trim() : '';
+                var t = hEl
+                    ? formatTopicTitle(hEl.dataset.sebsRawTopic || hEl.textContent)
+                    : '';
                 document.title = t ? t + ' — ' + MODULE_NAME : MODULE_NAME + ' | SEBS';
             } catch (e2) { /* ignore */ }
         }

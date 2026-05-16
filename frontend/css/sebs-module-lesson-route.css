@@ -3,6 +3,12 @@ body.lesson-route-mode .content-section {
     display: none !important;
 }
 
+/* Bölüm dışına düşmüş test / başlık kalıntıları (enjeksiyon hatası) */
+body.lesson-route-mode main > h2,
+body.lesson-route-mode main > .eval-quiz-section {
+    display: none !important;
+}
+
 body.lesson-route-mode .content-section.lesson-route-current-section {
     display: block !important;
 }
@@ -28,13 +34,11 @@ body.lesson-route-mode .lesson-route-current-section .section-inner > .lesson-im
 }
 
 .lesson-route-hero-module {
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    opacity: 0.85;
-    margin: 0 0 0.4rem;
-    line-height: 1.35;
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-hero-module {
+    display: none !important;
 }
 
 .lesson-route-hero-lesson {

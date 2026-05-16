@@ -11,6 +11,50 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULES = ROOT / "frontend" / "modules"
+SCRIPTS = Path(__file__).resolve().parent
+
+# section_id -> soru listesi (anlama odaklı bankalar)
+_QUIZ_BANKS: dict[str, dict[str, list[dict]]] = {}
+
+
+def _load_quiz_banks() -> None:
+    global _QUIZ_BANKS
+    if _QUIZ_BANKS:
+        return
+    try:
+        import sys
+
+        if str(SCRIPTS) not in sys.path:
+            sys.path.insert(0, str(SCRIPTS))
+        from quiz_banks.temel_kriptografi import QUESTIONS as kr_questions
+
+        _QUIZ_BANKS["temel-kriptografi.html"] = kr_questions
+    except ImportError:
+        pass
+
+
+def shuffle_question_options(q: dict, seed: str) -> dict:
+    """Şık sırasını karıştır; doğru cevap harfini güncelle."""
+    rng = random.Random(seed)
+    order = [0, 1, 2, 3]
+    rng.shuffle(order)
+    old_opts = q["opts"]
+    new_opts = [old_opts[i] for i in order]
+    correct_idx = ord(q["correct"].upper()) - ord("A")
+    new_correct = chr(ord("A") + order.index(correct_idx))
+    return {**q, "opts": new_opts, "correct": new_correct}
+
+
+def get_bank_questions(filename: str, section_id: str) -> list[dict] | None:
+    _load_quiz_banks()
+    bank = _QUIZ_BANKS.get(filename, {})
+    qs = bank.get(section_id)
+    if not qs:
+        return None
+    out = []
+    for i, q in enumerate(qs[:10]):
+        out.append(shuffle_question_options(q, f"{filename}:{section_id}:q{i}"))
+    return out
 
 # section_id -> (modül başlığı, konu listesi — 10+ madde)
 QUIZ_TOPICS: dict[str, dict[str, tuple[str, list[str]]]] = {
@@ -320,7 +364,18 @@ def balanced_correct_letters(seed: str, count: int = 10) -> list[str]:
     return bag[:count]
 
 
-def build_questions(module_title: str, topics: list[str], seed: str = "") -> list[dict]:
+def build_questions(
+    module_title: str,
+    topics: list[str],
+    seed: str = "",
+    *,
+    filename: str = "",
+    section_id: str = "",
+) -> list[dict]:
+    bank = get_bank_questions(filename, section_id) if filename and section_id else None
+    if bank:
+        return bank[:10]
+
     qs = []
     topic_list = topics[:10]
     answer_key = balanced_correct_letters(seed or module_title, len(topic_list))
@@ -392,8 +447,10 @@ def find_section(html_text: str, section_id: str) -> tuple[int, int] | None:
         return None
     start = m.start()
     rest = html_text[m.end() :]
-    m2 = re.search(r"<section\b", rest, re.I)
-    end = m.end() + (m2.start() if m2 else len(rest))
+    close = re.search(r"</section\s*>", rest, re.I)
+    if not close:
+        return None
+    end = m.end() + close.end()
     return start, end
 
 
@@ -411,10 +468,13 @@ def remove_injected_quiz(section_html: str) -> str:
 def insert_marker_index(section_html: str) -> int:
     markers = [
         r'<h2[^>]*>\s*<i[^>]*fa-clipboard-list[^>]*>\s*</i>\s*Kendini Değerlendir',
+        r"<h2[^>]*>\s*Kendini Değerlendir",
         r'<h2[^>]*>\s*<i[^>]*fa-book[^>]*>\s*</i>\s*Terimler',
+        r"<h2[^>]*>\s*Terimler",
         r"Bu Modülde Kazanılan",
         r"Bu Modülde Neler Öğrendik",
         r'<h2[^>]*>\s*<i[^>]*fa-flag-checkered',
+        r"<h2[^>]*>\s*Kapanış",
         r'<div class="lesson-controls"',
     ]
     for pat in markers:
@@ -449,7 +509,9 @@ def process_file(
         elif section_has_quiz(block):
             continue
         seed = f"{filename}:{section_id}"
-        questions = build_questions(title, topics, seed=seed)
+        questions = build_questions(
+            title, topics, seed=seed, filename=filename, section_id=section_id
+        )
         quiz_id = f"{section_id}-modul-testi"
         snippet = render_quiz_html(quiz_id, title, questions)
         idx = insert_marker_index(block)
