@@ -27,3 +27,29 @@ body.landing-site-body .sg-isletim-intro .sg-intro-theme {
     color: #7f1d1d;
     margin: 0 0 0.75rem;
 }
+
+/* Sözlük / tablo — content-card içinde de düzgün tablo kalsın */
+body.landing-site-body .content-card .glossary-table,
+body.landing-site-body .content-card table.comparison-table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+body.landing-site-body .content-card .glossary-table thead,
+body.landing-site-body .content-card .glossary-table tbody {
+    display: table-row-group !important;
+}
+
+body.landing-site-body .content-card .glossary-table tr {
+    display: table-row !important;
+}
+
+body.landing-site-body .content-card .glossary-table th,
+body.landing-site-body .content-card .glossary-table td {
+    display: table-cell !important;
+}
+
+body.landing-site-body.lesson-route-mode .content-card .sg-isletim-intro {
+    display: none !important;
+}

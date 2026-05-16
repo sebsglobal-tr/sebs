@@ -72,7 +72,17 @@
         return (h.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 120);
     }
 
+    function isSpecialSection(section) {
+        if (!section) return true;
+        if (section.classList.contains('eval-quiz-section')) return true;
+        var inner = section.querySelector('.section-inner');
+        if (inner && inner.querySelector('.glossary-table, table.glossary-table')) return true;
+        var id = String(section.id || '').toLowerCase();
+        return /terimler|glossary|sözlük|sozluk|değerlendirme|degerlendirme|test-soruları|test-sorulari/.test(id);
+    }
+
     function buildIntro(section, index) {
+        if (isSpecialSection(section)) return;
         var inner = section.querySelector('.section-inner');
         if (!inner || inner.querySelector('.sg-isletim-intro')) return;
         if (inner.querySelector('.concept-grid') && inner.querySelector('.lesson-image-wrap')) return;

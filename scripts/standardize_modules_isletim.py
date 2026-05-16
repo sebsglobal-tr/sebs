@@ -54,11 +54,6 @@ def ensure_script(html: str, src: str) -> str:
     return html
 
 
-def remove_section_mode(html: str) -> str:
-    html = re.sub(r",\s*\n\s*progressMode:\s*['\"]section['\"]", "", html)
-    return html
-
-
 def remove_siber_enhance(html: str) -> str:
     return html.replace(
         '    <script src="/js/siber-giris-module-enhance.js"></script>\n', ""
@@ -92,7 +87,6 @@ def process(path: Path) -> bool:
     html = ensure_landing_body(html)
     html = ensure_lesson_landing_css(html)
     html = ensure_link(html, CSS_LINK)
-    html = remove_section_mode(html)
     html = remove_siber_enhance(html)
     html = ensure_script(html, "/js/module-isletim-standard.js")
     if html != orig:

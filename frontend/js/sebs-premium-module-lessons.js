@@ -43,9 +43,20 @@
         });
     }
 
+    function shouldSkipCardify(inner) {
+        if (!inner) return true;
+        if (inner.querySelector('.glossary-table, table.glossary-table')) return true;
+        var sec = inner.closest('.content-section');
+        if (!sec) return false;
+        if (sec.classList.contains('eval-quiz-section')) return true;
+        var id = String(sec.id || '').toLowerCase();
+        return /terimler|glossary|sözlük|sozluk|değerlendirme|degerlendirme|test-soruları|test-sorulari/.test(id);
+    }
+
     function applyTemelCardLayout() {
         document.querySelectorAll('.section-inner').forEach(function (inner) {
             if (inner.dataset.cardified === '1') return;
+            if (shouldSkipCardify(inner)) return;
             inner.dataset.cardified = '1';
             var h2Blocks = Array.from(inner.children).filter(function (el) {
                 return el.tagName === 'H2';
@@ -611,6 +622,12 @@
             console.warn('SebsPremiumModuleLessons.run: moduleName ve storageKey gerekli');
             return;
         }
+        if (!cfg.progressMode) {
+            var navCount = document.querySelectorAll('.nav-link-section').length;
+            if (navCount > 12) {
+                cfg.progressMode = 'section';
+            }
+        }
         if (cfg.progressMode === 'section') {
             runClassicSections(cfg);
             return;
@@ -626,7 +643,9 @@
         var progressFill = document.getElementById('progressFill');
         var progressText = document.getElementById('progressText');
 
-        buildSubheadingNav(navSectionList);
+        if (cfg.subNavScroll === true) {
+            buildSubheadingNav(navSectionList);
+        }
         enhanceNotes();
         enhanceMiniHeadings();
         enhanceRunbookHeadings();
