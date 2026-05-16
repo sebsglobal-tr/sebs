@@ -322,12 +322,15 @@ body.landing-site-body .module-sidebar .nav-item span {
     flex: 1 !important;
 }
 
+body.landing-site-body .module-layout > main,
 body.landing-site-body .module-layout .module-content {
     margin-left: 320px !important;
     width: calc(100% - 320px) !important;
     max-width: calc(100vw - 320px) !important;
     padding: 2rem 2.5rem 3rem !important;
     background: #fff !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
 }
 
 body.landing-site-body .module-layout .content-section.module-2-enhanced,
@@ -337,6 +340,7 @@ body.landing-site-body .module-layout .content-section.active {
 }
 
 @media (max-width: 1024px) {
+    body.landing-site-body .module-layout > main,
     body.landing-site-body .module-layout .module-content {
         margin-left: 0 !important;
         width: 100% !important;
