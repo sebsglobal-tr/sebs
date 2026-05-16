@@ -349,9 +349,18 @@ QUIZ_TOPICS: dict[str, dict[str, tuple[str, list[str]]]] = {
 
 # network-guvenligi eksik modüller
 NETWORK_EXTRA = {
-    "modul-0-etik-ve-yasal-cerceve": ("Etik ve Yasal", ["Yetki", "Kapsam", "RoE", "NDA", "Kanıt", "Sızma testi sınırı", "Üçüncü taraf", "Raporlama", "Kill-switch", "Veri koruma"]),
-    "modul-5-guvenli-protokoller-tls-vpn-8021": ("TLS ve VPN", ["TLS 1.3", "Certificate", "VPN IPsec/SSL", "802.1X", "Perfect forward secrecy", "Cipher", "MITM", "HSTS", "mTLS", "Weak protocol"]),
-    "modul-8-izleme-loglama-trafik-analizi-ve": ("İzleme ve Log", ["NetFlow", "SPAN/TAP", "SIEM", "PCAP", "Retention", "Encrypted visibility", "Baseline", "Anomaly", "Wireshark", "Log source"]),
+    "modul-0-etik-ve-yasal-cerceve": (
+        "Etik ve Yasal",
+        ["Yetki", "Kapsam", "RoE", "NDA", "Kanıt", "Sızma testi sınırı", "Üçüncü taraf", "Raporlama", "Kill-switch", "Veri koruma"],
+    ),
+    "modul-5-guvenli-protokoller-tls-vpn-8021xnac": (
+        "TLS ve VPN",
+        ["TLS 1.3", "Certificate", "VPN IPsec/SSL", "802.1X", "Perfect forward secrecy", "Cipher", "MITM", "HSTS", "mTLS", "Weak protocol"],
+    ),
+    "modul-8-izleme-loglama-trafik-analizi-ve-sieme-hazrlk": (
+        "İzleme ve Log",
+        ["NetFlow", "SPAN/TAP", "SIEM", "PCAP", "Retention", "Encrypted visibility", "Baseline", "Anomaly", "Wireshark", "Log source"],
+    ),
 }
 QUIZ_TOPICS.setdefault("network-guvenligi.html", {}).update(NETWORK_EXTRA)
 
@@ -376,25 +385,39 @@ def build_questions(
     if bank:
         return bank[:10]
 
+    if str(SCRIPTS) not in sys.path:
+        sys.path.insert(0, str(SCRIPTS))
+    try:
+        from quiz_banks.comprehension_generator import build_comprehension_questions
+
+        return build_comprehension_questions(
+            module_title, topics, seed or f"{filename}:{section_id}"
+        )
+    except ImportError:
+        pass
+
+    return _legacy_template_questions(module_title, topics, seed)
+
+
+def _legacy_template_questions(
+    module_title: str, topics: list[str], seed: str = ""
+) -> list[dict]:
+    """Eski şablon — yalnızca comprehension_generator yüklenemezse."""
     qs = []
     topic_list = topics[:10]
     answer_key = balanced_correct_letters(seed or module_title, len(topic_list))
     opt_seed = hashlib.sha256(f"{seed or module_title}:opts".encode()).hexdigest()
     opt_rng = random.Random(opt_seed)
-
     distractor_templates = [
         "Bu ifade modül kapsamının dışındadır veya güvenlik açısından yanıltıcıdır.",
         "Kavramlar karıştırılmıştır; güvenlik hedefi yanlış eşleştirilmiştir.",
         "Uygulama adımı atlanmıştır; yalnızca teorik isim bilgisi yeterli değildir.",
     ]
-
     for i, topic in enumerate(topic_list):
         correct_letter = answer_key[i]
         correct_text = f"{topic} — modül kazanımlarıyla doğrudan uyumludur."
-
         wrong_pool = [distractor_templates[(i + j) % 3] for j in range(3)]
         opt_rng.shuffle(wrong_pool)
-
         opts_by_letter: dict[str, str] = {}
         wrong_i = 0
         for letter in "ABCD":
@@ -403,7 +426,6 @@ def build_questions(
             else:
                 opts_by_letter[letter] = f"{wrong_pool[wrong_i]} ({module_title})"
                 wrong_i += 1
-
         qs.append(
             {
                 "q": f"[{module_title}] Aşağıdakilerden hangisi «{topic}» konusunu en doğru yansıtır?",
