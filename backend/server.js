@@ -55,9 +55,7 @@ if (_dbRef && _suRef && _dbRef !== _suRef) {
     logger.warn(_supabaseProjectMismatchMsg);
 }
 
-if (process.env.DATABASE_URL?.includes('supabase') || process.env.DB_PASSWORD) {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+// Supabase pooler SSL: rejectUnauthorized yalnızca pool ssl ayarında (createPool), global TLS kapatılmaz.
 
 const app = express();
 
@@ -155,6 +153,17 @@ if (process.env.NODE_ENV === 'production' && process.env.SKIP_ENV_VALIDATION !==
 
     logger.info('Production mode initialized');
     logger.info('Environment validation passed');
+
+    try {
+        const { isIyzicoConfigured } = require('./lib/iyzico-checkout');
+        if (isIyzicoConfigured() && process.env.DISABLE_DIRECT_PURCHASE !== '1') {
+            logger.warn(
+                'Öneri: Canlıda Iyzico varken DISABLE_DIRECT_PURCHASE=1 ayarlayın (/api/purchase kapatılır).'
+            );
+        }
+    } catch (e) {
+        /* ignore */
+    }
 }
 
 
@@ -257,18 +266,14 @@ app.use(express.json({ limit: '10mb' }));
 
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-if (fs.existsSync(FRONTEND_DIR)) {
-    app.use(express.static(FRONTEND_DIR, {
-        extensions: ['html', 'htm'],
-        index: ['index.html', 'index.htm']
-    }));
-    app.use('/css', express.static(path.join(FRONTEND_DIR, 'public', 'css')));
-    app.use('/favicons', express.static(path.join(FRONTEND_DIR, 'public', 'favicons')));
-    app.use('/images', express.static(path.join(FRONTEND_DIR, 'public', 'images')));
-    app.use('/public', express.static(path.join(FRONTEND_DIR, 'public')));
-    app.use('/js', express.static(path.join(FRONTEND_DIR, 'js')));
-    app.use('/assets', express.static(path.join(FRONTEND_DIR, 'assets')));
-}
+const apiGeneralLimiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: 'Too many requests. Please try again later.' }
+});
+app.use('/api/', apiGeneralLimiter);
 
 const SUPABASE_POOLER = process.env.SUPABASE_POOLER || 'aws-1-eu-central-1.pooler.supabase.com';
 
@@ -724,6 +729,36 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+app.post('/api/auth/session-cookie', authenticateToken, (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+        return res.status(400).json({ success: false, message: 'Token gerekli' });
+    }
+    const secure = process.env.NODE_ENV === 'production';
+    const maxAge = 7 * 24 * 60 * 60;
+    res.setHeader(
+        'Set-Cookie',
+        `sebs_at=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? '; Secure' : ''}`
+    );
+    return res.json({ success: true });
+});
+
+app.post('/api/auth/session-cookie/clear', (req, res) => {
+    res.setHeader('Set-Cookie', 'sebs_at=; Path=/; HttpOnly; Max-Age=0; SameSite=Lax');
+    return res.json({ success: true });
+});
+
+app.get('/api/public/site-config', (req, res) => {
+    const { shouldEnforceModuleHtmlGate } = require('./routes/register-module-html-gate');
+    res.json({
+        success: true,
+        data: {
+            moduleHtmlGate: shouldEnforceModuleHtmlGate(req),
+            paymentsRequireIyzico: process.env.DISABLE_DIRECT_PURCHASE === '1'
+        }
+    });
+});
 
 app.get('/api/users/me', authenticateToken, async (req, res) => {
     try {
@@ -2490,6 +2525,8 @@ app.get('/api/user-achievements', authenticateToken, async (req, res) => {
 });
 
 
+const { getExpectedPrice, normalizeLevel } = require('./lib/package-prices');
+
 app.post('/api/purchase', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2501,6 +2538,16 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                 message: 'Category, level ve price gerekli.'
             });
         }
+
+        const backendLevel = normalizeLevel(level);
+        const expectedPrice = getExpectedPrice(category, backendLevel);
+        if (expectedPrice == null) {
+            return res.status(400).json({
+                success: false,
+                message: 'Geçersiz paket (category/level).'
+            });
+        }
+
         const priceNum = Number(price);
         if (Number.isNaN(priceNum) || priceNum < 0 || priceNum > 999999.99) {
             return res.status(400).json({
@@ -2509,8 +2556,28 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             });
         }
 
+        const allowDevPurchase =
+            process.env.ALLOW_DEV_PURCHASE === '1' && process.env.NODE_ENV !== 'production';
+        if (process.env.NODE_ENV === 'production' && process.env.DISABLE_DIRECT_PURCHASE === '1') {
+            return res.status(503).json({
+                success: false,
+                code: 'PAYMENT_PROVIDER_REQUIRED',
+                message:
+                    'Doğrudan satın alma kapalı. Lütfen ödeme sayfasından Iyzico ile ödeme yapın.'
+            });
+        }
+
+        if (!allowDevPurchase && priceNum !== expectedPrice) {
+            return res.status(400).json({
+                success: false,
+                message: 'Fiyat doğrulanamadı. Sayfayı yenileyip tekrar deneyin.'
+            });
+        }
+
+        const chargePrice = allowDevPurchase ? priceNum : expectedPrice;
+
         const validLevels = ['beginner', 'intermediate', 'advanced'];
-        if (!validLevels.includes(level)) {
+        if (!validLevels.includes(backendLevel)) {
             return res.status(400).json({
                 success: false,
                 message: 'Geçersiz level. beginner, intermediate veya advanced olmalıdır.'
@@ -2535,7 +2602,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             const existingPurchase = await pool.query(
                 `SELECT id FROM purchases 
                  WHERE user_id = $1 AND category = $2 AND level = $3 AND is_active = TRUE`,
-                [userId, category, level]
+                [userId, category, backendLevel]
             );
             
             if (existingPurchase.rows.length > 0) {
@@ -2546,7 +2613,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                 };
                 return res.status(400).json({
                     success: false,
-                    message: `Bu pakete zaten sahipsiniz. ${levelNames[level] || level} seviyesi ${category === 'cybersecurity' ? 'Siber Güvenlik' : category === 'cloud' ? 'Bulut Bilişim' : 'Veri Bilimleri'} alanında aktif.`
+                    message: `Bu pakete zaten sahipsiniz. ${levelNames[backendLevel] || backendLevel} seviyesi ${category === 'cybersecurity' ? 'Siber Güvenlik' : category === 'cloud' ? 'Bulut Bilişim' : 'Veri Bilimleri'} alanında aktif.`
                 });
             }
         } catch (err) {
@@ -2567,7 +2634,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                      purchased_at = CURRENT_TIMESTAMP,
                      updated_at = CURRENT_TIMESTAMP
                  RETURNING id`,
-                [userId, category, level, priceNum]
+                [userId, category, backendLevel, chargePrice]
             );
             purchaseId = userPackagePurchaseResult.rows[0]?.id;
             console.log('✅ Purchase recorded in user_package_purchases table');
@@ -2587,7 +2654,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                      purchased_at = CURRENT_TIMESTAMP,
                      updated_at = CURRENT_TIMESTAMP
                  RETURNING id`,
-                [userId, category, level, priceNum]
+                [userId, category, backendLevel, chargePrice]
             );
             if (!purchaseId) {
                 purchaseId = purchaseResult.rows[0]?.id;
@@ -2613,7 +2680,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                              purchased_at = CURRENT_TIMESTAMP,
                              updated_at = CURRENT_TIMESTAMP
                          RETURNING id`,
-                        [userId, category, level, priceNum]
+                        [userId, category, backendLevel, chargePrice]
                     );
                     if (!purchaseId) {
                         purchaseId = purchaseResult.rows[0]?.id;
@@ -2653,7 +2720,7 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
             console.error('Error updating user access level:', err);
             await pool.query(
                 'UPDATE users SET access_level = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-                [level, userId]
+                [backendLevel, userId]
             );
         }
 
@@ -2728,8 +2795,8 @@ app.post('/api/purchase', authenticateToken, async (req, res) => {
                 },
                 purchase: {
                     category,
-                    level,
-                    price
+                    level: backendLevel,
+                    price: chargePrice
                 }
             }
         });
@@ -3058,8 +3125,31 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
+const { createAuthResolver } = require('./lib/create-auth-resolver');
+const { registerModuleHtmlGate } = require('./routes/register-module-html-gate');
+
+const authResolver = createAuthResolver({
+    pool,
+    fullAccessEmail: FULL_ACCESS_EMAIL,
+    verifySupabaseAccessTokenViaApi,
+    logger
+});
+
+if (fs.existsSync(FRONTEND_DIR)) {
+    registerModuleHtmlGate(app, {
+        frontendDir: FRONTEND_DIR,
+        pool,
+        resolveUserFromRequest: authResolver.resolveUserFromRequest.bind(authResolver),
+        fullAccessEmail: FULL_ACCESS_EMAIL,
+        logger
+    });
+}
+
 app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api/')) {
+        return next();
+    }
+    if (/^\/modules\/[^/]+\.html$/i.test(req.path)) {
         return next();
     }
     if (!fs.existsSync(FRONTEND_DIR)) {
@@ -3193,7 +3283,31 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = { app, pool, getPool };
+try {
+    const { registerIyzicoPaymentRoutes } = require('./routes/iyzico-payments');
+    registerIyzicoPaymentRoutes(app, { pool, authenticateToken });
+    logger.info('Iyzico payment routes registered');
+} catch (iyzicoRouteErr) {
+    logger.warn('Iyzico routes not registered:', iyzicoRouteErr.message);
+}
+
+if (fs.existsSync(FRONTEND_DIR)) {
+    app.use(
+        express.static(FRONTEND_DIR, {
+            extensions: ['html', 'htm'],
+            index: ['index.html', 'index.htm']
+        })
+    );
+    app.use('/css', express.static(path.join(FRONTEND_DIR, 'public', 'css')));
+    app.use('/favicons', express.static(path.join(FRONTEND_DIR, 'public', 'favicons')));
+    app.use('/images', express.static(path.join(FRONTEND_DIR, 'public', 'images')));
+    app.use('/public', express.static(path.join(FRONTEND_DIR, 'public')));
+    app.use('/js', express.static(path.join(FRONTEND_DIR, 'js')));
+    app.use('/assets', express.static(path.join(FRONTEND_DIR, 'assets')));
+    logger.info('Frontend static assets mounted');
+}
+
+module.exports = { app, pool, getPool, authResolver };
 
 if (require.main === module) {
     const port = Number(process.env.PORT) || 3000;

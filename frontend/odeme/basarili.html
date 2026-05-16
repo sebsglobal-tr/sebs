@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <title>Ödeme Başarılı | SEBS Global</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+  <main class="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6 py-16 text-center">
+    <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-600" aria-hidden="true">
+      <i class="fas fa-check"></i>
+    </div>
+    <h1 class="text-2xl font-bold text-slate-900">Ödeme alındı</h1>
+    <p class="mt-3 text-slate-600">Paketiniz hesabınıza tanımlandı. Birkaç saniye içinde modüllere erişebilirsiniz.</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+      <a href="/modules.html" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Eğitim modülleri</a>
+      <a href="/dashboard.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">Panele git</a>
+    </div>
+  </main>
+  <script src="/js/session-cookie-sync.js"></script>
+  <script>
+    if (typeof syncSebsSessionCookie === 'function') syncSebsSessionCookie();
+  </script>
+</body>
+</html>

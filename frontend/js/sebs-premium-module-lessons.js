@@ -783,11 +783,97 @@
     }
 
     function catalogLessonTotal(fallback) {
-        var n = getAllNavSectionLinks().length;
-        if (n > 0) return n;
-        var ordered = collectLessonKeysOrdered();
-        if (ordered.length) return ordered.length;
+        var navCount = getAllNavSectionLinks().length;
+        var orderedLen = 0;
+        try {
+            orderedLen = collectLessonKeysOrdered().length;
+        } catch (eCatalog) {
+            orderedLen = 0;
+        }
+        if (orderedLen > navCount) return orderedLen;
+        if (navCount > 0) return navCount;
+        if (orderedLen > 0) return orderedLen;
         return Math.max(1, parseInt(String(fallback), 10) || 1);
+    }
+
+    function buildAllSubheadingNavs() {
+        var lists = document.querySelectorAll(
+            '.module-sidebar .nav-section-list, .sidebar-nav .nav-section-list'
+        );
+        if (!lists.length) {
+            var fallback = document.querySelector('.nav-section-list');
+            if (fallback) buildSubheadingNav(fallback);
+            return;
+        }
+        lists.forEach(function (list) {
+            buildSubheadingNav(list);
+        });
+    }
+
+    function stripAllSubheadingNavs() {
+        var lists = document.querySelectorAll(
+            '.module-sidebar .nav-section-list, .sidebar-nav .nav-section-list'
+        );
+        if (!lists.length) {
+            var fallback = document.querySelector('.nav-section-list');
+            if (fallback) stripSubheadingNav(fallback);
+            return;
+        }
+        lists.forEach(function (list) {
+            stripSubheadingNav(list);
+        });
+    }
+
+    /** Yan menüde tamamlanan modül / alt ders işaretleri */
+    function markCompletedInSidebar(navLinks, lessonKeysOrdered, completedLessons) {
+        var done = new Set(
+            Array.isArray(completedLessons)
+                ? completedLessons.map(function (k) {
+                      return canonicalLessonKey(k);
+                  })
+                : []
+        );
+        var keys = lessonKeysOrdered || [];
+        Array.from(navLinks || []).forEach(function (link) {
+            var sid = link.getAttribute('data-section');
+            if (!sid) return;
+            var keysInSection = keys.filter(function (k) {
+                return k === sid || k.indexOf(sid + '::') === 0;
+            });
+            var doneInSection = keysInSection.filter(function (k) {
+                return done.has(canonicalLessonKey(k));
+            });
+            var allDone =
+                keysInSection.length > 0 && doneInSection.length === keysInSection.length;
+            var partial = doneInSection.length > 0 && !allDone;
+            link.classList.toggle('completed', allDone);
+            link.classList.toggle('completed-partial', partial);
+            if (keysInSection.length && partial) {
+                link.setAttribute(
+                    'title',
+                    doneInSection.length + ' / ' + keysInSection.length + ' ders tamamlandı'
+                );
+            } else {
+                link.removeAttribute('title');
+            }
+            var item = link.closest('.nav-section-item');
+            if (item && (allDone || partial)) {
+                item.classList.add('is-open');
+            }
+        });
+        getAllNavSubLinks().forEach(function (a) {
+            var sec = a.getAttribute('data-section');
+            var anchor = a.getAttribute('data-anchor');
+            if (!sec || !anchor) return;
+            var lk = makeLessonKey(sec, anchor);
+            var isDone = done.has(lk) || done.has(canonicalLessonKey(lk));
+            a.classList.toggle('completed', isDone);
+            if (isDone) {
+                a.setAttribute('title', 'Tamamlandı');
+            } else {
+                a.removeAttribute('title');
+            }
+        });
     }
 
     function installLessonCompleteControls(routeMode, completeHandler) {
@@ -825,22 +911,63 @@
             if (cards.length) {
                 cards.forEach(function (card, idx) {
                     var head = getCardLessonHeading(card);
-                    if (!head) return;
+                    if (!head || isModuleThemeHeading(head)) return;
                     var hid = ensureHeadingId(head, sec.id, idx);
                     var lessonKey = makeLessonKey(sec.id, hid);
                     card.setAttribute('data-lesson-key', lessonKey);
-                    appendLessonFooter(card, function () {
-                        completeHandler(lessonKey);
-                    });
+                    if (!card.querySelector('.lesson-complete-footer')) {
+                        appendLessonFooter(card, function () {
+                            completeHandler(lessonKey);
+                        });
+                    }
                 });
             } else {
-                var head = inner.querySelector(':scope > h2, :scope > h3');
-                var lessonKey = head
-                    ? makeLessonKey(sec.id, ensureHeadingId(head, sec.id, 0))
-                    : sec.id;
-                appendLessonFooter(inner, function () {
-                    completeHandler(lessonKey);
-                });
+                var subHeadings = getSectionSubheadings(inner);
+                if (subHeadings.length) {
+                    subHeadings.forEach(function (head, idx) {
+                        var hid = ensureHeadingId(head, sec.id, idx);
+                        var lessonKey = makeLessonKey(sec.id, hid);
+                        var block = head.closest('.content-card');
+                        if (!block) {
+                            block = document.createElement('div');
+                            block.className = 'content-card sebs-lesson-block';
+                            inner.insertBefore(block, head);
+                            var node = head;
+                            while (node) {
+                                var next = node.nextElementSibling;
+                                block.appendChild(node);
+                                if (next && next.tagName === 'H2') break;
+                                if (
+                                    next &&
+                                    subHeadings.indexOf(next) !== -1 &&
+                                    next !== head
+                                ) {
+                                    break;
+                                }
+                                node = next;
+                            }
+                        }
+                        block.setAttribute('data-lesson-key', lessonKey);
+                        if (!block.querySelector('.lesson-complete-footer')) {
+                            appendLessonFooter(block, function () {
+                                completeHandler(lessonKey);
+                            });
+                        }
+                    });
+                } else {
+                    var head = inner.querySelector(':scope > h2, :scope > h3');
+                    if (head && isModuleThemeHeading(head)) {
+                        head = inner.querySelector(':scope > h2:not([data-sebs-skip]), :scope > h3');
+                    }
+                    var lessonKey = head
+                        ? makeLessonKey(sec.id, ensureHeadingId(head, sec.id, 0))
+                        : sec.id;
+                    if (!inner.querySelector('.lesson-complete-footer')) {
+                        appendLessonFooter(inner, function () {
+                            completeHandler(lessonKey);
+                        });
+                    }
+                }
             }
         });
 
@@ -866,18 +993,26 @@
                                   ? makeLessonKey(sid, ensureHeadingId(flatHead, sid, 0))
                                   : sid;
                           })();
-                } else {
-                    var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
-                    var head = firstCard
-                        ? getCardLessonHeading(firstCard)
-                        : inner
-                          ? inner.querySelector(':scope > h2, :scope > h3')
-                          : null;
-                    key = head ? makeLessonKey(sid, ensureHeadingId(head, sid, 0)) : sid;
+                } else if (sec) {
+                    key = resolveActiveLessonKeyInSection(sec) || sid;
                 }
                 completeHandler(key);
             });
         });
+    }
+
+    function resolveActiveLessonKeyInSection(sec) {
+        if (!sec || !sec.id) return null;
+        var card = sec.querySelector('.lesson-route-current-card');
+        if (card) {
+            var dk = card.getAttribute('data-lesson-key');
+            if (dk) return dk;
+            var ch = getCardLessonHeading(card);
+            if (ch && !isModuleThemeHeading(ch)) {
+                return makeLessonKey(sec.id, ensureHeadingId(ch, sec.id, 0));
+            }
+        }
+        return lessonKeyForSection(sec.id);
     }
 
     function lessonKeyForSection(sectionId) {
@@ -891,10 +1026,17 @@
                 ? makeLessonKey(sectionId, ensureHeadingId(flatHead, sectionId, 0))
                 : sectionId;
         }
-        var card = inner.querySelector(':scope > .content-card');
+        var card = firstNavigableCard(inner);
+        if (!card) {
+            card = inner.querySelector(':scope > .content-card');
+        }
         var head = card
             ? getCardLessonHeading(card)
             : inner.querySelector(':scope > h2, :scope > h3');
+        if (head && isModuleThemeHeading(head)) {
+            var subs = getSectionSubheadings(inner);
+            head = subs.length ? subs[0] : head;
+        }
         return head
             ? makeLessonKey(sectionId, ensureHeadingId(head, sectionId, 0))
             : sectionId;
@@ -973,10 +1115,10 @@
         }
 
         lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
-        if (lastRunSubNavScroll && navSectionList) {
-            buildSubheadingNav(navSectionList);
-        } else if (navSectionList) {
-            stripSubheadingNav(navSectionList);
+        if (lastRunSubNavScroll) {
+            buildAllSubheadingNavs();
+        } else {
+            stripAllSubheadingNavs();
         }
 
         global.MODULE_TOTAL_LESSONS = catalogLessonTotal(navLinks.length);
@@ -1041,17 +1183,8 @@
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
         }
 
-        function markCompletedInSidebar(completedLessons) {
-            var done = new Set(completedLessons);
-            navLinks.forEach(function (link) {
-                var id = link.getAttribute('data-section');
-                var sectionDone =
-                    done.has(id) ||
-                    Array.from(done).some(function (k) {
-                        return String(k).indexOf(id + '::') === 0;
-                    });
-                link.classList.toggle('completed', sectionDone);
-            });
+        function markSidebarProgress(completedLessons) {
+            markCompletedInSidebar(navLinks, sectionIdsOrdered, completedLessons);
         }
 
         function applySectionPageView(sectionId) {
@@ -1124,7 +1257,7 @@
             }
             completed.push(sectionId);
             saveProgressLocal(completed);
-            markCompletedInSidebar(completed);
+            markSidebarProgress(completed);
             refreshCompleteButtons(completed);
             try {
                 if (global.syncModuleProgressBulk) {
@@ -1182,7 +1315,7 @@
         (async function initProgress() {
             var completed = await loadProgress();
             updateProgressUI(completed.length);
-            markCompletedInSidebar(completed);
+            markSidebarProgress(completed);
             refreshCompleteButtons(completed);
         })();
 
@@ -1265,10 +1398,10 @@
         }
 
         lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
-        if (lastRunSubNavScroll && navSectionList) {
-            buildSubheadingNav(navSectionList);
-        } else if (navSectionList) {
-            stripSubheadingNav(navSectionList);
+        if (lastRunSubNavScroll) {
+            buildAllSubheadingNavs();
+        } else {
+            stripAllSubheadingNavs();
         }
 
         function getSectionIdsSet() {
@@ -1383,20 +1516,8 @@
             if (progressText) progressText.textContent = pct + '% Tamamlandı';
         }
 
-        function markCompletedInSidebar(completedLessons) {
-            var done = new Set(completedLessons);
-            navLinks.forEach(function (link) {
-                var sid = link.getAttribute('data-section');
-                var keysInSection = lessonKeysOrdered.filter(function (k) {
-                    return k === sid || k.indexOf(sid + '::') === 0;
-                });
-                var allDone =
-                    keysInSection.length > 0 &&
-                    keysInSection.every(function (k) {
-                        return done.has(k);
-                    });
-                link.classList.toggle('completed', allDone);
-            });
+        function markSidebarProgress(completedLessons) {
+            markCompletedInSidebar(navLinks, lessonKeysOrdered, completedLessons);
         }
 
         function updateLessonRouteHero(lessonKey, section, card, h2) {
@@ -1558,6 +1679,14 @@
                 if (!secId || !anchorId) return;
                 var lk = secId + '::' + anchorId;
                 a.setAttribute('href', hrefWithDersParam(lk));
+                if (a.dataset.sebsNavWired === '1') return;
+                a.dataset.sebsNavWired = '1';
+                a.addEventListener('click', function (ev) {
+                    if (lessonKeysOrdered.indexOf(lk) === -1) return;
+                    ev.preventDefault();
+                    navigateToLesson(lk, { inPlace: true });
+                    syncLessonUrl(lk, basePath, false);
+                });
             });
             getAllNavSectionLinks().forEach(function (link) {
                 var sid = link.getAttribute('data-section');
@@ -1576,11 +1705,9 @@
                     var key = firstKey || (sid ? lessonKeyForSection(sid) : '');
                     key = canonicalLessonKey(key);
                     if (!key || lessonKeysOrdered.indexOf(key) === -1) return;
-                    if (isFlatLessonModule()) {
-                        ev.preventDefault();
-                        navigateToLesson(key, { inPlace: true });
-                        syncLessonUrl(key, basePath, false);
-                    }
+                    ev.preventDefault();
+                    navigateToLesson(key, { inPlace: true });
+                    syncLessonUrl(key, basePath, false);
                 });
             });
         }
@@ -1590,12 +1717,8 @@
             var idx = lessonKeysOrdered.indexOf(lessonKey);
             if (idx >= 0 && idx + 1 < lessonKeysOrdered.length) {
                 var nextKey = lessonKeysOrdered[idx + 1];
-                if (isFlatLessonModule()) {
-                    navigateToLesson(nextKey, { inPlace: true });
-                    syncLessonUrl(nextKey, basePath, false);
-                } else {
-                    goToLessonPage(nextKey, basePath);
-                }
+                navigateToLesson(nextKey, { inPlace: true });
+                syncLessonUrl(nextKey, basePath, false);
             }
         }
 
@@ -1608,7 +1731,7 @@
             }
             completed.push(lessonKey);
             saveProgressLocal(completed);
-            markCompletedInSidebar(completed);
+            markSidebarProgress(completed);
             refreshCompleteButtons(completed);
             var totalLessons = catalogLessonTotal(lessonKeysOrdered.length);
             try {
@@ -1671,7 +1794,7 @@
             var completed = normalizeCompletedLessons(await loadProgress());
             saveProgressLocal(completed);
             updateProgressUI(completed.length);
-            markCompletedInSidebar(completed);
+            markSidebarProgress(completed);
             refreshCompleteButtons(completed);
             var catalogTotal = catalogLessonTotal(lessonKeysOrdered.length);
             if (

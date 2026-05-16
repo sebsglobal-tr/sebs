@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <title>Ödeme Başarısız | SEBS Global</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+  <main class="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6 py-16 text-center">
+    <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 text-3xl text-amber-600">
+      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+    </div>
+    <h1 class="text-2xl font-bold text-slate-900">Ödeme tamamlanamadı</h1>
+    <p id="reasonText" class="mt-3 text-slate-600">İşlem iptal edildi veya banka tarafından reddedildi. Tekrar deneyebilirsiniz.</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+      <a href="/pricing.html" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Paketlere dön</a>
+      <a href="/contact.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">Destek</a>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var map = {
+        missing_token: 'Ödeme oturumu bulunamadı.',
+        provider: 'Ödeme sağlayıcısı yapılandırılmamış.',
+        order_not_found: 'Sipariş kaydı bulunamadı.',
+        payment_failed: 'Ödeme onaylanmadı.',
+        error: 'Beklenmeyen bir hata oluştu.'
+      };
+      var q = new URLSearchParams(window.location.search).get('reason');
+      if (q && map[q]) document.getElementById('reasonText').textContent = map[q];
+    })();
+  </script>
+</body>
+</html>

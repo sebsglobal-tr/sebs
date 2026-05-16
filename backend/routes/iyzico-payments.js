@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const rateLimit = require('express-rate-limit');
 const {
     isIyzicoConfigured,
     initializeCheckoutForm,
@@ -29,6 +30,13 @@ async function ensurePaymentOrdersTable(pool) {
 }
 
 function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
+    const iyzicoCallbackLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: parseInt(process.env.RATE_LIMIT_IYZICO_CALLBACK_MAX, 10) || 40,
+        standardHeaders: true,
+        legacyHeaders: false
+    });
+
     ensurePaymentOrdersTable(pool).catch((e) => {
         console.warn('payment_orders ensure:', e.message);
     });
@@ -129,7 +137,7 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
         }
     });
 
-    app.post('/api/payments/iyzico/callback', async (req, res) => {
+    app.post('/api/payments/iyzico/callback', iyzicoCallbackLimiter, async (req, res) => {
         const base = frontendBaseUrl(req);
         const failUrl = `${base}/odeme/hata`;
         const okUrl = `${base}/odeme/basarili`;

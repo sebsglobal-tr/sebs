@@ -66,10 +66,20 @@ class SupabaseAuthSystem {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         this.isLoggedIn = true;
         this.user = session?.user || null;
+        if (session?.access_token) {
+          try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
+        }
+        if (typeof window.syncSebsSessionCookie === 'function') {
+          window.syncSebsSessionCookie().catch(function () {});
+        }
         await this.updateNavigation();
       } else if (event === 'SIGNED_OUT') {
         this.isLoggedIn = false;
         this.user = null;
+        try { localStorage.removeItem('authToken'); } catch (e) {}
+        if (typeof window.syncSebsSessionCookie === 'function') {
+          window.syncSebsSessionCookie().catch(function () {});
+        }
         await this.updateNavigation();
       } else if (event === 'USER_UPDATED') {
         if (session?.user) {
@@ -111,6 +121,9 @@ class SupabaseAuthSystem {
         try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
         if (session.access_token) {
           try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
+        }
+        if (typeof window.syncSebsSessionCookie === 'function') {
+          window.syncSebsSessionCookie().catch(function () {});
         }
         console.log('✅ Session found:', {
           email: session.user.email,
