@@ -1178,12 +1178,12 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İşletim Sistemlerine Giriş</h2>
 <div class="eval-quiz-section" id="modul-1-isletim-sistemlerine-giris-modul-testi" data-section="modul-1-isletim-sistemlerine-giris-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Penetrasyon testi sırasında müşteri e-postasına yetkisiz erişim mümkün görünüyor. Doğru adım?</li></ol>
-<p>A) Veriyi kopyalayıp analiz ekibine göndermek</p>
-<p>B) Kill-switch’i devre dışı bırakmak</p>
-<p>C) Sessizce devam edip satış ekibine anlatmak</p>
-<p>D) Kapsam/RoE’ye göre durmak, müşteriye kontrollü kanıt ve raporlama</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Yetkisiz veri erişimi kapsam dışıdır; disiplin ve sözleşme önceliklidir.</li></ul>
+<ol><li>1) RoE’de «Do Not Harm» ihlali riski doğdu. İlk adım?</li></ol>
+<p>A) Hızı artırmak</p>
+<p>B) Kanıtları silmek</p>
+<p>C) Tüm ağları kapatmak</p>
+<p>D) Stop/kill koşuluna göre durdurmak ve iletişim kanalını kullanmak</p>
+<ul><li>Doğru: D</li><li>Gerekçe: RoE limitleri üretim güvenliğini korur.</li></ul>
 <ol><li>2) Linux’ta bir binary SUID root ile çalışıyor ve shell spawn edebiliyor. Bu ne anlama gelir?</li></ol>
 <p>A) Çalıştıran kullanıcı geçici olarak root ayrıcalığı kazanabilir — yüksek risk</p>
 <p>B) Dosya salt okunurdur</p>
@@ -1196,18 +1196,18 @@
 <p>C) Otomatik yedekleme yapar</p>
 <p>D) Dosya salt okunurdur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: SUID kötüye kullanımı ayrıcalık yükseltme yoludur.</li></ul>
-<ol><li>4) «Zafiyet, tehdit, risk ve exploit ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Zafiyet, tehdit, risk ve exploit ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>B) İnterneti kalıcı kapatmak</p>
-<p>C) Yalnızca antivirüs imzasını güncellemek</p>
-<p>D) Tüm logları silmek</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Zafiyet, tehdit, risk ve exploit ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>5) Bir e-ticaret sitesi saldırı altında; kullanıcılar ödeme yapamıyor ancak veriler sızdırılmamış görünüyor. En doğrudan etkilenen CIA bileşeni hangisidir?</li></ol>
+<ol><li>4) Denetimde «Zafiyet, tehdit, risk ve exploit ayrımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<p>B) Ekran görüntüsü olmadan varsayım</p>
+<p>C) Başka modülün raporu</p>
+<p>D) Sözlü «biliyoruz» ifadesi</p>
+<ul><li>Doğru: A</li><li>Gerekçe: «Zafiyet, tehdit, risk ve exploit ayrımı» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>5) İndirilen yazılım paketinin hash değeri resmi sitedekiyle uyuşmuyor. Bu bulgu öncelikle hangi güvenlik hedefini ihlal eder?</li></ol>
 <p>A) Bütünlük</p>
 <p>B) Erişilebilirlik</p>
-<p>C) İnkâr edememe</p>
+<p>C) Anonimlik</p>
 <p>D) Gizlilik</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Hizmetin kullanılamaması erişilebilirlik kaybıdır; gizlilik ayrı bir hedeftir.</li></ul>
+<ul><li>Doğru: A</li><li>Gerekçe: İçeriğin yetkisiz değiştirilmesi bütünlük sorunudur.</li></ul>
 <ol><li>6) Sunucuda günlük iş için Domain Admin hesabı kullanılıyor. En doğru öneri?</li></ol>
 <p>A) Ayrıcalıklı hesabı yalnızca gerekli yönetim işlerinde kullanmak (JIT/ayrı hesap)</p>
 <p>B) Antivirüsü kaldırmak</p>
@@ -2297,18 +2297,18 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — Kullanıcı, Hesap ve Yetki Güvenliği</h2>
 <div class="eval-quiz-section" id="modul-2-kullanici-hesap-yetki-modul-testi" data-section="modul-2-kullanici-hesap-yetki-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Kurumsal politikada parola + mobil uygulama onayı zorunlu. Bu birleşim en çok neyi güçlendirir?</li></ol>
+<ol><li>1) Kullanıcı parolasını girdikten sonra «Yönetici paneline erişim reddedildi» mesajı alıyor. Parola doğru. Hangi aşama başarısız olmuş olabilir?</li></ol>
+<p>A) Kimlik doğrulama</p>
+<p>B) Yetkilendirme</p>
+<p>C) Kimlik bildirimi (identification)</p>
+<p>D) Şifreleme</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kimlik doğrulandıktan sonra erişim hakkı yetkilendirme ile belirlenir.</li></ul>
+<ol><li>2) Kurumsal politikada parola + mobil uygulama onayı zorunlu. Bu birleşim en çok neyi güçlendirir?</li></ol>
 <p>A) Kimlik doğrulama (MFA ile)</p>
-<p>B) Yalnızca log saklama süresi</p>
-<p>C) Yalnızca gizlilik</p>
+<p>B) Yalnızca gizlilik</p>
+<p>C) Yalnızca log saklama süresi</p>
 <p>D) Subnet maskesi doğruluğu</p>
 <ul><li>Doğru: A</li><li>Gerekçe: MFA, kimlik doğrulamayı çok faktörlü hale getirir.</li></ul>
-<ol><li>2) Kullanıcı parolasını girdikten sonra «Yönetici paneline erişim reddedildi» mesajı alıyor. Parola doğru. Hangi aşama başarısız olmuş olabilir?</li></ol>
-<p>A) Kimlik doğrulama</p>
-<p>B) Kimlik bildirimi (identification)</p>
-<p>C) Yetkilendirme</p>
-<p>D) Şifreleme</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Kimlik doğrulandıktan sonra erişim hakkı yetkilendirme ile belirlenir.</li></ul>
 <ol><li>3) Bir stajyer «Yönetici hesabının günlük işlerde kullanılmaması» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
 <p>A) Araç adı yeterlidir</p>
 <p>B) Sadece sınavda sorulursa öğrenilir</p>
@@ -2327,30 +2327,30 @@
 <p>C) Gizlilik ihlali yoktur</p>
 <p>D) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>6) Bir stajyer «Hesap kilitleme ve başarısız oturum açma izleme» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Yalnızca yöneticiler bilir</p>
+<ol><li>6) «Hesap kilitleme ve başarısız oturum açma izleme» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) İnterneti kalıcı kapatmak</p>
+<p>B) Hesap kilitleme ve başarısız oturum açma izleme için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>C) Tüm logları silmek</p>
+<p>D) Yalnızca antivirüs imzasını güncellemek</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «Hesap kilitleme ve başarısız oturum açma izleme» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>7) Bir stajyer «Ayrıcalık yükseltme saldırılarının hedefi» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Araç adı yeterlidir</p>
 <p>B) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<p>C) Sadece sınavda sorulursa öğrenilir</p>
-<p>D) Araç adı yeterlidir</p>
-<ul><li>Doğru: B</li><li>Gerekçe: «Hesap kilitleme ve başarısız oturum açma izleme» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>7) Denetimde «Ayrıcalık yükseltme saldırılarının hedefi» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Başka modülün raporu</p>
-<p>B) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>C) Ekran görüntüsü olmadan varsayım</p>
-<p>D) Sözlü «biliyoruz» ifadesi</p>
-<ul><li>Doğru: B</li><li>Gerekçe: «Ayrıcalık yükseltme saldırılarının hedefi» denetlenebilir kanıt gerektirir.</li></ul>
+<p>C) Yalnızca yöneticiler bilir</p>
+<p>D) Sadece sınavda sorulursa öğrenilir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: «Ayrıcalık yükseltme saldırılarının hedefi» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>8) «Yerel vs domain hesap ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
 <p>A) Yerel vs domain hesap ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
 <p>B) Yalnızca antivirüs imzasını güncellemek</p>
 <p>C) Tüm logları silmek</p>
 <p>D) İnterneti kalıcı kapatmak</p>
 <ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Yerel vs domain hesap ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>9) Denetimde «Oturum yönetimi ve zaman aşımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Sözlü «biliyoruz» ifadesi</p>
-<p>B) Başka modülün raporu</p>
-<p>C) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>D) Ekran görüntüsü olmadan varsayım</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Oturum yönetimi ve zaman aşımı» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>9) Bir stajyer «Oturum yönetimi ve zaman aşımı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Sadece sınavda sorulursa öğrenilir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>D) Yalnızca yöneticiler bilir</p>
+<ul><li>Doğru: C</li><li>Gerekçe: «Oturum yönetimi ve zaman aşımı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>10) Denetimde «Hesap yaşam döngüsü (oluşturma, devre dışı, silme)» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
 <p>A) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
 <p>B) Sözlü «biliyoruz» ifadesi</p>
@@ -3415,36 +3415,36 @@ drwx------   3 ogrenci01  staff    96 Jan  9 15:00 gizli_klasor</span>
 <p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
 <p>D) Araç adı yeterlidir</p>
 <ul><li>Doğru: C</li><li>Gerekçe: «Paylaşılan klasör izinlerinin yanlış yapılandırılması» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>5) Bir stajyer «Dosya bütünlüğü izleme (FIM) mantığı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Yalnızca yöneticiler bilir</p>
-<p>B) Araç adı yeterlidir</p>
-<p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<p>D) Sadece sınavda sorulursa öğrenilir</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Dosya bütünlüğü izleme (FIM) mantığı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
+<ol><li>5) «Dosya bütünlüğü izleme (FIM) mantığı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) İnterneti kalıcı kapatmak</p>
+<p>B) Yalnızca antivirüs imzasını güncellemek</p>
+<p>C) Dosya bütünlüğü izleme (FIM) mantığı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>D) Tüm logları silmek</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Dosya bütünlüğü izleme (FIM) mantığı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
 <ol><li>6) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
 <p>A) Hash ile aynıdır</p>
 <p>B) Güçlü gizlilik sağlanmıştır</p>
 <p>C) Encoding gizlilik sağlamaz; gerçek şifreleme ve anahtar yönetimi gerekir</p>
 <p>D) TLS gereksizdir</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Base64 tersine çevrilebilir format dönüşümüdür.</li></ul>
-<ol><li>7) Bir stajyer «Yedekleme izinlerinin ayrı değerlendirilmesi» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Araç adı yeterlidir</p>
-<p>B) Sadece sınavda sorulursa öğrenilir</p>
-<p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ol><li>7) «Yedekleme izinlerinin ayrı değerlendirilmesi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) Yalnızca antivirüs imzasını güncellemek</p>
+<p>B) Tüm logları silmek</p>
+<p>C) Yedekleme izinlerinin ayrı değerlendirilmesi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>D) İnterneti kalıcı kapatmak</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Yedekleme izinlerinin ayrı değerlendirilmesi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>8) «Gizli ve sistem dosyalarının korunması» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) Gizli ve sistem dosyalarının korunması için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>B) İnterneti kalıcı kapatmak</p>
+<p>C) Yalnızca antivirüs imzasını güncellemek</p>
+<p>D) Tüm logları silmek</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Gizli ve sistem dosyalarının korunması» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>9) Bir stajyer «İzin devralma (inheritance) hataları» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Sadece sınavda sorulursa öğrenilir</p>
 <p>D) Yalnızca yöneticiler bilir</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Yedekleme izinlerinin ayrı değerlendirilmesi» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>8) Denetimde «Gizli ve sistem dosyalarının korunması» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>B) Ekran görüntüsü olmadan varsayım</p>
-<p>C) Başka modülün raporu</p>
-<p>D) Sözlü «biliyoruz» ifadesi</p>
-<ul><li>Doğru: A</li><li>Gerekçe: «Gizli ve sistem dosyalarının korunması» denetlenebilir kanıt gerektirir.</li></ul>
-<ol><li>9) Denetimde «İzin devralma (inheritance) hataları» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>B) Başka modülün raporu</p>
-<p>C) Sözlü «biliyoruz» ifadesi</p>
-<p>D) Ekran görüntüsü olmadan varsayım</p>
-<ul><li>Doğru: A</li><li>Gerekçe: «İzin devralma (inheritance) hataları» denetlenebilir kanıt gerektirir.</li></ul>
+<ul><li>Doğru: A</li><li>Gerekçe: «İzin devralma (inheritance) hataları» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>10) Sunucuda günlük iş için Domain Admin hesabı kullanılıyor. En doğru öneri?</li></ol>
 <p>A) Ayrıcalıklı hesabı yalnızca gerekli yönetim işlerinde kullanmak (JIT/ayrı hesap)</p>
 <p>B) Antivirüsü kaldırmak</p>
@@ -4379,12 +4379,12 @@ Last metadata expiration check: 1:12:04 ago on Sat May 2 2026.
 <p>C) Log formatı bozulur</p>
 <p>D) Bilinen açık penceresinde sistem exploit edilebilir</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Yama gecikmesi, exploit window süresini uzatır.</li></ul>
-<ol><li>10) «Envanter ve uyumluluk raporlama» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Tüm logları silmek</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) İnterneti kalıcı kapatmak</p>
-<p>D) Envanter ve uyumluluk raporlama için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Envanter ve uyumluluk raporlama» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>10) RoE’de «Do Not Harm» ihlali riski doğdu. İlk adım?</li></ol>
+<p>A) Stop/kill koşuluna göre durdurmak ve iletişim kanalını kullanmak</p>
+<p>B) Kanıtları silmek</p>
+<p>C) Tüm ağları kapatmak</p>
+<p>D) Hızı artırmak</p>
+<ul><li>Doğru: A</li><li>Gerekçe: RoE limitleri üretim güvenliğini korur.</li></ul>
 </div><h2><i class="fas fa-book"></i> Terimler Sözlüğü</h2>
                         <table class="comparison-table">
                             <thead>
@@ -5238,24 +5238,24 @@ chrome.exe                    5120 Console                    1    156.400 K Run
 <p>C) Uyarıyı sessizce silmek</p>
 <p>D) Tüm ağı kapatmak</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Davranışsal tespit doğrulama ve bağlam gerektirir.</li></ul>
-<ol><li>4) Penetrasyon testi sırasında müşteri e-postasına yetkisiz erişim mümkün görünüyor. Doğru adım?</li></ol>
-<p>A) Kill-switch’i devre dışı bırakmak</p>
-<p>B) Kapsam/RoE’ye göre durmak, müşteriye kontrollü kanıt ve raporlama</p>
-<p>C) Veriyi kopyalayıp analiz ekibine göndermek</p>
-<p>D) Sessizce devam edip satış ekibine anlatmak</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Yetkisiz veri erişimi kapsam dışıdır; disiplin ve sözleşme önceliklidir.</li></ul>
-<ol><li>5) Denetimde «Uygulama allow-listing fikri» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Ekran görüntüsü olmadan varsayım</p>
-<p>B) Sözlü «biliyoruz» ifadesi</p>
-<p>C) Başka modülün raporu</p>
-<p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Uygulama allow-listing fikri» denetlenebilir kanıt gerektirir.</li></ul>
-<ol><li>6) «Makro ve script tabanlı kötü amaçlı yazılım» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Makro ve script tabanlı kötü amaçlı yazılım için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) Tüm logları silmek</p>
-<p>D) İnterneti kalıcı kapatmak</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Makro ve script tabanlı kötü amaçlı yazılım» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>4) Yazılı yetki belgesi olmadan üretimde tarama başlatıldı. Bu durumda öncelikli risk nedir?</li></ol>
+<p>A) TLS sürüm uyumsuzluğu</p>
+<p>B) Hukuki ve operasyonel sorumluluk; yetkisiz test</p>
+<p>C) Yalnızca performans düşüşü</p>
+<p>D) DNS TTL artışı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Yetkili test yazılı onay ve kapsam tanımına dayanır.</li></ul>
+<ol><li>5) Bir stajyer «Uygulama allow-listing fikri» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Yalnızca yöneticiler bilir</p>
+<p>B) Sadece sınavda sorulursa öğrenilir</p>
+<p>C) Araç adı yeterlidir</p>
+<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Uygulama allow-listing fikri» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
+<ol><li>6) Bir stajyer «Makro ve script tabanlı kötü amaçlı yazılım» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Sadece sınavda sorulursa öğrenilir</p>
+<p>D) Yalnızca yöneticiler bilir</p>
+<ul><li>Doğru: A</li><li>Gerekçe: «Makro ve script tabanlı kötü amaçlı yazılım» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>7) Linux’ta bir binary SUID root ile çalışıyor ve shell spawn edebiliyor. Bu ne anlama gelir?</li></ol>
 <p>A) Dosya salt okunurdur</p>
 <p>B) DNS çözer</p>
@@ -6070,12 +6070,12 @@ tcp4       0      0  127.0.0.1.5432         *.* LISTEN</span>
 <p>C) HTTP’ye geçmek</p>
 <p>D) Parolayı kısaltmak</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Uzak yönetimde sıkılaştırma ve dolaylı erişim standarttır.</li></ul>
-<ol><li>5) Kurumsal politikada parola + mobil uygulama onayı zorunlu. Bu birleşim en çok neyi güçlendirir?</li></ol>
-<p>A) Kimlik doğrulama (MFA ile)</p>
-<p>B) Yalnızca log saklama süresi</p>
-<p>C) Subnet maskesi doğruluğu</p>
-<p>D) Yalnızca gizlilik</p>
-<ul><li>Doğru: A</li><li>Gerekçe: MFA, kimlik doğrulamayı çok faktörlü hale getirir.</li></ul>
+<ol><li>5) Kullanıcı parolasını girdikten sonra «Yönetici paneline erişim reddedildi» mesajı alıyor. Parola doğru. Hangi aşama başarısız olmuş olabilir?</li></ol>
+<p>A) Kimlik doğrulama</p>
+<p>B) Yetkilendirme</p>
+<p>C) Şifreleme</p>
+<p>D) Kimlik bildirimi (identification)</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kimlik doğrulandıktan sonra erişim hakkı yetkilendirme ile belirlenir.</li></ul>
 <ol><li>6) Sunucuya doğrudan RDP (3389) internete açık; yönetim için önerilen iyileştirme hangisidir?</li></ol>
 <p>A) Antivirüsü kaldırmak</p>
 <p>B) VPN/bastion + MFA ile erişim; doğrudan internet RDP’sini kapatmak</p>
@@ -6088,12 +6088,12 @@ tcp4       0      0  127.0.0.1.5432         *.* LISTEN</span>
 <p>C) Otomatik yedekleme yapar</p>
 <p>D) Dosya salt okunurdur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: SUID kötüye kullanımı ayrıcalık yükseltme yoludur.</li></ul>
-<ol><li>8) «Banner ve sürüm sızıntısı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) İnterneti kalıcı kapatmak</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) Tüm logları silmek</p>
-<p>D) Banner ve sürüm sızıntısı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Banner ve sürüm sızıntısı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>8) Bir stajyer «Banner ve sürüm sızıntısı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Yalnızca yöneticiler bilir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Sadece sınavda sorulursa öğrenilir</p>
+<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Banner ve sürüm sızıntısı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>9) Sunucuya doğrudan RDP (3389) internete açık; yönetim için önerilen iyileştirme hangisidir?</li></ol>
 <p>A) Parolayı kısaltmak</p>
 <p>B) Antivirüsü kaldırmak</p>
@@ -6979,12 +6979,12 @@ reboot     ~                         Wed Jan  9 08:10</span>
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — Loglama, İzleme ve Olay</h2>
 <div class="eval-quiz-section" id="modul-7-loglama-izleme-olay-modul-testi" data-section="modul-7-loglama-izleme-olay-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) MTTD uzun, MTTR kısa. Bu neyi gösterir?</li></ol>
-<p>A) Olaylar geç fark ediliyor; müdahale hızlı</p>
-<p>B) Log toplanmıyor</p>
-<p>C) Sadece false positive var</p>
-<p>D) Hiç olay yok</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Tespit–müdahale metrikleri farklı aşamaları ölçer.</li></ul>
+<ol><li>1) SIEM’de gece 03:00’te 4000 benzer «failed logon» alarmı geldi. İlk triyaj adımı?</li></ol>
+<p>A) Tüm kullanıcıları silmek</p>
+<p>B) SIEM’i kapatmak</p>
+<p>C) Alarmı kalıcı bastırmak</p>
+<p>D) Kaynak IP, hedef hesap, zaman penceresi ve playbook ile önceliklendirme</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Alarm selinde bağlam ve playbook triyajı kritiktir.</li></ul>
 <ol><li>2) MTTD uzun, MTTR kısa. Bu neyi gösterir?</li></ol>
 <p>A) Hiç olay yok</p>
 <p>B) Olaylar geç fark ediliyor; müdahale hızlı</p>
@@ -7015,30 +7015,30 @@ reboot     ~                         Wed Jan  9 08:10</span>
 <p>C) Tüm logları silmek</p>
 <p>D) Yalnızca antivirüs imzasını güncellemek</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «Olay müdahale ilk adımları» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>7) Bir stajyer «Kim, ne zaman, nereden sorusu» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Yalnızca yöneticiler bilir</p>
-<p>B) Sadece sınavda sorulursa öğrenilir</p>
-<p>C) Araç adı yeterlidir</p>
-<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Kim, ne zaman, nereden sorusu» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>8) SIEM’de gece 03:00’te 4000 benzer «failed logon» alarmı geldi. İlk triyaj adımı?</li></ol>
-<p>A) SIEM’i kapatmak</p>
-<p>B) Tüm kullanıcıları silmek</p>
-<p>C) Alarmı kalıcı bastırmak</p>
-<p>D) Kaynak IP, hedef hesap, zaman penceresi ve playbook ile önceliklendirme</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Alarm selinde bağlam ve playbook triyajı kritiktir.</li></ul>
-<ol><li>9) Denetimde «Şüpheli oturum açma izleme» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Sözlü «biliyoruz» ifadesi</p>
-<p>B) Ekran görüntüsü olmadan varsayım</p>
+<ol><li>7) Denetimde «Kim, ne zaman, nereden sorusu» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Ekran görüntüsü olmadan varsayım</p>
+<p>B) Sözlü «biliyoruz» ifadesi</p>
 <p>C) Başka modülün raporu</p>
 <p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Şüpheli oturum açma izleme» denetlenebilir kanıt gerektirir.</li></ul>
-<ol><li>10) Penetrasyon testi sırasında müşteri e-postasına yetkisiz erişim mümkün görünüyor. Doğru adım?</li></ol>
-<p>A) Veriyi kopyalayıp analiz ekibine göndermek</p>
-<p>B) Kill-switch’i devre dışı bırakmak</p>
-<p>C) Kapsam/RoE’ye göre durmak, müşteriye kontrollü kanıt ve raporlama</p>
-<p>D) Sessizce devam edip satış ekibine anlatmak</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Yetkisiz veri erişimi kapsam dışıdır; disiplin ve sözleşme önceliklidir.</li></ul>
+<ul><li>Doğru: D</li><li>Gerekçe: «Kim, ne zaman, nereden sorusu» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>8) MTTD uzun, MTTR kısa. Bu neyi gösterir?</li></ol>
+<p>A) Log toplanmıyor</p>
+<p>B) Olaylar geç fark ediliyor; müdahale hızlı</p>
+<p>C) Sadece false positive var</p>
+<p>D) Hiç olay yok</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Tespit–müdahale metrikleri farklı aşamaları ölçer.</li></ul>
+<ol><li>9) Bir stajyer «Şüpheli oturum açma izleme» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Sadece sınavda sorulursa öğrenilir</p>
+<p>B) Yalnızca yöneticiler bilir</p>
+<p>C) Araç adı yeterlidir</p>
+<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Şüpheli oturum açma izleme» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
+<ol><li>10) Olay sonrası disk imajı alınırken hash değeri kaydedilmedi. Bu eksiklik neyi zayıflatır?</li></ol>
+<p>A) DNS çözümlemesini</p>
+<p>B) TLS cipher suite seçimini</p>
+<p>C) Kanıt zinciri ve bütünlük ispatını</p>
+<p>D) Wi-Fi kanal planını</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Adli/kanıt süreçlerinde değişmezlik kaydı (hash) kritiktir.</li></ul>
 </div><h2><i class="fas fa-book"></i> Terimler Sözlüğü</h2>
                         <table class="comparison-table">
                             <thead>
@@ -7888,42 +7888,42 @@ ssh.service                         <span style="color: #a6e3a1;">enabled</span>
 <p>C) Ayrıcalıklı hesabı yalnızca gerekli yönetim işlerinde kullanmak (JIT/ayrı hesap)</p>
 <p>D) RDP’yi internete açmak</p>
 <ul><li>Doğru: C</li><li>Gerekçe: En az ayrıcalık ve ayrık yönetim hesabı temel ilkedir.</li></ul>
-<ol><li>2) «Gereksiz rol/feature kaldırma» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Tüm logları silmek</p>
-<p>B) İnterneti kalıcı kapatmak</p>
-<p>C) Yalnızca antivirüs imzasını güncellemek</p>
-<p>D) Gereksiz rol/feature kaldırma için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Gereksiz rol/feature kaldırma» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>3) «Güvenli yapılandırma şablonu (GPO/ansible)» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Güvenli yapılandırma şablonu (GPO/ansible) için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) İnterneti kalıcı kapatmak</p>
-<p>D) Tüm logları silmek</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Güvenli yapılandırma şablonu (GPO/ansible)» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>4) «Audit policy etkinleştirme» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Tüm logları silmek</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) Audit policy etkinleştirme için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>D) İnterneti kalıcı kapatmak</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Audit policy etkinleştirme» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>2) Denetimde «Gereksiz rol/feature kaldırma» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Sözlü «biliyoruz» ifadesi</p>
+<p>B) Ekran görüntüsü olmadan varsayım</p>
+<p>C) Başka modülün raporu</p>
+<p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Gereksiz rol/feature kaldırma» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>3) Denetimde «Güvenli yapılandırma şablonu (GPO/ansible)» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<p>B) Başka modülün raporu</p>
+<p>C) Ekran görüntüsü olmadan varsayım</p>
+<p>D) Sözlü «biliyoruz» ifadesi</p>
+<ul><li>Doğru: A</li><li>Gerekçe: «Güvenli yapılandırma şablonu (GPO/ansible)» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>4) Bir stajyer «Audit policy etkinleştirme» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Sadece sınavda sorulursa öğrenilir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>D) Yalnızca yöneticiler bilir</p>
+<ul><li>Doğru: C</li><li>Gerekçe: «Audit policy etkinleştirme» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>5) Sunucuda günlük iş için Domain Admin hesabı kullanılıyor. En doğru öneri?</li></ol>
 <p>A) Antivirüsü kaldırmak</p>
 <p>B) RDP’yi internete açmak</p>
 <p>C) Parolayı ekrana yapıştırmak</p>
 <p>D) Ayrıcalıklı hesabı yalnızca gerekli yönetim işlerinde kullanmak (JIT/ayrı hesap)</p>
 <ul><li>Doğru: D</li><li>Gerekçe: En az ayrıcalık ve ayrık yönetim hesabı temel ilkedir.</li></ul>
-<ol><li>6) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
-<p>A) Hash ile aynıdır</p>
-<p>B) Encoding gizlilik sağlamaz; gerçek şifreleme ve anahtar yönetimi gerekir</p>
-<p>C) TLS gereksizdir</p>
-<p>D) Güçlü gizlilik sağlanmıştır</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Base64 tersine çevrilebilir format dönüşümüdür.</li></ul>
-<ol><li>7) «Local admin sınırlandırma» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Tüm logları silmek</p>
-<p>B) Local admin sınırlandırma için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>C) Yalnızca antivirüs imzasını güncellemek</p>
-<p>D) İnterneti kalıcı kapatmak</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «Local admin sınırlandırma» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>6) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
+<p>A) Uzun parola yeterlidir; algoritma önemsiz</p>
+<p>B) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
+<p>C) Şifreleme bütünlük sağlar</p>
+<p>D) Algoritma tamamen gizli kalmalı</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Kerckhoffs ilkesi standart kabuldür.</li></ul>
+<ol><li>7) Denetimde «Local admin sınırlandırma» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Sözlü «biliyoruz» ifadesi</p>
+<p>B) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<p>C) Başka modülün raporu</p>
+<p>D) Ekran görüntüsü olmadan varsayım</p>
+<ul><li>Doğru: B</li><li>Gerekçe: «Local admin sınırlandırma» denetlenebilir kanıt gerektirir.</li></ul>
 <ol><li>8) 192.168.10.50/24 adresli bir PC internete çıkamıyor; aynı VLAN’daki komşular çıkabiliyor. İlk kontrol?</li></ol>
 <p>A) Varsayılan ağ geçidi ve yerel IP yapılandırması</p>
 <p>B) CPU fan hızı</p>

@@ -110,8 +110,55 @@
         }
     }
 
+    function wireMobileMenu() {
+        var mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        var moduleSidebar = document.querySelector('.module-sidebar');
+        if (!mobileMenuToggle || !moduleSidebar) return;
+        if (mobileMenuToggle.dataset.sebsMobileWired === '1') return;
+        mobileMenuToggle.dataset.sebsMobileWired = '1';
+        mobileMenuToggle.addEventListener('click', function () {
+            moduleSidebar.classList.toggle('open');
+            var icon = mobileMenuToggle.querySelector('i');
+            if (!icon) return;
+            if (moduleSidebar.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        document.addEventListener('click', function (event) {
+            if (global.innerWidth > 1024) return;
+            if (
+                !moduleSidebar.contains(event.target) &&
+                !mobileMenuToggle.contains(event.target) &&
+                moduleSidebar.classList.contains('open')
+            ) {
+                moduleSidebar.classList.remove('open');
+                var ic = mobileMenuToggle.querySelector('i');
+                if (ic) {
+                    ic.classList.remove('fa-times');
+                    ic.classList.add('fa-bars');
+                }
+            }
+        });
+        document.querySelectorAll('.nav-link-section, .nav-link-sub, .nav-item').forEach(function (item) {
+            item.addEventListener('click', function () {
+                if (global.innerWidth > 1024) return;
+                moduleSidebar.classList.remove('open');
+                var ic2 = mobileMenuToggle.querySelector('i');
+                if (ic2) {
+                    ic2.classList.remove('fa-times');
+                    ic2.classList.add('fa-bars');
+                }
+            });
+        });
+    }
+
     function run() {
         enhanceSectionInners();
+        wireMobileMenu();
         var sections = document.querySelectorAll('.module-layout .content-section');
         sections.forEach(function (sec, i) {
             buildIntro(sec, i);

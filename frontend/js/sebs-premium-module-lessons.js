@@ -401,6 +401,73 @@
         };
     }
 
+    function querySuffixFromBasePath(basePath) {
+        var s = String(basePath || '');
+        var q = s.indexOf('?');
+        return q >= 0 ? s.slice(q) : '';
+    }
+
+    function moduleSlugFromBasePath(basePath) {
+        var path = String(basePath || '').split('?')[0];
+        var file = path.split('/').pop() || '';
+        return file.replace(/\.html$/i, '') || 'modul';
+    }
+
+    /** Her ders / bölüm için ayrı URL: /modules/{slug}/ders/{section}/{heading}.html */
+    function hrefForLessonKey(lessonKey, basePath) {
+        var slug = moduleSlugFromBasePath(basePath);
+        var q = querySuffixFromBasePath(basePath);
+        var parsed = parseLessonKey(lessonKey);
+        var path;
+        if (String(lessonKey || '').indexOf('::') !== -1) {
+            path =
+                '/modules/' +
+                slug +
+                '/ders/' +
+                encodeURIComponent(parsed.sectionId) +
+                '/' +
+                encodeURIComponent(parsed.headingId) +
+                '.html';
+        } else {
+            path =
+                '/modules/' +
+                slug +
+                '/bolum/' +
+                encodeURIComponent(parsed.sectionId) +
+                '.html';
+        }
+        return path + q;
+    }
+
+    function parseRouteKeyFromUrl(basePath) {
+        var pathname = global.location.pathname || '';
+        var slug = moduleSlugFromBasePath(basePath);
+        var prefix = '/modules/' + slug + '/';
+        if (pathname.indexOf(prefix) === 0) {
+            var rest = pathname.slice(prefix.length).replace(/\.html$/i, '');
+            var parts = rest.split('/').filter(Boolean);
+            if (parts[0] === 'ders' && parts.length >= 3) {
+                return (
+                    decodeURIComponent(parts[1]) +
+                    '::' +
+                    decodeURIComponent(parts.slice(2).join('/'))
+                );
+            }
+            if (parts[0] === 'ders' && parts.length === 2) {
+                return decodeURIComponent(parts[1]);
+            }
+            if (parts[0] === 'bolum' && parts.length >= 2) {
+                return decodeURIComponent(parts[1]);
+            }
+        }
+        try {
+            var sp = new URLSearchParams(global.location.search || '');
+            return sp.get('ders') || sp.get('bolum');
+        } catch (e) {
+            return null;
+        }
+    }
+
     function appendLessonFooter(container, onComplete) {
         if (!container || container.querySelector('.lesson-complete-footer')) return;
         var footer = document.createElement('div');
@@ -600,15 +667,9 @@
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
+        var basePath = cfg.basePath || (global.location && global.location.pathname) || '/';
         global.MODULE_NAME = MODULE_NAME;
-        document.body.classList.add('sebs-module-progress-section');
-        try {
-            var cleanUrl = new URL(global.location.href);
-            if (cleanUrl.searchParams.has('ders')) {
-                cleanUrl.searchParams.delete('ders');
-                global.history.replaceState({}, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
-            }
-        } catch (eUrl) { /* ignore */ }
+        document.body.classList.add('sebs-module-progress-section', 'module-section-pages');
 
         var sections = document.querySelectorAll('.content-section');
         var navLinks = document.querySelectorAll('.nav-link-section');
@@ -621,6 +682,13 @@
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
+        try {
+            global.dispatchEvent(new Event('sebs-lesson-cards-ready'));
+        } catch (e) {
+            var ev = document.createEvent('Event');
+            ev.initEvent('sebs-lesson-cards-ready', true, true);
+            global.dispatchEvent(ev);
+        }
 
         var subNavScroll = resolveSubNavScroll(cfg);
         if (subNavScroll) {
@@ -702,20 +770,63 @@
             });
         }
 
-        function goToSectionByIndex(sectionIndex) {
-            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
-            var target = sections[sectionIndex];
+        function applySectionPageView(sectionId) {
+            if (!sectionId) return false;
+            var target = document.getElementById(sectionId);
+            if (!target) return false;
+            document.body.classList.add('lesson-route-mode');
             sections.forEach(function (sec) {
-                sec.classList.toggle('active', sec === target);
+                var on = sec.id === sectionId;
+                sec.classList.toggle('active', on);
+                sec.classList.toggle('lesson-route-current-section', on);
+                sec.classList.toggle('lesson-route-whole-section', on);
             });
             navLinks.forEach(function (l) {
-                l.classList.toggle('active', l.getAttribute('data-section') === target.id);
+                l.classList.toggle('active', l.getAttribute('data-section') === sectionId);
             });
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelectorAll('.nav-section-item').forEach(function (li) {
+                li.classList.remove('is-open');
+            });
+            var activeNav = Array.from(navLinks).find(function (l) {
+                return l.getAttribute('data-section') === sectionId;
+            });
+            if (activeNav) {
+                var item = activeNav.closest('.nav-section-item');
+                if (item) item.classList.add('is-open');
+            }
+            global.scrollTo(0, 0);
+            var mainScroll = document.querySelector('main');
+            if (mainScroll) mainScroll.scrollTop = 0;
             if (global.innerWidth <= 1024) {
                 var sidebar = document.querySelector('.module-sidebar');
                 if (sidebar) sidebar.classList.remove('open');
             }
+            try {
+                var h1 = target.querySelector('.section-inner > h1');
+                document.title = h1
+                    ? formatTopicTitle(h1.textContent) + ' — ' + MODULE_NAME
+                    : MODULE_NAME + ' | SEBS';
+            } catch (eTitle) { /* ignore */ }
+            return true;
+        }
+
+        function navigateToSection(sectionId, opts) {
+            opts = opts || {};
+            if (!sectionId) return;
+            applySectionPageView(sectionId);
+            if (!opts.skipHistory) {
+                var href = hrefForLessonKey(sectionId, basePath);
+                if (opts.replace) {
+                    global.history.replaceState({ sectionId: sectionId }, '', href);
+                } else {
+                    global.history.pushState({ sectionId: sectionId }, '', href);
+                }
+            }
+        }
+
+        function goToSectionByIndex(sectionIndex) {
+            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
+            navigateToSection(sections[sectionIndex].id);
         }
 
         async function completeLesson(sectionId) {
@@ -748,84 +859,53 @@
         }
 
         navLinks.forEach(function (link) {
+            var sectionId = link.getAttribute('data-section');
+            if (sectionId) {
+                link.setAttribute('href', hrefForLessonKey(sectionId, basePath));
+            }
             link.addEventListener('click', function (e) {
                 e.preventDefault();
-                var sectionId = link.getAttribute('data-section');
-                sections.forEach(function (sec) {
-                    sec.classList.toggle('active', sec.id === sectionId);
-                });
-                navLinks.forEach(function (l) {
-                    l.classList.remove('active');
-                });
-                link.classList.add('active');
-                if (subNavScroll) {
-                    document.querySelectorAll('.nav-link-sub').forEach(function (l) {
-                        l.classList.remove('active');
-                    });
-                    var parentLi = link.closest('.nav-section-item');
-                    if (parentLi) {
-                        var shouldOpen = !parentLi.classList.contains('is-open');
-                        document.querySelectorAll('.nav-section-item').forEach(function (li) {
-                            li.classList.remove('is-open');
-                        });
-                        if (shouldOpen) parentLi.classList.add('is-open');
-                    }
-                }
-                var section = document.getElementById(sectionId);
-                if (section) {
-                    setTimeout(function () {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 40);
-                }
+                navigateToSection(link.getAttribute('data-section'));
             });
         });
 
         if (subNavScroll) {
             document.querySelectorAll('.nav-link-sub').forEach(function (link) {
+                var sectionId = link.getAttribute('data-section');
+                var anchorId = link.getAttribute('data-anchor');
+                if (sectionId && anchorId) {
+                    var lk = makeLessonKey(sectionId, anchorId);
+                    link.setAttribute('href', hrefForLessonKey(lk, basePath));
+                }
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    var sectionId = link.getAttribute('data-section');
-                    var anchorId = link.getAttribute('data-anchor');
-                    sections.forEach(function (sec) {
-                        sec.classList.toggle('active', sec.id === sectionId);
-                    });
-                    navLinks.forEach(function (l) {
-                        l.classList.toggle('active', l.getAttribute('data-section') === sectionId);
-                    });
-                    document.querySelectorAll('.nav-link-sub').forEach(function (l) {
-                        l.classList.remove('active');
-                    });
-                    link.classList.add('active');
-                    var parentLi = link.closest('.nav-section-item');
-                    if (parentLi) {
-                        document.querySelectorAll('.nav-section-item').forEach(function (li) {
-                            li.classList.remove('is-open');
-                        });
-                        parentLi.classList.add('is-open');
-                    }
-                    var anchor = document.getElementById(anchorId);
-                    if (anchor) {
-                        setTimeout(function () {
-                            anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }, 40);
+                    var sid = link.getAttribute('data-section');
+                    var aid = link.getAttribute('data-anchor');
+                    if (sid && aid) {
+                        global.location.href = hrefForLessonKey(makeLessonKey(sid, aid), basePath);
                     }
                 });
             });
         }
 
-        if (sections.length) {
-            sections.forEach(function (s, i) {
-                s.classList.toggle('active', i === 0);
-            });
-            var firstLink = document.querySelector('.nav-link-section');
-            if (firstLink) {
-                firstLink.classList.add('active');
-                if (subNavScroll) {
-                    var firstSectionItem = firstLink.closest('.nav-section-item');
-                    if (firstSectionItem) firstSectionItem.classList.add('is-open');
-                }
+        global.addEventListener('popstate', function () {
+            var rk = parseRouteKeyFromUrl(basePath);
+            if (!rk || rk.indexOf('::') !== -1) return;
+            if (document.getElementById(rk)) {
+                applySectionPageView(rk);
             }
-        }
+        });
+
+        (function initSectionRouteFromUrl() {
+            var fromUrl = parseRouteKeyFromUrl(basePath);
+            if (fromUrl && fromUrl.indexOf('::') === -1 && document.getElementById(fromUrl)) {
+                navigateToSection(fromUrl, { replace: true });
+                return;
+            }
+            if (sections.length) {
+                navigateToSection(sections[0].id, { replace: true });
+            }
+        })();
 
         installLessonCompleteControls(false, function (key) {
             completeLesson(parseLessonKey(key).sectionId);
@@ -874,8 +954,14 @@
             }
         }
         if (cfg.progressMode === 'section') {
-            runClassicSections(cfg);
-            return;
+            var routeProbe = parseRouteKeyFromUrl(cfg.basePath || global.location.pathname);
+            if (routeProbe && routeProbe.indexOf('::') !== -1 && moduleHasSubheadingNav()) {
+                cfg = Object.assign({}, cfg);
+                delete cfg.progressMode;
+            } else {
+                runClassicSections(cfg);
+                return;
+            }
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
@@ -894,6 +980,13 @@
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
+        try {
+            global.dispatchEvent(new Event('sebs-lesson-cards-ready'));
+        } catch (e) {
+            var ev = document.createEvent('Event');
+            ev.initEvent('sebs-lesson-cards-ready', true, true);
+            global.dispatchEvent(ev);
+        }
 
         var subNavScroll = resolveSubNavScroll(cfg);
         if (subNavScroll) {
@@ -1053,7 +1146,7 @@
         }
 
         function parseLessonKeyFromUrl() {
-            return new URLSearchParams(global.location.search).get('ders');
+            return parseRouteKeyFromUrl(basePath);
         }
 
         function applyLessonView(lessonKey) {
@@ -1123,12 +1216,11 @@
             if (!lessonKey || lessonKeysOrdered.indexOf(lessonKey) === -1) return;
             applyLessonView(lessonKey);
             if (!opts.skipHistory) {
-                var url = new URL(global.location.href);
-                url.searchParams.set('ders', lessonKey);
+                var href = hrefForLessonKey(lessonKey, basePath);
                 if (opts.replace) {
-                    global.history.replaceState({ lessonKey: lessonKey }, '', url.toString());
+                    global.history.replaceState({ lessonKey: lessonKey }, '', href);
                 } else {
-                    global.history.pushState({ lessonKey: lessonKey }, '', url.toString());
+                    global.history.pushState({ lessonKey: lessonKey }, '', href);
                 }
             }
             try {
@@ -1142,14 +1234,7 @@
         }
 
         function hrefWithDersParam(lessonKey) {
-            try {
-                var u = new URL(basePath, global.location.origin);
-                u.searchParams.set('ders', lessonKey);
-                return u.pathname + u.search + (u.hash || '');
-            } catch (e) {
-                var join = String(basePath).indexOf('?') >= 0 ? '&' : '?';
-                return basePath + join + 'ders=' + encodeURIComponent(lessonKey);
-            }
+            return hrefForLessonKey(lessonKey, basePath);
         }
 
         function wireLessonNavigation() {
@@ -1240,6 +1325,12 @@
 
         (function initLessonRouteFromUrl() {
             var fromUrl = parseLessonKeyFromUrl();
+            try {
+                var legacy = new URLSearchParams(global.location.search).get('ders');
+                if (legacy && lessonKeysOrdered.indexOf(legacy) !== -1 && legacy !== fromUrl) {
+                    fromUrl = legacy;
+                }
+            } catch (eLegacy) { /* ignore */ }
             var initial =
                 fromUrl && lessonKeysOrdered.indexOf(fromUrl) !== -1 ? fromUrl : lessonKeysOrdered[0];
             if (initial) {

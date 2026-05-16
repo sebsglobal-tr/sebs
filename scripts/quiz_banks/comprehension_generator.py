@@ -416,67 +416,142 @@ def _math(topic: str, _mod: str, v: int) -> Question:
     return bank[v % len(bank)]
 
 
-@_register("roe", "yetkili test", "nda", "kill-switch", "kanıt", "etik", "yasal", "kapsam", "veri koruma", "raporlama", "üçüncü taraf")
+@_register("roe", "yetkili test", "nda", "kill-switch", "kanıt", "etik", "yasal", "kapsam", "veri koruma", "raporlama", "üçüncü taraf", "minimizasyon")
 def _ethics(topic: str, _mod: str, v: int) -> Question:
     t = topic.lower()
-    bank: list[Question] = []
-    if "kapsam" in t or "scope" in t:
-        bank.append(
-            _q(
-                "Test sırasında kapsam dışı bir üretim sunucusuna erişim mümkün görünüyor. Ne yapılmalı?",
-                [
-                    "Hemen exploit edip rapora eklemek",
-                    "Durmak, müşteriye bildirmek ve kapsam dışı erişimi yapmamak",
-                    "Sunucuyu kapatmak",
-                    "Logları silmek",
-                ],
-                "B",
-                "Kapsam dışı sistemlere müdahale yetki ve sözleşme ihlalidir.",
-            )
+    if "roe" in t:
+        return _q(
+            "RoE’de rate limit aşıldı ve üretim yavaşladı. Doğru müdahale?",
+            [
+                "Limitleri görmezden gelip devam",
+                "Stop condition’a göre durdurup müşteriyle koordine etmek",
+                "Tüm kullanıcı oturumlarını silmek",
+                "Logları kapatmak",
+            ],
+            "B",
+            "RoE limitleri ve stop condition operasyonel güvenliği korur.",
         )
-    if "kanıt" in t or "bütünlük" in t and "veri" in t:
-        bank.append(
-            _q(
-                "Olay sonrası disk imajı alınırken hash değeri kaydedilmedi. Bu eksiklik neyi zayıflatır?",
-                [
-                    "DNS çözümlemesini",
-                    "Kanıt zinciri ve bütünlük ispatını",
-                    "Wi-Fi kanal planını",
-                    "TLS cipher suite seçimini",
-                ],
-                "B",
-                "Adli/kanıt süreçlerinde değişmezlik kaydı (hash) kritiktir.",
-            )
+    if "yetkili" in t or "yetki" in t:
+        return _q(
+            "Yazılı yetki belgesi olmadan üretimde tarama başlatıldı. Bu durumda öncelikli risk nedir?",
+            [
+                "Yalnızca performans düşüşü",
+                "Hukuki ve operasyonel sorumluluk; yetkisiz test",
+                "DNS TTL artışı",
+                "TLS sürüm uyumsuzluğu",
+            ],
+            "B",
+            "Yetkili test yazılı onay ve kapsam tanımına dayanır.",
+        )
+    if "kanıt" in t or ("bütünlük" in t and "veri" in t):
+        return _q(
+            "Olay sonrası disk imajı alınırken hash değeri kaydedilmedi. Bu eksiklik neyi zayıflatır?",
+            [
+                "DNS çözümlemesini",
+                "Kanıt zinciri ve bütünlük ispatını",
+                "Wi-Fi kanal planını",
+                "TLS cipher suite seçimini",
+            ],
+            "B",
+            "Adli/kanıt süreçlerinde değişmezlik kaydı (hash) kritiktir.",
+        )
+    if "minimizasyon" in t:
+        return _q(
+            "Olay raporuna gereksiz tam e-posta gövdeleri eklendi. Hangi ilke ihlal edilmiştir?",
+            [
+                "Veri minimizasyonu",
+                "ECB modu seçimi",
+                "ARP öğrenme",
+                "SSID gizleme",
+            ],
+            "A",
+            "Yalnızca gerekli veri toplanmalı ve paylaşılmalıdır.",
+        )
+    if "rapor" in t:
+        return _q(
+            "Yönetici özeti teknik PCAP ekleriyle doldurulmuş; karar vericiler okuyamıyor. Düzeltme?",
+            [
+                "Özeti iş etkisi ve risk odaklı tutup teknik detayı ek’e taşımak",
+                "Daha fazla ham log eklemek",
+                "Raporu şifrelemeden e-postalamak",
+                "Kapsamı genişletmek",
+            ],
+            "A",
+            "Raporlama hedef kitleye göre katmanlanır.",
+        )
+    if "üçüncü" in t or "onay" in t:
+        return _q(
+            "Alt yüklenici test ekibine müşteri verisi aktarılacak. Öncelikli kontrol?",
+            [
+                "NDA ve veri işleme sözleşmesi / yetki",
+                "Daha hızlı internet",
+                "ECB modu",
+                "SSID gizleme",
+            ],
+            "A",
+            "Üçüncü tarafla çalışmada sözleşme ve veri koruma şarttır.",
+        )
+    if "kapsam" in t or "scope" in t or "dışı" in t:
+        return _q(
+            "Test sırasında kapsam dışı bir üretim sunucusuna erişim mümkün görünüyor. Ne yapılmalı?",
+            [
+                "Hemen exploit edip rapora eklemek",
+                "Durmak, müşteriye bildirmek ve kapsam dışı erişimi yapmamak",
+                "Sunucuyu kapatmak",
+                "Logları silmek",
+            ],
+            "B",
+            "Kapsam dışı sistemlere müdahale yetki ve sözleşme ihlalidir.",
         )
     if "kill" in t:
-        bank.append(
-            _q(
-                "Üretimde beklenmedik kesinti riski doğdu; kill-switch tetiklenmeli mi?",
-                [
-                    "Hayır, test süresiz sürmeli",
-                    "RoE’de tanımlı stop/kill koşullarına göre durdurmak ve müşteriyi bilgilendirmek",
-                    "Yalnızca logları kapatmak",
-                    "Parolaları sıfırlamak",
-                ],
-                "B",
-                "Kill-switch kontrollü durdurma için önceden tanımlanır.",
-            )
+        return _q(
+            "Üretimde beklenmedik kesinti riski doğdu; kill-switch tetiklenmeli mi?",
+            [
+                "Hayır, test süresiz sürmeli",
+                "RoE’de tanımlı stop/kill koşullarına göre durdurmak ve müşteriyi bilgilendirmek",
+                "Yalnızca logları kapatmak",
+                "Parolaları sıfırlamak",
+            ],
+            "B",
+            "Kill-switch kontrollü durdurma için önceden tanımlanır.",
         )
-    if "nda" in t or "üçüncü" in t:
-        bank.append(
-            _q(
-                "Alt yüklenici test ekibine müşteri verisi aktarılacak. Öncelikli kontrol?",
-                [
-                    "NDA ve veri işleme sözleşmesi / yetki",
-                    "Daha hızlı internet",
-                    "ECB modu",
-                    "SSID gizleme",
-                ],
-                "A",
-                "Üçüncü tarafla çalışmada sözleşme ve veri koruma şarttır.",
-            )
+    if "nda" in t:
+        return _q(
+            "NDA imzalanmadan müşteri ağ diyagramı paylaşıldı. Bu durumda?",
+            [
+                "Paylaşımı durdurup hukuk/uyum sürecini başlatmak",
+                "Diyagramı sosyal medyada paylaşmak",
+                "Taramayı hızlandırmak",
+                "Logları silmek",
+            ],
+            "A",
+            "Gizlilik sözleşmesi olmadan hassas bilgi paylaşımı risklidir.",
         )
-    bank.append(
+    if "yasal" in t or "sınır" in t:
+        return _q(
+            "Yasal sınır ihlali şüphesi doğdu. Ekip ne yapmalı?",
+            [
+                "Sessizce devam",
+                "Hukuk/uyum ile koordine, kapsam dışı aksiyondan kaçınma",
+                "Sosyal medyada paylaşım",
+                "Varsayılan parolaları deneme",
+            ],
+            "B",
+            "Yasal çerçeve dışı faaliyet kabul edilemez.",
+        )
+    if "veri koruma" in t or "koruma" in t:
+        return _q(
+            "«Veri koruma» uygulanmadığı için olay müdahalesi gecikti. Öncelikli düzeltme?",
+            [
+                "Tanımlı veri koruma kontrolünü devreye almak ve süreci dokümante etmek",
+                "Tüm logları silmek",
+                "Yalnızca antivirüs imzasını güncellemek",
+                "İnterneti kalıcı kapatmak",
+            ],
+            "A",
+            "Eksik kontrol doğrudan hedeflenmeli.",
+        )
+    fallback = [
         _q(
             "Penetrasyon testi sırasında müşteri e-postasına yetkisiz erişim mümkün görünüyor. Doğru adım?",
             [
@@ -487,9 +562,20 @@ def _ethics(topic: str, _mod: str, v: int) -> Question:
             ],
             "B",
             "Yetkisiz veri erişimi kapsam dışıdır; disiplin ve sözleşme önceliklidir.",
-        )
-    )
-    return bank[v % len(bank)]
+        ),
+        _q(
+            "RoE’de «Do Not Harm» ihlali riski doğdu. İlk adım?",
+            [
+                "Hızı artırmak",
+                "Stop/kill koşuluna göre durdurmak ve iletişim kanalını kullanmak",
+                "Tüm ağları kapatmak",
+                "Kanıtları silmek",
+            ],
+            "B",
+            "RoE limitleri üretim güvenliğini korur.",
+        ),
+    ]
+    return fallback[_pick_variant(f"{topic}:{v}", len(fallback))]
 
 
 @_register("vpn", "ipsec", "802.1x", "netflow", "span", "tap", "pcap", "wireshark")
@@ -649,7 +735,18 @@ def build_comprehension_questions(
     seed: str = "",
 ) -> list[Question]:
     out: list[Question] = []
+    seen: set[str] = set()
     for i, topic in enumerate(topics[:10]):
-        q = generate_question(topic, module_title, f"{seed}:q{i}")
+        q: Question | None = None
+        for attempt in range(32):
+            candidate = generate_question(
+                topic, module_title, f"{seed}:q{i}:a{attempt}"
+            )
+            if candidate["q"] not in seen:
+                q = candidate
+                seen.add(candidate["q"])
+                break
+        if q is None:
+            q = generate_question(topic, module_title, f"{seed}:q{i}:fallback")
         out.append(shuffle_question_options(q, f"{seed}:shuffle:{i}"))
     return out

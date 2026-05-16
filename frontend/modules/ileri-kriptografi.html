@@ -60,6 +60,7 @@
   <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css" />
 </head>
 
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -350,36 +351,36 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 1</h2>
 <div class="eval-quiz-section" id="ik-m1-modul-testi" data-section="ik-m1-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Güvenlik ciddi şekilde kırılabilir</p>
-<p>B) ECB güvenli olur</p>
-<p>C) Sertifika otomatik yenilenir</p>
-<p>D) Performans artar</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) AES yavaştır</p>
+<p>B) Hash yasaktır</p>
+<p>C) Base64 gereklidir</p>
+<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
 <p>A) Algoritma tamamen gizli kalmalı</p>
 <p>B) Uzun parola yeterlidir; algoritma önemsiz</p>
 <p>C) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
 <p>D) Şifreleme bütünlük sağlar</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Kerckhoffs ilkesi standart kabuldür.</li></ul>
-<ol><li>3) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) AES yavaştır</p>
-<p>B) Hash yasaktır</p>
-<p>C) Base64 gereklidir</p>
-<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>3) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Güvenlik ciddi şekilde kırılabilir</p>
+<p>B) ECB güvenli olur</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) Performans artar</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Hash yasaktır</p>
 <p>B) AES yavaştır</p>
 <p>C) Base64 gereklidir</p>
 <p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>5) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Sertifika otomatik yenilenir</p>
-<p>B) Güvenlik ciddi şekilde kırılabilir</p>
-<p>C) ECB güvenli olur</p>
-<p>D) Performans artar</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>5) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Base64 gereklidir</p>
+<p>B) AES yavaştır</p>
+<p>C) Hash yasaktır</p>
+<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>6) Bir stajyer «Protokol vs primitive ayrımı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
 <p>A) Yalnızca yöneticiler bilir</p>
 <p>B) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
@@ -392,24 +393,24 @@
 <p>C) Gizlilik ihlali yoktur</p>
 <p>D) İçerik kesin güvenilirdir</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>8) İndirilen yazılım paketinin hash değeri resmi sitedekiyle uyuşmuyor. Bu bulgu öncelikle hangi güvenlik hedefini ihlal eder?</li></ol>
-<p>A) Anonimlik</p>
+<ol><li>8) Bir e-ticaret sitesi saldırı altında; kullanıcılar ödeme yapamıyor ancak veriler sızdırılmamış görünüyor. En doğrudan etkilenen CIA bileşeni hangisidir?</li></ol>
+<p>A) İnkâr edememe</p>
 <p>B) Erişilebilirlik</p>
 <p>C) Gizlilik</p>
 <p>D) Bütünlük</p>
-<ul><li>Doğru: D</li><li>Gerekçe: İçeriğin yetkisiz değiştirilmesi bütünlük sorunudur.</li></ul>
+<ul><li>Doğru: B</li><li>Gerekçe: Hizmetin kullanılamaması erişilebilirlik kaybıdır; gizlilik ayrı bir hedeftir.</li></ul>
 <ol><li>9) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) İçerik kesin güvenilirdir</p>
 <p>B) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <p>C) Gizlilik ihlali yoktur</p>
 <p>D) Base64 bozuktur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) Denetimde «Kriptanaliz ve tasarım gerilimi» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Başka modülün raporu</p>
-<p>B) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>C) Ekran görüntüsü olmadan varsayım</p>
-<p>D) Sözlü «biliyoruz» ifadesi</p>
-<ul><li>Doğru: B</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>10) Bir stajyer «Kriptanaliz ve tasarım gerilimi» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Araç adı yeterlidir</p>
+<p>B) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>C) Yalnızca yöneticiler bilir</p>
+<p>D) Sadece sınavda sorulursa öğrenilir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül, kriptografik güvenliği sezgisel bir his olmaktan çıkarıp sorgulanabilir, okunabilir ve değerlendirilebilir bir çerçeveye taşıdı.</p>
                     <p>Öğrenci artık “güvenli” kelimesinin kriptografide ne anlama geldiğini sorabilir; bir güvenlik iddiasının arkasındaki saldırgan modelini, güvenlik oyunu yapısını ve avantaj tanımını okuyabilir. IND-CPA ile IND-CCA arasındaki farkı bir protokolün gerçek saldırı yüzeyi üzerinden değerlendirebilir; neden sade şifrelemenin çoğu senaryoda yetersiz olduğunu, bütünlük ve kimlik doğrulamanın neden birlikte düşünülmesi gerektiğini açıklayabilir.</p>
@@ -633,24 +634,24 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 2</h2>
 <div class="eval-quiz-section" id="ik-m2-modul-testi" data-section="ik-m2-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>B) Base64 gereklidir</p>
-<p>C) Hash yasaktır</p>
-<p>D) AES yavaştır</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
-<p>A) Algoritma tamamen gizli kalmalı</p>
-<p>B) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
-<p>C) Uzun parola yeterlidir; algoritma önemsiz</p>
-<p>D) Şifreleme bütünlük sağlar</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Kerckhoffs ilkesi standart kabuldür.</li></ul>
-<ol><li>3) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Güvenlik ciddi şekilde kırılabilir</p>
+<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Performans artar</p>
 <p>B) Sertifika otomatik yenilenir</p>
 <p>C) ECB güvenli olur</p>
-<p>D) Performans artar</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<p>D) Güvenlik ciddi şekilde kırılabilir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>2) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
+<p>A) Güçlü gizlilik sağlanmıştır</p>
+<p>B) Encoding gizlilik sağlamaz; gerçek şifreleme ve anahtar yönetimi gerekir</p>
+<p>C) Hash ile aynıdır</p>
+<p>D) TLS gereksizdir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Base64 tersine çevrilebilir format dönüşümüdür.</li></ul>
+<ol><li>3) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) AES yavaştır</p>
+<p>B) Base64 gereklidir</p>
+<p>C) Hash yasaktır</p>
+<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <p>B) AES yavaştır</p>
@@ -687,12 +688,12 @@
 <p>C) Gizlilik ihlali yoktur</p>
 <p>D) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) «Kriptanaliz ve tasarım gerilimi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) İnterneti kalıcı kapatmak</p>
-<p>B) Yalnızca antivirüs imzasını güncellemek</p>
-<p>C) Tüm logları silmek</p>
-<p>D) Kriptanaliz ve tasarım gerilimi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Kriptanaliz ve tasarım gerilimi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>10) Denetimde «Kriptanaliz ve tasarım gerilimi» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Ekran görüntüsü olmadan varsayım</p>
+<p>B) Başka modülün raporu</p>
+<p>C) Sözlü «biliyoruz» ifadesi</p>
+<p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» denetlenebilir kanıt gerektirir.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül simetrik kriptografiyi kara kutu seviyesinden çıkararak tasarım kararları, güvenlik modeli ve uygulama riski düzeyine taşıdı.</p>
                     <p>AES’in iç yapısını anlayan öğrenci artık confusion ve diffusion kavramlarını somut adımlarla ilişkilendirebilir. SubBytes’in doğrusal olmayan S-box yapısıyla confusion sağladığını, ShiftRows ve MixColumns’un diffusion hedefini desteklediğini, AddRoundKey’in anahtarı şifreleme sürecine bağladığını ve Key Schedule’ın round key üretimi için neden önemli olduğunu açıklayabilir.</p>
@@ -913,12 +914,12 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 3</h2>
 <div class="eval-quiz-section" id="ik-m3-modul-testi" data-section="ik-m3-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) ECB güvenli olur</p>
-<p>B) Performans artar</p>
-<p>C) Güvenlik ciddi şekilde kırılabilir</p>
-<p>D) Sertifika otomatik yenilenir</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Hash yasaktır</p>
+<p>B) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>C) AES yavaştır</p>
+<p>D) Base64 gereklidir</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
 <p>A) Şifreleme bütünlük sağlar</p>
 <p>B) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
@@ -943,12 +944,12 @@
 <p>C) Hash yasaktır</p>
 <p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>6) Denetimde «Protokol vs primitive ayrımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Ekran görüntüsü olmadan varsayım</p>
-<p>B) Başka modülün raporu</p>
-<p>C) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>D) Sözlü «biliyoruz» ifadesi</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Protokol vs primitive ayrımı» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>6) «Protokol vs primitive ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) İnterneti kalıcı kapatmak</p>
+<p>B) Yalnızca antivirüs imzasını güncellemek</p>
+<p>C) Protokol vs primitive ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>D) Tüm logları silmek</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Protokol vs primitive ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
 <ol><li>7) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) İçerik kesin güvenilirdir</p>
 <p>B) Gizlilik ihlali yoktur</p>
@@ -967,12 +968,12 @@
 <p>C) İçerik kesin güvenilirdir</p>
 <p>D) Gizlilik ihlali yoktur</p>
 <ul><li>Doğru: A</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) Denetimde «Kriptanaliz ve tasarım gerilimi» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Sözlü «biliyoruz» ifadesi</p>
-<p>B) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>C) Başka modülün raporu</p>
-<p>D) Ekran görüntüsü olmadan varsayım</p>
-<ul><li>Doğru: B</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>10) «Kriptanaliz ve tasarım gerilimi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) Tüm logları silmek</p>
+<p>B) Kriptanaliz ve tasarım gerilimi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<p>C) Yalnızca antivirüs imzasını güncellemek</p>
+<p>D) İnterneti kalıcı kapatmak</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «Kriptanaliz ve tasarım gerilimi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül, hash ve parola güvenliği konusunu “algoritma adını bilme” seviyesinden çıkarıp güvenlik modeli, saldırgan modeli ve yapısal analiz düzeyine taşıdı.</p>
                     <p>Hash güvenlik özelliklerini collision, preimage ve second preimage olarak ayrı kategorilerde görmek, güvenlik seviyesi hesaplamalarını doğru yapmayı sağlar. Birthday paradox’ın n-bit hash için yaklaşık 2^(n/2) collision güvenliği anlamına geldiğini bilmek, SHA-256’nın neden collision açısından yaklaşık 128-bit güvenlik sunduğunu anlamanın temelidir.</p>
@@ -1176,42 +1177,42 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 4</h2>
 <div class="eval-quiz-section" id="ik-m4-modul-testi" data-section="ik-m4-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>B) AES yavaştır</p>
-<p>C) Base64 gereklidir</p>
-<p>D) Hash yasaktır</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Performans artar</p>
+<p>B) Güvenlik ciddi şekilde kırılabilir</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) ECB güvenli olur</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>2) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
 <p>A) Güçlü gizlilik sağlanmıştır</p>
 <p>B) Encoding gizlilik sağlamaz; gerçek şifreleme ve anahtar yönetimi gerekir</p>
 <p>C) Hash ile aynıdır</p>
 <p>D) TLS gereksizdir</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Base64 tersine çevrilebilir format dönüşümüdür.</li></ul>
-<ol><li>3) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Performans artar</p>
-<p>B) Sertifika otomatik yenilenir</p>
+<ol><li>3) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>B) Base64 gereklidir</p>
+<p>C) AES yavaştır</p>
+<p>D) Hash yasaktır</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Sertifika otomatik yenilenir</p>
+<p>B) Performans artar</p>
 <p>C) Güvenlik ciddi şekilde kırılabilir</p>
 <p>D) ECB güvenli olur</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
-<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Base64 gereklidir</p>
-<p>B) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>C) AES yavaştır</p>
-<p>D) Hash yasaktır</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>5) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Base64 gereklidir</p>
-<p>B) AES yavaştır</p>
-<p>C) Hash yasaktır</p>
-<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>6) «Protokol vs primitive ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) İnterneti kalıcı kapatmak</p>
-<p>B) Tüm logları silmek</p>
-<p>C) Protokol vs primitive ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>D) Yalnızca antivirüs imzasını güncellemek</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Protokol vs primitive ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>5) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Sertifika otomatik yenilenir</p>
+<p>B) Güvenlik ciddi şekilde kırılabilir</p>
+<p>C) ECB güvenli olur</p>
+<p>D) Performans artar</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>6) Denetimde «Protokol vs primitive ayrımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Ekran görüntüsü olmadan varsayım</p>
+<p>B) Sözlü «biliyoruz» ifadesi</p>
+<p>C) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<p>D) Başka modülün raporu</p>
+<ul><li>Doğru: C</li><li>Gerekçe: «Protokol vs primitive ayrımı» denetlenebilir kanıt gerektirir.</li></ul>
 <ol><li>7) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) İçerik kesin güvenilirdir</p>
 <p>B) Gizlilik ihlali yoktur</p>
@@ -1230,12 +1231,12 @@
 <p>C) İçerik kesin güvenilirdir</p>
 <p>D) Gizlilik ihlali yoktur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) «Kriptanaliz ve tasarım gerilimi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Yalnızca antivirüs imzasını güncellemek</p>
-<p>B) Tüm logları silmek</p>
-<p>C) İnterneti kalıcı kapatmak</p>
-<p>D) Kriptanaliz ve tasarım gerilimi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Kriptanaliz ve tasarım gerilimi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>10) Denetimde «Kriptanaliz ve tasarım gerilimi» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Başka modülün raporu</p>
+<p>B) Sözlü «biliyoruz» ifadesi</p>
+<p>C) Ekran görüntüsü olmadan varsayım</p>
+<p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» denetlenebilir kanıt gerektirir.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül, açık anahtar kriptografisini “RSA büyük sayılara dayanır, ECC eğriye dayanır” cümlesinin çok ötesine taşıdı.</p>
                     <p>Öğrenci artık güvenlik varsayımları hiyerarşisini — factoring, DL, CDH ve DDH — daha doğru okuyabilir. Bir protokol için “güvenlidir” denildiğinde, bunun hangi varsayıma, hangi güvenlik modeline ve hangi indirgeme kalitesine dayandığını sorgulayabilir.</p>
@@ -1430,12 +1431,12 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 5</h2>
 <div class="eval-quiz-section" id="ik-m5-modul-testi" data-section="ik-m5-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Sertifika otomatik yenilenir</p>
-<p>B) Güvenlik ciddi şekilde kırılabilir</p>
-<p>C) Performans artar</p>
-<p>D) ECB güvenli olur</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Base64 gereklidir</p>
+<p>B) AES yavaştır</p>
+<p>C) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>D) Hash yasaktır</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
 <p>A) Uzun parola yeterlidir; algoritma önemsiz</p>
 <p>B) Şifreleme bütünlük sağlar</p>
@@ -1448,12 +1449,12 @@
 <p>C) Güvenlik ciddi şekilde kırılabilir</p>
 <p>D) Sertifika otomatik yenilenir</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
-<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Hash yasaktır</p>
-<p>B) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>C) Base64 gereklidir</p>
-<p>D) AES yavaştır</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) ECB güvenli olur</p>
+<p>B) Performans artar</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) Güvenlik ciddi şekilde kırılabilir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>5) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
 <p>A) Performans artar</p>
 <p>B) ECB güvenli olur</p>
@@ -1472,12 +1473,12 @@
 <p>C) Base64 bozuktur</p>
 <p>D) Gizlilik ihlali yoktur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>8) İndirilen yazılım paketinin hash değeri resmi sitedekiyle uyuşmuyor. Bu bulgu öncelikle hangi güvenlik hedefini ihlal eder?</li></ol>
+<ol><li>8) Bir e-ticaret sitesi saldırı altında; kullanıcılar ödeme yapamıyor ancak veriler sızdırılmamış görünüyor. En doğrudan etkilenen CIA bileşeni hangisidir?</li></ol>
 <p>A) Erişilebilirlik</p>
 <p>B) Gizlilik</p>
-<p>C) Anonimlik</p>
+<p>C) İnkâr edememe</p>
 <p>D) Bütünlük</p>
-<ul><li>Doğru: D</li><li>Gerekçe: İçeriğin yetkisiz değiştirilmesi bütünlük sorunudur.</li></ul>
+<ul><li>Doğru: A</li><li>Gerekçe: Hizmetin kullanılamaması erişilebilirlik kaybıdır; gizlilik ayrı bir hedeftir.</li></ul>
 <ol><li>9) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <p>B) İçerik kesin güvenilirdir</p>
@@ -1724,24 +1725,24 @@
 <p>C) Hash yasaktır</p>
 <p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Performans artar</p>
-<p>B) Güvenlik ciddi şekilde kırılabilir</p>
-<p>C) Sertifika otomatik yenilenir</p>
-<p>D) ECB güvenli olur</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>B) AES yavaştır</p>
+<p>C) Base64 gereklidir</p>
+<p>D) Hash yasaktır</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>5) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Hash yasaktır</p>
 <p>B) AES yavaştır</p>
 <p>C) Base64 gereklidir</p>
 <p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>6) «Protokol vs primitive ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) İnterneti kalıcı kapatmak</p>
-<p>B) Tüm logları silmek</p>
-<p>C) Yalnızca antivirüs imzasını güncellemek</p>
-<p>D) Protokol vs primitive ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Protokol vs primitive ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>6) Bir stajyer «Protokol vs primitive ayrımı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Yalnızca yöneticiler bilir</p>
+<p>B) Sadece sınavda sorulursa öğrenilir</p>
+<p>C) Araç adı yeterlidir</p>
+<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Protokol vs primitive ayrımı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>7) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) Base64 bozuktur</p>
 <p>B) İçerik kesin güvenilirdir</p>
@@ -1760,12 +1761,12 @@
 <p>C) İçerik kesin güvenilirdir</p>
 <p>D) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) Bir stajyer «Kriptanaliz ve tasarım gerilimi» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Yalnızca yöneticiler bilir</p>
-<p>B) Sadece sınavda sorulursa öğrenilir</p>
-<p>C) Araç adı yeterlidir</p>
-<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
+<ol><li>10) «Kriptanaliz ve tasarım gerilimi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
+<p>A) İnterneti kalıcı kapatmak</p>
+<p>B) Tüm logları silmek</p>
+<p>C) Yalnızca antivirüs imzasını güncellemek</p>
+<p>D) Kriptanaliz ve tasarım gerilimi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Eksik kalan «Kriptanaliz ve tasarım gerilimi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül, ZKP’nin salt teorik bir kriptografi kavramı olmadığını; aktif üretim sistemlerinde kullanılan, ancak dikkatli konumlandırma gerektiren bir mühendislik alanı olduğunu gösterdi.</p>
                     <p>Completeness, soundness ve zero-knowledge özelliklerini güvenlik modeli çerçevesinde okumak, bir ZKP sistemi hakkında konuşurken neyin garanti altında olduğunu ve neyin olmadığını doğru ifade etmemizi sağlar. Bu özelliklerin perfect, statistical veya computational modellerde sağlanabileceğini görmek, “ZKP güvenlidir” gibi genel cümlelerin neden yetersiz olduğunu ortaya koyar.</p>
@@ -1966,42 +1967,42 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 7</h2>
 <div class="eval-quiz-section" id="ik-m7-modul-testi" data-section="ik-m7-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Güvenlik ciddi şekilde kırılabilir</p>
-<p>B) Sertifika otomatik yenilenir</p>
-<p>C) Performans artar</p>
-<p>D) ECB güvenli olur</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) AES yavaştır</p>
+<p>B) Base64 gereklidir</p>
+<p>C) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>D) Hash yasaktır</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>2) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
 <p>A) Güçlü gizlilik sağlanmıştır</p>
 <p>B) TLS gereksizdir</p>
 <p>C) Hash ile aynıdır</p>
 <p>D) Encoding gizlilik sağlamaz; gerçek şifreleme ve anahtar yönetimi gerekir</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Base64 tersine çevrilebilir format dönüşümüdür.</li></ul>
-<ol><li>3) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>B) AES yavaştır</p>
-<p>C) Base64 gereklidir</p>
-<p>D) Hash yasaktır</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Hash yasaktır</p>
-<p>B) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>C) AES yavaştır</p>
-<p>D) Base64 gereklidir</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>3) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Performans artar</p>
+<p>B) Güvenlik ciddi şekilde kırılabilir</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) ECB güvenli olur</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) ECB güvenli olur</p>
+<p>B) Performans artar</p>
+<p>C) Güvenlik ciddi şekilde kırılabilir</p>
+<p>D) Sertifika otomatik yenilenir</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>5) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <p>B) Base64 gereklidir</p>
 <p>C) Hash yasaktır</p>
 <p>D) AES yavaştır</p>
 <ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>6) «Protokol vs primitive ayrımı» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Tüm logları silmek</p>
-<p>B) İnterneti kalıcı kapatmak</p>
-<p>C) Protokol vs primitive ayrımı için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>D) Yalnızca antivirüs imzasını güncellemek</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Eksik kalan «Protokol vs primitive ayrımı» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>6) Denetimde «Protokol vs primitive ayrımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
+<p>A) Sözlü «biliyoruz» ifadesi</p>
+<p>B) Ekran görüntüsü olmadan varsayım</p>
+<p>C) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
+<p>D) Başka modülün raporu</p>
+<ul><li>Doğru: C</li><li>Gerekçe: «Protokol vs primitive ayrımı» denetlenebilir kanıt gerektirir.</li></ul>
 <ol><li>7) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) Gizlilik ihlali yoktur</p>
 <p>B) Base64 bozuktur</p>
@@ -2229,24 +2230,24 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 8</h2>
 <div class="eval-quiz-section" id="ik-m8-modul-testi" data-section="ik-m8-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>B) Hash yasaktır</p>
-<p>C) Base64 gereklidir</p>
-<p>D) AES yavaştır</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Performans artar</p>
+<p>B) ECB güvenli olur</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) Güvenlik ciddi şekilde kırılabilir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
 <p>A) Uzun parola yeterlidir; algoritma önemsiz</p>
 <p>B) Şifreleme bütünlük sağlar</p>
 <p>C) Algoritma tamamen gizli kalmalı</p>
 <p>D) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Kerckhoffs ilkesi standart kabuldür.</li></ul>
-<ol><li>3) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Performans artar</p>
-<p>B) Güvenlik ciddi şekilde kırılabilir</p>
-<p>C) Sertifika otomatik yenilenir</p>
-<p>D) ECB güvenli olur</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>3) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>B) AES yavaştır</p>
+<p>C) Base64 gereklidir</p>
+<p>D) Hash yasaktır</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Hash yasaktır</p>
 <p>B) Base64 gereklidir</p>
@@ -2271,12 +2272,12 @@
 <p>C) Base64 bozuktur</p>
 <p>D) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <ul><li>Doğru: D</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>8) İndirilen yazılım paketinin hash değeri resmi sitedekiyle uyuşmuyor. Bu bulgu öncelikle hangi güvenlik hedefini ihlal eder?</li></ol>
-<p>A) Anonimlik</p>
+<ol><li>8) Bir e-ticaret sitesi saldırı altında; kullanıcılar ödeme yapamıyor ancak veriler sızdırılmamış görünüyor. En doğrudan etkilenen CIA bileşeni hangisidir?</li></ol>
+<p>A) İnkâr edememe</p>
 <p>B) Erişilebilirlik</p>
 <p>C) Bütünlük</p>
 <p>D) Gizlilik</p>
-<ul><li>Doğru: C</li><li>Gerekçe: İçeriğin yetkisiz değiştirilmesi bütünlük sorunudur.</li></ul>
+<ul><li>Doğru: B</li><li>Gerekçe: Hizmetin kullanılamaması erişilebilirlik kaybıdır; gizlilik ayrı bir hedeftir.</li></ul>
 <ol><li>9) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) Base64 bozuktur</p>
 <p>B) İçerik kesin güvenilirdir</p>
@@ -2500,12 +2501,12 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 9</h2>
 <div class="eval-quiz-section" id="ik-m9-modul-testi" data-section="ik-m9-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) ECB güvenli olur</p>
-<p>B) Güvenlik ciddi şekilde kırılabilir</p>
-<p>C) Performans artar</p>
-<p>D) Sertifika otomatik yenilenir</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Hash yasaktır</p>
+<p>B) AES yavaştır</p>
+<p>C) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>D) Base64 gereklidir</p>
+<ul><li>Doğru: C</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>2) Modern kriptoda güvenlik varsayımı hangisidir?</li></ol>
 <p>A) Güvenlik anahtarın gizliliğine dayanır (Kerckhoffs)</p>
 <p>B) Algoritma tamamen gizli kalmalı</p>
@@ -2518,24 +2519,24 @@
 <p>C) Performans artar</p>
 <p>D) Sertifika otomatik yenilenir</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
-<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Base64 gereklidir</p>
-<p>B) Hash yasaktır</p>
-<p>C) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<p>D) AES yavaştır</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) Sertifika otomatik yenilenir</p>
+<p>B) ECB güvenli olur</p>
+<p>C) Performans artar</p>
+<p>D) Güvenlik ciddi şekilde kırılabilir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>5) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
 <p>A) Sertifika otomatik yenilenir</p>
 <p>B) Güvenlik ciddi şekilde kırılabilir</p>
 <p>C) Performans artar</p>
 <p>D) ECB güvenli olur</p>
 <ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
-<ol><li>6) Denetimde «Protokol vs primitive ayrımı» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Ekran görüntüsü olmadan varsayım</p>
-<p>B) Başka modülün raporu</p>
-<p>C) Sözlü «biliyoruz» ifadesi</p>
-<p>D) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Protokol vs primitive ayrımı» denetlenebilir kanıt gerektirir.</li></ul>
+<ol><li>6) Bir stajyer «Protokol vs primitive ayrımı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Yalnızca yöneticiler bilir</p>
+<p>B) Araç adı yeterlidir</p>
+<p>C) Sadece sınavda sorulursa öğrenilir</p>
+<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<ul><li>Doğru: D</li><li>Gerekçe: «Protokol vs primitive ayrımı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 <ol><li>7) E-posta ekine «imzalıdır» deniyor; imza doğrulaması başarısız. Ne sonuç çıkar?</li></ol>
 <p>A) İçerik kesin güvenilirdir</p>
 <p>B) Base64 bozuktur</p>
@@ -2554,12 +2555,12 @@
 <p>C) Kaynak bütünlüğü/kimlik iddiası doğrulanamadı; ek güvenilmez kabul edilmeli</p>
 <p>D) İçerik kesin güvenilirdir</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Geçersiz imza bütünlük ve kaynak kanıtını zayıflatır.</li></ul>
-<ol><li>10) «Kriptanaliz ve tasarım gerilimi» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Kriptanaliz ve tasarım gerilimi için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>B) Tüm logları silmek</p>
-<p>C) İnterneti kalıcı kapatmak</p>
-<p>D) Yalnızca antivirüs imzasını güncellemek</p>
-<ul><li>Doğru: A</li><li>Gerekçe: Eksik kalan «Kriptanaliz ve tasarım gerilimi» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
+<ol><li>10) Bir stajyer «Kriptanaliz ve tasarım gerilimi» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
+<p>A) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
+<p>B) Sadece sınavda sorulursa öğrenilir</p>
+<p>C) Yalnızca yöneticiler bilir</p>
+<p>D) Araç adı yeterlidir</p>
+<ul><li>Doğru: A</li><li>Gerekçe: «Kriptanaliz ve tasarım gerilimi» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
 </div>Bu Modülde Neler Öğrendik?</p>
                     <p>Bu modül, post-kuantum kriptografiyi soyut bir gelecek endişesi olmaktan çıkarıp bugünkü güvenlik mimarisi, veri saklama politikası ve kurumsal geçiş planlamasıyla ilişkilendirdi.</p>
                     <p>Shor algoritmasının RSA, klasik Diffie-Hellman ve ECC gibi public-key sistemlerini kökten etkilediğini; Grover algoritmasının ise simetrik sistemlerde daha sınırlı ve parametreyle yönetilebilir bir etki oluşturduğunu öğrendik. Hash fonksiyonlarında preimage ve collision güvenliğinin aynı şey olmadığını, bu yüzden kuantum etkisinin kullanım amacına göre ayrı yorumlanması gerektiğini netleştirdik.</p>
@@ -2746,12 +2747,12 @@
 <h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — İleri Kriptografi Modül 10</h2>
 <div class="eval-quiz-section" id="ik-m10-modul-testi" data-section="ik-m10-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
-<p>A) Hash yasaktır</p>
-<p>B) AES yavaştır</p>
-<p>C) Base64 gereklidir</p>
-<p>D) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
+<ol><li>1) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
+<p>A) ECB güvenli olur</p>
+<p>B) Güvenlik ciddi şekilde kırılabilir</p>
+<p>C) Sertifika otomatik yenilenir</p>
+<p>D) Performans artar</p>
+<ul><li>Doğru: B</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
 <ol><li>2) Geliştirici token’ı Base64 ile «şifreledik» diyor. En doğru değerlendirme?</li></ol>
 <p>A) Güçlü gizlilik sağlanmıştır</p>
 <p>B) Hash ile aynıdır</p>
@@ -2764,12 +2765,12 @@
 <p>C) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <p>D) Hash yasaktır</p>
 <ul><li>Doğru: C</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
-<ol><li>4) Aynı GCM anahtarıyla nonce tekrar kullanıldı. Sonuç?</li></ol>
-<p>A) Performans artar</p>
-<p>B) ECB güvenli olur</p>
-<p>C) Sertifika otomatik yenilenir</p>
-<p>D) Güvenlik ciddi şekilde kırılabilir</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Nonce tekrarı AEAD için kritik hatadır.</li></ul>
+<ol><li>4) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
+<p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
+<p>B) Hash yasaktır</p>
+<p>C) Base64 gereklidir</p>
+<p>D) AES yavaştır</p>
+<ul><li>Doğru: A</li><li>Gerekçe: Roll-your-own protokol tarihsel olarak hataya açıktır.</li></ul>
 <ol><li>5) Ekip «kendi protokolümüzü yazdık, AES kullanıyoruz» diyor. En büyük risk?</li></ol>
 <p>A) Denenmemiş protokol tasarımı; standart TLS/libsodium tercih edilmeli</p>
 <p>B) Hash yasaktır</p>

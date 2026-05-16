@@ -90,6 +90,22 @@
     { "src": "/blog/basari-mba-denge$", "dest": "/blog/basari-mba-denge.html" },
     { "src": "/blog/basari-mentorluk-ilk-yil$", "dest": "/blog/basari-mentorluk-ilk-yil.html" },
     { "src": "/tests/big-five$", "dest": "/tests/big-five.html" },
+    {
+      "src": "/modules/([^/]+)/ders/([^/]+)/([^/]+)\\.html",
+      "dest": "/modules/$1.html?ders=$2::$3"
+    },
+    {
+      "src": "/modules/([^/]+)/ders/([^/]+)/([^/]+)",
+      "dest": "/modules/$1.html?ders=$2::$3"
+    },
+    {
+      "src": "/modules/([^/]+)/bolum/([^/]+)\\.html",
+      "dest": "/modules/$1.html?bolum=$2"
+    },
+    {
+      "src": "/modules/([^/]+)/bolum/([^/]+)",
+      "dest": "/modules/$1.html?bolum=$2"
+    },
     { "handle": "filesystem" },
     { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
     { "src": "/robots.txt", "dest": "/robots.txt" }

@@ -279,3 +279,68 @@ body.landing-site-body .btn-complete-lesson.is-done {
 body.landing-site-body.lesson-route-mode .content-section.lesson-route-whole-section .section-inner > :not(.lesson-complete-footer) {
     display: block;
 }
+
+/* Temel Siber Güvenlik — nav-item yan menüyü nav-link-section ile aynı görünüm */
+body.landing-site-body .module-sidebar .nav-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.55rem !important;
+    padding: 0.55rem 0.85rem !important;
+    margin: 0.15rem 0.35rem !important;
+    border-radius: 10px !important;
+    border-left: 3px solid transparent !important;
+    color: rgba(248, 250, 252, 0.92) !important;
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+    cursor: pointer !important;
+    list-style: none !important;
+}
+
+body.landing-site-body .module-sidebar .nav-item:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body .module-sidebar .nav-item.active {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.11) !important;
+    border-left-color: #d4a853 !important;
+    font-weight: 600 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-item.completed:not(.active) {
+    border-left-color: #4ade80 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-item i:first-child {
+    color: rgba(253, 224, 171, 0.85) !important;
+    margin-top: 0.12rem !important;
+    flex-shrink: 0 !important;
+}
+
+body.landing-site-body .module-sidebar .nav-item span {
+    flex: 1 !important;
+}
+
+body.landing-site-body .module-layout .module-content {
+    margin-left: 320px !important;
+    width: calc(100% - 320px) !important;
+    max-width: calc(100vw - 320px) !important;
+    padding: 2rem 2.5rem 3rem !important;
+    background: #fff !important;
+}
+
+body.landing-site-body .module-layout .content-section.module-2-enhanced,
+body.landing-site-body .module-layout .content-section.active {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+    body.landing-site-body .module-layout .module-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1.25rem 1rem 2rem !important;
+    }
+}
