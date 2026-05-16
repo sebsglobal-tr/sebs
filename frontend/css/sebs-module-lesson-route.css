@@ -22,9 +22,22 @@ body.lesson-route-mode .section-inner > .content-card.lesson-route-current-card 
     animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body.lesson-route-mode .lesson-route-current-section .section-inner > h1,
-body.lesson-route-mode .lesson-route-current-section .section-inner > .lesson-image-wrap {
+/* Modül girişi (tema, kapak, kazanımlar): yalnızca bölümün ilk dersinde */
+body.lesson-route-mode .lesson-route-current-section .section-inner > *:not(.content-card) {
     display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > h1,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .sg-isletim-intro,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .lesson-image-wrap,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .learning-objectives,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .kr-inline-breakout,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .figure-block {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .concept-grid:not(.content-card .concept-grid) {
+    display: grid !important;
 }
 
 /* Düz ders yapısı (section-inner yok): tek bölüm = tek ders — İşletim ile aynı rota */

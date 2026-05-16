@@ -113,11 +113,30 @@
         });
     }
 
+    function isModuleThemeHeading(el) {
+        if (!el) return false;
+        var t = String(el.textContent || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        return /^modül\s+teması$/i.test(t);
+    }
+
+    function firstNavigableCard(inner) {
+        if (!inner) return null;
+        var cards = inner.querySelectorAll(':scope > .content-card');
+        for (var i = 0; i < cards.length; i++) {
+            var head = getCardLessonHeading(cards[i]);
+            if (!head || !isModuleThemeHeading(head)) return cards[i];
+        }
+        return cards[0] || null;
+    }
+
     function getSectionSubheadings(inner) {
         if (!inner) return [];
         return Array.from(inner.querySelectorAll('h2')).filter(function (h) {
             var t = String(h.textContent || '').trim();
             if (!t) return false;
+            if (isModuleThemeHeading(h)) return false;
             if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
                 return false;
             }
@@ -596,7 +615,7 @@
             if (cards.length) {
                 cards.forEach(function (card, idx) {
                     var head = getCardLessonHeading(card);
-                    if (!head) return;
+                    if (!head || isModuleThemeHeading(head)) return;
                     var hid = ensureHeadingId(head, sec.id, idx);
                     keys.push(makeLessonKey(sec.id, hid));
                 });
@@ -1300,6 +1319,7 @@
                 sec.classList.remove(
                     'lesson-route-current-section',
                     'lesson-route-whole-section',
+                    'lesson-route-show-module-intro',
                     'active'
                 );
             });
@@ -1323,7 +1343,13 @@
             }
             if (section) {
                 section.classList.add('lesson-route-current-section', 'active');
-                if (!card || card.closest('.content-section') === section) {
+                var inner = section.querySelector('.section-inner');
+                if (card && inner) {
+                    var introCard = firstNavigableCard(inner);
+                    if (introCard && card === introCard) {
+                        section.classList.add('lesson-route-show-module-intro');
+                    }
+                } else {
                     section.classList.add('lesson-route-whole-section');
                 }
             }
