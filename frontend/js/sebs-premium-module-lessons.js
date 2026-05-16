@@ -128,6 +128,30 @@
         });
     }
 
+    function isFlatLessonSection(sec) {
+        if (!sec || !sec.id) return false;
+        return !sec.querySelector('.section-inner');
+    }
+
+    function isFlatLessonModule() {
+        var sections = document.querySelectorAll('.module-layout .content-section');
+        if (!sections.length) return false;
+        var flat = 0;
+        sections.forEach(function (sec) {
+            if (isFlatLessonSection(sec)) flat++;
+        });
+        return flat > 0 && flat >= sections.length * 0.5;
+    }
+
+    function flatSectionHeading(sec) {
+        if (!sec) return null;
+        return (
+            sec.querySelector('.section-header h2') ||
+            sec.querySelector('.content-card > h2') ||
+            sec.querySelector('.content-card > h3')
+        );
+    }
+
     function moduleHasSubheadingNav() {
         var list = document.querySelector('.nav-section-list');
         if (!list) return false;
@@ -517,7 +541,15 @@
         var keys = [];
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
-            if (!inner) return;
+            if (!inner) {
+                var flatHead = flatSectionHeading(sec);
+                if (flatHead) {
+                    keys.push(makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0)));
+                } else {
+                    keys.push(sec.id);
+                }
+                return;
+            }
             var cards = inner.querySelectorAll(':scope > .content-card');
             if (cards.length) {
                 cards.forEach(function (card, idx) {
@@ -543,12 +575,23 @@
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) {
-                if (sec.querySelector('.btn-complete-lesson')) return;
+                var flatHead = flatSectionHeading(sec);
+                var flatKey = flatHead
+                    ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
+                    : sec.id;
                 var legacyCard = sec.querySelector('.content-card');
+                if (legacyCard) {
+                    legacyCard.setAttribute('data-lesson-key', flatKey);
+                    if (routeMode && !legacyCard.querySelector('.lesson-complete-footer')) {
+                        appendLessonFooter(legacyCard, function () {
+                            completeHandler(flatKey);
+                        });
+                    }
+                }
+                if (sec.querySelector('.btn-complete-lesson')) return;
                 if (legacyCard && !legacyCard.querySelector('.lesson-complete-footer')) {
-                    legacyCard.setAttribute('data-lesson-key', sec.id);
                     appendLessonFooter(legacyCard, function () {
-                        completeHandler(sec.id);
+                        completeHandler(flatKey);
                     });
                 }
                 return;
@@ -590,15 +633,21 @@
                 }
                 var sec = document.getElementById(sid);
                 var inner = sec ? sec.querySelector('.section-inner') : null;
-                var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
-                var head = firstCard
-                    ? getCardLessonHeading(firstCard)
-                    : inner
-                      ? inner.querySelector(':scope > h2, :scope > h3')
-                      : null;
-                var key = head
-                    ? makeLessonKey(sid, ensureHeadingId(head, sid, 0))
-                    : sid;
+                var key = sid;
+                if (!inner && sec) {
+                    var flatHead = flatSectionHeading(sec);
+                    key = flatHead
+                        ? makeLessonKey(sid, ensureHeadingId(flatHead, sid, 0))
+                        : sid;
+                } else {
+                    var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
+                    var head = firstCard
+                        ? getCardLessonHeading(firstCard)
+                        : inner
+                          ? inner.querySelector(':scope > h2, :scope > h3')
+                          : null;
+                    key = head ? makeLessonKey(sid, ensureHeadingId(head, sid, 0)) : sid;
+                }
                 completeHandler(key);
             });
         });
@@ -608,7 +657,12 @@
         var sec = document.getElementById(sectionId);
         if (!sec) return sectionId;
         var inner = sec.querySelector('.section-inner');
-        if (!inner) return sectionId;
+        if (!inner) {
+            var flatHead = flatSectionHeading(sec);
+            return flatHead
+                ? makeLessonKey(sectionId, ensureHeadingId(flatHead, sectionId, 0))
+                : sectionId;
+        }
         var card = inner.querySelector(':scope > .content-card');
         var head = card
             ? getCardLessonHeading(card)
@@ -948,10 +1002,18 @@
             return;
         }
         if (!cfg.progressMode) {
-            var navCount = document.querySelectorAll('.nav-link-section').length;
-            if (navCount > 12 && !moduleHasSubheadingNav()) {
-                cfg.progressMode = 'section';
+            if (isFlatLessonModule()) {
+                cfg = Object.assign({}, cfg, { progressMode: 'lesson' });
+            } else {
+                var navCount = document.querySelectorAll('.nav-link-section').length;
+                if (navCount > 12 && !moduleHasSubheadingNav()) {
+                    cfg.progressMode = 'section';
+                }
             }
+        }
+        if (cfg.progressMode === 'section' && isFlatLessonModule()) {
+            cfg = Object.assign({}, cfg);
+            delete cfg.progressMode;
         }
         if (cfg.progressMode === 'section') {
             var routeProbe = parseRouteKeyFromUrl(cfg.basePath || global.location.pathname);
@@ -1119,13 +1181,22 @@
             var inner = section ? section.querySelector('.section-inner') : null;
             var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
             var isFirstLessonInModule = !!(card && firstCard && card === firstCard);
+            if (!inner && section) {
+                h2 = h2 || flatSectionHeading(section);
+            }
             var elMod = host.querySelector('.lesson-route-hero-module');
             var elLes = host.querySelector('.lesson-route-hero-lesson');
             var heroImg = host.querySelector('.lesson-route-hero-img');
             var heroImgWrap = host.querySelector('.lesson-route-hero-img-wrap');
             if (elMod) {
-                elMod.textContent = '';
-                elMod.hidden = true;
+                if (!inner && section) {
+                    var modLine = section.querySelector('.section-intro');
+                    elMod.textContent = modLine ? String(modLine.textContent || '').trim() : '';
+                    elMod.hidden = !elMod.textContent;
+                } else {
+                    elMod.textContent = '';
+                    elMod.hidden = true;
+                }
             }
             if (elLes) {
                 elLes.textContent = h2
@@ -1167,10 +1238,19 @@
             var h2id = parsed.headingId;
             var section = document.getElementById(sid);
             var head = document.getElementById(h2id);
+            if (head && head.classList && head.classList.contains('content-section')) {
+                head = null;
+            }
+            if (!head && section) {
+                head = flatSectionHeading(section);
+            }
             var card = head ? head.closest('.content-card') : null;
+            if (!card && section) {
+                card = section.querySelector('.content-card');
+            }
             if (section) {
                 section.classList.add('lesson-route-current-section', 'active');
-                if (!card) {
+                if (!card || card.closest('.content-section') === section) {
                     section.classList.add('lesson-route-whole-section');
                 }
             }

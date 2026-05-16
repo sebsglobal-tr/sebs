@@ -27,6 +27,29 @@ body.lesson-route-mode .lesson-route-current-section .section-inner > .lesson-im
     display: none !important;
 }
 
+/* Düz ders yapısı (section-inner yok): tek bölüm = tek ders — İşletim ile aynı rota */
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header {
+    display: none !important;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) > .content-card {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-controls {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-hero-module:not([hidden]):not(:empty) {
+    display: block !important;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin: 0 0 0.35rem;
+}
+
 .lesson-route-hero {
     margin: 0 0 2rem;
     padding: 0;

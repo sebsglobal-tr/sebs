@@ -40,15 +40,17 @@ MODULE_LESSON_CONFIG: dict[str, dict[str, str]] = {
         "storageKey": "module_progress_siber_guvenlik_giris",
         "basePath": "/modules/guncel-siber-guvenlige-giris.html",
     },
-    "temel-network-egitimi.html": {
-        "moduleName": "Temel Network Eğitimi",
-        "storageKey": "module_progress_temel_network",
-        "basePath": "/modules/temel-network-egitimi.html",
-    },
     "temel-kriptografi.html": {
         "moduleName": "Temel Kriptografi",
         "storageKey": "module_progress_temel_kriptografi",
         "basePath": "/modules/temel-kriptografi.html",
+        "extra": 'progressMode: "lesson",',
+    },
+    "temel-network-egitimi.html": {
+        "moduleName": "Temel Network Eğitimi",
+        "storageKey": "module_progress_temel_network",
+        "basePath": "/modules/temel-network-egitimi.html",
+        "extra": 'progressMode: "lesson",',
     },
     "network-guvenligi.html": {
         "moduleName": "Network Güvenliği",
