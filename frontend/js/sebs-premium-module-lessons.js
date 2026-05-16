@@ -186,10 +186,34 @@
         return false;
     }
 
-    function resolveSubNavScroll(cfg) {
-        if (cfg && cfg.subNavScroll === true) return true;
+    var lastRunSubNavScroll = null;
+
+    function shouldBuildSubheadingNav(cfg) {
         if (cfg && cfg.subNavScroll === false) return false;
+        if (cfg && cfg.subNavScroll === true) return true;
         return moduleHasSubheadingNav();
+    }
+
+    function stripSubheadingNav(navSectionList) {
+        if (!navSectionList) return;
+        navSectionList.querySelectorAll('.nav-sublist').forEach(function (el) {
+            el.remove();
+        });
+        navSectionList.querySelectorAll('.nav-section-item').forEach(function (li) {
+            li.classList.remove('nav-section-item', 'is-open');
+        });
+        navSectionList.querySelectorAll('.nav-link-section .nav-expand-indicator').forEach(function (i) {
+            i.remove();
+        });
+        navSectionList.querySelectorAll('.nav-link-section').forEach(function (link) {
+            var label = link.querySelector('.nav-label');
+            if (!label) return;
+            var icon = label.querySelector('i.fas, i.fab');
+            var text = label.textContent.trim();
+            link.textContent = '';
+            if (icon) link.appendChild(icon);
+            link.appendChild(document.createTextNode(' ' + text));
+        });
     }
 
     function buildSubheadingNav(navSectionList) {
@@ -438,6 +462,41 @@
         return sectionId + '::' + headingId;
     }
 
+    /** Düz modül (network vb.): ilerleme ve URL yalnızca bölüm kimliği (ders-1-2) */
+    function canonicalLessonKey(lessonKey) {
+        var k = String(lessonKey || '').trim();
+        if (!k) return k;
+        if (!isFlatLessonModule()) return k;
+        var sep = k.indexOf('::');
+        return sep === -1 ? k : k.slice(0, sep);
+    }
+
+    function resolveLessonKeyFromRoute(raw, keysOrdered) {
+        var keys = keysOrdered || [];
+        var r = String(raw || '').trim();
+        if (!r) return null;
+        if (keys.indexOf(r) !== -1) return r;
+        var fromSection = lessonKeyForSection(r);
+        if (keys.indexOf(fromSection) !== -1) return fromSection;
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i] === r || keys[i].indexOf(r + '::') === 0) {
+                return canonicalLessonKey(keys[i]);
+            }
+        }
+        return null;
+    }
+
+    function syncLessonUrl(lessonKey, basePath, replace) {
+        if (!lessonKey || !global.history || !global.history.replaceState) return;
+        try {
+            var href = hrefForLessonKey(lessonKey, basePath);
+            var method = replace ? 'replaceState' : 'pushState';
+            global.history[method]({ sebsLessonKey: lessonKey }, '', href);
+        } catch (eUrl) {
+            /* ignore */
+        }
+    }
+
     function parseLessonKey(lessonKey) {
         var sep = String(lessonKey || '').indexOf('::');
         if (sep === -1) {
@@ -465,7 +524,16 @@
     function hrefForLessonKey(lessonKey, basePath) {
         var slug = moduleSlugFromBasePath(basePath);
         var q = querySuffixFromBasePath(basePath);
-        var parsed = parseLessonKey(lessonKey);
+        var parsed = parseLessonKey(canonicalLessonKey(lessonKey));
+        if (isFlatLessonModule()) {
+            return (
+                '/modules/' +
+                slug +
+                '.html?bolum=' +
+                encodeURIComponent(parsed.sectionId) +
+                q
+            );
+        }
         var path;
         if (String(lessonKey || '').indexOf('::') !== -1) {
             path =
@@ -501,10 +569,18 @@
     function goToLessonPage(lessonKey, basePath, opts) {
         opts = opts || {};
         if (!lessonKey) return false;
+        lessonKey = canonicalLessonKey(lessonKey);
         var href = hrefForLessonKey(lessonKey, basePath);
         var here = global.location.pathname + global.location.search;
         if (sameLessonUrl(here, href)) {
             return false;
+        }
+        if (isFlatLessonModule() && !opts.forceReload) {
+            if (typeof opts.onNavigateInPlace === 'function') {
+                opts.onNavigateInPlace(lessonKey, { replace: !!opts.replace });
+            }
+            syncLessonUrl(lessonKey, basePath, !!opts.replace);
+            return true;
         }
         if (opts.replace) {
             global.location.replace(href);
@@ -603,11 +679,17 @@
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) {
-                var flatHead = flatSectionHeading(sec);
-                if (flatHead) {
-                    keys.push(makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0)));
-                } else if (sec.id) {
-                    keys.push(sec.id);
+                if (sec.id) {
+                    if (isFlatLessonModule()) {
+                        keys.push(sec.id);
+                    } else {
+                        var flatHead = flatSectionHeading(sec);
+                        keys.push(
+                            flatHead
+                                ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
+                                : sec.id
+                        );
+                    }
                 }
                 return;
             }
@@ -683,10 +765,14 @@
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) {
-                var flatHead = flatSectionHeading(sec);
-                var flatKey = flatHead
-                    ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
-                    : sec.id;
+                var flatKey = isFlatLessonModule()
+                    ? sec.id
+                    : (function () {
+                          var flatHead = flatSectionHeading(sec);
+                          return flatHead
+                              ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
+                              : sec.id;
+                      })();
                 var legacyCard = sec.querySelector('.content-card');
                 if (legacyCard) {
                     legacyCard.setAttribute('data-lesson-key', flatKey);
@@ -743,10 +829,14 @@
                 var inner = sec ? sec.querySelector('.section-inner') : null;
                 var key = sid;
                 if (!inner && sec) {
-                    var flatHead = flatSectionHeading(sec);
-                    key = flatHead
-                        ? makeLessonKey(sid, ensureHeadingId(flatHead, sid, 0))
-                        : sid;
+                    key = isFlatLessonModule()
+                        ? sid
+                        : (function () {
+                              var flatHead = flatSectionHeading(sec);
+                              return flatHead
+                                  ? makeLessonKey(sid, ensureHeadingId(flatHead, sid, 0))
+                                  : sid;
+                          })();
                 } else {
                     var firstCard = inner ? inner.querySelector(':scope > .content-card') : null;
                     var head = firstCard
@@ -766,6 +856,7 @@
         if (!sec) return sectionId;
         var inner = sec.querySelector('.section-inner');
         if (!inner) {
+            if (isFlatLessonModule()) return sectionId;
             var flatHead = flatSectionHeading(sec);
             return flatHead
                 ? makeLessonKey(sectionId, ensureHeadingId(flatHead, sectionId, 0))
@@ -852,9 +943,11 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
-        if (subNavScroll && navSectionList) {
+        lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
+        if (lastRunSubNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
+        } else if (navSectionList) {
+            stripSubheadingNav(navSectionList);
         }
 
         global.MODULE_TOTAL_LESSONS = navLinks.length;
@@ -1023,7 +1116,7 @@
             }
         });
 
-        if (subNavScroll) {
+        if (lastRunSubNavScroll) {
             document.querySelectorAll('.nav-link-sub').forEach(function (link) {
                 var sectionId = link.getAttribute('data-section');
                 var anchorId = link.getAttribute('data-anchor');
@@ -1142,9 +1235,11 @@
             global.dispatchEvent(ev);
         }
 
-        var subNavScroll = resolveSubNavScroll(cfg) || moduleHasSubheadingNav();
-        if (subNavScroll && navSectionList) {
+        lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
+        if (lastRunSubNavScroll && navSectionList) {
             buildSubheadingNav(navSectionList);
+        } else if (navSectionList) {
+            stripSubheadingNav(navSectionList);
         }
 
         function getSectionIdsSet() {
@@ -1159,6 +1254,11 @@
             var out = new Set();
             raw.forEach(function (entry) {
                 if (!entry) return;
+                entry = canonicalLessonKey(entry);
+                if (isFlatLessonModule()) {
+                    if (sidSet.has(entry)) out.add(entry);
+                    return;
+                }
                 if (entry.indexOf('::') !== -1) {
                     out.add(entry);
                     return;
@@ -1437,13 +1537,21 @@
         }
 
         function goToNextLessonAfter(lessonKey) {
+            lessonKey = canonicalLessonKey(lessonKey);
             var idx = lessonKeysOrdered.indexOf(lessonKey);
             if (idx >= 0 && idx + 1 < lessonKeysOrdered.length) {
-                goToLessonPage(lessonKeysOrdered[idx + 1], basePath);
+                var nextKey = lessonKeysOrdered[idx + 1];
+                if (isFlatLessonModule()) {
+                    navigateToLesson(nextKey, { inPlace: true });
+                    syncLessonUrl(nextKey, basePath, false);
+                } else {
+                    goToLessonPage(nextKey, basePath);
+                }
             }
         }
 
         async function completeLesson(lessonKey) {
+            lessonKey = canonicalLessonKey(lessonKey);
             var completed = await loadProgress();
             if (completed.includes(lessonKey)) {
                 goToNextLessonAfter(lessonKey);
@@ -1486,26 +1594,33 @@
             var fromUrl = parseRouteKeyFromUrl(basePath);
             try {
                 var legacy = new URLSearchParams(global.location.search).get('ders');
-                if (legacy && lessonKeysOrdered.indexOf(legacy) !== -1 && legacy !== fromUrl) {
-                    fromUrl = legacy;
+                if (legacy) {
+                    var resolvedLegacy = resolveLessonKeyFromRoute(legacy, lessonKeysOrdered);
+                    if (resolvedLegacy) fromUrl = resolvedLegacy;
                 }
             } catch (eLegacy) { /* ignore */ }
-            if (fromUrl && lessonKeysOrdered.indexOf(fromUrl) === -1) {
-                fromUrl = null;
-            }
-            if (isModuleIndexPath(basePath) && lessonKeysOrdered.length) {
-                goToLessonPage(lessonKeysOrdered[0], basePath, { replace: true });
+            fromUrl = resolveLessonKeyFromRoute(fromUrl, lessonKeysOrdered);
+            if (isModuleIndexPath(basePath) && lessonKeysOrdered.length && !fromUrl) {
+                var first = lessonKeysOrdered[0];
+                navigateToLesson(first, { replace: true, inPlace: true });
+                syncLessonUrl(first, basePath, true);
                 return;
             }
-            var initial =
-                fromUrl && lessonKeysOrdered.indexOf(fromUrl) !== -1 ? fromUrl : lessonKeysOrdered[0];
+            var initial = fromUrl || lessonKeysOrdered[0];
             if (initial) {
                 navigateToLesson(initial, { replace: true, inPlace: true });
+                if (fromUrl) syncLessonUrl(initial, basePath, true);
             }
         })();
 
+        global.addEventListener('popstate', function () {
+            var key = resolveLessonKeyFromRoute(parseRouteKeyFromUrl(basePath), lessonKeysOrdered);
+            if (key) navigateToLesson(key, { inPlace: true });
+        });
+
         (async function initProgress() {
-            var completed = await loadProgress();
+            var completed = normalizeCompletedLessons(await loadProgress());
+            saveProgressLocal(completed);
             updateProgressUI(completed.length);
             markCompletedInSidebar(completed);
             refreshCompleteButtons(completed);
@@ -1542,7 +1657,12 @@
         run: run,
         refreshSubheadingNav: function () {
             var list = document.querySelector('.nav-section-list');
-            if (!list || !moduleHasSubheadingNav()) return;
+            if (!list) return;
+            if (lastRunSubNavScroll === false) {
+                stripSubheadingNav(list);
+                return;
+            }
+            if (!moduleHasSubheadingNav()) return;
             buildSubheadingNav(list);
         }
     };
