@@ -724,6 +724,9 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+const { requireModuleEntitlement } = require('./lib/module-entitlement');
+const { registerIyzicoPaymentRoutes } = require('./routes/iyzico-payments');
+registerIyzicoPaymentRoutes(app, { pool, authenticateToken });
 
 app.get('/api/users/me', authenticateToken, async (req, res) => {
     try {
@@ -1586,6 +1589,7 @@ app.post('/api/progress', authenticateToken, async (req, res) => {
         if (!moduleId) {
             return res.status(400).json({ success: false, message: 'moduleId gerekli.' });
         }
+        if (!(await requireModuleEntitlement(pool, res, userId, { moduleId }))) return;
         const pct = Math.max(0, Math.min(100, Number(percentComplete) || 0));
         let lastStepObj = {};
         if (typeof lastStep === 'string') {
@@ -1660,6 +1664,8 @@ app.post('/api/progress/lesson/:id', authenticateToken, async (req, res) => {
 
         const lesson = lessonResult.rows[0];
 
+        if (!(await requireModuleEntitlement(pool, res, userId, { moduleId: lesson.module_id }))) return;
+
         await pool.query(
             `INSERT INTO user_lesson_progress (user_id, lesson_id, status, progress_percentage, last_position_seconds)
              VALUES ($1, $2, $3, $4, $5)
@@ -1733,6 +1739,7 @@ app.post('/api/progress/time', authenticateToken, async (req, res) => {
         if (!moduleId) {
             return res.status(400).json({ success: false, message: 'moduleId gerekli.' });
         }
+        if (!(await requireModuleEntitlement(pool, res, userId, { moduleId }))) return;
         const mins = Math.max(0, Math.min(Number(timeSpentMinutes ?? minutes) || 0, 24 * 60)); // 0..1440 dakika (max 24 saat tek istek)
         await pool.query(
             `INSERT INTO module_progress (user_id, module_id, time_spent_minutes, last_accessed_at)
@@ -1766,6 +1773,7 @@ app.post('/api/progress/quiz', authenticateToken, async (req, res) => {
         if (!moduleId || quizId == null) {
             return res.status(400).json({ success: false, message: 'moduleId ve quizId gerekli.' });
         }
+        if (!(await requireModuleEntitlement(pool, res, userId, { moduleId }))) return;
         const entry = {
             quizId: String(quizId),
             score: Math.max(0, Math.min(100, Number(score) || 0)),
@@ -1832,6 +1840,15 @@ app.post('/api/simulations/start', authenticateToken, async (req, res) => {
         if (!simulationId.trim()) {
             return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
         }
+        if (
+            !(await requireModuleEntitlement(pool, res, userId, {
+                moduleId,
+                moduleSlug: simulationId,
+                moduleName: simulationId
+            }))
+        ) {
+            return;
+        }
         const r = await pool.query(
             `INSERT INTO simulation_runs (user_id, module_id, simulation_id, started_at)
              VALUES ($1, $2, $3, NOW()) RETURNING id`,
@@ -1861,6 +1878,17 @@ app.post('/api/simulations/complete', authenticateToken, async (req, res) => {
         const moduleId = coerceUuidOrNull(body.moduleId || body.module_id, 'module_id:complete');
         let runId = coerceUuidOrNull(body.runId || body.run_id, 'run_id:complete');
         const simulationId = String(body.simulationId || body.simulation_id || '');
+        if (simulationId.trim()) {
+            if (
+                !(await requireModuleEntitlement(pool, res, userId, {
+                    moduleId,
+                    moduleSlug: simulationId,
+                    moduleName: simulationId
+                }))
+            ) {
+                return;
+            }
+        }
 
         const maxScoreRaw = body.maxScore ?? body.max_score;
         const maxScore =
@@ -2107,6 +2135,7 @@ app.get('/api/progress/module/:moduleId', authenticateToken, async (req, res) =>
     try {
         const { moduleId } = req.params;
         const userId = req.user.userId;
+        if (!(await requireModuleEntitlement(pool, res, userId, { moduleId }))) return;
 
         const result = await pool.query(
             `SELECT ump.*, m.title as module_title,
