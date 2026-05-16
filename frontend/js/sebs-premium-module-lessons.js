@@ -824,7 +824,7 @@
         }
         if (!cfg.progressMode) {
             var navCount = document.querySelectorAll('.nav-link-section').length;
-            if (navCount > 12) {
+            if (navCount > 12 && !moduleHasSubheadingNav()) {
                 cfg.progressMode = 'section';
             }
         }
