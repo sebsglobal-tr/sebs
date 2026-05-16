@@ -1,12 +1,38 @@
 (function () {
   'use strict';
 
-  const CORRECT_REGEX = /Doğru\s*(?:Cevap)?\s*:\s*([A-D])|Doğru:\s*([A-D])/i;
+  const CORRECT_REGEX = /Doğru\s*(?:Cevap)?\s*:\s*([A-E])|Doğru:\s*([A-E])/i;
   const RATIONALE_REGEX = /Gerekçe\s*:\s*(.+)/i;
+  const OPTION_LINE_REGEX = /^([A-E])\)\s*(.+)$/;
+
+  function isValidOptionCount(n) {
+    return n >= 4 && n <= 5;
+  }
 
   function parseCorrect(text) {
     const m = String(text || '').match(CORRECT_REGEX);
     return m ? (m[1] || m[2]).toUpperCase() : null;
+  }
+
+  function stripHtmlToLine(chunk) {
+    return String(chunk || '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function linesFromBrHtml(html) {
+    return String(html || '')
+      .split(/<br\s*\/?>/i)
+      .map(stripHtmlToLine)
+      .filter(Boolean);
+  }
+
+  function pushOptionLine(optLines, line) {
+    const m = line.match(OPTION_LINE_REGEX);
+    if (!m) return false;
+    optLines.push({ letter: m[1].toUpperCase(), text: m[2] });
+    return true;
   }
 
   function parseRationale(text) {
@@ -109,16 +135,16 @@
       const optLines = [];
       let j = i + 1;
 
-      while (j < nodes.length && optLines.length < 4) {
+      while (j < nodes.length && optLines.length < 5) {
         const p = nodes[j];
         if (!p || p.tagName !== 'P' || p.style.display === 'none') break;
-        const m = (p.textContent || '').trim().match(/^([A-D])\)\s*(.+)$/);
+        const m = (p.textContent || '').trim().match(OPTION_LINE_REGEX);
         if (!m) break;
         optLines.push({ letter: m[1].toUpperCase(), text: m[2] });
         j++;
       }
 
-      if (optLines.length !== 4) {
+      if (!isValidOptionCount(optLines.length)) {
         i++;
         continue;
       }
@@ -154,27 +180,21 @@
     inner.querySelectorAll('p').forEach(function (p) {
       if (p.closest('.eval-question-block') || p.style.display === 'none') return;
       const rawHtml = p.innerHTML || '';
-      if (!/<strong>\s*Doğru\s*:/i.test(rawHtml)) return;
-      if (!/[A-D]\)/.test(rawHtml)) return;
+      if (!/<strong>\s*Doğru\s*(?:Cevap)?\s*:/i.test(rawHtml)) return;
+      if (!/[A-E]\)/.test(rawHtml)) return;
 
       const fullText = p.textContent || '';
       const correct = parseCorrect(fullText);
       if (!correct) return;
 
-      const parts = rawHtml.split(/<br\s*\/?>/i).map(function (chunk) {
-        return chunk.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-      }).filter(Boolean);
+      const parts = linesFromBrHtml(rawHtml);
 
       const optLines = [];
       let qText = '';
       let rationale = '';
 
       parts.forEach(function (line) {
-        const optM = line.match(/^([A-D])\)\s*(.+)$/);
-        if (optM) {
-          optLines.push({ letter: optM[1].toUpperCase(), text: optM[2] });
-          return;
-        }
+        if (pushOptionLine(optLines, line)) return;
         const ratM = line.match(/Gerekçe\s*:\s*(.+)/i);
         if (ratM) {
           rationale = ratM[1].trim();
@@ -182,7 +202,7 @@
         }
         if (/^Doğru\s*:/i.test(line)) {
           if (!rationale) {
-            rationale = line.replace(/^Doğru\s*:\s*[A-D]\s*[—–-]?\s*/i, '').trim();
+            rationale = line.replace(/^Doğru\s*:\s*[A-E]\s*[—–-]?\s*/i, '').trim();
           }
           return;
         }
@@ -194,14 +214,115 @@
       });
 
       if (!rationale) {
-        rationale = fullText.replace(/^[\s\S]*?Doğru\s*:\s*[A-D]\s*[—–-]?\s*/i, '').trim();
+        rationale = fullText.replace(/^[\s\S]*?Doğru\s*:\s*[A-E]\s*[—–-]?\s*/i, '').trim();
       }
 
-      if (optLines.length !== 4 || !qText) return;
+      if (!isValidOptionCount(optLines.length) || !qText) return;
 
       const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-br-format', rationale);
       p.parentNode.insertBefore(block, p);
       p.style.display = 'none';
+      created++;
+    });
+    return created;
+  }
+
+  /** <ol><li><p>Soru<br />A) ... <strong>Doğru Cevap: X</strong> — Güncel Siber vb. */
+  function processOlListBrQuestions(inner) {
+    let created = 0;
+    inner.querySelectorAll('ol > li').forEach(function (li) {
+      if (li.querySelector('.eval-question-block')) return;
+      const p = li.querySelector(':scope > p');
+      if (!p || p.querySelector('.eval-options-wrap')) return;
+      const rawHtml = p.innerHTML || '';
+      if (!/[A-E]\)/.test(rawHtml) || !/Doğru/i.test(rawHtml)) return;
+
+      const optLines = [];
+      let qText = '';
+      let correct = null;
+      let rationale = '';
+
+      linesFromBrHtml(rawHtml).forEach(function (line) {
+        if (pushOptionLine(optLines, line)) return;
+        if (/^Doğru/i.test(line)) {
+          correct = parseCorrect(line);
+          const inlineRat = line.replace(/^Doğru\s*(?:Cevap)?\s*:\s*[A-E]\s*[—–-]?\s*/i, '').trim();
+          if (inlineRat && !/^Açıklama/i.test(inlineRat)) rationale = inlineRat;
+          return;
+        }
+        if (/^Açıklama/i.test(line)) {
+          rationale = line.replace(/^Açıklama\s*:\s*/i, '').trim();
+          return;
+        }
+        if (!qText) qText = line.replace(/^\d+\)\s*/, '');
+        else if (optLines.length === 0) qText += ' ' + line;
+      });
+
+      if (!correct) correct = parseCorrect(p.textContent || '');
+      if (!isValidOptionCount(optLines.length) || !correct || !qText) return;
+
+      const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-ol-br', rationale);
+      inner.insertBefore(block, li);
+      li.style.display = 'none';
+      created++;
+    });
+    return created;
+  }
+
+  /** <h3>Soru</h3><p>A)<br />...</p><p><strong>Doğru Cevap: X</strong> */
+  function processH3StackQuestions(inner) {
+    let created = 0;
+    inner.querySelectorAll('h3').forEach(function (h3) {
+      if (h3.closest('.eval-question-block') || h3.querySelector('.eval-question-block')) return;
+      const optP = h3.nextElementSibling;
+      if (!optP || optP.tagName !== 'P' || optP.style.display === 'none') return;
+      if (!/[A-E]\)/.test(optP.innerHTML || optP.textContent || '')) return;
+
+      const optLines = [];
+      let qText = '';
+      let correct = null;
+      let rationale = '';
+      const h3Raw = (h3.textContent || '').trim();
+      const h3IsLabelOnly = /^Soru\s+\d+$/i.test(h3Raw);
+
+      if (!h3IsLabelOnly) {
+        qText = h3Raw.replace(/^\d+\)\s*/, '');
+      }
+
+      linesFromBrHtml(optP.innerHTML || '').forEach(function (line) {
+        if (pushOptionLine(optLines, line)) return;
+        if (/^Doğru/i.test(line)) {
+          correct = parseCorrect(line);
+          return;
+        }
+        if (/^Açıklama/i.test(line)) {
+          rationale = line.replace(/^Açıklama\s*:\s*/i, '').trim();
+          return;
+        }
+        if (!qText) qText = line.replace(/^\d+\)\s*/, '');
+        else if (optLines.length === 0) qText += (qText ? ' ' : '') + line;
+      });
+
+      let answerP = optP.nextElementSibling;
+      if (!correct && answerP && answerP.tagName === 'P') {
+        const answerText = answerP.textContent || '';
+        correct = parseCorrect(answerText);
+        if (!rationale) {
+          const ratM = answerText.match(/Açıklama\s*:\s*([\s\S]+)/i);
+          if (ratM) rationale = ratM[1].trim();
+        }
+      }
+
+      if (!isValidOptionCount(optLines.length) || !correct) return;
+      if (!qText) qText = h3Raw.replace(/^\d+\)\s*/, '');
+
+      const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-h3-stack', rationale);
+      inner.insertBefore(block, h3);
+      h3.style.display = 'none';
+      optP.style.display = 'none';
+      if (answerP && answerP.tagName === 'P' && /Doğru|Açıklama/i.test(answerP.textContent || '')) {
+        answerP.style.display = 'none';
+      }
       created++;
     });
     return created;
@@ -219,7 +340,7 @@
     optsWrap.querySelectorAll('.eval-option').forEach(function (label) {
       const letter = (label.dataset.letter || '').toUpperCase();
       const t = label.textContent || '';
-      const m = t.match(/^[A-D]\)\s*(.+)$/);
+      const m = t.match(/^[A-E]\)\s*(.+)$/);
       if (letter && m) map[letter] = m[1].trim();
     });
     return map;
@@ -422,6 +543,8 @@
     const inner = section.querySelector('.section-inner') || section;
 
     processSplitFormatQuestions(inner);
+    processOlListBrQuestions(inner);
+    processH3StackQuestions(inner);
     processBrParagraphQuestions(inner);
 
     inner.querySelectorAll('p').forEach(function (p) {
@@ -431,56 +554,10 @@
       }
     });
 
-    inner.querySelectorAll('h3').forEach(function (h3) {
-      let p = h3.nextElementSibling;
-      if (!p || p.tagName !== 'P') return;
-      const text = p.textContent || '';
-      if (!/[A-D]\)\s+/.test(text)) return;
-      let correct = parseCorrect(text);
-      let answerP = null;
-      let rationale = parseRationale(text);
-      if (!correct) {
-        const nextP = p.nextElementSibling;
-        if (nextP && nextP.tagName === 'P') {
-          correct = parseCorrect(nextP.textContent || '');
-          if (correct) {
-            answerP = nextP;
-            if (!rationale) rationale = parseRationale(nextP.textContent || '');
-          }
-        }
-      }
-      if (!correct) return;
-
-      const lines = text.split(/\n/);
-      const optLines = [];
-      const qParts = [];
-      for (const line of lines) {
-        const m = line.trim().match(/^([A-D])\)\s*(.+)$/);
-        if (m) optLines.push(m);
-        else if (!line.match(CORRECT_REGEX) && !/^Açıklama\s*:/.test(line) && line.trim()) {
-          qParts.push(line.trim());
-        }
-      }
-      if (optLines.length !== 4) return;
-
-      const wrap = createEvalQuestionBlock(
-        qParts.join(' ').replace(/<strong>Doğru[^<]*<\/strong>.*/gi, ''),
-        optLines.map(function (m) {
-          return { letter: m[1], text: m[2] };
-        }),
-        correct,
-        '',
-        rationale
-      );
-      p.parentNode.insertBefore(wrap, p);
-      p.style.display = 'none';
-      if (answerP) answerP.style.display = 'none';
-    });
-
     inner.querySelectorAll('p').forEach(function (p) {
       if (p.style.display === 'none' || p.closest('.eval-question-block')) return;
       const text = p.textContent || '';
-      if (!/^\s*\d+\)/.test(text) || !/[A-D]\)\s+/.test(text) || !CORRECT_REGEX.test(text)) {
+      if (!/^\s*\d+\)/.test(text) || !/[A-E]\)\s*/.test(text) || !CORRECT_REGEX.test(text)) {
         return;
       }
       const correct = parseCorrect(text);
@@ -491,72 +568,25 @@
       let qText = '';
       let rationale = '';
       for (const part of parts) {
-        const m = part.trim().match(/^([A-D])\)\s*(.+)$/);
-        if (m) optLines.push(m);
+        const m = part.trim().match(OPTION_LINE_REGEX);
+        if (m) optLines.push({ letter: m[1], text: m[2] });
         else if (part.trim() && !CORRECT_REGEX.test(part) && !/^Açıklama\s*:/.test(part)) {
           qText += part.trim() + ' ';
         } else if (/Gerekçe/i.test(part)) {
           rationale = parseRationale(part) || part.replace(/^Gerekçe\s*:\s*/i, '').trim();
         }
       }
-      if (optLines.length !== 4) return;
+      if (!isValidOptionCount(optLines.length)) return;
 
       const wrap = createEvalQuestionBlock(
         qText.replace(/\s*$/, '').replace(/\s*Doğru.*$/i, '').trim(),
-        optLines.map(function (m) {
-          return { letter: m[1], text: m[2] };
-        }),
+        optLines,
         correct,
         '',
         rationale
       );
       p.parentNode.insertBefore(wrap, p);
       p.style.display = 'none';
-    });
-
-    inner.querySelectorAll('ol li, ul li').forEach(function (li) {
-      const p = li.querySelector('p') || li;
-      if (p.style.display === 'none' || p.querySelector('.eval-options-wrap')) return;
-      const text = (p.textContent || '').trim();
-      if (!/[A-D]\)\s+/.test(text) || !CORRECT_REGEX.test(text)) return;
-      const correct = parseCorrect(text);
-      if (!correct) return;
-
-      const optLines = [];
-      const rawLines = text.split(/\n/).map(function (s) {
-        return s.trim();
-      });
-      let qText = '';
-      let rationale = '';
-      for (const line of rawLines) {
-        const m = line.match(/^([A-D])\)\s*(.+)$/);
-        if (m) optLines.push(m);
-        else if (!line.match(CORRECT_REGEX) && !/^Açıklama\s*:/.test(line) && line) {
-          qText += line + ' ';
-        } else if (/Gerekçe/i.test(line)) {
-          rationale = parseRationale(line);
-        }
-      }
-      if (optLines.length !== 4) {
-        const chunks = text.split(/\s*(?=[A-D]\)\s)/).filter(Boolean);
-        chunks.forEach(function (ch) {
-          const m2 = ch.trim().match(/^([A-D])\)\s*(.+)$/);
-          if (m2 && optLines.length < 4) optLines.push(m2);
-        });
-      }
-      if (optLines.length !== 4) return;
-
-      const wrap = createEvalQuestionBlock(
-        qText.replace(/\s*$/, '').trim(),
-        optLines.map(function (m) {
-          return { letter: m[1], text: m[2] };
-        }),
-        correct,
-        'eval-list-item',
-        rationale
-      );
-      p.innerHTML = '';
-      p.appendChild(wrap);
     });
 
     inner.querySelectorAll('.eval-question-block').forEach(function (block) {
