@@ -15,6 +15,18 @@ SECTION_BLOCK_RE = re.compile(
 )
 H2_TAG_RE = re.compile(r"<h2\b([^>]*)>(.*?)</h2>", re.I | re.S)
 H2_ID_RE = re.compile(r'\bid=["\']([^"\']+)["\']', re.I)
+NAV_SUB_RE = re.compile(
+    r'class="[^"]*nav-link-sub[^"]*"[^>]*data-section="([^"]+)"[^>]*data-anchor="([^"]+)"',
+    re.I,
+)
+NAV_SUB_RE_ALT = re.compile(
+    r'data-section="([^"]+)"[^>]*data-anchor="([^"]+)"[^>]*class="[^"]*nav-link-sub',
+    re.I,
+)
+NAV_SEC_RE = re.compile(
+    r'class="[^"]*nav-link-section[^"]*"[^>]*data-section="([^"]+)"',
+    re.I,
+)
 SKIP_H2 = re.compile(
     r"terimler\s+sözlüğü|kendini\s+değerlendir|kapanış|bu\s+modülde\s+kazanılan|bu\s+modülde\s+neler",
     re.I,
@@ -33,6 +45,15 @@ def slugify_anchor(text: str) -> str:
 
 def strip_tags(html: str) -> str:
     return re.sub(r"<[^>]+>", "", html).strip()
+
+
+def ensure_heading_id(section_id: str, title: str, idx: int, attr_id: str = "") -> str:
+    if attr_id and len(attr_id) <= 100:
+        return attr_id
+    slug = slugify_anchor(title) or f"lesson-{idx}"
+    if len(slug) > 64:
+        slug = slug[:64].rstrip("-")
+    return f"{section_id}-{slug}"
 
 
 def stub_html(module_file: str, lesson_key: str) -> str:
@@ -56,27 +77,68 @@ def stub_html(module_file: str, lesson_key: str) -> str:
 """
 
 
-def collect_keys(html: str) -> list[str]:
+def collect_keys_from_nav(html: str) -> list[str]:
+    keys: list[str] = []
+    seen: set[str] = set()
+    for pattern in (NAV_SUB_RE, NAV_SUB_RE_ALT):
+        for m in pattern.finditer(html):
+            key = f"{m.group(1)}::{m.group(2)}"
+            if key not in seen:
+                seen.add(key)
+                keys.append(key)
+    section_ids_with_sub = {k.split("::", 1)[0] for k in keys if "::" in k}
+    for m in NAV_SEC_RE.finditer(html):
+        sid = m.group(1)
+        if sid in section_ids_with_sub:
+            continue
+        if sid not in seen:
+            seen.add(sid)
+            keys.append(sid)
+    return keys
+
+
+def collect_keys_from_dom(html: str) -> list[str]:
     keys: list[str] = []
     for m in SECTION_BLOCK_RE.finditer(html):
         section_id = m.group(1)
         block = m.group(2)
+        inner_m = re.search(r'<div[^>]*class="[^"]*section-inner[^"]*"[^>]*>(.*)', block, re.I | re.S)
+        search_in = inner_m.group(1) if inner_m else block
         sub_keys: list[str] = []
-        for h2m in H2_TAG_RE.finditer(block):
+        idx = 0
+        for h2m in H2_TAG_RE.finditer(search_in):
             attrs, inner = h2m.group(1), h2m.group(2)
             title = strip_tags(inner)
-            if not title or SKIP_H2.search(title):
+            if not title or len(title) > 160 or SKIP_H2.search(title):
+                continue
+            if re.search(
+                r"learning-objectives|concept-grid|lesson-image-wrap|sg-isletim-intro",
+                search_in[max(0, h2m.start() - 400) : h2m.start()],
+                re.I,
+            ):
                 continue
             id_m = H2_ID_RE.search(attrs)
             hid = id_m.group(1) if id_m else ""
-            if not hid:
-                hid = f"{section_id}-{slugify_anchor(title) or 'sub'}"
+            hid = ensure_heading_id(section_id, title, idx, hid)
             sub_keys.append(f"{section_id}::{hid}")
+            idx += 1
         if sub_keys:
             keys.extend(sub_keys)
         else:
             keys.append(section_id)
     return keys
+
+
+def collect_keys(html: str) -> list[str]:
+    nav_keys = collect_keys_from_nav(html)
+    dom_keys = collect_keys_from_dom(html)
+    if not nav_keys:
+        return dom_keys
+    if any("::" in k for k in nav_keys):
+        return nav_keys
+    if any("::" in k for k in dom_keys):
+        return dom_keys
+    return nav_keys if len(nav_keys) >= len(dom_keys) else dom_keys
 
 
 def main() -> None:
