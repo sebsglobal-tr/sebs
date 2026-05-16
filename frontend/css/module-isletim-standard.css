@@ -86,6 +86,28 @@ body.landing-site-body .module-sidebar .nav-link-section .nav-expand-indicator {
   align-self: center !important;
   opacity: 0.75;
   color: rgba(255, 255, 255, 0.65) !important;
+  transition: transform 0.2s ease;
+}
+
+body.landing-site-body .module-sidebar .nav-sublist {
+  list-style: none;
+  margin: 0.15rem 0 0.35rem;
+  padding: 0;
+  display: none;
+}
+
+body.landing-site-body .module-sidebar .nav-section-item.is-open > .nav-sublist {
+  display: block;
+}
+
+body.landing-site-body .module-sidebar .nav-section-item.is-open > .nav-link-section .nav-expand-indicator {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+body.landing-site-body .module-sidebar .nav-subitem {
+  list-style: none;
+  margin: 0 0 2px;
 }
 
 body.landing-site-body .module-sidebar .nav-section-item > .nav-link-section:has(.nav-expand-indicator) {

@@ -84,6 +84,39 @@
         });
     }
 
+    function getSectionSubheadings(inner) {
+        if (!inner) return [];
+        return Array.from(inner.querySelectorAll('h2')).filter(function (h) {
+            var t = String(h.textContent || '').trim();
+            if (!t) return false;
+            if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
+                return false;
+            }
+            return true;
+        });
+    }
+
+    function moduleHasSubheadingNav() {
+        var list = document.querySelector('.nav-section-list');
+        if (!list) return false;
+        var links = list.querySelectorAll('.nav-link-section');
+        for (var i = 0; i < links.length; i++) {
+            var sec = document.getElementById(links[i].getAttribute('data-section'));
+            if (!sec) continue;
+            var inner = sec.querySelector('.section-inner');
+            if (getSectionSubheadings(inner).length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function resolveSubNavScroll(cfg) {
+        if (cfg && cfg.subNavScroll === true) return true;
+        if (cfg && cfg.subNavScroll === false) return false;
+        return moduleHasSubheadingNav();
+    }
+
     function buildSubheadingNav(navSectionList) {
         if (!navSectionList) return;
         navSectionList.querySelectorAll('.nav-sublist').forEach(function (el) {
@@ -96,20 +129,28 @@
             if (!sectionEl) return;
             var parentLi = moduleLink.closest('li');
             if (!parentLi) return;
+            var inner = sectionEl.querySelector('.section-inner');
+            var subHeadings = getSectionSubheadings(inner);
+            if (!subHeadings.length) {
+                parentLi.classList.remove('nav-section-item', 'is-open');
+                return;
+            }
             parentLi.classList.add('nav-section-item');
             if (!moduleLink.querySelector('.nav-label')) {
                 var text = moduleLink.textContent.trim();
+                var iconEl = moduleLink.querySelector('i.fas, i.fab');
+                var iconClass = iconEl ? iconEl.className : 'fas fa-book';
                 moduleLink.innerHTML =
-                    '<span class="nav-label"><i class="fas fa-book"></i> ' +
+                    '<span class="nav-label"><i class="' +
+                    iconClass +
+                    '"></i> ' +
                     text +
                     '</span><i class="fas fa-chevron-right nav-expand-indicator"></i>';
+            } else if (!moduleLink.querySelector('.nav-expand-indicator')) {
+                var chevron = document.createElement('i');
+                chevron.className = 'fas fa-chevron-right nav-expand-indicator';
+                moduleLink.appendChild(chevron);
             }
-            var inner = sectionEl.querySelector('.section-inner');
-            if (!inner) return;
-            var subHeadings = Array.from(inner.querySelectorAll('h2')).filter(function (h) {
-                return String(h.textContent || '').trim().length > 0;
-            });
-            if (!subHeadings.length) return;
             var subList = document.createElement('ul');
             subList.className = 'nav-sublist';
             parentLi.appendChild(subList);
@@ -514,8 +555,6 @@
         }
         var MODULE_NAME = cfg.moduleName;
         var STORAGE_KEY = cfg.storageKey;
-        var subNavScroll = cfg.subNavScroll === true;
-
         document.body.classList.add('sebs-module-progress-section');
         try {
             var cleanUrl = new URL(global.location.href);
@@ -535,7 +574,9 @@
         enhanceMiniHeadings();
         enhanceRunbookHeadings();
         tableizeGlossaries();
+        applyTemelCardLayout();
 
+        var subNavScroll = resolveSubNavScroll(cfg);
         if (subNavScroll) {
             buildSubheadingNav(navSectionList);
         }
@@ -801,14 +842,16 @@
         var progressFill = document.getElementById('progressFill');
         var progressText = document.getElementById('progressText');
 
-        if (cfg.subNavScroll === true) {
-            buildSubheadingNav(navSectionList);
-        }
         enhanceNotes();
         enhanceMiniHeadings();
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
+
+        var subNavScroll = resolveSubNavScroll(cfg);
+        if (subNavScroll) {
+            buildSubheadingNav(navSectionList);
+        }
 
         function getSectionIdsSet() {
             return new Set(Array.from(sections).map(function (s) {
@@ -1179,5 +1222,12 @@
         wireMobileMenu();
     }
 
-    global.SebsPremiumModuleLessons = { run: run };
+    global.SebsPremiumModuleLessons = {
+        run: run,
+        refreshSubheadingNav: function () {
+            var list = document.querySelector('.nav-section-list');
+            if (!list || !moduleHasSubheadingNav()) return;
+            buildSubheadingNav(list);
+        }
+    };
 })(typeof window !== 'undefined' ? window : this);

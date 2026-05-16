@@ -2,7 +2,7 @@
  * Tüm premium modülleri İşletim Sistemi Güvenliği (Temel) şablonuna yaklaştırır:
  * - module-2-enhanced içerik sınıfı
  * - Bölüm başına kapak görseli + concept-grid (yoksa)
- * - Yan menüde otomatik alt-H2 listesi yok (sadece nav-link-section)
+ * - Yan menü alt başlıkları sebs-premium-module-lessons.js tarafından üretilir (silinmez)
  */
 (function () {
     'use strict';
@@ -35,27 +35,6 @@
         var d = document.createElement('div');
         d.textContent = s;
         return d.innerHTML;
-    }
-
-    function stripAutoSubNav() {
-        document.querySelectorAll('.nav-sublist').forEach(function (el) {
-            el.remove();
-        });
-        document.querySelectorAll('.nav-section-item').forEach(function (li) {
-            li.classList.remove('nav-section-item', 'is-open');
-        });
-        document.querySelectorAll('.nav-link-section .nav-expand-indicator').forEach(function (i) {
-            i.remove();
-        });
-        document.querySelectorAll('.nav-link-section .nav-label').forEach(function (span) {
-            var link = span.closest('.nav-link-section');
-            if (!link) return;
-            var icon = link.querySelector('i.fas, i.fab');
-            var text = span.textContent.trim();
-            link.textContent = '';
-            if (icon) link.appendChild(icon);
-            link.appendChild(document.createTextNode(' ' + text));
-        });
     }
 
     function enhanceSectionInners() {
@@ -132,12 +111,17 @@
     }
 
     function run() {
-        stripAutoSubNav();
         enhanceSectionInners();
         var sections = document.querySelectorAll('.module-layout .content-section');
         sections.forEach(function (sec, i) {
             buildIntro(sec, i);
         });
+        if (
+            global.SebsPremiumModuleLessons &&
+            typeof global.SebsPremiumModuleLessons.refreshSubheadingNav === 'function'
+        ) {
+            global.SebsPremiumModuleLessons.refreshSubheadingNav();
+        }
     }
 
     if (document.readyState === 'loading') {
