@@ -8,8 +8,16 @@ import {
   pickTopDimensions,
   pickLowDimensions,
   buildLearningModeLabel,
+  bindReportInteractions,
 } from './report.js';
-import { saveAnswersDraft, loadAnswersDraft, saveBigFiveResult, clearBigFiveStorage } from './storage.js';
+import { downloadBigFivePdf, printBigFiveReport } from './pdf-export.js';
+import {
+  saveAnswersDraft,
+  loadAnswersDraft,
+  saveBigFiveResult,
+  clearBigFiveStorage,
+  loadBigFiveResult,
+} from './storage.js';
 
 const TOTAL = BIG_FIVE_QUESTIONS.length;
 
@@ -210,10 +218,27 @@ async function runAnalysis() {
   lastPayload = payload;
   saveBigFiveResult(payload);
 
-  const html = buildReportHtml(classical, modelOutput, modelError, topTwo, lowDims, learningMode);
-  if (els.resultMount) els.resultMount.innerHTML = html;
+  const html = buildReportHtml(
+    classical,
+    modelOutput,
+    modelError,
+    topTwo,
+    lowDims,
+    learningMode,
+    payload.created_at
+  );
+  showResults(html);
+  updateIntroLastReportButton();
+}
 
+function showResults(html) {
+  if (els.resultMount) els.resultMount.innerHTML = html;
+  bindReportInteractions(
+    () => downloadBigFivePdf('bf-report-document'),
+    () => printBigFiveReport()
+  );
   setView('results');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function rebuildReportOnly() {
@@ -243,9 +268,31 @@ function rebuildReportOnly() {
     lastPayload.model_error,
     topTwo,
     lowDims,
-    learningMode
+    learningMode,
+    lastPayload.created_at
   );
-  if (els.resultMount) els.resultMount.innerHTML = html;
+  showResults(html);
+}
+
+function showSavedReportIfAny() {
+  const saved = loadBigFiveResult();
+  if (!saved || saved.test_type !== 'big_five_learning' || !saved.classical_scores) return false;
+  lastPayload = saved;
+  const classical = saved.classical_scores;
+  const topTwo = pickTopDimensions(classical, 2);
+  const lowDims = pickLowDimensions(classical, 2);
+  const learningMode = saved.learning_mode || buildLearningModeLabel(topTwo, classical);
+  const html = buildReportHtml(
+    classical,
+    saved.model_output,
+    saved.model_error,
+    topTwo,
+    lowDims,
+    learningMode,
+    saved.created_at
+  );
+  showResults(html);
+  return true;
 }
 
 function restartTest() {
@@ -261,6 +308,7 @@ function restartTest() {
   const toggleBtn = $('btnToggleMode');
   if (toggleBtn) toggleBtn.textContent = 'Liste görünümü';
   setView('intro');
+  updateIntroLastReportButton();
   updateProgressUI();
 }
 
@@ -296,6 +344,7 @@ function bind() {
   els.loadingText = $('loadingText');
 
   $('btnStart')?.addEventListener('click', startFromIntro);
+  $('btnViewLastReport')?.addEventListener('click', () => showSavedReportIfAny());
   $('btnSubmit')?.addEventListener('click', () => runAnalysis());
   $('btnPrev')?.addEventListener('click', () => goStep(-1));
   $('btnNext')?.addEventListener('click', () => goStep(1));
@@ -307,8 +356,17 @@ function bind() {
   });
 }
 
+function updateIntroLastReportButton() {
+  const btn = $('btnViewLastReport');
+  if (!btn) return;
+  const saved = loadBigFiveResult();
+  const has = saved && saved.test_type === 'big_five_learning' && saved.classical_scores;
+  btn.hidden = !has;
+}
+
 function init() {
   bind();
+  updateIntroLastReportButton();
   setView('intro');
   updateProgressUI();
 }

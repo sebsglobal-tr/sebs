@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <link rel="stylesheet" href="/css/big-five-test.css?v=1" />
+  <link rel="stylesheet" href="/css/big-five-test.css?v=2" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -41,6 +41,7 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" defer></script>
 </head>
 <body class="bf-page font-sans text-slate-800 antialiased">
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/85 bf-glass">
@@ -66,11 +67,17 @@
       <ul class="mt-6 space-y-2 text-sm text-slate-600">
         <li class="flex gap-2"><i class="fas fa-check-circle mt-0.5 text-emerald-500" aria-hidden="true"></i> 50 soru, 5’li Likert ölçeği</li>
         <li class="flex gap-2"><i class="fas fa-check-circle mt-0.5 text-emerald-500" aria-hidden="true"></i> Klasik skor + isteğe bağlı yapay sinir ağı çıktısı</li>
+        <li class="flex gap-2"><i class="fas fa-check-circle mt-0.5 text-emerald-500" aria-hidden="true"></i> Detaylı rapor, grafikler ve PDF indirme</li>
         <li class="flex gap-2"><i class="fas fa-check-circle mt-0.5 text-emerald-500" aria-hidden="true"></i> Sonuçlar tarayıcında sana özel saklanır (panel özeti)</li>
       </ul>
-      <button type="button" id="btnStart" class="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
-        Teste başla <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>
-      </button>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <button type="button" id="btnStart" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+          Teste başla <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>
+        </button>
+        <button type="button" id="btnViewLastReport" hidden class="inline-flex items-center justify-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-6 py-3.5 text-sm font-bold text-indigo-800 transition hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2">
+          Son raporu gör <i class="fas fa-file-lines text-xs" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
 
     <div id="viewTest" hidden class="mt-6 space-y-6">
