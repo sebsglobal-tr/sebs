@@ -26,6 +26,23 @@
         return 'fa-book-open';
     }
 
+    function cardifyByHeading(inner, headings) {
+        headings.forEach(function (head) {
+            if (head.parentElement !== inner) return;
+            var card = document.createElement('div');
+            card.className = 'content-card';
+            inner.insertBefore(card, head);
+            var node = head;
+            while (node) {
+                var next = node.nextElementSibling;
+                card.appendChild(node);
+                var stopTag = headings[0] && headings[0].tagName;
+                if (next && next.tagName === stopTag) break;
+                node = next;
+            }
+        });
+    }
+
     function applyTemelCardLayout() {
         document.querySelectorAll('.section-inner').forEach(function (inner) {
             if (inner.dataset.cardified === '1') return;
@@ -33,6 +50,13 @@
             var h2Blocks = Array.from(inner.children).filter(function (el) {
                 return el.tagName === 'H2';
             });
+            var h3Blocks = Array.from(inner.children).filter(function (el) {
+                return el.tagName === 'H3';
+            });
+            if (h2Blocks.length === 1 && h3Blocks.length >= 2) {
+                cardifyByHeading(inner, h3Blocks);
+                return;
+            }
             h2Blocks.forEach(function (h2) {
                 if (h2.parentElement !== inner) return;
                 var card = document.createElement('div');

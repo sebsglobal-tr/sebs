@@ -18,7 +18,8 @@
     <!--
       Landing ders sayfası (Siber Güvenliğe Giriş modülü ile aynı hat):
       1) body.landing-site-body + sabit üst bar + landing footer
-      2) </head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
+      2)     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
+</head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
       3) premium-lesson + sayfa içi stiller (docx-content, linux-terminal, quiz-exam, interactive-lesson)
       4) </body> öncesi: Supabase CDN + supabase-env/client/auth + navigation.js (giriş durumu üst menüde)
       5) module-access-check.js + saas-shell.js
@@ -4700,8 +4701,7 @@
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Temel Network Eğitimi',
             storageKey: 'module_progress_temel_network',
-            basePath: '/modules/temel-network-egitimi.html',
-            progressMode: 'section'
+            basePath: '/modules/temel-network-egitimi.html'
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
@@ -4713,6 +4713,7 @@
     <script src="module-access-check.js"></script>
     <script src="/js/module-inline-cards.js"></script>
     <script src="/js/module-visual-enrichment.js"></script>
+    <script src="/js/module-isletim-standard.js"></script>
   <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">

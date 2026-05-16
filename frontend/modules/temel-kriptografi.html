@@ -18,10 +18,12 @@
     <!--
       Landing ders sayfası (Siber Güvenliğe Giriş modülü ile aynı hat):
       1) body.landing-site-body + sabit üst bar + landing footer
-      2) </head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
+      2)     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
+</head> sonu: Tailwind + /css/saas-landing.css + landing-chrome.css + module-lesson-landing.css
       3) premium-lesson + temel-kriptografi-premium.css + sayfa içi stiller (docx-content, quiz-exam)
       4) temel-kriptografi-lesson-visuals.js (ders başlığına göre SVG) → temel-kriptografi-premium.js (DOM) → interactive-lesson.js
-      5) </body> öncesi: Supabase CDN + supabase-env/client/auth + navigation.js (giriş durumu üst menüde)
+      5)     <script src="/js/module-isletim-standard.js"></script>
+</body> öncesi: Supabase CDN + supabase-env/client/auth + navigation.js (giriş durumu üst menüde)
       6) module-access-check.js + saas-shell.js
       7) Kontrast / CMD: module-lesson-landing.css (sidebar + header hizası)
     -->
@@ -4456,8 +4458,7 @@ C2 = P2 XOR K</pre><p>Bu iki şifreli metin birbiriyle XOR’landığında anaht
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Temel Kriptografi',
             storageKey: 'module_progress_temel_kriptografi',
-            basePath: '/modules/temel-kriptografi.html',
-            progressMode: 'section'
+            basePath: '/modules/temel-kriptografi.html'
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
