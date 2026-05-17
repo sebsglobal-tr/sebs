@@ -61,7 +61,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=4" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=5" />
 <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
@@ -585,71 +585,7 @@
                         <li><strong>Raporlama:</strong> Kişi isimlerine veya kesin ithamlara girmeden, teknik sınırda kal: “Şu kaynaktan yüksek hacimli ve hassas içerik riski taşıyan şifresiz trafik gözlendi” gibi.</li>
                         <li><strong>Escalation:</strong> RoE’de tanımlı kanaldan yetkili birime ilet (güvenlik/uyumluluk/BT). Bu, hem etik hem hukuki güvence sağlar.</li>
                     </ul>
-                    
-<h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — Etik ve Yasal Çerçeve</h2>
-<div class="eval-quiz-section" id="ders-0-4-modul-testi" data-section="ders-0-4-modul-testi">
-<p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) RoE’de rate limit aşıldı ve üretim yavaşladı. Doğru müdahale?</li></ol>
-<p>A) Logları kapatmak</p>
-<p>B) Stop condition’a göre durdurup müşteriyle koordine etmek</p>
-<p>C) Limitleri görmezden gelip devam</p>
-<p>D) Tüm kullanıcı oturumlarını silmek</p>
-<ul><li>Doğru: B</li><li>Gerekçe: RoE limitleri ve stop condition operasyonel güvenliği korur.</li></ul>
-<ol><li>2) Yazılı yetki belgesi olmadan üretimde tarama başlatıldı. Bu durumda öncelikli risk nedir?</li></ol>
-<p>A) DNS TTL artışı</p>
-<p>B) Yalnızca performans düşüşü</p>
-<p>C) Hukuki ve operasyonel sorumluluk; yetkisiz test</p>
-<p>D) TLS sürüm uyumsuzluğu</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Yetkili test yazılı onay ve kapsam tanımına dayanır.</li></ul>
-<ol><li>3) Olay sonrası disk imajı alınırken hash değeri kaydedilmedi. Bu eksiklik neyi zayıflatır?</li></ol>
-<p>A) TLS cipher suite seçimini</p>
-<p>B) DNS çözümlemesini</p>
-<p>C) Kanıt zinciri ve bütünlük ispatını</p>
-<p>D) Wi-Fi kanal planını</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Adli/kanıt süreçlerinde değişmezlik kaydı (hash) kritiktir.</li></ul>
-<ol><li>4) Olay raporuna gereksiz tam e-posta gövdeleri eklendi. Hangi ilke ihlal edilmiştir?</li></ol>
-<p>A) SSID gizleme</p>
-<p>B) ARP öğrenme</p>
-<p>C) ECB modu seçimi</p>
-<p>D) Veri minimizasyonu</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Yalnızca gerekli veri toplanmalı ve paylaşılmalıdır.</li></ul>
-<ol><li>5) Yönetici özeti teknik PCAP ekleriyle doldurulmuş; karar vericiler okuyamıyor. Düzeltme?</li></ol>
-<p>A) Raporu şifrelemeden e-postalamak</p>
-<p>B) Kapsamı genişletmek</p>
-<p>C) Daha fazla ham log eklemek</p>
-<p>D) Özeti iş etkisi ve risk odaklı tutup teknik detayı ek’e taşımak</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Raporlama hedef kitleye göre katmanlanır.</li></ul>
-<ol><li>6) Alt yüklenici test ekibine müşteri verisi aktarılacak. Öncelikli kontrol?</li></ol>
-<p>A) Daha hızlı internet</p>
-<p>B) NDA ve veri işleme sözleşmesi / yetki</p>
-<p>C) ECB modu</p>
-<p>D) SSID gizleme</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Üçüncü tarafla çalışmada sözleşme ve veri koruma şarttır.</li></ul>
-<ol><li>7) Test sırasında kapsam dışı bir üretim sunucusuna erişim mümkün görünüyor. Ne yapılmalı?</li></ol>
-<p>A) Hemen exploit edip rapora eklemek</p>
-<p>B) Logları silmek</p>
-<p>C) Durmak, müşteriye bildirmek ve kapsam dışı erişimi yapmamak</p>
-<p>D) Sunucuyu kapatmak</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Kapsam dışı sistemlere müdahale yetki ve sözleşme ihlalidir.</li></ul>
-<ol><li>8) Üretimde beklenmedik kesinti riski doğdu; kill-switch tetiklenmeli mi?</li></ol>
-<p>A) Parolaları sıfırlamak</p>
-<p>B) Hayır, test süresiz sürmeli</p>
-<p>C) Yalnızca logları kapatmak</p>
-<p>D) RoE’de tanımlı stop/kill koşullarına göre durdurmak ve müşteriyi bilgilendirmek</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Kill-switch kontrollü durdurma için önceden tanımlanır.</li></ul>
-<ol><li>9) NDA imzalanmadan müşteri ağ diyagramı paylaşıldı. Bu durumda?</li></ol>
-<p>A) Logları silmek</p>
-<p>B) Diyagramı sosyal medyada paylaşmak</p>
-<p>C) Paylaşımı durdurup hukuk/uyum sürecini başlatmak</p>
-<p>D) Taramayı hızlandırmak</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Gizlilik sözleşmesi olmadan hassas bilgi paylaşımı risklidir.</li></ul>
-<ol><li>10) Yasal sınır ihlali şüphesi doğdu. Ekip ne yapmalı?</li></ol>
-<p>A) Sosyal medyada paylaşım</p>
-<p>B) Sessizce devam</p>
-<p>C) Hukuk/uyum ile koordine, kapsam dışı aksiyondan kaçınma</p>
-<p>D) Varsayılan parolaları deneme</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Yasal çerçeve dışı faaliyet kabul edilemez.</li></ul>
-</div><div class="lesson-controls">
+                    <div class="lesson-controls">
                         <span class="lesson-status"><i class="fas fa-book-open"></i> Ders 0.4 — Raporlama Standartları</span>
                         <button type="button" class="btn-complete-lesson" data-section="ders-0-4" aria-label="Dersi tamamla"><i class="fas fa-check-circle"></i> Dersi Tamamla</button>
                     </div>
@@ -778,71 +714,7 @@
                             <p>“Ağ yok” demeden önce hangi ağ türünden bahsettiğini netleştir: Yerel LAN mı, internet çıkışı mı, intranet servisi mi? Yanlış sınıflandırma yanlış teşhis adımına götürür.</p>
                         </div>
                     </div>
-                    
-<h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — Network Mantığı</h2>
-<div class="eval-quiz-section" id="ders-1-2-modul-testi" data-section="ders-1-2-modul-testi">
-<p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
-<ol><li>1) Bir uygulama «connection refused» alıyor; ping hedefe gidiyor. Sorun büyük olasılıkla hangi katmanda?</li></ol>
-<p>A) Sadece presentation — JPEG</p>
-<p>B) Fiziksel — kablo kopuk</p>
-<p>C) Yalnızca session — token</p>
-<p>D) Uygulama/transport — port kapalı veya servis dinlemiyor</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Ping çalışıp port reddediliyorsa üst katman/servis odaklıdır.</li></ul>
-<ol><li>2) «LAN/WAN» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) İnterneti kalıcı kapatmak</p>
-<p>B) LAN/WAN için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>C) Yalnızca antivirüs imzasını güncellemek</p>
-<p>D) Tüm logları silmek</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «LAN/WAN» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>3) Denetimde «Paket vs frame» için kanıt isteniyor. Hangi çıktı en uygundur?</li></ol>
-<p>A) Ekran görüntüsü olmadan varsayım</p>
-<p>B) Sözlü «biliyoruz» ifadesi</p>
-<p>C) Politika, yapılandırma veya test sonucu ile uyum kanıtı</p>
-<p>D) Başka modülün raporu</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Paket vs frame» denetlenebilir kanıt gerektirir.</li></ul>
-<ol><li>4) Bir stajyer «Bandwidth/latency» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Sadece sınavda sorulursa öğrenilir</p>
-<p>B) Araç adı yeterlidir</p>
-<p>C) Yalnızca yöneticiler bilir</p>
-<p>D) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<ul><li>Doğru: D</li><li>Gerekçe: «Bandwidth/latency» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>5) Bir uygulama «connection refused» alıyor; ping hedefe gidiyor. Sorun büyük olasılıkla hangi katmanda?</li></ol>
-<p>A) Sadece presentation — JPEG</p>
-<p>B) Uygulama/transport — port kapalı veya servis dinlemiyor</p>
-<p>C) Fiziksel — kablo kopuk</p>
-<p>D) Yalnızca session — token</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Ping çalışıp port reddediliyorsa üst katman/servis odaklıdır.</li></ul>
-<ol><li>6) Bir stajyer «Switch/router farkı» hakkında «ezberledim, uygulamaya gerek yok» dedi. En doğru yanıt?</li></ol>
-<p>A) Araç adı yeterlidir</p>
-<p>B) Yalnızca yöneticiler bilir</p>
-<p>C) Kavramın pratikte nasıl uygulandığını ve hangi hatayı önlediğini açıklaması gerekir</p>
-<p>D) Sadece sınavda sorulursa öğrenilir</p>
-<ul><li>Doğru: C</li><li>Gerekçe: «Switch/router farkı» uygulama ve risk bağlamı olmadan anlamlı değildir.</li></ul>
-<ol><li>7) «Broadcast domain» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
-<p>A) Yalnızca antivirüs imzasını güncellemek</p>
-<p>B) Broadcast domain için tanımlı kontrolü devreye almak ve süreci dokümante etmek</p>
-<p>C) İnterneti kalıcı kapatmak</p>
-<p>D) Tüm logları silmek</p>
-<ul><li>Doğru: B</li><li>Gerekçe: Eksik kalan «Broadcast domain» doğrudan hedeflenmeli; diğer seçenekler sorunu çözmez.</li></ul>
-<ol><li>8) Veritabanında parolalar bcrypt hash + unique salt ile saklanıyor. Bu yaklaşım ne sağlar?</li></ol>
-<p>A) ECB modu</p>
-<p>B) TLS otomatik kurulum</p>
-<p>C) Çalıntı hash’lerde rainbow table ve toplu kırmayı zorlaştırma</p>
-<p>D) Parolayı geri çözebilir şifreleme</p>
-<ul><li>Doğru: C</li><li>Gerekçe: Yavaş KDF ve salt parola sızıntısı etkisini sınırlar.</li></ul>
-<ol><li>9) Bir uygulama «connection refused» alıyor; ping hedefe gidiyor. Sorun büyük olasılıkla hangi katmanda?</li></ol>
-<p>A) Sadece presentation — JPEG</p>
-<p>B) Yalnızca session — token</p>
-<p>C) Fiziksel — kablo kopuk</p>
-<p>D) Uygulama/transport — port kapalı veya servis dinlemiyor</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Ping çalışıp port reddediliyorsa üst katman/servis odaklıdır.</li></ul>
-<ol><li>10) Bir uygulama «connection refused» alıyor; ping hedefe gidiyor. Sorun büyük olasılıkla hangi katmanda?</li></ol>
-<p>A) Yalnızca session — token</p>
-<p>B) Fiziksel — kablo kopuk</p>
-<p>C) Sadece presentation — JPEG</p>
-<p>D) Uygulama/transport — port kapalı veya servis dinlemiyor</p>
-<ul><li>Doğru: D</li><li>Gerekçe: Ping çalışıp port reddediliyorsa üst katman/servis odaklıdır.</li></ul>
-</div><div class="lesson-controls">
+                    <div class="lesson-controls">
                         <span class="lesson-status"><i class="fas fa-book-open"></i> Ders 1.2 — Network Türleri</span>
                         <button type="button" class="btn-complete-lesson" data-section="ders-1-2" aria-label="Dersi tamamla"><i class="fas fa-check-circle"></i> Dersi Tamamla</button>
                     </div>
@@ -1119,7 +991,7 @@
                         </tbody>
                     </table>
                     
-<h2><i class="fas fa-clipboard-list"></i> Kendini Değerlendir — Topoloji</h2>
+<h2><i class="fas fa-clipboard-list"></i> Modül 1 — Modül Testi</h2>
 <div class="eval-quiz-section" id="ders-2-2-modul-testi" data-section="ders-2-2-modul-testi">
 <p>Aşağıdaki 10 soru modül kazanımlarını ölçer. Her soru için en iyi cevabı seçin ve <strong>Testi Gönder</strong> düğmesine basın.</p>
 <ol><li>1) «Yıldız topoloji» uygulanmadığı için bir olayda müdahale gecikti. Ekibin öncelikli düzeltmesi ne olmalıdır?</li></ol>
@@ -3172,7 +3044,7 @@
     
     
     
-        <script src="/js/sebs-premium-module-lessons.js?v=20260517f"></script>
+        <script src="/js/sebs-premium-module-lessons.js?v=20260517g"></script>
     <script>
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Temel Network Eğitimi',

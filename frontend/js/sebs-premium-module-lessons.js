@@ -194,7 +194,32 @@
     }
 
     function isQuizOnlyLessonKey(lessonKey) {
-        return isEmbeddedQuizElement(document.getElementById(String(lessonKey || '')));
+        return !!resolveQuizElementFromLessonKey(lessonKey);
+    }
+
+    function resolveQuizElementFromLessonKey(lessonKey) {
+        var k = String(lessonKey || '').trim();
+        if (!k) return null;
+        var direct = document.getElementById(k);
+        if (isEmbeddedQuizElement(direct)) return direct;
+        var parsed = parseLessonKey(k);
+        if (parsed.headingId && parsed.headingId !== parsed.sectionId) {
+            var nested = document.getElementById(parsed.headingId);
+            if (isEmbeddedQuizElement(nested)) return nested;
+        }
+        return null;
+    }
+
+    function isQuizHeadingText(text) {
+        return /kendini\s+değerlendir/i.test(String(text || '').trim());
+    }
+
+    function getPrimaryQuizInSection(sec) {
+        if (!sec) return null;
+        var list = sec.querySelectorAll(
+            '.section-inner .eval-quiz-section[id], .content-card .eval-quiz-section[id]'
+        );
+        return list.length ? list[0] : null;
     }
 
     /** Yinelenen modül testi bloklarını kaldırır (aynı id iki kez enjekte edilmişse) */
@@ -245,20 +270,115 @@
         }
     }
 
-    /** Düz derslerde gömülü modül testini ders sırasına ekler (ders → test → sonraki ders) */
-    function augmentLessonKeysWithEmbeddedQuizzes(keys) {
-        if (!isFlatLessonModule()) return keys;
-        var out = [];
-        (keys || []).forEach(function (k) {
-            out.push(k);
-            if (!k || String(k).indexOf('::') !== -1) return;
-            var sec = document.getElementById(k);
-            if (!sec || !isFlatLessonSection(sec)) return;
-            sec.querySelectorAll('.content-card .eval-quiz-section[id]').forEach(function (q) {
-                if (q.id && out.indexOf(q.id) === -1) out.push(q.id);
-            });
+    function applySectionInnerQuizVisibility(section, activeQuizId) {
+        if (!section) return;
+        section.querySelectorAll('.eval-quiz-section').forEach(function (q) {
+            var show = !!(activeQuizId && q.id === activeQuizId);
+            q.classList.toggle('lesson-route-quiz-visible', show);
+            var prev = q.previousElementSibling;
+            if (prev && prev.tagName === 'H2' && isQuizHeadingText(prev.textContent)) {
+                prev.classList.toggle('lesson-route-quiz-visible', show);
+                prev.classList.toggle('lesson-route-quiz-intro', show);
+            }
         });
+        section.classList.toggle('lesson-route-quiz-only', !!activeQuizId);
+    }
+
+    /** Her modül/bölümün sonuna tek modül testi anahtarı ekler */
+    function augmentLessonKeysWithEmbeddedQuizzes(keys) {
+        var input = keys || [];
+        if (!input.length) return input;
+        var out = [];
+        var seen = new Set();
+        var i = 0;
+        while (i < input.length) {
+            var k = input[i];
+            var sid = parseLessonKey(k).sectionId;
+            var j = i + 1;
+            while (j < input.length && parseLessonKey(input[j]).sectionId === sid) {
+                j++;
+            }
+            for (var n = i; n < j; n++) {
+                if (!seen.has(input[n])) {
+                    out.push(input[n]);
+                    seen.add(input[n]);
+                }
+            }
+            var sec = sid ? document.getElementById(sid) : null;
+            var quiz = getPrimaryQuizInSection(sec);
+            if (quiz && quiz.id) {
+                var qk =
+                    sec && isFlatLessonSection(sec) && isFlatLessonModule()
+                        ? quiz.id
+                        : makeLessonKey(sid, quiz.id);
+                if (!seen.has(qk)) {
+                    out.push(qk);
+                    seen.add(qk);
+                }
+            }
+            i = j;
+        }
         return out;
+    }
+
+    function findQuizForNavLessonGroup(lessonLinks) {
+        for (var i = lessonLinks.length - 1; i >= 0; i--) {
+            var sid = lessonLinks[i].getAttribute('data-section');
+            if (!sid) continue;
+            var quiz = getPrimaryQuizInSection(document.getElementById(sid));
+            if (quiz && quiz.id) return { sid: sid, quizId: quiz.id };
+        }
+        return null;
+    }
+
+    function insertModuleQuizNavAfterLi(li, sid, quizId) {
+        if (!li || !li.parentNode || !sid || !quizId) return;
+        var next = li.nextElementSibling;
+        if (
+            next &&
+            next.querySelector &&
+            next.querySelector('.nav-link-quiz[data-quiz-id="' + quizId + '"]')
+        ) {
+            return;
+        }
+        var quizLi = document.createElement('li');
+        var quizLink = document.createElement('a');
+        quizLink.href = '#';
+        quizLink.className = 'nav-link-section nav-link-quiz';
+        quizLink.setAttribute('data-section', sid);
+        quizLink.setAttribute('data-quiz-id', quizId);
+        quizLink.innerHTML =
+            '<i class="fas fa-clipboard-check" aria-hidden="true"></i> Modül testi';
+        quizLi.appendChild(quizLink);
+        li.parentNode.insertBefore(quizLi, li.nextElementSibling);
+    }
+
+    /** Yan menü: modül başına «Modül testi» (section-inner modüllerde her satır; gruplu listede tek) */
+    function syncModuleQuizSidebarNav() {
+        document.querySelectorAll('.sidebar-nav .nav-section').forEach(function (navSec) {
+            var list = navSec.querySelector('.nav-section-list');
+            if (!list) return;
+            var lessonLinks = list.querySelectorAll('.nav-link-section:not(.nav-link-quiz)');
+            if (!lessonLinks.length) return;
+            var firstSec = document.getElementById(lessonLinks[0].getAttribute('data-section'));
+            var perTopLevelModule =
+                firstSec && firstSec.querySelector('.section-inner');
+            if (perTopLevelModule) {
+                lessonLinks.forEach(function (link) {
+                    var sid = link.getAttribute('data-section');
+                    if (!sid) return;
+                    var quiz = getPrimaryQuizInSection(document.getElementById(sid));
+                    if (!quiz || !quiz.id) return;
+                    insertModuleQuizNavAfterLi(link.closest('li'), sid, quiz.id);
+                });
+                return;
+            }
+            if (list.querySelector('.nav-link-quiz')) return;
+            var found = findQuizForNavLessonGroup(lessonLinks);
+            if (!found) return;
+            var lastLi = lessonLinks[lessonLinks.length - 1].closest('li');
+            insertModuleQuizNavAfterLi(lastLi, found.sid, found.quizId);
+        });
     }
 
     function flatSectionHeading(sec) {
@@ -311,6 +431,9 @@
             return false;
         }
         if (/^terimler\s+sözlüğü/i.test(t)) {
+            return false;
+        }
+        if (isQuizHeadingText(t)) {
             return false;
         }
         if (lessonHeadingLevel === 'h3') {
@@ -1592,8 +1715,24 @@
                     }
                     if (isQuizOnlyLessonKey(entry)) {
                         out.add(entry);
+                        return;
+                    }
+                    var pq = parseLessonKey(entry);
+                    if (
+                        pq.headingId &&
+                        pq.headingId !== pq.sectionId &&
+                        isEmbeddedQuizElement(document.getElementById(pq.headingId))
+                    ) {
+                        out.add(entry);
                     }
                     return;
+                }
+                if (entry.indexOf('::') !== -1) {
+                    var quizPart = parseLessonKey(entry).headingId;
+                    if (isEmbeddedQuizElement(document.getElementById(quizPart))) {
+                        out.add(entry);
+                        return;
+                    }
                 }
                 if (entry.indexOf('::') !== -1) {
                     out.add(entry);
@@ -1768,14 +1907,12 @@
             document.querySelectorAll('.content-card').forEach(function (c) {
                 c.classList.remove('lesson-route-current-card');
             });
-            var quizEl = isQuizOnlyLessonKey(lessonKey)
-                ? document.getElementById(lessonKey)
-                : null;
+            var quizEl = resolveQuizElementFromLessonKey(lessonKey);
             var parsed = parseLessonKey(lessonKey);
             var sid = quizEl
                 ? (quizEl.closest('.content-section') || {}).id || parsed.sectionId
                 : parsed.sectionId;
-            var h2id = parsed.headingId;
+            var h2id = quizEl ? quizEl.id : parsed.headingId;
             var section = document.getElementById(sid);
             var head = quizEl
                 ? quizEl.previousElementSibling &&
@@ -1801,11 +1938,15 @@
                     if (introCard && card === introCard) {
                         section.classList.add('lesson-route-show-module-intro');
                     }
-                    resetQuizVisibilityInSection(section);
+                    if (quizEl) {
+                        applySectionInnerQuizVisibility(section, quizEl.id);
+                    } else {
+                        applySectionInnerQuizVisibility(section, null);
+                    }
                 } else {
                     section.classList.add('lesson-route-whole-section');
                     if (quizEl) {
-                        applyFlatSectionQuizVisibility(section, lessonKey);
+                        applyFlatSectionQuizVisibility(section, quizEl.id);
                     } else {
                         applyFlatSectionQuizVisibility(section, null);
                     }
@@ -1818,8 +1959,16 @@
             if (head) {
                 applyTopicTitleToHeading(head);
             }
-            navLinks.forEach(function (l) {
-                l.classList.toggle('active', l.getAttribute('data-section') === sid);
+            getAllNavSectionLinks().forEach(function (l) {
+                var linkSid = l.getAttribute('data-section');
+                var linkQuizId = l.getAttribute('data-quiz-id');
+                var active = false;
+                if (linkQuizId && linkSid) {
+                    active = lessonKey === makeLessonKey(linkSid, linkQuizId);
+                } else if (linkSid === sid) {
+                    active = !quizEl && (lessonKey === sid || lessonKey.indexOf(sid + '::') === 0);
+                }
+                l.classList.toggle('active', active);
             });
             document.querySelectorAll('.nav-link-sub').forEach(function (a) {
                 var aid = a.getAttribute('data-anchor');
@@ -1890,11 +2039,17 @@
             });
             getAllNavSectionLinks().forEach(function (link) {
                 var sid = link.getAttribute('data-section');
-                var firstKey = lessonKeysOrdered.find(function (k) {
-                    return k === sid || k.indexOf(sid + '::') === 0;
-                });
-                if (!firstKey && sid) {
-                    firstKey = lessonKeyForSection(sid);
+                var quizId = link.getAttribute('data-quiz-id');
+                var firstKey = null;
+                if (quizId && sid) {
+                    firstKey = makeLessonKey(sid, quizId);
+                } else {
+                    firstKey = lessonKeysOrdered.find(function (k) {
+                        return k === sid || k.indexOf(sid + '::') === 0;
+                    });
+                    if (!firstKey && sid) {
+                        firstKey = lessonKeyForSection(sid);
+                    }
                 }
                 if (firstKey) {
                     link.setAttribute('href', hrefWithDersParam(firstKey));
@@ -1902,7 +2057,10 @@
                 if (link.dataset.sebsNavWired === '1') return;
                 link.dataset.sebsNavWired = '1';
                 link.addEventListener('click', function (ev) {
-                    var key = firstKey || (sid ? lessonKeyForSection(sid) : '');
+                    var key =
+                        quizId && sid
+                            ? makeLessonKey(sid, quizId)
+                            : firstKey || (sid ? lessonKeyForSection(sid) : '');
                     key = canonicalLessonKey(key);
                     if (!key || lessonKeysOrdered.indexOf(key) === -1) return;
                     ev.preventDefault();
@@ -1910,6 +2068,19 @@
                     syncLessonUrl(key, basePath, false);
                 });
             });
+        }
+
+        function navLinkResolvesToLessonKey(link, lessonKey) {
+            var linkSid = link.getAttribute('data-section');
+            var linkQuizId = link.getAttribute('data-quiz-id');
+            if (linkQuizId && linkSid) {
+                return lessonKey === makeLessonKey(linkSid, linkQuizId);
+            }
+            if (!linkSid) return false;
+            return (
+                lessonKey === linkSid ||
+                (lessonKey.indexOf(linkSid + '::') === 0 && !resolveQuizElementFromLessonKey(lessonKey))
+            );
         }
 
         function goToNextLessonAfter(lessonKey) {
@@ -1955,6 +2126,8 @@
 
         lessonKeysOrdered = collectLessonKeysOrdered();
         global.MODULE_TOTAL_LESSONS = catalogLessonTotal(lessonKeysOrdered.length);
+
+        syncModuleQuizSidebarNav();
 
         installLessonCompleteControls(true, function (key) {
             completeLesson(key);

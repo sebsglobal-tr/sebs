@@ -71,6 +71,19 @@ body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section h2.les
     display: block !important;
 }
 
+/* section-inner: test yalnızca «Modül testi» adımında */
+body.lesson-route-mode .lesson-route-current-section .section-inner .eval-quiz-section:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section .section-inner h2.lesson-route-quiz-intro:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only .section-inner > .content-card:not(.lesson-route-current-card) {
+    display: none !important;
+}
+
 body.lesson-route-mode .lesson-controls {
     display: none !important;
 }
