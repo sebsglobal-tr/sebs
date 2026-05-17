@@ -288,9 +288,7 @@
             subList.className = 'nav-sublist';
             parentLi.appendChild(subList);
             subHeadings.forEach(function (h2, idx) {
-                if (!h2.id) {
-                    h2.id = sectionId + '-' + (slugifyAnchor(h2.textContent) || 'sub-' + idx);
-                }
+                ensureHeadingId(h2, sectionId, idx);
                 var li = document.createElement('li');
                 li.className = 'nav-subitem';
                 var rawTitle = String(h2.textContent || '').trim();
@@ -462,16 +460,28 @@
 
     function ensureHeadingId(heading, sectionId, idx) {
         if (!heading) return '';
-        if (!heading.id) {
-            var slug = slugifyAnchor(heading.textContent) || 'lesson-' + idx;
-            if (slug.length > 64) {
-                slug = slug.slice(0, 64).replace(/-+$/, '');
-            }
-            heading.id = sectionId + '-' + slug;
-        } else if (heading.id.length > 100) {
-            heading.id = sectionId + '-lesson-' + idx;
+        if (heading.id) return heading.id;
+        var slug = slugifyAnchor(heading.textContent) || 'lesson-' + idx;
+        if (slug.length > 64) {
+            slug = slug.slice(0, 64).replace(/-+$/, '');
         }
+        heading.id = sectionId + '-' + slug;
         return heading.id;
+    }
+
+    /** Eski sürüm: uzun başlık id’si lesson-N ile değiştirilmiş kayıtları güncel menü anahtarına eşler */
+    function remapLegacyLessonIndexKey(entry, keysOrdered) {
+        var k = String(entry || '');
+        if (k.indexOf('::') === -1) return k;
+        var parsed = parseLessonKey(k);
+        var legacy = String(parsed.headingId || '').match(/-lesson-(\d+)$/);
+        if (!legacy) return k;
+        var idx = parseInt(legacy[1], 10);
+        if (isNaN(idx)) return k;
+        var inSection = (keysOrdered || []).filter(function (key) {
+            return parseLessonKey(key).sectionId === parsed.sectionId;
+        });
+        return inSection[idx] || k;
     }
 
     function makeLessonKey(sectionId, headingId) {
@@ -719,21 +729,19 @@
                 }
                 return;
             }
+            var subHeadings = getSectionSubheadings(inner);
+            if (subHeadings.length) {
+                subHeadings.forEach(function (head, idx) {
+                    keys.push(makeLessonKey(sec.id, ensureHeadingId(head, sec.id, idx)));
+                });
+                return;
+            }
             var cards = inner.querySelectorAll(':scope > .content-card');
             if (cards.length) {
                 cards.forEach(function (card, idx) {
                     var head = getCardLessonHeading(card);
                     if (!head || isModuleThemeHeading(head)) return;
-                    var hid = ensureHeadingId(head, sec.id, idx);
-                    keys.push(makeLessonKey(sec.id, hid));
-                });
-                return;
-            }
-            var subHeadings = getSectionSubheadings(inner);
-            if (subHeadings.length) {
-                subHeadings.forEach(function (head, idx) {
-                    var hid = ensureHeadingId(head, sec.id, idx);
-                    keys.push(makeLessonKey(sec.id, hid));
+                    keys.push(makeLessonKey(sec.id, ensureHeadingId(head, sec.id, idx)));
                 });
                 return;
             }
@@ -847,7 +855,7 @@
             var allDone =
                 keysInSection.length > 0 &&
                 (sectionMarkedDone || doneInSection.length === keysInSection.length);
-            var partial = !allDone && (sectionMarkedDone || doneInSection.length > 0);
+            var partial = doneInSection.length > 0 && !allDone;
             link.classList.toggle('completed', allDone);
             link.classList.toggle('completed-partial', partial);
             if (keysInSection.length && partial) {
@@ -911,23 +919,8 @@
             }
             if (inner.querySelector('.btn-complete-lesson')) return;
 
-            var cards = inner.querySelectorAll(':scope > .content-card');
-            if (cards.length) {
-                cards.forEach(function (card, idx) {
-                    var head = getCardLessonHeading(card);
-                    if (!head || isModuleThemeHeading(head)) return;
-                    var hid = ensureHeadingId(head, sec.id, idx);
-                    var lessonKey = makeLessonKey(sec.id, hid);
-                    card.setAttribute('data-lesson-key', lessonKey);
-                    if (!card.querySelector('.lesson-complete-footer')) {
-                        appendLessonFooter(card, function () {
-                            completeHandler(lessonKey);
-                        });
-                    }
-                });
-            } else {
-                var subHeadings = getSectionSubheadings(inner);
-                if (subHeadings.length) {
+            var subHeadings = getSectionSubheadings(inner);
+            if (subHeadings.length) {
                     subHeadings.forEach(function (head, idx) {
                         var hid = ensureHeadingId(head, sec.id, idx);
                         var lessonKey = makeLessonKey(sec.id, hid);
@@ -954,6 +947,21 @@
                         block.setAttribute('data-lesson-key', lessonKey);
                         if (!block.querySelector('.lesson-complete-footer')) {
                             appendLessonFooter(block, function () {
+                                completeHandler(lessonKey);
+                            });
+                        }
+                    });
+            } else {
+                var cards = inner.querySelectorAll(':scope > .content-card');
+                if (cards.length) {
+                    cards.forEach(function (card, idx) {
+                        var head = getCardLessonHeading(card);
+                        if (!head || isModuleThemeHeading(head)) return;
+                        var hid = ensureHeadingId(head, sec.id, idx);
+                        var lessonKey = makeLessonKey(sec.id, hid);
+                        card.setAttribute('data-lesson-key', lessonKey);
+                        if (!card.querySelector('.lesson-complete-footer')) {
+                            appendLessonFooter(card, function () {
                                 completeHandler(lessonKey);
                             });
                         }
@@ -1421,6 +1429,7 @@
             raw.forEach(function (entry) {
                 if (!entry) return;
                 entry = canonicalLessonKey(entry);
+                entry = remapLegacyLessonIndexKey(entry, lessonKeysOrdered);
                 if (isFlatLessonModule()) {
                     if (sidSet.has(entry)) out.add(entry);
                     return;
