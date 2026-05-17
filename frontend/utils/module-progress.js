@@ -47,7 +47,35 @@ document.head.appendChild(script);
 let moduleNameCache = null;
 let moduleCacheExpiry = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const MODULES_CATALOG_TTL = 10 * 60 * 1000;
 const moduleIdInflight = new Map();
+let modulesCatalogCache = null;
+let modulesCatalogExpiry = 0;
+let modulesCatalogInflight = null;
+
+function loadModuleNameCacheFromStorage() {
+    try {
+        var raw = localStorage.getItem('moduleNameCache');
+        var t = parseInt(localStorage.getItem('moduleNameCacheTime'), 10);
+        if (raw && t && !isNaN(t)) {
+            moduleNameCache = JSON.parse(raw);
+            moduleCacheExpiry = t + CACHE_DURATION;
+        }
+    } catch (e) {
+    }
+}
+
+function persistModuleNameCache() {
+    try {
+        if (moduleNameCache && moduleCacheExpiry) {
+            localStorage.setItem('moduleNameCache', JSON.stringify(moduleNameCache));
+            localStorage.setItem('moduleNameCacheTime', String(moduleCacheExpiry - CACHE_DURATION));
+        }
+    } catch (e) {
+    }
+}
+
+loadModuleNameCacheFromStorage();
 
 function normModuleTitleStr(s) {
     return String(s || '')
@@ -59,10 +87,167 @@ function normModuleTitleStr(s) {
 window.invalidateModuleIdCache = function () {
     moduleNameCache = null;
     moduleCacheExpiry = 0;
+    modulesCatalogCache = null;
+    modulesCatalogExpiry = 0;
+    modulesCatalogInflight = null;
     try {
         localStorage.removeItem('moduleNameCache');
         localStorage.removeItem('moduleNameCacheTime');
     } catch (e) {
+    }
+};
+
+function matchModuleTitleLoose(a, b) {
+    if (!a || !b) return false;
+    var na = normModuleTitleStr(a);
+    var nb = normModuleTitleStr(b);
+    if (na === nb) return true;
+    return na.includes(nb) || nb.includes(na);
+}
+
+function pickModuleIdFromFlatList(moduleName, list) {
+    if (!list || !list.length) return null;
+    var want = normModuleTitleStr(moduleName);
+    var aliases = MODULE_NAME_LOOKUP_ALIASES[moduleName] || [];
+    var wantSet = new Set(
+        [want]
+            .concat(aliases.map(function (a) {
+                return normModuleTitleStr(a);
+            }))
+            .filter(Boolean)
+    );
+    var i;
+    for (i = 0; i < list.length; i++) {
+        var m = list[i];
+        var t = normModuleTitleStr(m.title || m.name);
+        if (t && wantSet.has(t)) return m.id;
+    }
+    for (i = 0; i < list.length; i++) {
+        m = list[i];
+        t = normModuleTitleStr(m.title || m.name);
+        if (t && t === want) return m.id;
+    }
+    var loose = [];
+    for (i = 0; i < list.length; i++) {
+        m = list[i];
+        t = normModuleTitleStr(m.title || m.name);
+        if (!t) continue;
+        var matched = matchModuleTitleLoose(t, want);
+        if (!matched) {
+            for (var j = 0; j < aliases.length; j++) {
+                if (matchModuleTitleLoose(t, normModuleTitleStr(aliases[j]))) {
+                    matched = true;
+                    break;
+                }
+            }
+        }
+        if (matched) loose.push(m);
+    }
+    if (loose.length === 1) return loose[0].id;
+    if (loose.length > 1) {
+        loose.sort(function (a, b) {
+            return (
+                normModuleTitleStr(b.title || b.name).length -
+                normModuleTitleStr(a.title || a.name).length
+            );
+        });
+        return loose[0].id;
+    }
+    return null;
+}
+
+async function ensureModulesCatalog(authHeader) {
+    if (modulesCatalogCache && Date.now() < modulesCatalogExpiry) {
+        return modulesCatalogCache;
+    }
+    if (modulesCatalogInflight) {
+        return modulesCatalogInflight;
+    }
+
+    modulesCatalogInflight = (async function () {
+        var apiBase = getProgressApiBase();
+        var flat = [];
+        var rateLimited = false;
+
+        try {
+            var modulesResponse = await fetch(apiBase + '/modules', {
+                headers: { Authorization: authHeader }
+            });
+            if (modulesResponse.status === 429) {
+                rateLimited = true;
+                console.warn('[SEBS] GET /api/modules 429 — katalog önbelleği kullanılıyor');
+            } else if (modulesResponse.ok) {
+                var modulesData = await modulesResponse.json();
+                if (modulesData.success && Array.isArray(modulesData.data)) {
+                    flat = modulesData.data.slice();
+                }
+            }
+        } catch (e) {
+            console.warn('ensureModulesCatalog /modules:', e);
+        }
+
+        if (!flat.length && !rateLimited) {
+            try {
+                var coursesResponse = await fetch(apiBase + '/courses', {
+                    headers: { Authorization: authHeader }
+                });
+                if (coursesResponse.status === 429) {
+                    rateLimited = true;
+                    console.warn('[SEBS] GET /api/courses 429 — katalog önbelleği kullanılıyor');
+                } else if (coursesResponse.ok) {
+                    var coursesData = await coursesResponse.json();
+                    if (coursesData.success && coursesData.data) {
+                        coursesData.data.forEach(function (course) {
+                            if (!course.modules) return;
+                            course.modules.forEach(function (mod) {
+                                if (mod && mod.id) flat.push(mod);
+                            });
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('ensureModulesCatalog /courses:', e);
+            }
+        }
+
+        var catalog = { flat: flat, rateLimited: rateLimited, fetchedAt: Date.now() };
+        if (flat.length) {
+            modulesCatalogCache = catalog;
+            modulesCatalogExpiry = Date.now() + MODULES_CATALOG_TTL;
+        }
+        modulesCatalogInflight = null;
+        return modulesCatalogCache || catalog;
+    })();
+
+    return modulesCatalogInflight;
+}
+
+/** Dashboard senkronundan önce tek seferde modül id eşlemesini doldurur (429 önleme) */
+window.warmModuleNameCache = async function () {
+    var token = await getSupabaseAccessToken();
+    if (!token) return;
+    var authHeader = 'Bearer ' + token;
+    var catalog = await ensureModulesCatalog(authHeader);
+    if (!catalog.flat || !catalog.flat.length) return;
+
+    var registry = window.SEBS_MODULE_PROGRESS_REGISTRY || [];
+    var map = moduleNameCache ? Object.assign({}, moduleNameCache) : {};
+    var changed = false;
+
+    registry.forEach(function (entry) {
+        if (!entry || !entry.moduleTitle) return;
+        if (map[entry.moduleTitle]) return;
+        var id = pickModuleIdFromFlatList(entry.moduleTitle, catalog.flat);
+        if (id) {
+            map[entry.moduleTitle] = id;
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        moduleNameCache = map;
+        moduleCacheExpiry = Date.now() + CACHE_DURATION;
+        persistModuleNameCache();
     }
 };
 
@@ -270,6 +455,13 @@ window.getLocalModuleProgressSnapshots = function () {
 window.syncAllLocalModuleProgressToApi = async function () {
     var snapshots = window.getLocalModuleProgressSnapshots();
     if (!snapshots.length) return { ok: true, synced: 0, total: 0 };
+    if (typeof window.warmModuleNameCache === 'function') {
+        try {
+            await window.warmModuleNameCache();
+        } catch (warmErr) {
+            console.warn('[SEBS] warmModuleNameCache:', warmErr);
+        }
+    }
     var synced = 0;
     for (var i = 0; i < snapshots.length; i++) {
         var snap = snapshots[i];
@@ -307,8 +499,6 @@ window.getModuleIdFromName = async function (rawName) {
 
     (async () => {
         try {
-            const apiBase = getProgressApiBase();
-
             let authHeader = null;
             const supabaseToken = await getSupabaseAccessToken();
             if (supabaseToken) {
@@ -322,98 +512,14 @@ window.getModuleIdFromName = async function (rawName) {
                 return;
             }
 
-            function matchModuleTitleLoose(a, b) {
-                if (!a || !b) return false;
-                const na = normModuleTitleStr(a);
-                const nb = normModuleTitleStr(b);
-                if (na === nb) return true;
-                return na.includes(nb) || nb.includes(na);
-            }
-
-            function pickModuleIdFromFlatList(list) {
-                if (!list || !list.length) return null;
-                const want = normModuleTitleStr(moduleName);
-                const aliases = MODULE_NAME_LOOKUP_ALIASES[moduleName] || [];
-                const wantSet = new Set(
-                    [want]
-                        .concat(
-                            aliases.map((a) => normModuleTitleStr(a))
-                        )
-                        .filter(Boolean)
-                );
-                for (const m of list) {
-                    const t = normModuleTitleStr(m.title || m.name);
-                    if (t && wantSet.has(t)) return m.id;
-                }
-                for (const m of list) {
-                    const t = normModuleTitleStr(m.title || m.name);
-                    if (t && t === want) return m.id;
-                }
-                const loose = [];
-                for (const m of list) {
-                    const t = normModuleTitleStr(m.title || m.name);
-                    if (!t) continue;
-                    let matched = matchModuleTitleLoose(t, want);
-                    if (!matched) {
-                        for (const alias of aliases) {
-                            if (matchModuleTitleLoose(t, normModuleTitleStr(alias))) {
-                                matched = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (matched) loose.push(m);
-                }
-                if (loose.length === 1) return loose[0].id;
-                if (loose.length > 1) {
-                    loose.sort(
-                        (a, b) =>
-                            normModuleTitleStr(b.title || b.name).length -
-                            normModuleTitleStr(a.title || a.name).length
-                    );
-                    return loose[0].id;
-                }
-                return null;
-            }
-
-            function pickIdFromCoursesPayload(coursesData) {
-                if (!coursesData.success || !coursesData.data) return null;
-                const flat = [];
-                for (const course of coursesData.data) {
-                    if (!course.modules) continue;
-                    for (const mod of course.modules) {
-                        if (mod && mod.id) flat.push(mod);
-                    }
-                }
-                return pickModuleIdFromFlatList(flat);
-            }
-
-            async function fetchModulesList() {
-                const modulesResponse = await fetch(apiBase + '/modules', {
-                    headers: { Authorization: authHeader }
-                });
-                if (!modulesResponse.ok) return null;
-                const modulesData = await modulesResponse.json();
-                if (!modulesData.success || !Array.isArray(modulesData.data)) return null;
-                return pickModuleIdFromFlatList(modulesData.data);
-            }
-
-            let resolvedId = await fetchModulesList();
-
-            if (!resolvedId) {
-                const coursesResponse = await fetch(apiBase + '/courses', {
-                    headers: { Authorization: authHeader }
-                });
-                if (coursesResponse.ok) {
-                    const coursesData = await coursesResponse.json();
-                    resolvedId = pickIdFromCoursesPayload(coursesData);
-                }
-            }
+            const catalog = await ensureModulesCatalog(authHeader);
+            const resolvedId = pickModuleIdFromFlatList(moduleName, catalog.flat);
 
             if (resolvedId) {
                 const cacheMap = { [moduleName]: resolvedId };
-                moduleNameCache = Object.assign({}, moduleNameCache, cacheMap);
+                moduleNameCache = Object.assign({}, moduleNameCache || {}, cacheMap);
                 moduleCacheExpiry = Date.now() + CACHE_DURATION;
+                persistModuleNameCache();
                 settle(resolvedId);
             } else {
                 settle(null);

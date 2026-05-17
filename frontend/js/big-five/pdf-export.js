@@ -20,7 +20,10 @@ export async function downloadBigFivePdf(elementId = 'bf-report-document') {
       await html2pdf()
         .set({
           margin: [8, 8, 8, 8],
-          filename: `sebs-big-five-rapor-${date}.pdf`,
+          filename:
+            elementId === 'ca-report-document'
+              ? `sebs-kariyer-degerlendirme-rapor-${date}.pdf`
+              : `sebs-big-five-rapor-${date}.pdf`,
           image: { type: 'jpeg', quality: 0.92 },
           html2canvas: {
             scale: 2,

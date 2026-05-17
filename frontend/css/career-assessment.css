@@ -1,0 +1,50 @@
+/* Kariyer değerlendirme — Holland + Big Five birleşik akış */
+.ca-page { background: linear-gradient(180deg, #f8fafc 0%, #fff 40%); min-height: 100vh; }
+.ca-step-pill { display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 9999px; border: 1px solid #e2e8f0; background: #fff; padding: 0.35rem 0.85rem; font-size: 0.75rem; font-weight: 600; color: #64748b; }
+.ca-step-pill.is-active { border-color: #6366f1; background: #eef2ff; color: #4338ca; }
+.ca-step-pill.is-done { border-color: #10b981; color: #047857; }
+.ca-report-root { max-width: 56rem; margin: 0 auto; }
+.ca-report-hero { margin-bottom: 2rem; padding: 1.5rem; border-radius: 1rem; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: #fff; }
+.ca-eyebrow, .ci-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6366f1; }
+.ca-report-hero .ca-eyebrow { color: #c7d2fe; }
+.ca-hero-title { margin-top: 0.5rem; font-size: 1.75rem; font-weight: 800; }
+.ca-hero-lead { margin-top: 0.75rem; font-size: 0.9rem; line-height: 1.6; opacity: 0.92; }
+.ca-hero-date { margin-top: 0.25rem; font-size: 0.8rem; opacity: 0.75; }
+.ca-toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+.ca-toc a { font-size: 0.8rem; font-weight: 600; color: #4f46e5; padding: 0.35rem 0.75rem; border-radius: 9999px; background: #eef2ff; text-decoration: none; }
+.ca-toc a:hover { background: #e0e7ff; }
+.ca-section-divider { height: 2px; margin: 2.5rem 0; background: linear-gradient(90deg, transparent, #cbd5e1, transparent); }
+.ci-report-block { padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 1px 3px rgb(15 23 42 / 0.06); }
+.ci-title { font-size: 1.35rem; font-weight: 800; color: #0f172a; }
+.ci-lead { margin-top: 0.75rem; font-size: 0.9rem; line-height: 1.65; color: #475569; }
+.ci-date { font-size: 0.8rem; color: #94a3b8; }
+.ci-bars { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.ci-bar-head { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: #334155; }
+.ci-bar-track { height: 0.5rem; border-radius: 9999px; background: #f1f5f9; overflow: hidden; }
+.ci-bar-fill { height: 100%; border-radius: 9999px; background: linear-gradient(90deg, #059669, #10b981); }
+.ci-subtitle { margin-top: 1.25rem; font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+.ci-model-list { margin-top: 0.5rem; padding-left: 1.25rem; font-size: 0.85rem; color: #475569; }
+.ci-muted { color: #94a3b8; font-weight: 400; }
+.ci-disclaimer { margin-top: 1rem; font-size: 0.75rem; color: #94a3b8; line-height: 1.5; }
+.ci-note--warn { padding: 0.75rem; border-radius: 0.5rem; background: #fffbeb; color: #92400e; font-size: 0.85rem; }
+.ca-bf-embed .bf-report-cover { border-radius: 0.75rem; }
+.ca-bf-embed #bf-report-document .bf-report-actions,
+.ca-bf-embed .bf-report-actions.bf-no-print { display: none !important; }
+.ca-careers-section { padding: 1.5rem; border-radius: 1rem; border: 1px solid #c7d2fe; background: linear-gradient(180deg, #eef2ff 0%, #fff 100%); }
+.ca-career-grid { display: grid; gap: 1rem; margin-top: 1.25rem; }
+@media (min-width: 640px) { .ca-career-grid { grid-template-columns: 1fr 1fr; } }
+.ca-career-card { display: flex; gap: 1rem; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; background: #fff; }
+.ca-career-icon { flex-shrink: 0; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; background: #eef2ff; color: #4f46e5; }
+.ca-career-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+.ca-career-desc { margin-top: 0.25rem; font-size: 0.8rem; line-height: 1.5; color: #64748b; }
+.ca-career-match { margin-top: 0.35rem; font-size: 0.75rem; color: #64748b; }
+.ca-match { font-weight: 700; text-transform: capitalize; }
+.ca-match--yüksek { color: #059669; }
+.ca-match--orta { color: #d97706; }
+.ca-career-link { display: inline-block; margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; color: #4f46e5; text-decoration: none; }
+.ca-career-link:hover { text-decoration: underline; }
+.ca-report-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+.ca-transition-banner { margin: 1rem 0; padding: 1rem 1.25rem; border-radius: 0.75rem; border: 1px solid #a7f3d0; background: #ecfdf5; color: #065f46; font-size: 0.9rem; }
+@media print {
+  .ca-report-actions, .ca-toc, .bf-no-print, .no-print { display: none !important; }
+}
