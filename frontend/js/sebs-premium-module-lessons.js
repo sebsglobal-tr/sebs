@@ -924,9 +924,10 @@
                 return done.has(canonicalLessonKey(k));
             });
             var allDone =
-                keysInSection.length > 0 &&
-                (sectionMarkedDone || doneInSection.length === keysInSection.length);
-            var partial = doneInSection.length > 0 && !allDone;
+                sectionMarkedDone ||
+                (keysInSection.length > 0 &&
+                    doneInSection.length === keysInSection.length);
+            var partial = !allDone && doneInSection.length > 0;
             link.classList.toggle('completed', allDone);
             link.classList.toggle('completed-partial', partial);
             if (keysInSection.length && partial) {
@@ -1271,7 +1272,11 @@
         }
 
         function markSidebarProgress(completedLessons) {
-            markCompletedInSidebar(navLinks, sectionIdsOrdered, completedLessons);
+            markCompletedInSidebar(
+                getAllNavSectionLinks(),
+                sectionIdsOrdered,
+                completedLessons
+            );
         }
 
         function applySectionPageView(sectionId) {
@@ -1612,7 +1617,11 @@
         }
 
         function markSidebarProgress(completedLessons) {
-            markCompletedInSidebar(navLinks, lessonKeysOrdered, completedLessons);
+            markCompletedInSidebar(
+                getAllNavSectionLinks(),
+                lessonKeysOrdered,
+                completedLessons
+            );
         }
 
         function updateLessonRouteHero(lessonKey, section, card, h2) {
