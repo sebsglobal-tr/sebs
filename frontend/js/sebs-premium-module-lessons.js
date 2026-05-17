@@ -669,23 +669,23 @@
     }
 
     function refreshCompleteButtons(completedList) {
-        var done = new Set(Array.isArray(completedList) ? completedList : []);
+        var done = new Set(
+            Array.isArray(completedList)
+                ? completedList.map(function (k) {
+                      return canonicalLessonKey(k);
+                  })
+                : []
+        );
         document.querySelectorAll('.lesson-complete-btn, .btn-complete-lesson').forEach(function (btn) {
             var card = btn.closest('.content-card');
             var sec = btn.closest('.content-section');
             var key =
-                btn.getAttribute('data-section') ||
                 (card && card.getAttribute('data-lesson-key')) ||
+                btn.getAttribute('data-section') ||
                 (sec && sec.id) ||
                 '';
-            var sid = sec ? sec.id : key;
-            var isDone =
-                done.has(key) ||
-                (sid &&
-                    (done.has(sid) ||
-                        Array.from(done).some(function (k) {
-                            return String(k) === sid || String(k).indexOf(sid + '::') === 0;
-                        })));
+            key = canonicalLessonKey(key);
+            var isDone = key && done.has(key);
             btn.disabled = !!isDone;
             btn.classList.toggle('is-done', !!isDone);
             if (btn.classList.contains('btn-complete-lesson')) {
