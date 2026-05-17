@@ -840,12 +840,14 @@
             var keysInSection = keys.filter(function (k) {
                 return k === sid || k.indexOf(sid + '::') === 0;
             });
+            var sectionMarkedDone = done.has(sid) || done.has(canonicalLessonKey(sid));
             var doneInSection = keysInSection.filter(function (k) {
                 return done.has(canonicalLessonKey(k));
             });
             var allDone =
-                keysInSection.length > 0 && doneInSection.length === keysInSection.length;
-            var partial = doneInSection.length > 0 && !allDone;
+                keysInSection.length > 0 &&
+                (sectionMarkedDone || doneInSection.length === keysInSection.length);
+            var partial = !allDone && (sectionMarkedDone || doneInSection.length > 0);
             link.classList.toggle('completed', allDone);
             link.classList.toggle('completed-partial', partial);
             if (keysInSection.length && partial) {
@@ -866,7 +868,9 @@
             var anchor = a.getAttribute('data-anchor');
             if (!sec || !anchor) return;
             var lk = makeLessonKey(sec, anchor);
-            var isDone = done.has(lk) || done.has(canonicalLessonKey(lk));
+            var sectionMarkedDone = done.has(sec) || done.has(canonicalLessonKey(sec));
+            var isDone =
+                sectionMarkedDone || done.has(lk) || done.has(canonicalLessonKey(lk));
             a.classList.toggle('completed', isDone);
             if (isDone) {
                 a.setAttribute('title', 'Tamamlandı');
@@ -1426,16 +1430,7 @@
                     return;
                 }
                 if (sidSet.has(entry)) {
-                    var expanded = lessonKeysOrdered.filter(function (k) {
-                        return k.indexOf(entry + '::') === 0;
-                    });
-                    if (expanded.length) {
-                        expanded.forEach(function (k) {
-                            out.add(k);
-                        });
-                    } else {
-                        out.add(entry);
-                    }
+                    out.add(entry);
                 } else {
                     out.add(entry);
                 }
