@@ -815,7 +815,9 @@
         var MODULE_PAGE_BY_NORMALIZED_TITLE = {
             'siber güvenliğe giriş': '/modules/guncel-siber-guvenlige-giris.html',
             'temel network eğitimi': '/modules/temel-network-egitimi.html',
+            'temel kriptografi': '/modules/temel-kriptografi.html',
             'temel siber güvenlik': '/modules/temel-siber-guvenlik.html',
+            'soc eğitimi (güncel)': '/modules/soc.html',
             'sosyal mühendisliğe giriş (güncel)': '/modules/sosyal-muhendislik.html',
             'sosyal mühendisliğe giriş': '/modules/sosyal-muhendislik.html',
             'malware analizi (orta seviye)': '/modules/malware-analizi.html',
@@ -936,27 +938,17 @@
                 /* ignore */
             }
 
-            // 2) Eski module_progress_* anahtarları
-            var extras = [
-                { key: 'module_progress_temel_network', title: 'Temel Network Eğitimi' },
-                { key: 'module_progress_siber_guvenlik_giris', title: 'Siber Güvenliğe Giriş' },
-                { key: 'module_progress_isletim_sistemleri_guvenligi_temel', title: 'İşletim Sistemleri Güvenliği (Temel)' },
-                { key: 'module_progress_isletim_sistemi_guvenligi_ileri_temel', title: 'İşletim Sistemi Güvenliği (İleri Temel)' }
-            ];
-            extras.forEach(function (x) {
-                var raw = localStorage.getItem(x.key);
-                if (!raw) return;
-                var local;
-                try {
-                    local = JSON.parse(raw);
-                } catch (e) {
-                    return;
-                }
-                var completed = local.completedLessons || [];
-                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
-                var pct = Math.min(100, Math.round((completed.length / total) * 100));
-                pushLocalModule(x.title, pct, total, completed.length);
-            });
+            // 2) Tüm premium modül module_progress_* kayıtları (SEBS_MODULE_PROGRESS_REGISTRY)
+            if (typeof window.getLocalModuleProgressSnapshots === 'function') {
+                window.getLocalModuleProgressSnapshots().forEach(function (snap) {
+                    pushLocalModule(
+                        snap.moduleTitle,
+                        snap.percentComplete,
+                        snap.totalLessons,
+                        (snap.completedLessons && snap.completedLessons.length) || 0
+                    );
+                });
+            }
             return out;
         }
 
@@ -1089,6 +1081,16 @@
 
                 if (token) {
                     try {
+                        if (typeof window.flushPendingProgressQueue === 'function') {
+                            await window.flushPendingProgressQueue();
+                        }
+                        if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
+                            await window.syncAllLocalModuleProgressToApi();
+                        }
+                    } catch (preSyncErr) {
+                        console.warn('[SEBS] Yerel ilerleme ön senkron:', preSyncErr);
+                    }
+                    try {
                         var progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
                             headers: { Authorization: 'Bearer ' + token }
                         });
@@ -1164,35 +1166,6 @@
 
                 if (token && overviewOk) {
                     try {
-                        await Promise.all([
-                            syncLocalModuleProgressToApi(
-                                token,
-                                'module_progress_temel_network',
-                                'Temel Network Eğitimi'
-                            ),
-                            syncLocalModuleProgressToApi(
-                                token,
-                                'module_progress_siber_guvenlik_giris',
-                                'Siber Güvenliğe Giriş'
-                            ),
-                            syncLocalModuleProgressToApi(
-                                token,
-                                'module_progress_isletim_sistemleri_guvenligi_temel',
-                                'İşletim Sistemleri Güvenliği (Temel)'
-                            ),
-                            syncLocalModuleProgressToApi(
-                                token,
-                                'module_progress_isletim_sistemi_guvenligi_ileri_temel',
-                                'İşletim Sistemi Güvenliği (İleri Temel)'
-                            )
-                        ]);
-                        if (typeof window.flushPendingProgressQueue === 'function') {
-                            try {
-                                await window.flushPendingProgressQueue();
-                            } catch (flushErr) {
-                                console.warn('flushPendingProgressQueue:', flushErr);
-                            }
-                        }
                         var progressResponse2 = await fetch(getApiBaseUrl() + '/progress/overview', {
                             headers: { Authorization: 'Bearer ' + token }
                         });

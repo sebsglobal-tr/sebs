@@ -103,6 +103,44 @@ async function getSupabaseAccessToken() {
     return getSupabaseAccessTokenFromStorage();
 }
 
+/**
+ * Yerel depolama anahtarı → veritabanı / modules.html başlığı.
+ * Dashboard ve syncModuleProgressBulk bu listeyi kullanır.
+ */
+window.SEBS_MODULE_PROGRESS_REGISTRY = [
+    { storageKey: 'module_progress_siber_guvenlik_giris', moduleTitle: 'Siber Güvenliğe Giriş' },
+    { storageKey: 'module_progress_temel_network', moduleTitle: 'Temel Network Eğitimi' },
+    { storageKey: 'module_progress_temel_kriptografi', moduleTitle: 'Temel Kriptografi' },
+    {
+        storageKey: 'module_progress_isletim_sistemleri_guvenligi_temel',
+        moduleTitle: 'İşletim Sistemleri Güvenliği (Temel)'
+    },
+    {
+        storageKey: 'module_progress_isletim_sistemi_guvenligi_ileri_temel',
+        moduleTitle: 'İşletim Sistemi Güvenliği (İleri Temel)'
+    },
+    { storageKey: 'module_progress_network_guvenligi', moduleTitle: 'Network Güvenliği' },
+    { storageKey: 'module_progress_sosyal_muhendislik_giris', moduleTitle: 'Sosyal Mühendisliğe Giriş' },
+    { storageKey: 'module_progress_sosyal_muhendislik', moduleTitle: 'Sosyal Mühendisliğe Giriş' },
+    { storageKey: 'module_progress_malware_analizi_orta', moduleTitle: 'Malware Analizi (Orta Seviye)' },
+    { storageKey: 'module_progress_malware_analizi', moduleTitle: 'Malware Analizi (Orta Seviye)' },
+    {
+        storageKey: 'module_progress_soc_egitimi_guncel',
+        moduleTitle: 'SOC (Security Operations Center) Eğitimi'
+    },
+    { storageKey: 'module_progress_soc', moduleTitle: 'SOC (Security Operations Center) Eğitimi' },
+    {
+        storageKey: 'module_progress_ileri_malware_analizi',
+        moduleTitle: 'İleri Malware Analizi & Reverse Engineering'
+    },
+    { storageKey: 'module_progress_incident_response', moduleTitle: 'Olay Müdahalesi & Digital Forensics' },
+    { storageKey: 'module_progress_ileri_kriptografi', moduleTitle: 'İleri Kriptografi' },
+    { storageKey: 'module_progress_red_team_pentest', moduleTitle: 'Red Team & Pentest (İleri)' },
+    { storageKey: 'module_progress_penetration_testing', moduleTitle: 'Red Team & Pentest (İleri)' },
+    { storageKey: 'module_progress_threat_intelligence', moduleTitle: 'Threat Intelligence' },
+    { storageKey: 'module_progress_threat_hunting', moduleTitle: 'Threat Intelligence' }
+];
+
 /** API modül başlığı eşlemesi (sayfa MODULE_NAME → veritabanı title) */
 const MODULE_NAME_LOOKUP_ALIASES = {
     'İşletim Sistemleri Güvenliği (Temel)': [
@@ -113,7 +151,137 @@ const MODULE_NAME_LOOKUP_ALIASES = {
     'İşletim Sistemi Güvenliği (İleri Temel)': [
         'İşletim Sistemi Güvenliği (İleri)',
         'İşletim Sistemleri Güvenliği (İleri Temel)'
-    ]
+    ],
+    'SOC Eğitimi (Güncel)': [
+        'SOC (Security Operations Center) Eğitimi',
+        'SOC Eğitimi',
+        'SOC'
+    ],
+    'Sosyal Mühendisliğe Giriş (Güncel)': ['Sosyal Mühendisliğe Giriş'],
+    'Malware Analizi (Orta Seviye)': ['Malware Analizi'],
+    'Red Team & Pentest (İleri)': [
+        'Red Team ve Pentest (İleri)',
+        'Red Team & Pentest',
+        'Penetration Testing'
+    ],
+    'Threat Intelligence': ['Threat Hunting'],
+    'Olay Müdahalesi & Digital Forensics': [
+        'Olay Müdahalesi ve Dijital Adli Bilişim (İleri)',
+        'Olay Müdahalesi & DFIR'
+    ],
+    'İleri Malware Analizi & Reverse Engineering': ['İleri Malware Analizi'],
+    'Temel Kriptografi': ['Kriptografi Temelleri'],
+    'Network Güvenliği': ['Orta Seviye Network Güvenliği'],
+    'Siber Güvenliğe Giriş': ['Güncel Siber Güvenliğe Giriş', 'Temel Siber Güvenlik']
+};
+
+function readLocalModuleProgressRaw(storageKey) {
+    try {
+        var raw = localStorage.getItem(storageKey);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch (e) {
+        return null;
+    }
+}
+
+function snapshotFromLocalProgress(storageKey, moduleTitle) {
+    var local = readLocalModuleProgressRaw(storageKey);
+    if (!local || typeof local !== 'object') return null;
+    var completed = Array.isArray(local.completedLessons)
+        ? local.completedLessons.map(String)
+        : [];
+    var total = Math.max(
+        1,
+        parseInt(String(local.totalLessons), 10) || completed.length || 0
+    );
+    if (!completed.length && !(parseInt(String(local.progress), 10) > 0)) return null;
+    var pct = Math.min(100, Math.round((completed.length / total) * 100));
+    if (!completed.length && local.progress != null) {
+        pct = Math.min(100, Math.max(0, parseInt(String(local.progress), 10) || 0));
+    }
+    return {
+        storageKey: storageKey,
+        moduleTitle: moduleTitle,
+        completedLessons: completed,
+        totalLessons: total,
+        percentComplete: pct,
+        isCompleted: pct >= 100
+    };
+}
+
+/** Tüm kayıtlı modüllerin yerel ilerleme anlık görüntüleri (başlık başına en yüksek yüzde) */
+window.getLocalModuleProgressSnapshots = function () {
+    var byTitle = {};
+    var registry = window.SEBS_MODULE_PROGRESS_REGISTRY || [];
+    var seenKeys = {};
+
+    registry.forEach(function (entry) {
+        if (!entry || !entry.storageKey || !entry.moduleTitle) return;
+        if (seenKeys[entry.storageKey]) return;
+        seenKeys[entry.storageKey] = true;
+        var snap = snapshotFromLocalProgress(entry.storageKey, entry.moduleTitle);
+        if (!snap) return;
+        var norm = normModuleTitleStr(entry.moduleTitle);
+        var prev = byTitle[norm];
+        if (!prev || snap.percentComplete > prev.percentComplete) {
+            if (prev && prev.completedLessons && prev.completedLessons.length) {
+                snap.completedLessons = [
+                    ...new Set(
+                        prev.completedLessons.concat(snap.completedLessons).map(String)
+                    )
+                ];
+                snap.totalLessons = Math.max(prev.totalLessons, snap.totalLessons);
+                snap.percentComplete = Math.min(
+                    100,
+                    Math.round((snap.completedLessons.length / snap.totalLessons) * 100)
+                );
+                snap.isCompleted = snap.percentComplete >= 100;
+            }
+            byTitle[norm] = snap;
+        }
+    });
+
+    try {
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (!k || k.indexOf('module_progress_') !== 0 || seenKeys[k]) continue;
+            var guessed = k
+                .replace(/^module_progress_/, '')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, function (c) {
+                    return c.toUpperCase();
+                });
+            var snapExtra = snapshotFromLocalProgress(k, guessed);
+            if (!snapExtra) continue;
+            var normExtra = normModuleTitleStr(snapExtra.moduleTitle);
+            if (!byTitle[normExtra]) byTitle[normExtra] = snapExtra;
+        }
+    } catch (eScan) {
+        /* ignore */
+    }
+
+    return Object.keys(byTitle).map(function (n) {
+        return byTitle[n];
+    });
+};
+
+/** localStorage → POST /api/progress (tüm premium modüller) */
+window.syncAllLocalModuleProgressToApi = async function () {
+    var snapshots = window.getLocalModuleProgressSnapshots();
+    if (!snapshots.length) return { ok: true, synced: 0, total: 0 };
+    var synced = 0;
+    for (var i = 0; i < snapshots.length; i++) {
+        var snap = snapshots[i];
+        if (!snap.completedLessons || !snap.completedLessons.length) continue;
+        var rs = await window.syncModuleProgressBulk(
+            snap.moduleTitle,
+            snap.completedLessons,
+            snap.totalLessons
+        );
+        if (rs && rs.ok) synced += 1;
+    }
+    return { ok: true, synced: synced, total: snapshots.length };
 };
 
 window.getModuleIdFromName = async function (rawName) {
@@ -636,7 +804,7 @@ window.syncModuleProgressBulk = async function (moduleTitle, clientCompletedLess
             : [];
         const catalogHint = Math.max(
             0,
-            parseInt(String(global.MODULE_TOTAL_LESSONS), 10) || 0
+            parseInt(String(window.MODULE_TOTAL_LESSONS), 10) || 0
         );
         const normalizedTotal = Math.max(
             1,
