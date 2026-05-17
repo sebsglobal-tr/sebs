@@ -87,6 +87,15 @@
             if (inner.dataset.cardified === '1') return;
             if (shouldSkipCardify(inner)) return;
             inner.dataset.cardified = '1';
+            if (lessonHeadingLevel === 'h3') {
+                var lessonH3 = Array.from(inner.children).filter(function (el) {
+                    return el.tagName === 'H3' && isNavigableLessonHeading(el);
+                });
+                if (lessonH3.length) {
+                    cardifyByHeading(inner, lessonH3);
+                    return;
+                }
+            }
             var h2Blocks = Array.from(inner.children).filter(function (el) {
                 return el.tagName === 'H2';
             });
@@ -94,7 +103,12 @@
                 return el.tagName === 'H3';
             });
             if (h2Blocks.length === 1 && h3Blocks.length >= 2) {
-                cardifyByHeading(inner, h3Blocks);
+                cardifyByHeading(
+                    inner,
+                    h3Blocks.filter(function (el) {
+                        return isNavigableLessonHeading(el);
+                    })
+                );
                 return;
             }
             h2Blocks.forEach(function (h2) {
@@ -133,18 +147,12 @@
 
     function getSectionSubheadings(inner) {
         if (!inner) return [];
-        return Array.from(inner.querySelectorAll('h2')).filter(function (h) {
-            var t = String(h.textContent || '').trim();
-            if (!t) return false;
-            if (isModuleThemeHeading(h)) return false;
-            if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
-                return false;
-            }
-            if (/^terimler\s+sözlüğü/i.test(t)) {
-                return false;
-            }
-            return true;
-        });
+        if (lessonHeadingLevel === 'h3') {
+            var h3List = Array.from(inner.querySelectorAll('h3')).filter(isNavigableLessonHeading);
+            var h2Closing = Array.from(inner.querySelectorAll('h2')).filter(isClosingLessonH2);
+            return sortHeadingsByDocumentOrder(h3List.concat(h2Closing));
+        }
+        return Array.from(inner.querySelectorAll('h2')).filter(isNavigableLessonHeading);
     }
 
     /** Tüm modül yan menü linkleri (birden fazla .nav-section-list olduğunda hepsi) */
@@ -206,6 +214,53 @@
     }
 
     var lastRunSubNavScroll = null;
+    /** 'h2' (varsayılan) veya 'h3' — İleri Kriptografi gibi h3 ağırlıklı modüller */
+    var lessonHeadingLevel = 'h2';
+
+    function sortHeadingsByDocumentOrder(headings) {
+        return headings.slice().sort(function (a, b) {
+            if (a === b) return 0;
+            var pos = a.compareDocumentPosition(b);
+            if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+            if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+            return 0;
+        });
+    }
+
+    function isNavigableLessonHeading(h) {
+        if (!h) return false;
+        var t = String(h.textContent || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        if (!t) return false;
+        if (isModuleThemeHeading(h)) return false;
+        if (/^modül\s+özeti$/i.test(t)) return false;
+        if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
+            return false;
+        }
+        if (/^terimler\s+sözlüğü/i.test(t)) {
+            return false;
+        }
+        if (lessonHeadingLevel === 'h3') {
+            if (/^modül\s+\d+\s*[—\-–:]/i.test(t)) return false;
+            if (/^kazanımlar$/i.test(t)) return false;
+            if (/\t/.test(t)) return false;
+            if (t.length < 4) return false;
+        }
+        return true;
+    }
+
+    function isClosingLessonH2(h) {
+        if (!h || h.tagName !== 'H2') return false;
+        var t = String(h.textContent || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        return (
+            /kendini\s+değerlendir/i.test(t) ||
+            /^bu modülde neler öğrendik/i.test(t) ||
+            /^kapanış:/i.test(t)
+        );
+    }
 
     function shouldBuildSubheadingNav(cfg) {
         if (cfg && cfg.subNavScroll === false) return false;
@@ -1380,6 +1435,7 @@
             console.warn('SebsPremiumModuleLessons.run: moduleName ve storageKey gerekli');
             return;
         }
+        lessonHeadingLevel = cfg.lessonHeadingLevel === 'h3' ? 'h3' : 'h2';
         if (!cfg.progressMode) {
             if (isFlatLessonModule()) {
                 cfg = Object.assign({}, cfg, { progressMode: 'lesson' });
