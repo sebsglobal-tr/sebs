@@ -83,19 +83,18 @@ function countAnswered(arr) {
 }
 
 function setView() {
-  const views = {
-    intro: 'viewIntro',
-    step1: 'viewTest',
-    step1_done: 'viewStep1Done',
-    step2: 'viewTest',
-    loading: 'viewLoading',
-    results: 'viewResults',
-  };
-  Object.entries(views).forEach(([p, id]) => {
-    const el = $(id);
-    if (el) el.hidden = phase !== p;
-  });
-  if ($('viewStep1Done')) $('viewStep1Done').hidden = phase !== 'step1_done';
+  const showTest = phase === 'step1' || phase === 'step2';
+  const intro = $('viewIntro');
+  const test = $('viewTest');
+  const step1Done = $('viewStep1Done');
+  const loading = $('viewLoading');
+  const results = $('viewResults');
+
+  if (intro) intro.hidden = phase !== 'intro';
+  if (test) test.hidden = !showTest;
+  if (step1Done) step1Done.hidden = phase !== 'step1_done';
+  if (loading) loading.hidden = phase !== 'loading';
+  if (results) results.hidden = phase !== 'results';
 
   const onStep1 = phase === 'step1' || phase === 'step1_done';
   const onStep2 = phase === 'step2';
@@ -114,12 +113,23 @@ function setView() {
 
   const submitBtn = $('btnSubmit');
   if (submitBtn) {
+    const showSubmit = phase === 'step1' || phase === 'step2';
+    submitBtn.hidden = !showSubmit;
     if (phase === 'step1') {
-      submitBtn.innerHTML = 'Adım 1 sonucunu kaydet ve devam et <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>';
+      submitBtn.innerHTML =
+        'Adım 1\'i bitir ve Adım 2\'ye geç <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>';
     } else if (phase === 'step2') {
       submitBtn.innerHTML = 'Birleşik raporu oluştur <i class="fas fa-chart-pie text-xs" aria-hidden="true"></i>';
     }
   }
+}
+
+/** @param {Promise<T>} promise @param {number} ms @returns {Promise<T|null>} */
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => setTimeout(() => resolve(null), ms)),
+  ]);
 }
 
 function updateProgressUI() {
@@ -263,24 +273,45 @@ async function finishStep1() {
   }
   hideMissing();
 
+  const submitBtn = $('btnSubmit');
+  if (submitBtn) submitBtn.disabled = true;
+
   phase = 'loading';
   activeTest = 'ci';
   setView();
   if (els.loadingText) els.loadingText.textContent = 'Meslek ilgi profilin hesaplanıyor…';
 
   const answersOrdered = /** @type {number[]} */ (ciAnswers.slice());
-  const classical = computeRiasecScores(answersOrdered, CAREER_INTEREST_QUESTIONS);
+  let classical = null;
   let modelOutput = null;
   let modelError = null;
-  const tf = window.tf;
-  if (tf) {
-    try {
-      modelOutput = await predictCareerInterestSoftmax(tf, answersOrdered);
-    } catch (e) {
-      modelError = e?.message || String(e);
+
+  try {
+    classical = computeRiasecScores(answersOrdered, CAREER_INTEREST_QUESTIONS);
+    const tf = window.tf;
+    if (tf) {
+      try {
+        const pred = await withTimeout(predictCareerInterestSoftmax(tf, answersOrdered), 15000);
+        if (pred) {
+          modelOutput = pred;
+        } else {
+          modelError = 'Model yanıt vermedi (zaman aşımı). RIASEC skorları kullanıldı.';
+        }
+      } catch (e) {
+        modelError = e?.message || String(e);
+      }
+    } else {
+      modelError = 'TensorFlow.js bulunamadı.';
     }
-  } else {
-    modelError = 'TensorFlow.js bulunamadı.';
+  } catch (e) {
+    console.error('Adım 1 analiz hatası:', e);
+    if (els.loadingText) {
+      els.loadingText.textContent = 'Bir hata oluştu; yine de Adım 2\'ye geçiliyor…';
+    }
+    if (!classical) {
+      classical = computeRiasecScores(answersOrdered, CAREER_INTEREST_QUESTIONS);
+    }
+    modelError = modelError || e?.message || String(e);
   }
 
   const ciPayload = {
@@ -300,8 +331,7 @@ async function finishStep1() {
   };
   saveAssessmentSession(session);
 
-  phase = 'step1_done';
-  setView();
+  continueToStep2();
 }
 
 async function finishStep2AndReport() {
@@ -312,23 +342,41 @@ async function finishStep2AndReport() {
   }
   hideMissing();
 
+  const submitBtn = $('btnSubmit');
+  if (submitBtn) submitBtn.disabled = true;
+
   phase = 'loading';
   setView();
   if (els.loadingText) els.loadingText.textContent = 'Big Five profili ve birleşik meslek önerileri hazırlanıyor…';
 
   const answersOrdered = /** @type {number[]} */ (bfAnswers.slice());
-  const classical = computeClassicalScores(answersOrdered, BIG_FIVE_QUESTIONS);
+  let classical = null;
   let modelOutput = null;
   let modelError = null;
-  const tf = window.tf;
-  if (tf) {
-    try {
-      modelOutput = await predictBigFiveSoftmax(tf, answersOrdered);
-    } catch (e) {
-      modelError = e?.message || String(e);
+
+  try {
+    classical = computeClassicalScores(answersOrdered, BIG_FIVE_QUESTIONS);
+    const tf = window.tf;
+    if (tf) {
+      try {
+        const pred = await withTimeout(predictBigFiveSoftmax(tf, answersOrdered), 20000);
+        if (pred) {
+          modelOutput = pred;
+        } else {
+          modelError = 'Model yanıt vermedi (zaman aşımı). Klasik skorlar kullanıldı.';
+        }
+      } catch (e) {
+        modelError = e?.message || String(e);
+      }
+    } else {
+      modelError = 'TensorFlow.js bulunamadı.';
     }
-  } else {
-    modelError = 'TensorFlow.js bulunamadı.';
+  } catch (e) {
+    console.error('Adım 2 analiz hatası:', e);
+    if (!classical) {
+      classical = computeClassicalScores(answersOrdered, BIG_FIVE_QUESTIONS);
+    }
+    modelError = modelError || e?.message || String(e);
   }
 
   const topTwo = pickTopDimensions(classical, 2);
@@ -396,6 +444,8 @@ function bindReportButtons() {
 }
 
 function startStep1() {
+  const banner = $('step2Banner');
+  if (banner) banner.hidden = true;
   phase = 'step1';
   activeTest = 'ci';
   const draft = loadAssessmentSession();
@@ -426,6 +476,7 @@ function continueToStep2() {
   session = loadAssessmentSession() || session;
   phase = 'step2';
   activeTest = 'bf';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   const stored = (() => {
     try {
       const raw = localStorage.getItem('sebs_big_five_answers');
@@ -446,6 +497,12 @@ function continueToStep2() {
   renderStepQuestion();
   updateNavButtons();
   updateProgressUI();
+
+  const submitBtn = $('btnSubmit');
+  if (submitBtn) submitBtn.disabled = countAnswered(bfAnswers) !== BF_TOTAL;
+
+  const banner = $('step2Banner');
+  if (banner) banner.hidden = false;
 }
 
 function resetPanels() {
