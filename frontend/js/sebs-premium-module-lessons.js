@@ -469,6 +469,22 @@
         return heading.id;
     }
 
+    function unionLessonKeyLists() {
+        var out = [];
+        var seen = new Set();
+        for (var a = 0; a < arguments.length; a++) {
+            var list = arguments[a];
+            if (!Array.isArray(list)) continue;
+            list.forEach(function (k) {
+                k = String(k || '').trim();
+                if (!k || seen.has(k)) return;
+                seen.add(k);
+                out.push(k);
+            });
+        }
+        return out;
+    }
+
     /** Eski sürüm: uzun başlık id’si lesson-N ile değiştirilmiş kayıtları güncel menü anahtarına eşler */
     function remapLegacyLessonIndexKey(entry, keysOrdered) {
         var k = String(entry || '');
@@ -1137,13 +1153,14 @@
 
         async function loadProgress() {
             var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            var localDone = Array.isArray(local.completedLessons) ? local.completedLessons.map(String) : [];
             var token =
                 (global.getProgressAuthToken && (await global.getProgressAuthToken())) ||
                 (typeof localStorage !== 'undefined' && localStorage.getItem('authToken'));
-            if (!token || !global.getModuleIdFromName) return local.completedLessons || [];
+            if (!token || !global.getModuleIdFromName) return localDone;
             try {
                 var moduleId = await global.getModuleIdFromName(MODULE_NAME);
-                if (!moduleId) return local.completedLessons || [];
+                if (!moduleId) return localDone;
                 var apiBase =
                     typeof global.getSebsApiBase === 'function'
                         ? global.getSebsApiBase()
@@ -1157,23 +1174,26 @@
                         d.data && typeof d.data.lastStep === 'string'
                             ? JSON.parse(d.data.lastStep || '{}')
                             : (d.data && d.data.lastStep) || {};
-                    var lessons = step.completedLessons || [];
-                    if (lessons.length) {
+                    var fromApi = Array.isArray(step.completedLessons)
+                        ? step.completedLessons.map(String)
+                        : [];
+                    var merged = unionLessonKeyLists(localDone, fromApi);
+                    if (merged.length) {
                         localStorage.setItem(
                             STORAGE_KEY,
                             JSON.stringify({
-                                completedLessons: lessons,
+                                completedLessons: merged,
                                 totalLessons: step.totalLessons || navLinks.length,
                                 lastUpdated: new Date().toISOString()
                             })
                         );
                     }
-                    return lessons;
+                    return merged.length ? merged : localDone;
                 }
             } catch (e) {
                 console.warn('Load progress from API failed:', e);
             }
-            return local.completedLessons || [];
+            return localDone;
         }
 
         function saveProgressLocal(completedLessons) {
@@ -1471,8 +1491,10 @@
                         d.data && typeof d.data.lastStep === 'string'
                             ? JSON.parse(d.data.lastStep || '{}')
                             : (d.data && d.data.lastStep) || {};
-                    var lessons = step.completedLessons || [];
-                    var merged = normalizeCompletedLessons(lessons);
+                    var fromApi = step.completedLessons || [];
+                    var merged = normalizeCompletedLessons(
+                        unionLessonKeyLists(localDone, fromApi)
+                    );
                     if (merged.length) {
                         var catalogTotal = catalogLessonTotal(lessonKeysOrdered.length);
                         var apiTotal = parseInt(String(step.totalLessons), 10) || 0;
@@ -1485,7 +1507,7 @@
                             })
                         );
                     }
-                    return merged;
+                    return merged.length ? merged : localDone;
                 }
             } catch (e) {
                 console.warn('Load progress from API failed:', e);
@@ -1494,12 +1516,25 @@
         }
 
         function saveProgressLocal(completedLessons) {
+            var stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            var prior = Array.isArray(stored.completedLessons) ? stored.completedLessons : [];
+            completedLessons = normalizeCompletedLessons(
+                unionLessonKeyLists(prior, completedLessons || [])
+            );
             var total = catalogLessonTotal(lessonKeysOrdered.length);
             if (lessonKeysOrdered.length && completedLessons.length) {
                 var valid = new Set(lessonKeysOrdered.map(canonicalLessonKey));
-                completedLessons = completedLessons.filter(function (k) {
-                    return valid.has(canonicalLessonKey(k));
+                var kept = [];
+                var seenSave = new Set();
+                completedLessons.forEach(function (k) {
+                    var ck = canonicalLessonKey(k);
+                    var resolved = resolveLessonKeyFromRoute(k, lessonKeysOrdered);
+                    var canonical = resolved ? canonicalLessonKey(resolved) : ck;
+                    if (!canonical || !valid.has(canonical) || seenSave.has(canonical)) return;
+                    seenSave.add(canonical);
+                    kept.push(canonical);
                 });
+                completedLessons = kept;
             }
             var pct = total ? Math.round((completedLessons.length / total) * 100) : 0;
             localStorage.setItem(
