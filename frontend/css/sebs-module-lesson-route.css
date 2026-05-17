@@ -42,7 +42,28 @@ body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-in
 
 /* Düz ders yapısı (section-inner yok): tek bölüm = tek ders — İşletim ile aynı rota */
 body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header {
+    display: block !important;
+    margin: 0 0 1.35rem;
+    max-width: 100%;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header h2 {
     display: none !important;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header p {
+    display: block !important;
+    text-transform: none;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: normal;
+    color: #475569;
+    margin: 0 0 0.85rem;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header p:last-child {
+    margin-bottom: 0;
 }
 
 body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) > .content-card {
@@ -88,28 +109,14 @@ body.lesson-route-mode .lesson-controls {
     display: none !important;
 }
 
-body.lesson-route-mode .lesson-route-hero-module:not([hidden]):not(:empty) {
-    display: block !important;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #64748b;
-    margin: 0 0 0.35rem;
+body.lesson-route-mode .lesson-route-hero-module {
+    display: none !important;
 }
 
 .lesson-route-hero {
     margin: 0 0 2rem;
     padding: 0;
     max-width: 100%;
-}
-
-.lesson-route-hero-module {
-    display: none !important;
-}
-
-body.lesson-route-mode .lesson-route-hero-module {
-    display: none !important;
 }
 
 .lesson-route-hero-lesson {

@@ -1862,14 +1862,8 @@
             var heroImg = host.querySelector('.lesson-route-hero-img');
             var heroImgWrap = host.querySelector('.lesson-route-hero-img-wrap');
             if (elMod) {
-                if (!inner && section) {
-                    var modLine = section.querySelector('.section-intro');
-                    elMod.textContent = modLine ? String(modLine.textContent || '').trim() : '';
-                    elMod.hidden = !elMod.textContent;
-                } else {
-                    elMod.textContent = '';
-                    elMod.hidden = true;
-                }
+                elMod.textContent = '';
+                elMod.hidden = true;
             }
             if (elLes) {
                 elLes.textContent = h2
