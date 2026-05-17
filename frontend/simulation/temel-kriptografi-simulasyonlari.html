@@ -13,8 +13,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=7" />
+  <link rel="stylesheet" href="/css/simulation-chrome.css" />
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -67,7 +69,9 @@
               <li><i class="fa-solid fa-check text-cyan-600 mr-1" aria-hidden="true"></i> JWT decode · HMAC · XOR · OpenSSL okuryazarlığı</li>
               <li><i class="fa-solid fa-check text-cyan-600 mr-1" aria-hidden="true"></i> Operasyon konsolu arayüzü</li>
             </ul>
-            <a href="/simulation/lunabox-teslimat-krizi.html" class="mt-4 inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">Vakayı Başlat</a>
+            <a href="/simulation/lunabox-teslimat-krizi.html" class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto sm:self-start">
+              <i class="fas fa-play text-xs" aria-hidden="true"></i> Vakayı Başlat
+            </a>
           </div>
         </article>
 
@@ -85,7 +89,9 @@
               <li><i class="fa-solid fa-check text-amber-600 mr-1" aria-hidden="true"></i> Base64 · SHA-256 · AEAD config · X.509 / TLS</li>
               <li><i class="fa-solid fa-check text-amber-600 mr-1" aria-hidden="true"></i> Klasik müze arşivi senaryosu</li>
             </ul>
-            <a href="/simulation/orion-gece-alarmi-kripto-vaka.html" class="mt-4 inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">Vakayı Başlat</a>
+            <a href="/simulation/orion-gece-alarmi-kripto-vaka.html" class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto sm:self-start">
+              <i class="fas fa-play text-xs" aria-hidden="true"></i> Vakayı Başlat
+            </a>
           </div>
         </article>
       </div>
@@ -97,6 +103,18 @@
       </div>
     </section>
   </main>
-<script src="/simulation/simulation-access-check.js"></script>
+
+  <footer class="border-t border-slate-200 bg-white py-12">
+    <div class="mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">
+      <p class="text-xs text-slate-400">© <span class="landing-footer-year">2025</span> SEBS Global</p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+      el.textContent = String(new Date().getFullYear());
+    });
+  </script>
+  <script src="/simulation/simulation-access-check.js"></script>
 </body>
 </html>
