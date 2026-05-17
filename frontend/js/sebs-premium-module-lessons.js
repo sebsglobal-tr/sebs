@@ -189,6 +189,78 @@
         return flat > 0 && flat >= sections.length * 0.5;
     }
 
+    function isEmbeddedQuizElement(el) {
+        return !!(el && el.classList && el.classList.contains('eval-quiz-section') && el.id);
+    }
+
+    function isQuizOnlyLessonKey(lessonKey) {
+        return isEmbeddedQuizElement(document.getElementById(String(lessonKey || '')));
+    }
+
+    /** Yinelenen modül testi bloklarını kaldırır (aynı id iki kez enjekte edilmişse) */
+    function dedupeEmbeddedQuizSections() {
+        var seen = new Set();
+        document.querySelectorAll('.eval-quiz-section[id]').forEach(function (q) {
+            var id = q.id;
+            if (!id) return;
+            if (seen.has(id)) {
+                var prev = q.previousElementSibling;
+                if (
+                    prev &&
+                    prev.tagName === 'H2' &&
+                    /kendini\s+değerlendir/i.test(String(prev.textContent || ''))
+                ) {
+                    prev.remove();
+                }
+                q.remove();
+                return;
+            }
+            seen.add(id);
+        });
+    }
+
+    function resetQuizVisibilityInSection(section) {
+        if (!section) return;
+        section.querySelectorAll('.eval-quiz-section').forEach(function (q) {
+            q.classList.remove('lesson-route-quiz-visible');
+            var prev = q.previousElementSibling;
+            if (prev && prev.tagName === 'H2') {
+                prev.classList.remove('lesson-route-quiz-visible', 'lesson-route-quiz-intro');
+            }
+        });
+        section.classList.remove('lesson-route-quiz-only');
+    }
+
+    function applyFlatSectionQuizVisibility(section, activeQuizId) {
+        if (!section) return;
+        resetQuizVisibilityInSection(section);
+        if (!activeQuizId) return;
+        var quiz = document.getElementById(activeQuizId);
+        if (!quiz || !section.contains(quiz)) return;
+        section.classList.add('lesson-route-quiz-only');
+        quiz.classList.add('lesson-route-quiz-visible');
+        var prev = quiz.previousElementSibling;
+        if (prev && prev.tagName === 'H2') {
+            prev.classList.add('lesson-route-quiz-visible', 'lesson-route-quiz-intro');
+        }
+    }
+
+    /** Düz derslerde gömülü modül testini ders sırasına ekler (ders → test → sonraki ders) */
+    function augmentLessonKeysWithEmbeddedQuizzes(keys) {
+        if (!isFlatLessonModule()) return keys;
+        var out = [];
+        (keys || []).forEach(function (k) {
+            out.push(k);
+            if (!k || String(k).indexOf('::') !== -1) return;
+            var sec = document.getElementById(k);
+            if (!sec || !isFlatLessonSection(sec)) return;
+            sec.querySelectorAll('.content-card .eval-quiz-section[id]').forEach(function (q) {
+                if (q.id && out.indexOf(q.id) === -1) out.push(q.id);
+            });
+        });
+        return out;
+    }
+
     function flatSectionHeading(sec) {
         if (!sec) return null;
         return (
@@ -855,10 +927,10 @@
         var domHasSub = fromDom.some(function (k) {
             return k.indexOf('::') !== -1;
         });
-        if (navHasSub) return fromNav;
-        if (domHasSub) return fromDom;
-        if (fromNav.length) return fromNav;
-        return fromDom;
+        if (navHasSub) return augmentLessonKeysWithEmbeddedQuizzes(fromNav);
+        if (domHasSub) return augmentLessonKeysWithEmbeddedQuizzes(fromDom);
+        if (fromNav.length) return augmentLessonKeysWithEmbeddedQuizzes(fromNav);
+        return augmentLessonKeysWithEmbeddedQuizzes(fromDom);
     }
 
     function catalogLessonTotal(fallback) {
@@ -1190,6 +1262,7 @@
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
+        dedupeEmbeddedQuizSections();
         try {
             global.dispatchEvent(new Event('sebs-lesson-cards-ready'));
         } catch (e) {
@@ -1482,6 +1555,7 @@
         enhanceRunbookHeadings();
         tableizeGlossaries();
         applyTemelCardLayout();
+        dedupeEmbeddedQuizSections();
         try {
             global.dispatchEvent(new Event('sebs-lesson-cards-ready'));
         } catch (e) {
@@ -1512,7 +1586,13 @@
                 entry = canonicalLessonKey(entry);
                 entry = remapLegacyLessonIndexKey(entry, lessonKeysOrdered);
                 if (isFlatLessonModule()) {
-                    if (sidSet.has(entry)) out.add(entry);
+                    if (sidSet.has(entry)) {
+                        out.add(entry);
+                        return;
+                    }
+                    if (isQuizOnlyLessonKey(entry)) {
+                        out.add(entry);
+                    }
                     return;
                 }
                 if (entry.indexOf('::') !== -1) {
@@ -1688,15 +1768,25 @@
             document.querySelectorAll('.content-card').forEach(function (c) {
                 c.classList.remove('lesson-route-current-card');
             });
+            var quizEl = isQuizOnlyLessonKey(lessonKey)
+                ? document.getElementById(lessonKey)
+                : null;
             var parsed = parseLessonKey(lessonKey);
-            var sid = parsed.sectionId;
+            var sid = quizEl
+                ? (quizEl.closest('.content-section') || {}).id || parsed.sectionId
+                : parsed.sectionId;
             var h2id = parsed.headingId;
             var section = document.getElementById(sid);
-            var head = document.getElementById(h2id);
+            var head = quizEl
+                ? quizEl.previousElementSibling &&
+                  quizEl.previousElementSibling.tagName === 'H2'
+                    ? quizEl.previousElementSibling
+                    : null
+                : document.getElementById(h2id);
             if (head && head.classList && head.classList.contains('content-section')) {
                 head = null;
             }
-            if (!head && section) {
+            if (!head && section && !quizEl) {
                 head = flatSectionHeading(section);
             }
             var card = head ? head.closest('.content-card') : null;
@@ -1711,8 +1801,14 @@
                     if (introCard && card === introCard) {
                         section.classList.add('lesson-route-show-module-intro');
                     }
+                    resetQuizVisibilityInSection(section);
                 } else {
                     section.classList.add('lesson-route-whole-section');
+                    if (quizEl) {
+                        applyFlatSectionQuizVisibility(section, lessonKey);
+                    } else {
+                        applyFlatSectionQuizVisibility(section, null);
+                    }
                 }
             }
             if (card) {

@@ -49,6 +49,28 @@ body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.sec
     display: block !important;
 }
 
+/* Düz ders: gömülü modül testi yalnızca test adımında görünür */
+body.lesson-route-mode .lesson-route-whole-section .eval-quiz-section:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-whole-section h2.lesson-route-quiz-intro:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .lesson-controls {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .content-card > *:not(.eval-quiz-section):not(h2.lesson-route-quiz-intro) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .eval-quiz-section.lesson-route-quiz-visible,
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section h2.lesson-route-quiz-intro.lesson-route-quiz-visible {
+    display: block !important;
+}
+
 body.lesson-route-mode .lesson-controls {
     display: none !important;
 }
