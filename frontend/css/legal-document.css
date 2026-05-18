@@ -1,5 +1,16 @@
 /* Yasal metin ve Hakkımızda sayfaları — ortak tipografi ve bileşenler */
 
+/* Yasal / Hakkımızda: çift üst boşluk önleme (body padding + main padding) */
+body.landing-site-body.legal-page,
+body.landing-site-body.about-page {
+  padding-top: 0;
+}
+
+body.legal-page main {
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+}
+
 .legal-updated {
   font-size: 0.875rem;
   color: rgb(100 116 139);
@@ -42,14 +53,26 @@
   margin-top: 0.875rem;
 }
 
-.legal-prose ul {
+.legal-prose ul:not(.about-pillars):not(.legal-related-links) {
   margin-top: 0.75rem;
   padding-left: 1.25rem;
   list-style: disc;
 }
 
+.legal-prose ul.about-pillars,
+.legal-prose ul.legal-related-links {
+  margin-top: 0.75rem;
+  padding-left: 0;
+  list-style: none;
+}
+
 .legal-prose li {
   margin-top: 0.35rem;
+}
+
+.legal-prose ul.legal-related-links li,
+.legal-prose ul.about-pillars li {
+  margin-top: 0;
 }
 
 .legal-prose a {
@@ -156,6 +179,11 @@
 
 .about-team-card {
   text-align: center;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
 }
 
 .about-team-photo {
@@ -214,25 +242,8 @@
   color: rgb(100 116 139);
 }
 
-.about-pillars {
-  margin-top: 0.75rem;
-  padding-left: 0;
-  list-style: none;
-}
-
-.about-pillars li {
-  margin-top: 0.75rem;
-  padding-left: 0;
-}
-
-.about-pillars strong {
-  display: block;
-  font-size: 0.9375rem;
-  color: rgb(15 23 42);
-}
-
 /* Ödeme bandı (Hakkımızda gövdesi) */
-.legal-prose .sebs-payment-trust--about-inline {
+.sebs-payment-trust--about-inline {
   margin-top: 1rem;
   padding: 1.25rem;
   border-radius: 0.75rem;
@@ -241,7 +252,7 @@
   text-align: center;
 }
 
-.legal-prose .sebs-payment-trust--about-inline .sebs-payment-trust__band {
+.sebs-payment-trust--about-inline .sebs-payment-trust__band {
   margin-left: auto;
   margin-right: auto;
   margin-top: 0.75rem;
@@ -255,4 +266,207 @@
 
 .legal-footer-payment .sebs-payment-trust__band {
   margin-top: 0.5rem;
+}
+
+/* ——— Hakkımızda sayfa düzeni ——— */
+.about-hero {
+  padding-top: 5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgb(226 232 240 / 0.9);
+}
+
+@media (min-width: 640px) {
+  .about-hero {
+    padding-top: 5.5rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.about-hero__inner {
+  max-width: 42rem;
+}
+
+.about-hero h1 {
+  margin: 0;
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(15 23 42);
+}
+
+.about-hero__lead {
+  margin-top: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgb(71 85 105);
+}
+
+.about-hero__links {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.about-hero__links a {
+  font-weight: 600;
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-hero__links a:hover {
+  text-decoration: underline;
+}
+
+.about-hero__sep {
+  margin: 0 0.5rem;
+  color: rgb(203 213 225);
+}
+
+.about-body {
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.about-section {
+  margin-top: 2.75rem;
+}
+
+.about-section:first-child {
+  margin-top: 0;
+}
+
+.about-section__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(15 23 42);
+}
+
+.about-section__intro {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgb(100 116 139);
+  max-width: 40rem;
+}
+
+.about-pillars-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .about-pillars-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.about-pillar-card {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+}
+
+.about-pillar-card strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-pillar-card span {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgb(100 116 139);
+}
+
+.about-vm-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .about-vm-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-vm-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+}
+
+.about-vm-card h3 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-vm-card p {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgb(100 116 139);
+}
+
+.about-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.about-legal-links li {
+  margin: 0;
+  list-style: none;
+}
+
+.about-legal-links a {
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgb(51 65 85);
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.about-legal-links a:hover {
+  border-color: rgb(191 219 254);
+  background: rgb(239 246 255);
+  color: rgb(30 64 175);
+}
+
+.about-cta-row {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgb(241 245 249);
+  font-size: 0.9375rem;
+}
+
+.about-cta-row a {
+  font-weight: 600;
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-cta-row a:hover {
+  text-decoration: underline;
 }

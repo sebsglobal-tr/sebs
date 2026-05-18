@@ -25,12 +25,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
-  <link rel="stylesheet" href="/css/legal-document.css?v=2" />
+  <link rel="stylesheet" href="/css/legal-document.css?v=3" />
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body about-page font-sans text-slate-800 antialiased bg-white">
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <a href="/" class="landing-brand-link flex items-center gap-2 focus-ring rounded-lg">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
         <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 object-contain" />
         <span class="landing-brand-wordmark">SEBS</span>
       </a>
@@ -52,130 +52,163 @@
     </div>
   </header>
 
-  <main class="pt-24 pb-16">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 legal-prose">
-      <p class="legal-updated">Software Education &amp; Business Solutions</p>
-      <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900">Hakkımızda</h1>
-      <p class="legal-lead">
-        SEBS; kariyer yolları, modüler eğitimler ve senaryo tabanlı simülasyonları tek çatıda toplar. Yapay zeka destekli yönlendirme ile başlangıç noktan netleşir; mentor ve rubriklerle ilerlemen takip edilir.
-      </p>
-
-      <h2 id="sirket-bilgileri">Şirket ve iletişim bilgileri</h2>
-      <p>Ödeme ve mesafeli satış süreçlerinde geçerli satıcı bilgileri aşağıdadır.</p>
-      <div class="about-company-panel">
-        <dl>
-          <div>
-            <dt>Ticari unvan</dt>
-            <dd>SEBS Global (Software Education &amp; Business Solutions)</dd>
-          </div>
-          <div>
-            <dt>Web sitesi</dt>
-            <dd><a href="https://sebsglobal.com/">https://sebsglobal.com</a></dd>
-          </div>
-          <div>
-            <dt>E-posta</dt>
-            <dd><a href="mailto:info@sebsglobal.com">info@sebsglobal.com</a></dd>
-          </div>
-          <div>
-            <dt>Telefon</dt>
-            <dd><a href="tel:+905332669087">+90 533 266 90 87</a></dd>
-          </div>
-          <div>
-            <dt>Adres</dt>
-            <dd>Sivas, Türkiye</dd>
-          </div>
-          <div>
-            <dt>Ödeme altyapısı</dt>
-            <dd>Iyzico güvenli ödeme (SSL ile şifrelenmiş bağlantı)</dd>
-          </div>
-        </dl>
+  <main>
+    <section class="about-hero hero-mesh" aria-labelledby="about-title">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="about-hero__inner">
+          <p class="legal-updated">Software Education &amp; Business Solutions</p>
+          <h1 id="about-title">Hakkımızda</h1>
+          <p class="about-hero__lead">
+            SEBS; kariyer yolları, modüler eğitimler ve senaryo tabanlı simülasyonları tek çatıda toplar. Yapay zeka destekli yönlendirme ile başlangıç noktan netleşir; mentor ve rubriklerle ilerlemen takip edilir.
+          </p>
+          <p class="about-hero__links">
+            <a href="#sirket-bilgileri">Şirket bilgileri</a>
+            <span class="about-hero__sep" aria-hidden="true">·</span>
+            <a href="#yasal-belgeler">Yasal belgeler</a>
+          </p>
+        </div>
       </div>
+    </section>
 
-      <h2>Ne yapıyoruz?</h2>
-      <p>Öğrenme, ölçüm ve kurumsal dağıtımı birbirini tamamlayan üç ayak üzerine kuruluyuz.</p>
-      <ul class="about-pillars">
-        <li>
-          <strong>Modül + simülasyon</strong>
-          Konu anlatımı ile gerçek işe yakın senaryolar; riski kontrollü ortamda görürsünüz.
-        </li>
-        <li>
-          <strong>Davranış ve kanıt</strong>
-          Sadece doğru cevap değil; karar izi, süre ve rubrik notları rapora dökülür.
-        </li>
-        <li>
-          <strong>Kurumsal cohort</strong>
-          İşe alım, L&amp;D veya akademi için markaya özel içerik ve teslim ritmi planlanır.
-        </li>
-      </ul>
+    <div class="about-body">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <section class="about-section" id="sirket-bilgileri" aria-labelledby="about-company-title">
+          <h2 class="about-section__title" id="about-company-title">Şirket ve iletişim bilgileri</h2>
+          <p class="about-section__intro">Ödeme ve mesafeli satış süreçlerinde geçerli satıcı bilgileri aşağıdadır.</p>
+          <div class="about-company-panel">
+            <dl>
+              <div>
+                <dt>Ticari unvan</dt>
+                <dd>SEBS Global (Software Education &amp; Business Solutions)</dd>
+              </div>
+              <div>
+                <dt>Web sitesi</dt>
+                <dd><a href="https://sebsglobal.com/">https://sebsglobal.com</a></dd>
+              </div>
+              <div>
+                <dt>E-posta</dt>
+                <dd><a href="mailto:info@sebsglobal.com">info@sebsglobal.com</a></dd>
+              </div>
+              <div>
+                <dt>Telefon</dt>
+                <dd><a href="tel:+905332669087">+90 533 266 90 87</a></dd>
+              </div>
+              <div>
+                <dt>Adres</dt>
+                <dd>Sivas, Türkiye</dd>
+              </div>
+              <div>
+                <dt>Ödeme altyapısı</dt>
+                <dd>Iyzico güvenli ödeme (SSL ile şifrelenmiş bağlantı)</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
 
-      <h2>Vizyon ve misyon</h2>
-      <p><strong>Vizyon:</strong> Türkiye’de ve bölgede deneyim tabanlı yetkinlik ölçümünün güvenilir adresi olmak; bireyin kariyerini ve kurumun yetenek kararını aynı dilde, şeffaf veriyle konuşturmak.</p>
-      <p><strong>Misyon:</strong> Eğitim içeriği, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt, slayt yerine karar pratiği üretmek.</p>
+        <section class="about-section" aria-labelledby="about-product-title">
+          <h2 class="about-section__title" id="about-product-title">Ne yapıyoruz?</h2>
+          <p class="about-section__intro">Öğrenme, ölçüm ve kurumsal dağıtım birbirini tamamlar.</p>
+          <ul class="about-pillars-grid">
+            <li class="about-pillar-card">
+              <strong>Modül + simülasyon</strong>
+              <span>Konu anlatımı ile gerçek işe yakın senaryolar; riski kontrollü ortamda görürsünüz.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Davranış ve kanıt</strong>
+              <span>Karar izi, süre ve rubrik notları bir arada rapora dökülür.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Kurumsal cohort</strong>
+              <span>Markaya özel içerik ve teslim ritmi birlikte planlanır.</span>
+            </li>
+          </ul>
+        </section>
 
-      <h2>Kurucu ekip</h2>
-      <p>Yön, ürün ve deneyim; sahada çalışan çekirdek bir ekip.</p>
-      <div class="about-team-grid">
-        <article class="about-team-card">
-          <div class="about-team-photo">
+        <section class="about-section" aria-labelledby="about-vm-title">
+          <h2 class="about-section__title" id="about-vm-title">Vizyon ve misyon</h2>
+          <div class="about-vm-grid">
+            <article class="about-vm-card">
+              <h3>Vizyon</h3>
+              <p>Türkiye’de ve bölgede deneyim tabanlı yetkinlik ölçümünün güvenilir adresi olmak; bireyin kariyerini ve kurumun yetenek kararını aynı dilde konuşturmak.</p>
+            </article>
+            <article class="about-vm-card">
+              <h3>Misyon</h3>
+              <p>Eğitim, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt üretmek.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section" aria-labelledby="about-team-title">
+          <h2 class="about-section__title" id="about-team-title">Kurucu ekip</h2>
+          <p class="about-section__intro">Yön, ürün ve deneyim; sahada çalışan çekirdek bir ekip.</p>
+          <div class="about-team-grid">
+            <article class="about-team-card">
+              <div class="about-team-photo">
+                <img
+                  src="/images/abidin-samet-cay.jpg?v=2"
+                  alt="Abidin Samet Çay — SEBS Global kurucu ortak"
+                  width="112"
+                  height="140"
+                  class="h-full w-full object-cover object-[center_15%]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <h3>Abidin Samet Çay</h3>
+              <p class="about-team-role">Kurucu ortak · CEO</p>
+              <p>Bulut ve siber güvenlik tarafında saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
+            </article>
+            <article class="about-team-card">
+              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
+              <h3>İbrahim Ethem Arı</h3>
+              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+              <p>Ürün ve mühendislik; platform mimarisi ve teknik kalite.</p>
+            </article>
+            <article class="about-team-card">
+              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
+              <h3>Emir Berat Kayalı</h3>
+              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+              <p>Deneyim ve arayüz; kullanıcı akışları ve markanın dijital yüzü.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section" id="yasal-belgeler" aria-labelledby="about-legal-title">
+          <h2 class="about-section__title" id="about-legal-title">Yasal belgeler</h2>
+          <p class="about-section__intro">Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
+          <ul class="about-legal-links">
+            <li><a href="/gizlilik">Gizlilik politikası</a></li>
+            <li><a href="/kvkk">KVKK aydınlatma</a></li>
+            <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
+            <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
+            <li><a href="/mesafeli-satis">Mesafeli satış</a></li>
+            <li><a href="/fiyatlandirma">Paketler ve ödeme</a></li>
+          </ul>
+        </section>
+
+        <section class="about-section" aria-labelledby="about-payment-title">
+          <h2 class="about-section__title" id="about-payment-title">Güvenli ödeme</h2>
+          <p class="about-section__intro">Kart ödemeleri Iyzico altyapısı üzerinden, SSL ile korunan bağlantıda işlenir. Kart bilgileri SEBS tarafından saklanmaz.</p>
+          <div class="sebs-payment-trust sebs-payment-trust--about-inline" aria-label="Kabul edilen ödeme yöntemleri">
+            <p class="sebs-payment-trust__label">Güvenli ödeme</p>
             <img
-              src="/images/abidin-samet-cay.jpg?v=2"
-              alt="Abidin Samet Çay — SEBS Global kurucu ortak"
-              width="112"
-              height="140"
-              class="h-full w-full object-cover object-[center_15%]"
+              src="/images/payments/iyzico/logo-band-footer.svg"
+              alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
+              width="429"
+              height="32"
               loading="lazy"
               decoding="async"
+              class="sebs-payment-trust__band"
             />
           </div>
-          <h3>Abidin Samet Çay</h3>
-          <p class="about-team-role">Kurucu ortak · CEO</p>
-          <p>Bulut ve siber güvenlik tarafında saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
-        </article>
-        <article class="about-team-card">
-          <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
-          <h3>İbrahim Ethem Arı</h3>
-          <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
-          <p>Ürün ve mühendislik; platform mimarisi, güvenilir teslimat ve teknik kalite.</p>
-        </article>
-        <article class="about-team-card">
-          <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
-          <h3>Emir Berat Kayalı</h3>
-          <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
-          <p>Deneyim ve arayüz; kullanıcı akışları, görsel tutarlılık ve markanın dijital yüzü.</p>
-        </article>
+        </section>
+
+        <p class="about-cta-row">
+          <a href="/signup.html">Ücretsiz başla</a>
+          <span class="about-hero__sep" aria-hidden="true">·</span>
+          <a href="/contact.html">İletişim</a>
+        </p>
       </div>
-
-      <h2 id="yasal-belgeler">Yasal belgeler</h2>
-      <p>Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
-      <ul class="legal-related-links">
-        <li><a href="/gizlilik">Gizlilik politikası</a></li>
-        <li><a href="/kvkk">KVKK aydınlatma</a></li>
-        <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
-        <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
-        <li><a href="/mesafeli-satis">Mesafeli satış sözleşmesi</a></li>
-        <li><a href="/fiyatlandirma">Paketler ve ödeme</a></li>
-      </ul>
-
-      <h2>Güvenli ödeme</h2>
-      <p>Kart ödemeleri Iyzico altyapısı üzerinden, 256-bit SSL ile korunan bağlantıda işlenir. Kart bilgileri SEBS tarafından saklanmaz.</p>
-      <div class="sebs-payment-trust sebs-payment-trust--about-inline" aria-label="Kabul edilen ödeme yöntemleri">
-        <p class="sebs-payment-trust__label">Güvenli ödeme</p>
-        <img
-          src="/images/payments/iyzico/logo-band-footer.svg"
-          alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
-          width="429"
-          height="32"
-          loading="lazy"
-          decoding="async"
-          class="sebs-payment-trust__band"
-        />
-      </div>
-
-      <p class="mt-10">
-        <a href="/signup.html" class="font-semibold text-blue-600 hover:text-blue-700">Ücretsiz başla</a>
-        <span class="text-slate-300 mx-2" aria-hidden="true">·</span>
-        <a href="/contact.html" class="font-semibold text-blue-600 hover:text-blue-700">İletişim</a>
-      </p>
     </div>
   </main>
 

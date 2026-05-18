@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <base href="/">
-    <title>Paketler ve Fiyatlar - SEBS Global</title>
-    <meta name="description" content="SEBS Global eğitim paketleri. Siber güvenlik, bulut bilişim ve daha fazlası için uygun fiyatlı paketler.">
+    <title>Kariyer Yolları ve Paketler - SEBS Global</title>
+    <meta name="description" content="Siber güvenlik kariyer yolları: SEBS Yolu aşamaları, abonelik planları ve modül müfredatı. Ücretsiz keşif ile başla, planla kilidi aç.">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="SEBS Global">
     <meta name="theme-color" content="#1e3a5f">
     <link rel="canonical" href="https://sebsglobal.com/fiyatlandirma">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/fiyatlandirma">
-    <meta property="og:title" content="Paketler ve Fiyatlar - SEBS Global">
-    <meta property="og:description" content="SEBS Global eğitim paketleri. Siber güvenlik, bulut bilişim ve daha fazlası için uygun fiyatlı paketler.">
+    <meta property="og:title" content="Kariyer Yolları ve Paketler - SEBS Global">
+    <meta property="og:description" content="Siber güvenlik kariyer yolları, SEBS Yolu aşamaları ve abonelik planları. Ücretsiz yol haritası ile başla.">
     <meta property="og:image" content="https://sebsglobal.com/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -22,11 +22,11 @@
     <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Paketler ve Fiyatlar - SEBS Global">
-    <meta name="twitter:description" content="SEBS Global eğitim paketleri. Siber güvenlik, bulut bilişim ve daha fazlası için uygun fiyatlı paketler.">
+    <meta name="twitter:title" content="Kariyer Yolları ve Paketler - SEBS Global">
+    <meta name="twitter:description" content="Siber güvenlik kariyer yolları, SEBS Yolu aşamaları ve abonelik planları. Ücretsiz yol haritası ile başla.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-image.jpg">
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Fiyatlandirma","item":"https://sebsglobal.com/fiyatlandirma"}]}
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Kariyer Yollari","item":"https://sebsglobal.com/fiyatlandirma"}]}
     </script>
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     
@@ -761,6 +761,15 @@
 
         .pricing-card {
             cursor: pointer;
+            position: relative;
+        }
+
+        body.sebs-pricing-journey .sebs-yolu-chip-open {
+            color: #15803d;
+        }
+
+        body.sebs-pricing-journey .sebs-yolu-chip-locked {
+            color: #b91c1c;
         }
 
         .pricing-card.journey-reveal {
@@ -811,11 +820,148 @@
         }
 
         .access-info-section,
-        .sebs-visual-strip,
         .sebs-yolu-compare,
-        .sebs-roadmap-flow {
+        .sebs-pricing-options-table,
+        .pricing-plans-section {
             position: relative;
             z-index: 1;
+        }
+
+        .pricing-hero-bridge {
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .pricing-hero-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+
+        .pricing-hero-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.75rem 1.35rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .pricing-hero-cta--primary {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+        }
+
+        .pricing-hero-cta--secondary {
+            background: #fff;
+            color: #1e40af;
+            border: 2px solid rgba(37, 99, 235, 0.35);
+        }
+
+        .pricing-hero-cta--ghost {
+            background: transparent;
+            color: #475569;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+        }
+
+        .pricing-hero-cta:hover {
+            transform: translateY(-2px);
+        }
+
+        .pricing-plans-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .pricing-plans-intro {
+            text-align: center;
+            margin: 2rem 0 1.25rem;
+        }
+
+        .pricing-plans-intro h2 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .pricing-plans-intro p {
+            margin: 0.5rem auto 0;
+            max-width: 640px;
+            font-size: 1rem;
+            color: rgba(51, 65, 85, 0.88);
+            line-height: 1.65;
+        }
+
+        .pricing-featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #d4a853 0%, #f59e0b 100%);
+            color: #1e293b;
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            z-index: 2;
+        }
+
+        .sebs-pricing-options-table {
+            margin: 2rem auto;
+            max-width: 1100px;
+            padding: 0 2rem;
+        }
+
+        .sebs-pricing-options-table h2 {
+            margin: 0 0 0.35rem;
+            text-align: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .sebs-pricing-options-table > p {
+            margin: 0 auto 1rem;
+            max-width: 560px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .sebs-pricing-options-table .sebs-yolu-compare {
+            margin-top: 0;
+        }
+
+        .sebs-pricing-options-table .option-recommended {
+            display: inline-block;
+            margin-left: 0.35rem;
+            padding: 0.12rem 0.45rem;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.12);
+            color: #1d4ed8;
+            font-size: 0.68rem;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        #detayli-mufredat {
+            scroll-margin-top: 5rem;
         }
 
         .journey-reveal {
@@ -1317,9 +1463,10 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=6" />
+  <link rel="stylesheet" href="/css/sebs-yolu-premium.css?v=1" />
 
 </head>
-<body class="landing-site-body sebs-pricing-journey font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body sebs-pricing-journey sebs-premium-page font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -1382,9 +1529,22 @@
 
     <section class="pricing-hero">
         <div class="container">
-            <span class="sebs-yolu-badge"><i class="fas fa-route"></i> SEBS Yolu Gelir Modeli</span>
-            <h1>SEBS Yolunu Gör, Kilitleri Aç, İlerle</h1>
-            <p>Kişisel yol haritanı ücretsiz gör; İçerik, simülasyon ve ilerleme sistemini plan ya da tekli durak erişimiyle aç.</p>
+            <span class="sebs-yolu-badge"><i class="fas fa-route"></i> Kariyer yolları · SEBS Yolu</span>
+            <h1>Siber güvenlikte hedef rolünü seç, adım adım ilerle</h1>
+            <p>
+                <strong>Kariyer yolları</strong>, SEBS Yolu müfredatı ve abonelik paketlerinin bir arada olduğu sayfadır.
+                Önce ücretsiz keşif ile yönünü netleştir; sonra plan veya tekli modülle kilitleri aç.
+            </p>
+            <span class="pricing-hero-bridge">SEBS Yolu = İlk Adım → Yükseliş → Zirve · her aşamada duraklar ve simülasyonlar</span>
+            <div class="pricing-hero-ctas">
+                <a href="/signup.html" class="pricing-hero-cta pricing-hero-cta--primary focus-ring">
+                    <i class="fas fa-map" aria-hidden="true"></i> Ücretsiz yol haritamı gör
+                </a>
+                <a href="/tests/kariyer-degerlendirme" class="pricing-hero-cta pricing-hero-cta--secondary focus-ring">
+                    <i class="fas fa-compass" aria-hidden="true"></i> Kariyer testi yap
+                </a>
+                <a href="#pricing-plans" class="pricing-hero-cta pricing-hero-cta--ghost focus-ring">Planları karşılaştır</a>
+            </div>
         </div>
     </section>
 
@@ -1416,111 +1576,110 @@
         </div>
     </section>
 
+    <section class="pricing-plans-section journey-reveal" id="pricing-plans" aria-labelledby="pricing-plans-heading">
+        <div class="pricing-plans-intro">
+            <h2 id="pricing-plans-heading">Abonelik planları</h2>
+            <p>Plan seçerek SEBS Yolu aşamalarını ve ilerleme sistemini açarsın. Aşağıdaki kartlardan doğrudan satın alabilirsin.</p>
+        </div>
+        <div class="category-tabs" id="categoryTabs" hidden aria-hidden="true">
+            <button class="category-tab active" data-category="sebs-road" type="button">SEBS Yolu Planları</button>
+        </div>
+        <div class="pricing-container">
+            <div class="pricing-grid" id="pricingGrid"></div>
+        </div>
+    </section>
+
+    <section class="sebs-pricing-options-table journey-reveal" aria-labelledby="pricing-options-heading">
+        <h2 id="pricing-options-heading">Hangi seçenek sana uygun?</h2>
+        <p>Abonelik ilerleme takibi ve önerileri açar; tekli satın alma yalnızca seçtiğin içeriği verir.</p>
+        <div class="sebs-yolu-compare">
+            <table aria-label="SEBS Yolu satın alma seçenekleri karşılaştırması">
+                <thead>
+                    <tr>
+                        <th scope="col">Seçenek</th>
+                        <th scope="col">Fiyat</th>
+                        <th scope="col">Ne açılır</th>
+                        <th scope="col">Kim için</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>İlk Adım Planı</strong> <span class="option-recommended">Abonelik</span></td>
+                        <td>199 TL/ay</td>
+                        <td>İlk Adım aşaması · 6 durak · 18 simülasyon · ilerleme takibi</td>
+                        <td>Kariyere yeni başlayanlar, yön arayanlar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Yükseliş Planı</strong> <span class="option-recommended">Önerilen</span></td>
+                        <td>349 TL/ay</td>
+                        <td>İlk Adım + Yükseliş · +9 simülasyon · yol önerileri</td>
+                        <td>Ciddi ilerlemek isteyenler, SOC / ağ odaklı roller</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zirve Planı</strong></td>
+                        <td>799 TL/ay</td>
+                        <td>Tüm aşamalar · tüm duraklar ve simülasyonlar · premium takip</td>
+                        <td>Tam yol, pentest / IR / ileri seviye hedefler</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tek modül</strong></td>
+                        <td>120 TL · tek sefer</td>
+                        <td>Seçtiğin bir modül ve simülasyonları · sınırlı sistem</td>
+                        <td>Tek konuya hızlı odaklanmak isteyenler</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tek durak</strong></td>
+                        <td>199 TL · tek sefer</td>
+                        <td>Bir durak içeriği · abonelik olmadan düşük taahhüt</td>
+                        <td>Denemek isteyenler; sonradan plana geçilebilir</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="sebs-yolu-compare" style="margin-top: 1.25rem;">
+            <table aria-label="Planlara göre aşama erişimi">
+                <thead>
+                    <tr>
+                        <th scope="col">Plan</th>
+                        <th scope="col">İlk Adım</th>
+                        <th scope="col">Yükseliş</th>
+                        <th scope="col">Zirve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>İlk Adım Planı</td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                    </tr>
+                    <tr>
+                        <td>Yükseliş Planı</td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
+                    </tr>
+                    <tr>
+                        <td>Zirve Planı</td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <div class="container">
-        <div class="category-tabs" id="categoryTabs">
-            <button class="category-tab active" data-category="sebs-road">SEBS Yolu Planları</button>
+        <div class="access-info-section journey-reveal">
+            <p><i class="fas fa-info-circle"></i> <strong>Temel mantık:</strong> Tekli satış içerik verir, abonelik sistem verir (ilerleme, öneriler, aşamalar arası geçiş). Üst planlar alt planları kapsar; yükseltirken kalan süren korunur.</p>
         </div>
     </div>
 
-    <div class="container" style="margin-top: 1.25rem;">
-        <div class="sebs-visual-strip">
-            <div class="sebs-visual-strip-grid">
-                <article class="sebs-visual-mini">
-                    <h4>İlk Adım Planı · 199 TL/ay</h4>
-                    <p>Düşük bariyerli başlangıç.</p>
-                    <ul class="sebs-dayline">
-                        <li><strong>Açık</strong> İlk Adım aşaması</li>
-                        <li><strong>Görünür</strong> 6 durak · 18 simülasyon</li>
-                        <li><strong>Kilitli</strong> Yükseliş + Zirve</li>
-                    </ul>
-                </article>
-                <article class="sebs-visual-mini">
-                    <h4>Yükseliş Planı · 349 TL/ay</h4>
-                    <p>Ana tercih, en dengeli paket.</p>
-                    <ul class="sebs-dayline">
-                        <li><strong>Açık</strong> İlk Adım + Yükseliş</li>
-                        <li><strong>Ek</strong> 3 durak · 9 simülasyon</li>
-                        <li><strong>Kilitli</strong> Zirve</li>
-                    </ul>
-                </article>
-                <article class="sebs-visual-mini">
-                    <h4>Zirve Planı · 799 TL/ay</h4>
-                    <p>Yolun tamamını açar.</p>
-                    <ul class="sebs-dayline">
-                        <li><strong>Açık</strong> Tüm aşamalar</li>
-                        <li><strong>Erişim</strong> Tüm durak ve simülasyonlar</li>
-                        <li><strong>Artı</strong> Premium yol takibi</li>
-                    </ul>
-                </article>
-            </div>
-        </div>
-    </div>
+    <section class="container journey-module-shop journey-reveal" id="detayli-mufredat" aria-labelledby="detayli-mufredat-heading">
+        <div id="moduleRoadContainer" style="display:none;"></div>
+    </section>
 
-    <section class="container journey-module-shop journey-reveal" id="moduleRoadContainer" style="display:none;"></section>
-
-    <div class="pricing-container">
-        <div class="pricing-grid" id="pricingGrid">
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="access-info-section">
-            <p><i class="fas fa-info-circle"></i> <strong>Temel Mantık:</strong> Tekli satış içerik verir, abonelik sistem verir. Üst planlar alt planları kapsar; plan yükseltirken kalan süren korunur.</p>
-        </div>
-    </div>
-
-    <div class="container sebs-yolu-compare">
-        <table aria-label="SEBS Yolu plan erişim tablosu">
-            <thead>
-                <tr>
-                    <th>Plan</th>
-                    <th>İlk Adım</th>
-                    <th>Yükseliş</th>
-                    <th>Zirve</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>İlk Adım Planı</td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                </tr>
-                <tr>
-                    <td>Yükseliş Planı</td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                </tr>
-                <tr>
-                    <td>Zirve Planı</td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="container">
-        <div class="sebs-roadmap-flow">
-            <article class="sebs-roadmap-step">
-                <h4>İlk Adım</h4>
-                <p>Temeller, yön bulma, ilk uygulanabilir kazanımlar.</p>
-                <div class="meta">6 durak · 18 simülasyon</div>
-            </article>
-            <article class="sebs-roadmap-step">
-                <h4>Yükseliş</h4>
-                <p>Derinleşme, daha yoğun görevler, gerçek beceri.</p>
-                <div class="meta">3 durak · 9 simülasyon</div>
-            </article>
-            <article class="sebs-roadmap-step">
-                <h4>Zirve</h4>
-                <p>İleri seviye görevler ve tam yol hakimiyeti.</p>
-                <div class="meta">4 durak · 12 simülasyon</div>
-            </article>
-        </div>
-    </div>
 
     <script src="js/navigation.js"></script>
     
@@ -1793,8 +1952,8 @@
 
             container.innerHTML = `
                 <div class="journey-shop-head">
-                    <h3>Modül Yolundan Satın Alma</h3>
-                    <p>Tek bir yol üzerinde ilerle: her modül bir durak, kilitli durağa tıklayıp aşama erişimini aç.</p>
+                    <h3 id="detayli-mufredat-heading">Detaylı müfredat</h3>
+                    <p>SEBS Yolu üzerindeki tüm modüller (duraklar). Kilitli modüle tıklayarak tek modül veya aşama planıyla açabilirsin.</p>
                     <div class="road-controls">
                         <button class="road-filter-btn ${activeRoadStage === 'all' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('all')">Tüm Duraklar</button>
                         <button class="road-filter-btn ${activeRoadStage === 'ilk-adim' ? 'active' : ''}" type="button" onclick="setRoadStageFilter('ilk-adim')">İlk Adım</button>
@@ -1899,36 +2058,14 @@
             }
         }
 
-        // Render pricing cards
-        async function renderPricingCards(category) {
-            // Önce kullanıcı satın alımlarını getir
-            await fetchUserPurchases();
-            
-            const grid = document.getElementById('pricingGrid');
-            const data = pricingData[category];
-            const moduleRoadContainer = document.getElementById('moduleRoadContainer');
-            const pricingContainer = document.querySelector('.pricing-container');
 
-            if (category === 'sebs-road') {
-                if (pricingContainer) pricingContainer.style.display = 'none';
-                if (moduleRoadContainer) {
-                    moduleRoadContainer.style.display = 'block';
-                    renderModuleRoad(category);
-                }
-                setupJourneyReveal();
-                return;
-            }
-
-            if (pricingContainer) pricingContainer.style.display = '';
-            if (moduleRoadContainer) moduleRoadContainer.style.display = 'none';
-
-            grid.innerHTML = data.packages.map((pkg, index) => {
-                // Gerçek satın alımlara göre kontrol et
+        function buildPackageCardsHtml(category, data) {
+            return data.packages.map((pkg, index) => {
                 const isOwned = hasPurchasedPackage(category, pkg.level);
                 const isFeatured = category === 'sebs-road' ? index === 1 : index === 0;
-
                 return `
                     <div class="pricing-card journey-reveal ${isFeatured ? 'featured' : ''}">
+                        ${isFeatured ? '<span class="pricing-featured-badge">En çok tercih edilen</span>' : ''}
                         <div class="pricing-header">
                             <div class="pricing-level">${getLevelLabel(pkg.level)}</div>
                             <h3 class="pricing-title">${pkg.title}</h3>
@@ -1962,6 +2099,32 @@
                     </div>
                 `;
             }).join('');
+        }
+        // Render pricing cards
+        async function renderPricingCards(category) {
+            // Önce kullanıcı satın alımlarını getir
+            await fetchUserPurchases();
+            
+            const grid = document.getElementById('pricingGrid');
+            const data = pricingData[category];
+            const moduleRoadContainer = document.getElementById('moduleRoadContainer');
+            const pricingContainer = document.querySelector('.pricing-container');
+
+            if (category === 'sebs-road') {
+                if (pricingContainer) pricingContainer.style.display = '';
+                if (moduleRoadContainer) {
+                    moduleRoadContainer.style.display = 'block';
+                    renderModuleRoad(category);
+                }
+                grid.innerHTML = buildPackageCardsHtml(category, data);
+                setupJourneyReveal();
+                return;
+            }
+
+            if (pricingContainer) pricingContainer.style.display = '';
+            if (moduleRoadContainer) moduleRoadContainer.style.display = 'none';
+
+            grid.innerHTML = buildPackageCardsHtml(category, data);
 
             setupJourneyReveal();
         }
@@ -2250,7 +2413,7 @@
             <ul class="mt-4 space-y-2 text-sm">
               <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
               <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
-              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kariyer yolları</a></li>
             </ul>
           </div>
           <div>
