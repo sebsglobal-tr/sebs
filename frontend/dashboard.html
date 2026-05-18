@@ -150,6 +150,11 @@
                         <p class="welcome-subtitle mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
                             Simülasyon ve modül performansınızın özeti; yetkinlik izinizi ve ilerlemenizi tek ekranda takip edin.
                         </p>
+                        <p id="adminPanelLinkWrap" class="mt-5 hidden">
+                            <a href="/admin.html" class="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-800 transition hover:bg-violet-100 focus-ring">
+                                <i class="fas fa-shield-halved" aria-hidden="true"></i> Yönetim paneli
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -686,6 +691,11 @@
                         welcomeTitleEl.textContent = user.fullName || firstName;
                     }
                     
+                    var adminWrap = document.getElementById('adminPanelLinkWrap');
+                    if (adminWrap) {
+                        adminWrap.classList.toggle('hidden', user.role !== 'admin');
+                    }
+
                     console.log('✅ User info loaded:', {
                         email: user.email,
                         name: firstName,

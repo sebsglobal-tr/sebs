@@ -751,11 +751,21 @@ app.post('/api/auth/session-cookie/clear', (req, res) => {
 
 app.get('/api/public/site-config', (req, res) => {
     const { shouldEnforceModuleHtmlGate } = require('./routes/register-module-html-gate');
+    let iyzicoConfigured = false;
+    try {
+        const { isIyzicoConfigured } = require('./lib/iyzico-checkout');
+        iyzicoConfigured = isIyzicoConfigured();
+    } catch (_) {
+        /* ignore */
+    }
+    const disableDirect = process.env.DISABLE_DIRECT_PURCHASE === '1';
     res.json({
         success: true,
         data: {
             moduleHtmlGate: shouldEnforceModuleHtmlGate(req),
-            paymentsRequireIyzico: process.env.DISABLE_DIRECT_PURCHASE === '1'
+            paymentsRequireIyzico: disableDirect || (process.env.NODE_ENV === 'production' && process.env.ALLOW_DEV_PURCHASE !== '1'),
+            iyzicoConfigured,
+            paymentProvider: 'iyzico'
         }
     });
 });
@@ -3143,6 +3153,28 @@ if (fs.existsSync(FRONTEND_DIR)) {
         fullAccessEmail: FULL_ACCESS_EMAIL,
         logger
     });
+    try {
+        const { registerAdminHtmlGate } = require('./routes/register-admin-html-gate');
+        registerAdminHtmlGate(app, {
+            frontendDir: FRONTEND_DIR,
+            resolveUserFromRequest: authResolver.resolveUserFromRequest.bind(authResolver),
+            fullAccessEmail: FULL_ACCESS_EMAIL
+        });
+        logger.info('Admin HTML gate registered');
+    } catch (adminGateErr) {
+        logger.warn('Admin HTML gate not registered:', adminGateErr.message);
+    }
+}
+
+try {
+    const { registerModuleAccessApiRoutes } = require('./routes/module-access-api');
+    registerModuleAccessApiRoutes(app, {
+        pool,
+        resolveUserFromRequest: authResolver.resolveUserFromRequest.bind(authResolver),
+        fullAccessEmail: FULL_ACCESS_EMAIL
+    });
+} catch (moduleAccessApiErr) {
+    logger.warn('Module access API not registered:', moduleAccessApiErr.message);
 }
 
 app.get('*', (req, res, next) => {
@@ -3152,11 +3184,17 @@ app.get('*', (req, res, next) => {
     if (/^\/modules\/[^/]+\.html$/i.test(req.path)) {
         return next();
     }
+    if (/^\/(admin\.html|admin|yonetim)\/?$/i.test(req.path)) {
+        return res.redirect(302, '/dashboard.html');
+    }
     if (!fs.existsSync(FRONTEND_DIR)) {
         return next();
     }
     const filePath = path.join(FRONTEND_DIR, req.path.replace(/^\//, ''));
     if (fs.existsSync(filePath) && filePath.endsWith('.html')) {
+        if (/admin\.html$/i.test(filePath)) {
+            return res.redirect(302, '/dashboard.html');
+        }
         return res.sendFile(filePath);
     }
     const htmlFallbackPath = `${filePath}.html`;
@@ -3284,6 +3322,30 @@ app.post('/api/users/reset-progress', authenticateToken, async (req, res) => {
 });
 
 try {
+    const { registerPaymentApiRoutes } = require('./routes/payment-api');
+    registerPaymentApiRoutes(app, { pool });
+} catch (paymentApiErr) {
+    logger.warn('Payment API routes not registered:', paymentApiErr.message);
+}
+
+try {
+    const { loadPackagePrices } = require('./lib/pricing-store');
+    loadPackagePrices(pool).then(() => logger.info('Package prices loaded')).catch((e) => {
+        logger.warn('Package prices load:', e.message);
+    });
+} catch (pricingErr) {
+    logger.warn('Pricing store:', pricingErr.message);
+}
+
+try {
+    const { registerAdminApiRoutes } = require('./routes/admin-api');
+    registerAdminApiRoutes(app, { pool, authenticateToken });
+    logger.info('Admin API routes registered');
+} catch (adminApiErr) {
+    logger.warn('Admin API routes not registered:', adminApiErr.message);
+}
+
+try {
     const { registerIyzicoPaymentRoutes } = require('./routes/iyzico-payments');
     registerIyzicoPaymentRoutes(app, { pool, authenticateToken });
     logger.info('Iyzico payment routes registered');
@@ -3292,6 +3354,12 @@ try {
 }
 
 if (fs.existsSync(FRONTEND_DIR)) {
+    app.use((req, res, next) => {
+        if (req.method === 'GET' && /^\/admin\.html$/i.test(req.path)) {
+            return res.redirect(302, '/dashboard.html');
+        }
+        next();
+    });
     app.use(
         express.static(FRONTEND_DIR, {
             extensions: ['html', 'htm'],

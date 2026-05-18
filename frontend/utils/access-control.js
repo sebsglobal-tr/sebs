@@ -374,6 +374,14 @@ function showAccessDeniedModal(message = '') {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
+function clearPurchasesCache() {
+    userPurchasesCache = null;
+    purchasesCacheTime = 0;
+    userMeCache = null;
+    userMeCacheTime = 0;
+    userMePromise = null;
+}
+
 window.AccessControl = {
     getUserAccessLevel,
     hasAccess,
@@ -381,7 +389,8 @@ window.AccessControl = {
     checkModuleAccess,
     checkSimulationAccess,
     showAccessDeniedModal,
-    fetchUserPurchases
+    fetchUserPurchases,
+    clearPurchasesCache
 };
 
 } // End of AccessControlLoaded check

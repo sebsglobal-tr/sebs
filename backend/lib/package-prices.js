@@ -18,7 +18,14 @@ function normalizeLevel(level) {
 }
 
 function getExpectedPrice(category, level) {
-    const cat = PACKAGE_PRICES[category];
+    let prices = PACKAGE_PRICES;
+    try {
+        const { getPricesSync } = require('./pricing-store');
+        prices = getPricesSync();
+    } catch {
+        /* defaults */
+    }
+    const cat = prices[category];
     if (!cat) return null;
     const lvl = normalizeLevel(level);
     const price = cat[lvl];

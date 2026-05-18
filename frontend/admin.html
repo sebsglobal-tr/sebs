@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <title>Yönetim Paneli — SEBS Global</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="/images/SEBS.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin-panel.css">
+  <style>
+    html { visibility: hidden; }
+    html.admin-ready { visibility: visible; }
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; }
+    .admin-sidebar-brand { padding: 0 1.25rem 1rem; font-weight: 800; font-size: 1.1rem; color: #fff; }
+    .admin-sidebar-brand span { color: #818cf8; }
+    .admin-sidebar-foot { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid #1e293b; font-size: 0.75rem; color: #64748b; }
+    .admin-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .admin-topbar h1 { margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a; }
+    .admin-search { padding: 0.45rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; min-width: 200px; }
+    .admin-loading { padding: 3rem; text-align: center; color: #64748b; }
+    .admin-denied { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; padding: 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="adminGate" class="admin-loading">Yetki kontrol ediliyor…</div>
+
+  <div id="adminDenied" class="admin-denied" style="display:none;">
+    <i class="fas fa-lock" style="font-size:3rem;color:#94a3b8;"></i>
+    <h1 style="margin:0;font-size:1.25rem;">Erişim reddedildi</h1>
+    <p style="color:#64748b;max-width:360px;">Bu sayfa yalnızca yönetici hesapları içindir.</p>
+    <a href="/dashboard.html" class="admin-btn admin-btn--primary" style="text-decoration:none;">Panele dön</a>
+  </div>
+
+  <div id="adminApp" class="admin-layout" style="display:none;">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">SEBS <span>Admin</span></div>
+      <nav id="adminNav" aria-label="Yönetim">
+        <a href="#dashboard" data-view="dashboard" class="is-active"><i class="fas fa-chart-pie"></i> Özet</a>
+        <a href="#users" data-view="users"><i class="fas fa-users"></i> Kullanıcılar</a>
+        <a href="#pricing" data-view="pricing"><i class="fas fa-tags"></i> Fiyatlandırma</a>
+        <a href="#purchases" data-view="purchases"><i class="fas fa-shopping-cart"></i> Satın almalar</a>
+        <a href="#orders" data-view="orders"><i class="fas fa-credit-card"></i> Ödeme siparişleri</a>
+      </nav>
+      <div class="admin-sidebar-foot">
+        <div id="adminUserEmail">—</div>
+        <a href="/dashboard.html" style="color:#94a3b8;margin-top:0.5rem;display:inline-block;">← Kullanıcı paneli</a>
+      </div>
+    </aside>
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <h1 id="adminPageTitle">Özet</h1>
+        <button type="button" id="adminRefreshBtn" class="admin-btn admin-btn--ghost"><i class="fas fa-sync-alt"></i> Yenile</button>
+      </div>
+      <div id="adminContent"></div>
+    </div>
+  </div>
+
+  <div id="adminDrawer" class="admin-drawer" aria-hidden="true">
+    <div class="admin-drawer-panel" id="adminDrawerBody"></div>
+  </div>
+  <div id="adminToast" class="admin-toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-auth.js"></script>
+  <script src="/js/session-cookie-sync.js"></script>
+  <script src="/js/admin/app.js"></script>
+</body>
+</html>

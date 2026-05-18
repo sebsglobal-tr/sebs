@@ -2093,26 +2093,45 @@
                         price: parseFloat(price)
                     });
 
-                    let result = null;
+                    let payConfig = { paymentsRequireIyzico: false, iyzicoConfigured: false };
+                    try {
+                        const cfgRes = await fetch(apiP + '/payments/config');
+                        if (cfgRes.ok) {
+                            const cfgJson = await cfgRes.json();
+                            if (cfgJson.success && cfgJson.data) payConfig = cfgJson.data;
+                        }
+                    } catch (cfgErr) {
+                        console.warn('payments/config:', cfgErr);
+                    }
+
                     const iyzicoInit = await fetch(apiP + '/payments/iyzico/initialize', {
                         method: 'POST',
                         headers: authHeaders,
                         body: purchaseBody
                     });
-                    if (iyzicoInit.ok) {
-                        const iyzData = await iyzicoInit.json();
-                        if (iyzData.success && iyzData.data) {
-                            if (iyzData.data.paymentPageUrl) {
-                                window.location.href = iyzData.data.paymentPageUrl;
-                                return;
-                            }
-                            if (iyzData.data.checkoutFormContent) {
-                                document.open();
-                                document.write(iyzData.data.checkoutFormContent);
-                                document.close();
-                                return;
-                            }
+                    const iyzData = iyzicoInit.ok ? await iyzicoInit.json() : null;
+
+                    if (iyzicoInit.ok && iyzData && iyzData.success && iyzData.data) {
+                        if (iyzData.data.paymentPageUrl) {
+                            window.location.href = iyzData.data.paymentPageUrl;
+                            return;
                         }
+                        if (iyzData.data.checkoutFormContent) {
+                            document.open();
+                            document.write(iyzData.data.checkoutFormContent);
+                            document.close();
+                            return;
+                        }
+                    }
+
+                    if (payConfig.paymentsRequireIyzico || payConfig.iyzicoConfigured) {
+                        const msg =
+                            (iyzData && iyzData.message) ||
+                            'Ödeme sistemi şu an kullanılamıyor. Lütfen biraz sonra tekrar deneyin veya destek ile iletişime geçin.';
+                        alert('❌ ' + msg);
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
+                        return;
                     }
 
                     const response = await fetch(apiP + '/purchase', {
@@ -2121,7 +2140,7 @@
                         body: purchaseBody
                     });
 
-                    result = await response.json();
+                    const result = await response.json();
 
                     if (result.success) {
                         // Purchase saved to database - refresh purchases and re-render cards
@@ -2129,6 +2148,9 @@
 
                         // Satın alımları yeniden getir ve kartları güncelle
                         await fetchUserPurchases();
+                        if (window.AccessControl && window.AccessControl.clearPurchasesCache) {
+                            window.AccessControl.clearPurchasesCache();
+                        }
                         await renderPricingCards(category);
 
                         alert('✅ Satın alma işlemi başarılı! Erişim seviyeniz güncellendi.');
