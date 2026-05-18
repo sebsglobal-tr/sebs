@@ -507,6 +507,44 @@
             color: #fff;
         }
 
+        .btn-modal-confirm:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .purchase-legal-consents {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.35);
+            text-align: left;
+        }
+
+        .purchase-legal-consents label {
+            display: flex;
+            gap: 0.55rem;
+            align-items: flex-start;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+            cursor: pointer;
+        }
+
+        .purchase-legal-consents label + label {
+            margin-top: 0.65rem;
+        }
+
+        .purchase-legal-consents input {
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .purchase-legal-consents a {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
         @media (max-width: 760px) {
             .purchase-modal-grid {
                 grid-template-columns: 1fr;
@@ -2358,14 +2396,22 @@
                                 class="sebs-payment-trust__band"
                             />
                             <p class="mt-3 text-center text-xs text-slate-500">
-                                Ödeme Iyzico güvenli ödeme sayfasında tamamlanır.
-                                <a href="/mesafeli-satis" class="underline hover:text-slate-700">Mesafeli satış</a> ve
-                                <a href="/teslimat-iade" class="underline hover:text-slate-700">teslimat/iade</a> şartlarını kabul etmiş olursunuz.
+                                Ödeme Iyzico güvenli ödeme sayfasında tamamlanır (SSL).
                             </p>
+                        </div>
+                        <div class="purchase-legal-consents">
+                            <label>
+                                <input type="checkbox" id="purchaseAcceptTerms" />
+                                <span><a href="/mesafeli-satis" target="_blank" rel="noopener">Mesafeli satış sözleşmesi</a>, <a href="/kullanim-sartlari" target="_blank" rel="noopener">kullanım şartları</a>, <a href="/gizlilik" target="_blank" rel="noopener">gizlilik politikası</a> ve <a href="/kvkk" target="_blank" rel="noopener">KVKK aydınlatma metnini</a> okudum ve kabul ediyorum.</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="purchaseAcceptDigital" />
+                                <span>Cayma süresi dolmadan dijital içeriğin (hesap erişiminin) ifasına başlanmasını talep ediyorum; ifa başladıktan sonra cayma hakkımın yasal sınırlar içinde sona erebileceğini kabul ediyorum.</span>
+                            </label>
                         </div>
                         <div class="purchase-modal-actions">
                             <button type="button" class="btn-modal-cancel" data-modal-close>Vazgeç</button>
-                            <button type="button" class="btn-modal-confirm" data-modal-confirm>Ödemeye devam et</button>
+                            <button type="button" class="btn-modal-confirm" data-modal-confirm disabled>Ödemeye devam et</button>
                         </div>
                     </div>
                 </div>
@@ -2375,7 +2421,18 @@
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay || e.target.closest('[data-modal-close]')) close();
             });
-            overlay.querySelector('[data-modal-confirm]').addEventListener('click', () => {
+            const confirmBtn = overlay.querySelector('[data-modal-confirm]');
+            const termsCb = overlay.querySelector('#purchaseAcceptTerms');
+            const digitalCb = overlay.querySelector('#purchaseAcceptDigital');
+            function syncPurchaseConfirm() {
+                const ok = termsCb && termsCb.checked && digitalCb && digitalCb.checked;
+                confirmBtn.disabled = !ok;
+            }
+            if (termsCb) termsCb.addEventListener('change', syncPurchaseConfirm);
+            if (digitalCb) digitalCb.addEventListener('change', syncPurchaseConfirm);
+            syncPurchaseConfirm();
+            confirmBtn.addEventListener('click', () => {
+                if (confirmBtn.disabled) return;
                 close();
                 onConfirm();
             });

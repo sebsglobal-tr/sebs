@@ -56,6 +56,30 @@
             align-items: center;
             z-index: 9999;
         }
+        .signup-legal-consents {
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .signup-legal-consents label {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: var(--text-secondary, #64748b);
+            cursor: pointer;
+        }
+        .signup-legal-consents label + label {
+            margin-top: 0.65rem;
+        }
+        .signup-legal-consents input {
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+        .signup-legal-consents a {
+            color: var(--primary, #2563eb);
+            text-decoration: underline;
+        }
     </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -212,6 +236,19 @@
                 <div class="form-error" id="confirmPasswordError"></div>
             </div>
 
+
+            <div class="signup-legal-consents">
+                <label>
+                    <input type="checkbox" id="acceptKvkk" name="acceptKvkk" required />
+                    <span><a href="/kvkk" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a> ve <a href="/gizlilik" target="_blank" rel="noopener">Gizlilik Politikası</a>’nı okudum; kişisel verilerimin bu kapsamda işlenmesini kabul ediyorum.</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="acceptTerms" name="acceptTerms" required />
+                    <span><a href="/kullanim-sartlari" target="_blank" rel="noopener">Kullanım Şartları</a>’nı okudum ve kabul ediyorum. 18 yaşından büyük olduğumu beyan ederim.</span>
+                </label>
+            </div>
+            <div class="form-error" id="legalConsentError"></div>
+
             <button type="submit" class="btn-signup" id="signupSubmitBtn">
                 <span id="signupBtnText">Hesap Oluştur</span>
             </button>
@@ -280,6 +317,8 @@
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
             <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/kvkk" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">KVKK</a></li>
+              <li><a href="/cerez" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Çerezler</a></li>
               <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
               <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
               <li><a href="/teslimat-iade" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Teslimat ve iade</a></li>
@@ -424,6 +463,11 @@
                 isValid = false;
             } else if (password !== confirmPassword) {
                 showError('confirmPasswordError', 'Şifreler eşleşmiyor');
+                isValid = false;
+            }
+
+            if (!document.getElementById('acceptKvkk').checked || !document.getElementById('acceptTerms').checked) {
+                showError('legalConsentError', 'Devam etmek için yasal metinleri kabul etmelisiniz');
                 isValid = false;
             }
 

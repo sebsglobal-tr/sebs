@@ -25,7 +25,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
-  <link rel="stylesheet" href="/css/legal-document.css?v=3" />
+  <link rel="stylesheet" href="/css/legal-document.css?v=5" />
 </head>
 <body class="landing-site-body about-page font-sans text-slate-800 antialiased bg-white">
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -59,9 +59,13 @@
           <p class="legal-updated">Software Education &amp; Business Solutions</p>
           <h1 id="about-title">Hakkımızda</h1>
           <p class="about-hero__lead">
-            SEBS; kariyer yolları, modüler eğitimler ve senaryo tabanlı simülasyonları tek çatıda toplar. Yapay zeka destekli yönlendirme ile başlangıç noktan netleşir; mentor ve rubriklerle ilerlemen takip edilir.
+            SEBS; modüler siber güvenlik eğitimleri, senaryo tabanlı simülasyonlar ve ölçülebilir ilerlemeyi tek platformda sunar. Yapay zeka destekli yönlendirme ile hedef rolün netleşir; rubrik ve kanıt tabanlı raporlarla gelişimin görünür olur.
           </p>
           <p class="about-hero__links">
+            <a href="#hikaye">Hikâyemiz</a>
+            <span class="about-hero__sep" aria-hidden="true">·</span>
+            <a href="#nasil-calisir">Nasıl çalışır</a>
+            <span class="about-hero__sep" aria-hidden="true">·</span>
             <a href="#sirket-bilgileri">Şirket bilgileri</a>
             <span class="about-hero__sep" aria-hidden="true">·</span>
             <a href="#yasal-belgeler">Yasal belgeler</a>
@@ -72,14 +76,85 @@
 
     <div class="about-body">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <section class="about-section" id="hikaye" aria-labelledby="about-story-title">
+          <h2 class="about-section__title" id="about-story-title">Hikâyemiz</h2>
+          <p class="about-section__intro">SEBS, «ezberle geç» modelinden «kanıtla öğren» modeline geçiş için kuruldu.</p>
+          <div class="about-story-panel">
+            <p>Siber güvenlik eğitiminde çoğu zaman video izlenir, sınav geçilir; sahada ne yapılacağı belirsiz kalır. SEBS Global ekibi; bulut, siber güvenlik ve ürün geliştirme sahasında gördüğü bu boşluğu kapatmak için modüler anlatımı, senaryo tabanlı simülasyonları ve ölçülebilir ilerlemeyi tek platformda birleştirdi.</p>
+            <p>Bugün <strong>SEBS Yolu</strong> ile bireyler hedef role göre yönlenir; kurumlar cohort ve raporlama ile yetkinliği aynı dilde takip eder. Platform sürekli büyüyen bir müfredatla gelişir; satın alınan paket, ödeme anında erişilebilir içerikle sınırlıdır — yol haritası şeffaftır.</p>
+          </div>
+        </section>
+
+        <section class="about-section" id="neden-sebs" aria-labelledby="about-why-title">
+          <h2 class="about-section__title" id="about-why-title">Neden SEBS?</h2>
+          <ul class="about-pillars-grid about-pillars-grid--4">
+            <li class="about-pillar-card">
+              <strong>Uygulamalı öğrenme</strong>
+              <span>Ders + simülasyon; kararlarınız kontrollü ortamda ölçülür.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Ölçülebilir ilerleme</strong>
+              <span>Rubrik, süre ve tamamlama verisi; «bitti» değil «kanıtlandı».</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>SEBS Yolu</strong>
+              <span>İlk Adım → Yükseliş → Zirve; paketlerle aşamalar açılır.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Kurumsal uyum</strong>
+              <span>Cohort, özel içerik ve işveren tarafı raporlama (B2B).</span>
+            </li>
+          </ul>
+        </section>
+
+        <section class="about-section" id="nasil-calisir" aria-labelledby="about-how-title">
+          <h2 class="about-section__title" id="about-how-title">Nasıl çalışır?</h2>
+          <p class="about-section__intro">Kayıttan paket erişimine kadar dört adım.</p>
+          <ol class="about-process-steps">
+            <li>
+              <span class="about-process-steps__num">1</span>
+              <div>
+                <strong>Keşif ve yön</strong>
+                <span>Ücretsiz kayıt; kariyer testi ve SEBS Yolu ile başlangıç noktanız netleşir.</span>
+              </div>
+            </li>
+            <li>
+              <span class="about-process-steps__num">2</span>
+              <div>
+                <strong>Paket seçimi</strong>
+                <span>Plan veya tekli modül; fiyat ve kapsam ödeme öncesi sayfada gösterilir.</span>
+              </div>
+            </li>
+            <li>
+              <span class="about-process-steps__num">3</span>
+              <div>
+                <strong>Güvenli ödeme</strong>
+                <span>Iyzico ile SSL korumalı ödeme; kart bilgisi SEBS’te saklanmaz.</span>
+              </div>
+            </li>
+            <li>
+              <span class="about-process-steps__num">4</span>
+              <div>
+                <strong>Erişim ve öğrenme</strong>
+                <span>Onay sonrası hesaba tanımlama; modül, quiz ve simülasyonlarla ilerleme.</span>
+              </div>
+            </li>
+          </ol>
+          <p class="about-section__cta-inline"><a href="/fiyatlandirma">Paketleri incele</a> · <a href="/signup.html">Ücretsiz başla</a></p>
+        </section>
+
         <section class="about-section" id="sirket-bilgileri" aria-labelledby="about-company-title">
           <h2 class="about-section__title" id="about-company-title">Şirket ve iletişim bilgileri</h2>
-          <p class="about-section__intro">Ödeme ve mesafeli satış süreçlerinde geçerli satıcı bilgileri aşağıdadır.</p>
+          <p class="about-section__intro">6502 sayılı TKHK, Mesafeli Sözleşmeler Yönetmeliği ve KVKK kapsamında geçerli satıcı / veri sorumlusu bilgileri. Ön bilgilendirme ve sözleşme metinleri <a href="#yasal-belgeler">yasal belgeler</a> bölümündedir.</p>
           <div class="about-company-panel">
             <dl>
               <div>
                 <dt>Ticari unvan</dt>
                 <dd>SEBS Global (Software Education &amp; Business Solutions)</dd>
+              </div>
+              <div>
+                <dt>Faaliyet alanı</dt>
+                <dd>Çevrimiçi dijital eğitim platformu (siber güvenlik ve ilgili alanlar)</dd>
               </div>
               <div>
                 <dt>Web sitesi</dt>
@@ -90,18 +165,52 @@
                 <dd><a href="mailto:info@sebsglobal.com">info@sebsglobal.com</a></dd>
               </div>
               <div>
+                <dt>KVKK başvurusu</dt>
+                <dd><a href="mailto:info@sebsglobal.com?subject=KVKK%20Ba%C5%9Fvurusu">info@sebsglobal.com</a> (konu: KVKK Başvurusu)</dd>
+              </div>
+              <div>
                 <dt>Telefon</dt>
                 <dd><a href="tel:+905332669087">+90 533 266 90 87</a></dd>
               </div>
               <div>
                 <dt>Adres</dt>
-                <dd>Sivas, Türkiye</dd>
+                <dd>Sivas, Türkiye (Merkez)</dd>
+              </div>
+              <div>
+                <dt>Destek saatleri</dt>
+                <dd>Hafta içi 09:00–18:00 (TR) · Talepler en geç 5 iş gününde yanıtlanır</dd>
               </div>
               <div>
                 <dt>Ödeme altyapısı</dt>
-                <dd>Iyzico güvenli ödeme (SSL ile şifrelenmiş bağlantı)</dd>
+                <dd>Iyzico — Visa, Mastercard (SSL / 3D Secure)</dd>
+              </div>
+              <div>
+                <dt>MERSİS / vergi no</dt>
+                <dd>Ticari sicil bilgileri talep üzerine yazılı olarak paylaşılır</dd>
               </div>
             </dl>
+          </div>
+        </section>
+
+        <section class="about-section" id="tuketici-guven" aria-labelledby="about-trust-title">
+          <h2 class="about-section__title" id="about-trust-title">Güven, gizlilik ve tüketici hakları</h2>
+          <div class="about-trust-grid">
+            <article class="about-trust-card">
+              <h3>KVKK ve gizlilik</h3>
+              <p>Kişisel veriler 6698 sayılı KVKK’ya uygun işlenir. <a href="/kvkk">Aydınlatma metni</a> ve <a href="/gizlilik">gizlilik politikası</a> yayında.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Mesafeli satış</h3>
+              <p>Dijital hizmet satışında 14 gün cayma hakkı ve dijital içerik onayı <a href="/mesafeli-satis">sözleşmede</a> açıklanır.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Teslimat ve iade</h3>
+              <p>Erişim ödeme onayından sonra hesaba tanımlanır. <a href="/teslimat-iade">Teslimat ve iade şartları</a>.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Çerezler</h3>
+              <p>Zorunlu ve analitik çerez kullanımı <a href="/cerez">çerez politikasında</a> listelenir.</p>
+            </article>
           </div>
         </section>
 
@@ -136,6 +245,25 @@
               <p>Eğitim, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt üretmek.</p>
             </article>
           </div>
+        </section>
+
+
+        <section class="about-section" aria-labelledby="about-values-title">
+          <h2 class="about-section__title" id="about-values-title">Değerlerimiz</h2>
+          <ul class="about-pillars-grid">
+            <li class="about-pillar-card">
+              <strong>Şeffaflık</strong>
+              <span>Paket kapsamı, fiyat ve yol haritası açık; gizli taahhüt yok.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Güvenlik</strong>
+              <span>Veri koruma ve etik öğrenme; platform yalnızca yasal eğitim amaçlı kullanılır.</span>
+            </li>
+            <li class="about-pillar-card">
+              <strong>Erişilebilirlik</strong>
+              <span>Modüler ilerleme; kendi hızında, ölçülebilir adımlarla.</span>
+            </li>
+          </ul>
         </section>
 
         <section class="about-section" aria-labelledby="about-team-title">
@@ -179,6 +307,7 @@
           <ul class="about-legal-links">
             <li><a href="/gizlilik">Gizlilik politikası</a></li>
             <li><a href="/kvkk">KVKK aydınlatma</a></li>
+            <li><a href="/cerez">Çerez politikası</a></li>
             <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
             <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
             <li><a href="/mesafeli-satis">Mesafeli satış</a></li>
@@ -217,6 +346,7 @@
       <div class="legal-footer-links text-sm">
         <a href="/gizlilik" class="text-slate-600 hover:text-slate-900">Gizlilik</a>
         <a href="/kvkk" class="text-slate-600 hover:text-slate-900">KVKK</a>
+        <a href="/cerez" class="text-slate-600 hover:text-slate-900">Çerezler</a>
         <a href="/kullanim-sartlari" class="text-slate-600 hover:text-slate-900">Kullanım şartları</a>
         <a href="/teslimat-iade" class="text-slate-600 hover:text-slate-900">Teslimat ve iade</a>
         <a href="/mesafeli-satis" class="text-slate-600 hover:text-slate-900">Mesafeli satış</a>
