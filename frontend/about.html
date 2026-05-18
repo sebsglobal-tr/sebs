@@ -46,7 +46,7 @@
     };
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
-  <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=9" />
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 
@@ -273,32 +273,97 @@
 
     <section class="border-b border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="about-legal-heading" id="yasal-belgeler">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
-          <div>
-            <h2 id="about-legal-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Yasal belgeler</h2>
-            <p class="mt-3 text-slate-600">Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
-            <nav class="about-legal-grid mt-8" aria-label="Yasal sayfalar">
-              <a class="about-legal-link" href="/gizlilik">Gizlilik politikası <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/kvkk">KVKK aydınlatma <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/kullanim-sartlari">Kullanım şartları <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/teslimat-iade">Teslimat ve iade <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/mesafeli-satis">Mesafeli satış sözleşmesi <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/fiyatlandirma">Paketler ve ödeme <span aria-hidden="true">→</span></a>
-            </nav>
-          </div>
-          <div class="sebs-payment-trust sebs-payment-trust--about-page" aria-label="Kabul edilen ödeme yöntemleri">
-            <p class="sebs-payment-trust__label">Güvenli ödeme</p>
-            <p class="mt-2 text-sm text-slate-600">Kart ödemeleri Iyzico altyapısı üzerinden, 256-bit SSL ile korunan bağlantıda işlenir.</p>
-            <img
-              src="/images/payments/iyzico/logo-band-footer.svg"
-              alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
-              width="429"
-              height="32"
-              loading="lazy"
-              decoding="async"
-              class="sebs-payment-trust__band mt-5"
-            />
-          </div>
+        <h2 id="about-legal-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Yasal belgeler</h2>
+        <p class="mt-3 max-w-2xl text-slate-600">Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
+
+        <div class="about-legal-layout mt-10">
+          <nav class="about-legal-list" aria-label="Yasal sayfalar">
+            <a class="about-legal-card about-legal-card--privacy" href="/gizlilik">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">Gizlilik</span>
+                <span class="about-legal-card__title">Gizlilik politikası</span>
+                <span class="about-legal-card__desc">Kişisel verilerin toplanması, kullanımı ve korunması.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="about-legal-card about-legal-card--kvkk" href="/kvkk">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">KVKK</span>
+                <span class="about-legal-card__title">KVKK aydınlatma metni</span>
+                <span class="about-legal-card__desc">Veri sorumlusu bilgileri ve haklarınız.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="about-legal-card about-legal-card--terms" href="/kullanim-sartlari">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">Kullanım</span>
+                <span class="about-legal-card__title">Kullanım şartları</span>
+                <span class="about-legal-card__desc">Platform kuralları ve hizmet koşulları.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="about-legal-card about-legal-card--delivery" href="/teslimat-iade">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">Teslimat</span>
+                <span class="about-legal-card__title">Teslimat ve iade</span>
+                <span class="about-legal-card__desc">Dijital içerik teslimi, süre ve iade koşulları.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="about-legal-card about-legal-card--distance" href="/mesafeli-satis">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">Sözleşme</span>
+                <span class="about-legal-card__title">Mesafeli satış sözleşmesi</span>
+                <span class="about-legal-card__desc">Ön bilgilendirme ve cayma hakkı.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="about-legal-card about-legal-card--pricing" href="/fiyatlandirma">
+              <span class="about-legal-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </span>
+              <span class="about-legal-card__body">
+                <span class="about-legal-card__tag">Ödeme</span>
+                <span class="about-legal-card__title">Paketler ve ödeme</span>
+                <span class="about-legal-card__desc">Abonelik planları ve güvenli ödeme seçenekleri.</span>
+              </span>
+              <span class="about-legal-card__arrow" aria-hidden="true">→</span>
+            </a>
+          </nav>
+
+          <aside class="about-payment-panel" aria-label="Kabul edilen ödeme yöntemleri">
+            <div class="about-payment-panel__inner">
+              <p class="about-payment-panel__eyebrow">Güvenli ödeme</p>
+              <p class="about-payment-panel__text">Kart ödemeleri Iyzico altyapısı üzerinden, 256-bit SSL ile korunan bağlantıda işlenir.</p>
+              <div class="about-payment-panel__logos">
+                <img
+                  src="/images/payments/iyzico/logo-band-footer.svg"
+                  alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
+                  width="429"
+                  height="32"
+                  loading="lazy"
+                  decoding="async"
+                  class="about-payment-panel__band"
+                />
+              </div>
+              <p class="about-payment-panel__cards">Visa · Mastercard · American Express · Troy</p>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
