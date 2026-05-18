@@ -78,7 +78,10 @@
         if (path === '/blog' || path.startsWith('/blog/')) {
             return 'blog';
         }
-        
+        if (path === '/hakkimizda' || path === '/about.html' || page === 'about') {
+            return 'about';
+        }
+
         return page;
     }
 
@@ -401,7 +404,13 @@
                     return currentPath === '/pricing.html';
                 }
                 if (linkPath === '/contact.html') {
-                    return currentPath === '/contact.html';
+                    return currentPath === '/contact.html' || currentPath === '/iletisim';
+                }
+                if (linkPath === '/hakkimizda' || linkPath === '/about.html') {
+                    return (
+                        currentPath === '/hakkimizda' ||
+                        currentPath === '/about.html'
+                    );
                 }
                 if (linkPath === '/') {
                     return currentPath === '/' || currentPath === '/index.html';
@@ -521,7 +530,7 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Ana sayfa | Platform | Kariyer Yolları | İşverenler | Blog | İletişim (landing-chrome.css). */
+    /** Landing üst menü: Ana sayfa | Platform | Kariyer Yolları | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
@@ -612,6 +621,14 @@
             return a;
         }
 
+        function makeAboutLink() {
+            var a = document.createElement('a');
+            a.href = '/hakkimizda';
+            a.textContent = 'Hakkımızda';
+            a.className = NAV_MUTED;
+            return a;
+        }
+
         function makeContactNavLink() {
             var a = document.createElement('a');
             a.href = '/contact.html';
@@ -631,6 +648,7 @@
             desktopNav.appendChild(makeCareerPathsLink());
             desktopNav.appendChild(makeEmployersLink());
             desktopNav.appendChild(makeBlogLink());
+            desktopNav.appendChild(makeAboutLink());
             desktopNav.appendChild(makeContactNavLink());
         }
 
@@ -701,6 +719,11 @@
             blogA.textContent = 'Blog';
             blogA.className = drawerAccent;
 
+            var aboutA = document.createElement('a');
+            aboutA.href = '/hakkimizda';
+            aboutA.textContent = 'Hakkımızda';
+            aboutA.className = drawerMuted;
+
             var contactA = document.createElement('a');
             contactA.href = '/contact.html';
             contactA.textContent = 'İletişim';
@@ -717,6 +740,7 @@
             frag.appendChild(careerA);
             frag.appendChild(empA);
             frag.appendChild(blogA);
+            frag.appendChild(aboutA);
             frag.appendChild(contactA);
             frag.appendChild(hrBeforeAuth);
             mobilePanel.insertBefore(frag, guest);
