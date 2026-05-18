@@ -1,111 +1,101 @@
 import { MODEL_INPUT_MODE } from './constants.js';
 
-/** model.json düzeltildiğinde önbelleği kırmak için artırın. */
-const MODEL_ASSET_VERSION = '3';
-const MODEL_JSON_URL = `/models/career-interest/model.json?v=${MODEL_ASSET_VERSION}`;
+const MODEL_ASSET_VERSION = '4';
 const WEIGHTS_BASE = `/models/career-interest`;
 
+/** @type {import('@tensorflow/tfjs').LayersModel|null} */
+let cachedModel = null;
 let loadPromise = null;
 
-/**
- * Keras 3 → TF.js: ayrı InputLayer (batch_shape) tarayıcıda hata verir.
- * @param {object} artifact
- */
-function patchCareerModelArtifact(artifact) {
-  const topology = artifact.modelTopology;
-  const modelConfig = topology?.model_config?.config;
-  if (!modelConfig?.layers?.length) return artifact;
-
-  const layers = modelConfig.layers;
-  const first = layers[0];
-
-  if (first?.class_name === 'InputLayer') {
-    const shape =
-      first.config?.batch_shape ||
-      first.config?.batchInputShape ||
-      first.config?.inputShape ||
-      modelConfig.build_input_shape;
-    const inputDim = Array.isArray(shape) ? shape[shape.length - 1] : 48;
-    layers.shift();
-
-    const dense = layers[0];
-    if (dense?.class_name === 'Dense') {
-      dense.config.inputShape = [inputDim];
-      if (dense.config.dtype && typeof dense.config.dtype === 'object') {
-        dense.config.dtype = dense.config.dtype?.config?.name || 'float32';
-      }
-    }
-    modelConfig.build_input_shape = [null, inputDim];
-  }
-
-  modelConfig.dtype =
-    typeof modelConfig.dtype === 'object' ? modelConfig.dtype?.config?.name || 'float32' : modelConfig.dtype || 'float32';
-
-  for (const layer of layers) {
-    if (layer.config?.dtype && typeof layer.config.dtype === 'object') {
-      layer.config.dtype = layer.config.dtype?.config?.name || 'float32';
-    }
-  }
-
-  return artifact;
-}
+const WEIGHT_MANIFEST = [
+  {
+    paths: ['group1-shard1of1.bin'],
+    weights: [
+      { name: 'dense/kernel', shape: [48, 64], dtype: 'float32' },
+      { name: 'dense/bias', shape: [64], dtype: 'float32' },
+      { name: 'dense_1/kernel', shape: [64, 32], dtype: 'float32' },
+      { name: 'dense_1/bias', shape: [32], dtype: 'float32' },
+      { name: 'dense_2/kernel', shape: [32, 9], dtype: 'float32' },
+      { name: 'dense_2/bias', shape: [9], dtype: 'float32' },
+    ],
+  },
+];
 
 /**
- * @returns {import('@tensorflow/tfjs').io.IOHandler}
+ * model.json / InputLayer kullanmadan mimariyi kodda kurar (Keras 3 uyumsuzluğu yok).
+ * @param {typeof import('@tensorflow/tfjs')} tf
  */
-function createModelIOHandler() {
-  return {
-    load: async () => {
-      const res = await fetch(MODEL_JSON_URL);
-      if (!res.ok) throw new Error(`Model yüklenemedi (${res.status})`);
-      const artifact = patchCareerModelArtifact(await res.json());
-
-      const weightSpecs = [];
-      const weightData = [];
-
-      for (const group of artifact.weightsManifest || []) {
-        for (const spec of group.weights || []) {
-          const name = spec.name?.startsWith('sequential/')
-            ? spec.name.replace(/^sequential\//, '')
-            : spec.name;
-          weightSpecs.push({ ...spec, name });
-        }
-        for (const path of group.paths || []) {
-          const wRes = await fetch(`${WEIGHTS_BASE}/${path}?v=${MODEL_ASSET_VERSION}`);
-          if (!wRes.ok) throw new Error(`Ağırlık dosyası yüklenemedi: ${path}`);
-          weightData.push(await wRes.arrayBuffer());
-        }
-      }
-
-      return {
-        modelTopology: artifact.modelTopology,
-        format: artifact.format,
-        generatedBy: artifact.generatedBy,
-        convertedBy: artifact.convertedBy,
-        weightSpecs,
-        weightData,
-      };
-    },
-  };
+function buildCareerInterestArchitecture(tf) {
+  const model = tf.sequential();
+  model.add(
+    tf.layers.dense({
+      units: 64,
+      activation: 'relu',
+      inputShape: [48],
+      name: 'dense',
+    })
+  );
+  model.add(tf.layers.dropout({ rate: 0.2, name: 'dropout' }));
+  model.add(tf.layers.dense({ units: 32, activation: 'relu', name: 'dense_1' }));
+  model.add(tf.layers.dense({ units: 9, activation: 'softmax', name: 'dense_2' }));
+  return model;
 }
 
 /**
  * @param {typeof import('@tensorflow/tfjs')} tf
  */
-export function loadCareerInterestModel(tf) {
-  if (!tf || !tf.loadLayersModel) {
-    return Promise.reject(new Error('TensorFlow.js yüklenemedi.'));
+async function loadWeightTensors(tf) {
+  const fetchWeights = (filePaths) =>
+    Promise.all(
+      filePaths.map((path) =>
+        fetch(`${WEIGHTS_BASE}/${path}?v=${MODEL_ASSET_VERSION}`).then((res) => {
+          if (!res.ok) throw new Error(`Ağırlık dosyası yüklenemedi: ${path}`);
+          return res.arrayBuffer();
+        })
+      )
+    );
+
+  const loadWeights = tf.io.weightsLoaderFactory(fetchWeights);
+  return loadWeights(WEIGHT_MANIFEST, '');
+}
+
+/**
+ * @param {typeof import('@tensorflow/tfjs')} tf
+ */
+export async function loadCareerInterestModel(tf) {
+  if (!tf?.sequential) {
+    throw new Error('TensorFlow.js yüklenemedi.');
   }
+  if (cachedModel) return cachedModel;
+
   if (!loadPromise) {
-    loadPromise = tf.loadLayersModel(createModelIOHandler()).catch((err) => {
+    loadPromise = (async () => {
+      const named = await loadWeightTensors(tf);
+      const model = buildCareerInterestArchitecture(tf);
+      model.setWeights([
+        named['dense/kernel'],
+        named['dense/bias'],
+        named['dense_1/kernel'],
+        named['dense_1/bias'],
+        named['dense_2/kernel'],
+        named['dense_2/bias'],
+      ]);
+      cachedModel = model;
+      return model;
+    })().catch((err) => {
       loadPromise = null;
       throw err;
     });
   }
+
   return loadPromise;
 }
 
 export function resetCareerInterestModelCache() {
+  if (cachedModel) {
+    cachedModel.dispose();
+    cachedModel = null;
+  }
   loadPromise = null;
 }
 
