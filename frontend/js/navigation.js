@@ -530,7 +530,7 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Ana sayfa | Platform | Kariyer Yolları | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
+    /** Landing üst menü: Ana sayfa | Platform | Paketler | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
@@ -608,7 +608,7 @@
         function makeCareerPathsLink() {
             var a = document.createElement('a');
             a.href = '/pricing.html';
-            a.textContent = 'Kariyer Yolları';
+            a.textContent = 'Paketler';
             a.className = NAV_ACCENT;
             return a;
         }
@@ -706,7 +706,7 @@
 
             var careerA = document.createElement('a');
             careerA.href = '/pricing.html';
-            careerA.textContent = 'Kariyer Yolları';
+            careerA.textContent = 'Paketler';
             careerA.className = drawerAccent;
 
             var empA = document.createElement('a');
