@@ -1,6 +1,6 @@
 
 (function runSebsLegacyProgressStorageMigrationOnceModules() {
-    var SEBS_PROGRESS_STORAGE_VER = '3';
+    var SEBS_PROGRESS_STORAGE_VER = '4';
     var KEY = 'sebs_progress_storage_version';
     try {
         if (typeof localStorage === 'undefined') return;
@@ -94,11 +94,11 @@ window.clearSebsLocalProgressStorage = function clearSebsLocalProgressStorage() 
 
 /**
  * Oturum kullanıcısı değişince veya sahipsiz yerel veri varken ilerlemeyi sıfırlar.
- * @returns {boolean} Yerel veri temizlendiyse true
+ * @returns {{ cleared: boolean, switched: boolean }}
  */
 window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(userIdOrEmail) {
     var next = normalizeProgressOwnerId(userIdOrEmail);
-    if (!next) return false;
+    if (!next) return { cleared: false, switched: false };
 
     var prev = '';
     try {
@@ -109,9 +109,17 @@ window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(
 
     var switched = !!(prev && prev !== next);
     var orphanLocal = !prev && window.sebsHasUnscopedLocalProgressData();
+    var cleared = switched || orphanLocal;
 
-    if (switched || orphanLocal) {
+    if (cleared) {
         window.clearSebsLocalProgressStorage();
+        try {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            sessionStorage.setItem('sebs_progress_owner_just_changed', '1');
+        } catch (e3) {
+            /* ignore */
+        }
         console.info('[SEBS] Yerel ilerleme temizlendi (farklı kullanıcı veya sahipsiz kayıt)');
     }
 
@@ -120,7 +128,7 @@ window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(
     } catch (e2) {
         /* ignore */
     }
-    return switched || orphanLocal;
+    return { cleared: cleared, switched: switched };
 };
 
 window.sebsLocalProgressBelongsToCurrentOwner = function sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail) {
@@ -133,8 +141,13 @@ window.sebsLocalProgressBelongsToCurrentOwner = function sebsLocalProgressBelong
     }
 };
 
-window.sebsShouldMergeLocalDashboardProgress = function sebsShouldMergeLocalDashboardProgress(userIdOrEmail, hasApiToken) {
+window.sebsShouldMergeLocalDashboardProgress = function sebsShouldMergeLocalDashboardProgress(
+    userIdOrEmail,
+    hasApiToken,
+    overviewOk
+) {
     if (!hasApiToken) return true;
+    if (overviewOk) return false;
     if (!userIdOrEmail) return false;
     return window.sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail);
 };
@@ -1004,7 +1017,19 @@ function dequeuePendingProgress(moduleTitle) {
     writePendingProgressQueue(queue);
 }
 
-window.flushPendingProgressQueue = async function () {
+window.flushPendingProgressQueue = async function (opts) {
+    opts = opts || {};
+    let owner = opts.progressOwner;
+    if (!owner) {
+        try {
+            owner = localStorage.getItem(SEBS_PROGRESS_OWNER_KEY);
+        } catch (e) {
+            owner = '';
+        }
+    }
+    if (!owner || !window.sebsLocalProgressBelongsToCurrentOwner(owner)) {
+        return { ok: true, flushed: 0, skipped: true };
+    }
     const queue = readPendingProgressQueue();
     if (!queue.length) return { ok: true, flushed: 0 };
     let flushed = 0;
