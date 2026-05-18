@@ -589,7 +589,7 @@ async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) 
     );
 
     if (existing.rows.length > 0) {
-        const { id } = existing.rows[0];
+        const { id, role: existingRole } = existing.rows[0];
         await pool.query(
             `UPDATE users SET
                 first_name = COALESCE(NULLIF($2::varchar, ''), first_name),
@@ -600,6 +600,25 @@ async function ensureUserFromSupabase(supabaseUserId, email, userMetadata = {}) 
              WHERE id = $1::uuid`,
             [id, firstName, lastName, now]
         );
+        if (existingRole !== 'admin') {
+            const localPart = emNorm.split('@')[0];
+            if (localPart) {
+                const peerAdmin = await pool.query(
+                    `SELECT 1 FROM users
+                     WHERE role = 'admin'
+                       AND LOWER(SPLIT_PART(TRIM(email), '@', 1)) = $1
+                       AND id <> $2::uuid
+                     LIMIT 1`,
+                    [localPart, id]
+                );
+                if (peerAdmin.rows.length > 0) {
+                    await pool.query(
+                        `UPDATE users SET role = 'admin', updated_at = NOW() WHERE id = $1::uuid`,
+                        [id]
+                    );
+                }
+            }
+        }
         return id;
     }
 
@@ -682,12 +701,26 @@ const authenticateToken = (req, res, next) => {
                     return res.status(500).json({ success: false, message: 'Kullanıcı kaydı bulunamadı.' });
                 }
                 const u = userRow.rows[0];
+                let role = u.role || 'user';
+                const tokenEmail = (supaEmail || u.email || '').toLowerCase().trim();
+                if (role !== 'admin' && tokenEmail) {
+                    const adminByEmail = await pool.query(
+                        `SELECT role FROM users WHERE LOWER(TRIM(email)) = $1 LIMIT 1`,
+                        [tokenEmail]
+                    );
+                    if (adminByEmail.rows[0]?.role === 'admin') {
+                        role = 'admin';
+                    }
+                }
                 req.user = {
                     userId: u.id,
                     email: u.email,
-                    role: u.role || 'user'
+                    role
                 };
                 if (FULL_ACCESS_EMAIL && req.user.email && req.user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL) {
+                    req.user.role = 'admin';
+                }
+                if (FULL_ACCESS_EMAIL && tokenEmail === FULL_ACCESS_EMAIL) {
                     req.user.role = 'admin';
                 }
                 next();

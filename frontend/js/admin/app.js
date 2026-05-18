@@ -70,30 +70,70 @@
 
     function denyAdminAccess() {
         document.documentElement.classList.remove('admin-ready');
-        window.location.replace('/dashboard.html');
     }
 
     function allowAdminAccess() {
         document.documentElement.classList.add('admin-ready');
     }
 
+    async function getSessionEmail() {
+        try {
+            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                const gr = await window.supabaseAuthSystem.supabase.auth.getSession();
+                return gr?.data?.session?.user?.email || '';
+            }
+        } catch (e) {
+            /* */
+        }
+        return '';
+    }
+
+    function showDeniedDetail(sessionEmail, role, apiMessage) {
+        const el = document.getElementById('adminDeniedDetail');
+        if (!el) return;
+        const parts = [];
+        if (sessionEmail) parts.push('Oturum: ' + sessionEmail);
+        if (role) parts.push('Rol: ' + role);
+        if (apiMessage) parts.push(apiMessage);
+        el.textContent = parts.join(' · ');
+    }
+
     async function assertAdminRole() {
-        const me = await fetch(apiBase() + '/users/me', {
-            headers: { Authorization: 'Bearer ' + (await getToken()) }
+        const token = await getToken();
+        const sessionEmail = await getSessionEmail();
+        const me = await fetch(apiBase() + '/admin/me', {
+            headers: { Authorization: 'Bearer ' + token }
         });
         const body = await me.json().catch(() => ({}));
+        if (me.ok && body.success) {
+            return body;
+        }
+        if (me.status === 403) {
+            let role = 'user';
+            try {
+                const probe = await fetch(apiBase() + '/users/me', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                const probeBody = await probe.json().catch(() => ({}));
+                role = probeBody.data?.role || role;
+                if (!sessionEmail && probeBody.data?.email) {
+                    showDeniedDetail(probeBody.data.email, role, body.message);
+                } else {
+                    showDeniedDetail(sessionEmail, role, body.message);
+                }
+            } catch (e) {
+                showDeniedDetail(sessionEmail, role, body.message);
+            }
+            const err = new Error(body.message || 'Yönetici değil');
+            err.status = 403;
+            throw err;
+        }
         if (!me.ok) {
             const err = new Error(body.message || 'Oturum gerekli');
             err.status = me.status;
             throw err;
         }
-        const role = body.data?.role || body.user?.role || body.role;
-        if (role !== 'admin') {
-            const err = new Error('Yönetici değil');
-            err.status = 403;
-            denyAdminAccess();
-            throw err;
-        }
+        return body;
     }
 
     function esc(s) {
@@ -549,8 +589,13 @@
         }
 
         try {
-            await assertAdminRole();
-            const meRes = await api('/admin/me');
+            if (!window.supabaseAuthSystem && typeof SupabaseAuthSystem !== 'undefined') {
+                window.supabaseAuthSystem = new SupabaseAuthSystem();
+                await new Promise(function (r) {
+                    setTimeout(r, 400);
+                });
+            }
+            const meRes = await assertAdminRole();
             allowAdminAccess();
             if (gate) gate.style.display = 'none';
             if (denied) denied.style.display = 'none';
@@ -575,6 +620,8 @@
                 return;
             }
             if (e.status === 403) {
+                if (gate) gate.style.display = 'none';
+                if (denied) denied.style.display = 'flex';
                 return;
             }
             allowAdminAccess();
