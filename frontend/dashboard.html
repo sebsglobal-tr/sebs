@@ -625,6 +625,11 @@
                     sessionStorage.removeItem('sebs_dash_401_reload_once');
                 } catch (e) {}
 
+                var progressOwnerInit = session.user.id || session.user.email;
+                if (progressOwnerInit && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+                    window.ensureSebsProgressOwnerForUser(progressOwnerInit);
+                }
+
                 if (typeof window.runSebsLegacyProgressStorageMigrationOnce === 'function') {
                     window.runSebsLegacyProgressStorageMigrationOnce();
                 }
@@ -905,7 +910,10 @@
          * API'de satır yokken (veya overview boşken) localStorage ilerlemesini kartlara ekler.
          * API verisi her zaman önceliklidir; local veri yalnızca fallback olarak kullanılır.
          */
-        function mergeDashboardLocalModuleProgress(modules) {
+        function mergeDashboardLocalModuleProgress(modules, allowLocalMerge) {
+            if (allowLocalMerge === false) {
+                return Array.isArray(modules) ? modules.slice() : [];
+            }
             var out = Array.isArray(modules) ? modules.slice() : [];
             var seen = {};
             out.forEach(function (m) {
@@ -1091,6 +1099,31 @@
             return null;
         }
 
+        async function getDashboardProgressOwnerId() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.user) {
+                    var u = window.supabaseAuthSystem.user;
+                    return u.id || u.email || '';
+                }
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var gr = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (gr && gr.data && gr.data.session && gr.data.session.user) {
+                        var su = gr.data.session.user;
+                        return su.id || su.email || '';
+                    }
+                }
+            } catch (e) {
+                /* ignore */
+            }
+            try {
+                var ud = JSON.parse(localStorage.getItem('userData') || '{}');
+                if (ud.id || ud.email) return ud.id || ud.email;
+            } catch (e2) {
+                /* ignore */
+            }
+            return '';
+        }
+
         // SEBS - Abidin Samet Çay
         async function loadProgress() {
             /** Giriş yapılmışken catch/legacy yolunda userProgress_* kullanılmaması için */
@@ -1099,6 +1132,14 @@
             try {
                 var token = await getApiAuthToken();
                 sessionHadApiToken = !!token;
+                var progressOwner = await getDashboardProgressOwnerId();
+                if (progressOwner && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+                    window.ensureSebsProgressOwnerForUser(progressOwner);
+                }
+                var allowLocalMerge =
+                    typeof window.sebsShouldMergeLocalDashboardProgress === 'function'
+                        ? window.sebsShouldMergeLocalDashboardProgress(progressOwner, !!token)
+                        : !token;
                 var progressData = null;
                 var overviewOk = false;
 
@@ -1108,7 +1149,7 @@
                             await window.flushPendingProgressQueue();
                         }
                         if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
-                            await window.syncAllLocalModuleProgressToApi();
+                            await window.syncAllLocalModuleProgressToApi({ progressOwner: progressOwner });
                         }
                     } catch (preSyncErr) {
                         console.warn('[SEBS] Yerel ilerleme ön senkron:', preSyncErr);
@@ -1238,10 +1279,10 @@
                             : ''
                 });
 
-                // Yerel module_progress_* kayıtlarını her zaman birleştir (API'de eksik modüller veya düşük yüzde).
+                // Yerel ilerleme yalnızca aynı oturum kullanıcısına aitse birleştirilir.
                 var beforeMerge = modules.length;
-                modules = mergeDashboardLocalModuleProgress(modules);
-                if (modules.length > beforeMerge && token && overviewOk) {
+                modules = mergeDashboardLocalModuleProgress(modules, allowLocalMerge);
+                if (modules.length > beforeMerge && token && overviewOk && allowLocalMerge) {
                     console.info('[SEBS] Yerel ilerleme ile birleştirildi', {
                         eklenen: modules.length - beforeMerge
                     });
@@ -2302,6 +2343,12 @@
             localStorage.removeItem('isVerified');
             localStorage.removeItem('userData');
             localStorage.removeItem('authToken');
+            localStorage.removeItem('userProgress');
+            localStorage.removeItem('recentActivities');
+            localStorage.removeItem('achievements');
+            if (typeof window.clearSebsLocalProgressStorage === 'function') {
+                window.clearSebsLocalProgressStorage();
+            }
 
             setTimeout(function () {
                 try {

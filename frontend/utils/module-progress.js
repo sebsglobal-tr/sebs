@@ -30,6 +30,115 @@
     }
 })();
 
+var SEBS_PROGRESS_OWNER_KEY = 'sebs_progress_owner_id';
+
+function normalizeProgressOwnerId(id) {
+    return String(id || '')
+        .trim()
+        .toLowerCase();
+}
+
+window.sebsHasUnscopedLocalProgressData = function sebsHasUnscopedLocalProgressData() {
+    try {
+        var up = JSON.parse(localStorage.getItem('userProgress') || '{}');
+        if (up && typeof up === 'object' && Object.keys(up).length > 0) return true;
+    } catch (e) {
+        /* ignore */
+    }
+    try {
+        var i;
+        var k;
+        var raw;
+        for (i = 0; i < localStorage.length; i++) {
+            k = localStorage.key(i);
+            if (!k || k.indexOf('module_progress_') !== 0) continue;
+            raw = localStorage.getItem(k);
+            if (raw && raw !== '{}' && raw !== 'null' && raw.length > 2) return true;
+        }
+    } catch (e2) {
+        /* ignore */
+    }
+    return false;
+};
+
+window.clearSebsLocalProgressStorage = function clearSebsLocalProgressStorage() {
+    var fixed = [
+        'userProgress',
+        'recentActivities',
+        'achievements',
+        'sebs_pending_progress_queue_v1',
+        'moduleNameCache',
+        'moduleNameCacheTime'
+    ];
+    var i;
+    var k;
+    try {
+        fixed.forEach(function (key) {
+            localStorage.removeItem(key);
+        });
+        for (i = localStorage.length - 1; i >= 0; i--) {
+            k = localStorage.key(i);
+            if (!k) continue;
+            if (k.indexOf('userProgress_') === 0 || k.indexOf('module_progress_') === 0) {
+                localStorage.removeItem(k);
+            }
+        }
+        localStorage.removeItem(SEBS_PROGRESS_OWNER_KEY);
+    } catch (e) {
+        /* ignore */
+    }
+    if (typeof window.invalidateModuleIdCache === 'function') {
+        window.invalidateModuleIdCache();
+    }
+};
+
+/**
+ * Oturum kullanıcısı değişince veya sahipsiz yerel veri varken ilerlemeyi sıfırlar.
+ * @returns {boolean} Yerel veri temizlendiyse true
+ */
+window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(userIdOrEmail) {
+    var next = normalizeProgressOwnerId(userIdOrEmail);
+    if (!next) return false;
+
+    var prev = '';
+    try {
+        prev = normalizeProgressOwnerId(localStorage.getItem(SEBS_PROGRESS_OWNER_KEY));
+    } catch (e) {
+        /* ignore */
+    }
+
+    var switched = !!(prev && prev !== next);
+    var orphanLocal = !prev && window.sebsHasUnscopedLocalProgressData();
+
+    if (switched || orphanLocal) {
+        window.clearSebsLocalProgressStorage();
+        console.info('[SEBS] Yerel ilerleme temizlendi (farklı kullanıcı veya sahipsiz kayıt)');
+    }
+
+    try {
+        localStorage.setItem(SEBS_PROGRESS_OWNER_KEY, next);
+    } catch (e2) {
+        /* ignore */
+    }
+    return switched || orphanLocal;
+};
+
+window.sebsLocalProgressBelongsToCurrentOwner = function sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail) {
+    var expected = normalizeProgressOwnerId(userIdOrEmail);
+    if (!expected) return false;
+    try {
+        return normalizeProgressOwnerId(localStorage.getItem(SEBS_PROGRESS_OWNER_KEY)) === expected;
+    } catch (e) {
+        return false;
+    }
+};
+
+window.sebsShouldMergeLocalDashboardProgress = function sebsShouldMergeLocalDashboardProgress(userIdOrEmail, hasApiToken) {
+    if (!hasApiToken) return true;
+    if (!userIdOrEmail) return false;
+    return window.sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail);
+};
+
 function getProgressApiBase() {
     if (typeof window.getSebsApiBase === 'function') {
         return window.getSebsApiBase();
@@ -452,7 +561,19 @@ window.getLocalModuleProgressSnapshots = function () {
 };
 
 /** localStorage → POST /api/progress (tüm premium modüller) */
-window.syncAllLocalModuleProgressToApi = async function () {
+window.syncAllLocalModuleProgressToApi = async function (opts) {
+    opts = opts || {};
+    var owner = opts.progressOwner;
+    if (!owner) {
+        try {
+            owner = localStorage.getItem(SEBS_PROGRESS_OWNER_KEY);
+        } catch (e) {
+            owner = '';
+        }
+    }
+    if (!owner || !window.sebsLocalProgressBelongsToCurrentOwner(owner)) {
+        return { ok: true, synced: 0, total: 0, skipped: true };
+    }
     var snapshots = window.getLocalModuleProgressSnapshots();
     if (!snapshots.length) return { ok: true, synced: 0, total: 0 };
     if (typeof window.warmModuleNameCache === 'function') {

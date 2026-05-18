@@ -69,6 +69,10 @@ class SupabaseAuthSystem {
         if (session?.access_token) {
           try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
         }
+        const ownerId = session?.user?.id || session?.user?.email;
+        if (ownerId && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+          window.ensureSebsProgressOwnerForUser(ownerId);
+        }
         if (typeof window.syncSebsSessionCookie === 'function') {
           window.syncSebsSessionCookie().catch(function () {});
         }
@@ -76,6 +80,9 @@ class SupabaseAuthSystem {
       } else if (event === 'SIGNED_OUT') {
         this.isLoggedIn = false;
         this.user = null;
+        if (typeof window.clearSebsLocalProgressStorage === 'function') {
+          window.clearSebsLocalProgressStorage();
+        }
         try { localStorage.removeItem('authToken'); } catch (e) {}
         if (typeof window.syncSebsSessionCookie === 'function') {
           window.syncSebsSessionCookie().catch(function () {});
@@ -121,6 +128,10 @@ class SupabaseAuthSystem {
         try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
         if (session.access_token) {
           try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
+        }
+        const ownerId = session.user.id || session.user.email;
+        if (ownerId && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+          window.ensureSebsProgressOwnerForUser(ownerId);
         }
         if (typeof window.syncSebsSessionCookie === 'function') {
           window.syncSebsSessionCookie().catch(function () {});
@@ -325,6 +336,9 @@ class SupabaseAuthSystem {
     const clearClientSession = () => {
       this.isLoggedIn = false;
       this.user = null;
+      if (typeof window.clearSebsLocalProgressStorage === 'function') {
+        window.clearSebsLocalProgressStorage();
+      }
       try {
         for (let i = localStorage.length - 1; i >= 0; i--) {
           const k = localStorage.key(i);
@@ -338,6 +352,9 @@ class SupabaseAuthSystem {
         localStorage.removeItem('userEmail');
         localStorage.removeItem('userData');
         localStorage.removeItem('userRole');
+        localStorage.removeItem('userProgress');
+        localStorage.removeItem('recentActivities');
+        localStorage.removeItem('achievements');
       } catch (e) {}
     };
 
