@@ -1,6 +1,6 @@
 
 (function runSebsLegacyProgressStorageMigrationOnceModules() {
-    var SEBS_PROGRESS_STORAGE_VER = '4';
+    var SEBS_PROGRESS_STORAGE_VER = '3';
     var KEY = 'sebs_progress_storage_version';
     try {
         if (typeof localStorage === 'undefined') return;
@@ -93,13 +93,12 @@ window.clearSebsLocalProgressStorage = function clearSebsLocalProgressStorage() 
 };
 
 /**
- * Oturum kullanıcısı değişince yerel ilerlemeyi sıfırlar.
- * Sahipsiz yerel veri silinmez; mevcut kullanıcıya atanır ve API'ye gönderilir.
- * @returns {{ cleared: boolean, switched: boolean, adoptedOrphan: boolean }}
+ * Oturum kullanıcısı değişince veya sahipsiz yerel veri varken ilerlemeyi sıfırlar.
+ * @returns {boolean} Yerel veri temizlendiyse true
  */
 window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(userIdOrEmail) {
     var next = normalizeProgressOwnerId(userIdOrEmail);
-    if (!next) return { cleared: false, switched: false, adoptedOrphan: false };
+    if (!next) return false;
 
     var prev = '';
     try {
@@ -111,14 +110,9 @@ window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(
     var switched = !!(prev && prev !== next);
     var orphanLocal = !prev && window.sebsHasUnscopedLocalProgressData();
 
-    if (switched) {
+    if (switched || orphanLocal) {
         window.clearSebsLocalProgressStorage();
-        try {
-            sessionStorage.setItem('sebs_progress_owner_just_changed', '1');
-        } catch (e3) {
-            /* ignore */
-        }
-        console.info('[SEBS] Yerel ilerleme temizlendi (farklı kullanıcı)');
+        console.info('[SEBS] Yerel ilerleme temizlendi (farklı kullanıcı veya sahipsiz kayıt)');
     }
 
     try {
@@ -126,51 +120,7 @@ window.ensureSebsProgressOwnerForUser = function ensureSebsProgressOwnerForUser(
     } catch (e2) {
         /* ignore */
     }
-
-    if (orphanLocal && !switched) {
-        if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
-            window.syncAllLocalModuleProgressToApi({ progressOwner: next }).catch(function () {});
-        }
-        if (typeof window.flushPendingProgressQueue === 'function') {
-            window.flushPendingProgressQueue({ progressOwner: next }).catch(function () {});
-        }
-    }
-
-    return { cleared: switched, switched: switched, adoptedOrphan: orphanLocal && !switched };
-};
-
-/** Çıkış öncesi yerel + bekleyen kuyruk → sunucu */
-window.flushSebsProgressBeforeLogout = async function flushSebsProgressBeforeLogout() {
-    var owner = '';
-    try {
-        owner = localStorage.getItem(SEBS_PROGRESS_OWNER_KEY) || '';
-    } catch (e) {
-        owner = '';
-    }
-    if (!owner && window.supabaseAuthSystem && window.supabaseAuthSystem.user) {
-        var u = window.supabaseAuthSystem.user;
-        owner = u.id || u.email || '';
-        if (owner && typeof window.ensureSebsProgressOwnerForUser === 'function') {
-            window.ensureSebsProgressOwnerForUser(owner);
-        }
-    }
-    if (!owner) return { ok: false, reason: 'no_owner' };
-    var out = { ok: true, synced: 0, flushed: 0 };
-    try {
-        if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
-            var syncRs = await window.syncAllLocalModuleProgressToApi({ progressOwner: owner });
-            out.synced = (syncRs && syncRs.synced) || 0;
-        }
-        if (typeof window.flushPendingProgressQueue === 'function') {
-            var flushRs = await window.flushPendingProgressQueue({ progressOwner: owner });
-            out.flushed = (flushRs && flushRs.flushed) || 0;
-        }
-    } catch (err) {
-        console.warn('[SEBS] Çıkış öncesi ilerleme senkronu:', err);
-        out.ok = false;
-        out.reason = String(err && err.message);
-    }
-    return out;
+    return switched || orphanLocal;
 };
 
 window.sebsLocalProgressBelongsToCurrentOwner = function sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail) {
@@ -183,13 +133,8 @@ window.sebsLocalProgressBelongsToCurrentOwner = function sebsLocalProgressBelong
     }
 };
 
-window.sebsShouldMergeLocalDashboardProgress = function sebsShouldMergeLocalDashboardProgress(
-    userIdOrEmail,
-    hasApiToken,
-    overviewOk
-) {
+window.sebsShouldMergeLocalDashboardProgress = function sebsShouldMergeLocalDashboardProgress(userIdOrEmail, hasApiToken) {
     if (!hasApiToken) return true;
-    if (overviewOk) return false;
     if (!userIdOrEmail) return false;
     return window.sebsLocalProgressBelongsToCurrentOwner(userIdOrEmail);
 };
@@ -1059,19 +1004,7 @@ function dequeuePendingProgress(moduleTitle) {
     writePendingProgressQueue(queue);
 }
 
-window.flushPendingProgressQueue = async function (opts) {
-    opts = opts || {};
-    let owner = opts.progressOwner;
-    if (!owner) {
-        try {
-            owner = localStorage.getItem(SEBS_PROGRESS_OWNER_KEY);
-        } catch (e) {
-            owner = '';
-        }
-    }
-    if (!owner || !window.sebsLocalProgressBelongsToCurrentOwner(owner)) {
-        return { ok: true, flushed: 0, skipped: true };
-    }
+window.flushPendingProgressQueue = async function () {
     const queue = readPendingProgressQueue();
     if (!queue.length) return { ok: true, flushed: 0 };
     let flushed = 0;

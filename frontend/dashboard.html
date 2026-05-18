@@ -355,7 +355,7 @@
 
     <script src="/utils/legacy-progress-storage-migrate.js"></script>
     <script src="/js/api-base.js"></script>
-    <script src="/utils/module-progress.js?v=5"></script>
+    <script src="/utils/module-progress.js"></script>
     <script src="/js/dashboard-simulation-history.js?v=1"></script>
     <script src="/js/dashboard-module-progress.js?v=1"></script>
     <script>
@@ -509,7 +509,6 @@
                     role: 'user',
                     accessLevel: 'beginner',
                     isVerified: !!session.user.email_confirmed_at,
-                    createdAt: session.user.created_at || null,
                     purchases: [] // Purchases ayrı yüklenecek
                 };
                 
@@ -536,7 +535,6 @@
                                     userData.lastName = d.lastName || userData.lastName;
                                     userData.fullName = [d.firstName, d.lastName].filter(Boolean).join(' ') || userData.fullName;
                                 }
-                                if (d.createdAt) userData.createdAt = d.createdAt;
                             }
                         } else if (purchasesResponse.status === 401) {
                             console.warn(
@@ -628,26 +626,6 @@
                 } catch (e) {}
 
                 var progressOwnerInit = session.user.id || session.user.email;
-                try {
-                    var staleUd = JSON.parse(localStorage.getItem('userData') || '{}');
-                    if (
-                        staleUd.id &&
-                        session.user.id &&
-                        String(staleUd.id) !== String(session.user.id)
-                    ) {
-                        localStorage.removeItem('userData');
-                        localStorage.removeItem('authToken');
-                    }
-                } catch (staleErr) {
-                    /* ignore */
-                }
-                if (session.access_token) {
-                    try {
-                        localStorage.setItem('authToken', session.access_token);
-                    } catch (tokErr) {
-                        /* ignore */
-                    }
-                }
                 if (progressOwnerInit && typeof window.ensureSebsProgressOwnerForUser === 'function') {
                     window.ensureSebsProgressOwnerForUser(progressOwnerInit);
                 }
@@ -1088,17 +1066,10 @@
                 if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                     var sess = await window.supabaseAuthSystem.supabase.auth.getSession();
                     if (sess && sess.data && sess.data.session && sess.data.session.access_token) {
-                        var liveToken = sess.data.session.access_token;
-                        try {
-                            localStorage.setItem('authToken', liveToken);
-                        } catch (e) {}
-                        return liveToken;
+                        return sess.data.session.access_token;
                     }
                 }
             } catch (e) { /* ignore */ }
-            if (window.supabaseAuthSystem && window.supabaseAuthSystem.user) {
-                return getSupabaseAccessTokenFromStorage();
-            }
             var legacy = localStorage.getItem('authToken');
             if (legacy) return legacy;
             return getSupabaseAccessTokenFromStorage();
@@ -1162,23 +1133,26 @@
                 var token = await getApiAuthToken();
                 sessionHadApiToken = !!token;
                 var progressOwner = await getDashboardProgressOwnerId();
-                var ownerChange = { cleared: false, switched: false };
                 if (progressOwner && typeof window.ensureSebsProgressOwnerForUser === 'function') {
-                    ownerChange = window.ensureSebsProgressOwnerForUser(progressOwner) || ownerChange;
+                    window.ensureSebsProgressOwnerForUser(progressOwner);
                 }
+                var allowLocalMerge =
+                    typeof window.sebsShouldMergeLocalDashboardProgress === 'function'
+                        ? window.sebsShouldMergeLocalDashboardProgress(progressOwner, !!token)
+                        : !token;
                 var progressData = null;
                 var overviewOk = false;
 
                 if (token) {
                     try {
-                        if (
-                            !ownerChange.cleared &&
-                            typeof window.flushPendingProgressQueue === 'function'
-                        ) {
-                            await window.flushPendingProgressQueue({ progressOwner: progressOwner });
+                        if (typeof window.flushPendingProgressQueue === 'function') {
+                            await window.flushPendingProgressQueue();
+                        }
+                        if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
+                            await window.syncAllLocalModuleProgressToApi({ progressOwner: progressOwner });
                         }
                     } catch (preSyncErr) {
-                        console.warn('[SEBS] Yerel ilerleme kuyruğu:', preSyncErr);
+                        console.warn('[SEBS] Yerel ilerleme ön senkron:', preSyncErr);
                     }
                     try {
                         var progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
@@ -1294,113 +1268,18 @@
                     }
                 }
 
-                var justChangedOwner = false;
-                try {
-                    justChangedOwner = sessionStorage.getItem('sebs_progress_owner_just_changed') === '1';
-                    if (justChangedOwner) sessionStorage.removeItem('sebs_progress_owner_just_changed');
-                } catch (jcErr) {
-                    /* ignore */
-                }
-
-                var decontOnceKey = progressOwner
-                    ? 'sebs_decont_v1_' + String(progressOwner).slice(0, 64)
-                    : '';
-                var decontNotYet = decontOnceKey && !localStorage.getItem(decontOnceKey);
-
-                if (
-                    token &&
-                    overviewOk &&
-                    modules.length > 0 &&
-                    typeof getUserMe === 'function' &&
-                    (ownerChange.switched || justChangedOwner || decontNotYet)
-                ) {
-                    try {
-                        var meInfo = await getUserMe();
-                        var createdMs = meInfo && meInfo.createdAt ? new Date(meInfo.createdAt).getTime() : NaN;
-                        var accountAgeMs = Number.isFinite(createdMs) ? Date.now() - createdMs : Infinity;
-                        var shouldWipe =
-                            ownerChange.switched ||
-                            justChangedOwner ||
-                            (decontNotYet && accountAgeMs < 7 * 24 * 60 * 60 * 1000);
-                        if (shouldWipe) {
-                            if (decontOnceKey) {
-                                try {
-                                    localStorage.setItem(decontOnceKey, '1');
-                                } catch (dkErr) {
-                                    /* ignore */
-                                }
-                            }
-                            var wipeRes = await fetch(getApiBaseUrl() + '/users/reset-progress', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    Authorization: 'Bearer ' + token
-                                },
-                                body: JSON.stringify({ confirm: true })
-                            });
-                            if (wipeRes.ok) {
-                                var wipeJson = await wipeRes.json().catch(function () {
-                                    return {};
-                                });
-                                console.info('[SEBS] Yanlış aktarılmış ilerleme sıfırlandı', wipeJson.data);
-                                var again = await fetch(getApiBaseUrl() + '/progress/overview', {
-                                    headers: { Authorization: 'Bearer ' + token }
-                                });
-                                if (again.ok) {
-                                    progressData = await again.json();
-                                    if (progressData && progressData.success && progressData.data) {
-                                        modules = progressData.data.modules || [];
-                                        simulationRuns = progressData.data.simulationRuns || [];
-                                        completedModules =
-                                            progressData.data.completedModules != null
-                                                ? progressData.data.completedModules
-                                                : modules.filter(function (m) {
-                                                      return m.isCompleted;
-                                                  }).length;
-                                        totalStudyTime =
-                                            progressData.data.totalStudyTime != null
-                                                ? progressData.data.totalStudyTime
-                                                : modules.reduce(function (total, m) {
-                                                      if (m.lastStep && m.lastStep.timeSpentMinutes) {
-                                                          return total + m.lastStep.timeSpentMinutes;
-                                                      }
-                                                      return total;
-                                                  }, 0);
-                                    }
-                                }
-                                showToast(
-                                    'Önceki hesabın ilerlemesi bu hesaptan kaldırıldı. Yeni başlangıç gösteriliyor.',
-                                    'success'
-                                );
-                            }
-                        }
-                    } catch (wipeErr) {
-                        console.warn('[SEBS] İlerleme sıfırlama:', wipeErr);
-                    }
-                }
-
-                var allowLocalMerge =
-                    typeof window.sebsShouldMergeLocalDashboardProgress === 'function'
-                        ? window.sebsShouldMergeLocalDashboardProgress(
-                              progressOwner,
-                              !!token,
-                              overviewOk
-                          )
-                        : !token || !overviewOk;
-
                 console.info('[SEBS] İlerleme yüklendi', {
                     api: getApiBaseUrl(),
                     overviewOk: overviewOk,
                     modülSayısı: modules.length,
                     simülasyonKaydı: simulationRuns.length,
-                    yerelBirlestirme: allowLocalMerge,
                     ipucu:
                         token && overviewOk && modules.length === 0 && simulationRuns.length === 0
                             ? 'Sunucu bu hesap için kayıt döndürmedi; simülasyonu giriş yapılmış sekmede bitirip kaydetmeyi deneyin veya Ağ sekmesinde simulations/start ve complete yanıtlarına bakın.'
                             : ''
                 });
 
-                // Giriş + sunucu verisi varken yerel depo birleştirilmez.
+                // Yerel ilerleme yalnızca aynı oturum kullanıcısına aitse birleştirilir.
                 var beforeMerge = modules.length;
                 modules = mergeDashboardLocalModuleProgress(modules, allowLocalMerge);
                 if (modules.length > beforeMerge && token && overviewOk && allowLocalMerge) {
