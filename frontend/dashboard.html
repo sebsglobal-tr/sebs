@@ -1312,10 +1312,7 @@
                     overviewOk &&
                     modules.length > 0 &&
                     typeof getUserMe === 'function' &&
-                    (ownerChange.switched ||
-                        justChangedOwner ||
-                        ownerChange.cleared ||
-                        decontNotYet)
+                    (ownerChange.switched || justChangedOwner || decontNotYet)
                 ) {
                     try {
                         var meInfo = await getUserMe();
@@ -1324,8 +1321,7 @@
                         var shouldWipe =
                             ownerChange.switched ||
                             justChangedOwner ||
-                            (decontNotYet && accountAgeMs < 7 * 24 * 60 * 60 * 1000) ||
-                            (ownerChange.cleared && accountAgeMs < 72 * 60 * 60 * 1000);
+                            (decontNotYet && accountAgeMs < 7 * 24 * 60 * 60 * 1000);
                         if (shouldWipe) {
                             if (decontOnceKey) {
                                 try {

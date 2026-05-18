@@ -9,7 +9,9 @@ const { Pool } = require('pg');
 
 const PROJECT_REF = (process.env.SUPABASE_PROJECT_REF || '').trim();
 const POOLER_HOST = process.env.SUPABASE_POOLER || 'aws-1-eu-central-1.pooler.supabase.com';
-const DIRECT_HOST = `db.${PROJECT_REF}.supabase.co`;
+/** pg_dump / Prisma migrate — IPv4 uyumlu session pooler (db.* çoğu projede DNS çözülmez) */
+const DIRECT_HOST = POOLER_HOST;
+const DIRECT_PORT = 5432;
 const DB_USER_POOLER = `postgres.${PROJECT_REF}`;
 const DB_NAME = 'postgres';
 
@@ -41,7 +43,7 @@ async function testConnection(connectionString) {
 }
 
 function updateEnvFiles(root, poolerUrl, password) {
-  const directUrl = buildConnectionString(DIRECT_HOST, 5432, DB_USER_POOLER, password, false);
+  const directUrl = buildConnectionString(DIRECT_HOST, DIRECT_PORT, DB_USER_POOLER, password, false);
   const rootEnv = path.join(root, '.env');
   const backendEnv = path.join(root, 'backend', '.env');
   const esc = (s) => JSON.stringify(String(s));

@@ -73,6 +73,14 @@ class SupabaseAuthSystem {
         if (ownerId && typeof window.ensureSebsProgressOwnerForUser === 'function') {
           window.ensureSebsProgressOwnerForUser(ownerId);
         }
+        if (ownerId) {
+          if (typeof window.flushPendingProgressQueue === 'function') {
+            window.flushPendingProgressQueue({ progressOwner: ownerId }).catch(function () {});
+          }
+          if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
+            window.syncAllLocalModuleProgressToApi({ progressOwner: ownerId }).catch(function () {});
+          }
+        }
         if (typeof window.syncSebsSessionCookie === 'function') {
           window.syncSebsSessionCookie().catch(function () {});
         }
@@ -333,6 +341,19 @@ class SupabaseAuthSystem {
   }
 
   async logout() {
+    try {
+      if (typeof window.flushSebsProgressBeforeLogout === 'function') {
+        await Promise.race([
+          window.flushSebsProgressBeforeLogout(),
+          new Promise(function (resolve) {
+            setTimeout(resolve, 4000);
+          })
+        ]);
+      }
+    } catch (flushErr) {
+      console.warn('[SEBS] Çıkış öncesi ilerleme kaydı:', flushErr);
+    }
+
     const clearClientSession = () => {
       this.isLoggedIn = false;
       this.user = null;

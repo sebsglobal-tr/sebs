@@ -10,7 +10,9 @@
     "restart": "./scripts/restart-local.sh",
     "start:cluster": "npm --prefix backend run start:cluster",
     "build": "node scripts/verify-build.js",
-    "setup-db": "node setup-database-tables.js"
+    "setup-db": "node setup-database-tables.js",
+    "db:setup": "node scripts/db-setup.js",
+    "db:backup": "node scripts/db-backup.js"
   },
   "engines": {
     "node": "20.x"
