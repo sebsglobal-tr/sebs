@@ -8,17 +8,12 @@
   <title>Hakkımızda | SEBS Global</title>
   <meta name="description" content="SEBS Global; yapay zeka destekli yönlendirme, modüler eğitimler ve simülasyonlarla birey ve kurumların yetkinliğini ölçülebilir şekilde geliştiren bir platformdur." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0f172a" />
   <link rel="canonical" href="https://sebsglobal.com/hakkimizda" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sebsglobal.com/hakkimizda" />
   <meta property="og:title" content="Hakkımızda | SEBS Global" />
   <meta property="og:description" content="Deneyim tabanlı öğrenme, simülasyon ve ölçülebilir yetkinlik — SEBS ekibi ve yaklaşımı." />
   <meta property="og:image" content="https://sebsglobal.com/og-image.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Hakkımızda | SEBS Global" />
-  <meta name="twitter:description" content="Deneyim tabanlı öğrenme ve yetkinlik platformu." />
-  <meta name="twitter:image" content="https://sebsglobal.com/og-image.jpg" />
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Hakkımızda","item":"https://sebsglobal.com/hakkimizda"}]}
   </script>
@@ -26,368 +21,176 @@
     {"@context":"https://schema.org","@type":"Organization","name":"SEBS Global","alternateName":"Software Education & Business Solutions","url":"https://sebsglobal.com/","logo":"https://sebsglobal.com/images/SEBS.png","email":"info@sebsglobal.com","telephone":"+905332669087","address":{"@type":"PostalAddress","addressLocality":"Sivas","addressCountry":"TR"},"sameAs":["https://t.me/sebsglobal"]}
   </script>
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          colors: { ink: '#0c1222', surface: '#f4f6fa' },
-          boxShadow: {
-            card: '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
-            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
-            glow: '0 0 0 1px rgb(15 23 42 / 0.06)',
-          },
-        },
-      },
-    };
-  </script>
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
+  <link rel="stylesheet" href="/css/legal-document.css?v=2" />
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
-
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
-      <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
-        <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <a href="/" class="landing-brand-link flex items-center gap-2 focus-ring rounded-lg">
+        <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 object-contain" />
         <span class="landing-brand-wordmark">SEBS</span>
       </a>
-      <nav class="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex" aria-label="Ana menü">
-        <a href="/" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Ana sayfa</a>
-        <div class="relative z-[55]" id="navPlatformWrap">
-          <button type="button" id="navPlatformTrigger" class="landing-nav-pill-link landing-nav-pill-link--platform nav-platform-trigger inline-flex items-center gap-0.5 border-0 bg-transparent focus-ring" aria-expanded="false" aria-haspopup="menu" aria-controls="navPlatformPanel" aria-label="Platform menüsü">Platform<span class="nav-platform-chevron text-[0.7rem] leading-none opacity-75" aria-hidden="true">▾</span></button>
-          <div id="navPlatformPanel" class="nav-platform-dropdown absolute left-1/2 top-full z-[60] mt-2 hidden w-56 -translate-x-1/2 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
-            <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Eğitim modülleri</a>
-            <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Simülasyonlar</a>
-          </div>
-        </div>
-        <a href="/pricing.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Kariyer Yolları</a>
-        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İşverenler İçin</a>
-        <a href="/blog" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Blog</a>
-        <a href="/hakkimizda" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Hakkımızda</a>
-        <a href="/contact.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İletişim</a>
+      <nav class="legal-doc-nav hidden sm:flex items-center gap-4 text-sm font-semibold text-slate-700" aria-label="Site menüsü">
+        <a href="/modules.html" class="hover:text-slate-900 focus-ring rounded">Eğitimler</a>
+        <a href="/fiyatlandirma" class="hover:text-slate-900 focus-ring rounded">Paketler</a>
+        <a href="/hakkimizda" aria-current="page" class="hover:text-slate-900 focus-ring rounded">Hakkımızda</a>
+        <a href="/contact.html" class="hover:text-slate-900 focus-ring rounded">İletişim</a>
       </nav>
-      <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
-        <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
-        <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
-        <div id="userProfile" class="relative hidden max-w-[10rem] sm:max-w-[12rem]" style="display: none;">
-          <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
-            <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
-            <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
-          </button>
-          <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
-            <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
-            <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5" role="none">
-              <span class="text-sm text-slate-600">Gece modu</span>
-              <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
-            </div>
-            <button type="button" id="logoutBtn" class="hidden w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring" style="display: none;" role="menuitem">Çıkış yap</button>
-          </div>
+      <details class="legal-doc-mobile-menu relative shrink-0 sm:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">Menü</summary>
+        <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Eğitimler</a>
+          <a href="/fiyatlandirma" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Paketler</a>
+          <a href="/hakkimizda" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Hakkımızda</a>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">İletişim</a>
         </div>
-        <details class="relative xl:hidden">
-          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
-            Menü
-          </summary>
-          <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-            <a href="/" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Ana sayfa</a>
-            <div class="landing-nav-drawer-heading px-4 pb-1 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Platform</div>
-            <a href="/modules.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
-            <a href="/simulations.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
-            <hr class="my-1 border-slate-100" />
-            <a href="/pricing.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Kariyer Yolları</a>
-            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İşverenler İçin</a>
-            <a href="/blog" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Blog</a>
-            <a href="/hakkimizda" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Hakkımızda</a>
-            <a href="/contact.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İletişim</a>
-            <hr class="my-1 border-slate-100" />
-            <div id="mobileGuestLinks">
-              <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
-              <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
-            </div>
-            <div id="mobileUserLinks" style="display: none;">
-              <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
-            </div>
-          </div>
-        </details>
-      </div>
+      </details>
     </div>
   </header>
 
-  <main id="top">
-    <section class="hero-mesh relative overflow-x-hidden border-b border-slate-200/80 pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-28">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-          <span class="h-1.5 w-1.5 rounded-full bg-blue-500/80" aria-hidden="true"></span>
-          Software Education &amp; Business Solutions
-        </p>
-        <nav class="mt-2 text-sm text-slate-500" aria-label="Breadcrumb">
-          <a href="/" class="hover:text-slate-800 focus-ring rounded">Ana sayfa</a>
-          <span class="mx-1.5 text-slate-300" aria-hidden="true">/</span>
-          <span class="font-medium text-slate-700">Hakkımızda</span>
-        </nav>
-        <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.1rem] lg:leading-[1.1]">
-          SEBS Global hakkında
-        </h1>
-        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-          SEBS; kariyer yolları, modüler eğitimler ve senaryo tabanlı simülasyonları tek çatıda toplar. Yapay zeka destekli yönlendirme ile başlangıç noktan netleşir; mentor ve rubriklerle ilerlemen takip edilir. Amacımız “tamamladı” sayısı değil; karar kalitesi ve işe yakın kanıt üretmek.
-        </p>
-        <div class="mt-10 flex flex-wrap items-center gap-3">
-          <a href="/signup.html" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">
-            Ücretsiz başla
-            <span aria-hidden="true">→</span>
-          </a>
-          <a href="/contact.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring">
-            Tanışma görüşmesi
-          </a>
-        </div>
-        <p class="mt-8 text-sm text-slate-500">
-          <a href="#sirket-bilgileri" class="font-medium text-blue-600 hover:text-blue-700 focus-ring rounded">Şirket bilgileri</a>
-          <span class="mx-2 text-slate-300" aria-hidden="true">·</span>
-          <a href="#yasal-belgeler" class="font-medium text-blue-600 hover:text-blue-700 focus-ring rounded">Yasal belgeler ve ödeme</a>
-        </p>
-      </div>
-    </section>
+  <main class="pt-24 pb-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 legal-prose">
+      <p class="legal-updated">Software Education &amp; Business Solutions</p>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900">Hakkımızda</h1>
+      <p class="legal-lead">
+        SEBS; kariyer yolları, modüler eğitimler ve senaryo tabanlı simülasyonları tek çatıda toplar. Yapay zeka destekli yönlendirme ile başlangıç noktan netleşir; mentor ve rubriklerle ilerlemen takip edilir.
+      </p>
 
-    <section class="border-b border-slate-100 bg-slate-50 py-12 sm:py-16" aria-labelledby="about-company-heading" id="sirket-bilgileri">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 id="about-company-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Şirket ve iletişim bilgileri</h2>
-        <p class="mt-3 max-w-2xl text-slate-600">
-          Ödeme ve mesafeli satış süreçlerinde şeffaflık için aşağıdaki bilgiler geçerlidir. Güncel yasal metinler sayfa altındaki bağlantılardan erişilebilir.
-        </p>
-        <div class="about-company-panel mt-8 p-6 sm:p-8">
-          <dl>
-            <div>
-              <dt>Ticari unvan</dt>
-              <dd>SEBS Global (Software Education &amp; Business Solutions)</dd>
-            </div>
-            <div>
-              <dt>Web sitesi</dt>
-              <dd><a href="https://sebsglobal.com/">https://sebsglobal.com</a></dd>
-            </div>
-            <div>
-              <dt>E-posta</dt>
-              <dd><a href="mailto:info@sebsglobal.com">info@sebsglobal.com</a></dd>
-            </div>
-            <div>
-              <dt>Telefon</dt>
-              <dd><a href="tel:+905332669087">+90 533 266 90 87</a></dd>
-            </div>
-            <div>
-              <dt>Adres</dt>
-              <dd>Sivas, Türkiye</dd>
-            </div>
-            <div>
-              <dt>Ödeme altyapısı</dt>
-              <dd>Iyzico güvenli ödeme (SSL ile şifrelenmiş bağlantı)</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </section>
-
-
-    <section class="border-b border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="about-focus-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 id="about-focus-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Üç ayak</h2>
-        <p class="mt-3 max-w-2xl text-slate-600">Ürünü parçalamadan anlatmak gerekirse; öğrenme, ölçüm ve kurumsal dağıtım birbirini tamamlar.</p>
-        <div class="mt-12 grid gap-6 sm:grid-cols-3">
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
-            <p class="text-xs font-bold uppercase tracking-wide text-blue-600">Öğrenme</p>
-            <h3 class="mt-2 text-lg font-semibold text-slate-900">Modül + simülasyon</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">Konu anlatımı ile birlikte gerçek işe yakın senaryolar; riski kontrollü ortamda görürsün.</p>
-          </article>
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
-            <p class="text-xs font-bold uppercase tracking-wide text-violet-600">Ölçüm</p>
-            <h3 class="mt-2 text-lg font-semibold text-slate-900">Davranış ve kanıt</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">Sadece doğru cevap değil; iz süren karar, süre ve rubrik notları bir arada rapora dökülür.</p>
-          </article>
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
-            <p class="text-xs font-bold uppercase tracking-wide text-emerald-600">Kurum</p>
-            <h3 class="mt-2 text-lg font-semibold text-slate-900">Özel senaryo ve cohort</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">İşe alım, L&amp;D veya akademi için aynı altyapı; markaya özel içerik ve teslim ritmi birlikte planlanır.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="border-b border-slate-100 bg-slate-50 py-16 sm:py-20" aria-labelledby="about-vm-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 id="about-vm-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Vizyon ve misyon</h2>
-        <div class="mt-10 grid gap-8 lg:grid-cols-2">
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-card">
-            <h3 class="text-lg font-semibold text-slate-900">Vizyon</h3>
-            <p class="mt-4 text-sm leading-relaxed text-slate-600">
-              Türkiye’de ve bölgede, <strong class="font-semibold text-slate-800">deneyim tabanlı yetkinlik ölçümünün</strong> güvenilir adresi olmak: bireyin kariyerini ve kurumun yetenek kararını aynı dilde, şeffaf veriyle konuşturmak.
-            </p>
-          </article>
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-card">
-            <h3 class="text-lg font-semibold text-slate-900">Misyon</h3>
-            <p class="mt-4 text-sm leading-relaxed text-slate-600">
-              Eğitim içeriği, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek <strong class="font-semibold text-slate-800">ölçülebilir gelişim</strong> sunmak; ezber yerine kanıt, slayt yerine karar pratiği üretmek.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="border-b border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="about-team-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 id="about-team-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Kurucu ekip</h2>
-        <p class="mt-3 max-w-2xl text-slate-600">Yön, ürün ve deneyim; tek bir “kurumsal slayt” yerine sahada çalışan bir çekirdek ekip.</p>
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
-            <div class="about-team-photo">
-              <img
-                src="/images/abidin-samet-cay.jpg?v=2"
-                alt="Abidin Samet Çay — SEBS Global kurucu ortak"
-                width="224"
-                height="288"
-                class="h-full w-full object-cover object-[center_15%]"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <h3 class="mt-5 text-center text-lg font-semibold text-slate-900">Abidin Samet Çay</h3>
-            <p class="text-center text-xs font-semibold uppercase tracking-wide text-blue-600">Kurucu ortak · CEO</p>
-            <p class="mt-3 text-center text-sm leading-relaxed text-slate-600">Bulut ve siber güvenlik tarafında derin saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
-          </article>
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card">
-            <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
-            <h3 class="mt-5 text-center text-lg font-semibold text-slate-900">İbrahim Ethem Arı</h3>
-            <p class="text-center text-xs font-semibold uppercase tracking-wide text-slate-500">Kurucu ortak</p>
-            <p class="mt-3 text-center text-sm leading-relaxed text-slate-600">Ürün ve mühendislik; platform mimarisi, güvenilir teslimat ve teknik kalite.</p>
-          </article>
-          <article class="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card sm:col-span-2 lg:col-span-1">
-            <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
-            <h3 class="mt-5 text-center text-lg font-semibold text-slate-900">Emir Berat Kayalı</h3>
-            <p class="text-center text-xs font-semibold uppercase tracking-wide text-slate-500">Kurucu ortak</p>
-            <p class="mt-3 text-center text-sm leading-relaxed text-slate-600">Deneyim ve arayüz; kullanıcı akışları, görsel tutarlılık ve markanın dijital yüzü.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="border-b border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="about-legal-heading" id="yasal-belgeler">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
+      <h2 id="sirket-bilgileri">Şirket ve iletişim bilgileri</h2>
+      <p>Ödeme ve mesafeli satış süreçlerinde geçerli satıcı bilgileri aşağıdadır.</p>
+      <div class="about-company-panel">
+        <dl>
           <div>
-            <h2 id="about-legal-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Yasal belgeler</h2>
-            <p class="mt-3 text-slate-600">Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
-            <nav class="about-legal-grid mt-8" aria-label="Yasal sayfalar">
-              <a class="about-legal-link" href="/gizlilik">Gizlilik politikası <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/kvkk">KVKK aydınlatma <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/kullanim-sartlari">Kullanım şartları <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/teslimat-iade">Teslimat ve iade <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/mesafeli-satis">Mesafeli satış sözleşmesi <span aria-hidden="true">→</span></a>
-              <a class="about-legal-link" href="/fiyatlandirma">Paketler ve ödeme <span aria-hidden="true">→</span></a>
-            </nav>
+            <dt>Ticari unvan</dt>
+            <dd>SEBS Global (Software Education &amp; Business Solutions)</dd>
           </div>
-          <div class="sebs-payment-trust sebs-payment-trust--about-page" aria-label="Kabul edilen ödeme yöntemleri">
-            <p class="sebs-payment-trust__label">Güvenli ödeme</p>
-            <p class="mt-2 text-sm text-slate-600">Kart ödemeleri Iyzico altyapısı üzerinden, 256-bit SSL ile korunan bağlantıda işlenir.</p>
+          <div>
+            <dt>Web sitesi</dt>
+            <dd><a href="https://sebsglobal.com/">https://sebsglobal.com</a></dd>
+          </div>
+          <div>
+            <dt>E-posta</dt>
+            <dd><a href="mailto:info@sebsglobal.com">info@sebsglobal.com</a></dd>
+          </div>
+          <div>
+            <dt>Telefon</dt>
+            <dd><a href="tel:+905332669087">+90 533 266 90 87</a></dd>
+          </div>
+          <div>
+            <dt>Adres</dt>
+            <dd>Sivas, Türkiye</dd>
+          </div>
+          <div>
+            <dt>Ödeme altyapısı</dt>
+            <dd>Iyzico güvenli ödeme (SSL ile şifrelenmiş bağlantı)</dd>
+          </div>
+        </dl>
+      </div>
+
+      <h2>Ne yapıyoruz?</h2>
+      <p>Öğrenme, ölçüm ve kurumsal dağıtımı birbirini tamamlayan üç ayak üzerine kuruluyuz.</p>
+      <ul class="about-pillars">
+        <li>
+          <strong>Modül + simülasyon</strong>
+          Konu anlatımı ile gerçek işe yakın senaryolar; riski kontrollü ortamda görürsünüz.
+        </li>
+        <li>
+          <strong>Davranış ve kanıt</strong>
+          Sadece doğru cevap değil; karar izi, süre ve rubrik notları rapora dökülür.
+        </li>
+        <li>
+          <strong>Kurumsal cohort</strong>
+          İşe alım, L&amp;D veya akademi için markaya özel içerik ve teslim ritmi planlanır.
+        </li>
+      </ul>
+
+      <h2>Vizyon ve misyon</h2>
+      <p><strong>Vizyon:</strong> Türkiye’de ve bölgede deneyim tabanlı yetkinlik ölçümünün güvenilir adresi olmak; bireyin kariyerini ve kurumun yetenek kararını aynı dilde, şeffaf veriyle konuşturmak.</p>
+      <p><strong>Misyon:</strong> Eğitim içeriği, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt, slayt yerine karar pratiği üretmek.</p>
+
+      <h2>Kurucu ekip</h2>
+      <p>Yön, ürün ve deneyim; sahada çalışan çekirdek bir ekip.</p>
+      <div class="about-team-grid">
+        <article class="about-team-card">
+          <div class="about-team-photo">
             <img
-              src="/images/payments/iyzico/logo-band-footer.svg"
-              alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
-              width="429"
-              height="32"
+              src="/images/abidin-samet-cay.jpg?v=2"
+              alt="Abidin Samet Çay — SEBS Global kurucu ortak"
+              width="112"
+              height="140"
+              class="h-full w-full object-cover object-[center_15%]"
               loading="lazy"
               decoding="async"
-              class="sebs-payment-trust__band mt-5"
             />
           </div>
-        </div>
+          <h3>Abidin Samet Çay</h3>
+          <p class="about-team-role">Kurucu ortak · CEO</p>
+          <p>Bulut ve siber güvenlik tarafında saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
+        </article>
+        <article class="about-team-card">
+          <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
+          <h3>İbrahim Ethem Arı</h3>
+          <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+          <p>Ürün ve mühendislik; platform mimarisi, güvenilir teslimat ve teknik kalite.</p>
+        </article>
+        <article class="about-team-card">
+          <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
+          <h3>Emir Berat Kayalı</h3>
+          <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+          <p>Deneyim ve arayüz; kullanıcı akışları, görsel tutarlılık ve markanın dijital yüzü.</p>
+        </article>
       </div>
-    </section>
 
+      <h2 id="yasal-belgeler">Yasal belgeler</h2>
+      <p>Dijital hizmet satışı kapsamında zorunlu açıklama ve sözleşme metinleri.</p>
+      <ul class="legal-related-links">
+        <li><a href="/gizlilik">Gizlilik politikası</a></li>
+        <li><a href="/kvkk">KVKK aydınlatma</a></li>
+        <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
+        <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
+        <li><a href="/mesafeli-satis">Mesafeli satış sözleşmesi</a></li>
+        <li><a href="/fiyatlandirma">Paketler ve ödeme</a></li>
+      </ul>
 
-    <section class="bg-slate-50 py-16 sm:py-20" aria-labelledby="about-values-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 id="about-values-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Değerler</h2>
-        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="rounded-xl border border-slate-200/80 bg-white p-5">
-            <p class="text-sm font-semibold text-slate-900">Şeffaflık</p>
-            <p class="mt-2 text-sm text-slate-600">Skor ve rubrikler gizlenmez; paydaşların güvenebileceği dil.</p>
-          </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white p-5">
-            <p class="text-sm font-semibold text-slate-900">Saha gerçekliği</p>
-            <p class="mt-2 text-sm text-slate-600">Teoriyi bırakıp, karar ve kanıt üzerinden ilerleriz.</p>
-          </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white p-5">
-            <p class="text-sm font-semibold text-slate-900">Ritim</p>
-            <p class="mt-2 text-sm text-slate-600">Kısa döngülerle geri bildirim; uzun bekleyiş yok.</p>
-          </div>
-          <div class="rounded-xl border border-slate-200/80 bg-white p-5">
-            <p class="text-sm font-semibold text-slate-900">Ölçek</p>
-            <p class="mt-2 text-sm text-slate-600">Bireyden kohorta; aynı çekirdek mimari.</p>
-          </div>
-        </div>
+      <h2>Güvenli ödeme</h2>
+      <p>Kart ödemeleri Iyzico altyapısı üzerinden, 256-bit SSL ile korunan bağlantıda işlenir. Kart bilgileri SEBS tarafından saklanmaz.</p>
+      <div class="sebs-payment-trust sebs-payment-trust--about-inline" aria-label="Kabul edilen ödeme yöntemleri">
+        <p class="sebs-payment-trust__label">Güvenli ödeme</p>
+        <img
+          src="/images/payments/iyzico/logo-band-footer.svg"
+          alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
+          width="429"
+          height="32"
+          loading="lazy"
+          decoding="async"
+          class="sebs-payment-trust__band"
+        />
       </div>
-    </section>
 
-    <section class="border-t border-slate-100 bg-white py-16 sm:py-20" aria-labelledby="about-cta-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 px-6 py-12 shadow-card sm:px-10 sm:py-14">
-          <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/[0.12] blur-3xl" aria-hidden="true"></div>
-          <div class="relative mx-auto max-w-2xl text-center">
-            <h2 id="about-cta-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Bir sonraki adım</h2>
-            <p class="mt-4 text-slate-600">Hedefini netleştirelim: bireysel kayıt, kurumsal pilot veya içerik uyarlama — kısa bir görüşmede hangi modülün işe yarayacağını birlikte seçeriz.</p>
-            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <a href="/signup.html" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">Ücretsiz başla</a>
-              <a href="/contact.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring">İletişim</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <p class="mt-10">
+        <a href="/signup.html" class="font-semibold text-blue-600 hover:text-blue-700">Ücretsiz başla</a>
+        <span class="text-slate-300 mx-2" aria-hidden="true">·</span>
+        <a href="/contact.html" class="font-semibold text-blue-600 hover:text-blue-700">İletişim</a>
+      </p>
+    </div>
   </main>
 
-  <footer class="border-t border-slate-200 bg-white py-14">
+  <footer class="border-t border-slate-200 bg-white py-12">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
-        <div>
-          <div class="flex items-center gap-2">
-            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
-            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
-          </div>
-          <p class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-400">Software Education &amp; Business Solutions</p>
-          <p class="mt-3 max-w-sm text-sm text-slate-500">
-            Simülasyonlar, karar analizi ve veri temelli profille bireylerin ve kurumların yetkinliği deneyimleyerek keşfetmesini; işe alım ve kariyer kararlarını objektifleştirmesini sağlayan platform.
-          </p>
-        </div>
-        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
-            <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
-              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
-              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
-            <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="/isverenler.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kurumsal simülasyonlar</a></li>
-              <li><a href="/hakkimizda" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
-              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
-            <ul class="mt-4 space-y-2 text-sm">
-              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
-              <li><a href="/kvkk" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">KVKK</a></li>
-              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
-              <li><a href="/teslimat-iade" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Teslimat ve iade</a></li>
-              <li><a href="/mesafeli-satis" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Mesafeli satış</a></li>
-            </ul>
-          </div>
-        </div>
+      <div class="legal-footer-links text-sm">
+        <a href="/gizlilik" class="text-slate-600 hover:text-slate-900">Gizlilik</a>
+        <a href="/kvkk" class="text-slate-600 hover:text-slate-900">KVKK</a>
+        <a href="/kullanim-sartlari" class="text-slate-600 hover:text-slate-900">Kullanım şartları</a>
+        <a href="/teslimat-iade" class="text-slate-600 hover:text-slate-900">Teslimat ve iade</a>
+        <a href="/mesafeli-satis" class="text-slate-600 hover:text-slate-900">Mesafeli satış</a>
+        <a href="/hakkimizda" class="text-slate-600 hover:text-slate-900">Hakkımızda</a>
+        <a href="/contact.html" class="text-slate-600 hover:text-slate-900">İletişim</a>
       </div>
-      <div class="sebs-payment-trust" aria-label="Ödeme yöntemleri">
+      <div class="legal-footer-payment sebs-payment-trust" aria-label="Ödeme yöntemleri">
         <p class="sebs-payment-trust__label">Güvenli ödeme</p>
         <img
           src="/images/payments/iyzico/logo-band-footer.svg"
@@ -398,18 +201,13 @@
           class="sebs-payment-trust__band"
         />
       </div>
-      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
-        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
-        <p class="text-xs text-slate-400"><a href="mailto:info@sebsglobal.com" class="hover:text-slate-600">info@sebsglobal.com</a> · <a href="tel:+905332669087" class="hover:text-slate-600">+90 533 266 90 87</a> · Sivas, Türkiye</p>
-      </div>
+      <p class="mt-8 text-xs text-slate-400">
+        © <span class="landing-footer-year"></span> SEBS Global ·
+        <a href="mailto:info@sebsglobal.com" class="hover:text-slate-600">info@sebsglobal.com</a> ·
+        <a href="tel:+905332669087" class="hover:text-slate-600">+90 533 266 90 87</a> · Sivas, Türkiye
+      </p>
     </div>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-  <script src="/js/supabase-env.js?v=2"></script>
-  <script src="/js/supabase-client.js"></script>
-  <script src="/js/supabase-auth.js?v=2.1"></script>
-  <script src="/js/navigation.js?v=3.7" defer></script>
   <script>
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {
       el.textContent = String(new Date().getFullYear());

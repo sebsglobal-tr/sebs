@@ -1,0 +1,258 @@
+/* Yasal metin ve Hakkımızda sayfaları — ortak tipografi ve bileşenler */
+
+.legal-updated {
+  font-size: 0.875rem;
+  color: rgb(100 116 139);
+}
+
+.legal-prose {
+  color: rgb(51 65 85);
+  line-height: 1.7;
+}
+
+.legal-prose > p:first-of-type,
+.legal-prose > .legal-lead {
+  margin-top: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgb(71 85 105);
+}
+
+.legal-prose h2 {
+  margin-top: 2.75rem;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(15 23 42);
+}
+
+.legal-prose h2:first-of-type {
+  margin-top: 2rem;
+}
+
+.legal-prose h3 {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.legal-prose p {
+  margin-top: 0.875rem;
+}
+
+.legal-prose ul {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.legal-prose li {
+  margin-top: 0.35rem;
+}
+
+.legal-prose a {
+  color: rgb(37 99 235);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.legal-prose a:hover {
+  text-decoration: underline;
+}
+
+.legal-prose strong {
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.legal-doc-nav a[aria-current="page"] {
+  color: rgb(15 23 42);
+}
+
+.legal-doc-mobile-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.legal-related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.legal-related-links li {
+  margin: 0;
+}
+
+.legal-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+/* Hakkımızda — şirket bilgisi */
+.about-company-panel {
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
+}
+
+.about-company-panel dl {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .about-company-panel dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+  }
+}
+
+.about-company-panel dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(100 116 139);
+}
+
+.about-company-panel dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgb(15 23 42);
+  line-height: 1.5;
+}
+
+.about-company-panel dd a {
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-company-panel dd a:hover {
+  text-decoration: underline;
+}
+
+/* Kurucu ekip */
+.about-team-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .about-team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.about-team-card {
+  text-align: center;
+}
+
+.about-team-photo {
+  width: 7rem;
+  aspect-ratio: 4 / 5;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(241 245 249);
+}
+
+.about-team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-team-initials {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(71 85 105);
+  background: linear-gradient(145deg, rgb(241 245 249), rgb(226 232 240));
+}
+
+.about-team-card h3 {
+  margin-top: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.about-team-role {
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(37 99 235);
+}
+
+.about-team-role--muted {
+  color: rgb(100 116 139);
+}
+
+.about-team-card p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgb(100 116 139);
+}
+
+.about-pillars {
+  margin-top: 0.75rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.about-pillars li {
+  margin-top: 0.75rem;
+  padding-left: 0;
+}
+
+.about-pillars strong {
+  display: block;
+  font-size: 0.9375rem;
+  color: rgb(15 23 42);
+}
+
+/* Ödeme bandı (Hakkımızda gövdesi) */
+.legal-prose .sebs-payment-trust--about-inline {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  text-align: center;
+}
+
+.legal-prose .sebs-payment-trust--about-inline .sebs-payment-trust__band {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.75rem;
+}
+
+.legal-footer-payment {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(241 245 249);
+}
+
+.legal-footer-payment .sebs-payment-trust__band {
+  margin-top: 0.5rem;
+}

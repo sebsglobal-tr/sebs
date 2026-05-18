@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Sync legal page header (with mobile menu) and footer across yasal HTML files."""
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1] / "frontend"
+
+FILES = [
+    "gizlilik-politikasi.html",
+    "kvkk-aydinlatma.html",
+    "kullanim-sartlari.html",
+    "teslimat-iade.html",
+    "mesafeli-satis-sozlesmesi.html",
+]
+
+HEADER = """  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <motion omitted class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
+        <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 object-contain" />
+        <span class="landing-brand-wordmark">SEBS</span>
+      </a>
+      <nav class="legal-doc-nav hidden sm:flex items-center gap-4 text-sm font-semibold text-slate-700" aria-label="Site menüsü">
+        <a href="/modules.html" class="hover:text-slate-900 focus-ring rounded">Eğitimler</a>
+        <a href="/fiyatlandirma" class="hover:text-slate-900 focus-ring rounded">Paketler</a>
+        <a href="/hakkimizda" class="hover:text-slate-900 focus-ring rounded">Hakkımızda</a>
+        <a href="/contact.html" class="hover:text-slate-900 focus-ring rounded">İletişim</a>
+      </nav>
+      <details class="legal-doc-mobile-menu relative shrink-0 sm:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">Menü</summary>
+        <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Eğitimler</a>
+          <a href="/fiyatlandirma" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Paketler</a>
+          <a href="/hakkimizda" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Hakkımızda</a>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">İletişim</a>
+        </div>
+      </details>
+    </div>
+  </header>""".replace("<motion omitted class=", "<div class=")
+
+FOOTER = """  <footer class="border-t border-slate-200 bg-white py-12">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="legal-footer-links text-sm">
+        <a href="/gizlilik" class="text-slate-600 hover:text-slate-900">Gizlilik</a>
+        <a href="/kvkk" class="text-slate-600 hover:text-slate-900">KVKK</a>
+        <a href="/kullanim-sartlari" class="text-slate-600 hover:text-slate-900">Kullanım şartları</a>
+        <a href="/teslimat-iade" class="text-slate-600 hover:text-slate-900">Teslimat ve iade</a>
+        <a href="/mesafeli-satis" class="text-slate-600 hover:text-slate-900">Mesafeli satış</a>
+        <a href="/hakkimizda" class="text-slate-600 hover:text-slate-900">Hakkımızda</a>
+        <a href="/contact.html" class="text-slate-600 hover:text-slate-900">İletişim</a>
+      </div>
+      <p class="mt-8 text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global</p>
+    </div>
+  </footer>"""
+
+CSS_BUMP = 'href="/css/legal-document.css?v=2"'
+CSS_OLD = re.compile(r'href="/css/legal-document\.css\?v=\d+"|href="/css/legal-document\.css"')
+
+
+def main() -> None:
+    for name in FILES:
+        path = ROOT / name
+        text = path.read_text(encoding="utf-8")
+
+        text = re.sub(
+            r'  <header class="fixed[\s\S]*?  </header>',
+            HEADER,
+            text,
+            count=1,
+        )
+
+        main_chunk = (
+            text.split("<main", 1)[-1].split("<footer", 1)[0]
+            if "<main" in text and "<footer" in text
+            else ""
+        )
+        if main_chunk and "</main>" not in main_chunk:
+            text = re.sub(r"\n(\s*)<footer", r"\n    </div>\n  </main>\n\n\1<footer", text, count=1)
+
+        text = re.sub(
+            r'  <footer class="border-t[\s\S]*?  </footer>',
+            FOOTER,
+            text,
+            count=1,
+        )
+
+        text = CSS_OLD.sub(CSS_BUMP, text)
+        text = text.replace("landing-chrome.css?v=5", "landing-chrome.css?v=8")
+
+        path.write_text(text, encoding="utf-8")
+        print("updated", name)
+
+
+if __name__ == "__main__":
+    main()
