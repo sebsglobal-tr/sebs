@@ -16,6 +16,7 @@
     'sosyal-muhendislik-insan-faktoru-zincir': { title: 'İnsan Faktörü Zinciri', area: 'Sosyal Mühendislik', icon: 'fa-people-arrows' },
     'guvenli-is-istasyonu-os-guvenligi': { title: 'Güvenli İş İstasyonu', area: 'İşletim Sistemi Güvenliği', icon: 'fa-desktop' },
     'isletim-sistemi-guvenligi-temel-senaryo': { title: 'OS Güvenliği Senaryosu', area: 'İşletim Sistemi Güvenliği', icon: 'fa-laptop-code' },
+    'gece-acilan-kapi-rdp-guvenlik-duvari': { title: 'Gece Açılan Kapı — RDP Krizi', area: 'İşletim Sistemi Güvenliği', icon: 'fa-shield-halved' },
     'temel-network-sim': { title: 'Temel Network Simülasyonu', area: 'Network & Altyapı', icon: 'fa-network-wired' },
     'penetration-testing-sim': { title: 'Penetrasyon Testi', area: 'Ofansif Güvenlik', icon: 'fa-bug' },
   };

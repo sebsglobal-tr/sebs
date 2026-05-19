@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0f172a" />
   <base href="/" />
   <title>İşletim Sistemi Güvenliği Simülasyonları | SEBS Global</title>
-  <meta name="description" content="İşletim Sistemleri Güvenliği (Temel) simülasyonları: Güvenli İş İstasyonu kontrol paneli ve IT stajyer masaüstü krizi senaryosu." />
+  <meta name="description" content="İşletim Sistemleri Güvenliği (Temel) simülasyonları: hardening paneli, IT stajyer senaryosu ve RDP / güvenlik duvarı krizi vakası." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -52,9 +52,9 @@
     <section class="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="mb-8 text-center">
         <h2 class="text-3xl font-bold tracking-tight text-slate-900">Simülasyon Seçin</h2>
-        <p class="mt-2 text-slate-600">Kontrol paneli ile sıkılaştırma veya stajyer senaryosu ile bilet çözme — ikisi de çok adımlı ve puanlıdır.</p>
+        <p class="mt-2 text-slate-600">Üç senaryo: hardening paneli, stajyer bilet akışı ve gece RDP / firewall krizi — hepsi çok adımlı ve puanlıdır.</p>
       </div>
-      <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ring-2 ring-emerald-100">
           <div class="relative h-44 w-full bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-800">
             <span class="absolute left-3 top-3 rounded-full bg-emerald-400/90 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-slate-900">Kontrol paneli</span>
@@ -91,6 +91,26 @@
             </ul>
             <a href="/simulation/isletim-sistemi-guvenligi-temel-senaryo.html" class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto sm:self-start">
               <i class="fas fa-play text-xs" aria-hidden="true"></i> Senaryoyu Başlat
+            </a>
+          </div>
+        </article>
+
+        <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ring-2 ring-violet-100 md:col-span-2 xl:col-span-1">
+          <div class="relative h-44 w-full bg-gradient-to-br from-slate-900 via-violet-950 to-slate-800">
+            <span class="absolute left-3 top-3 rounded-full bg-violet-400/90 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-slate-900">Vaka</span>
+            <span class="absolute right-3 top-3 rounded-full border border-violet-300/40 bg-slate-900/60 px-2.5 py-0.5 text-[11px] font-semibold text-violet-100">RDP · Firewall</span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold text-slate-900">Gece Açılan Kapı</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              OFFICE-PC-17 üzerinde gece saatlerinde başarısız uzak oturum denemeleri. Açık portlar, firewall profilleri, servis/PID eşlemesi, loglar ve NAT maruziyetini inceleyip güvenli müdahale sırasını uygulayın.
+            </p>
+            <ul class="mt-3 space-y-1 text-xs text-slate-500">
+              <li><i class="fa-solid fa-check text-violet-600 mr-1" aria-hidden="true"></i> macOS laboratuvarı ve kanıt sepeti</li>
+              <li><i class="fa-solid fa-check text-violet-600 mr-1" aria-hidden="true"></i> 8 aşama · ~30 dk</li>
+            </ul>
+            <a href="/simulation/gece-acilan-kapi-rdp-guvenlik-duvari-krizi.html" class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:w-auto sm:self-start">
+              <i class="fas fa-play text-xs" aria-hidden="true"></i> Vakayı Başlat
             </a>
           </div>
         </article>
