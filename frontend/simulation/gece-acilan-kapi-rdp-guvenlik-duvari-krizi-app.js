@@ -1,8 +1,7 @@
-/* Gece Açılan Kapı — RDP / Firewall simülasyonu */
 (function () {
-  'use strict';
+'use strict';
 
-  function bootError(msg) {
+function bootError(msg) {
     var overlay = document.getElementById('introOverlay');
     if (overlay) {
       overlay.classList.remove('hidden');
@@ -28,18 +27,24 @@
     evidence: [],
     flags: {},
     stageDone: {},
+    stageWrong: {},
     activeTab: 'ticket',
     selectedPort: null,
     selectedPid: null,
     selectedLogs: {},
-    dragOrder: [],
+    orderPick: [],
+    orderDisplay: [],
     decisionLocked: false,
     selectedDecision: null,
     decisionConfig: null,
     reportOpen: false,
     startedAt: 0,
-    timerId: null
+    timerId: null,
+    windows: {},
+    focusedApp: null,
+    nextZ: 20
   };
+
 
   function $(id) { return document.getElementById(id); }
   function esc(s) {
@@ -48,24 +53,307 @@
     return d.innerHTML;
   }
 
+
+var MAC_APPS = [
+  { id: 'ticket', label: 'Ticket', title: 'SEBS Service Desk — NET-417', icon: 'fa-ticket', color: '#f97316', pos: [32, 28] },
+  { id: 'overview', label: 'Overview', title: 'Uzak Sistem Bilgisi — OFFICE-PC-17', icon: 'fa-display', color: '#3b82f6', pos: [56, 44] },
+  { id: 'fw-profiles', label: 'FW Profiles', title: 'Windows Defender Firewall', icon: 'fa-shield', color: '#6366f1', pos: [80, 32] },
+  { id: 'ports', label: 'Open Ports', title: 'cmd.exe — netstat -ano', icon: 'fa-network-wired', color: '#ef4444', pos: [104, 48] },
+  { id: 'services', label: 'Services', title: 'services.msc', icon: 'fa-gears', color: '#8b5cf6', pos: [48, 72] },
+  { id: 'fw-rules', label: 'FW Rules', title: 'Gelişmiş Güvenlik — Gelen Kurallar', icon: 'fa-list-check', color: '#0ea5e9', pos: [72, 88] },
+  { id: 'logs', label: 'Login Logs', title: 'Event Viewer — Security', icon: 'fa-clock-rotate-left', color: '#14b8a6', pos: [96, 64] },
+  { id: 'edge-nat', label: 'Edge NAT', title: 'Edge Gateway — NAT Policies', icon: 'fa-globe', color: '#f59e0b', pos: [120, 40] },
+  { id: 'report', label: 'Report', title: 'Final Report', icon: 'fa-file-lines', color: '#64748b', pos: [64, 56] }
+];
+
+function initWindows() {
+  state.windows = {};
+  MAC_APPS.forEach(function (a) {
+    state.windows[a.id] = { open: a.id === 'ticket', minimized: false, maximized: false, restorePos: null };
+  });
+  state.focusedApp = 'ticket';
+  state.nextZ = 20;
+  state.activeTab = 'ticket';
+}
+
+function isReportLocked() {
+  return state.stage < 7 && !state.stageDone[7];
+}
+
+function openApp(id) {
+  if (id === 'report' && isReportLocked()) return;
+  var w = state.windows[id];
+  if (!w) return;
+  w.open = true;
+  w.minimized = false;
+  w.maximized = false;
+  focusApp(id);
+  if (id === 'overview') state.flags.overviewSeen = true;
+  if (id === 'fw-profiles') state.flags.fwProfilesSeen = true;
+  if (id === 'fw-rules') state.flags.fwRulesSeen = true;
+  state.activeTab = id;
+  renderMacDesktop();
+}
+
+function closeApp(id) {
+  var w = state.windows[id];
+  if (!w) return;
+  w.open = false;
+  w.minimized = false;
+  w.maximized = false;
+  if (state.focusedApp === id) {
+    var next = null;
+    MAC_APPS.forEach(function (a) {
+      var x = state.windows[a.id];
+      if (x && x.open && !x.minimized) next = a.id;
+    });
+    state.focusedApp = next;
+  }
+  renderMacDesktop();
+}
+
+function minimizeApp(id) {
+  var w = state.windows[id];
+  if (!w || !w.open) return;
+  var host = $('macWindows');
+  var winEl = host && host.querySelector('.mac-win[data-app="' + id + '"]');
+  if (winEl) {
+    winEl.classList.add('mac-win--minimizing');
+    setTimeout(function () {
+      w.minimized = true;
+      w.maximized = false;
+      renderMacDesktop();
+    }, 260);
+    return;
+  }
+  w.minimized = true;
+  w.maximized = false;
+  renderMacDesktop();
+}
+
+function toggleMaximizeApp(id) {
+  var w = state.windows[id];
+  if (!w || !w.open) return;
+  w.minimized = false;
+  var app = MAC_APPS.filter(function (a) { return a.id === id; })[0];
+  if (!w.maximized) {
+    var host = $('macWindows');
+    var winEl = host && host.querySelector('.mac-win[data-app="' + id + '"]');
+    if (winEl) {
+      w.restorePos = {
+        left: parseFloat(winEl.style.left) || (app ? app.pos[0] : 32),
+        top: parseFloat(winEl.style.top) || (app ? app.pos[1] : 28)
+      };
+    } else if (app) {
+      w.restorePos = { left: app.pos[0], top: app.pos[1] };
+    }
+    w.maximized = true;
+  } else {
+    w.maximized = false;
+  }
+  focusApp(id);
+}
+
+function focusApp(id) {
+  state.focusedApp = id;
+  state.activeTab = id;
+  state.nextZ += 1;
+  renderMacDesktop();
+}
+
+function dockClick(id) {
+  if (id === 'report' && isReportLocked()) return;
+  var w = state.windows[id];
+  if (!w) return;
+  if (!w.open) { openApp(id); return; }
+  if (w.minimized) { w.minimized = false; focusApp(id); return; }
+  if (state.focusedApp === id) minimizeApp(id);
+  else focusApp(id);
+}
+
+function updateMacMenu() {
+  var app = MAC_APPS.filter(function (a) { return a.id === state.focusedApp; })[0];
+  var el = $('macMenuApp');
+  if (el) el.textContent = app ? app.title : 'SEBS Lab';
+  var clk = $('macMenuClock');
+  if (clk) {
+    var d = new Date();
+    var h = d.getHours();
+    var m = d.getMinutes();
+    clk.textContent = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+}
+
+function renderDock() {
+  var dock = $('macDock');
+  if (!dock) return;
+  dock.innerHTML = MAC_APPS.map(function (a) {
+    var w = state.windows[a.id];
+    var locked = a.id === 'report' && isReportLocked();
+    var cls = 'mac-dock-item';
+    if (locked) cls += ' mac-dock-item--locked';
+    else if (w && w.open && !w.minimized && state.focusedApp === a.id) cls += ' mac-dock-item--active';
+    if (w && w.open && w.minimized) cls += ' mac-dock-item--minimized';
+    if (w && w.open) cls += ' mac-dock-item--running';
+    return '<button type="button" class="' + cls + '" data-dock="' + a.id + '"' + (locked ? ' disabled title="Aşama 8 sonrası"' : '') + '>' +
+      '<span class="mac-dock-icon" style="background:' + a.color + '"><i class="fa-solid ' + a.icon + '"></i></span>' +
+      '<span class="mac-dock-label">' + esc(a.label) + '</span><span class="mac-dock-dot"></span></button>';
+  }).join('');
+  dock.querySelectorAll('[data-dock]').forEach(function (btn) {
+    btn.onclick = function () { dockClick(btn.getAttribute('data-dock')); };
+  });
+}
+
+function buildMacWindow(app, bodyHtml, z, w) {
+  var cls = 'mac-win mac-win--' + app.id;
+  if (state.focusedApp === app.id) cls += ' mac-win--focused';
+  if (w && w.maximized) cls += ' mac-win--maximized';
+  var pos = (w && w.restorePos) ? w.restorePos : { left: app.pos[0], top: app.pos[1] };
+  var style = w && w.maximized
+    ? 'z-index:' + z
+    : 'left:' + pos.left + 'px;top:' + pos.top + 'px;z-index:' + z;
+  var maxTitle = w && w.maximized ? 'Küçült' : 'Tam ekran';
+  var maxLabel = w && w.maximized ? 'Pencereyi küçült' : 'Tam ekran yap';
+  return '<div class="' + cls + '" data-app="' + app.id + '" style="' + style + '">' +
+    '<div class="mac-win-titlebar" data-dragbar="' + app.id + '">' +
+    '<span class="mac-traffic">' +
+    '<button type="button" class="mac-close" data-action="close" data-app="' + app.id + '" title="Kapat" aria-label="Pencereyi kapat"></button>' +
+    '<button type="button" class="mac-min" data-action="minimize" data-app="' + app.id + '" title="Aşağı indir" aria-label="Pencereyi küçült"></button>' +
+    '<button type="button" class="mac-max" data-action="maximize" data-app="' + app.id + '" title="' + maxTitle + '" aria-label="' + maxLabel + '"></button>' +
+    '</span><span class="mac-win-title">' + esc(app.title) + '</span></div>' +
+    '<div class="mac-win-body">' + bodyHtml + '</div></div>';
+}
+
+function renderAppContent(appId) {
+  switch (appId) {
+    case 'ticket': return renderTicketPanel();
+    case 'overview': state.flags.overviewSeen = true; return renderOverview();
+    case 'fw-profiles': state.flags.fwProfilesSeen = true; return renderFwProfiles();
+    case 'ports': return renderPorts();
+    case 'services': return renderServices();
+    case 'fw-rules': state.flags.fwRulesSeen = true; return renderFwRules();
+    case 'logs': return renderLogs();
+    case 'edge-nat': return renderEdgeNat();
+    case 'report': return renderReportPanel();
+    default: return '';
+  }
+}
+
+function bindMacWindowChrome() {
+  var host = $('macWindows');
+  if (!host) return;
+  host.querySelectorAll('.mac-win').forEach(function (win) {
+    win.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.mac-traffic')) return;
+      if (!e.target.closest('.mac-win-titlebar')) return;
+      focusApp(win.getAttribute('data-app'));
+    });
+  });
+  host.querySelectorAll('[data-action="close"]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      closeApp(btn.getAttribute('data-app'));
+    });
+  });
+  host.querySelectorAll('[data-action="minimize"]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      minimizeApp(btn.getAttribute('data-app'));
+    });
+  });
+  host.querySelectorAll('[data-action="maximize"]').forEach(function (btn) {
+    btn.addEventListener('mousedown', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      toggleMaximizeApp(btn.getAttribute('data-app'));
+    });
+  });
+  host.querySelectorAll('[data-dragbar]').forEach(function (bar) {
+    var appId = bar.getAttribute('data-dragbar');
+    var win = host.querySelector('.mac-win[data-app="' + appId + '"]');
+    if (!win) return;
+    bar.onmousedown = function (e) {
+      if (e.target.closest('.mac-traffic')) return;
+      var wState = state.windows[appId];
+      if (wState && wState.maximized) return;
+      e.preventDefault();
+      focusApp(appId);
+      var sx = e.clientX;
+      var sy = e.clientY;
+      var rect = win.getBoundingClientRect();
+      var parent = $('macDesktop').getBoundingClientRect();
+      var ox = rect.left - parent.left;
+      var oy = rect.top - parent.top;
+      function move(ev) {
+        win.style.left = Math.max(0, ox + ev.clientX - sx) + 'px';
+        win.style.top = Math.max(0, oy + ev.clientY - sy) + 'px';
+      }
+      function up() {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+        var wUp = state.windows[appId];
+        if (wUp && !wUp.maximized) {
+          wUp.restorePos = {
+            left: parseFloat(win.style.left) || 0,
+            top: parseFloat(win.style.top) || 0
+          };
+        }
+      }
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    };
+  });
+}
+
+function renderMacDesktop() {
+  renderDock();
+  updateMacMenu();
+  var host = $('macWindows');
+  if (!host) return;
+  var html = '';
+  var baseZ = 10;
+  MAC_APPS.forEach(function (app, i) {
+    var w = state.windows[app.id];
+    if (!w || !w.open || w.minimized) return;
+    var z = state.focusedApp === app.id ? state.nextZ : baseZ + i;
+    html += buildMacWindow(app, renderAppContent(app.id), z, w);
+  });
+  host.innerHTML = html;
+  bindMacWindowChrome();
+  bindWorkspaceEvents();
+  var st = CFG.stages[state.stage];
+  if (st && st.guide && st.guide.tabHint && $('tabActionHint')) {
+    var h = st.guide.tabHint.replace(/sekme/gi, 'uygulama');
+    if (h.indexOf('Dock') < 0) h = "Dock'tan ilgili uygulamayı açın.";
+    $('tabActionHint').textContent = h;
+  }
+}
+
+
   function save() {
     /* İlerleme kaydedilmez — her girişte simülasyon baştan başlar. */
   }
 
   function resetAll() {
+    cancelSupervisorTyping();
     state.stage = 0;
     state.score = 0;
     state.evidence = [];
     state.flags = {};
     state.stageDone = {};
+    state.stageWrong = {};
     state.activeTab = 'ticket';
     state.selectedPort = null;
     state.selectedPid = null;
     state.selectedLogs = {};
-    state.dragOrder = [];
+    state.orderPick = [];
+    state.orderDisplay = [];
     state.decisionLocked = false;
     state.selectedDecision = null;
     state.reportOpen = false;
+    initWindows();
     renderAll();
   }
 
@@ -115,19 +403,33 @@
 
   function gateMsg(gate) {
     var m = {
-      overviewSeen: 'Önce System Overview sekmesini inceleyin.',
-      port3389Evidence: 'Önce 3389 port satırını seçip kanıt sepetine ekleyin.',
-      serviceEvidence: 'Önce PID 1148 seçip servis kanıtını sepete ekleyin.',
-      fwRuleEvidence: 'Önce kritik RDP firewall kuralını kanıt sepetine ekleyin.',
-      logEvidence: 'En az 3 başarısız giriş logu ve «RDP allow rule active» kaydını kanıta ekleyin.',
-      natEvidence: 'Önce Edge NAT kuralını kanıt sepetine ekleyin.'
+      overviewSeen: 'Dock\'tan System Overview uygulamasını açıp inceleyin.',
+      port3389Evidence: 'Dock\'tan Open Ports uygulamasını açıp tabloyu inceleyin. Olayla ilişkili dinleyen portu kanıta ekleyin.',
+      serviceEvidence: 'Dock\'tan Service Mapper\'da PID 1148 seçip kanıtı sepete ekleyin.',
+      fwRuleEvidence: 'Dock\'tan Firewall Rules\'da kritik RDP kuralını kanıta ekleyin.',
+      logEvidence: 'Dock\'tan Login Logs\'ta en az 3 başarısız giriş + RDP allow rule satırını kanıta ekleyin.',
+      natEvidence: 'Dock\'tan Edge NAT uygulamasında kuralı kanıta ekleyin.'
     };
     return m[gate] || 'Önce gerekli inceleme adımlarını tamamlayın.';
   }
 
+  var AUTO_ADVANCE_MS = 1400;
+
   function updateScore(pts) {
     state.score = Math.min(100, state.score + pts);
     $('scoreLbl').textContent = String(state.score);
+  }
+
+  function deductScore(pts) {
+    state.score = Math.max(0, state.score - (pts || 0));
+    $('scoreLbl').textContent = String(state.score);
+  }
+
+  function scheduleAutoNextStage() {
+    setTimeout(function () {
+      if (state.stage >= 8) return;
+      nextStage();
+    }, AUTO_ADVANCE_MS);
   }
 
   function setFeedback(kind, msg) {
@@ -159,25 +461,35 @@
     }, 1000);
   }
 
-  function isCorrectDrag(order) {
-    var ref = CFG.intervention;
-    return order.length === ref.length && order.every(function (v, i) { return v === i; });
+  function isCorrectOrder(pick) {
+    var n = CFG.intervention.length;
+    return pick.length === n && pick.every(function (v, i) { return v === i; });
   }
 
-  function shuffleDrag() {
+  function shuffleOrderDisplay() {
     var n = CFG.intervention.length;
     var arr = [];
     var i;
     for (i = 0; i < n; i++) arr.push(i);
-    do {
-      for (i = n - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var t = arr[i];
-        arr[i] = arr[j];
-        arr[j] = t;
-      }
-    } while (isCorrectDrag(arr));
+    for (i = n - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i];
+      arr[i] = arr[j];
+      arr[j] = t;
+    }
     return arr;
+  }
+
+  function initOrderDisplay() {
+    state.orderDisplay = shuffleOrderDisplay();
+  }
+
+  function getOrderBadge(interventionIdx) {
+    var i;
+    for (i = 0; i < state.orderPick.length; i++) {
+      if (state.orderPick[i] === interventionIdx) return i + 1;
+    }
+    return 0;
   }
 
   function renderEvidence() {
@@ -212,7 +524,7 @@
       '<ol class="gk-guide-list">' +
       st.guide.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
       '</ol>';
-    $('tabActionHint').textContent = st.guide.tabHint || 'Orta panelde sekmeler arasında gezinin.';
+    /* tab hint in renderMacDesktop */
   }
 
   function updateHintPopover() {
@@ -230,7 +542,7 @@
     $('stagePill').textContent = 'Aşama ' + Math.min(state.stage + 1, 8) + '/8';
   }
 
-  function renderTabs() {
+  function renderTabsOld() {
     var html = CFG.tabs.map(function (t) {
       if (t.id === 'report' && state.stage < 7 && !state.stageDone[7]) {
         return '<button type="button" class="gk-tab gk-tab--locked" disabled title="Aşama 8\'den sonra"><i class="fa-solid ' + t.icon + '"></i> ' + esc(t.label) + '</button>';
@@ -246,7 +558,7 @@
         if (state.activeTab === 'fw-profiles') state.flags.fwProfilesSeen = true;
         if (state.activeTab === 'fw-rules') state.flags.fwRulesSeen = true;
         renderTabs();
-        renderWorkspace();
+        renderMacDesktop();
         save();
       };
     });
@@ -255,18 +567,27 @@
   function renderTicketPanel() {
     var t = CFG.ticket;
     return (
-      '<div class="gk-card gk-card--ticket">' +
-      '<div class="gk-ticket-head"><span class="gk-badge">Ticket</span> <strong>' + esc(t.id) + '</strong></div>' +
-      '<dl class="gk-dl">' +
+      '<div class="tool-app tool-ticket">' +
+      '<div class="tool-vendor-bar"><i class="fa-solid fa-ticket"></i> SEBS Service Desk — Güvenlik Olayları</div>' +
+      '<div class="tool-ticket-head">' +
+      '<div style="font-size:0.6rem;color:#64748b">INCIDENT / Güvenlik</div>' +
+      '<div class="tool-ticket-id">' + esc(t.id) + '</div>' +
+      '<div class="tool-pills">' +
+      '<span class="tool-pill tool-pill--p2">P2 — Yüksek</span>' +
+      '<span class="tool-pill tool-pill--open">Açık</span>' +
+      '<span class="tool-pill" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0">Atanan: SOC L1</span>' +
+      '</div></div>' +
+      '<dl class="tool-fields">' +
       '<dt>Cihaz</dt><dd>' + esc(t.device) + '</dd>' +
       '<dt>Kullanıcı</dt><dd>' + esc(t.user) + '</dd>' +
-      '<dt>OS</dt><dd>' + esc(t.os) + '</dd>' +
-      '<dt>Bildirim</dt><dd>' + esc(t.summary) + '</dd>' +
-      '<dt>Zaman</dt><dd>' + esc(t.window) + '</dd>' +
+      '<dt>Hedef OS</dt><dd>' + esc(t.os) + '</dd>' +
+      '<dt>İnceleme konsolu</dt><dd>' + esc(t.labOs || 'macOS Sonoma 14.4') + '</dd>' +
+      '<dt>Özet</dt><dd>' + esc(t.summary) + '</dd>' +
+      '<dt>Zaman penceresi</dt><dd>' + esc(t.window) + '</dd>' +
       '<dt>Durum</dt><dd>' + esc(t.status) + '</dd>' +
       '</dl>' +
-      '<p class="gk-body-text">' + esc(t.body) + '</p>' +
-      '<button type="button" class="gk-btn gk-btn--sm" id="btnAddTicket">Ticket\'ı kanıt sepetine ekle</button>' +
+      '<div class="tool-desc">' + esc(t.body) + '</div>' +
+      '<div class="tool-footer"><button type="button" class="tool-btn tool-btn--primary" id="btnAddTicket"><i class="fa-solid fa-basket-shopping"></i> Ticket\'ı kanıt sepetine ekle</button></div>' +
       '</div>'
     );
   }
@@ -274,134 +595,168 @@
   function renderOverview() {
     var o = CFG.overview;
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">System Overview</h3>' +
-      '<dl class="gk-dl gk-dl--grid">' +
-      '<dt>Hostname</dt><dd>' + esc(o.hostname) + '</dd>' +
-      '<dt>OS</dt><dd>' + esc(o.os) + '</dd>' +
-      '<dt>Kullanıcı</dt><dd>' + esc(o.user) + '</dd>' +
-      '<dt>Yerel IP</dt><dd class="font-jb">' + esc(o.localIp) + '</dd>' +
-      '<dt>Ağ Profili</dt><dd><span class="gk-badge gk-badge--warn">' + esc(o.networkProfile) + '</span></dd>' +
-      '<dt>VPN</dt><dd>' + esc(o.vpn) + '</dd>' +
-      '<dt>Remote Desktop</dt><dd><span class="gk-badge gk-badge--danger">' + esc(o.rdp) + '</span></dd>' +
-      '<dt>Son güncelleme</dt><dd>' + esc(o.lastUpdate) + '</dd>' +
-      '<dt>Firewall</dt><dd><span class="gk-badge gk-badge--ok">' + esc(o.firewallStatus) + '</span></dd>' +
-      '<dt>Son yeniden başlatma</dt><dd>' + esc(o.lastReboot) + '</dd>' +
-      '</dl>' +
-      '<div class="gk-edu-box">' + esc(o.eduMsg) + '</div>' +
+      '<div class="tool-app tool-overview">' +
+      '<div class="tool-win-chrome"><i class="fa-brands fa-windows"></i> Uzak Sistem Bilgisi — ' + esc(o.hostname) + '</div>' +
+      '<div class="tool-host-banner">' +
+      '<div class="tool-host-icon"><i class="fa-solid fa-desktop"></i></div>' +
+      '<div><div class="tool-host-name">' + esc(o.hostname) + '</div>' +
+      '<div class="tool-host-sub">' + esc(o.os) + ' · Son oturum: ' + esc(o.user) + '</div></div>' +
+      '</div>' +
+      '<div class="tool-alert"><i class="fa-solid fa-triangle-exclamation"></i><span><strong>Remote Desktop:</strong> ' + esc(o.rdp) + ' — Uzak oturum servisi etkin.</span></div>' +
+      '<div class="tool-tiles">' +
+      '<div class="tool-tile"><div class="tool-tile-label">Yerel IP</div><div class="tool-tile-val font-jb">' + esc(o.localIp) + '</div></div>' +
+      '<div class="tool-tile"><div class="tool-tile-label">Ağ profili</div><div class="tool-tile-val" style="color:#c2410c">' + esc(o.networkProfile) + '</div></div>' +
+      '<div class="tool-tile"><div class="tool-tile-label">VPN</div><div class="tool-tile-val">' + esc(o.vpn) + '</div></div>' +
+      '<div class="tool-tile"><div class="tool-tile-label">Güvenlik Duvarı</div><div class="tool-tile-val" style="color:#15803d">' + esc(o.firewallStatus) + '</div></div>' +
+      '<div class="tool-tile"><div class="tool-tile-label">Son güncelleme</div><div class="tool-tile-val">' + esc(o.lastUpdate) + '</div></div>' +
+      '<div class="tool-tile"><div class="tool-tile-label">Son yeniden başlatma</div><div class="tool-tile-val">' + esc(o.lastReboot) + '</div></div>' +
+      '</div>' +
+      '<div class="tool-note">' + esc(o.eduMsg) + '</div>' +
       '</div>'
     );
   }
 
   function renderFwProfiles() {
     var rows = CFG.fwProfiles.map(function (p) {
-      return '<tr><td>' + esc(p.profile) + '</td><td><span class="gk-badge gk-badge--ok">' + esc(p.status) + '</span></td><td>' + esc(p.inbound) + '</td><td>' + esc(p.note) + '</td></tr>';
+      return '<tr><td><i class="fa-solid fa-shield" style="color:#0078d4;margin-right:4px"></i>' + esc(p.profile) + '</td><td>' + esc(p.status) + '</td><td>' + esc(p.inbound) + '</td><td>' + esc(p.note) + '</td></tr>';
     }).join('');
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">Firewall Profiles</h3>' +
-      '<table class="gk-table"><thead><tr><th>Profil</th><th>Durum</th><th>Inbound varsayılan</th><th>Not</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<p class="gk-muted">İlk bakışta normal görünebilir — Firewall Rules sekmesine geçin.</p>' +
+      '<div class="tool-app tool-mmc">' +
+      '<div class="tool-mmc-bar"><i class="fa-solid fa-window-maximize"></i> Windows Defender Firewall with Advanced Security</div>' +
+      '<div class="tool-mmc-body">' +
+      '<div class="tool-mmc-tree">' +
+      '<div class="tool-mmc-tree-item">Windows Defender Firewall</div>' +
+      '<div class="tool-mmc-tree-item tool-mmc-tree-item--sel">Overview</div>' +
+      '<div class="tool-mmc-tree-item">Inbound Rules</div>' +
+      '<div class="tool-mmc-tree-item">Outbound Rules</div>' +
+      '</div>' +
+      '<div class="tool-mmc-main"><table class="tool-mmc-table"><thead><tr><th>Profil</th><th>Durum</th><th>Inbound (varsayılan)</th><th>Not</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '</div>' +
+      '<div class="tool-mmc-hint">Profiller normal görünebilir — asıl risk genelde Allow kurallarında ortaya çıkar.</div>' +
       '</div>'
     );
   }
 
   function renderPorts() {
     var rows = CFG.ports.map(function (p, i) {
-      var crit = p.critical ? ' gk-row--crit' : '';
-      var sel = state.selectedPort === i ? ' gk-row--sel' : '';
-      var badge = p.critical ? '<span class="gk-badge gk-badge--danger">!</span> ' : '';
-      return '<tr class="gk-row-click' + crit + sel + '" data-port="' + i + '">' +
-        '<td>' + esc(p.proto) + '</td><td class="font-jb">' + esc(p.local) + '</td><td><strong>' + p.port + '</strong></td>' +
-        '<td>' + esc(p.state) + '</td><td>' + p.pid + '</td><td>' + badge + esc(p.comment) + '</td></tr>';
+      var sel = state.selectedPort === i ? ' tool-term-row--sel' : '';
+      var crit = p.critical ? ' tool-term-row--crit' : '';
+      var local = p.local + ':' + p.port;
+      return '<tr class="tool-term-row' + sel + crit + '" data-port="' + i + '"><td>' + esc(p.proto) + '</td><td class="font-jb">' + esc(local) + '</td><td></td><td>' + esc(p.state) + '</td><td>' + p.pid + '</td></tr>';
     }).join('');
     var detail = '';
-    if (state.selectedPort === 0) {
-      var d = CFG.portDetail3389;
-      detail =
-        '<div class="gk-detail-panel">' +
-        '<h4>Port detayı — ' + d.port + '</h4>' +
-        '<dl class="gk-dl"><dt>Durum</dt><dd>' + esc(d.state) + '</dd><dt>Dinleme</dt><dd class="font-jb">' + esc(d.listen) + '</dd>' +
-        '<dt>PID</dt><dd>' + d.pid + '</dd><dt>Not</dt><dd>' + esc(d.note) + '</dd></dl>' +
-        '<button type="button" class="gk-btn gk-btn--sm" id="btnAddPort">3389 portunu kanıta ekle</button>' +
-        '</div>';
+    if (state.selectedPort != null && CFG.ports[state.selectedPort]) {
+      var p = CFG.ports[state.selectedPort];
+      var d = p.port === 3389 ? CFG.portDetail3389 : null;
+      detail = '<div class="tool-term-detail"><h4>// Seçili bağlantı — port ' + p.port + '</h4><dl>' +
+        '<dt>proto</dt><dd>' + esc(p.proto) + '</dd>' +
+        '<dt>state</dt><dd>' + esc(d ? d.state : p.state) + '</dd>' +
+        '<dt>local</dt><dd>' + esc(d ? d.listen + ':' + d.port : p.local + ':' + p.port) + '</dd>' +
+        '<dt>pid</dt><dd>' + p.pid + '</dd>' +
+        '<dt>note</dt><dd>' + esc(d ? d.note : p.comment) + '</dd></dl>';
+      detail += '<div style="margin-top:0.4rem"><button type="button" class="tool-btn tool-btn--primary" id="btnAddPort">Port ' +
+        p.port + ' kanıta ekle</button></div>';
+      detail += '</div>';
     }
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">Open Ports <span class="gk-muted">(netstat -ano benzeri)</span></h3>' +
-      '<table class="gk-table"><thead><tr><th>Proto</th><th>Local</th><th>Port</th><th>State</th><th>PID</th><th>Yorum</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      detail +
-      '</div>'
+      '<div class="tool-app tool-term">' +
+      '<div class="tool-term-title">Administrator: C:\\Windows\\System32\\cmd.exe — netstat -ano</div>' +
+      '<div class="tool-term-prompt">C:\\Users\\destek.ofis&gt; netstat -ano | findstr LISTENING</div>' +
+      '<div class="tool-term-out"><table class="tool-term-table"><thead><tr><td>Proto</td><td>Local Address</td><td>Foreign</td><td>State</td><td>PID</td></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      detail + '</div>'
     );
   }
 
   function renderServices() {
-    var pids = Object.keys(CFG.services);
-    var chips = pids.map(function (pid) {
-      var sel = state.selectedPid === +pid ? ' gk-chip--active' : '';
-      return '<button type="button" class="gk-chip' + sel + '" data-pid="' + pid + '">PID ' + pid + '</button>';
+    var svcRows = [
+      { pid: 1148, name: 'TermService', display: 'Remote Desktop Services', status: 'Running', start: 'Automatic' },
+      { pid: 912, name: 'RpcEptMapper', display: 'RPC Endpoint Mapper', status: 'Running', start: 'Automatic' },
+      { pid: 4, name: 'System', display: 'Windows System', status: 'Running', start: 'Boot' }
+    ];
+    var listRows = svcRows.map(function (r) {
+      var cls = state.selectedPid === r.pid ? 'tool-svc--sel' : '';
+      return '<tr class="' + cls + '" data-pid="' + r.pid + '"><td>' + esc(r.display) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.status) + '</td><td>' + esc(r.start) + '</td><td>' + r.pid + '</td></tr>';
     }).join('');
-    var body = '<p class="gk-muted">PID 1148 seçin (3389 ile eşleşen).</p>';
+    var detail = '<p style="color:#666;margin:0">Tablodan bir servis satırı seçin.</p>';
     if (state.selectedPid && CFG.services[state.selectedPid]) {
       var s = CFG.services[state.selectedPid];
-      body =
-        '<dl class="gk-dl">' +
+      detail = '<h4>' + esc(s.displayName) + ' (' + esc(s.service) + ')</h4>' +
+        '<dl class="tool-svc-grid">' +
         '<dt>PID</dt><dd>' + s.pid + '</dd>' +
         '<dt>Süreç</dt><dd>' + esc(s.process) + '</dd>' +
-        '<dt>Servis</dt><dd><strong>' + esc(s.service) + '</strong></dd>' +
-        '<dt>Display Name</dt><dd>' + esc(s.displayName) + '</dd>' +
         '<dt>Hesap</dt><dd>' + esc(s.account) + '</dd>' +
         '<dt>Başlangıç</dt><dd>' + esc(s.startType) + '</dd>' +
-        '<dt>Yol</dt><dd class="font-jb" style="font-size:0.65rem">' + esc(s.path) + '</dd>' +
+        '<dt>Yol</dt><dd class="font-jb" style="font-size:0.6rem">' + esc(s.path) + '</dd>' +
         '<dt>İmza</dt><dd>' + esc(s.signed) + '</dd>' +
         '</dl>' +
-        '<div class="gk-edu-box">' + esc(s.riskNote) + '</div>' +
-        '<button type="button" class="gk-btn gk-btn--sm" id="btnAddService">PID/servis kanıtını ekle</button>';
+        '<p style="margin:0.35rem 0;font-size:0.62rem;color:#92400e;background:#fffbeb;padding:0.35rem;border-radius:4px">' + esc(s.riskNote) + '</p>' +
+        '<button type="button" class="tool-btn tool-btn--primary" id="btnAddService">PID ' + s.pid + ' / ' + esc(s.service) + ' kanıta ekle</button>';
     }
-    return '<div class="gk-card"><h3 class="gk-card-title">Service Mapper</h3><div class="gk-chips">' + chips + '</div>' + body + '</div>';
+    return (
+      '<div class="tool-app tool-svc">' +
+      '<div class="tool-mmc-bar"><i class="fa-solid fa-gears"></i> services.msc — Yerel Bilgisayar</div>' +
+      '<div class="tool-svc-list"><table class="tool-svc-table"><thead><tr><th>Görünen Ad</th><th>Servis</th><th>Durum</th><th>Başlangıç</th><th>PID</th></tr></thead><tbody>' + listRows + '</tbody></table></div>' +
+      '<div class="tool-svc-detail">' + detail + '</div>' +
+      '</div>'
+    );
   }
 
   function renderFwRules() {
     var rows = CFG.fwRules.map(function (r, i) {
-      var crit = r.critical ? ' gk-row--crit' : '';
-      var sel = state.flags.selectedRule === i ? ' gk-row--sel' : '';
-      return '<tr class="gk-row-click' + crit + sel + '" data-rule="' + i + '">' +
-        '<td>' + esc(r.name) + '</td><td>' + esc(r.profile) + '</td><td>' + esc(r.port) + '</td>' +
-        '<td>' + esc(r.source) + '</td><td>' + esc(r.action) + '</td><td>' +
-        (r.critical ? '<span class="gk-badge gk-badge--danger">' + esc(r.status) + '</span>' : esc(r.status)) +
-        '</td></tr>';
+      var crit = r.critical ? ' tool-fw--crit' : '';
+      var sel = state.flags.selectedRule === i ? ' tool-fw--sel' : '';
+      var actCls = r.action === 'Allow' ? 'tool-fw-action-allow' : 'tool-fw-action-block';
+      return '<tr class="' + crit.trim() + sel.trim() + '" data-rule="' + i + '">' +
+        '<td>' + (r.critical ? '<i class="fa-solid fa-circle-exclamation" style="color:#dc2626"></i> ' : '') + esc(r.name) + '</td>' +
+        '<td>' + esc(r.profile) + '</td><td>' + esc(r.port) + '</td><td>' + esc(r.source) + '</td>' +
+        '<td class="' + actCls + '">' + esc(r.action) + '</td><td>' + esc(r.status) + '</td></tr>';
     }).join('');
     var det = '';
-    if (state.flags.selectedRule === 0) {
-      var c = CFG.criticalRuleDetail;
-      det =
-        '<div class="gk-detail-panel">' +
-        '<h4>Kritik kural detayı</h4>' +
-        '<dl class="gk-dl"><dt>Ad</dt><dd>' + esc(c.name) + '</dd><dt>Profil</dt><dd>' + esc(c.profiles) + '</dd>' +
-        '<dt>Eylem</dt><dd>' + esc(c.action) + '</dd><dt>Protokol</dt><dd>' + esc(c.protocol) + '</dd>' +
-        '<dt>Local Port</dt><dd>' + c.localPort + '</dd><dt>Remote</dt><dd>' + esc(c.remote) + '</dd>' +
-        '<dt>Durum</dt><dd>Enabled</dd></dl>' +
-        '<button type="button" class="gk-btn gk-btn--sm" id="btnAddFwRule">Firewall kuralını kanıta ekle</button>' +
-        '</div>';
+    if (state.flags.selectedRule != null && CFG.fwRules[state.flags.selectedRule]) {
+      var ri = state.flags.selectedRule;
+      var r = CFG.fwRules[ri];
+      var extra = '';
+      if (ri === 0) {
+        var c = CFG.criticalRuleDetail;
+        extra = '<br><span style="font-size:0.62rem;color:#64748b">' + esc(c.protocol) + ' · Local ' + c.localPort + ' · Remote: ' + esc(c.remote) + '</span>';
+      }
+      det = '<div class="tool-fw-detail"><strong>' + esc(r.name) + '</strong>' + extra +
+        '<br><span style="font-size:0.62rem">' + esc(r.profile) + ' · Port ' + esc(r.port) + ' · ' + esc(r.source) + ' · ' + esc(r.action) + '</span>' +
+        '<div style="margin-top:0.4rem"><button type="button" class="tool-btn tool-btn--primary" id="btnAddFwRule">Firewall kuralını kanıta ekle</button></div></div>';
     }
-    return '<div class="gk-card"><h3 class="gk-card-title">Firewall Rules</h3><table class="gk-table"><thead><tr><th>Kural</th><th>Profil</th><th>Port</th><th>Kaynak</th><th>Eylem</th><th>Durum</th></tr></thead><tbody>' + rows + '</tbody></table>' + det + '</div>';
+    return (
+      '<div class="tool-app tool-fw">' +
+      '<div class="tool-mmc-bar"><i class="fa-solid fa-shield-halved"></i> Gelişmiş Güvenlik — Gelen Kurallar</div>' +
+      '<div class="tool-fw-group">Windows Remote Desktop</div>' +
+      '<table class="tool-fw-table"><thead><tr><th>Kural</th><th>Profil</th><th>Port</th><th>Kaynak</th><th>Eylem</th><th>Durum</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      det + '</div>'
+    );
   }
 
   function renderLogs() {
     var rows = CFG.loginLogs.map(function (l, i) {
-      var sel = state.selectedLogs[i] ? ' gk-row--sel' : '';
-      var resCls = l.fail ? 'gk-badge--danger' : (l.system ? 'gk-badge--warn' : 'gk-badge--ok');
-      return '<tr class="gk-row-click' + sel + '" data-log="' + i + '">' +
-        '<td class="font-jb">' + esc(l.t) + '</td><td>' + esc(l.ev) + '</td><td>' + esc(l.user) + '</td>' +
-        '<td class="font-jb">' + esc(l.src) + '</td><td><span class="gk-badge ' + resCls + '">' + esc(l.result) + '</span></td></tr>';
+      var sel = state.selectedLogs[i] ? ' tool-ev--sel' : '';
+      var icon = l.fail ? 'fa-circle-xmark tool-ev-icon--err' : (l.system ? 'fa-circle-info tool-ev-icon--warn' : 'fa-circle-check tool-ev-icon--ok');
+      var evId = l.fail ? '4625' : (l.system ? '4954' : '4624');
+      return '<tr class="' + sel.trim() + '" data-log="' + i + '">' +
+        '<td class="tool-ev-icon"><i class="fa-solid ' + icon + '"></i></td>' +
+        '<td class="font-jb">2026-05-15 ' + esc(l.t) + '</td>' +
+        '<td>' + esc(l.ev) + '</td>' +
+        '<td>Microsoft-Windows-Security-Auditing</td>' +
+        '<td class="font-jb">' + evId + '</td>' +
+        '<td>' + esc(l.user) + ' · ' + esc(l.src) + ' · ' + esc(l.result) + '</td></tr>';
     }).join('');
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">Login Logs — zaman çizelgesi</h3>' +
-      '<div class="gk-edu-box">' + esc(CFG.logsEduMsg) + '</div>' +
-      '<table class="gk-table"><thead><tr><th>Saat</th><th>Olay</th><th>Kullanıcı</th><th>Kaynak IP</th><th>Sonuç</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<button type="button" class="gk-btn gk-btn--sm" id="btnAddLogs" style="margin-top:0.5rem">Seçili logları kanıta ekle</button>' +
-      '<p class="gk-muted">En az 3 başarısız deneme + RDP allow rule active kaydı gerekir.</p>' +
+      '<div class="tool-app tool-ev">' +
+      '<div class="tool-ev-head">Event Viewer &gt; <span class="tool-ev-path">Custom Views\\Remote Access Attempts</span></div>' +
+      '<div class="tool-ev-filter">Kaynak: Security · Olay: 4624, 4625, 4954 · Zaman: Son 24 saat</div>' +
+      '<div class="tool-ev-banner">' + esc(CFG.logsEduMsg) + '</div>' +
+      '<div class="tool-ev-scroll"><table class="tool-ev-table"><thead><tr><th></th><th>Tarih ve Saat</th><th>Olay</th><th>Kaynak</th><th>Olay Kimliği</th><th>Ayrıntı</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="tool-footer tool-footer--row">' +
+      '<button type="button" class="tool-btn" id="btnSelectAllLogs"><i class="fa-solid fa-check-double"></i> Tüm logları seç</button>' +
+      '<button type="button" class="tool-btn tool-btn--primary" id="btnAddLogs"><i class="fa-solid fa-basket-shopping"></i> Seçili logları kanıta ekle</button>' +
+      '</div>' +
+      '<p style="font-size:0.6rem;color:#64748b;margin:0.35rem 0.5rem 0.5rem">En az 3 başarısız deneme + RDP allow rule active kaydı gerekir.</p>' +
       '</div>'
     );
   }
@@ -409,41 +764,67 @@
   function renderEdgeNat() {
     var n = CFG.edgeNat;
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">Edge Firewall / NAT</h3>' +
-      '<dl class="gk-dl">' +
-      '<dt>Rule Name</dt><dd class="font-jb">' + esc(n.name) + '</dd>' +
+      '<div class="tool-app tool-nat">' +
+      '<div class="tool-nat-header"><h3>Edge Gateway — NAT Policies</h3><p>OFFICE-PC-17 · Geçici uzak destek kuralları</p></div>' +
+      '<div class="tool-nat-nav"><span class="tool-nat-nav--on">NAT</span><span>Firewall</span><span>VPN</span><span>Logs</span></div>' +
+      '<div class="tool-nat-card tool-nat-card--alert">' +
+      '<div class="tool-nat-card-head"><span>' + esc(n.name) + '</span><span style="font-size:0.58rem;background:#dc2626;color:#fff;padding:0.1rem 0.35rem;border-radius:3px">' + esc(n.status) + '</span></div>' +
+      '<dl class="tool-nat-grid">' +
       '<dt>Public Port</dt><dd>' + n.publicPort + '</dd>' +
       '<dt>Internal Host</dt><dd class="font-jb">' + esc(n.internalHost) + '</dd>' +
       '<dt>Internal Port</dt><dd>' + n.internalPort + '</dd>' +
-      '<dt>Status</dt><dd><span class="gk-badge gk-badge--danger">' + esc(n.status) + '</span></dd>' +
       '<dt>Created</dt><dd>' + esc(n.created) + '</dd>' +
       '<dt>Purpose</dt><dd>' + esc(n.purpose) + '</dd>' +
       '<dt>Owner</dt><dd>' + esc(n.owner) + '</dd>' +
       '<dt>Expected Expiry</dt><dd>' + esc(n.expectedExpiry) + '</dd>' +
-      '<dt>Actual</dt><dd><span class="gk-badge gk-badge--warn">' + esc(n.actual) + '</span></dd>' +
-      '</dl>' +
-      '<div class="gk-edu-box"><strong>Sistem sahibi notu:</strong> ' + esc(n.ownerNote) + '</div>' +
-      '<button type="button" class="gk-btn gk-btn--sm" id="btnAddNat">NAT kuralını kanıta ekle</button>' +
+      '<dt>Actual</dt><dd style="color:#c2410c;font-weight:700">' + esc(n.actual) + '</dd>' +
+      '</dl></div>' +
+      '<div class="tool-nat-note"><strong>Sistem sahibi notu:</strong> ' + esc(n.ownerNote) + '</div>' +
+      '<div class="tool-footer"><button type="button" class="tool-btn tool-btn--primary" id="btnAddNat"><i class="fa-solid fa-basket-shopping"></i> NAT kuralını kanıta ekle</button></div>' +
       '</div>'
     );
   }
 
   function renderReportPanel() {
     var missing = getReportMissing();
-    var warn = missing.length
-      ? '<div class="gk-edu-box gk-edu-box--warn"><strong>Eksik kanıt:</strong><ul>' + missing.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>'
-      : '<div class="gk-edu-box gk-edu-box--ok">Zorunlu kanıtlar tamam. Raporu düzenleyip kaydedebilirsiniz.</div>';
+    var tk = CFG.ticket;
+    var statusHtml = missing.length
+      ? '<div class="tool-report-status tool-report-status--warn"><i class="fa-solid fa-triangle-exclamation"></i><div><strong>Eksik kanıt var</strong> — raporu tamamlamak için önce aşağıdakileri sepete ekleyin.<ul>' +
+        missing.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div></div>'
+      : '<div class="tool-report-status tool-report-status--ok"><i class="fa-solid fa-circle-check"></i><div><strong>Zorunlu kanıtlar tamam.</strong> Metinleri gözden geçirip düzenleyebilir, ardından raporu kaydedebilirsiniz.</div></div>';
     var s = buildReportSections();
+    function section(iconCls, icon, title, hint, id, rows, extraCls, val) {
+      return (
+        '<section class="tool-report-section">' +
+        '<div class="tool-report-section-head">' +
+        '<span class="tool-report-section-icon tool-report-section-icon--' + iconCls + '"><i class="fa-solid ' + icon + '"></i></span>' +
+        '<h4>' + esc(title) + '</h4>' +
+        '<span class="tool-report-section-hint">' + esc(hint) + '</span></div>' +
+        '<textarea id="' + id + '" class="tool-report-area' + (extraCls || '') + '" rows="' + rows + '">' + esc(val) + '</textarea>' +
+        '</section>'
+      );
+    }
     return (
-      '<div class="gk-card">' +
-      '<h3 class="gk-card-title">Final Report</h3>' + warn +
-      '<div class="gk-report-field"><label>Bulgu</label><textarea id="reportBulgu" rows="4">' + esc(s.bulgu) + '</textarea></div>' +
-      '<div class="gk-report-field"><label>Etki</label><textarea id="reportEtki" rows="4">' + esc(s.etki) + '</textarea></div>' +
-      '<div class="gk-report-field"><label>Öneri</label><textarea id="reportOneri" rows="4">' + esc(s.oneri) + '</textarea></div>' +
-      '<div class="gk-report-field"><label>Kanıt</label><textarea id="reportKanit" rows="6">' + esc(s.kanit) + '</textarea></div>' +
-      '<button type="button" class="gk-btn" id="btnSaveReport" style="width:100%;margin-top:0.5rem">Raporu tamamla</button>' +
-      '</div>'
+      '<div class="tool-app tool-report">' +
+      '<header class="tool-report-header">' +
+      '<div class="tool-report-header-icon"><i class="fa-solid fa-file-shield"></i></div>' +
+      '<div class="tool-report-header-text">' +
+      '<h2>Ön İnceleme Raporu</h2>' +
+      '<p>Gece Açılan Kapı — RDP Maruziyeti ve Güvenlik Duvarı Krizi</p>' +
+      '<div class="tool-report-meta">' +
+      '<span><i class="fa-solid fa-ticket"></i> ' + esc(tk.id) + '</span>' +
+      '<span><i class="fa-solid fa-desktop"></i> ' + esc(tk.device) + '</span>' +
+      '<span><i class="fa-solid fa-user"></i> ' + esc(tk.user) + '</span>' +
+      '</div></div></header>' +
+      '<div class="tool-report-body">' + statusHtml +
+      section('bulgu', 'fa-magnifying-glass', 'Bulgu', 'Tespitler', 'reportBulgu', 5, '', s.bulgu) +
+      section('etki', 'fa-chart-line', 'Etki', 'Risk değerlendirmesi', 'reportEtki', 4, '', s.etki) +
+      section('oneri', 'fa-clipboard-list', 'Öneri', 'Müdahale planı', 'reportOneri', 4, '', s.oneri) +
+      section('kanit', 'fa-paperclip', 'Kanıt', 'Sepet özeti', 'reportKanit', 7, ' tool-report-area--kanit', s.kanit) +
+      '</div>' +
+      '<footer class="tool-report-footer">' +
+      '<button type="button" class="tool-btn tool-btn--primary" id="btnSaveReport"><i class="fa-solid fa-file-circle-check"></i> Raporu tamamla ve simülasyonu bitir</button>' +
+      '</footer></div>'
     );
   }
 
@@ -466,7 +847,7 @@
     return { bulgu: t.bulgu, etki: t.etki, oneri: t.oneri, kanit: kanit };
   }
 
-  function renderWorkspace() {
+  function renderWorkspaceOld() {
     var html = '';
     switch (state.activeTab) {
       case 'ticket': html = renderTicketPanel(); break;
@@ -489,54 +870,90 @@
     var tbtn = $('btnAddTicket');
     if (tbtn) tbtn.onclick = function () {
       if (addEvidence('Ticket', CFG.ticket.id + ' · ' + CFG.ticket.device)) setFeedback('ok', 'Ticket kanıta eklendi.');
+      else setFeedback('info', 'Bu kanıt zaten sepette.');
     };
-    document.querySelectorAll('[data-port]').forEach(function (row) {
-      row.onclick = function () {
+    document.querySelectorAll('tr[data-port]').forEach(function (row) {
+      row.onclick = function (e) {
+        e.stopPropagation();
         state.selectedPort = +row.getAttribute('data-port');
-        renderWorkspace();
+        renderMacDesktop();
       };
     });
     var pbtn = $('btnAddPort');
     if (pbtn) pbtn.onclick = function () {
-      var d = CFG.portDetail3389;
-      if (addEvidence('Açık port', 'TCP ' + d.listen + ':' + d.port + ' LISTENING PID ' + d.pid)) {
-        setFeedback('ok', '3389 port kanıtı eklendi.');
+      var idx = state.selectedPort;
+      if (idx == null || !CFG.ports[idx]) return;
+      var p = CFG.ports[idx];
+      if (p.port === 3389) {
+        var d = CFG.portDetail3389;
+        if (addEvidence('Açık port', 'TCP ' + d.listen + ':' + d.port + ' LISTENING PID ' + d.pid)) {
+          setFeedback('ok', 'Port kanıtı eklendi.');
+          if (state.stage === 2 && !state.decisionLocked) renderStagePanel();
+        } else setFeedback('info', 'Bu kanıt zaten sepette.');
+      } else {
+        setFeedback('info', 'Bu port bu olay için yeterli kanıt değil.');
+        showBeratPortWarning(getWrongPortEvidenceMsg(p));
       }
     };
     document.querySelectorAll('[data-pid]').forEach(function (chip) {
       chip.onclick = function () {
         state.selectedPid = +chip.getAttribute('data-pid');
-        renderWorkspace();
+        renderMacDesktop();
       };
     });
     var sbtn = $('btnAddService');
     if (sbtn) sbtn.onclick = function () {
-      var s = CFG.services[state.selectedPid];
-      if (!s) return;
-      if (addEvidence('Servis', 'PID ' + s.pid + ' · ' + s.service + ' / ' + s.displayName)) {
-        setFeedback('ok', 'Servis kanıtı eklendi.');
+      var pid = state.selectedPid;
+      if (pid == null || !CFG.services[pid]) return;
+      var s = CFG.services[pid];
+      if (pid === 1148) {
+        if (addEvidence('Servis', 'PID ' + s.pid + ' · ' + s.service + ' / ' + s.displayName)) {
+          setFeedback('ok', 'Servis kanıtı eklendi.');
+        } else setFeedback('info', 'Bu kanıt zaten sepette.');
+      } else {
+        setFeedback('info', 'Bu servis bu olay için yeterli kanıt değil.');
+        showBeratEvidenceWarning(
+          getWrongServiceEvidenceMsg(pid),
+          ' Tekrar düşün — port ile eşleşen doğru servisi bulup kanıta eklemeni istiyorum.'
+        );
       }
     };
     document.querySelectorAll('[data-rule]').forEach(function (row) {
       row.onclick = function () {
         state.flags.selectedRule = +row.getAttribute('data-rule');
-        renderWorkspace();
+        renderMacDesktop();
       };
     });
     var fbtn = $('btnAddFwRule');
     if (fbtn) fbtn.onclick = function () {
-      var c = CFG.criticalRuleDetail;
-      if (addEvidence('Firewall kuralı', c.name + ' · Profil: ' + c.profiles + ' · Kaynak: ' + c.remote)) {
-        setFeedback('ok', 'Firewall kuralı kanıta eklendi.');
+      var ri = state.flags.selectedRule;
+      if (ri == null || !CFG.fwRules[ri]) return;
+      if (ri === 0) {
+        var c = CFG.criticalRuleDetail;
+        if (addEvidence('Firewall kuralı', c.name + ' · Profil: ' + c.profiles + ' · Kaynak: ' + c.remote)) {
+          setFeedback('ok', 'Firewall kuralı kanıta eklendi.');
+        } else setFeedback('info', 'Bu kanıt zaten sepette.');
+      } else {
+        setFeedback('info', 'Bu kural bu olay için yeterli kanıt değil.');
+        showBeratEvidenceWarning(
+          getWrongFwRuleEvidenceMsg(ri),
+          ' Tekrar düşün — RDP maruziyetiyle ilgili kritik Allow kuralını bulup kanıta eklemeni istiyorum.'
+        );
       }
     };
     document.querySelectorAll('[data-log]').forEach(function (row) {
       row.onclick = function () {
         var i = +row.getAttribute('data-log');
         state.selectedLogs[i] = !state.selectedLogs[i];
-        renderWorkspace();
+        renderMacDesktop();
       };
     });
+    var sallBtn = $('btnSelectAllLogs');
+    if (sallBtn) sallBtn.onclick = function () {
+      CFG.loginLogs.forEach(function (l, i) { state.selectedLogs[i] = true; });
+      renderMacDesktop();
+      setFeedback('info', 'Tüm log satırları seçildi.');
+    };
     var lbtn = $('btnAddLogs');
     if (lbtn) lbtn.onclick = function () {
       var added = 0;
@@ -546,7 +963,7 @@
         }
       });
       state.selectedLogs = {};
-      renderWorkspace();
+      renderMacDesktop();
       if (added) setFeedback('ok', added + ' log satırı kanıta eklendi.');
       else setFeedback('info', 'Önce log satırlarını seçin.');
     };
@@ -566,6 +983,161 @@
       }
       showFinal();
     };
+  }
+
+  var SUPERVISOR = { name: 'Berat', title: 'SOC Süpervizör', initial: 'B' };
+  var supervisorTypeTimer = null;
+
+  function cancelSupervisorTyping() {
+    if (supervisorTypeTimer) {
+      clearInterval(supervisorTypeTimer);
+      supervisorTypeTimer = null;
+    }
+  }
+
+  function buildSupervisorHtml(mode) {
+    var cls = 'gk-supervisor';
+    if (mode === 'wrong') cls += ' gk-supervisor--wrong';
+    if (mode === 'ok') cls += ' gk-supervisor--ok';
+    return '<div class="' + cls + '" id="supervisorBlock">' +
+      '<div class="gk-supervisor-avatar">' + esc(SUPERVISOR.initial) + '</div>' +
+      '<div class="gk-supervisor-body">' +
+      '<div class="gk-supervisor-name">' + esc(SUPERVISOR.name) + ' · ' + esc(SUPERVISOR.title) + '</div>' +
+      '<div class="gk-supervisor-bubble"><p class="gk-supervisor-text" id="supervisorText"></p></div>' +
+      '</div></div>';
+  }
+
+  function startSupervisorSpeech(text, onComplete) {
+    cancelSupervisorTyping();
+    var el = $('supervisorText');
+    if (!el) {
+      if (onComplete) onComplete();
+      return;
+    }
+    var full = text || '';
+    var i = 0;
+    el.textContent = '';
+    el.classList.add('gk-supervisor-text--typing');
+    supervisorTypeTimer = setInterval(function () {
+      if (i >= full.length) {
+        cancelSupervisorTyping();
+        el.classList.remove('gk-supervisor-text--typing');
+        if (onComplete) onComplete();
+        return;
+      }
+      el.textContent += full.charAt(i);
+      i++;
+    }, 24);
+  }
+
+  function setSupervisorMode(mode) {
+    var block = $('supervisorBlock');
+    if (!block) return;
+    block.className = 'gk-supervisor';
+    if (mode === 'wrong') block.classList.add('gk-supervisor--wrong');
+    if (mode === 'ok') block.classList.add('gk-supervisor--ok');
+  }
+
+  function hideDecisionArea() {
+    var da = $('decisionArea');
+    if (da) da.classList.remove('gk-decision-area--visible');
+  }
+
+  function showDecisionArea() {
+    var da = $('decisionArea');
+    if (da) da.classList.add('gk-decision-area--visible');
+  }
+
+  function getSupervisorPrompt(st) {
+    if (st.id === 2 && st.gate === 'port3389Evidence' && gateOk(st.gate) && st.supervisorPromptAfterEvidence) {
+      return st.supervisorPromptAfterEvidence;
+    }
+    return st.supervisorPrompt || st.question || '';
+  }
+
+  function clearStageFeedback() {
+    var el = $('stageFeedback');
+    if (!el) return;
+    el.className = 'gk-feedback';
+    el.textContent = '';
+  }
+
+  function getWrongPortEvidenceMsg(p) {
+    var onPortsStage = state.stage === 2;
+    if (onPortsStage) {
+      var vague = {
+        49664:
+          'Bu satır yalnızca localhost\'ta dinliyor; gece ticket\'ındaki dış uzak oturum şüphesiyle örtüşmüyor. Tabloyu baştan tara — dinleme adresine ve olayın doğasına dikkat et.',
+        5353:
+          'Bu port yerel ağ servisi gibi görünüyor; uzak oturum maruziyeti için ana kanıt değil. Hangi satırın geniş kapsamda dinlediğine sen karar ver.',
+        445:
+          'SMB ayrı bir konu; bu ticket uzaktan oturum odaklı. Tabloda olayla doğrudan ilişkili portu kendin bulmalısın.',
+        9229:
+          'Localhost\'ta dinleyen bir araç; dış erişim sinyali değil. Ticket özetini ve tabloyu birlikte değerlendir.'
+      };
+      return (
+        vague[p.port] ||
+        'Bu port bu olay için yeterli kanıt gibi durmuyor. Tabloyu ve ticket\'ı yeniden incele — doğru satırı sen bulmalısın.'
+      );
+    }
+    var msgs = {
+      49664:
+        '49664 yalnızca 127.0.0.1 üzerinde dinliyor; dış uzak oturum denemeleriyle doğrudan örtüşmüyor. Daha dikkatli incele.',
+      5353:
+        '5353 yerel ağ servisi; bu vakadaki uzak oturum bulgusu değil. Tabloda hangi portun 0.0.0.0\'da dinlediğine tekrar bak.',
+      445:
+        '445 (SMB) ayrıca incelenebilir; fakat bu olayda uzak oturum portuna odaklan. Yanlış kanıt analizi kaydırır.',
+      9229:
+        '9229 localhost geliştirme aracı; dış erişim sinyali değil. Olayla ilişkili portu bulup onu kanıta eklemelisin.'
+    };
+    return msgs[p.port] || 'Bu port bu olay için ana kanıt değil. Tabloyu yeniden incele.';
+  }
+
+  function showBeratEvidenceWarning(text, suffix) {
+    var sc = $('stageContent');
+    if (!sc) {
+      setFeedback('bad', text);
+      return;
+    }
+    cancelSupervisorTyping();
+    var lbl = $('decisionSectionLabel');
+    if (lbl) lbl.textContent = 'Berat ile görüşme';
+    sc.innerHTML = buildSupervisorHtml('wrong');
+    setSupervisorMode('wrong');
+    clearStageFeedback();
+    startSupervisorSpeech(text + suffix, function () {});
+  }
+
+  function showBeratPortWarning(text) {
+    var suffix = state.stage === 2
+      ? ' Tekrar düşün — tabloyu ve ticket\'ı birlikte inceleyip doğru kanıtı kendin bulmalısın.'
+      : ' Tekrar düşün — doğru portu bulup kanıta eklemeni istiyorum.';
+    showBeratEvidenceWarning(text, suffix);
+  }
+
+  function getWrongServiceEvidenceMsg(pid) {
+    var msgs = {
+      912: 'RPC Endpoint Mapper çekirdek bir servistir; 3389 portunu kullanan TermService kanıtı değildir. Port–PID eşleştirmesinde doğru satırı seç.',
+      4: 'PID 4 System sürecidir; Remote Desktop Services (TermService) değildir. Açık port analiziyle ilişkili servisi bulmalısın.'
+    };
+    return msgs[pid] || 'Bu servis bu olay için ana kanıt değil. Port 3389 ile eşleşen servisi seçip kanıta ekle.';
+  }
+
+  function getWrongFwRuleEvidenceMsg(ruleIdx) {
+    var msgs = {
+      1: 'SMB (445) Private profilde ayrıca incelenebilir; fakat bu vakada en kritik bulgu Public profilde Any→3389 RDP Allow kuralıdır.',
+      2: 'DNS (53) çekirdek ağ trafiği için normal bir kuraldır; uzak oturum maruziyeti kanıtı değildir.',
+      3: 'Telnet\'in engellenmesi olumlu bir durumdur; gece ticket\'ındaki RDP Allow kuralı değildir.'
+    };
+    return msgs[ruleIdx] || 'Bu firewall kuralı bu olay için ana kanıt değil. RDP ile ilgili kritik Allow kuralını seç.';
+  }
+
+  function showSupervisorOptions(st) {
+    $('decisionArea').innerHTML =
+      '<p class="gk-options-label">Yanıtınız</p>' +
+      renderDecisionCards(st.options, false);
+    bindDecision(st);
+    showDecisionArea();
   }
 
   function renderDecisionCards(options, multi) {
@@ -601,148 +1173,238 @@
       return;
     }
     if (cfg.gate && !gateOk(cfg.gate)) {
-      setFeedback('info', gateMsg(cfg.gate));
-      if (cfg.tab) {
-        state.activeTab = cfg.tab;
-        if (cfg.tab === 'overview') state.flags.overviewSeen = true;
-        if (cfg.tab === 'fw-rules') state.flags.fwRulesSeen = true;
-      }
-      if (cfg.alsoVisit) cfg.alsoVisit.forEach(function (t) { state.flags['visit_' + t] = true; });
-      renderTabs();
-      renderWorkspace();
+      clearStageFeedback();
+      setSupervisorMode('');
+      var gateText = 'Henüz yeterli kanıt toplamadık. ' + gateMsg(cfg.gate);
+      startSupervisorSpeech(gateText, function () {});
+      if (cfg.tab) { openApp(cfg.tab); }
+      if (cfg.alsoVisit) cfg.alsoVisit.forEach(function (t) { openApp(t); });
       return;
     }
     var i = state.selectedDecision;
     var cards = document.querySelectorAll('.gk-decision-card');
+    var cb = $('btnConfirmSingle');
     if (i === cfg.correct) {
       state.decisionLocked = true;
       state.stageDone[cfg.id] = true;
       updateScore(cfg.pts);
-      setFeedback('ok', cfg.ok);
+      clearStageFeedback();
+      setSupervisorMode('ok');
       cards.forEach(function (b, j) {
         b.disabled = true;
         if (j === cfg.correct) b.classList.add('gk-decision-card--ok');
       });
-      var cb = $('btnConfirmSingle');
       if (cb) cb.disabled = true;
-      $('btnNextStage').classList.remove('hidden');
-      scrollToNext();
-      save();
-    } else {
-      setFeedback('bad', cfg.wrong[i] || 'Bu seçenek uygun değil.');
-      cards.forEach(function (b, j) {
-        if (j === i) b.classList.add('gk-decision-card--bad');
-      });
-      state.selectedDecision = null;
-      cards.forEach(function (b) { b.classList.remove('gk-decision-card--pick'); });
-    }
-  }
-
-  function renderDragList() {
-    if (!state.dragOrder.length || isCorrectDrag(state.dragOrder)) {
-      state.dragOrder = shuffleDrag();
-    }
-    var host = $('dragList');
-    if (!host) return;
-    host.innerHTML = state.dragOrder.map(function (idx, pos) {
-      return '<li class="gk-drag-item" draggable="true" data-pos="' + pos + '">' +
-        '<span class="gk-drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>' +
-        '<span class="gk-drag-text">' + esc(CFG.intervention[idx]) + '</span>' +
-        '<span class="gk-drag-nudge">' +
-        '<button type="button" class="gk-nudge" data-dir="up" data-pos="' + pos + '" title="Yukarı">▲</button>' +
-        '<button type="button" class="gk-nudge" data-dir="down" data-pos="' + pos + '" title="Aşağı">▼</button>' +
-        '</span></li>';
-    }).join('');
-    bindDrag();
-  }
-
-  function bindDrag() {
-    var list = $('dragList');
-    if (!list) return;
-    var dragFrom = null;
-    list.querySelectorAll('.gk-drag-item').forEach(function (item) {
-      item.addEventListener('dragstart', function (e) {
-        dragFrom = +item.getAttribute('data-pos');
-        e.dataTransfer.effectAllowed = 'move';
-      });
-      item.addEventListener('dragover', function (e) { e.preventDefault(); });
-      item.addEventListener('drop', function (e) {
-        e.preventDefault();
-        var to = +item.getAttribute('data-pos');
-        if (dragFrom == null || dragFrom === to) return;
-        var o = state.dragOrder.slice();
-        var t = o[dragFrom];
-        o.splice(dragFrom, 1);
-        o.splice(to, 0, t);
-        state.dragOrder = o;
-        renderDragList();
-      });
-    });
-    list.querySelectorAll('.gk-nudge').forEach(function (btn) {
-      btn.onclick = function (e) {
-        e.stopPropagation();
-        var pos = +btn.getAttribute('data-pos');
-        var dir = btn.getAttribute('data-dir');
-        var o = state.dragOrder.slice();
-        var np = dir === 'up' ? pos - 1 : pos + 1;
-        if (np < 0 || np >= o.length) return;
-        var t = o[pos];
-        o[pos] = o[np];
-        o[np] = t;
-        state.dragOrder = o;
-        renderDragList();
-      };
-    });
-    var chk = $('btnCheckOrder');
-    if (chk) chk.onclick = function () {
-      if (isCorrectDrag(state.dragOrder)) {
-        state.stageDone[7] = true;
-        state.decisionLocked = true;
-        updateScore(10);
-        setFeedback('ok', 'Doğru müdahale sırası. Önce kanıt ve analiz, sonra düzeltme önerisi ve rapor.');
+      startSupervisorSpeech(cfg.ok, function () {
         $('btnNextStage').classList.remove('hidden');
         scrollToNext();
+      });
+      save();
+    } else {
+      state.decisionLocked = true;
+      state.stageDone[cfg.id] = true;
+      state.stageWrong[cfg.id] = true;
+      deductScore(cfg.pts || 10);
+      clearStageFeedback();
+      cards.forEach(function (b, j) {
+        b.disabled = true;
+        if (j === i) b.classList.add('gk-decision-card--bad');
+        if (j === cfg.correct) b.classList.add('gk-decision-card--ok');
+      });
+      if (cb) cb.disabled = true;
+      setSupervisorMode('wrong');
+      var wrongText = cfg.wrong[i] || 'Bu seçenek uygun değil.';
+      startSupervisorSpeech(wrongText, function () {
+        scheduleAutoNextStage();
+      });
+      save();
+    }
+  }
+
+  function renderOrderList() {
+    var host = $('orderList');
+    if (!host) return;
+    if (!state.orderDisplay.length) initOrderDisplay();
+    var locked = state.decisionLocked && state.stageDone[7];
+    host.innerHTML = state.orderDisplay.map(function (idx) {
+      var badge = getOrderBadge(idx);
+      var cls = 'gk-order-item';
+      if (badge) cls += ' gk-order-item--picked';
+      if (locked) cls += ' gk-order-item--locked';
+      var badgeHtml = badge ? '<span class="gk-order-badge">' + badge + '</span>' : '';
+      return '<li class="' + cls + '" data-idx="' + idx + '">' + badgeHtml +
+        '<span class="gk-order-text">' + esc(CFG.intervention[idx]) + '</span></li>';
+    }).join('');
+    bindOrder();
+  }
+
+  function bindOrder() {
+    var locked = state.decisionLocked && state.stageDone[7];
+    document.querySelectorAll('.gk-order-item').forEach(function (item) {
+      item.onclick = function () {
+        if (locked) return;
+        var idx = +item.getAttribute('data-idx');
+        var pos = state.orderPick.indexOf(idx);
+        if (pos >= 0) {
+          state.orderPick.splice(pos, 1);
+        } else {
+          state.orderPick.push(idx);
+        }
+        renderOrderList();
+      };
+    });
+    var confirmBtn = $('btnConfirmOrder');
+    var clearBtn = $('btnClearOrder');
+    if (confirmBtn) {
+      confirmBtn.disabled = locked;
+      confirmBtn.onclick = confirmOrder;
+    }
+    if (clearBtn) {
+      clearBtn.disabled = locked;
+      clearBtn.onclick = function () {
+        if (locked) return;
+        state.orderPick = [];
+        renderOrderList();
+      };
+    }
+  }
+
+  function confirmOrder() {
+    if (state.decisionLocked) return;
+    var st = CFG.stages[7];
+    var n = CFG.intervention.length;
+    clearStageFeedback();
+    if (state.orderPick.length < n) {
+      setSupervisorMode('');
+      startSupervisorSpeech(
+        'Henüz tüm adımları numaralandırmadın (' + state.orderPick.length + '/' + n + '). Doğru sırayla tıklamaya devam et, sonra Onayla.',
+        function () {}
+      );
+      return;
+    }
+    if (isCorrectOrder(state.orderPick)) {
+      state.stageDone[7] = true;
+      state.decisionLocked = true;
+      updateScore(st.pts || 10);
+      setSupervisorMode('ok');
+      startSupervisorSpeech(st.ok || 'Doğru müdahale sırası.', function () {
+        $('btnNextStage').classList.remove('hidden');
+        renderOrderList();
+        scrollToNext();
         save();
-      } else {
-        setFeedback('bad', 'Bu sıra eksik. Yapılandırma değişikliği yapılmadan önce mevcut port, servis, firewall ve log durumu belgelenmelidir.');
-      }
-    };
+      });
+    } else {
+      state.stageDone[7] = true;
+      state.decisionLocked = true;
+      state.stageWrong[7] = true;
+      deductScore(st.pts || 10);
+      setSupervisorMode('wrong');
+      startSupervisorSpeech(st.orderWrong || 'Bu sıra doğru değil.', function () {
+        renderOrderList();
+        scheduleAutoNextStage();
+      });
+      save();
+    }
   }
 
   function renderStagePanel() {
     var st = CFG.stages[state.stage];
     if (!st) return;
-    $('decisionSectionLabel').textContent = st.type === 'drag' ? 'Müdahale sırası' : 'Kararınız';
-    var content = '';
-    if (st.type === 'drag') {
-      content = '<ul class="gk-drag-list" id="dragList"></ul><button type="button" class="gk-btn gk-btn--sm" id="btnCheckOrder" style="width:100%">Sırayı kontrol et</button>';
-      $('stageContent').innerHTML = '<p class="gk-muted">Adımları sürükleyin veya oklarla sıralayın.</p>';
-      $('decisionArea').innerHTML = content;
-      renderDragList();
-      state.decisionConfig = null;
-      return;
-    }
+    cancelSupervisorTyping();
+    clearStageFeedback();
+
     if (st.type === 'report') {
-      $('stageContent').innerHTML = '<p class="gk-muted">Final Report sekmesinde raporu tamamlayın.</p>';
+      $('decisionSectionLabel').textContent = 'Final rapor';
+      $('stageContent').innerHTML = '<p class="gk-muted">Dock\'tan Final Report uygulamasını açıp raporu tamamlayın.</p>';
       $('decisionArea').innerHTML = '';
-      state.activeTab = 'report';
-      renderTabs();
-      renderWorkspace();
+      hideDecisionArea();
+      openApp('report');
       return;
     }
-    $('stageContent').innerHTML = st.question ? '<p class="gk-q">' + esc(st.question) + '</p>' : '';
-    $('decisionArea').innerHTML = renderDecisionCards(st.options, false);
+
+    if (st.type === 'order') {
+      $('decisionSectionLabel').textContent = 'Berat ile görüşme';
+      hideDecisionArea();
+      $('stageContent').innerHTML = buildSupervisorHtml('');
+      $('decisionArea').innerHTML =
+        '<p class="gk-muted" style="margin:0 0 0.45rem;font-size:0.68rem">Adımlara doğru sırayla tıklayın; sağ üstte numara görünür.</p>' +
+        '<ul class="gk-order-list" id="orderList"></ul>' +
+        '<div class="gk-order-actions">' +
+        '<button type="button" class="gk-btn gk-btn--sm" id="btnConfirmOrder">Onayla</button>' +
+        '<button type="button" class="gk-btn gk-btn--sm gk-btn--ghost" id="btnClearOrder">Temizle</button>' +
+        '</div>';
+      state.decisionConfig = null;
+      if (!(state.decisionLocked && state.stageDone[st.id]) && !state.orderDisplay.length) {
+        initOrderDisplay();
+      }
+      if (state.decisionLocked && state.stageDone[st.id]) {
+        var elDone = $('supervisorText');
+        if (elDone) {
+          elDone.textContent = state.stageWrong[st.id]
+            ? (st.orderWrong || 'Bu sıra doğru değil.')
+            : (st.ok || getSupervisorPrompt(st));
+        }
+        setSupervisorMode(state.stageWrong[st.id] ? 'wrong' : 'ok');
+        showDecisionArea();
+        renderOrderList();
+        return;
+      }
+      startSupervisorSpeech(getSupervisorPrompt(st), function () {
+        showDecisionArea();
+        renderOrderList();
+      });
+      return;
+    }
+
+    $('decisionSectionLabel').textContent = 'Berat ile görüşme';
+    hideDecisionArea();
+    $('stageContent').innerHTML = buildSupervisorHtml('');
+    $('decisionArea').innerHTML = '';
     if (st.tab) state.activeTab = st.tab;
-    bindDecision(st);
+
     if (state.decisionLocked && state.stageDone[st.id]) {
+      var elOk = $('supervisorText');
+      if (elOk) {
+        elOk.textContent = state.stageWrong[st.id]
+          ? (st.wrong && state.selectedDecision != null && st.wrong[state.selectedDecision]) || 'Yanlış seçim.'
+          : (st.ok || getSupervisorPrompt(st));
+        setSupervisorMode(state.stageWrong[st.id] ? 'wrong' : 'ok');
+      }
+      showSupervisorOptions(st);
       document.querySelectorAll('.gk-decision-card').forEach(function (b, j) {
         b.disabled = true;
         if (j === st.correct) b.classList.add('gk-decision-card--ok');
       });
+      var cbDone = $('btnConfirmSingle');
+      if (cbDone) cbDone.disabled = true;
+      return;
     }
+
+    if (st.id === 2 && st.gate === 'port3389Evidence' && !gateOk(st.gate)) {
+      setSupervisorMode('');
+      startSupervisorSpeech(getSupervisorPrompt(st), function () {
+        hideDecisionArea();
+      });
+      return;
+    }
+
+    if (st.id === 2 && st.gate === 'port3389Evidence' && gateOk(st.gate)) {
+      setSupervisorMode('');
+      var afterMsg = st.supervisorPromptAfterEvidence || getSupervisorPrompt(st);
+      startSupervisorSpeech(afterMsg, function () {
+        showSupervisorOptions(st);
+      });
+      return;
+    }
+
+    setSupervisorMode('');
+    startSupervisorSpeech(getSupervisorPrompt(st), function () {
+      showSupervisorOptions(st);
+    });
   }
 
   function nextStage() {
+    cancelSupervisorTyping();
     if (state.stage >= 7) {
       state.stage = 8;
       state.activeTab = 'report';
@@ -753,6 +1415,10 @@
       state.selectedDecision = null;
       var st = CFG.stages[state.stage];
       if (st && st.tab) state.activeTab = st.tab;
+      if (st && st.type === 'order') {
+        state.orderPick = [];
+        state.orderDisplay = [];
+      }
     }
     $('btnNextStage').classList.add('hidden');
     renderAll();
@@ -760,6 +1426,11 @@
   }
 
   function showFinal() {
+    var reportSt = CFG.stages[8];
+    if (reportSt && reportSt.pts && !state.stageDone[8]) {
+      state.stageDone[8] = true;
+      updateScore(reportSt.pts);
+    }
     $('app').classList.add('hidden');
     $('finalScreen').classList.remove('hidden');
     $('finalScore').textContent = state.score + ' / 100';
@@ -783,8 +1454,7 @@
     updateHintPopover();
     updateProgress();
     $('scoreLbl').textContent = String(state.score);
-    renderTabs();
-    renderWorkspace();
+    renderMacDesktop();
     renderEvidence();
     renderStagePanel();
     var st = CFG.stages[state.stage];

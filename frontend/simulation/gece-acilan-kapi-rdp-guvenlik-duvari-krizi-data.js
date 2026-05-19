@@ -22,6 +22,7 @@ window.GK_VAKA = {
     device: 'OFFICE-PC-17',
     user: 'destek.ofis',
     os: 'Windows 11 Pro',
+    labOs: 'macOS Sonoma 14.4',
     summary: 'Gece başarısız uzak oturum açma denemeleri',
     window: '02:00–03:00',
     status: 'İlk inceleme bekliyor',
@@ -32,6 +33,7 @@ window.GK_VAKA = {
   overview: {
     hostname: 'OFFICE-PC-17',
     os: 'Windows 11 Pro',
+    labOs: 'macOS Sonoma 14.4',
     user: 'destek.ofis',
     localIp: '10.10.12.47',
     networkProfile: 'Public',
@@ -78,6 +80,28 @@ window.GK_VAKA = {
       signed: 'Microsoft Windows',
       riskNote:
         'Servis meşru olabilir; ancak gereksiz veya geniş erişime açık olması risk oluşturur.'
+    },
+    912: {
+      pid: 912,
+      process: 'svchost.exe',
+      service: 'RpcEptMapper',
+      displayName: 'RPC Endpoint Mapper',
+      account: 'NT AUTHORITY\\Network Service',
+      startType: 'Automatic',
+      path: 'C:\\Windows\\System32\\svchost.exe',
+      signed: 'Microsoft Windows',
+      riskNote: 'Çekirdek RPC bileşeni; 3389 portu ve uzak oturum analizi için ana kanıt değildir.'
+    },
+    4: {
+      pid: 4,
+      process: 'System',
+      service: 'System',
+      displayName: 'Windows System',
+      account: 'SYSTEM',
+      startType: 'Boot',
+      path: 'System',
+      signed: 'Microsoft Windows',
+      riskNote: 'Sistem süreci; açık RDP portunu kullanan TermService ile eşleştirme kanıtı değildir.'
     }
   },
 
@@ -160,6 +184,8 @@ window.GK_VAKA = {
         tabHint: 'Ticket sekmesinde özet kartını inceleyin.'
       },
       question: 'Bu durumda ilk yapılması gereken nedir?',
+      supervisorPrompt:
+        'Merhaba. Ben Berat, SOC süpervizörünüz. Gece NET-417 ticket\'ı düştü — OFFICE-PC-17\'de başarısız uzak oturum denemeleri var. Panik yapmadan: bu durumda ilk olarak ne yaparsın?',
       options: [
         'RDP servisini hemen kapatmak.',
         'Güvenlik duvarı kurallarını hemen sıfırlamak.',
@@ -185,6 +211,8 @@ window.GK_VAKA = {
         tabHint: 'System Overview sekmesine geçin.'
       },
       question: 'Firewall açık görünüyorsa bu cihaz kesin güvenli midir?',
+      supervisorPrompt:
+        'System Overview\'e baktın; firewall açık görünüyor. Sence bu tek başına cihazın güvenli olduğunu kanıtlar mı, yoksa başka neye bakmalıyız?',
       options: [
         'Evet, firewall açıksa açık port riski yoktur.',
         'Hayır, firewall açık olsa bile yanlış izin kuralı varsa risk devam eder.',
@@ -206,11 +234,15 @@ window.GK_VAKA = {
       pts: 15,
       tab: 'ports',
       guide: {
-        steps: ['Open Ports tablosunda 3389 satırına tıklayın.', 'Detay panelini okuyun.', 'Port kanıtını sepete ekleyin.', 'Soruyu yanıtlayın.'],
+        steps: ['Open Ports tablosunda olayla ilişkili port satırını bulun.', 'Detay panelini okuyun.', 'Port kanıtını sepete ekleyin.', 'Soruyu yanıtlayın.'],
         hint: '0.0.0.0 üzerinde dinleme, tüm arayüzlerde bağlantı kabul edilebileceğini gösterebilir; kapsam firewall/NAT ile birlikte değerlendirilmelidir.',
         tabHint: 'Open Ports sekmesine geçin.'
       },
-      question: '0.0.0.0:3389 LISTENING ne anlama gelir?',
+      question: '0.0.0.0 üzerinde LISTENING ne anlama gelir?',
+      supervisorPrompt:
+        'Open Ports tablosuna geç. Gece ticket\'ında uzaktan oturum denemeleri var — önce tablodan kanıt olarak hangi portu sepete eklemen gerektiğini kendin bul. Kanıtı ekledikten sonra dinleme adresinin ne anlama geldiğini konuşuruz.',
+      supervisorPromptAfterEvidence:
+        'Kanıtı ekledin, iyi. Şimdi sepetteki port satırına bak — 0.0.0.0 üzerinde LISTENING ne anlama gelir?',
       options: [
         'RDP yalnızca bu cihazın kendi içinde çalışıyor.',
         'RDP hiçbir bağlantı kabul etmiyor.',
@@ -237,6 +269,8 @@ window.GK_VAKA = {
         tabHint: 'Service Mapper sekmesine geçin.'
       },
       question: 'Bu çıktıdan en doğru sonuç hangisidir?',
+      supervisorPrompt:
+        'PID 1148\'i TermService ile eşleştirdin. Meşru bir servis görünüyor olabilir — bu çıktıdan en doğru sonuç hangisi olurdu?',
       options: [
         'svchost.exe göründüğü için olay kesin zararlıdır.',
         'TermService meşru RDP servisidir; risk, servisin gerekli olup olmadığı ve nasıl erişime açıldığı üzerinden değerlendirilmelidir.',
@@ -263,6 +297,8 @@ window.GK_VAKA = {
         tabHint: 'Önce Firewall Profiles, ardından Firewall Rules.'
       },
       question: 'En kritik firewall bulgusu hangisidir?',
+      supervisorPrompt:
+        'Firewall profilleri ve kuralları masada. Bu listede en kritik bulgu hangisi — hangisine önce odaklanırsın?',
       options: [
         'DNS kuralının açık olması.',
         'Telnet’in engellenmiş olması.',
@@ -290,6 +326,8 @@ window.GK_VAKA = {
         tabHint: 'Login Logs sekmesine geçin.'
       },
       question: 'Loglara göre en doğru yorum hangisidir?',
+      supervisorPrompt:
+        'Login loglarında gece dış IP\'lerden başarısız denemeler var. Açık RDP bulgularıyla birlikte düşününce loglara göre nasıl yorumlarsın?',
       options: [
         'Sistem kesin ele geçirilmiştir.',
         'Hiç başarılı giriş yoksa risk yoktur.',
@@ -316,6 +354,8 @@ window.GK_VAKA = {
         tabHint: 'Edge Firewall / NAT sekmesine geçin.'
       },
       question: 'Bu durumda en doğru aksiyon seti hangisidir?',
+      supervisorPrompt:
+        'Parçalar bir araya geldi: RDP dinliyor, Public profilde Any→3389 Allow var, edge\'de geçici NAT hâlâ aktif. Müdahale planında bu durumda hangi aksiyon setini seçersin?',
       options: [
         'Yalnızca Windows Firewall kapatılır.',
         'RDP servisi gerekiyorsa daraltılır; gerekmiyorsa kapatılır. Edge firewall üzerindeki geçici NAT kuralı kaldırılır veya devre dışı bırakılır. Mevcut kurallar önce belgelenir.',
@@ -335,10 +375,16 @@ window.GK_VAKA = {
       id: 7,
       title: 'Müdahale sırası',
       pts: 10,
-      type: 'drag',
+      type: 'order',
+      supervisorPrompt:
+        'Kanıtları topladın. Şimdi müdahale sırasına geçelim: adımlara tıkladıkça 1, 2, 3… diye numaralanacak. Doğru sırayı kurduğunda Onayla\'ya bas.',
+      ok: 'Doğru müdahale sırası. Önce kanıt ve analiz, sonra düzeltme önerisi ve rapor.',
+      orderWrong:
+        'Bu sıra doğru değil. Yapılandırma değişikliğinden önce port, servis, firewall ve log belgelenmeli. Temizle\'ye basıp baştan numaralandır.',
       guide: {
-        steps: ['Adımları doğru sıraya sürükleyin.', '«Sırayı kontrol et» ile doğrulayın.'],
-        hint: 'Yapılandırma değişikliğinden önce port, servis, firewall ve log belgelenmeli; rapor en sonda gelir.',
+        steps: ['Adımlara doğru sırayla tıklayın (1, 2, 3…).', 'Onayla ile gönderin; gerekirse Temizle ile sıfırlayın.'],
+        hint:
+          'Doğru sıra: 1) Ticket ve sistem bilgilerini kaydet. 2) Açık portları incele. 3) 3389 portunu PID/servis ile eşleştir. 4) Firewall profil ve kural listesini incele. 5) Login loglarını zaman çizelgesine dönüştür. 6) Edge firewall/NAT kuralını kontrol et. 7) RDP gerekliliğini sistem sahibi notuyla doğrula. 8) Mevcut kanıtları sakla. 9) Gereksizse RDP ve geçici NAT kuralının kapatılmasını öner. 10) Final raporu oluştur.',
         tabHint: 'Tüm sekmelerde topladığınız kanıtları gözden geçirin.'
       }
     },
@@ -369,4 +415,4 @@ window.GK_VAKA = {
     'Geçici destek kurallarının kapatılmamasının kalıcı güvenlik açığına dönüşebileceğini gördün.',
     'Müdahale etmeden önce port, servis, firewall ve log kanıtlarını topladın.'
   ]
-};
+}
