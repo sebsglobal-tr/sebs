@@ -18,6 +18,9 @@
     'isletim-sistemi-guvenligi-temel-senaryo': { title: 'OS Güvenliği Senaryosu', area: 'İşletim Sistemi Güvenliği', icon: 'fa-laptop-code' },
     'gece-acilan-kapi-rdp-guvenlik-duvari': { title: 'Gece Açılan Kapı — RDP Krizi', area: 'İşletim Sistemi Güvenliği', icon: 'fa-shield-halved' },
     'sessiz-birakilan-dosya': { title: 'Sessiz Bırakılan Dosya — Paylaşım Krizi', area: 'İşletim Sistemi Güvenliği', icon: 'fa-folder-open' },
+    'sessiz-tekrar-lasfin-aes-gcm-nonce': { title: 'Sessiz Tekrar — LasFin AES-GCM Nonce Krizi', area: 'İleri Kriptografi', icon: 'fa-key' },
+    'lunabox-teslimat-krizi': { title: 'LunaBox Teslimat Krizi', area: 'Temel Kriptografi', icon: 'fa-box' },
+    'orion-gece-alarmi-kripto-vaka': { title: 'Orion Gece Alarmı', area: 'Temel Kriptografi', icon: 'fa-moon' },
     'temel-network-sim': { title: 'Temel Network Simülasyonu', area: 'Network & Altyapı', icon: 'fa-network-wired' },
     'penetration-testing-sim': { title: 'Penetrasyon Testi', area: 'Ofansif Güvenlik', icon: 'fa-bug' },
   };
@@ -27,6 +30,8 @@
     'Forensik & Olay İnceleme',
     'Sosyal Mühendislik',
     'İşletim Sistemi Güvenliği',
+    'Temel Kriptografi',
+    'İleri Kriptografi',
     'Network & Altyapı',
     'Ofansif Güvenlik',
     'Diğer Simülasyonlar',
