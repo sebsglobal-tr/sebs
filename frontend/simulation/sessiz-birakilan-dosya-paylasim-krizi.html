@@ -661,6 +661,9 @@
 (function () {
   'use strict';
   var SIM_ID = 'sessiz-birakilan-dosya';
+  var SIM_NAME = 'Sessiz Bırakılan Dosya — Paylaşım Krizi';
+  var MODULE_NAME = 'İşletim Sistemi Güvenliği';
+  var simStartedAt = 0;
   var HASH_INPUT = '\\\\FILE-SRV01\\Finance\\Incoming\\2026_Maas_Guncelleme_Formu.xlsm|421888|2026-05-10T03:38:00Z|intern.mert';
   var HASH = '837bc309402830e8eb706e16bf71fe01f32aa2fec33e46a84a3c34a33c4274e1';
 
@@ -2032,7 +2035,16 @@
       'Teknik kanıt olmadan kesin hüküm vermedin.',
       'Yanlış izin yapılandırmasını bulgu-etki-öneri-kanıt formatında raporladın.'
     ].map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('');
-    if (window.SimulationTracker) window.SimulationTracker.complete(SIM_ID, { score: state.score });
+    if (window.SimulationTracker && window.SimulationTracker.saveCompletion) {
+      window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+        score: state.score,
+        maxScore: 100,
+        timeSpentSeconds: simStartedAt ? Math.round((Date.now() - simStartedAt) / 1000) : 0,
+        passed: state.score >= 70,
+        moduleName: MODULE_NAME,
+        redirectToDashboard: false
+      });
+    }
     try { localStorage.removeItem(SIM_ID); } catch (e) {}
   }
 
@@ -2059,7 +2071,10 @@
     resetState();
     initDecisionBindings();
     renderStage();
-    if (window.SimulationTracker) window.SimulationTracker.start(SIM_ID);
+    simStartedAt = Date.now();
+    if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+      window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+    }
   };
 
   $('btnNextStage').onclick = nextStage;

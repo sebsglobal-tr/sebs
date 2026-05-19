@@ -163,6 +163,30 @@
             sessionStorage.removeItem(getRunStorageKey(simulationId));
         },
 
+        /** Kısayol: start(id) veya start(id, ad, { moduleName }) */
+        async start(simulationId, simulationName, data) {
+            var name = simulationName;
+            var opts = data;
+            if (name != null && typeof name === 'object') {
+                opts = name;
+                name = (opts && opts.simulationName) || simulationId;
+            }
+            if (!name || typeof name !== 'string') name = simulationId;
+            return this.recordStart(simulationId, name, opts || {});
+        },
+
+        /** Kısayol: complete(id, { score }) veya complete(id, ad, { score, ... }) */
+        async complete(simulationId, simulationName, data) {
+            var name = simulationName;
+            var opts = data;
+            if (name != null && typeof name === 'object') {
+                opts = name;
+                name = (opts && opts.simulationName) || null;
+            }
+            if (!name || typeof name !== 'string') name = simulationId;
+            return this.saveCompletion(simulationId, name, opts || {});
+        },
+
         async saveCompletion(simulationId, simulationName, data = {}) {
             const token = await getAuthBearer();
 

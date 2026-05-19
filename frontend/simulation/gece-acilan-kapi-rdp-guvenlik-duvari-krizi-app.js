@@ -20,6 +20,8 @@ function bootError(msg) {
 
   var CFG = window.GK_VAKA;
   var SIM_ID = CFG.simId;
+  var SIM_NAME = CFG.title || 'Gece Açılan Kapı — RDP Maruziyeti';
+  var MODULE_NAME = 'İşletim Sistemi Güvenliği';
 
   var state = {
     stage: 0,
@@ -1443,7 +1445,16 @@ function renderMacDesktop() {
     $('gainsList').innerHTML = CFG.gains.map(function (g) {
       return '<li>' + esc(g) + '</li>';
     }).join('');
-    if (window.SimulationTracker) window.SimulationTracker.complete(SIM_ID, { score: state.score });
+    if (window.SimulationTracker && window.SimulationTracker.saveCompletion) {
+      window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+        score: state.score,
+        maxScore: 100,
+        timeSpentSeconds: state.startedAt ? Math.round((Date.now() - state.startedAt) / 1000) : 0,
+        passed: state.score >= 70,
+        moduleName: MODULE_NAME,
+        redirectToDashboard: false
+      });
+    }
     if (state.timerId) clearInterval(state.timerId);
     try { localStorage.removeItem(SIM_ID); } catch (e) {}
   }
@@ -1472,6 +1483,9 @@ function renderMacDesktop() {
     state.startedAt = 0;
     resetAll();
     startTimer();
+    if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+      window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+    }
   }
 
   try { localStorage.removeItem(SIM_ID); } catch (e) {}
