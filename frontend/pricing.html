@@ -55,7 +55,7 @@
         }
         .loading-overlay.active { display: flex; }
     </style>
-    <link rel="stylesheet" href="/css/pricing-page.css?v=2" />
+    <link rel="stylesheet" href="/css/pricing-page.css?v=3" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -762,41 +762,39 @@
             overlay.innerHTML = `
                 <div class="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
                     <div class="purchase-modal-head">
-                        <h3 id="purchaseModalTitle">Bu durak SEBS Yolunun bir parçası</h3>
-                        <button type="button" class="purchase-modal-close" data-modal-close aria-label="Kapat">×</button>
+                        <div>
+                            <p class="purchase-modal-eyebrow">Satın alma</p>
+                            <h3 id="purchaseModalTitle">Ödeme özeti</h3>
+                        </div>
+                        <button type="button" class="purchase-modal-close" data-modal-close aria-label="Kapat"><i class="fas fa-times" aria-hidden="true"></i></button>
                     </div>
                     <div class="purchase-modal-body">
-                        <div class="purchase-modal-grid">
-                            <article class="purchase-modal-card">
-                                <h4>Seçtiğin seçenek</h4>
-                                <p><strong>${packageTitle}</strong> · ₺${price}<br>${categoryTitle} içinde bu kilit açılacak.</p>
-                            </article>
-                            <article class="purchase-modal-card">
-                                <h4>Abonelik neden daha avantajlı?</h4>
-                                <p>Tekli satış içerik verir, plan ise sistemi açar: ilerleme takibi, aşamalar arası geçiş ve öneriler birlikte gelir.</p>
-                            </article>
+                        <div class="purchase-modal-summary">
+                            <div class="purchase-modal-price">
+                                <span class="purchase-modal-price__label">${packageTitle}</span>
+                                <span class="purchase-modal-price__amount">₺${price}</span>
+                            </div>
+                            <p class="purchase-modal-summary__note">${categoryTitle} kapsamında erişim hesabınıza tanımlanır. Plan ile ilerleme takibi ve aşamalar arası geçiş açılır.</p>
                         </div>
-                        <div class="sebs-payment-trust sebs-payment-trust--checkout" aria-label="Ödeme yöntemleri">
+                        <div class="purchase-modal-trust" aria-label="Ödeme yöntemi">
                             <img
                                 src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg"
                                 alt="iyzico ile Öde"
-                                width="200"
-                                height="32"
+                                width="168"
+                                height="28"
                                 loading="lazy"
-                                class="sebs-payment-trust__band"
+                                class="purchase-modal-trust__logo"
                             />
-                            <p class="mt-3 text-center text-xs text-slate-500">
-                                Ödeme iyzico güvenli ödeme sayfasında tamamlanır. Tutar sunucuda doğrulanır; ödeme onayı yalnızca banka/iyzico doğrulaması sonrası hesabınıza işlenir.
-                            </p>
+                            <p>Ödeme iyzico güvenli sayfasında tamamlanır. Tutar sunucuda doğrulanır.</p>
                         </div>
                         <div class="purchase-legal-consents">
                             <label>
                                 <input type="checkbox" id="purchaseAcceptTerms" />
-                                <span><a href="/mesafeli-satis" target="_blank" rel="noopener">Mesafeli satış sözleşmesi</a>, <a href="/kullanim-sartlari" target="_blank" rel="noopener">kullanım şartları</a>, <a href="/gizlilik" target="_blank" rel="noopener">gizlilik politikası</a> ve <a href="/kvkk" target="_blank" rel="noopener">KVKK aydınlatma metnini</a> okudum ve kabul ediyorum.</span>
+                                <span><a href="/mesafeli-satis" target="_blank" rel="noopener">Mesafeli satış sözleşmesi</a>, <a href="/kullanim-sartlari" target="_blank" rel="noopener">kullanım şartları</a>, <a href="/gizlilik" target="_blank" rel="noopener">gizlilik politikası</a> ve <a href="/kvkk" target="_blank" rel="noopener">KVKK metnini</a> okudum ve kabul ediyorum.</span>
                             </label>
                             <label>
                                 <input type="checkbox" id="purchaseAcceptDigital" />
-                                <span>Cayma süresi dolmadan dijital içeriğin (hesap erişiminin) ifasına başlanmasını talep ediyorum; ifa başladıktan sonra cayma hakkımın yasal sınırlar içinde sona erebileceğini kabul ediyorum.</span>
+                                <span>Dijital içeriğe hemen erişim talep ediyorum; ifa başladıktan sonra cayma hakkımın sona erebileceğini kabul ediyorum.</span>
                             </label>
                         </div>
                         <div class="purchase-modal-actions">
