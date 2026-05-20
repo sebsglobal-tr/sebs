@@ -911,6 +911,51 @@
             display: none;
         }
 
+        .pricing-test-payment-section {
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 16px;
+            border: 2px dashed rgba(245, 158, 11, 0.55);
+            background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(254, 243, 199, 0.5));
+            text-align: center;
+        }
+
+        .pricing-test-payment-section.hidden {
+            display: none;
+        }
+
+        .pricing-test-payment-section h3 {
+            margin: 0 0 0.35rem;
+            font-size: 1.1rem;
+            color: #92400e;
+        }
+
+        .pricing-test-payment-section p {
+            margin: 0 0 1rem;
+            font-size: 0.88rem;
+            color: #78350f;
+        }
+
+        .btn-test-payment {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.35rem;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
+        }
+
+        .btn-test-payment:hover {
+            filter: brightness(1.05);
+        }
+
         .pricing-hero-cta {
             display: inline-flex;
             align-items: center;
@@ -1833,6 +1878,21 @@
             <h2 id="pricing-plans-heading">Abonelik planları</h2>
             <p>Plan seçerek SEBS Yolu aşamalarını ve ilerleme sistemini açarsın. Aşağıdaki kartlardan doğrudan satın alabilirsin.</p>
         </div>
+        <div id="testPaymentSection" class="pricing-test-payment-section hidden" aria-labelledby="test-payment-heading">
+            <h3 id="test-payment-heading"><i class="fas fa-flask" aria-hidden="true"></i> Sandbox test ödemesi</h3>
+            <p id="testPaymentDesc">iyzico sandbox’ta düşük tutarla ödeme akışını dene. Başarılı ödemede İlk Adım erişimi tanımlanır.</p>
+            <button
+                type="button"
+                class="btn-purchase btn-test-payment"
+                data-category="sebs-road"
+                data-level="test-odeme"
+                data-price="2"
+                data-title="Sandbox Test Ödemesi"
+            >
+                <i class="fas fa-credit-card" aria-hidden="true"></i>
+                <span id="testPaymentBtnLabel">Test ödemesi — ₺2</span>
+            </button>
+        </div>
         <div class="category-tabs" id="categoryTabs" hidden aria-hidden="true">
             <button class="category-tab active" data-category="sebs-road" type="button">SEBS Yolu Planları</button>
         </div>
@@ -2072,6 +2132,7 @@
                 'ilk-adim': 'beginner',
                 yukselis: 'intermediate',
                 zirve: 'advanced',
+                'test-odeme': 'beginner',
                 'single-stop': 'beginner',
                 'upgrade-yukselis': 'intermediate',
                 'upgrade-zirve-loyalty': 'advanced'
@@ -2537,8 +2598,9 @@
                         'Authorization': `Bearer ${token}`
                     };
                     const roadPackage =
-                        category === 'sebs-road' &&
-                        ['ilk-adim', 'yukselis', 'zirve'].includes(level);
+                        level === 'test-odeme' ||
+                        (category === 'sebs-road' &&
+                            ['ilk-adim', 'yukselis', 'zirve', 'test-odeme'].includes(level));
                     const purchaseBody = JSON.stringify(
                         roadPackage
                             ? { package: level }
@@ -2560,12 +2622,38 @@
                         console.warn('payments/config:', cfgErr);
                     }
 
+                    let authToken = localStorage.getItem('authToken');
+                    if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                        try {
+                            const { data: sessWrap } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                            const access = sessWrap && sessWrap.session && sessWrap.session.access_token;
+                            if (access) {
+                                authToken = access;
+                                localStorage.setItem('authToken', authToken);
+                                localStorage.setItem('isLoggedIn', 'true');
+                            }
+                        } catch (sessErr) {
+                            console.warn('session refresh:', sessErr);
+                        }
+                    }
+                    if (!authToken) {
+                        alert('❌ Oturum süresi dolmuş. Lütfen tekrar giriş yapın.');
+                        window.location.href = 'login.html?redirect=pricing.html';
+                        return;
+                    }
+                    authHeaders.Authorization = 'Bearer ' + authToken;
+
                     const iyzicoInit = await fetch(apiP + '/payments/iyzico/checkout/create', {
                         method: 'POST',
                         headers: authHeaders,
                         body: purchaseBody
                     });
-                    const iyzData = iyzicoInit.ok ? await iyzicoInit.json() : null;
+                    let iyzData = null;
+                    try {
+                        iyzData = await iyzicoInit.json();
+                    } catch (parseErr) {
+                        console.warn('checkout/create parse:', parseErr);
+                    }
 
                     if (iyzicoInit.ok && iyzData && iyzData.success && iyzData.data) {
                         if (iyzData.data.paymentPageUrl) {
@@ -2581,9 +2669,17 @@
                     }
 
                     if (payConfig.paymentsRequireIyzico || payConfig.iyzicoConfigured) {
-                        const msg =
+                        let msg =
                             (iyzData && iyzData.message) ||
                             'Ödeme sistemi şu an kullanılamıyor. Lütfen biraz sonra tekrar deneyin veya destek ile iletişime geçin.';
+                        if (iyzicoInit.status === 401) {
+                            msg = 'Oturum geçersiz veya süresi dolmuş. Çıkış yapıp tekrar giriş yapın.';
+                        } else if (iyzData && iyzData.code) {
+                            msg += ' (' + iyzData.code + ')';
+                        }
+                        if (iyzicoInit.status) {
+                            console.error('checkout/create HTTP', iyzicoInit.status, iyzData);
+                        }
                         alert('❌ ' + msg);
                         button.disabled = false;
                         button.innerHTML = '<i class="fas fa-shopping-cart"></i> Satın Al';
@@ -2642,15 +2738,33 @@
                     if (banner) {
                         banner.classList.remove('hidden');
                         banner.textContent =
-                            'Sandbox test modu aktif: İlk Adım 1 TL, Yükseliş 3 TL, Zirve 5 TL. Ödeme Iyzico güvenli sayfasında tamamlanır.';
+                            'Sandbox test modu: Test ödemesi 2 TL · İlk Adım 1 TL · Yükseliş 3 TL · Zirve 5 TL. Ödeme iyzico güvenli sayfasında tamamlanır.';
+                    }
+                    const testSec = document.getElementById('testPaymentSection');
+                    if (testSec) testSec.classList.remove('hidden');
+                    if (d.testPayment) {
+                        const desc = document.getElementById('testPaymentDesc');
+                        if (desc && d.testPayment.description) desc.textContent = d.testPayment.description;
+                        const testBtn = testSec && testSec.querySelector('.btn-test-payment');
+                        if (testBtn && d.testPayment.price != null) {
+                            testBtn.dataset.price = String(d.testPayment.price);
+                            const lbl = document.getElementById('testPaymentBtnLabel');
+                            if (lbl) lbl.textContent = 'Test ödemesi — ₺' + d.testPayment.price;
+                        }
                     }
                 }
                 if (d.roadPackages) {
-                    document.querySelectorAll('.pricing-hero-package-btn[data-level]').forEach((btn) => {
+                    document.querySelectorAll('.btn-purchase[data-level]').forEach((btn) => {
                         const slug = btn.dataset.level;
+                        if (slug === 'test-odeme') return;
                         const pkg = d.roadPackages[slug];
                         if (pkg && pkg.price != null) {
                             btn.dataset.price = String(pkg.price);
+                            const card = btn.closest('.pricing-card');
+                            if (card) {
+                                const priceEl = card.querySelector('.pricing-price');
+                                if (priceEl) priceEl.textContent = '₺' + pkg.price;
+                            }
                         }
                     });
                 }

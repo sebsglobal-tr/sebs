@@ -14,7 +14,8 @@ const PACKAGE_PRICES = {
     'single-stop': { 'single-stop': 120 }
 };
 
-/** Sandbox canlı test: IYZICO_TEST_MODE=1 → 1 / 3 / 5 TL */
+/** Sandbox test fiyatları (TRY) */
+const TEST_ODEME_PRICE = 2;
 const TEST_PACKAGE_PRICES = {
     cybersecurity: { beginner: 1, intermediate: 3, advanced: 5 },
     'sebs-road': {
@@ -24,11 +25,16 @@ const TEST_PACKAGE_PRICES = {
         intermediate: 3,
         zirve: 5,
         advanced: 5
-    }
+    },
+    'test-odeme': { 'test-odeme': TEST_ODEME_PRICE }
 };
 
 function isTestPaymentMode() {
-    return process.env.IYZICO_TEST_MODE === '1' || process.env.IYZICO_TEST_MODE === 'true';
+    const flag = String(process.env.IYZICO_TEST_MODE || '').toLowerCase();
+    if (flag === '0' || flag === 'false') return false;
+    if (flag === '1' || flag === 'true') return true;
+    const base = (process.env.IYZICO_BASE_URL || '').toLowerCase();
+    return base.includes('sandbox');
 }
 
 const ROAD_STAGE_TO_LEVEL = {
@@ -44,6 +50,9 @@ function normalizeLevel(level) {
 
 function getExpectedPrice(category, level) {
     if (isTestPaymentMode()) {
+        if (category === 'test-odeme' || level === 'test-odeme') {
+            return TEST_ODEME_PRICE;
+        }
         const testCat = TEST_PACKAGE_PRICES[category] || TEST_PACKAGE_PRICES.cybersecurity;
         const testLvl = normalizeLevel(level);
         const testPrice = testCat[level] != null ? testCat[level] : testCat[testLvl];
@@ -76,6 +85,7 @@ function getRoadPackageLabel(slug) {
 module.exports = {
     PACKAGE_PRICES,
     TEST_PACKAGE_PRICES,
+    TEST_ODEME_PRICE,
     ROAD_STAGE_TO_LEVEL,
     normalizeLevel,
     getExpectedPrice,

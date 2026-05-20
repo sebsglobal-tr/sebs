@@ -1,6 +1,6 @@
 const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
 const { DEFAULT_PRICES, getPackagePrices } = require('../lib/pricing-store');
-const { isTestPaymentMode } = require('../lib/package-prices');
+const { isTestPaymentMode, TEST_ODEME_PRICE } = require('../lib/package-prices');
 
 function registerPaymentApiRoutes(app, { pool } = {}) {
     app.get('/api/payments/config', async (req, res) => {
@@ -41,6 +41,16 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
                 provider: 'iyzico',
                 iyzicoConfigured: iyzico,
                 testMode,
+                testPayment: testMode
+                    ? {
+                          package: 'test-odeme',
+                          title: 'Sandbox Test Ödemesi',
+                          price: TEST_ODEME_PRICE,
+                          description:
+                              '2 TL ile iyzico sandbox ödeme akışını dener. Başarılı ödemede İlk Adım (beginner) erişimi açılır.',
+                          grants: 'İlk Adım (cybersecurity / beginner)'
+                      }
+                    : null,
                 checkoutCreatePath: '/api/payments/iyzico/checkout/create',
                 paymentsRequireIyzico: disableDirect || (isProd && process.env.ALLOW_DEV_PURCHASE !== '1'),
                 directPurchaseAllowed:

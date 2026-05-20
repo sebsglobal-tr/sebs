@@ -1,9 +1,14 @@
-const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./package-prices');
+const {
+    getExpectedPrice,
+    normalizeLevel,
+    ROAD_STAGE_TO_LEVEL,
+    isTestPaymentMode
+} = require('./package-prices');
 const { initializeCheckoutForm, retrieveCheckoutForm } = require('./iyzico-checkout');
 const { grantPackagePurchase } = require('./grant-purchase');
 const { verifyHppWebhookSignature } = require('./iyzico-webhook');
 
-const ROAD_PACKAGE_SLUGS = new Set(['ilk-adim', 'yukselis', 'zirve']);
+const ROAD_PACKAGE_SLUGS = new Set(['ilk-adim', 'yukselis', 'zirve', 'test-odeme']);
 
 function backendBaseUrl(req) {
     const fromEnv = (process.env.BACKEND_URL || process.env.API_PUBLIC_URL || '').replace(/\/$/, '');
@@ -30,6 +35,18 @@ function callbackUrl(req) {
  */
 function resolvePackageInput(body) {
     const pkg = body && body.package;
+    if (pkg === 'test-odeme') {
+        if (!isTestPaymentMode()) {
+            const err = new Error('Test ödemesi kapalı. Render’da IYZICO_TEST_MODE=1 veya sandbox API URL kullanın.');
+            err.code = 'TEST_PAYMENT_DISABLED';
+            throw err;
+        }
+        return {
+            category: 'cybersecurity',
+            level: 'beginner',
+            packageSlug: 'test-odeme'
+        };
+    }
     if (pkg && ROAD_PACKAGE_SLUGS.has(pkg)) {
         return {
             category: 'cybersecurity',

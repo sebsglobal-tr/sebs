@@ -21,20 +21,15 @@ async function ensurePaymentOrdersTable(pool) {
         await pool.query(sql);
         console.log('✅ payment_orders table created');
     }
-    try {
-        const extPath = path.join(
-            __dirname,
-            '..',
-            '..',
-            'database',
-            'migrations',
-            '016_payment_orders_webhook.sql'
-        );
-        if (fs.existsSync(extPath)) {
-            await pool.query(fs.readFileSync(extPath, 'utf8'));
+    for (const name of ['016_payment_orders_webhook.sql', '017_payment_orders_uuid_fix.sql']) {
+        try {
+            const extPath = path.join(__dirname, '..', '..', 'database', 'migrations', name);
+            if (fs.existsSync(extPath)) {
+                await pool.query(fs.readFileSync(extPath, 'utf8'));
+            }
+        } catch (extErr) {
+            console.warn('payment_orders migration', name, extErr.message);
         }
-    } catch (extErr) {
-        console.warn('payment_orders extension:', extErr.message);
     }
 }
 
