@@ -1754,7 +1754,7 @@
                     const card = link.closest('.simulation-card-detailed, .card');
                     const category = card?.dataset.category || 'cybersecurity';
                     
-                    const accessCheck = await window.AccessControl.checkSimulationAccess(simulationLevel, category);
+                    const accessCheck = await window.AccessControl.checkSimulationAccess(href || simulationLevel, category);
                     
                     if (!accessCheck.hasAccess) {
                         e.preventDefault();

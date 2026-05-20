@@ -12,7 +12,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="sebs-content-version" content="20260523">
+    <meta name="sebs-content-version" content="20260524">
     <link rel="canonical" href="https://sebsglobal.com/egitimler/siber-guvenlik">
     <meta property="og:url" content="https://sebsglobal.com/egitimler/siber-guvenlik">
     <script type="application/ld+json">
@@ -79,6 +79,17 @@
 <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
+    <style>
+        .edu-narrative, .edu-lesson-recap { margin: 1.25rem 0 1.75rem; line-height: 1.8; max-width: 78ch; }
+        .edu-narrative p, .edu-lesson-recap p { margin-bottom: 1rem; }
+        .edu-lesson-recap { padding: 1.25rem 1.5rem; border-radius: 12px; background: #f7fafc; border-left: 4px solid #667eea; }
+        .edu-chapter-body { margin: 1.5rem 0 2rem; padding: 1.25rem 0; border-top: 1px solid rgba(0,0,0,0.08); }
+        .edu-chapter-body h3 { margin-top: 1.75rem; margin-bottom: 0.75rem; }
+        .edu-chapter-body h3:first-child { margin-top: 0.5rem; }
+        .edu-chapter-body p { margin-bottom: 1rem; line-height: 1.8; max-width: 78ch; }
+        .learning-objectives { margin: 1rem 0 1.5rem; padding: 1rem 1.25rem; border-radius: 10px; background: rgba(102,126,234,0.08); }
+        .learning-objectives ul { margin: 0.5rem 0 0 1.25rem; }
+    </style>
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -140,7 +151,7 @@
                 <p class="sebs-sidebar-eyebrow">SEBS — Başlangıç seviye</p>
                 <h1>Siber Güvenliğe Giriş</h1>
                 <p class="sebs-sidebar-tagline">CIA üçlüsü (eşit derinlik), varlık-tehdit-risk ve saldırı zinciri.</p>
-                <p class="sebs-content-version-badge" style="font-size:0.75rem;opacity:0.7;margin-top:0.35rem;">İçerik sürümü: 2026-05-23</p>
+                <p class="sebs-content-version-badge" style="font-size:0.75rem;opacity:0.7;margin-top:0.35rem;">İçerik sürümü: 2026-05-24</p>
                 <div class="progress-container sebs-sidebar-progress">
                     <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -287,45 +298,76 @@
 <section class="content-section docx-content" id="siber-güvenlik-nedir" data-section="siber-güvenlik-nedir">
 <div class="section-inner">
 <h2 id="siber-güvenlik-nedir"><strong>1.1) Siber Güvenlik Nedir?</strong></h2>
-<h3 id="tanım-sanat-ve-bilim-olarak-siber-güvenlik"><strong>1.1.1) Tanım: “Sanat ve Bilim” Olarak Siber Güvenlik</strong></h3>
-<p>Siber güvenlik, bilgisayar sistemlerini, ağları ve verileri dijital saldırılardan koruma “sanatı ve bilimi” olarak özetlenebilir. Ancak akademik çerçevede daha kapsamlı bir tanım gerekir:</p>
-<p><strong>Siber güvenlik</strong>, dijital varlıkların gizliliğini, bütünlüğünü ve erişilebilirliğini sağlamak amacıyla uygulanan <strong>teknoloji, süreç ve kontroller</strong> bütünüdür.</p>
-<p>Bu tanımda üç unsur özellikle kritiktir:</p>
+
+<div class="learning-objectives">
+<h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3>
 <ul>
-<li><p><strong>Dijital ortam:</strong> Bilgisayarlar, mobil cihazlar, ağlar, internet, bulut servisleri.</p></li>
-<li><p><strong>Varlık:</strong> Korunması gereken değer (veri/sistem/hizmet).</p></li>
-<li><p><strong>Tehdit:</strong> Zarar doğurabilecek unsur (kasıtlı saldırı, hata, yanlış yapılandırma, kesinti vb.).</p></li>
+<li>Siber güvenliği bilgi güvenliğinden ayırt etmek</li>
+<li>Veri, sistem ve hizmet varlıklarını örneklemek</li>
+<li>Teknoloji, süreç ve insan boyutunu savunmada konumlandırmak</li>
+<li>Günlük hayattan en az üç gerçekçi risk senaryosu kurmak</li>
 </ul>
-<h3 id="bilgi-güvenliği-ile-siber-güvenlik-arasındaki-fark"><strong>1.1.2) Bilgi Güvenliği ile Siber Güvenlik Arasındaki Fark</strong></h3>
-<p>Yeni başlayanlar için en kritik ayrım budur:</p>
-<ul>
-<li><p><strong>Bilgi Güvenliği (Information Security / InfoSec):</strong> Bilgiyi <strong>fiziksel veya dijital</strong> fark etmeksizin korur (kâğıt belge, sözlü bilgi, dijital dosya).</p></li>
-<li><p><strong>Siber Güvenlik (Cybersecurity):</strong> Bilgi güvenliğinin <strong>dijital ortama ve siber uzaya (ağlar, internet, dijital cihazlar, bulut)</strong> odaklanan alt kümesidir.</p></li>
-</ul>
-<p>Bu ayrım önemlidir: bir kurumun fiziksel arşiv odasındaki dosyaların kilit altında tutulması bilgi güvenliği kapsamındayken, bu dosyaların dijital taramalarının bir sunucuda saklanması ve ağa açık olması siber güvenlik kapsamını doğrudan ilgilendirir.</p>
-<p>Bu ayrım, CIA Üçlüsünü işlerken daha da netleşir; çünkü CIA hedefleri hem bilgi güvenliğinin hem de siber güvenliğin merkezindedir.</p>
-<h3 id="dijital-varlık-kavramı-veri-sistem-hizmet"><strong>1.1.3) Dijital Varlık Kavramı: Veri – Sistem – Hizmet</strong></h3>
-<p>Bir güvenlik stratejisi kurgulanırken ilk soru şudur: <strong>“Neyi koruyoruz?”</strong><br />
-Dijital varlıkları üç temel sınıfta ele almak pratik bir çerçeve sağlar:</p>
-<p><strong>Veri (Data)</strong> — Korunması gereken ham bilgidir. Notlar, sözleşmeler, fotoğraflar, müşteri kayıtları, sınav dokümanları, finansal raporlar ve fikri mülkiyet (örneğin bir yazılımın kaynak kodu) veri kapsamına girer. Verinin ifşası gizliliği, değişmesi bütünlüğü, kaybı ise erişilebilirliği doğrudan etkiler.</p>
-<p><strong>Sistem (System)</strong> — Veriyi işleyen ve hizmet üreten donanım ile yazılım bileşenleridir. Dizüstü bilgisayar, sunucu, mobil cihaz, veritabanı, işletim sistemi, uygulamalar ve ağ cihazları (yönlendirici, router vb.) sistem kategorisine girer. Sistemler veriyi taşır ve hizmete dönüştürür; sistem bozulduğunda hem veri hem de hizmet etkilenir.</p>
-<p><strong>Hizmet (Service)</strong> — Kullanıcıların ihtiyaç duyduğu işlevlerin sunulmasıdır. Web sitesinin yayın yapması, e-posta trafiğinin akması, çevrimiçi randevu, ödeme altyapısı ve uzaktan erişim hizmet örnekleridir. Hizmet kesintisi, kullanıcıların ihtiyaç anında erişememesi anlamına gelir; bu da CIA üçlüsünde erişilebilirlik hedefini etkiler.</p>
-<div class="example-box">
-<p><strong>Kurgusal örnek (sınıflandırma):</strong> "Kuzey Lojistik" adlı kurgusal bir firmayı düşünün. Araç takip uygulaması bir <strong>hizmet</strong>tir; uygulamanın çalıştığı ana sunucu <strong>sistem</strong>, araçların konum bilgileri ve rota kayıtları ise <strong>veri</strong>dir. Bu sınıflandırma, hangi varlığın hangi güvenlik hedefiyle korunacağını tasarlamayı kolaylaştırır.</p>
 </div>
-<h3 id="dijital-dünyanın-kısa-tarihçesi-ve-siber-güvenliğin-doğuşu"><strong>1.1.4) Dijital Dünyanın Kısa Tarihçesi ve Siber Güvenliğin Doğuşu</strong></h3>
-<p>Siber güvenlik tarihi, teknolojik ilerleme ile kötüye kullanımın evriminin birlikte ilerlediği bir tarihtir.</p>
-<ul>
-<li><p>1970’lerde ARPANET üzerinde dolaşabilen deneysel programlar (ör. <strong>Creeper</strong>) “ağ üzerinde yayılabilen yazılım” fikrini görünür kılmıştır.</p></li>
-<li><p>1990’larda internetin ticarileşmesiyle bağlantı ve veri akışı hızlanmış; güvenlik, yerel bir teknik mesele olmaktan çıkarak geniş ölçekli bir problem alanına dönüşmüştür.</p></li>
-<li><p>Günümüzde siber güvenlik, bireysel merakın ötesinde; kurumsal süreklilik, ulusal güvenlik ve ekonomik istikrarla ilişkili bir öncelik haline gelmiştir.</p></li>
-</ul>
-<p>Bu tarihsel bağlam, bir sonraki modülde tehdit aktörlerinin motivasyonlarını (merak, kazanç, ideoloji, devlet destekli hedefler vb.) anlamak için temel oluşturur.</p>
-<h3 id="günlük-hayattan-örnekler"><strong>1.1.5) Günlük Hayattan Örnekler</strong> </h3>
+
+<div class="edu-narrative enhanced-text">
+<h3 id="sgn-buyuk-resim"><i class="fas fa-compass"></i> Büyük resim — neden buradan başlıyoruz?</h3>
+<p>Siber güvenlik, “antivirüs kurmak” veya “parola uzun olsun” demek değildir. Dijital dünyada <strong>neyi</strong> koruduğunuzu, <strong>neye göre</strong> güvenli sayacağınızı (CIA üçlüsü — sonraki bölüm) ve <strong>kime karşı</strong> koruduğunuzu (tehditler — Modül 2) netleştirmeden araçlar anlamsız kalır.</p>
+<p>Bu bölüm modülün ilk taşıdır. Okurken her paragrafta şunu sorun: Bu cümle <em>varlık</em>, <em>tehdit</em> veya <em>hedef</em> (gizlilik / bütünlük / erişilebilirlik) ile ilgili mi?</p>
+<p>Profesyonel ekipler toplantıda “hacklendik” demez; “müşteri verisi (<strong>varlık</strong>) yetkisiz kopyalandı (<strong>gizlilik</strong>), ERP iki saat kapalı kaldı (<strong>erişilebilirlik</strong>)” der. Bu dil, kariyeriniz boyunca referans çerçeveniz olacak.</p>
+</div>
+
+<div class="edu-chapter-body enhanced-text">
+<h3 id="tanim-sanat-ve-bilim"><i class="fas fa-shield-alt"></i> Tanım: sanat, bilim ve uygulama</h3>
+<p>Siber güvenlik, bilgisayar sistemlerini, ağları, uygulamaları ve verileri yetkisiz erişim, değiştirme veya hizmet kesintisine karşı korumak için uygulanan <strong>teknik, süreç ve insan</strong> önlemlerinin bütünüdür. “Sanat ve bilim” ifadesi şunu hatırlatır: Teknik bilgi (bilim) ile bağlama uygun karar (sanat) birlikte gerekir — her kuruma aynı paket yazılım uymaz.</p>
+<p><strong>Üç unsur:</strong> (1) <em>Dijital ortam</em> — cihaz, ağ, bulut, SaaS. (2) <em>Varlık</em> — korunan değer; aşağıda veri / sistem / hizmet. (3) <em>Tehdit</em> — zarar potansiyeli; kasıtlı saldırı, hata, yanlış yapılandırma, doğal afet (erişilebilirlik).</p>
+<p>Kurumsal ölçekte koruma; kimlik yönetimi, yedekleme, tedarikçi sözleşmeleri, KVKK uyumu ve çalışan eğitimini kapsar. Tek ürün “tam koruma” vaadi gerçekçi değildir.</p>
+
+<h3 id="bilgi-guvenligi-fark"><i class="fas fa-book"></i> Bilgi güvenliği ile siber güvenlik farkı</h3>
+<p><strong>Bilgi güvenliği (InfoSec)</strong> bilgiyi fiziksel veya dijital fark etmeksizin korur: kilitli arşiv odası, imzalı kağıt sözleşme, sözlü mülakat notu. <strong>Siber güvenlik</strong> bu çerçevenin dijital ve ağ bağlantılı alt kümesidir — sunucu, e-posta, mobil uygulama, bulut bucket.</p>
+<p>Örnek: Hastane hasta dosyası dolapta kilitli → bilgi güvenliği. Aynı dosyanın taranmış PDF’i herkese açık bulutta → siber güvenlik + KVKK gündemi.</p>
+<p>CIA üçlüsü (Gizlilik, Bütünlük, Erişilebilirlik) her iki disiplinin de ortak hedef dilidir; bir sonraki bölümde her boyut <strong>eşit derinlikte</strong> işlenir.</p>
+
+<h3 id="dijital-varlik-veri-sistem-hizmet"><i class="fas fa-gem"></i> Dijital varlık: veri, sistem, hizmet</h3>
+<p>Stratejinin ilk sorusu: <strong>Neyi koruyoruz?</strong> Pratik sınıflandırma:</p>
+<p><strong>Veri:</strong> Müşteri PII, finans kaydı, kaynak kodu, sınav dosyası. Sızıntı → gizlilik; değişiklik → bütünlük; kayıp (yedek yok) → erişilebilirlik.</p>
+<p><strong>Sistem:</strong> Sunucu, laptop, veritabanı, firewall. Sistem çökünce üzerindeki veri ve ürettiği hizmet birlikte risk altına girer.</p>
+<p><strong>Hizmet:</strong> Web sitesi, e-posta, ödeme, randevu paneli. Kullanıcı “giremiyorum” dediğinde çoğu zaman hizmet varlığı konuşulur.</p>
 <div class="example-box">
-<p><strong>📌 Veri örneği:</strong> Bir kişi telefon notlarına hassas bilgiler yazmıştır. Telefon ekran kilidi zayıfsa veya yedekleme izinleri yanlışsa bu veri yetkisiz erişime açık hale gelebilir.</p>
-<p><strong>📌 Sistem örneği:</strong> Bir dizüstü bilgisayar uzun süre güncellenmeden kullanılır. Bu durum, bilinen açıkların kapanmaması anlamına gelebilir.</p>
-<p><strong>📌 Hizmet örneği:</strong> Bir topluluk etkinlik kayıtlarını çevrimiçi form ile alır. Formun çalışmaması halinde başvurular aksar; bu doğrudan hizmet sürekliliği problemidir.</p>
+<p><strong>Kuzey Lojistik (kurgu):</strong> Araç takip uygulaması = <strong>hizmet</strong>; sunucu = <strong>sistem</strong>; konum kayıtları = <strong>veri</strong>. Hedef: konum sızmaması (gizlilik), kayıt değişmemesi (bütünlük), sürücünün panele erişmesi (erişilebilirlik). Tek satır “uygulama” envanteri yeterli değildir.</p>
+</div>
+<table class="comparison-table"><thead><tr><th>Varlık</th><th>Örnek</th><th>Tipik CIA etkisi</th></tr></thead><tbody>
+<tr><td>Veri</td><td>Müşteri listesi</td><td>Gizlilik, bütünlük</td></tr>
+<tr><td>Sistem</td><td>ERP sunucusu</td><td>Bütünlük, erişilebilirlik</td></tr>
+<tr><td>Hizmet</td><td>Online randevu</td><td>Erişilebilirlik</td></tr>
+</tbody></table>
+
+<h3 id="teknoloji-surec-insan"><i class="fas fa-layer-group"></i> Teknoloji, süreç ve insan üçlüsü</h3>
+<p>Savunma yalnızca yazılımla bitmez:</p>
+<p><strong>Teknoloji:</strong> Şifreleme, firewall, EDR, yama. Yanlış yapılandırılmış bulut bucket’ı pahalı firewall’ı baypas eder.</p>
+<p><strong>Süreç:</strong> Erişim onayı, yedek testi, olay bildirimi, ayrılan çalışanın hesabını kapatma SLA’sı.</p>
+<p><strong>İnsan:</strong> Phishing direnci, sosyal mühendislik. Birçok olayda zayıf halka kullanıcı veya yöneticidir.</p>
+<p>Üçü birlikte olmadan “güvenli” sayılmaz: MFA (teknik) var ama parola Slack’te paylaşılıyorsa (insan) yine olay çıkar.</p>
+
+<h3 id="kisa-tarihce"><i class="fas fa-history"></i> Kısa tarihçe — neden bugün kritik?</h3>
+<p>1970’ler ARPANET ve <strong>Creeper</strong> — ağda yayılan yazılım fikri. 1990’lar internet ticarileşmesi; güvenlik yerel mesele olmaktan çıktı. Günümüz: ransomware, tedarik zinciri, kritik altyapı — siber güvenlik ekonomik ve ulusal öncelik.</p>
+<p>Tarih, Modül 2’deki tehdit motivasyonlarını (para, ideoloji, casusluk) anlamak için zemin hazırlar.</p>
+
+<h3 id="gunluk-ornekler"><i class="fas fa-home"></i> Günlük hayattan örnekler</h3>
+<p><strong>Veri:</strong> Telefonda banka SMS’leri; zayıf ekran kilidi veya bulut yedek izni → gizlilik riski.</p>
+<p><strong>Sistem:</strong> Güncellenmemiş laptop → bilinen CVE’ler açık kalır (zafiyet).</p>
+<p><strong>Hizmet:</strong> Üniversite başvuru formu çöküyor → veri sızmamış olsa bile erişilebilirlik ihlali.</p>
+<p><strong>İnsan:</strong> “IT destek” diye gelen sahte arama ile OTP paylaşımı → teknik duvarları atlama.</p>
+</div>
+
+<div class="edu-lesson-recap">
+<h3 id="sgn-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3>
+<p>Siber güvenliğin tanımı, bilgi güvenliği ile farkı, veri–sistem–hizmet varlıkları ve teknoloji–süreç–insan üçlüsü netleşti. Sonraki bölüm: <strong>CIA üçlüsü</strong> (gizlilik, bütünlük, erişilebilirlik eşit derinlikte).</p>
+<ul>
+<li>Tanım ve üç boyut (teknik / süreç / insan)</li>
+<li>InfoSec vs Cybersecurity</li>
+<li>Varlık sınıflandırması ve Kuzey Lojistik örneği</li>
+<li>Günlük hayat senaryoları</li>
+</ul>
 </div>
 </div>
 </section>
@@ -4359,13 +4401,14 @@ D) Üretim sistemlerinde test için yeterlidir</p>
         </main>
     </div>
 
-        <script src="/js/sebs-premium-module-lessons.js?v=20260523"></script>
+        <script src="/js/sebs-premium-module-lessons.js?v=20260524"></script>
     <script>
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Siber Güvenliğe Giriş',
             storageKey: 'module_progress_siber_guvenlik_giris',
             basePath: '/modules/guncel-siber-guvenlige-giris.html',
-            subNavScroll: false
+            subNavScroll: true,
+            lessonHeadingLevel: 'h3'
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>

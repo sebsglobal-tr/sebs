@@ -44,6 +44,21 @@ const SIMULATION_PATH_LEVELS = [
 
 const ASSESSMENT_PATHS = new Set(['big-five', 'kariyer-degerlendirme', 'career-assessment']);
 
+/** Paket satın almadan erişilebilir simülasyonlar (Temel Siber Güvenlik + giriş senaryoları) */
+const FREE_SIMULATION_PATH_FRAGMENTS = [
+    'temel-siber-guvenlik',
+    'siber-guvenlige-giris',
+    'kayit-haftasi-krizi',
+    'semptom-etki-zinciri',
+    'bir-seyler-yanlis',
+    'linux-forensik-lab'
+];
+
+function isFreeSimulation(pathOrSlug) {
+    const s = String(pathOrSlug || '').toLowerCase();
+    return FREE_SIMULATION_PATH_FRAGMENTS.some((frag) => s.includes(frag));
+}
+
 function getSimulationLevelFromPath(pathOrSlug) {
     const s = String(pathOrSlug || '').toLowerCase();
     for (const [fragment, level] of SIMULATION_PATH_LEVELS) {
@@ -87,6 +102,8 @@ module.exports = {
     ROAD_STAGE_BY_LEVEL,
     SIMULATION_PATH_LEVELS,
     ASSESSMENT_PATHS,
+    FREE_SIMULATION_PATH_FRAGMENTS,
+    isFreeSimulation,
     getSimulationLevelFromPath,
     isAssessmentPath,
     getMaxPurchaseRank,

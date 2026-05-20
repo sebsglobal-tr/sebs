@@ -131,6 +131,16 @@ const MODULES_NOT_LIVE = ['web-uygulama-guvenligi', 'web-app-security'];
 
 const FREE_MODULE_SLUGS = new Set(['guncel-siber-guvenlige-giris', 'coming-soon']);
 
+/** Paket satın almadan erişilebilir simülasyonlar (Temel Siber Güvenlik + giriş senaryoları) */
+const FREE_SIMULATION_PATH_FRAGMENTS = [
+    'temel-siber-guvenlik',
+    'siber-guvenlige-giris',
+    'kayit-haftasi-krizi',
+    'semptom-etki-zinciri',
+    'bir-seyler-yanlis',
+    'linux-forensik-lab'
+];
+
 const TIER_DISPLAY_NAMES = {
     beginner: 'İlk Adım',
     intermediate: 'Yükseliş',
@@ -139,6 +149,11 @@ const TIER_DISPLAY_NAMES = {
 
 function isFreeModuleSlug(slug) {
     return FREE_MODULE_SLUGS.has(String(slug || '').toLowerCase());
+}
+
+function isFreeSimulationPath(pathOrSlug) {
+    const s = String(pathOrSlug || '').toLowerCase();
+    return FREE_SIMULATION_PATH_FRAGMENTS.some((frag) => s.includes(frag));
 }
 
 function getMaxPurchaseRank(purchases, category) {
@@ -312,8 +327,12 @@ async function checkAssessmentAccess() {
 }
 
 async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersecurity') {
-    let simulationLevel;
     const raw = String(simulationNameOrLevel || '').toLowerCase();
+    if (isFreeSimulationPath(raw)) {
+        return { hasAccess: true, message: '' };
+    }
+
+    let simulationLevel;
     if (['beginner', 'intermediate', 'advanced'].includes(raw)) {
         simulationLevel = raw;
     } else {
@@ -438,6 +457,7 @@ window.AccessControl = {
     userMeetsTierForLevel,
     getModuleLevel,
     getSimulationLevelFromPath,
+    isFreeSimulationPath,
     checkModuleAccess,
     checkSimulationAccess,
     checkAssessmentAccess,

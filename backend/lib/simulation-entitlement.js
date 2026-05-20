@@ -1,7 +1,11 @@
-const { getSimulationLevelFromPath, userMeetsTierForLevel } = require('./sebs-road-catalog');
+const { getSimulationLevelFromPath, userMeetsTierForLevel, isFreeSimulation } = require('./sebs-road-catalog');
 const { fetchActivePurchases } = require('./module-entitlement');
 
 async function userCanAccessSimulation(pool, user, pathOrSlug, fullAccessEmail) {
+    if (isFreeSimulation(pathOrSlug)) {
+        return { allowed: true, reason: 'free' };
+    }
+
     if (!user || !user.userId) {
         return { allowed: false, reason: 'login' };
     }
