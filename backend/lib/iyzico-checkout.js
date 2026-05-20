@@ -26,6 +26,40 @@ function getIyzipayClient() {
     });
 }
 
+/** Sandbox/canlı API anahtarı ile BASE_URL uyumu (Cep POS anahtarı burada kullanılmamalı). */
+function validateCredentialEnvironment() {
+    const key = String(process.env.IYZICO_API_KEY || '').trim();
+    const secret = String(process.env.IYZICO_SECRET_KEY || '').trim();
+    const base = String(process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com')
+        .trim()
+        .toLowerCase();
+
+    if (!key || !secret) {
+        return { ok: false, code: 'MISSING_KEYS', message: 'IYZICO_API_KEY ve IYZICO_SECRET_KEY gerekli.' };
+    }
+
+    if (!key.startsWith('sandbox-') && !base.includes('sandbox')) {
+        /* canlı */
+    } else if (base.includes('sandbox') && !key.startsWith('sandbox-')) {
+        return {
+            ok: false,
+            code: 'IYZICO_KEY_ENV_MISMATCH',
+            message:
+                'Sandbox API URL kullanılıyor ancak API anahtarı "sandbox-" ile başlamıyor. ' +
+                'iyzico panelindeki "API Anahtarları" (Cep POS değil) bölümündeki sandbox anahtarlarını Render\'a girin.'
+        };
+    } else if (!base.includes('sandbox') && key.startsWith('sandbox-')) {
+        return {
+            ok: false,
+            code: 'IYZICO_KEY_ENV_MISMATCH',
+            message:
+                'Sandbox API anahtarı ile canlı IYZICO_BASE_URL birlikte kullanılamaz.'
+        };
+    }
+
+    return { ok: true };
+}
+
 function conversationId(userId, category, level) {
     const slug = `${userId}-${category}-${level}`.replace(/[^a-zA-Z0-9_-]/g, '-');
     return `sebs-${slug}-${Date.now()}`.slice(0, 64);
@@ -43,21 +77,33 @@ function splitName(fullName, email) {
     return { name: local.slice(0, 30) || 'SEBS', surname: 'Kullanici' };
 }
 
-function buildBuyer(user) {
+function buyerIdForIyzico(userId) {
+    const raw = String(userId || 'guest').replace(/[^a-zA-Z0-9]/g, '');
+    return raw.slice(0, 50) || 'sebsguest';
+}
+
+function buildBuyer(user, clientIp) {
     const email = user.email || 'noreply@sebs.global';
     const { name, surname } = splitName(user.full_name || user.name, email);
-    const gsm = (process.env.IYZICO_DEFAULT_GSM || '5555555555').replace(/\D/g, '').slice(-11);
+    let gsm = (process.env.IYZICO_DEFAULT_GSM || '5555555555').replace(/\D/g, '');
+    if (gsm.startsWith('90')) gsm = gsm.slice(2);
+    gsm = gsm.slice(-10);
+    if (gsm.length < 10) gsm = '5555555555';
+    const ip =
+        (clientIp && String(clientIp).split(',')[0].trim()) ||
+        process.env.IYZICO_DEFAULT_IP ||
+        '85.34.78.112';
     return {
-        id: String(user.id),
+        id: buyerIdForIyzico(user.id),
         name,
         surname,
-        gsmNumber: gsm.startsWith('+') ? gsm : `+90${gsm}`,
+        gsmNumber: `+90${gsm}`,
         email,
         identityNumber: process.env.IYZICO_DEFAULT_IDENTITY || '11111111111',
         lastLoginDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
         registrationDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
         registrationAddress: process.env.IYZICO_DEFAULT_ADDRESS || 'Istanbul Turkiye',
-        ip: process.env.IYZICO_DEFAULT_IP || '85.34.78.112',
+        ip,
         city: process.env.IYZICO_DEFAULT_CITY || 'Istanbul',
         country: 'Turkey',
         zipCode: process.env.IYZICO_DEFAULT_ZIP || '34000'
@@ -88,7 +134,14 @@ function categoryLabel(category) {
     return map[category] || category;
 }
 
-function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlug }) {
+function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlug, clientIp }) {
+    const envCheck = validateCredentialEnvironment();
+    if (!envCheck.ok) {
+        const err = new Error(envCheck.message);
+        err.code = envCheck.code;
+        throw err;
+    }
+
     const iyzipay = getIyzipayClient();
     if (!iyzipay) {
         const err = new Error('Iyzico yapılandırılmamış');
@@ -124,7 +177,7 @@ function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlu
         paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
         callbackUrl,
         enabledInstallments: [1],
-        buyer: buildBuyer(user),
+        buyer: buildBuyer(user, clientIp),
         shippingAddress: buildAddress(user),
         billingAddress: buildAddress(user),
         basketItems: [
@@ -146,10 +199,16 @@ function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlu
                 e.iyzico = result;
                 return reject(e);
             }
+            const pageUrl = result.paymentPageUrl || result.payWithIyzicoPageUrl || '';
+            if (!pageUrl && !result.checkoutFormContent) {
+                const e = new Error('Iyzico ödeme sayfası URL veya form içeriği dönmedi');
+                e.iyzico = result;
+                return reject(e);
+            }
             resolve({
                 conversationId: convId,
                 token: result.token,
-                paymentPageUrl: result.paymentPageUrl,
+                paymentPageUrl: pageUrl,
                 checkoutFormContent: result.checkoutFormContent,
                 price
             });
@@ -177,6 +236,7 @@ function retrieveCheckoutForm(token) {
 
 module.exports = {
     isIyzicoConfigured,
+    validateCredentialEnvironment,
     initializeCheckoutForm,
     retrieveCheckoutForm,
     conversationId,

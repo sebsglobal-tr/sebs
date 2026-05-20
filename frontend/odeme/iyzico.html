@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <title>Ödeme | SEBS Global</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; }
+    .wrap { max-width: 520px; margin: 3rem auto; padding: 1.5rem; text-align: center; }
+    .spinner { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    a { color: #2563eb; }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="status">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>iyzico ödeme sayfasına yönlendiriliyorsunuz…</p>
+  </div>
+  <script>
+    (function () {
+      var KEY = 'sebs_iyzico_checkout';
+      var raw;
+      try { raw = sessionStorage.getItem(KEY); } catch (e) { raw = null; }
+      if (!raw) {
+        document.getElementById('status').innerHTML =
+          '<p>Oturum bulunamadı. <a href="/fiyatlandirma">Paketlere dön</a></p>';
+        return;
+      }
+      var data;
+      try { data = JSON.parse(raw); } catch (e2) {
+        data = null;
+      }
+      try { sessionStorage.removeItem(KEY); } catch (e3) { /* */ }
+      if (!data || (!data.checkoutFormContent && !data.paymentPageUrl)) {
+        document.getElementById('status').innerHTML =
+          '<p>Ödeme bilgisi geçersiz. <a href="/fiyatlandirma">Tekrar deneyin</a></p>';
+        return;
+      }
+      if (data.ts && Date.now() - data.ts > 15 * 60 * 1000) {
+        document.getElementById('status').innerHTML =
+          '<p>Ödeme oturumu süresi doldu. <a href="/fiyatlandirma">Yeniden başlatın</a></p>';
+        return;
+      }
+      if (data.checkoutFormContent) {
+        document.open();
+        document.write(data.checkoutFormContent);
+        document.close();
+        return;
+      }
+      if (data.paymentPageUrl) {
+        window.location.replace(data.paymentPageUrl);
+        return;
+      }
+    })();
+  </script>
+</body>
+</html>

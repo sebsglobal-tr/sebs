@@ -69,7 +69,7 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
             console.error('Iyzico checkout create:', error);
             const code = error.code || 'IYZICO_INIT_FAILED';
             const status =
-                code === 'PAYMENT_PROVIDER_REQUIRED'
+                code === 'PAYMENT_PROVIDER_REQUIRED' || code === 'IYZICO_KEY_ENV_MISMATCH'
                     ? 503
                     : code === 'ALREADY_OWNED' || code === 'INVALID_REQUEST' || code === 'INVALID_PACKAGE'
                       ? 400

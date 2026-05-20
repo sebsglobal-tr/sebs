@@ -2656,14 +2656,26 @@
                     }
 
                     if (iyzicoInit.ok && iyzData && iyzData.success && iyzData.data) {
-                        if (iyzData.data.paymentPageUrl) {
-                            window.location.href = iyzData.data.paymentPageUrl;
-                            return;
-                        }
-                        if (iyzData.data.checkoutFormContent) {
-                            document.open();
-                            document.write(iyzData.data.checkoutFormContent);
-                            document.close();
+                        const pay = iyzData.data;
+                        if (pay.checkoutFormContent || pay.paymentPageUrl) {
+                            try {
+                                sessionStorage.setItem(
+                                    'sebs_iyzico_checkout',
+                                    JSON.stringify({
+                                        checkoutFormContent: pay.checkoutFormContent || '',
+                                        paymentPageUrl: pay.paymentPageUrl || '',
+                                        conversationId: pay.conversationId || '',
+                                        ts: Date.now()
+                                    })
+                                );
+                            } catch (storageErr) {
+                                console.warn('sessionStorage:', storageErr);
+                                if (pay.paymentPageUrl) {
+                                    window.location.replace(pay.paymentPageUrl);
+                                    return;
+                                }
+                            }
+                            window.location.href = pay.checkoutPage || '/odeme/iyzico';
                             return;
                         }
                     }

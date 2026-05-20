@@ -296,12 +296,19 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
         full_name: [row.first_name, row.last_name].filter(Boolean).join(' ')
     };
 
+    const clientIp =
+        (req.headers && req.headers['x-forwarded-for'] && String(req.headers['x-forwarded-for']).split(',')[0].trim()) ||
+        (req.headers && req.headers['x-real-ip']) ||
+        req.ip ||
+        '';
+
     const init = await initializeCheckoutForm({
         user,
         category,
         level,
         packageSlug,
-        callbackUrl: callbackUrl(req)
+        callbackUrl: callbackUrl(req),
+        clientIp
     });
 
     await pool.query(
@@ -327,12 +334,12 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
 
     const base = frontendBaseUrl(req);
     return {
-        token: init.token,
         paymentPageUrl: init.paymentPageUrl,
         checkoutFormContent: init.checkoutFormContent,
         conversationId: init.conversationId,
         price: init.price,
         packageSlug: packageSlug || level,
+        checkoutPage: `${base}/odeme/iyzico`,
         successRedirect: `${base}/odeme/basarili`,
         failureRedirect: `${base}/odeme/hata`
     };
