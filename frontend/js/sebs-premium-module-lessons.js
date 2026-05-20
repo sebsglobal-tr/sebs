@@ -488,7 +488,7 @@
         if (!t) return false;
         if (isModuleThemeHeading(h)) return false;
         if (/^modül\s+özeti$/i.test(t)) return false;
-        if (h.closest('.sg-isletim-intro, .learning-objectives, #lesson-route-hero')) {
+        if (h.closest('.sg-isletim-intro, .learning-objectives, .edu-lesson-recap, #lesson-route-hero')) {
             return false;
         }
         if (/^terimler\s+sözlüğü/i.test(t)) {

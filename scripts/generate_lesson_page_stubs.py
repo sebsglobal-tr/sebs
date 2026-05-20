@@ -14,7 +14,12 @@ SECTION_BLOCK_RE = re.compile(
     re.I | re.S,
 )
 H2_TAG_RE = re.compile(r"<h2\b([^>]*)>(.*?)</h2>", re.I | re.S)
+H3_TAG_RE = re.compile(r"<h3\b([^>]*)>(.*?)</h3>", re.I | re.S)
 H2_ID_RE = re.compile(r'\bid=["\']([^"\']+)["\']', re.I)
+SKIP_H3 = re.compile(
+    r"kazanım|bullseye|bu bölümde neler|check-double|fa-bullseye",
+    re.I,
+)
 NAV_SUB_RE = re.compile(
     r'class="[^"]*nav-link-sub[^"]*"[^>]*data-section="([^"]+)"[^>]*data-anchor="([^"]+)"',
     re.I,
@@ -104,6 +109,28 @@ def collect_keys_from_dom(html: str) -> list[str]:
         block = m.group(2)
         inner_m = re.search(r'<div[^>]*class="[^"]*section-inner[^"]*"[^>]*>(.*)', block, re.I | re.S)
         search_in = inner_m.group(1) if inner_m else block
+        h3_keys: list[str] = []
+        h3_idx = 0
+        for h3m in H3_TAG_RE.finditer(search_in):
+            attrs, inner = h3m.group(1), h3m.group(2)
+            title = strip_tags(inner)
+            if not title or len(title) > 160 or SKIP_H3.search(title):
+                continue
+            pre = search_in[max(0, h3m.start() - 1200) : h3m.start()]
+            if re.search(r"<div[^>]*class=\"[^\"]*learning-objectives", pre, re.I) and not re.search(
+                r"edu-narrative|edu-chapter-body", pre, re.I
+            ):
+                continue
+            if re.search(r"<div[^>]*class=\"[^\"]*edu-lesson-recap", pre, re.I):
+                continue
+            id_m = H2_ID_RE.search(attrs)
+            hid = id_m.group(1) if id_m else ""
+            hid = ensure_heading_id(section_id, title, h3_idx, hid)
+            h3_keys.append(f"{section_id}::{hid}")
+            h3_idx += 1
+        if len(h3_keys) >= 2:
+            keys.extend(h3_keys)
+            continue
         sub_keys: list[str] = []
         idx = 0
         for h2m in H2_TAG_RE.finditer(search_in):
@@ -124,6 +151,8 @@ def collect_keys_from_dom(html: str) -> list[str]:
             idx += 1
         if sub_keys:
             keys.extend(sub_keys)
+        elif h3_keys:
+            keys.extend(h3_keys)
         else:
             keys.append(section_id)
     return keys
