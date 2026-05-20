@@ -8,6 +8,7 @@
         [
             'module_progress_temel_network',
             'module_progress_siber_guvenlik_giris',
+            'module_progress_temel_siber_guvenlik',
             'moduleNameCache',
             'moduleNameCacheTime',
             'userProgress'
@@ -403,6 +404,7 @@ async function getSupabaseAccessToken() {
  */
 window.SEBS_MODULE_PROGRESS_REGISTRY = [
     { storageKey: 'module_progress_siber_guvenlik_giris', moduleTitle: 'Siber Güvenliğe Giriş' },
+    { storageKey: 'module_progress_temel_siber_guvenlik', moduleTitle: 'Temel Siber Güvenlik' },
     { storageKey: 'module_progress_temel_network', moduleTitle: 'Temel Network Eğitimi' },
     { storageKey: 'module_progress_temel_kriptografi', moduleTitle: 'Temel Kriptografi' },
     {
@@ -466,7 +468,8 @@ const MODULE_NAME_LOOKUP_ALIASES = {
     'İleri Malware Analizi & Reverse Engineering': ['İleri Malware Analizi'],
     'Temel Kriptografi': ['Kriptografi Temelleri'],
     'Network Güvenliği': ['Orta Seviye Network Güvenliği'],
-    'Siber Güvenliğe Giriş': ['Güncel Siber Güvenliğe Giriş', 'Temel Siber Güvenlik']
+    'Siber Güvenliğe Giriş': ['Güncel Siber Güvenliğe Giriş'],
+    'Temel Siber Güvenlik': ['Temel Siber Guvenlik']
 };
 
 function readLocalModuleProgressRaw(storageKey) {
@@ -558,6 +561,44 @@ window.getLocalModuleProgressSnapshots = function () {
     return Object.keys(byTitle).map(function (n) {
         return byTitle[n];
     });
+};
+
+/**
+ * Eski userProgress_{email} kayıtlarını module_progress_* anahtarına taşır (Temel Siber Güvenlik).
+ */
+window.sebsMigrateLegacyUserProgressModule = function (moduleTitle, storageKey, labelToSectionId) {
+    try {
+        if (!moduleTitle || !storageKey || !labelToSectionId) return;
+        var existing = readLocalModuleProgressRaw(storageKey);
+        if (existing && Array.isArray(existing.completedLessons) && existing.completedLessons.length) {
+            return;
+        }
+        var userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        var uid = userData.email || userData.id || 'guest';
+        var legacyKey = 'userProgress_' + uid;
+        var saved = JSON.parse(localStorage.getItem(legacyKey) || '{}');
+        var mod = saved.modules && saved.modules[moduleTitle];
+        if (!mod) return;
+        var completed = [];
+        (mod.completedLessons || []).forEach(function (label) {
+            var sid = labelToSectionId[label] || label;
+            if (sid && completed.indexOf(sid) === -1) completed.push(String(sid));
+        });
+        if (!completed.length) return;
+        localStorage.setItem(
+            storageKey,
+            JSON.stringify({
+                completedLessons: completed,
+                totalLessons: Math.max(
+                    7,
+                    parseInt(String(mod.totalSections), 10) || completed.length
+                ),
+                lastUpdated: mod.lastUpdated || new Date().toISOString()
+            })
+        );
+    } catch (e) {
+        /* ignore */
+    }
 };
 
 /** localStorage → POST /api/progress (tüm premium modüller) */

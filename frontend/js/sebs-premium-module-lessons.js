@@ -1235,6 +1235,15 @@
                               : sec.id;
                       })();
                 var legacyCard = sec.querySelector('.content-card');
+                if (!legacyCard) {
+                    var body = sec.querySelector('.content-body, .lesson-content');
+                    if (body && body.parentElement === sec) {
+                        legacyCard = document.createElement('div');
+                        legacyCard.className = 'content-card';
+                        sec.insertBefore(legacyCard, body);
+                        legacyCard.appendChild(body);
+                    }
+                }
                 if (legacyCard) {
                     legacyCard.setAttribute('data-lesson-key', flatKey);
                     if (routeMode && !legacyCard.querySelector('.lesson-complete-footer')) {

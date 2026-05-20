@@ -1863,7 +1863,7 @@
   <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
-    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=7" />
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -1979,77 +1979,14 @@
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <h4><i class="fas fa-play-circle"></i> Dersler</h4>
-                    <ul class="nav-list">
-                        <li class="nav-item active" data-section="intro">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Giriş ve Tanıtım</span>
-                            <i class="fas fa-check-circle completed"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson1">
-                            <i class="fas fa-book"></i>
-                            <span>1. Siber Güvenlik Temelleri</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson2">
-                            <i class="fas fa-book"></i>
-                            <span>2. Tehdit Türleri</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson3">
-                            <i class="fas fa-book"></i>
-                            <span>3. Güvenlik Prensipleri</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson4">
-                            <i class="fas fa-book"></i>
-                            <span>4. Risk Değerlendirmesi</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson5">
-                            <i class="fas fa-book"></i>
-                            <span>5. Güvenlik Politikaları</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lesson6">
-                            <i class="fas fa-book"></i>
-                            <span>6. Incident Response</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                    </ul>
-                </div>
-                <div class="nav-section">
-                    <h4><i class="fas fa-flask"></i> Pratik Uygulamalar</h4>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-section="lab1">
-                            <i class="fas fa-tools"></i>
-                            <span>Lab 1: Güvenlik Araçları</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lab2">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Lab 2: Risk Analizi</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="lab3">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <span>Lab 3: Incident Response</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                    </ul>
-                </div>
-                <div class="nav-section">
-                    <h4><i class="fas fa-graduation-cap"></i> Sınavlar</h4>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-section="midterm">
-                            <i class="fas fa-clipboard-check"></i>
-                            <span>Ara Sınav</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
-                        <li class="nav-item" data-section="final">
-                            <i class="fas fa-trophy"></i>
-                            <span>Final Sınavı</span>
-                            <i class="fas fa-lock"></i>
-                        </li>
+                    <ul class="nav-list nav-section-list">
+                        <li><a href="#" class="nav-link-section active" data-section="intro"><i class="fas fa-info-circle"></i> Giriş ve Tanıtım</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson1"><i class="fas fa-book"></i> 1. Siber Güvenlik Temelleri</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson2"><i class="fas fa-bug"></i> 2. Tehdit Türleri</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson3"><i class="fas fa-shield-alt"></i> 3. Güvenlik Prensipleri</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson4"><i class="fas fa-chart-line"></i> 4. Risk Değerlendirmesi</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson5"><i class="fas fa-file-shield"></i> 5. Güvenlik Politikaları</a></li>
+                        <li><a href="#" class="nav-link-section" data-section="lesson6"><i class="fas fa-exclamation-triangle"></i> 6. Incident Response</a></li>
                     </ul>
                 </div>
             </nav>
@@ -2069,7 +2006,7 @@
                     <h2><i class="fas fa-info-circle"></i> Giriş ve Tanıtım</h2>
                     <p>Temel Siber Güvenlik modülüne hoş geldiniz</p>
                 </div>
-                
+                <div class="content-card">
                 <div class="lesson-content">
                     <h3><i class="fas fa-shield-alt"></i> Temel Siber Güvenlik Eğitimi</h3>
                     <p>Bu modül, siber güvenlik dünyasına ilk adımınızı atmanız için tasarlanmış kapsamlı bir eğitim programıdır. Temel kavramlardan başlayarak, gerçek dünya örnekleri ve pratik uygulamalarla siber güvenlik bilginizi geliştireceksiniz.</p>
@@ -2109,6 +2046,7 @@
                                 </div>
                                 </div>
                                 </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson1">
@@ -2116,14 +2054,9 @@
                     <h2><i class="fas fa-shield-alt"></i> 1. Siber Güvenlik Temelleri</h2>
                     <p>Siber güvenliğin temel kavramları ve CIA triad</p>
                     <p class="section-intro" style="color: var(--text-secondary); line-height: 1.75; margin-top: 0.75rem; max-width: 72ch;">Siber güvenlik, yalnızca “virüs programı kurmak” veya “şifre güçlü olsun” demek değildir; sistemlerin, ağların ve verilerin gizliliğini, bütünlüğünü ve erişilebilirliğini korumak için teknik, operasyonel ve yönetimsel önlemlerin bütünüdür. Bu derste önce “CIA triad” (Gizlilik, Bütünlük, Erişilebilirlik) kavramını net bir şekilde öğrenecek, ardından günlük hayattan ve kurumsal ortamlardan örneklerle bu üç prensibin nasıl uygulandığını göreceksiniz. Tablolar ve kartlar, konuyu daha akıcı ve kalıcı biçimde kavramanızı sağlar.</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson1')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                        </button>
-                        </div>
                     </div>
 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-info-circle"></i> Siber Güvenlik Nedir?</h3>
@@ -2924,20 +2857,16 @@
                             </table>
                         </div>
                             </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson2">
                 <div class="section-header">
                     <h2><i class="fas fa-bug"></i> 2. Tehdit Türleri</h2>
                     <p>Siber saldırı türleri ve tehdit aktörleri</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson2')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                        </button>
-                                </div>
-                            </div>
+                    </div>
 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-exclamation-triangle"></i> Siber Tehditlerin Sınıflandırılması</h3>
@@ -3172,20 +3101,16 @@
                             </table>
                         </div>
                 </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson3">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> 3. Güvenlik Prensipleri</h2>
                     <p>Temel güvenlik prensipleri ve savunma stratejileri</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson3')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                        </button>
-                    </div>
-                </div>
+</div>
                 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-lock"></i> Temel Güvenlik Prensipleri</h3>
@@ -3422,20 +3347,16 @@
                             </table>
                         </div>
                 </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson4">
                 <div class="section-header">
                     <h2><i class="fas fa-chart-line"></i> 4. Risk Değerlendirmesi</h2>
                     <p>Risk analizi ve azaltma stratejileri</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson4')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                        </button>
-                    </div>
-                </div>
+</div>
                 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-exclamation-triangle"></i> Risk Değerlendirmesi Süreci</h3>
@@ -3672,20 +3593,16 @@
                             </table>
                         </div>
                             </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson5">
                 <div class="section-header">
                     <h2><i class="fas fa-file-shield"></i> 5. Güvenlik Politikaları</h2>
                     <p>Kurumsal güvenlik politikaları ve uygulamaları</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson5')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                        </button>
-                                                    </div>
-                                                </div>
+</div>
                                                 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-clipboard-list"></i> Güvenlik Politikaları ve Prosedürleri</h3>
@@ -3922,20 +3839,16 @@
                         </div>
                                             </div>
                                                     </div>
+                </div>
             </section>
 
             <section class="content-section" id="lesson6">
                 <div class="section-header">
                     <h2><i class="fas fa-exclamation-triangle"></i> 6. Incident Response</h2>
                     <p>Olay müdahale süreçleri ve kriz yönetimi</p>
-                    <div class="lesson-controls">
-                        <span class="lesson-status">Ders Başlamadı</span>
-                        <button class="btn-complete-lesson" onclick="completeLesson('lesson6')">
-                            <i class="fas fa-check"></i> Dersi Tamamla
-                                            </button>
-                                </div>
-                            </div>
+                    </div>
 
+                <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
                         <h3><i class="fas fa-ambulance"></i> Incident Response Süreci</h3>
@@ -4174,492 +4087,52 @@
                             </table>
                         </div>
                             </div>
+                </div>
             </section>
         </main>
                         </div>
 
     <script>
-        // Loading screen management
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const loadingScreen = document.getElementById('loadingScreen');
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var loadingScreen = document.getElementById('loadingScreen');
                 if (loadingScreen) {
                     loadingScreen.classList.add('hidden');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         loadingScreen.style.display = 'none';
                     }, 500);
                 }
-            }, 2000); // 2 saniye yükleme ekranı göster
+            }, 800);
         });
-
-        // Check if user is logged in
-        function checkAuth() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            
-            // Always return true for navigation to work
-            return true;
-        }
-
-        function getModuleName() {
-            return 'Temel Siber Güvenlik';
-        }
-
-        // Save progress to localStorage
-        // Database API configuration
-        function getModulePageApiBase() {
-            return typeof window.getSebsApiBase === 'function'
-                ? window.getSebsApiBase()
-                : (window.location.origin || '') + '/api';
-        }
-        
-        // Get current user ID from localStorage
-        function getCurrentUserId() {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            return userData.id || null;
-        }
-
-        // API helper functions
-        async function apiRequest(endpoint, method = 'GET', data = null) {
-            const url = `${getModulePageApiBase()}${endpoint}`;
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            };
-            
-            if (data) {
-                options.body = JSON.stringify(data);
-            }
-            
-            try {
-                const response = await fetch(url, options);
-                const result = await response.json();
-                return result;
-            } catch (error) {
-                console.error('API Error:', error);
-                return { success: false, message: 'Bağlantı hatası' };
-            }
-        }
-
-        // Lesson completion system
-        async function completeLesson(lessonId) {
-            // Mark current lesson as completed
-            const currentNavItem = document.querySelector(`[data-section="${lessonId}"]`);
-            if (currentNavItem) {
-                currentNavItem.classList.add('completed');
-                // Change icon if it exists
-                const icons = currentNavItem.querySelectorAll('i');
-                if (icons.length > 0) {
-                    // Keep the icon structure, just change the icon class
-                    icons.forEach(icon => {
-                        if (icon.classList.contains('fa-lock') || icon.classList.contains('fa-play')) {
-                            icon.className = 'fas fa-check-circle completed';
-                        } else if (!icon.classList.contains('completed')) {
-                            icon.className = 'fas fa-check-circle completed';
-                        }
-                    });
-                }
-            }
-            
-            // Define lesson order manually to ensure correct sequence
-            const lessonOrder = ['intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6'];
-            const currentIndex = lessonOrder.indexOf(lessonId);
-            const nextIndex = currentIndex + 1;
-            
-            // Save lesson progress to database
-            const lessonMap = {
-                'intro': 'Giriş',
-                'lesson1': 'Ders 1: CIA Triad',
-                'lesson2': 'Ders 2: Siber Güvenlik Kavramları',
-                'lesson3': 'Ders 3: Tehdit Türleri',
-                'lesson4': 'Ders 4: Güvenlik Prensipleri',
-                'lesson5': 'Ders 5: Risk Yönetimi',
-                'lesson6': 'Ders 6: Gizlilik ve Güvenlik'
-            };
-            
-            const lessonName = lessonMap[lessonId] || lessonId;
-            
-            if (window.ModuleProgressTracker) {
-                try {
-                    await ModuleProgressTracker.saveLessonProgress('Temel Siber Güvenlik', lessonName);
-                    if (nextIndex >= lessonOrder.length) {
-                        await ModuleProgressTracker.completeModule('Temel Siber Güvenlik');
-                    }
-                } catch (e) {
-                    console.warn('Modül ilerlemesi kaydedilemedi:', e);
-                }
-            }
-            
-            if (nextIndex < lessonOrder.length) {
-                const nextSectionId = lessonOrder[nextIndex];
-                const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
-                
-                if (nextNavItem) {
-                    // Unlock next lesson
-                    const nextLockIcon = nextNavItem.querySelector('i.fa-lock');
-                    if (nextLockIcon) {
-                        nextLockIcon.className = 'fas fa-play';
-                    }
-                }
-                
-                // Show completion message
-                showCompletionMessage(lessonId, nextSectionId);
-                
-                // Auto-navigate to next lesson after delay
-                setTimeout(() => {
-                    navigateToNextLesson(nextSectionId);
-                }, 2000);
-            } else {
-                // Module completed
-                showModuleCompletionMessage();
-            }
-            
-            // Update progress
-            updateProgress();
-            
-            // Save to database
-            saveProgressToDatabase();
-        }
-        
-        function showCompletionMessage(currentLesson, nextLesson) {
-            const message = document.createElement('div');
-            message.className = 'completion-message';
-            message.innerHTML = `
-                <div class="completion-content">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Ders Tamamlandı!</h3>
-                    <p>${currentLesson} dersini başarıyla tamamladınız.</p>
-                    <p>Bir sonraki derse geçiliyor...</p>
-                                </div>
-            `;
-            document.body.appendChild(message);
-            
-            setTimeout(() => {
-                message.remove();
-            }, 2000);
-        }
-        
-        function showModuleCompletionMessage() {
-            const message = document.createElement('div');
-            message.className = 'completion-message module-complete';
-            message.innerHTML = `
-                <div class="completion-content">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Modül Tamamlandı!</h3>
-                    <p>Tebrikler! Tüm dersleri başarıyla tamamladınız.</p>
-                    <button class="btn-dashboard" onclick="window.location.href='/dashboard.html'">
-                        <i class="fas fa-tachometer-alt"></i> Panel'a Git
-                    </button>
-                                    </div>
-            `;
-            document.body.appendChild(message);
-        }
-        
-        function navigateToNextLesson(nextSectionId) {
-            // Remove active class from all nav items
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(nav => nav.classList.remove('active'));
-            
-            // Add active class to next lesson
-            const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
-            if (nextNavItem) {
-                nextNavItem.classList.add('active');
-            }
-            
-            // Hide all content sections
-            const contentSections = document.querySelectorAll('.content-section');
-            contentSections.forEach(section => section.classList.remove('active'));
-            
-            // Show next lesson
-            const nextSection = document.getElementById(nextSectionId);
-            if (nextSection) {
-                nextSection.classList.add('active');
-            }
-            
-            // Update progress
-            updateProgress();
-        }
-
-
-        async function saveProgressToDatabase() {
-            const moduleName = getModuleName();
-            const completedItems = document.querySelectorAll('.nav-item i.fa-check-circle.completed').length;
-            const totalItems = document.querySelectorAll('.nav-item').length;
-            const progressPercentage = Math.round((completedItems / totalItems) * 100);
-
-            const progressData = {
-                percentage: progressPercentage,
-                completedSections: completedItems,
-                totalSections: totalItems,
-                status: progressPercentage === 100 ? 'Tamamlandı' : 'Devam Ediyor',
-                time_spent: Math.floor(Math.random() * 60) + 30
-            };
-
-            saveProgress(moduleName, progressData);
-        }
-
-        // Save progress to localStorage with persistent storage
-        function saveProgress(moduleName, progressData) {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            const userId = userData.email || userData.id || 'guest';
-            const storageKey = 'userProgress_' + userId;
-            const savedProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            
-            if (!savedProgress.modules) savedProgress.modules = {};
-            if (!savedProgress.modules[moduleName]) savedProgress.modules[moduleName] = {};
-            
-            // Add completed lessons to progress data
-            progressData.completedLessons = getCompletedLessons();
-            progressData.lastUpdated = new Date().toISOString();
-            
-            savedProgress.modules[moduleName] = progressData;
-            localStorage.setItem(storageKey, JSON.stringify(savedProgress));
-            
-            console.log('İlerleme localStorage\'a kaydedildi:', progressData);
-        }
-        
-        // Get completed lessons list
-        function getCompletedLessons() {
-            const completedLessons = [];
-            // Get all nav items with completed class
-            document.querySelectorAll('.nav-item.completed').forEach(navItem => {
-                const lessonName = navItem.querySelector('.nav-text')?.textContent.trim();
-                if (lessonName) {
-                    completedLessons.push(lessonName);
-                }
-            });
-            console.log('Completed lessons:', completedLessons);
-            return completedLessons;
-        }
-        
-        // Load progress from localStorage
-        function loadProgressFromStorage() {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            const userId = userData.email || userData.id || 'guest';
-            const storageKey = 'userProgress_' + userId;
-            const savedProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            
-            if (savedProgress.modules && savedProgress.modules['Temel Siber Güvenlik']) {
-                const moduleProgress = savedProgress.modules['Temel Siber Güvenlik'];
-                console.log('İlerleme yüklendi:', moduleProgress);
-                
-                // Restore completed lessons
-                if (moduleProgress.completedLessons) {
-                    moduleProgress.completedLessons.forEach(lessonName => {
-                        // Find nav item by lesson ID
-                        const lessonMap = {
-                            'Giriş': 'intro',
-                            'Ders 1: CIA Triad': 'lesson1',
-                            'Ders 2: Siber Güvenlik Kavramları': 'lesson2',
-                            'Ders 3: Tehdit Türleri': 'lesson3',
-                            'Ders 4: Güvenlik Prensipleri': 'lesson4',
-                            'Ders 5: Risk Yönetimi': 'lesson5',
-                            'Ders 6: Gizlilik ve Güvenlik': 'lesson6'
-                        };
-                        
-                        const lessonId = lessonMap[lessonName] || lessonName.toLowerCase().replace(/ /g, '-');
-                        const navItem = document.querySelector(`[data-section="${lessonId}"]`);
-                        
-                        if (navItem) {
-                            const icon = navItem.querySelector('i');
-                            if (icon) {
-                                icon.className = 'fas fa-check-circle completed';
-                            }
-                            navItem.classList.add('completed');
-                            
-                            // Unlock next lesson
-                            const lessonOrder = ['intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6'];
-                            const currentIndex = lessonOrder.indexOf(lessonId);
-                            const nextIndex = currentIndex + 1;
-                            
-                            if (nextIndex < lessonOrder.length) {
-                                const nextSectionId = lessonOrder[nextIndex];
-                                const nextNavItem = document.querySelector(`[data-section="${nextSectionId}"]`);
-                                
-                                if (nextNavItem) {
-                                    const nextLockIcon = nextNavItem.querySelector('i.fa-lock');
-                                    if (nextLockIcon) {
-                                        nextLockIcon.className = 'fas fa-play';
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-                
-                updateProgress();
-            }
-        }
-
-        // Check authentication status
-        function checkAuthStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const isVerified = localStorage.getItem('isVerified');
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            
-            if (isLoggedIn === 'true' && isVerified === 'true') {
-                // User is logged in
-                document.getElementById('loginBtn').style.display = 'none';
-                if (typeof window.sebsApplySignupNavCta === 'function') {
-                    window.sebsApplySignupNavCta(true, null);
-                }
-                document.getElementById('userProfile').style.display = 'flex';
-                document.getElementById('logoutBtn').style.display = 'block';
-                
-                // Update user info
-                const userName = userData.name || userData.firstName || 'Kullanıcı';
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
-                
-                // Make user profile clickable to go to dashboard
-                document.getElementById('userProfile').onclick = function() {
-                    window.location.href = '../dashboard.html';
-                };
-            } else {
-                // User is not logged in
-                document.getElementById('loginBtn').style.display = 'block';
-                if (typeof window.sebsApplySignupNavCta === 'function') {
-                    window.sebsApplySignupNavCta(false, null);
-                }
-                document.getElementById('userProfile').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'none';
-            }
-        }
-
-        // Logout function
-        async function logout() {
-            try {
-                if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
-                    await window.supabaseAuthSystem.logout();
-                    return;
-                }
-                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-                    await window.supabaseAuthSystem.supabase.auth.signOut();
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('isVerified');
-            localStorage.removeItem('userData');
-            localStorage.removeItem('userProgress');
-            localStorage.removeItem('recentActivities');
-            localStorage.removeItem('achievements');
-            setTimeout(function () {
-                try {
-                    window.location.reload();
-                } catch (e) {
-                    window.location.href = window.location.href;
-                }
-            }, 0);
-        }
-
-        // Mobil üst menü: ../js/navigation.js
-
-        // Initialize auth status when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize module progress tracker
-            if (window.ModuleProgressTracker) {
-                ModuleProgressTracker.initializeModule('Temel Siber Güvenlik', 6);
-            }
-            
-            // Check auth status for navigation
-            checkAuthStatus();
-            
-            // Add logout button event listener
-            document.getElementById('logoutBtn').onclick = logout;
-            
-            // Hide loading overlay
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-            }, 1000);
-            
-            // Navigation functionality
-            const navItems = document.querySelectorAll('.nav-item');
-            const contentSections = document.querySelectorAll('.content-section');
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const targetSection = this.getAttribute('data-section');
-                    
-                    // Remove active class from all nav items
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // Hide all content sections
-                    contentSections.forEach(section => section.classList.remove('active'));
-                    
-                    // Show target section
-                    const targetElement = document.getElementById(targetSection);
-                    if (targetElement) {
-                        targetElement.classList.add('active');
-                    }
-                    
-                    // Update progress
-                    updateProgress();
-                });
-            });
-            
-            // Initialize progress
-            loadProgressFromStorage();
-            updateProgress();
-        });
-        
-        function updateProgress() {
-            const completedItems = document.querySelectorAll('.nav-item i.fa-check-circle.completed').length;
-            const totalItems = document.querySelectorAll('.nav-item').length;
-            const progressPercentage = Math.round((completedItems / totalItems) * 100);
-            
-            const progressFill = document.querySelector('.progress-fill');
-            const progressText = document.querySelector('.progress-text');
-            
-            if (progressFill) {
-                progressFill.style.width = progressPercentage + '%';
-            }
-            if (progressText) {
-                progressText.textContent = progressPercentage + '% Tamamlandı';
-            }
-        }
-        
-        function showCompletionMessage(currentLesson, nextLesson) {
-            const message = document.createElement('div');
-            message.className = 'completion-message';
-            message.innerHTML = `
-                <div class="completion-content">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Ders Tamamlandı!</h3>
-                    <p>${currentLesson} dersini başarıyla tamamladınız.</p>
-                    <p>Bir sonraki derse geçiliyor...</p>
-                </div>
-            `;
-            document.body.appendChild(message);
-            
-            setTimeout(() => {
-                message.remove();
-            }, 2000);
-        }
-        
-        function showModuleCompletionMessage() {
-            const message = document.createElement('div');
-            message.className = 'completion-message module-complete';
-            message.innerHTML = `
-                <div class="completion-content">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Modül Tamamlandı!</h3>
-                    <p>Tebrikler! Tüm dersleri başarıyla tamamladınız.</p>
-                    <button class="btn-dashboard" onclick="window.location.href='/dashboard.html'">
-                        <i class="fas fa-tachometer-alt"></i> Panel'a Git
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(message);
-        }
     </script>
-    <script src="../js/navigation.js">    </script>
+    <script src="/js/sebs-premium-module-lessons.js?v=20260520c"></script>
+    <script>
+        if (typeof window.sebsMigrateLegacyUserProgressModule === 'function') {
+            window.sebsMigrateLegacyUserProgressModule('Temel Siber Güvenlik', 'module_progress_temel_siber_guvenlik', {
+                'Giriş ve Tanıtım': 'intro',
+                'Giriş': 'intro',
+                'Ders 1: CIA Triad': 'lesson1',
+                '1. Siber Güvenlik Temelleri': 'lesson1',
+                'Ders 2: Siber Güvenlik Kavramları': 'lesson2',
+                '2. Tehdit Türleri': 'lesson2',
+                'Ders 3: Tehdit Türleri': 'lesson3',
+                '3. Güvenlik Prensipleri': 'lesson3',
+                'Ders 4: Güvenlik Prensipleri': 'lesson4',
+                '4. Risk Değerlendirmesi': 'lesson4',
+                'Ders 5: Risk Yönetimi': 'lesson5',
+                '5. Güvenlik Politikaları': 'lesson5',
+                'Ders 6: Gizlilik ve Güvenlik': 'lesson6',
+                '6. Incident Response': 'lesson6'
+            });
+        }
+        window.SebsPremiumModuleLessons.run({
+            moduleName: 'Temel Siber Güvenlik',
+            storageKey: 'module_progress_temel_siber_guvenlik',
+            basePath: '/modules/temel-siber-guvenlik.html',
+            progressMode: 'lesson'
+        });
+    </script>
+    <script src="../js/navigation.js"></script>
     <script src="../utils/access-control.js"></script>
     <script src="module-access-check.js"></script>
     <script src="/js/module-inline-cards.js"></script>
