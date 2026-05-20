@@ -2745,7 +2745,14 @@
                 const cfgJson = await cfgRes.json();
                 if (!cfgJson.success || !cfgJson.data) return;
                 const d = cfgJson.data;
-                if (d.testMode) {
+                if (d.zirveTestActive && d.zirveTestPrice != null) {
+                    const banner = document.getElementById('iyzicoTestModeBanner');
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.textContent =
+                            'Test fiyatı aktif: Zirve planı şu an ₺' + d.zirveTestPrice + ' (IYZICO_ZIRVE_TEST_PRICE). Diğer planlar normal fiyatta. Test bitince Render\'dan bu değişkeni kaldırın.';
+                    }
+                } else if (d.testMode) {
                     const banner = document.getElementById('iyzicoTestModeBanner');
                     if (banner) {
                         banner.classList.remove('hidden');

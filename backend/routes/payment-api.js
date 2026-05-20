@@ -1,6 +1,11 @@
 const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
 const { DEFAULT_PRICES, getPackagePrices } = require('../lib/pricing-store');
-const { isTestPaymentMode, TEST_ODEME_PRICE } = require('../lib/package-prices');
+const {
+    isTestPaymentMode,
+    TEST_ODEME_PRICE,
+    getZirveTestPriceOverride,
+    getRoadPackageDisplayPrice
+} = require('../lib/package-prices');
 
 function registerPaymentApiRoutes(app, { pool } = {}) {
     app.get('/api/payments/config', async (req, res) => {
@@ -17,21 +22,22 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
         }
 
         const testMode = isTestPaymentMode();
+        const zirveTestPrice = getZirveTestPriceOverride();
         const roadPackages = {
             'ilk-adim': {
                 slug: 'ilk-adim',
                 title: 'İlk Adım',
-                price: testMode ? 1 : (packages.cybersecurity && packages.cybersecurity.beginner) || 199
+                price: getRoadPackageDisplayPrice('ilk-adim', packages) ?? 199
             },
             yukselis: {
                 slug: 'yukselis',
                 title: 'Yükseliş',
-                price: testMode ? 3 : (packages.cybersecurity && packages.cybersecurity.intermediate) || 349
+                price: getRoadPackageDisplayPrice('yukselis', packages) ?? 349
             },
             zirve: {
                 slug: 'zirve',
                 title: 'Zirve',
-                price: testMode ? 5 : (packages.cybersecurity && packages.cybersecurity.advanced) || 799
+                price: getRoadPackageDisplayPrice('zirve', packages) ?? 799
             }
         };
 
@@ -41,6 +47,8 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
                 provider: 'iyzico',
                 iyzicoConfigured: iyzico,
                 testMode,
+                zirveTestPrice: zirveTestPrice,
+                zirveTestActive: zirveTestPrice != null,
                 testPayment: testMode
                     ? {
                           package: 'test-odeme',

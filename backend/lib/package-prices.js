@@ -34,6 +34,20 @@ function isTestPaymentMode() {
     return flag === '1' || flag === 'true';
 }
 
+/** Canlıda tek paket testi: Render → IYZICO_ZIRVE_TEST_PRICE=5 (test bitince silin) */
+function getZirveTestPriceOverride() {
+    const raw = String(process.env.IYZICO_ZIRVE_TEST_PRICE || '').trim();
+    if (!raw) return null;
+    const n = Number(raw);
+    if (Number.isNaN(n) || n <= 0 || n > 999999.99) return null;
+    return n;
+}
+
+function isZirveLevel(level) {
+    const lvl = normalizeLevel(level);
+    return lvl === 'advanced' || level === 'zirve';
+}
+
 const ROAD_STAGE_TO_LEVEL = {
     'ilk-adim': 'beginner',
     yukselis: 'intermediate',
@@ -46,6 +60,11 @@ function normalizeLevel(level) {
 }
 
 function getExpectedPrice(category, level) {
+    const zirveOverride = getZirveTestPriceOverride();
+    if (zirveOverride != null && isZirveLevel(level)) {
+        return zirveOverride;
+    }
+
     if (isTestPaymentMode()) {
         if (category === 'test-odeme' || level === 'test-odeme') {
             return TEST_ODEME_PRICE;
@@ -70,6 +89,25 @@ function getExpectedPrice(category, level) {
     return price != null ? Number(price) : null;
 }
 
+function getRoadPackageDisplayPrice(slug, packages) {
+    const zirveOverride = getZirveTestPriceOverride();
+    if (slug === 'zirve' && zirveOverride != null) return zirveOverride;
+
+    if (isTestPaymentMode()) {
+        const test = TEST_PACKAGE_PRICES['sebs-road'] || TEST_PACKAGE_PRICES.cybersecurity;
+        if (slug === 'ilk-adim') return test['ilk-adim'] || test.beginner;
+        if (slug === 'yukselis') return test.yukselis || test.intermediate;
+        if (slug === 'zirve') return test.zirve || test.advanced;
+    }
+
+    const p = packages || PACKAGE_PRICES;
+    const cyber = p.cybersecurity || p['sebs-road'] || {};
+    if (slug === 'ilk-adim') return cyber.beginner ?? cyber['ilk-adim'] ?? 199;
+    if (slug === 'yukselis') return cyber.intermediate ?? cyber.yukselis ?? 349;
+    if (slug === 'zirve') return cyber.advanced ?? cyber.zirve ?? 799;
+    return null;
+}
+
 function getRoadPackageLabel(slug) {
     const labels = {
         'ilk-adim': 'İlk Adım',
@@ -86,6 +124,8 @@ module.exports = {
     ROAD_STAGE_TO_LEVEL,
     normalizeLevel,
     getExpectedPrice,
+    getZirveTestPriceOverride,
+    getRoadPackageDisplayPrice,
     isTestPaymentMode,
     getRoadPackageLabel
 };
