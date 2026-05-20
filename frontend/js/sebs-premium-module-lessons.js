@@ -992,6 +992,23 @@
         btn.addEventListener('click', onComplete);
         footer.appendChild(btn);
         container.appendChild(footer);
+        hideLegacyLessonControls(container);
+    }
+
+    function hideLegacyLessonControls(scope) {
+        var root = scope && scope.querySelectorAll ? scope : document;
+        var cards = root.querySelectorAll
+            ? root.matches && root.matches('.content-card')
+                ? [root]
+                : root.querySelectorAll('.content-card')
+            : [];
+        cards.forEach(function (card) {
+            if (!card.querySelector('.lesson-complete-footer')) return;
+            card.querySelectorAll('.lesson-controls').forEach(function (el) {
+                el.hidden = true;
+                el.setAttribute('aria-hidden', 'true');
+            });
+        });
     }
 
     function refreshCompleteButtons(completedList) {
@@ -1226,15 +1243,6 @@
                         });
                     }
                 }
-                if (
-                    routeMode &&
-                    legacyCard &&
-                    !legacyCard.querySelector('.lesson-complete-footer')
-                ) {
-                    appendLessonFooter(legacyCard, function () {
-                        completeHandler(flatKey);
-                    });
-                }
                 return;
             }
 
@@ -1311,6 +1319,10 @@
                 completeHandler(key);
             });
         });
+
+        if (routeMode) {
+            hideLegacyLessonControls(document);
+        }
     }
 
     function resolveActiveLessonKeyInSection(sec) {

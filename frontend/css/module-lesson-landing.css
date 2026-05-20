@@ -581,6 +581,25 @@ body.landing-site-body main .comparison-table {
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
 }
 
+/* Div tabanlı karşılaştırma ızgarası — shell display:table ile bozulmasın */
+body.landing-site-body div.comparison-table {
+  display: block !important;
+  table-layout: unset !important;
+  border-collapse: separate !important;
+}
+
+body.landing-site-body div.comparison-table .comparison-header,
+body.landing-site-body div.comparison-table .comparison-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+body.landing-site-body div.comparison-table .comparison-cell {
+  display: flex !important;
+  align-items: center;
+}
+
 body.landing-site-body main .comparison-table thead {
   background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
 }

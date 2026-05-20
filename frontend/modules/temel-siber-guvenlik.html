@@ -1200,6 +1200,41 @@
             color: #3b82f6;
             font-size: 1.1rem;
         }
+
+        div.comparison-table {
+            display: block !important;
+            table-layout: unset !important;
+        }
+
+        .terimler-block {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .terimler-block table.comparison-table,
+        .terimler-block table.glossary-table {
+            display: table !important;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .terimler-block table.comparison-table thead th {
+            background: #1e293b;
+            color: #fff;
+            padding: 0.85rem 1rem;
+            text-align: left;
+        }
+
+        .terimler-block table.comparison-table tbody td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        .terimler-block table.comparison-table tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
         
         .process-flow {
             background: white;
@@ -2870,6 +2905,24 @@
                                         </div>
                                     </div>
                                 </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson1">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Cybersecurity</strong></td><td>Siber güvenlik; dijital varlıkların tehditlere karşı korunması</td></tr>
+                                    <tr><td><strong>CIA Triad</strong></td><td>Gizlilik, bütünlük ve erişilebilirlik üçlüsü</td></tr>
+                                    <tr><td><strong>Confidentiality</strong></td><td>Gizlilik; yetkisiz erişimin önlenmesi</td></tr>
+                                    <tr><td><strong>Integrity</strong></td><td>Bütünlük; verinin doğru ve değiştirilmemiş kalması</td></tr>
+                                    <tr><td><strong>Availability</strong></td><td>Erişilebilirlik; yetkili kullanıcıların hizmete ulaşabilmesi</td></tr>
+                                    <tr><td><strong>Asset</strong></td><td>Korunması gereken değerli unsur (veri, sistem, hizmet)</td></tr>
+                                    <tr><td><strong>Threat</strong></td><td>Varlığa zarar verebilecek potansiyel olay veya aktör</td></tr>
+                                    <tr><td><strong>Vulnerability</strong></td><td>Sistemin istismar edilebilir zayıflığı</td></tr>
+                                    <tr><td><strong>Risk</strong></td><td>Tehdit × zafiyet × etki ile ölçülen olası zarar</td></tr>
+                                    <tr><td><strong>Defense in Depth</strong></td><td>Katmanlı savunma; tek noktaya bağımlı kalmama</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                             </div>
             </section>
 
@@ -3099,6 +3152,24 @@
                                         </div>
                                         </div>
                             </div>
+                        </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson2">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Malware</strong></td><td>Zararlı yazılımların genel adı</td></tr>
+                                    <tr><td><strong>Ransomware</strong></td><td>Veriyi şifreleyip fidye talep eden yazılım</td></tr>
+                                    <tr><td><strong>Phishing</strong></td><td>E-posta veya mesajla kimlik bilgisi avlama</td></tr>
+                                    <tr><td><strong>APT</strong></td><td>Gelişmiş kalıcı tehdit; hedefli uzun süreli saldırı</td></tr>
+                                    <tr><td><strong>DDoS</strong></td><td>Dağıtık hizmet dışı bırakma saldırısı</td></tr>
+                                    <tr><td><strong>Social Engineering</strong></td><td>İnsan psikolojisini kullanarak bilgi veya erişim elde etme</td></tr>
+                                    <tr><td><strong>Zero-day</strong></td><td>Yaması henüz yayınlanmamış bilinen zafiyet</td></tr>
+                                    <tr><td><strong>Insider Threat</strong></td><td>Kurum içinden kaynaklanan kasıtlı veya kazara tehdit</td></tr>
+                                    <tr><td><strong>Threat Actor</strong></td><td>Saldırıyı gerçekleştiren kişi, grup veya kurum</td></tr>
+                                    <tr><td><strong>Botnet</strong></td><td>Saldırganın uzaktan yönettiği ele geçirilmiş cihazlar ağı</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                 </div>
             </section>
@@ -3332,6 +3403,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson3">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Least Privilege</strong></td><td>En az ayrıcalık; iş için gereken minimum yetki</td></tr>
+                                    <tr><td><strong>Separation of Duties</strong></td><td>Görev ayrımı; tek kişinin tüm kritik adımları yürütmemesi</td></tr>
+                                    <tr><td><strong>Fail Secure</strong></td><td>Hata durumunda güvenli (kısıtlayıcı) moda geçiş</td></tr>
+                                    <tr><td><strong>Need to Know</strong></td><td>Bilgiye yalnızca görev gerektirdiğinde erişim</td></tr>
+                                    <tr><td><strong>Zero Trust</strong></td><td>Varsayılan güvensizlik; sürekli doğrulama modeli</td></tr>
+                                    <tr><td><strong>MFA</strong></td><td>Çok faktörlü kimlik doğrulama</td></tr>
+                                    <tr><td><strong>Encryption</strong></td><td>Veriyi yetkisiz okumaya karşı şifreleme</td></tr>
+                                    <tr><td><strong>Hashing</strong></td><td>Bütünlük kontrolü için tek yönlü özet üretimi</td></tr>
+                                    <tr><td><strong>Security Baseline</strong></td><td>Sistemler için asgari güvenlik yapılandırması</td></tr>
+                                    <tr><td><strong>Hardening</strong></td><td>Gereksiz servis ve zayıf ayarların kapatılması</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                 </div>
             </section>
 
@@ -3564,6 +3653,24 @@
                                         </div>
                                     </div>
                                 </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson4">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Risk Assessment</strong></td><td>Tehdit ve zafiyetleri değerlendirerek risk önceliği belirleme</td></tr>
+                                    <tr><td><strong>Likelihood</strong></td><td>Olayın gerçekleşme olasılığı</td></tr>
+                                    <tr><td><strong>Impact</strong></td><td>Olayın iş üzerindeki etkisi</td></tr>
+                                    <tr><td><strong>Risk Matrix</strong></td><td>Olasılık × etki ile risk sınıflandırma tablosu</td></tr>
+                                    <tr><td><strong>Mitigation</strong></td><td>Riski azaltan kontrol ve önlem</td></tr>
+                                    <tr><td><strong>Residual Risk</strong></td><td>Kontroller sonrası kalan risk</td></tr>
+                                    <tr><td><strong>Risk Acceptance</strong></td><td>Kalan riskin bilinçli olarak üstlenilmesi</td></tr>
+                                    <tr><td><strong>Risk Transfer</strong></td><td>Riskin sigorta veya sözleşme ile aktarılması</td></tr>
+                                    <tr><td><strong>Asset Inventory</strong></td><td>Korunacak varlıkların envanteri</td></tr>
+                                    <tr><td><strong>Threat Modeling</strong></td><td>Sisteme yönelik tehditlerin yapılandırılmış analizi</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                             </div>
             </section>
 
@@ -3795,6 +3902,24 @@
                                             </div>
                                                     </div>
                                                 </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson5">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Security Policy</strong></td><td>Üst düzey güvenlik kuralları ve hedefleri</td></tr>
+                                    <tr><td><strong>Standard</strong></td><td>Politikayı destekleyen zorunlu teknik kurallar</td></tr>
+                                    <tr><td><strong>Procedure</strong></td><td>Adım adım uygulama talimatı</td></tr>
+                                    <tr><td><strong>Guideline</strong></td><td>Öneri niteliğinde en iyi uygulama rehberi</td></tr>
+                                    <tr><td><strong>Compliance</strong></td><td>Yasal ve düzenleyici gerekliliklere uyum</td></tr>
+                                    <tr><td><strong>GDPR / KVKK</strong></td><td>Kişisel veri koruma düzenlemeleri</td></tr>
+                                    <tr><td><strong>Acceptable Use Policy</strong></td><td>Kabul edilebilir kullanım kuralları</td></tr>
+                                    <tr><td><strong>Data Classification</strong></td><td>Verinin hassasiyet seviyesine göre etiketlenmesi</td></tr>
+                                    <tr><td><strong>Security Awareness</strong></td><td>Çalışanların güvenlik farkındalık eğitimi</td></tr>
+                                    <tr><td><strong>Policy Review</strong></td><td>Politikaların periyodik gözden geçirilmesi</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                                             </div>
                                                     </div>
             </section>
@@ -4030,6 +4155,24 @@
                                         </div>
                                     </div>
                                 </div>
+                        <div class="enhanced-text terimler-block" id="terimler-sözlüğü-lesson6">
+                            <h6><i class="fas fa-book"></i> Terimler Sözlüğü</h6>
+                            <table class="comparison-table glossary-table">
+                                <thead><tr><th>Terim</th><th>Türkçe karşılığı / açıklama</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Incident Response</strong></td><td>Güvenlik olayına sistematik müdahale süreci</td></tr>
+                                    <tr><td><strong>Preparation</strong></td><td>Plan, ekip ve araç hazırlığı aşaması</td></tr>
+                                    <tr><td><strong>Identification</strong></td><td>Olayın tespit ve sınıflandırılması</td></tr>
+                                    <tr><td><strong>Containment</strong></td><td>Tehdidin yayılmasının sınırlandırılması</td></tr>
+                                    <tr><td><strong>Eradication</strong></td><td>Tehdidin sistemden tamamen temizlenmesi</td></tr>
+                                    <tr><td><strong>Recovery</strong></td><td>Normal işleyişe güvenli dönüş</td></tr>
+                                    <tr><td><strong>Lessons Learned</strong></td><td>Olay sonrası iyileştirme ve raporlama</td></tr>
+                                    <tr><td><strong>SIEM</strong></td><td>Güvenlik olaylarını toplayan ve korelasyon yapan platform</td></tr>
+                                    <tr><td><strong>Forensics</strong></td><td>Dijital delil toplama ve analiz</td></tr>
+                                    <tr><td><strong>Playbook</strong></td><td>Belirli olay türleri için standart müdahale rehberi</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                             </div>
             </section>
         </main>
