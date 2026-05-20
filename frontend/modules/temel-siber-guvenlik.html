@@ -2097,7 +2097,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson1">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson1">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Siber güvenliğin tanımını ve bilgi güvenliği ile ilişkisini açıklamak</li>
@@ -2106,13 +2106,31 @@
 <li>Farklı sektörlerde koruma önceliklerinin nasıl değiştiğini kavramak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson1">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson1">
 <h3 id="ders1-buyuk-resim"><i class="fas fa-compass"></i> Siber güvenliğe giriş: büyük resim</h3>
 <p>Dijitalleşme, her işletmeyi — küçük bir kafe bile olsa — veri işleyen bir organizasyona dönüştürdü. Müşteri listesi, personel bordrosu, tedarikçi sözleşmeleri ve sosyal medya hesapları artık <strong>varlık</strong> sayılır; bu varlıklar çalındığında, değiştirildiğinde veya erişilemez olduğunda doğrudan para ve itibar kaybı yaşanır. Siber güvenlik disiplini, bu kayıpları önlemek veya sınırlamak için sistematik bir yaklaşım sunar; “tek bir antivirüs yeter” düşüncesi gerçek dünyada çoğu olayı durdurmaz.</p>
 <p>Profesyonel bakış açısı üç katmanlıdır. <strong>Teknoloji</strong> katmanı şifreleme, güvenlik duvarı, uç nokta koruması ve yama yönetimini içerir; ancak yanlış yapılandırılmış bir bulut bucket’ı en pahalı firewall’ı bile baypas edebilir. <strong>Süreç</strong> katmanı erişim onayı, yedekleme testi ve olay bildirim prosedürlerini kapsar; süreç yoksa araçlar kuruma özgü riskleri görmez. <strong>İnsan</strong> katmanı farkındalık eğitimi ve sosyal mühendisliğe dirençtir; istatistikler hâlâ birçok saldırının insan hatası veya kötü niyetli içeriden kaynaklandığını gösterir.</p>
 <p>Bu derste CIA üçlüsünün ayrıntısına girilmez (ders 2); önce <em>ortak dil</em> kurulur. Varlık envanteri yapmadan risk konuşulamaz; tehdit modeli kurmadan hangi kontrolün gerekli olduğu belirsiz kalır. Metnin ilerleyen bölümlerinde sektör kartları, kavram kutuları ve terimler sözlüğü bu iskeleti somutlaştırır.</p>
 <p>Kariyer açısından bu ders, SOC analisti, güvenlik mimarı, GRC (yönetişim–risk–uyumluluk) uzmanı veya penetrasyon testçisi rollerinin hepsinde geçen temel soruları yanıtlar: Hangi veri kritik? Kim erişebilir? Ne olduğunda kime haber verilir? Bu sorulara net cevap verebilmek, ileride teknik derinliğe inmenin ön koşuludur.</p>
 </div>
+
+                        <h3 id="varlik-tehdit-risk-modeli"><i class="fas fa-project-diagram"></i> Varlık, tehdit, zafiyet ve risk modeli</h3>
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-varlik-model">
+                            <p>Bu bölüm, siber güvenlik olaylarını anlatırken kullanacağınız <strong>ortak dilin</strong> çekirdeğidir. Profesyonel raporlarda “hacklendik” yerine şu dört soru sorulur: Hangi <strong>varlık</strong> etkilendi? Hangi <strong>tehdit</strong> kaynağı devredeydi? Hangi <strong>zafiyet</strong> istismar edildi? <strong>Risk</strong> neden bu kurum için yüksekti? Bu sorulara net cevap verebilmek, SOC, GRC veya mimari rollerinde iletişimin temelidir.</p>
+                            <p><strong>Varlık</strong>, korunması gereken değerdir: müşteri verisi, ERP sunucusu, e-posta hizmeti, marka itibarı veya iş sürekliliği. Varlık envanteri olmadan “her şeyi koruyalım” yaklaşımı bütçeyi tüketir ve öncelik belirsiz kalır. Küçük işletmelerde bile “tek kişinin bildiği admin parolası” veya “Excel’de tutulan müşteri listesi” ayrı varlık satırı olarak yazılmalıdır.</p>
+                            <p><strong>Tehdit</strong>, zarar verme potansiyeli taşıyan kişi, grup veya koşuldur; saldırı henüz başarısız olsa bile tehdit vardır (ör. günde binlerce başarısız giriş denemesi). Tehdit, risk değildir: Risk, tehdidin sizin zafiyetiniz ve varlık değerinizle birleşimidir. Modülün 3. dersinde malware ve aktör profilleri ayrıntılandırılır.</p>
+                            <p><strong>Zafiyet</strong> yalnızca yazılım hatası değildir. Güncellenmemiş sunucu, herkese açık bulut klasörü, paylaşılan admin hesabı ve phishing eğitiminin olmaması aynı çatı altındadır. Yama yönetimi teknik zafiyetleri azaltır; politika ve denetim süreç zafiyetlerini hedefler.</p>
+                            <p><strong>Risk</strong> = olasılık × etki (ve pratikte varlık kritikliği). Aynı SQL injection açığı test ortamında düşük, canlı müşteri veritabanında kritik risktir. Kontroller riski azaltır: MFA, segmentasyon, yedekleme, olay müdahale planı.</p>
+                        </div>
+                        <div class="detailed-explanation">
+                            <h4><i class="fas fa-link"></i> Saldırı zinciri: exploit ve payload</h4>
+                            <p><strong>Exploit</strong>, zafiyeti tetikleyen teknik veya araçtır (özel HTTP isteği, e-posta eki, kimlik avı sayfası). <strong>Payload</strong>, içeri girdikten sonraki eylemdir: veri şifreleme, hesap açma, veri sızdırma. Olay raporunda bu ayrım netlik sağlar.</p>
+                            <p><strong>Zero-day</strong>, yaması olmayan veya bilinmeyen açıktır; imza tabanlı savunma yetmez, davranış izleme ve segmentasyon öne çıkar.</p>
+                            <div class="example-box" style="margin-top:1rem;padding:1rem 1.25rem;background:var(--bg-secondary);border-radius:8px;border-left:4px solid #667eea;">
+                                <p><strong>Örnek senaryo:</strong> Muhasebe çalışanı sahte fatura e-postasına tıklar (zafiyet: farkındalık). Saldırgan bulut klasöründen müşteri listesini indirir (payload). Varlık: müşteri verisi. Tehdit: finansal motivasyonlu grup. Etki: gizlilik ihlali, KVKK bildirimi gündeme gelir.</p>
+                            </div>
+                        </div>
 
                         <h3 id="siber-guvenlik-nedir"><i class="fas fa-info-circle"></i> Siber güvenlik nedir?</h3>
                         <div class="enhanced-text" data-sebs-expand="l1-nedir">
@@ -2541,7 +2559,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson1-cia">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson1-cia">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>CIA üçlüsünün her bileşenini teknik ve iş örnekleriyle açıklamak</li>
@@ -2549,7 +2567,8 @@
 <li>Hangi kontrolün hangi CIA boyutunu güçlendirdiğini eşleştirmek</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson1-cia">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson1-cia">
 <h3 id="ders2-cia-buyuk-resim"><i class="fas fa-compass"></i> CIA üçlüsü: güvenliğin ortak dili</h3>
 <p>CIA üçlüsü (Confidentiality, Integrity, Availability), onlarca yıldır bilgi güvenliği eğitim ve denetimlerinde kullanılan <strong>denge çerçevesidir</strong>. Her güvenlik kontrolü — parola politikasından yedeklemeye, MFA’dan log saklamaya — bu üç hedeften en az birine hizmet eder. Profesyonel tartışmalarda “bu önlem neyi koruyor?” sorusu CIA ile yanıtlanır; böylece ekipler ortak dil konuşur.</p>
 <p>Pratikte üçlü statik değildir. Aşırı şifreleme ve katı erişim kuralları felaket anında kurtarmayı yavaşlatabilir (erişilebilirlik düşer). Agresif yama politikası üretim sisteminde kesinti yaratabilir. İyi mimari, iş gereksinimine göre <strong>kabul edilebilir denge</strong> tanımlar ve bunu politika ile destekler.</p>
@@ -2997,7 +3016,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson2">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson2">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Malware türlerini ve yayılma modellerini açıklamak</li>
@@ -3006,7 +3025,8 @@
 <li>Tehdit yaşam döngüsü ve istihbarat kavramlarına giriş yapmak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson2">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson2">
 <h3 id="ders3-tehdit-buyuk-resim"><i class="fas fa-compass"></i> Tehdit ortamını okumak</h3>
 <p>Tehdit ortamı sürekli değişir; dünün imza tabanlı savunması bugünün şifreli C2 trafiğine yetmeyebilir. Bu derste amaç, “her şeyi listelemek” değil, <strong>sınıflandırma mantığını</strong> öğrenmektir: Aynı teknik farklı aktörlerce farklı amaçla kullanılır; savunma önceliği sektör ve varlığa göre değişir.</p>
 <p>Malware ailesi (virüs, solucan, trojan, ransomware, spyware) yayılma ve etki açısından ayrılır. Saldırı vektörleri (phishing, SQLi, XSS, MitM) uygulama ve insan katmanına işaret eder. Aktör profilleri (amatör, hacktivist, organize suç, APT, içeriden) motivasyon ve kaynak tahmini için kullanılır.</p>
@@ -3277,7 +3297,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson3">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson3">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Defense in depth (katmanlı savunma) mantığını açıklamak</li>
@@ -3286,7 +3306,8 @@
 <li>Güvenlik mimarisi ve izleme kavramlarına giriş yapmak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson3">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson3">
 <h3 id="ders4-prensipler-buyuk-resim"><i class="fas fa-compass"></i> Savunma prensipleri ve mimari düşünce</h3>
 <p>Savunma prensipleri, ürün katalogundan önce gelen <strong>tasarım kurallarıdır</strong>. “Daha fazla araç alalım” yerine “hangi prensibi hangi katmanda uyguluyoruz?” sorusu sorulmalıdır. Katmanlı savunma, tek noktadaki başarısızlığın tüm sistemi çökertmemesini hedefler; en az ayrıcalık, ele geçirilen hesabın etkisini sınırlar; sıfır güven, iç ağa kör güveni reddeder.</p>
 <p>Target (2013) gibi olaylar, tedarikçi erişimi ve segmentasyon eksikliğinin prensipleri ihlal ettiğinde sonuçlarının ne kadar büyük olduğunu gösterir. Metindeki kavram kutuları ve vaka çalışmaları, prensiplerin soyut kalmaması içindir.</p>
@@ -3558,7 +3579,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson4">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson4">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Risk değerlendirme sürecinin adımlarını sıralamak</li>
@@ -3566,7 +3587,8 @@
 <li>Kalan risk ve üst yönetim onayı kavramlarını tanımak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson4">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson4">
 <h3 id="ders5-risk-buyuk-resim"><i class="fas fa-compass"></i> Risk: önceliklendirme dili</h3>
 <p>Risk yönetimi, sınırsız tehdit listesini <strong>iş kararına</strong> çevirir. Varlık envanteri olmadan, tehdit ve zafiyet skorları anlamsız kalır. Risk = olasılık × etki düşüncesi, yatırımın nereye yapılacağını tartışır: Kritik veritabanı için kod inceleme mi, MFA mı, yedek testi mi?</p>
 <p>Kalan risk kabulü, mükemmel güvenliğin maliyetli ve imkânsız olduğu gerçeğini yansıtır. Denetçiler ve yönetim kurulu, dokümante edilmiş risk kayıtları ve azaltma planları ister.</p>
@@ -3833,7 +3855,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson5">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson5">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Politika, prosedür, standart ve kılavuz ayrımını yapmak</li>
@@ -3841,7 +3863,8 @@
 <li>Uyumluluk ve tedarikçi güvenliğine giriş yapmak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson5">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson5">
 <h3 id="ders6-politika-buyuk-resim"><i class="fas fa-compass"></i> Politikalar: tekniği işe bağlamak</h3>
 <p>Güvenlik politikaları, teknik kontrollerin <strong>neden ve nasıl</strong> uygulanacağını kuruma özgü hale getirir. ISO 27001, NIST CSF veya sektör düzenlemeleri (PCI-DSS, sağlık verisi kuralları) çoğu zaman politika seti ister; ancak asıl değer, çalışanların günlük kararlarında rehber olmasıdır.</p>
 <p>Politika olmadan MFA zorunluluğu tartışılamaz; politika olmadan log saklama süresi belirsiz kalır. Tedarikçi güvenliği, zincir saldırıları nedeniyle kritik hale gelmiştir.</p>
@@ -4108,7 +4131,7 @@
                 <div class="content-card">
                 <div class="content-body">
                     <div class="lesson-content">
-<div class="learning-objectives" data-sebs-edu="lo-lesson6">
+                        <div class="learning-objectives" data-sebs-edu="lo-lesson6">
 <h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3>
 <ul>
 <li>Olay müdahale aşamalarını (hazırlık–tespit–sınırlandırma–temizleme–kurtarma–ders) sıralamak</li>
@@ -4116,7 +4139,8 @@
 <li>SIEM ve adli analizin olay sürecindeki yerini açıklamak</li>
 </ul>
 </div>
-<div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson6">
+
+                        <div class="edu-narrative enhanced-text" data-sebs-edu="nar-lesson6">
 <h3 id="ders7-olay-buyuk-resim"><i class="fas fa-compass"></i> Olay müdahalesi: kriz anında disiplin</h3>
 <p>Olay çıktığında panik, delil kaybına ve yanlış iletişime yol açar. Hazırlık aşamasında playbook, iletişim listesi ve masa başı tatbikatı yapılmış kurumlar, ilk saatlerde daha kontrollü hareket eder. Tespit, sınırlandırma, temizleme ve kurtarma adımları atlanmamalıdır; “sistemi hemen kapat” her zaman doğru değildir — bazen izolasyon ve log toplama önce gelir.</p>
 <p>Olay sonrası kök neden analizi ve politika güncellemesi, aynı saldırının tekrarını önler. Maersk–NotPetya örneği, yedekleme ve kurtarma planının iş sürekliliği için ne kadar kritik olduğunu hatırlatır.</p>
@@ -4416,7 +4440,7 @@
             }, 800);
         });
     </script>
-    <script src="/js/sebs-premium-module-lessons.js?v=20260520f"></script>
+    <script src="/js/sebs-premium-module-lessons.js?v=20260521a"></script>
     <script>
         if (typeof window.sebsMigrateLegacyUserProgressModule === 'function') {
             window.sebsMigrateLegacyUserProgressModule('Temel Siber Güvenlik', 'module_progress_temel_siber_guvenlik', {

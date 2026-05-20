@@ -366,44 +366,90 @@ Modül 2’de DoS/DDoS gibi saldırıların daha çok erişilebilirliğe, kimlik
 <section class="content-section docx-content" id="temel-siber-güvenlik-kavramları" data-section="temel-siber-güvenlik-kavramları">
 <div class="section-inner">
 <h2 id="temel-siber-güvenlik-kavramları"><strong>1.3) Temel Siber Güvenlik Kavramları</strong></h2>
-<p>Bu bölüm, siber güvenlik dilinin “alfabesidir”. Bir olayı analiz ederken şu soruları sistematik hale getirir:</p>
-<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1633265486064-086b219458ec?w=320&q=90" alt="Varlık, Tehdit, Zafiyet" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Siber güvenlik dilinin alfabesi.</p></div>
-
+<p>Bu bölüm, siber güvenlik dilinin <strong>alfabesidir</strong>. Modül 1’in geri kalanında (CIA üçlüsü, Linux komutları, değerlendirme) gördüğünüz her örnek, aslında burada tanımlanan kavramlara geri bağlanır. Profesyonel ekipler bir olayı tartışırken çoğu zaman şu dört soruyu sırayla sorar; siz de okurken aynı disiplini uygulayın:</p>
 <ul>
-<li><p>Hangi <strong>varlık</strong> etkilendi?</p></li>
-<li><p>Hangi <strong>tehdit</strong> devredeydi?</p></li>
-<li><p>Hangi <strong>zafiyet</strong> kullanıldı?</p></li>
-<li><p><strong>Risk</strong> neden yüksekti/düşüktü?</p></li>
+<li><p>Hangi <strong>varlık</strong> etkilendi — veri mi, sistem mi, hizmet mi, itibar mı?</p></li>
+<li><p>Hangi <strong>tehdit</strong> devredeydi — kim veya ne, hangi motivasyonla?</p></li>
+<li><p>Hangi <strong>zafiyet</strong> istismar edildi — teknik mi, süreç mi, insan mı?</p></li>
+<li><p><strong>Risk</strong> neden o seviyedeydi — olasılık ve iş etkisi birlikte nasıl değerlendirildi?</p></li>
 </ul>
-<h3 id="varlık-asset"><strong>1.3.1) Varlık (Asset)</strong></h3>
-<p>Korunması gereken değer. Veri, sistem, hizmet; ayrıca zaman, itibar ve iş süreçleri de varlık olarak ele alınabilir. Varlığı tanımlamadan güvenlik hedefi ve öncelik belirlenemez. Örneğin e-posta hesabı bir varlıktır; içindeki mesajlar veri, hesabın çalışması hizmet boyutunu taşır.</p>
-<h3 id="tehdit-threat"><strong>1.3.2) Tehdit (Threat)</strong></h3>
-<p>Bir varlığa zarar verme potansiyeli taşıyan olay, kişi veya koşul. Tehdit her zaman “gerçekleşmiş saldırı” demek değildir. Parola tahmin denemeleri bir tehdittir. Tehdit aktörlerinin kimler olduğu ve motivasyonları Modül 2’de ayrıntılı sınıflandırılacaktır.</p>
-<h3 id="zafiyet-vulnerability"><strong>1.3.3) Zafiyet (Vulnerability)</strong></h3>
-<p>Zafiyet, sistem veya süreçte bulunan açıklık ya da eksikliktir. Sadece yazılım hatası değil; yanlış yapılandırma ve süreç zaafları da zafiyet kapsamına girer. Güncellenmemiş uygulama sürümü, aşırı yetkili hesaplar veya varsayılan ayarların değiştirilmemesi günlük hayatta sık görülen zafiyet örnekleridir.</p>
-<h3 id="risk"><strong>1.3.4) Risk</strong></h3>
-<p>Risk, bir tehdidin bir zafiyeti kullanma olasılığı ile bunun sonucunda ortaya çıkacak etkinin (zararın) büyüklüğünün birlikte değerlendirilmesidir. Risk yönetimi, sınırlı kaynakları doğru yere ayırabilmek için önceliklendirme sağlar.</p>
-<p><strong>Yaygın iki ifade biçimi:</strong></p>
-<div class="key-concepts">
-<div class="key-concept-card"><h4><i class="fas fa-calculator"></i> Risk = Olasılık × Etki</h4><p>Likelihood × Impact — risk değerlendirmede en temel ve yaygın yaklaşım.</p></div>
-<div class="key-concept-card"><h4><i class="fas fa-link"></i> Risk ≈ Tehdit × Zafiyet</h4><p>Tehdit ve zafiyet arttıkça risk artar. Uygulamada etki boyutu ayrıca değerlendirilir.</p></div>
+<p>Bu kavramları birbirine karıştırmak, güvenlik toplantılarında yanlış öncelik ve gereksiz paniğe yol açar. Örneğin “tehdit” ile “risk” aynı şey değildir: Tehdit potansiyel zarar kaynağıdır; risk, o tehdidin <em>sizin</em> zafiyetiniz ve varlığınız bağlamında ne kadar olası ve ne kadar yıkıcı olduğudur.</p>
+
+<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1633265486064-086b219458ec?w=320&q=90" alt="Varlık, Tehdit, Zafiyet" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Siber güvenlik dilinin alfabesi — olay analizinde dört soru.</p></div>
+
+<div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Kavram haritası">
+<div class="kr-inline-breakout__head"><i class="fas fa-project-diagram" aria-hidden="true"></i><span>Kavram zinciri</span></div>
+<p class="kr-inline-breakout__hint">Olay analizi: varlık → tehdit + zafiyet → risk → (gerçekleşirse) exploit/payload → CIA etkisi.</p>
+<div class="kr-cia-grid">
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-gem"></i></span><span class="kr-exp-goal__title">Varlık</span></summary><div class="kr-exp-goal__body">Korunan değer. Envanter yoksa öncelik yoktur.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-user-ninja"></i></span><span class="kr-exp-goal__title">Tehdit</span></summary><div class="kr-exp-goal__body">Zarar potansiyeli. Saldırı gerçekleşmemiş olabilir.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-door-open"></i></span><span class="kr-exp-goal__title">Zafiyet</span></summary><div class="kr-exp-goal__body">Zayıf nokta. Yama, yapılandırma veya süreç.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-balance-scale"></i></span><span class="kr-exp-goal__title">Risk</span></summary><div class="kr-exp-goal__body">Olasılık × etki. Kaynak tahsisi buradan yapılır.</div></details>
 </div>
+</div>
+
+<h3 id="varlık-asset"><strong>1.3.1) Varlık (Asset)</strong></h3>
+<p><strong>Varlık</strong>, korunması gereken her türlü değerdir. Klasik üçlü — <strong>veri</strong>, <strong>sistem</strong>, <strong>hizmet</strong> — 1.1.3’te işlenmişti; burada vurguyu “güvenlik kararı verilebilir somut hedef” üzerine koyuyoruz. Varlık tanımlanmadan neyin gizli, bütün veya erişilebilir kalması gerektiği netleşmez; bütçe ve efor yanlış yere gider.</p>
+<p><strong>Veri</strong> varlığı: Müşteri listesi, sağlık kaydı, ödeme bilgisi, kaynak kodu, sınav dosyası. Sızıntıda gizlilik, yanlış değişiklikte bütünlük, kayıpta erişilebilirlik (yedek yoksa) etkilenir.</p>
+<p><strong>Sistem</strong> varlığı: Sunucu, dizüstü bilgisayar, mobil cihaz, veritabanı, ağ cihazı, bulut sanal makinesi. Sistem bozulduğunda üzerindeki veri ve ürettiği hizmet birlikte risk altına girer.</p>
+<p><strong>Hizmet</strong> varlığı: E-posta, web sitesi, ödeme altyapısı, randevu sistemi, uzaktan erişim. Kullanıcı “sisteme giremiyorum” dediğinde çoğu zaman hizmet varlığı konuşulur; arka planda yine veri ve sistem vardır.</p>
+<p>Varlık envanteri yapılırken sık gözden kaçanlar: <strong>itibar</strong> (marka güveni), <strong>zaman</strong> (kesinti saatlerinin maliyeti), <strong>insan bilgisi</strong> (erişim yetkisi olan çalışan), <strong>üçüncü taraf</strong> (tedarikçi, SaaS). Küçük bir işletmede bile “tek kişinin bildiği admin parolası” kritik bir varlık sayılabilir.</p>
+<div class="example-box">
+<p><strong>Kurgusal örnek — “Kuzey Lojistik”:</strong> Araç takip uygulaması bir <strong>hizmet</strong>tir; uygulamanın çalıştığı sunucu <strong>sistem</strong>, konum ve rota kayıtları <strong>veri</strong>dir. Güvenlik hedefi: Konum verisinin rakiplere sızmaması (gizlilik), rota kayıtlarının değiştirilmemesi (bütünlük), sürücülerin mesai saatinde panele erişebilmesi (erişilebilirlik). Envanter bu üçlüyü ayrı satırlarda listeler; tek “uygulama” satırı yeterli değildir.</p>
+</div>
+<table class="comparison-table"><thead><tr><th>Varlık türü</th><th>Örnek</th><th>Tipik CIA etkisi</th></tr></thead><tbody>
+<tr><td><strong>Veri</strong></td><td>Müşteri PII, finans kaydı</td><td>Gizlilik, bütünlük</td></tr>
+<tr><td><strong>Sistem</strong></td><td>ERP sunucusu, VPN cihazı</td><td>Bütünlük, erişilebilirlik</td></tr>
+<tr><td><strong>Hizmet</strong></td><td>Online satış, e-posta</td><td>Erişilebilirlik (çoğu olayda)</td></tr>
+<tr><td><strong>İtibar / süreç</strong></td><td>Marka, iş sürekliliği</td><td>Dolaylı; tüm CIA boyutları</td></tr>
+</tbody></table>
+
+<h3 id="tehdit-threat"><strong>1.3.2) Tehdit (Threat)</strong></h3>
+<p><strong>Tehdit</strong>, bir varlığa zarar verme <em>potansiyeli</em> taşıyan olay, kişi, grup veya koşuldur. Önemli ayrım: Tehdit, henüz gerçekleşmemiş bir saldırı olabilir. Otomatik port taraması, şüpheli giriş denemeleri veya fidye yazılımı dağıtan bir grup “tehdit kaynağı”dır; saldırı başarısız olsa bile tehdit ortamı vardır.</p>
+<p>Tehditleri sınıflandırırken üç eksen kullanılır: <strong>kapasite</strong> (amatör mü, organize mi, devlet destekli mi?), <strong>motivasyon</strong> (para, ideoloji, casusluk, içeriden intikam), <strong>yöntem</strong> (sosyal mühendislik, malware, fiziksel erişim). Modül 2’de tehdit aktörleri bu eksenlerle detaylandırılacaktır; burada amaç, “tehdit = sadece hacker” algısını kırmaktır.</p>
+<p>Doğal tehditler de vardır: Yangın, deprem, elektrik kesintisi — bunlar siber tehdit değil ama <strong>erişilebilirlik</strong> hedefini etkiler; felaket kurtarma planları bu yüzden siber güvenlik programının parçasıdır.</p>
+<div class="example-box">
+<p><strong>Örnek:</strong> Bir üniversitenin öğrenci portalında günde binlerce başarısız parola denemesi görülüyor. Bu, aktif bir saldırı olmayabilir (hesaplar kilitleniyor olabilir) ama <strong>tehdit</strong> ortamının var olduğunu gösterir. Yanıt: MFA, hız sınırlama, IP engelleme — yani tehdide karşı kontrol.</p>
+</div>
+
+<h3 id="zafiyet-vulnerability"><strong>1.3.3) Zafiyet (Vulnerability)</strong></h3>
+<p><strong>Zafiyet</strong>, bir varlığın korunmasını zayıflatan açıklık veya eksikliktir. Yalnızca “yazılım hatası” değildir. Üç ana kaynak:</p>
+<ul>
+<li><p><strong>Teknik zafiyet:</strong> Bilinen CVE’li hata, varsayılan parola, açık RDP portu, SQL injection’a açık form, zayıf TLS.</p></li>
+<li><p><strong>Yapılandırma zafiyeti:</strong> Bulut bucket’ının herkese açık olması, firewall kuralının yanlış yazılması, gereksiz admin yetkisi.</p></li>
+<li><p><strong>Süreç / insan zafiyeti:</strong> Parolanın Slack’te paylaşılması, işten ayrılanın hesabının kapatılmaması, yedeklemenin test edilmemesi, phishing eğitiminin olmaması.</p></li>
+</ul>
+<p>Zafiyet, tehdit olmadan tek başına “felaket” üretmez; ancak tehdit ortamında istismar edilir. Kurumlar zafiyet tarama (vulnerability assessment) ve yama yönetimi ile teknik tarafı kapatmaya çalışır; süreç zafiyetleri ise politika ve denetimle azaltılır.</p>
 <div class="callout-box warning">
   <div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div>
-  <div class="callout-body"><h5>Dikkat</h5><p>“Tehdit × Zafiyet” ifadesi, çoğu zaman olasılık (likelihood) tarafını sezdirir. Gerçek dünyada aynı zafiyet, farklı varlıklarda farklı etkilere yol açabilir; bu yüzden etkiyi ayrıca düşünmek gerekir.</p></div>
+  <div class="callout-body"><h5>Dikkat</h5><p>“Sistemimiz güncel, zafiyet yok” demek nadiren doğrudur. Güncelleme yalnızca bilinen yazılım açıklarını kapatır; yanlış IAM politikası veya paylaşılan admin hesabı hâlâ kritik zafiyettir.</p></div>
 </div>
-<p><strong>Pedagojik örnek:</strong> Bir evin kapısını açık bırakmak <strong>zafiyet</strong>, sokakta dolaşan bir hırsızın varlığı <strong>tehdit</strong>, hırsızın o açık kapıdan girip zarar verme olasılığı ve sonucunun büyüklüğü <strong>risk</strong>tir.</p>
+
+<h3 id="risk"><strong>1.3.4) Risk</strong></h3>
+<p><strong>Risk</strong>, bir tehdidin belirli bir zafiyeti kullanarak belirli bir varlığa zarar verme <em>olasılığı</em> ile bu zararın <em>iş etkisinin</em> büyüklüğünün birlikte düşünülmesidir. Sınırsız kaynak yoktur; risk dili, “önce neyi düzeltelim?” sorusuna cevap verir.</p>
+<p><strong>Yaygın ifadeler:</strong></p>
+<div class="key-concepts">
+<div class="key-concept-card"><h4><i class="fas fa-calculator"></i> Risk = Olasılık × Etki</h4><p>Likelihood × Impact — yönetim kuruluna anlatımın en net biçimi. Örnek: Düşük olasılık × çok yüksek etki (hastane verisi sızıntısı) hâlâ öncelikli olabilir.</p></div>
+<div class="key-concept-card"><h4><i class="fas fa-link"></i> Risk ≈ Tehdit × Zafiyet × Varlık değeri</h4><p>Tehdit ve zafiyet arttıkça risk artar; varlığın kritikliği etkiyi çarpar. Aynı SQL injection açığı, test ortamında düşük, canlı müşteri veritabanında kritik risktir.</p></div>
+</div>
+<p><strong>Pedagojik örnek (ev benzetmesi):</strong> Kapıyı kilitsiz bırakmak <strong>zafiyet</strong>; mahallede dolaşan hırsız <strong>tehdit</strong>; evdeki nakit ve mücevherat <strong>varlık değeri</strong>; hırsızın girme ihtimali ve çalacağı şeyin değeri birlikte <strong>risk</strong>tir. Alarm sistemi (kontrol) riski azaltır; kapıyı kapatmak (zafiyeti gider) de.</p>
+<p>Risk yönetimi seçenekleri: <strong>Azalt</strong> (kontrol ekle), <strong>Transfer</strong> (sigorta, outsource), <strong>Kabul et</strong> (dokümante edilmiş kalan risk), <strong>Kaçın</strong> (faaliyeti durdur). Siber güvenlikte çoğu zaman azaltma tercih edilir.</p>
+
 <h3 id="exploit-ve-payload"><strong>1.3.5) Exploit ve Payload</strong></h3>
-<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=320&q=90" alt="Exploit ve payload" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Exploit zafiyeti açar; payload hedefte asıl etkiyi üretir.</p></div>
-<ul>
-<li><p><strong>Exploit:</strong> Bir zafiyeti istismar etmek için tasarlanmış yöntem/kod/araçtır. “Kapıyı açmak için kullanılan maymuncuk” benzetmesi bu ayrımı sezdirir.</p></li>
-<li><p><strong>Payload:</strong> Exploit başarılı olduktan sonra hedef sistemde yürütülen asıl zararlı faaliyettir. “İçeri girdikten sonra yapılan eylem” (ör. dosyaları şifreleme, veri çalma, yetki yükseltme) payload ile ilişkilidir.</p></li>
-</ul>
+<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=320&q=90" alt="Exploit ve payload" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Exploit zafiyeti tetikler; payload asıl etkiyi üretir.</p></div>
+<p>Zafiyet, kapıdaki zayıf kilittir. <strong>Exploit</strong>, o kilidi açmak için kullanılan teknik veya araçtır (özel istek, malware modülü, kimlik avı linki). <strong>Payload</strong>, kapı açıldıktan sonra yapılan eylemdir: veriyi şifrelemek, kullanıcı hesabı oluşturmak, veri sızdırmak, hizmeti durdurmak.</p>
+<p>Bu ayrım olay raporlarında netlik sağlar. “Exploit başarılı, ransomware payload yüklendi” cümlesi, olayın teknik akışını özetler. Savunmada exploit’i engellemek (IPS, patch) ile payload’ı engellemek (EDR, uygulama kontrolü) farklı kontrollerdir.</p>
+<div class="example-box">
+<p><strong>Zincir örneği:</strong> Eski bir web sunucusu sürümü (<strong>zafiyet</strong>). Saldırgan bilinen HTTP exploit’i gönderir (<strong>exploit</strong>). Shell erişimi alır, ardından veritabanı dökümü çalar (<strong>payload</strong>). Etki: müşteri verisinde <strong>gizlilik</strong> ihlali; raporlama KVKK kapsamında değerlendirilir.</p>
+</div>
+
 <h3 id="zero-day-sıfırıncı-gün"><strong>1.3.6) Zero-Day (Sıfırıncı Gün)</strong></h3>
-<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=320&q=90" alt="Zero-day zafiyet" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Bilinmeyen zafiyetler savunma için en zorlu durumlardır.</p></div>
-<p>Zero-day, üreticisi tarafından henüz bilinmeyen veya yaması yayımlanmamış güvenlik açıklarıdır. Savunma tarafının hazırlanması için zamanın çok kısıtlı olduğu durumları ifade eder.</p>
+<div class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=320&q=90" alt="Zero-day zafiyet" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><p class="lesson-image-caption">Bilinmeyen zafiyet — savunmada en kısıtlı süre penceresi.</p></div>
+<p><strong>Zero-day</strong>, üreticinin henüz bilmediği veya yaması yayımlanmadığı güvenlik açığıdır. “Sıfırıncı gün” ifadesi, kurumun savunması için <em>sıfır gün</em> hazırlık süresi olduğunu vurgular. Bu durumda imza tabanlı antivirüs ve bilinen CVE listeleri yetersiz kalabilir; davranış tabanlı izleme, ağ segmentasyonu ve en az ayrıcalık daha da kritik hale gelir.</p>
+<p>Zero-day pazarı (yasal ve yasadışı) ileri düzey tehdit istihbaratı konusudur; başlangıç seviyesinde bilmeniz gereken: <strong>Mükemmel yama disiplini bile her şeyi kapatmaz</strong>; derinlemes savunma ve olay müdahale hazırlığı şarttır.</p>
+
 <h3 id="saldırı-zinciri-mantığı-attack-chain"><strong>1.3.7) Saldırı Zinciri Mantığı (Attack Chain)</strong></h3>
-<p>Siber saldırılar genellikle tek hamlede olmaz; bir süreç izler. Basit bir saldırı zinciri şu adımlarla kavramsallaştırılabilir:</p>
+<p>Siber saldırılar nadiren tek tıkla biter. Kill chain / saldırı zinciri, aşamaları görünür kılar; savunma her aşamada kesmeyi hedefler (erken kesilen zincir, daha az hasar).</p>
 <div class="process-flow" aria-label="Saldırı zinciri adımları">
 <span class="process-step">1. Keşif</span>
 <span class="process-step">2. Hazırlık</span>
@@ -411,21 +457,31 @@ Modül 2’de DoS/DDoS gibi saldırıların daha çok erişilebilirliğe, kimlik
 <span class="process-step">4. Sızma</span>
 <span class="process-step">5. Eylem</span>
 </div>
-<table class="comparison-table"><thead><tr><th>Adım</th><th>Açıklama</th></tr></thead><tbody>
-<tr><td><strong>Keşif</strong></td><td>Hedef hakkında bilgi toplama (sistemler, kullanıcılar, zafiyetler).</td></tr>
-<tr><td><strong>Saldırı Hazırlığı</strong></td><td>Exploit ve payload’un hazırlanması/birleştirilmesi.</td></tr>
-<tr><td><strong>İletim</strong></td><td>Hazırlanan saldırının hedefe ulaştırılması (e-posta, web, dosya).</td></tr>
-<tr><td><strong>Sızma ve Yerleşme</strong></td><td>Sisteme giriş ve kalıcılık sağlama.</td></tr>
-<tr><td><strong>Eylem</strong></td><td>Veri çalma, hizmeti durdurma, zarar verme gibi amaçların icrası.</td></tr>
+<table class="comparison-table"><thead><tr><th>Adım</th><th>Açıklama</th><th>Savunma fırsatı</th></tr></thead><tbody>
+<tr><td><strong>Keşif</strong></td><td>Hedef hakkında bilgi: domain, çalışanlar, açık portlar, teknoloji stack.</td><td>OSINT farkındalığı, gereksiz bilgi sızıntısını azaltma.</td></tr>
+<tr><td><strong>Hazırlık</strong></td><td>Exploit/payload üretimi, phishing şablonu, sahte domain.</td><td>Tehdit istihbaratı, e-posta filtreleme.</td></tr>
+<tr><td><strong>İletim</strong></td><td>Saldırı vektörü: e-posta, USB, web, tedarikçi.</td><td>Phishing eğitimi, macro engeli, WAF.</td></tr>
+<tr><td><strong>Sızma / yerleşme</strong></td><td>İlk erişim, kalıcılık, yan yana hareket.</td><td>EDR, segmentasyon, MFA, log korelasyonu.</td></tr>
+<tr><td><strong>Eylem</strong></td><td>Veri exfil, şifreleme, hizmet kesintisi.</td><td>DLP, yedekleme, olay müdahale planı.</td></tr>
 </tbody></table>
-<p>Bu zincirin “etki” kısmını değerlendirmek için CIA Üçlüsüne geri dönülür.<br />
-Bu zincirin her aşamasında alınabilecek temel farkındalık önlemleri Modül 8’de özetlenecektir.</p>
-<h3 id="günlük-hayattan-örnekler-2"><strong>1.3.8) Günlük Hayattan Örnekler</strong> </h3>
+<p>Zincirin sonunda etkiyi değerlendirmek için <strong>CIA üçlüsüne</strong> (bölüm 1.2) geri dönün: Veri çalındı mı (gizlilik)? Kayıtlar değiştirildi mi (bütünlük)? Sistem ayakta mı (erişilebilirlik)? Modül 8’de günlük farkındalık önlemleri bu zinciri kısaltmaya yönelik özetlenecektir.</p>
+
+<h3 id="kavramlari-bir-arada"><strong>1.3.8) Kavramları Bir Arada: Olay Çözümleme Alıştırması</strong></h3>
+<p>Aşağıdaki senaryoyu kendi cümlelerinizle genişleterek çalışın:</p>
+<div class="example-box">
+<p><strong>Senaryo:</strong> Bir KOBİ’nin muhasebe çalışanı, “fatura” konulu bir e-postadaki linke tıklar. Tarayıcıda sahte giriş sayfasına bilgilerini girer. Saldırgan, paylaşılan bulut klasöründeki müşteri listesini indirir ve birkaç gün sonra fidye talep eder.</p>
+<p><strong>Çözümleme:</strong> <em>Varlık</em> — müşteri listesi (veri), bulut hizmeti (hizmet). <em>Tehdit</em> — finansal motivasyonlu siber suçlular. <em>Zafiyet</em> — phishing farkındalığı eksikliği (insan), MFA yok (teknik/süreç). <em>Exploit</em> — sahte sayfa / kimlik bilgisi çalma. <em>Payload</em> — veri exfil + fidye. <em>Risk</em> — yüksek etki (KVKK, itibar), orta-yüksek olasılık (e-posta yaygın vektör). <em>CIA</em> — gizlilik ihlali birincil; fidye sonrası erişilebilirlik de etkilenebilir.</p>
+</div>
+
+<h3 id="günlük-hayattan-örnekler-2"><strong>1.3.9) Günlük Hayattan Örnekler</strong></h3>
 <ul>
-<li><p><strong>Risk analizi:</strong> Bir kişi aynı parolayı birçok hesapta kullanır (zafiyet). Bir saldırganın daha önce sızmış parola listelerini farklı sitelerde denemesi (tehdit) hesap ele geçirme olasılığını artırır; hesap ele geçirilirse sonuçları ağırsa risk yüksektir.</p></li>
-<li><p><strong>Exploit–payload ayrımı:</strong> Eski bir uygulamada bir hata vardır (zafiyet). Bu hatayı tetikleyen özel hazırlanmış bir istek (exploit) kullanılır. Sonrasında tarayıcı ayarlarını değiştiren istenmeyen bir yazılımın kurulması payload olabilir.</p></li>
-<li><p><strong>Zafiyetin süreç boyutu:</strong> Ortak bir hesabın şifresinin herkesle paylaşılması ve kimin ne yaptığına dair iz bırakılmaması süreç zafiyetidir; teknik açık olmasa bile risk üretir.</p></li>
+<li><p><strong>Parola yeniden kullanımı:</strong> Aynı parola birçok sitede (<strong>zafiyet</strong>). Sızmış listeyi deneyen botlar (<strong>tehdit</strong>). Hesap ele geçirme (<strong>risk</strong> gerçekleşir).</p></li>
+<li><p><strong>Güncellenmemiş router:</strong> Ev ağı cihazı (<strong>varlık/sistem</strong>). Bilinen exploit (<strong>tehdit + zafiyet</strong>). DNS hijacking ile banka sahtesi (<strong>payload</strong>).</p></li>
+<li><p><strong>Ortak admin hesabı:</strong> Kim yaptı belli değil (<strong>süreç zafiyeti</strong>). İçeriden veya sızan kimlik bilgisi (<strong>tehdit</strong>). Veri silme (<strong>payload</strong>), bütünlük ve erişilebilirlik etkilenir.</p></li>
 </ul>
+
+<h3 id="temel-kavramlar-ozet"><strong>1.3.10) Bu Bölümde Neler Öğrendik?</strong></h3>
+<p>Varlık, tehdit, zafiyet ve risk dilini kurduk; exploit ve payload ile saldırının teknik akışını ayırdık; zero-day ve saldırı zinciri ile savunmanın neden katmanlı olması gerektiğini gördük. Sonraki bölümde (1.4) Linux komutlarına geçmeden önce bu dört soruyu bir olay haberinde uygulamayı deneyin — modülün geri kalanı çok daha anlaşılır olacaktır.</p>
 </div>
 </section>
 
