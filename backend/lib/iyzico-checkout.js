@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { getExpectedPrice, normalizeLevel } = require('./package-prices');
+const { getExpectedPrice, normalizeLevel, getRoadPackageLabel } = require('./package-prices');
 
 let Iyzipay = null;
 try {
@@ -88,7 +88,7 @@ function categoryLabel(category) {
     return map[category] || category;
 }
 
-function initializeCheckoutForm({ user, category, level, callbackUrl }) {
+function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlug }) {
     const iyzipay = getIyzipayClient();
     if (!iyzipay) {
         const err = new Error('Iyzico yapılandırılmamış');
@@ -106,6 +106,12 @@ function initializeCheckoutForm({ user, category, level, callbackUrl }) {
 
     const convId = conversationId(user.id, category, backendLevel);
     const priceStr = price.toFixed(2);
+    const roadSlug = packageSlug || level;
+    const itemName =
+        packageSlug && getRoadPackageLabel(packageSlug)
+            ? `SEBS Yolu — ${getRoadPackageLabel(packageSlug)} Planı`
+            : `${categoryLabel(category)} — ${levelLabel(backendLevel)} Paket`;
+
     const request = {
         locale: Iyzipay.LOCALE.TR,
         conversationId: convId,
@@ -122,7 +128,7 @@ function initializeCheckoutForm({ user, category, level, callbackUrl }) {
         basketItems: [
             {
                 id: `PKG-${category}-${backendLevel}`,
-                name: `${categoryLabel(category)} — ${levelLabel(backendLevel)} Paket`,
+                name: itemName,
                 category1: 'Education',
                 itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL,
                 price: priceStr

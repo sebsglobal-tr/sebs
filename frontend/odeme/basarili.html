@@ -14,7 +14,8 @@
       <i class="fas fa-check"></i>
     </div>
     <h1 class="text-2xl font-bold text-slate-900">Ödeme alındı</h1>
-    <p id="statusText" class="mt-3 text-slate-600">Paketiniz hesabınıza tanımlanıyor…</p>
+    <p id="statusText" class="mt-3 text-slate-600">Ödeme sunucuda doğrulanıyor…</p>
+    <p id="statusHint" class="mt-2 hidden text-sm text-amber-700"></p>
     <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
       <a href="/egitimler" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Eğitim modülleri</a>
       <a href="/dashboard.html" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50">Panele git</a>
@@ -33,19 +34,43 @@
           ? window.getSebsApiBase()
           : (window.location.origin || '') + '/api';
       const token = localStorage.getItem('authToken');
-      if (token) {
+      const params = new URLSearchParams(window.location.search);
+      const conversationId = params.get('conversationId');
+      const hintEl = document.getElementById('statusHint');
+
+      if (token && conversationId) {
         try {
-          const res = await fetch(apiP + '/users/me', {
-            headers: { Authorization: 'Bearer ' + token }
-          });
-          if (res.ok) {
-            document.getElementById('statusText').textContent =
-              'Paketiniz hesabınıza tanımlandı. Modüllere hemen erişebilirsiniz.';
+          const statusRes = await fetch(
+            apiP + '/payments/iyzico/status/' + encodeURIComponent(conversationId),
+            { headers: { Authorization: 'Bearer ' + token } }
+          );
+          const statusJson = statusRes.ok ? await statusRes.json() : null;
+          if (statusJson && statusJson.success && statusJson.data) {
+            if (statusJson.data.paid) {
+              document.getElementById('statusText').textContent =
+                'Ödeme doğrulandı. Paketiniz hesabınıza tanımlandı; modüllere hemen erişebilirsiniz.';
+            } else {
+              document.getElementById('statusText').textContent =
+                'Ödeme henüz onaylanmadı. Birkaç saniye bekleyip sayfayı yenileyin.';
+              if (hintEl) {
+                hintEl.classList.remove('hidden');
+                hintEl.textContent =
+                  'Erişim açılmazsa destek ile iletişime geçin; ödeme yalnızca sunucu doğrulaması ile aktifleşir.';
+              }
+            }
           }
         } catch (e) {
           document.getElementById('statusText').textContent =
-            'Ödeme alındı. Erişim birkaç saniye içinde aktif olacaktır; sorun yaşarsanız panelden çıkış yapıp tekrar giriş yapın.';
+            'Ödeme işlendi. Erişim birkaç saniye içinde aktif olacaktır.';
         }
+      }
+
+      if (token) {
+        try {
+          await fetch(apiP + '/users/me', {
+            headers: { Authorization: 'Bearer ' + token }
+          });
+        } catch (e) { /* */ }
       }
     })();
   </script>

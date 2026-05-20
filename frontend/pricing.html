@@ -874,6 +874,43 @@
             margin-top: 1.75rem;
         }
 
+        .pricing-hero-packages {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.65rem;
+            margin-top: 1.25rem;
+            max-width: 52rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-hero-package-btn {
+            font-size: 0.82rem;
+            padding: 0.65rem 1.1rem;
+        }
+
+        .pricing-hero-package-btn--featured {
+            box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.45);
+        }
+
+        .pricing-test-mode-banner {
+            margin: 1rem auto 0;
+            max-width: 40rem;
+            padding: 0.55rem 1rem;
+            border-radius: 10px;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            color: #92400e;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .pricing-test-mode-banner.hidden {
+            display: none;
+        }
+
         .pricing-hero-cta {
             display: inline-flex;
             align-items: center;
@@ -1748,6 +1785,18 @@
                 </a>
                 <a href="#pricing-plans" class="pricing-hero-cta pricing-hero-cta--ghost focus-ring">Planları karşılaştır</a>
             </div>
+            <div class="pricing-hero-packages" id="pricingHeroPackages" aria-label="Paket satın al">
+                <button type="button" class="btn-purchase pricing-hero-package-btn" data-category="sebs-road" data-level="ilk-adim" data-price="199" data-title="İlk Adım Planı">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> İlk Adım — Satın Al
+                </button>
+                <button type="button" class="btn-purchase pricing-hero-package-btn pricing-hero-package-btn--featured" data-category="sebs-road" data-level="yukselis" data-price="349" data-title="Yükseliş Planı">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> Yükseliş — Satın Al
+                </button>
+                <button type="button" class="btn-purchase pricing-hero-package-btn" data-category="sebs-road" data-level="zirve" data-price="799" data-title="Zirve Planı">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> Zirve — Satın Al
+                </button>
+            </div>
+            <p id="iyzicoTestModeBanner" class="pricing-test-mode-banner hidden" role="status"></p>
         </div>
     </section>
 
@@ -2487,11 +2536,18 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     };
-                    const purchaseBody = JSON.stringify({
-                        category: backendCategory,
-                        level: backendLevel,
-                        price: parseFloat(price)
-                    });
+                    const roadPackage =
+                        category === 'sebs-road' &&
+                        ['ilk-adim', 'yukselis', 'zirve'].includes(level);
+                    const purchaseBody = JSON.stringify(
+                        roadPackage
+                            ? { package: level }
+                            : {
+                                  category: backendCategory,
+                                  level: backendLevel,
+                                  price: parseFloat(price)
+                              }
+                    );
 
                     let payConfig = { paymentsRequireIyzico: false, iyzicoConfigured: false };
                     try {
@@ -2504,7 +2560,7 @@
                         console.warn('payments/config:', cfgErr);
                     }
 
-                    const iyzicoInit = await fetch(apiP + '/payments/iyzico/initialize', {
+                    const iyzicoInit = await fetch(apiP + '/payments/iyzico/checkout/create', {
                         method: 'POST',
                         headers: authHeaders,
                         body: purchaseBody
@@ -2570,8 +2626,52 @@
             }
         }
 
+        async function loadPaymentConfigBanner() {
+            try {
+                const apiP =
+                    typeof window.getSebsApiBase === 'function'
+                        ? window.getSebsApiBase()
+                        : (window.location.origin || '') + '/api';
+                const cfgRes = await fetch(apiP + '/payments/config');
+                if (!cfgRes.ok) return;
+                const cfgJson = await cfgRes.json();
+                if (!cfgJson.success || !cfgJson.data) return;
+                const d = cfgJson.data;
+                if (d.testMode) {
+                    const banner = document.getElementById('iyzicoTestModeBanner');
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.textContent =
+                            'Sandbox test modu aktif: İlk Adım 1 TL, Yükseliş 3 TL, Zirve 5 TL. Ödeme Iyzico güvenli sayfasında tamamlanır.';
+                    }
+                }
+                if (d.roadPackages) {
+                    document.querySelectorAll('.pricing-hero-package-btn[data-level]').forEach((btn) => {
+                        const slug = btn.dataset.level;
+                        const pkg = d.roadPackages[slug];
+                        if (pkg && pkg.price != null) {
+                            btn.dataset.price = String(pkg.price);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('payments/config banner:', e);
+            }
+        }
+
+        document.querySelectorAll('.pricing-hero-package-btn').forEach((btn) => {
+            btn.addEventListener('click', function (ev) {
+                if (!isLoggedIn()) {
+                    handlePurchaseClick(ev);
+                    return;
+                }
+                handlePurchase(ev);
+            });
+        });
+
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
+            await loadPaymentConfigBanner();
             // Check URL parameters for category and level
             const urlParams = new URLSearchParams(window.location.search);
             const urlCategory = urlParams.get('category');
