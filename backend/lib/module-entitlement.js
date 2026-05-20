@@ -1,9 +1,5 @@
-const {
-    getModuleLevel,
-    getCategoryFromSlug,
-    isFreeModule,
-    meetsRequiredLevel
-} = require('./module-catalog');
+const { getCategoryFromSlug, isFreeModule } = require('./module-catalog');
+const { getModuleLevel, userMeetsTierForLevel } = require('./sebs-road-catalog');
 
 async function fetchActivePurchases(pool, userId) {
     let purchases = [];
@@ -58,11 +54,7 @@ async function userCanAccessModule(pool, user, slug, fullAccessEmail) {
     const category = getCategoryFromSlug(slug);
     const purchases = await fetchActivePurchases(pool, user.userId);
 
-    const direct = purchases.find((p) => p.category === category && p.level === requiredLevel);
-    if (direct) return { allowed: true };
-
-    const accessLevel = user.accessLevel || 'beginner';
-    if (meetsRequiredLevel(accessLevel, requiredLevel)) {
+    if (userMeetsTierForLevel(purchases, requiredLevel, category)) {
         return { allowed: true };
     }
 

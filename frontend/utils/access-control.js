@@ -138,7 +138,27 @@ function isLocalDevAccess() {
     }
 }
 
-async function hasAccess(requiredLevel, category = null) {
+function getMaxPurchaseRank(purchases, category) {
+    const cat = category || 'cybersecurity';
+    let max = -1;
+    for (const p of purchases || []) {
+        const matchCat =
+            p.category === cat ||
+            (cat === 'cybersecurity' &&
+                (p.category === 'cybersecurity' || p.category === 'sebs-road'));
+        if (!matchCat) continue;
+        max = Math.max(max, levelRank(p.level));
+    }
+    return max;
+}
+
+function userMeetsTierForLevel(purchases, requiredLevel, category) {
+    const maxRank = getMaxPurchaseRank(purchases, category);
+    if (maxRank < 0) return false;
+    return levelRank(requiredLevel) <= maxRank;
+}
+
+async function hasAccess(requiredLevel, category = 'cybersecurity') {
     const token = getBearerTokenFromStorage();
     if (!token) {
         return false;
@@ -151,35 +171,54 @@ async function hasAccess(requiredLevel, category = null) {
 
     const purchases = await fetchUserPurchases();
 
-    if (purchases.length === 0) {
-        if (!isLocalDevAccess()) {
-            return false;
-        }
-        const userLevel = await getUserAccessLevel();
-        return userMeetsRequiredLevel(userLevel, requiredLevel);
+    if (purchases.length > 0) {
+        return userMeetsTierForLevel(purchases, requiredLevel, category);
     }
 
-    if (category) {
-        const categoryPurchase = purchases.find(p => 
-            p.category === category && p.level === requiredLevel
-        );
-        if (categoryPurchase) {
-            return true;
-        }
-        const userLevel = await getUserAccessLevel();
-        return userMeetsRequiredLevel(userLevel, requiredLevel);
-    }
-
-    const hasPurchase = purchases.some(p => 
-        p.category === 'cybersecurity' && p.level === requiredLevel
-    );
-    
-    if (hasPurchase) {
-        return true;
+    if (!isLocalDevAccess()) {
+        return false;
     }
 
     const userLevel = await getUserAccessLevel();
     return userMeetsRequiredLevel(userLevel, requiredLevel);
+}
+
+const SIMULATION_PATH_LEVELS = [
+    ['sessiz-tekrar-lasfin', 'advanced'],
+    ['ileri-kriptografi-simulasyonlari', 'advanced'],
+    ['penetration-testing', 'advanced'],
+    ['threat-hunting', 'advanced'],
+    ['incident-response', 'advanced'],
+    ['isletim-sistemi-guvenligi-ileri', 'intermediate'],
+    ['gece-acilan-kapi', 'intermediate'],
+    ['sessiz-birakilan-dosya', 'intermediate'],
+    ['malware-analizi', 'intermediate'],
+    ['network-guvenligi', 'intermediate'],
+    ['misafir-agini', 'intermediate'],
+    ['terminalden-trafik', 'intermediate'],
+    ['lunabox-teslimat', 'beginner'],
+    ['orion-gece-alarmi', 'beginner'],
+    ['temel-kriptografi-simulasyonlari', 'beginner'],
+    ['temel-network-simulasyonlari', 'beginner'],
+    ['temel-network-misafir', 'beginner'],
+    ['sosyal-muhendislik', 'beginner'],
+    ['isletim-sistemi-guvenligi-simulasyonlari', 'beginner'],
+    ['guvenli-is-istasyonu', 'beginner'],
+    ['linux-forensik-lab', 'beginner'],
+    ['kayit-haftasi-krizi', 'beginner'],
+    ['bir-seyler-yanlis', 'beginner'],
+    ['semptom-etki-zinciri', 'beginner'],
+    ['temel-siber-guvenlik', 'beginner'],
+    ['siber-guvenlige-giris', 'beginner'],
+    ['web-app-security', 'intermediate']
+];
+
+function getSimulationLevelFromPath(pathOrSlug) {
+    const s = String(pathOrSlug || '').toLowerCase();
+    for (const [fragment, level] of SIMULATION_PATH_LEVELS) {
+        if (s.includes(fragment)) return level;
+    }
+    return getModuleLevel(s);
 }
 
 function getModuleLevel(moduleName) {
@@ -258,13 +297,37 @@ async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') 
     };
 }
 
+async function checkAssessmentAccess() {
+    const token = getBearerTokenFromStorage();
+    if (!token) {
+        return {
+            hasAccess: false,
+            message: 'Big Five ve kariyer testleri için giriş yapıp İlk Adım veya üst bir plan satın almanız gerekir.'
+        };
+    }
+    const user = await fetchUserMe();
+    if (user && (user.role === 'admin' || (user.email && user.email.toLowerCase().trim() === FULL_ACCESS_EMAIL))) {
+        return { hasAccess: true, message: '' };
+    }
+    const purchases = await fetchUserPurchases();
+    const maxRank = getMaxPurchaseRank(purchases, 'cybersecurity');
+    if (maxRank < 0) {
+        return {
+            hasAccess: false,
+            message:
+                'Big Five ve kariyer değerlendirme testleri İlk Adım planı veya üst paketlerle açılır. Fiyatlandırma sayfasından plan seçebilirsiniz.'
+        };
+    }
+    return { hasAccess: true, message: '' };
+}
+
 async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersecurity') {
     let simulationLevel;
     const raw = String(simulationNameOrLevel || '').toLowerCase();
     if (['beginner', 'intermediate', 'advanced'].includes(raw)) {
         simulationLevel = raw;
     } else {
-        simulationLevel = getModuleLevel(simulationNameOrLevel);
+        simulationLevel = getSimulationLevelFromPath(simulationNameOrLevel);
     }
     const userHasAccess = await hasAccess(simulationLevel, category);
     
@@ -386,8 +449,10 @@ window.AccessControl = {
     getUserAccessLevel,
     hasAccess,
     getModuleLevel,
+    getSimulationLevelFromPath,
     checkModuleAccess,
     checkSimulationAccess,
+    checkAssessmentAccess,
     showAccessDeniedModal,
     fetchUserPurchases,
     clearPurchasesCache

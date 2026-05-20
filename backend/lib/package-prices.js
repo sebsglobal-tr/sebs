@@ -31,10 +31,7 @@ const TEST_PACKAGE_PRICES = {
 
 function isTestPaymentMode() {
     const flag = String(process.env.IYZICO_TEST_MODE || '').toLowerCase();
-    if (flag === '0' || flag === 'false') return false;
-    if (flag === '1' || flag === 'true') return true;
-    const base = (process.env.IYZICO_BASE_URL || '').toLowerCase();
-    return base.includes('sandbox');
+    return flag === '1' || flag === 'true';
 }
 
 const ROAD_STAGE_TO_LEVEL = {

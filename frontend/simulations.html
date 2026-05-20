@@ -1763,7 +1763,12 @@
             // Check access on simulation link click
             simulationLinks.forEach(link => {
                 link.addEventListener('click', async (e) => {
-                    const simulationLevel = link.dataset.simulationLevel || 'beginner';
+                    const href = link.getAttribute('href') || '';
+                    const simulationLevel =
+                        (window.AccessControl.getSimulationLevelFromPath &&
+                            window.AccessControl.getSimulationLevelFromPath(href)) ||
+                        link.dataset.simulationLevel ||
+                        'beginner';
                     const card = link.closest('.simulation-card-detailed, .card');
                     const category = card?.dataset.category || 'cybersecurity';
                     

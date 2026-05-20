@@ -2008,11 +2008,11 @@
                         period: '/ay',
                         subtitle: 'SEBS Yoluna başlamak isteyenler için',
                         features: [
-                            'İlk Adım aşamasındaki tüm duraklar',
-                            '18 başlangıç simülasyonuna erişim',
-                            'Temel ilerleme takibi',
-                            'Görev tamamlama ve yol görünümü',
-                            '1 durağı ücretsiz deneme sonrası devam erişimi'
+                            'İlk Adım aşamasındaki tüm modül durakları',
+                            'İlk Adım kapsamındaki simülasyonlar (Yükseliş/Zirve simülasyonları hariç)',
+                            'Big Five ve kariyer değerlendirme testleri',
+                            'Temel ilerleme takibi ve yol görünümü',
+                            'Yükseliş veya Zirve için plan yükseltmesi gerekir'
                         ]
                     },
                     {
@@ -2506,7 +2506,7 @@
                                 class="sebs-payment-trust__band"
                             />
                             <p class="mt-3 text-center text-xs text-slate-500">
-                                Ödeme Iyzico güvenli ödeme sayfasında tamamlanır (SSL).
+                                Ödeme iyzico güvenli ödeme sayfasında tamamlanır. Tutar sunucuda doğrulanır; ödeme onayı yalnızca banka/iyzico doğrulaması sonrası hesabınıza işlenir.
                             </p>
                         </div>
                         <div class="purchase-legal-consents">
@@ -2750,7 +2750,7 @@
                     if (banner) {
                         banner.classList.remove('hidden');
                         banner.textContent =
-                            'Sandbox test modu: Test ödemesi 2 TL · İlk Adım 1 TL · Yükseliş 3 TL · Zirve 5 TL. Ödeme iyzico güvenli sayfasında tamamlanır.';
+                            'Geliştirici test modu (IYZICO_TEST_MODE=1): düşük tutarlar yalnızca sandbox içindir. Canlıda bu bant görünmez.';
                     }
                     const testSec = document.getElementById('testPaymentSection');
                     if (testSec) testSec.classList.remove('hidden');
