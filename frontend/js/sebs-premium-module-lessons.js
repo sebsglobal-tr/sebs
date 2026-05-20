@@ -836,6 +836,14 @@
         if (keys.indexOf(r) !== -1) return r;
         var fromSection = lessonKeyForSection(r);
         if (keys.indexOf(fromSection) !== -1) return fromSection;
+        if (r.indexOf('::') !== -1) {
+            var secPart = r.split('::')[0];
+            if (keys.indexOf(secPart) !== -1) return secPart;
+            var prefix = secPart + '::';
+            for (var j = 0; j < keys.length; j++) {
+                if (keys[j].indexOf(prefix) === 0) return canonicalLessonKey(keys[j]);
+            }
+        }
         for (var i = 0; i < keys.length; i++) {
             if (keys[i] === r || keys[i].indexOf(r + '::') === 0) {
                 return canonicalLessonKey(keys[i]);
@@ -1954,6 +1962,17 @@
             return parseRouteKeyFromUrl(basePath);
         }
 
+        function cardVisibleTextLen(card) {
+            if (!card) return 0;
+            var clone = card.cloneNode(true);
+            clone.querySelectorAll('.lesson-complete-footer, .lesson-controls').forEach(function (n) {
+                n.remove();
+            });
+            return String(clone.textContent || '')
+                .replace(/\s+/g, ' ')
+                .trim().length;
+        }
+
         function applyLessonView(lessonKey) {
             if (!lessonKey || lessonKeysOrdered.indexOf(lessonKey) === -1) return false;
             document.body.classList.add('lesson-route-mode');
@@ -2003,10 +2022,28 @@
                     card = section.querySelector('.content-card');
                 }
             }
+            var useWholeSection =
+                cfg.routeGranularity === 'section' ||
+                !card ||
+                !head ||
+                (card && cardVisibleTextLen(card) < 80);
+
             if (section) {
                 section.classList.add('lesson-route-current-section', 'active');
                 var inner = section.querySelector('.section-inner');
-                if (card && inner) {
+                if (useWholeSection) {
+                    section.classList.add('lesson-route-whole-section');
+                    if (quizEl) {
+                        applyFlatSectionQuizVisibility(section, quizEl.id);
+                    } else {
+                        applyFlatSectionQuizVisibility(section, null);
+                    }
+                    if (head && head.scrollIntoView) {
+                        global.setTimeout(function () {
+                            head.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 80);
+                    }
+                } else if (card && inner) {
                     var introCard = firstNavigableCard(inner);
                     if (introCard && card === introCard) {
                         section.classList.add('lesson-route-show-module-intro');
@@ -2025,7 +2062,7 @@
                     }
                 }
             }
-            if (card) {
+            if (card && !useWholeSection) {
                 card.classList.add('lesson-route-current-card');
                 card.setAttribute('data-lesson-key', lessonKey);
             }

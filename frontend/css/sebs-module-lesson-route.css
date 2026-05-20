@@ -13,38 +13,39 @@ body.lesson-route-mode .content-section.lesson-route-current-section {
     display: block !important;
 }
 
-body.lesson-route-mode .section-inner > .content-card {
+/* Tek alt-ders modu: yalnızca aktif kart görünsün (iç içe sarmalayıcılar dahil) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card {
     display: none !important;
 }
 
-body.lesson-route-mode .section-inner > .content-card.lesson-route-current-card {
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card.lesson-route-current-card {
     display: block !important;
     animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Modül girişi (tema, kapak, kazanımlar): yalnızca bölümün ilk dersinde */
-body.lesson-route-mode .lesson-route-current-section .section-inner > *:not(.content-card) {
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:not(:has(.lesson-route-current-card)) {
     display: none !important;
 }
 
-/* edu-chapter-body / edu-narrative: alt ders kartları section-inner altında değil — içerik görünür kalsın */
-body.lesson-route-mode .lesson-route-current-section .section-inner > .edu-chapter-body,
-body.lesson-route-mode .lesson-route-current-section .section-inner > .edu-narrative,
-body.lesson-route-mode .lesson-route-current-section .section-inner > .edu-lesson-recap {
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:has(.lesson-route-current-card) {
     display: block !important;
 }
 
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-chapter-body > .content-card,
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-narrative > .content-card,
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-lesson-recap > .content-card {
-    display: none !important;
+/* Tüm bölüm modu: boş alt sayfa yok — section-inner tamamen görünür */
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner > * {
+    display: block !important;
 }
 
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-chapter-body > .content-card.lesson-route-current-card,
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-narrative > .content-card.lesson-route-current-card,
-body.lesson-route-mode .lesson-route-current-section .section-inner .edu-lesson-recap > .content-card.lesson-route-current-card {
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner .content-card {
     display: block !important;
-    animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner > .concept-grid {
+    display: grid !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .kr-cia-grid {
+    display: grid !important;
 }
 
 body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > h1,
