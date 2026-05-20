@@ -440,6 +440,14 @@
         );
     }
 
+    function getFlatSectionSubheadings(sec) {
+        if (!sec) return [];
+        var card = sec.querySelector('.content-card');
+        if (!card) return [];
+        var headings = Array.from(card.querySelectorAll('h3'));
+        return sortHeadingsByDocumentOrder(headings).filter(isNavigableLessonHeading);
+    }
+
     function moduleHasSubheadingNav() {
         var list = document.querySelector('.nav-section-list');
         if (!list) return false;
@@ -449,6 +457,9 @@
             if (!sec) continue;
             var inner = sec.querySelector('.section-inner');
             if (getSectionSubheadings(inner).length > 0) {
+                return true;
+            }
+            if (getFlatSectionSubheadings(sec).length > 1) {
                 return true;
             }
         }
@@ -548,7 +559,9 @@
             var parentLi = moduleLink.closest('li');
             if (!parentLi) return;
             var inner = sectionEl.querySelector('.section-inner');
-            var subHeadings = getSectionSubheadings(inner);
+            var subHeadings = inner
+                ? getSectionSubheadings(inner)
+                : getFlatSectionSubheadings(sectionEl);
             if (!subHeadings.length) {
                 parentLi.classList.remove('nav-section-item', 'is-open');
                 var topIconEl = moduleLink.querySelector('i.fas, i.fab');
