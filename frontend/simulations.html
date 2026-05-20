@@ -1734,10 +1734,19 @@
     <script src="/js/navigation.js?v=3.7" defer></script>
     <script src="/js/animations.js" defer></script>
     <script src="utils/access-control.js"></script>
+    <script src="/js/road-access-ui.js"></script>
     
     <script>
         // Simulation access control
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            let retries = 0;
+            while ((!window.AccessControl || !window.RoadAccessUI) && retries < 30) {
+                await new Promise((r) => setTimeout(r, 100));
+                retries++;
+            }
+            if (window.RoadAccessUI && window.RoadAccessUI.applySimulationCardLocks) {
+                await window.RoadAccessUI.applySimulationCardLocks();
+            }
             // Add access level data attributes to simulation links
             const simulationLinks = document.querySelectorAll('a[href*="simulation"]');
             simulationLinks.forEach(link => {

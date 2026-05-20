@@ -129,13 +129,16 @@ const FULL_ACCESS_EMAIL = 'asasferfer4566@gmail.com';
 /** Modüller satışta vaat edilir ama henüz içerik yayında değil */
 const MODULES_NOT_LIVE = ['web-uygulama-guvenligi', 'web-app-security'];
 
-function isLocalDevAccess() {
-    try {
-        const h = window.location.hostname;
-        return h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local');
-    } catch (e) {
-        return false;
-    }
+const FREE_MODULE_SLUGS = new Set(['guncel-siber-guvenlige-giris', 'coming-soon']);
+
+const TIER_DISPLAY_NAMES = {
+    beginner: 'İlk Adım',
+    intermediate: 'Yükseliş',
+    advanced: 'Zirve'
+};
+
+function isFreeModuleSlug(slug) {
+    return FREE_MODULE_SLUGS.has(String(slug || '').toLowerCase());
 }
 
 function getMaxPurchaseRank(purchases, category) {
@@ -158,6 +161,10 @@ function userMeetsTierForLevel(purchases, requiredLevel, category) {
     return levelRank(requiredLevel) <= maxRank;
 }
 
+function hasAnyPackagePurchase(purchases, category = 'cybersecurity') {
+    return getMaxPurchaseRank(purchases, category) >= 0;
+}
+
 async function hasAccess(requiredLevel, category = 'cybersecurity') {
     const token = getBearerTokenFromStorage();
     if (!token) {
@@ -171,16 +178,7 @@ async function hasAccess(requiredLevel, category = 'cybersecurity') {
 
     const purchases = await fetchUserPurchases();
 
-    if (purchases.length > 0) {
-        return userMeetsTierForLevel(purchases, requiredLevel, category);
-    }
-
-    if (!isLocalDevAccess()) {
-        return false;
-    }
-
-    const userLevel = await getUserAccessLevel();
-    return userMeetsRequiredLevel(userLevel, requiredLevel);
+    return userMeetsTierForLevel(purchases, requiredLevel, category);
 }
 
 const SIMULATION_PATH_LEVELS = [
@@ -246,10 +244,10 @@ function getModuleLevel(moduleName) {
         'threat-hunting': 'advanced'
     };
 
-    for (const [key, level] of Object.entries(moduleLevels)) {
-        if (moduleName.toLowerCase().includes(key)) {
-            return level;
-        }
+    const s = moduleName.toLowerCase();
+    const keys = Object.keys(moduleLevels).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+        if (s.includes(key)) return moduleLevels[key];
     }
 
     return 'beginner';
@@ -257,6 +255,9 @@ function getModuleLevel(moduleName) {
 
 async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') {
     const rawSlug = String(moduleNameOrLevel || '').toLowerCase();
+    if (isFreeModuleSlug(rawSlug)) {
+        return { hasAccess: true, message: '' };
+    }
     if (MODULES_NOT_LIVE.some((key) => rawSlug.includes(key))) {
         return {
             hasAccess: false,
@@ -273,21 +274,10 @@ async function checkModuleAccess(moduleNameOrLevel, category = 'cybersecurity') 
     const userHasAccess = await hasAccess(moduleLevel, category);
     
     if (!userHasAccess) {
-        const levelNames = {
-            beginner: 'Temel',
-            intermediate: 'Orta',
-            advanced: 'İleri'
-        };
-        
-        const categoryNames = {
-            cybersecurity: 'Siber Güvenlik',
-            cloud: 'Bulut Bilişim',
-            'data-science': 'Veri Bilimleri'
-        };
-        
+        const tierName = TIER_DISPLAY_NAMES[moduleLevel] || moduleLevel;
         return {
             hasAccess: false,
-            message: `${categoryNames[category] || category} alanında ${levelNames[moduleLevel]} Paketi satın almanız gerekiyor.`
+            message: `Bu modül ${tierName} planında açılır. Satın almadıysanız fiyatlandırma sayfasından plan seçin.`
         };
     }
     
@@ -302,7 +292,7 @@ async function checkAssessmentAccess() {
     if (!token) {
         return {
             hasAccess: false,
-            message: 'Big Five ve kariyer testleri için giriş yapıp İlk Adım veya üst bir plan satın almanız gerekir.'
+            message: 'Big Five ve kariyer testleri için giriş yapıp İlk Adım, Yükseliş veya Zirve planlarından birini satın almanız gerekir.'
         };
     }
     const user = await fetchUserMe();
@@ -315,7 +305,7 @@ async function checkAssessmentAccess() {
         return {
             hasAccess: false,
             message:
-                'Big Five ve kariyer değerlendirme testleri İlk Adım planı veya üst paketlerle açılır. Fiyatlandırma sayfasından plan seçebilirsiniz.'
+                'Big Five ve kariyer değerlendirme testleri yalnızca paket satın alan kullanıcılara açıktır. Fiyatlandırma sayfasından plan seçebilirsiniz.'
         };
     }
     return { hasAccess: true, message: '' };
@@ -332,15 +322,10 @@ async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersec
     const userHasAccess = await hasAccess(simulationLevel, category);
     
     if (!userHasAccess) {
-        const levelNames = {
-            beginner: 'Temel',
-            intermediate: 'Orta',
-            advanced: 'İleri'
-        };
-        
+        const tierName = TIER_DISPLAY_NAMES[simulationLevel] || simulationLevel;
         return {
             hasAccess: false,
-            message: `Bu simülasyona erişim için ${levelNames[simulationLevel]} Paketi satın almanız gerekiyor.`
+            message: `Bu simülasyon ${tierName} planında açılır (veya üst paket). Uygun planı satın almanız gerekir.`
         };
     }
     
@@ -448,6 +433,9 @@ function clearPurchasesCache() {
 window.AccessControl = {
     getUserAccessLevel,
     hasAccess,
+    getMaxPurchaseRank,
+    hasAnyPackagePurchase,
+    userMeetsTierForLevel,
     getModuleLevel,
     getSimulationLevelFromPath,
     checkModuleAccess,

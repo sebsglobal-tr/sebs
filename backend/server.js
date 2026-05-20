@@ -1910,6 +1910,30 @@ app.post('/api/simulations/start', authenticateToken, async (req, res) => {
         if (!simulationId.trim()) {
             return res.status(400).json({ success: false, message: 'simulationId gerekli.' });
         }
+
+        const { userCanAccessSimulation } = require('./lib/simulation-entitlement');
+        const simAccess = await userCanAccessSimulation(
+            pool,
+            { userId, email: req.user.email, role: req.user.role },
+            simulationId.trim(),
+            FULL_ACCESS_EMAIL
+        );
+        if (!simAccess.allowed) {
+            const roadLevel =
+                simAccess.level === 'advanced'
+                    ? 'zirve'
+                    : simAccess.level === 'intermediate'
+                      ? 'yukselis'
+                      : 'ilk-adim';
+            return res.status(403).json({
+                success: false,
+                message: 'Bu simülasyon için uygun SEBS Yolu planı gerekir.',
+                code: 'SIMULATION_ACCESS_DENIED',
+                requiredLevel: simAccess.level,
+                pricingUrl: `/fiyatlandirma?category=sebs-road&level=${roadLevel}`
+            });
+        }
+
         const r = await pool.query(
             `INSERT INTO simulation_runs (user_id, module_id, simulation_id, started_at)
              VALUES ($1, $2, $3, NOW()) RETURNING id`,
@@ -3187,6 +3211,18 @@ if (fs.existsSync(FRONTEND_DIR)) {
         logger
     });
     try {
+        const { registerSimulationHtmlGate } = require('./routes/register-simulation-html-gate');
+        registerSimulationHtmlGate(app, {
+            frontendDir: FRONTEND_DIR,
+            pool,
+            resolveUserFromRequest: authResolver.resolveUserFromRequest.bind(authResolver),
+            fullAccessEmail: FULL_ACCESS_EMAIL
+        });
+        logger.info('Simulation HTML gate registered');
+    } catch (simGateErr) {
+        logger.warn('Simulation HTML gate not registered:', simGateErr.message);
+    }
+    try {
         const { registerAdminHtmlGate } = require('./routes/register-admin-html-gate');
         registerAdminHtmlGate(app, {
             frontendDir: FRONTEND_DIR,
@@ -3215,6 +3251,9 @@ app.get('*', (req, res, next) => {
         return next();
     }
     if (/^\/modules\/[^/]+\.html$/i.test(req.path)) {
+        return next();
+    }
+    if (/^\/simulation\/[^/]+\.html$/i.test(req.path)) {
         return next();
     }
     if (/^\/(admin\.html|admin|yonetim)\/?$/i.test(req.path)) {

@@ -32,12 +32,25 @@ body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-in
 body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .lesson-image-wrap,
 body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .learning-objectives,
 body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .kr-inline-breakout,
-body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .figure-block {
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .figure-block,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > h1,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .sg-isletim-intro,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .lesson-image-wrap,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .learning-objectives,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .kr-inline-breakout,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .figure-block {
     display: block !important;
 }
 
-body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .concept-grid:not(.content-card .concept-grid) {
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .concept-grid:not(.content-card .concept-grid),
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .concept-grid {
     display: grid !important;
+}
+
+/* Düz ders (section-inner yok): mevcut karttaki tamamla alanı görünür kalsın */
+body.lesson-route-mode .lesson-route-current-card .lesson-controls,
+body.lesson-route-mode .lesson-route-whole-section > .content-card .lesson-controls {
+    display: flex !important;
 }
 
 /* Düz ders yapısı (section-inner yok): tek bölüm = tek ders — İşletim ile aynı rota */

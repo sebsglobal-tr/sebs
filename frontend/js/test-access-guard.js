@@ -1,5 +1,5 @@
 /**
- * Big Five + kariyer testleri — paket kontrolü (İlk Adım veya üst)
+ * Big Five + kariyer testleri — yalnızca paket satın alanlar
  */
 (function () {
     async function guard() {

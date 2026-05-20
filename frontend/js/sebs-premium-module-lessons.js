@@ -56,20 +56,67 @@
     }
 
     function cardifyByHeading(inner, headings) {
+        if (!inner || !headings.length) return;
+        var stopTag = headings[0].tagName;
         headings.forEach(function (head) {
-            if (head.parentElement !== inner) return;
+            if (!head || head.closest('.content-card')) return;
+            var parent = head.parentElement;
+            if (!parent) return;
             var card = document.createElement('div');
             card.className = 'content-card';
-            inner.insertBefore(card, head);
+            parent.insertBefore(card, head);
             var node = head;
             while (node) {
                 var next = node.nextElementSibling;
                 card.appendChild(node);
-                var stopTag = headings[0] && headings[0].tagName;
-                if (next && next.tagName === stopTag) break;
+                if (!next) break;
+                if (next.tagName === stopTag) break;
+                if (headings.indexOf(next) !== -1 && next !== head) break;
                 node = next;
             }
         });
+    }
+
+    /** Kartlara alınmamış giriş (h1, kapak, modül özeti) — ilk derse birleştirilir */
+    function mergeLeadingOrphansIntoFirstLessonCard(inner) {
+        if (!inner) return;
+        var orphans = [];
+        var child = inner.firstElementChild;
+        while (child) {
+            if (child.classList && child.classList.contains('content-card')) break;
+            orphans.push(child);
+            child = child.nextElementSibling;
+        }
+        if (!orphans.length) return;
+        var target = firstNavigableCard(inner) || inner.querySelector(':scope > .content-card');
+        if (!target) return;
+        var ref = target.firstChild;
+        orphans.forEach(function (n) {
+            target.insertBefore(n, ref);
+        });
+    }
+
+    function ensureHeadingLessonCard(head, inner) {
+        if (!head || !inner) return head.closest('.content-card');
+        var existing = head.closest('.content-card');
+        if (existing) return existing;
+        var subHeadings = getSectionSubheadings(inner);
+        var block = document.createElement('div');
+        block.className = 'content-card sebs-lesson-block';
+        var parent = head.parentElement || inner;
+        parent.insertBefore(block, head);
+        var node = head;
+        var stopTag = lessonHeadingLevel === 'h3' ? 'H3' : 'H2';
+        while (node) {
+            var next = node.nextElementSibling;
+            block.appendChild(node);
+            if (!next) break;
+            if (lessonHeadingLevel !== 'h3' && next.tagName === 'H2') break;
+            if (next.tagName === stopTag) break;
+            if (subHeadings.indexOf(next) !== -1 && next !== head) break;
+            node = next;
+        }
+        return block;
     }
 
     function shouldSkipCardify(inner) {
@@ -88,11 +135,12 @@
             if (shouldSkipCardify(inner)) return;
             inner.dataset.cardified = '1';
             if (lessonHeadingLevel === 'h3') {
-                var lessonH3 = Array.from(inner.children).filter(function (el) {
-                    return el.tagName === 'H3' && isNavigableLessonHeading(el);
-                });
+                var lessonH3 = sortHeadingsByDocumentOrder(
+                    Array.from(inner.querySelectorAll('h3')).filter(isNavigableLessonHeading)
+                );
                 if (lessonH3.length) {
                     cardifyByHeading(inner, lessonH3);
+                    mergeLeadingOrphansIntoFirstLessonCard(inner);
                     return;
                 }
             }
@@ -105,10 +153,11 @@
             if (h2Blocks.length === 1 && h3Blocks.length >= 2) {
                 cardifyByHeading(
                     inner,
-                    h3Blocks.filter(function (el) {
-                        return isNavigableLessonHeading(el);
-                    })
+                    sortHeadingsByDocumentOrder(
+                        Array.from(inner.querySelectorAll('h3')).filter(isNavigableLessonHeading)
+                    )
                 );
+                mergeLeadingOrphansIntoFirstLessonCard(inner);
                 return;
             }
             h2Blocks.forEach(function (h2) {
@@ -124,6 +173,7 @@
                     node = next;
                 }
             });
+            mergeLeadingOrphansIntoFirstLessonCard(inner);
         });
     }
 
@@ -1176,41 +1226,24 @@
                         });
                     }
                 }
-                if (sec.querySelector('.btn-complete-lesson')) return;
-                if (legacyCard && !legacyCard.querySelector('.lesson-complete-footer')) {
+                if (
+                    routeMode &&
+                    legacyCard &&
+                    !legacyCard.querySelector('.lesson-complete-footer')
+                ) {
                     appendLessonFooter(legacyCard, function () {
                         completeHandler(flatKey);
                     });
                 }
                 return;
             }
-            if (inner.querySelector('.btn-complete-lesson')) return;
 
             var subHeadings = getSectionSubheadings(inner);
             if (subHeadings.length) {
                     subHeadings.forEach(function (head, idx) {
                         var hid = ensureHeadingId(head, sec.id, idx);
                         var lessonKey = makeLessonKey(sec.id, hid);
-                        var block = head.closest('.content-card');
-                        if (!block) {
-                            block = document.createElement('div');
-                            block.className = 'content-card sebs-lesson-block';
-                            inner.insertBefore(block, head);
-                            var node = head;
-                            while (node) {
-                                var next = node.nextElementSibling;
-                                block.appendChild(node);
-                                if (next && next.tagName === 'H2') break;
-                                if (
-                                    next &&
-                                    subHeadings.indexOf(next) !== -1 &&
-                                    next !== head
-                                ) {
-                                    break;
-                                }
-                                node = next;
-                            }
-                        }
+                        var block = ensureHeadingLessonCard(head, inner);
                         block.setAttribute('data-lesson-key', lessonKey);
                         if (!block.querySelector('.lesson-complete-footer')) {
                             appendLessonFooter(block, function () {
@@ -1921,8 +1954,20 @@
                 head = flatSectionHeading(section);
             }
             var card = head ? head.closest('.content-card') : null;
+            if (!card && head && section) {
+                var innerForCard = section.querySelector('.section-inner');
+                if (innerForCard) {
+                    card = ensureHeadingLessonCard(head, innerForCard);
+                }
+            }
             if (!card && section) {
-                card = section.querySelector('.content-card');
+                if (head && head.id) {
+                    var byId = document.getElementById(head.id);
+                    if (byId) card = byId.closest('.content-card');
+                }
+                if (!card) {
+                    card = section.querySelector('.content-card');
+                }
             }
             if (section) {
                 section.classList.add('lesson-route-current-section', 'active');

@@ -2099,6 +2099,7 @@
         });
     </script>
     <script src="utils/access-control.js" defer></script>
+    <script src="/js/road-access-ui.js" defer></script>
     
     <script>
         // Handle purchase button click - check if user is logged in
@@ -2147,50 +2148,14 @@
             return 'beginner';
         }
 
-        // Filter and display modules based on user's access level
+        // Kartları satın alınan paket kademesine göre kilitle (İlk Adım / Yükseliş / Zirve)
         async function filterModulesByAccessLevel() {
-            // Supabase session kontrolü
-            let isLoggedIn = false;
-            try {
-                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
-                    const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
-                    isLoggedIn = !!(session && session.user);
-                } else {
-                    // Fallback: localStorage kontrolü
-                    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                }
-            } catch (error) {
-                console.warn('Session check error:', error);
-                isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!window.AccessControl) return;
+            let locked = 0;
+            if (window.RoadAccessUI && window.RoadAccessUI.applyModuleCardLocks) {
+                locked = await window.RoadAccessUI.applyModuleCardLocks();
             }
-            
-            const userAccessLevel = await getUserAccessLevel();
-            
-            console.log('🔵 Filtering modules - User access level:', userAccessLevel, 'Logged in:', isLoggedIn);
-            
-            // Tüm modül kartları (simülasyon sayfası ile aynı yapı)
-            const moduleCards = document.querySelectorAll('.simulation-card-detailed[data-category]');
-            let visibleCount = 0;
-            
-            if (isLoggedIn) {
-                moduleCards.forEach(card => {
-                    card.style.display = 'block';
-                    visibleCount++;
-                });
-            } else {
-                moduleCards.forEach(card => {
-                    card.style.display = 'block';
-                    visibleCount++;
-                });
-            }
-            
-            // Giriş yapılmış kullanıcılar için mesaj gösterme (artık tüm modüller gösteriliyor)
-            const noModulesMessage = document.querySelector('.no-modules-message');
-            if (noModulesMessage) {
-                noModulesMessage.remove();
-            }
-            
-            console.log('✅ Module filtering completed. Visible modules:', visibleCount, 'Logged in:', isLoggedIn);
+            console.log('✅ Module tier locks applied. Locked cards:', locked);
         }
 
         // Module access control

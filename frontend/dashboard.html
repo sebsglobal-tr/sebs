@@ -355,6 +355,7 @@
 
     <script src="/utils/legacy-progress-storage-migrate.js"></script>
     <script src="/js/api-base.js"></script>
+    <script src="/utils/access-control.js"></script>
     <script src="/utils/module-progress.js"></script>
     <script src="/js/dashboard-simulation-history.js?v=1"></script>
     <script src="/js/dashboard-module-progress.js?v=1"></script>
@@ -1662,9 +1663,24 @@
             }
         }
 
-        function renderBigFiveDashboardCard() {
+        async function renderBigFiveDashboardCard() {
             var mount = document.getElementById('bigFiveDashboardMount');
             if (!mount) return;
+
+            if (window.AccessControl && window.AccessControl.checkAssessmentAccess) {
+                var assessment = await window.AccessControl.checkAssessmentAccess();
+                if (!assessment.hasAccess) {
+                    mount.innerHTML =
+                        '<div class="text-center text-sm text-slate-600">' +
+                        '<p><i class="fas fa-lock text-amber-600" aria-hidden="true"></i> ' +
+                        escapeHtml(assessment.message || 'Testler paket satın alındıktan sonra açılır.') +
+                        '</p>' +
+                        '<a href="/fiyatlandirma" class="mt-4 inline-flex items-center justify-center rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus-ring">Planları gör</a>' +
+                        '</div>';
+                    return;
+                }
+            }
+
             var BF_LABELS = {
                 openness: 'Açıklık / Yeniliğe Açıklık',
                 conscientiousness: 'Planlılık / Sorumluluk',

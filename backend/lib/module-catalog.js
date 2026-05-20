@@ -12,7 +12,7 @@ const MODULE_LEVELS = {
     'web-uygulama-guvenligi': 'intermediate',
     'malware-analizi': 'intermediate',
     soc: 'intermediate',
-    'isletim-sistemi-guvenligi': 'intermediate',
+    'isletim-sistemi-guvenligi-temel': 'beginner',
     'isletim-sistemi-guvenligi-ileri': 'intermediate',
     'temel-cloud-security': 'intermediate',
     'ileri-malware-analizi': 'advanced',
@@ -32,8 +32,9 @@ const LEVEL_RANK = { beginner: 0, intermediate: 1, advanced: 2 };
 
 function getModuleLevel(slug) {
     const s = String(slug || '').toLowerCase();
-    for (const [key, level] of Object.entries(MODULE_LEVELS)) {
-        if (s.includes(key)) return level;
+    const keys = Object.keys(MODULE_LEVELS).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+        if (s.includes(key)) return MODULE_LEVELS[key];
     }
     return 'beginner';
 }
