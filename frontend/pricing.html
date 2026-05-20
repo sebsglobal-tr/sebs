@@ -55,7 +55,7 @@
         }
         .loading-overlay.active { display: flex; }
     </style>
-    <link rel="stylesheet" href="/css/pricing-page.css?v=3" />
+    <link rel="stylesheet" href="/css/pricing-page.css?v=4" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -261,9 +261,9 @@
     <section class="pp-mufredat" id="detayli-mufredat">
         <div class="pp-container">
             <details>
-                <summary>Modül listesi</summary>
+                <summary>SEBS Yolu — modül haritası</summary>
                 <div class="pp-mufredat__body">
-                    <p class="pp-mufredat__hint">SEBS Yolu üzerindeki tüm eğitim modülleri aşamalara göre sıralanır.</p>
+                    <p class="pp-mufredat__hint">Duraklar yol üzerinde sıralanır; kilitli modüle tıklayarak plan veya tek modül ile açabilirsin.</p>
                     <a href="/modules.html" class="pp-mufredat__link focus-ring">Eğitim modüllerini gör <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                     <div id="moduleCatalogContainer" hidden></div>
                 </div>
@@ -506,15 +506,15 @@
             return map[level] || map['ilk-adim'];
         }
 
-        function renderModuleCatalog() {
+        function renderModuleRoad() {
             const container = document.getElementById('moduleCatalogContainer');
             if (!container) return;
 
             const userRank = getUserRoadRank();
             const stageOrder = [
-                { id: 'ilk-adim', title: 'İlk Adım', planPrice: '199 TL/ay' },
-                { id: 'yukselis', title: 'Yükseliş', planPrice: '349 TL/ay' },
-                { id: 'zirve', title: 'Zirve', planPrice: '799 TL/ay' }
+                { id: 'ilk-adim', title: 'İlk Adım', planPrice: '199 TL/ay', tone: 'blue' },
+                { id: 'yukselis', title: 'Yükseliş', planPrice: '349 TL/ay', tone: 'violet' },
+                { id: 'zirve', title: 'Zirve', planPrice: '799 TL/ay', tone: 'amber' }
             ];
             const filters = [
                 { id: 'all', label: 'Tümü' },
@@ -523,7 +523,8 @@
                 { id: 'zirve', label: 'Zirve' }
             ];
 
-            const groupsHtml = stageOrder
+            var globalIndex = 0;
+            const stagesHtml = stageOrder
                 .filter(function (stage) {
                     return activeRoadStage === 'all' || activeRoadStage === stage.id;
                 })
@@ -532,8 +533,11 @@
                         return m.stage === stage.id;
                     });
                     if (!mods.length) return '';
-                    const items = mods
+
+                    const rows = mods
                         .map(function (mod) {
+                            const side = globalIndex % 2 === 0 ? 'left' : 'right';
+                            globalIndex += 1;
                             const meta = getStageMeta(mod.stage);
                             const requiredRank = stageRank[meta.key] || 1;
                             const stageOwned = userRank >= requiredRank;
@@ -545,73 +549,122 @@
                                 stageOwned && !isSingle
                                     ? 'Erişim açık'
                                     : isSingle
-                                      ? 'Tek modül · 120 TL'
-                                      : 'Planla aç · ' + meta.price + ' TL';
+                                      ? 'Tek modül'
+                                      : 'Kilidi aç';
+                            const topics = (mod.topics || [])
+                                .slice(0, 3)
+                                .map(function (t) {
+                                    return '<span class="pp-road__tag">' + t + '</span>';
+                                })
+                                .join('');
                             return (
-                                '<li class="pp-catalog__item' +
-                                (stageOwned && !isSingle ? ' is-open' : '') +
+                                '<li class="pp-road__row pp-road__row--' +
+                                side +
                                 '">' +
-                                '<div class="pp-catalog__item-main">' +
-                                '<span class="pp-catalog__item-title">' +
-                                mod.title +
-                                '</span>' +
-                                '<span class="pp-catalog__item-meta">' +
-                                mod.hours +
-                                '</span>' +
-                                '<p class="pp-catalog__item-desc">' +
-                                mod.desc +
-                                '</p>' +
-                                '</div>' +
-                                '<button type="button" class="pp-catalog__btn btn-purchase" data-category="' +
-                                purchaseCategory +
-                                '" data-level="' +
-                                purchaseLevel +
-                                '" data-price="' +
-                                purchasePrice +
-                                '" data-title="' +
-                                mod.title +
-                                '"' +
-                                (stageOwned && !isSingle ? ' disabled' : '') +
-                                (!isLoggedIn()
-                                    ? ' onclick="handlePurchaseClick(event)"'
-                                    : ' onclick="handlePurchase(event)"') +
-                                '>' +
-                                actionText +
-                                '</button></li>'
+                                (side === 'left'
+                                    ? '<article class="pp-road__card' +
+                                      (stageOwned && !isSingle ? ' is-open' : '') +
+                                      ' stage-' +
+                                      mod.stage +
+                                      '">' +
+                                      '<div class="pp-road__card-top">' +
+                                      '<span class="pp-road__card-title">' +
+                                      mod.title +
+                                      '</span>' +
+                                      '<span class="pp-road__card-hours">' +
+                                      mod.hours +
+                                      '</span></div>' +
+                                      '<p class="pp-road__card-desc">' +
+                                      mod.desc +
+                                      '</p>' +
+                                      (topics ? '<div class="pp-road__tags">' + topics + '</div>' : '') +
+                                      '<button type="button" class="pp-road__card-btn btn-purchase" data-category="' +
+                                      purchaseCategory +
+                                      '" data-level="' +
+                                      purchaseLevel +
+                                      '" data-price="' +
+                                      purchasePrice +
+                                      '" data-title="' +
+                                      mod.title +
+                                      '"' +
+                                      (stageOwned && !isSingle ? ' disabled' : '') +
+                                      (!isLoggedIn()
+                                          ? ' onclick="handlePurchaseClick(event)"'
+                                          : ' onclick="handlePurchase(event)"') +
+                                      '>' +
+                                      actionText +
+                                      '</button></article><span class="pp-road__node" aria-hidden="true"></span><span class="pp-road__gap"></span>'
+                                    : '<span class="pp-road__gap"></span><span class="pp-road__node" aria-hidden="true"></span>' +
+                                      '<article class="pp-road__card' +
+                                      (stageOwned && !isSingle ? ' is-open' : '') +
+                                      ' stage-' +
+                                      mod.stage +
+                                      '">' +
+                                      '<div class="pp-road__card-top">' +
+                                      '<span class="pp-road__card-title">' +
+                                      mod.title +
+                                      '</span>' +
+                                      '<span class="pp-road__card-hours">' +
+                                      mod.hours +
+                                      '</span></div>' +
+                                      '<p class="pp-road__card-desc">' +
+                                      mod.desc +
+                                      '</p>' +
+                                      (topics ? '<div class="pp-road__tags">' + topics + '</div>' : '') +
+                                      '<button type="button" class="pp-road__card-btn btn-purchase" data-category="' +
+                                      purchaseCategory +
+                                      '" data-level="' +
+                                      purchaseLevel +
+                                      '" data-price="' +
+                                      purchasePrice +
+                                      '" data-title="' +
+                                      mod.title +
+                                      '"' +
+                                      (stageOwned && !isSingle ? ' disabled' : '') +
+                                      (!isLoggedIn()
+                                          ? ' onclick="handlePurchaseClick(event)"'
+                                          : ' onclick="handlePurchase(event)"') +
+                                      '>' +
+                                      actionText +
+                                      '</button></article>') +
+                                '</li>'
                             );
                         })
                         .join('');
+
                     return (
-                        '<section class="pp-catalog__group" aria-labelledby="catalog-' +
+                        '<section class="pp-road__stage pp-road__stage--' +
+                        stage.tone +
+                        '" aria-labelledby="road-stage-' +
                         stage.id +
                         '">' +
-                        '<div class="pp-catalog__group-head">' +
-                        '<h4 id="catalog-' +
+                        '<div class="pp-road__stage-head" id="road-stage-' +
                         stage.id +
                         '">' +
+                        '<span class="pp-road__stage-dot"></span>' +
+                        '<div class="pp-road__stage-text">' +
+                        '<h4>' +
                         stage.title +
                         '</h4>' +
-                        '<span class="pp-catalog__plan">' +
+                        '<p>' +
                         stage.planPrice +
-                        '</span></div>' +
-                        '<ul class="pp-catalog__list">' +
-                        items +
-                        '</ul></section>'
+                        '</p></div></div>' +
+                        '<ol class="pp-road__path">' +
+                        rows +
+                        '</ol></section>'
                     );
                 })
                 .join('');
 
             container.innerHTML =
-                '<div class="pp-catalog" role="region" aria-label="Modül listesi">' +
-                '<div class="pp-catalog__toolbar">' +
-                '<div class="pp-catalog__filters" role="tablist" aria-label="Aşama filtresi">' +
+                '<div class="pp-road" role="region" aria-label="SEBS Yolu modül haritası">' +
+                '<div class="pp-road__toolbar">' +
+                '<div class="pp-road__filters" role="tablist" aria-label="Aşama filtresi">' +
                 filters
                     .map(function (f) {
                         return (
-                            '<button type="button" class="pp-catalog__filter' +
+                            '<button type="button" class="pp-road__chip' +
                             (activeRoadStage === f.id ? ' is-active' : '') +
-                            '" data-stage="' +
-                            f.id +
                             '" onclick="setCatalogStageFilter(\'' +
                             f.id +
                             '\')">' +
@@ -621,27 +674,32 @@
                     })
                     .join('') +
                 '</div>' +
-                '<div class="pp-catalog__mode">' +
-                '<button type="button" class="pp-catalog__filter' +
+                '<div class="pp-road__mode">' +
+                '<button type="button" class="pp-road__chip' +
                 (roadPurchaseMode === 'subscription' ? ' is-active' : '') +
                 '" onclick="setRoadPurchaseMode(\'subscription\')">Aşama planı</button>' +
-                '<button type="button" class="pp-catalog__filter' +
+                '<button type="button" class="pp-road__chip' +
                 (roadPurchaseMode === 'single' ? ' is-active' : '') +
                 '" onclick="setRoadPurchaseMode(\'single\')">Tek modül · 120 TL</button>' +
                 '</div></div>' +
-                groupsHtml +
-                '</div>';
+                '<div class="pp-road__canvas">' +
+                '<svg class="pp-road__curve" viewBox="0 0 120 800" preserveAspectRatio="none" aria-hidden="true">' +
+                '<path d="M60 0 C 20 80, 100 160, 60 240 C 20 320, 100 400, 60 480 C 20 560, 100 640, 60 720 L 60 800" fill="none" stroke="url(#ppRoadGrad)" stroke-width="3" stroke-linecap="round"/>' +
+                '<defs><linearGradient id="ppRoadGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#93c5fd"/><stop offset="50%" stop-color="#6366f1"/><stop offset="100%" stop-color="#c4b5fd"/></linearGradient></defs>' +
+                '</svg>' +
+                stagesHtml +
+                '</div></div>';
             container.hidden = false;
         }
 
         function setCatalogStageFilter(stage) {
             activeRoadStage = stage;
-            renderModuleCatalog();
+            renderModuleRoad();
         }
 
         function setRoadPurchaseMode(mode) {
             roadPurchaseMode = mode;
-            renderModuleCatalog();
+            renderModuleRoad();
         }
 
 
@@ -701,7 +759,7 @@
                 var detailsEl = document.querySelector('.pp-mufredat details');
                 if (catalogContainer) {
                     if (detailsEl && detailsEl.open) {
-                        renderModuleCatalog();
+                        renderModuleRoad();
                     } else {
                         catalogContainer.hidden = true;
                         catalogContainer.innerHTML = '';
@@ -1048,7 +1106,7 @@
                 if (!detailsEl.open) return;
                 if (currentCategory === 'sebs-road') {
                     await fetchUserPurchases();
-                    renderModuleCatalog();
+                    renderModuleRoad();
                 }
             });
         })();
@@ -1081,7 +1139,7 @@
                     if (targetCard) {
                         targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         const pricingCard = targetCard.closest('.pricing-card');
-                        const catalogItem = targetCard.closest('.pp-catalog__item');
+                        const catalogItem = targetCard.closest('.pp-road__card');
                         if (pricingCard) {
                             pricingCard.style.border = '3px solid #1e40af';
                             pricingCard.style.boxShadow = '0 0 20px rgba(30, 64, 175, 0.5)';

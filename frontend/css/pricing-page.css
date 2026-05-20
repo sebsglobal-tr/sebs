@@ -831,78 +831,136 @@ body.sebs-pricing-page .journey-reveal {
   }
 }
 
-/* Modül listesi (details içinde) */
-.pp-catalog {
+/* SEBS Yolu — kompakt modül haritası */
+.pp-road {
   margin-top: 1.25rem;
 }
 
-.pp-catalog__toolbar {
+.pp-road__toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.35rem;
 }
 
-.pp-catalog__filters,
-.pp-catalog__mode {
+.pp-road__filters,
+.pp-road__mode {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
 
-.pp-catalog__filter {
-  padding: 0.4rem 0.75rem;
+.pp-road__chip {
+  padding: 0.38rem 0.72rem;
   border-radius: 999px;
   border: 1px solid #e2e8f0;
   background: #fff;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: #475569;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.pp-catalog__filter:hover {
+.pp-road__chip:hover {
   border-color: #cbd5e1;
   background: #f8fafc;
 }
 
-.pp-catalog__filter.is-active {
+.pp-road__chip.is-active {
   color: #fff;
   background: #0f172a;
   border-color: #0f172a;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
 }
 
-.pp-catalog__group + .pp-catalog__group {
-  margin-top: 1.5rem;
+.pp-road__canvas {
+  position: relative;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.pp-road__curve {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4rem;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+.pp-road__stage {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-road__stage + .pp-road__stage {
+  margin-top: 1.75rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px dashed #e2e8f0;
 }
 
-.pp-catalog__group-head {
+.pp-road__stage-head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.06), transparent);
+  border: 1px solid rgba(37, 99, 235, 0.12);
 }
 
-.pp-catalog__group-head h4 {
+.pp-road__stage--violet .pp-road__stage-head {
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.06), transparent);
+  border-color: rgba(124, 58, 237, 0.12);
+}
+
+.pp-road__stage--amber .pp-road__stage-head {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0.06), transparent);
+  border-color: rgba(217, 119, 6, 0.12);
+}
+
+.pp-road__stage-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  flex-shrink: 0;
+}
+
+.pp-road__stage--violet .pp-road__stage-dot {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.pp-road__stage--amber .pp-road__stage-dot {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+.pp-road__stage-text h4 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #0f172a;
 }
 
-.pp-catalog__plan {
-  font-size: 0.78rem;
+.pp-road__stage-text p {
+  margin: 0.1rem 0 0;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #1d4ed8;
 }
 
-.pp-catalog__list {
+.pp-road__path {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -911,80 +969,166 @@ body.sebs-pricing-page .journey-reveal {
   gap: 0.55rem;
 }
 
-.pp-catalog__item {
+.pp-road__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pp-road__node {
+  width: 12px;
+  height: 12px;
+  justify-self: center;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  z-index: 2;
+}
+
+.pp-road__gap {
+  display: block;
+}
+
+.pp-road__card {
+  max-width: 17.5rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid #e8ecf1;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pp-road__row--left .pp-road__card {
+  justify-self: end;
+}
+
+.pp-road__row--right .pp-road__card {
+  justify-self: start;
+}
+
+.pp-road__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+  border-color: #cbd5e1;
+}
+
+.pp-road__card.is-open {
+  border-color: rgba(22, 163, 74, 0.35);
+  background: linear-gradient(145deg, #fff, rgba(22, 163, 74, 0.04));
+}
+
+.pp-road__card-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid #e8ecf1;
-  background: #fafbfc;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
-.pp-catalog__item.is-open {
-  border-color: rgba(22, 163, 74, 0.25);
-  background: rgba(22, 163, 74, 0.04);
-}
-
-.pp-catalog__item-main {
-  min-width: 0;
-  flex: 1;
-}
-
-.pp-catalog__item-title {
-  display: block;
-  font-size: 0.92rem;
-  font-weight: 600;
+.pp-road__card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.3;
   color: #0f172a;
 }
 
-.pp-catalog__item-meta {
-  display: inline-block;
-  margin-top: 0.15rem;
-  font-size: 0.72rem;
+.pp-road__card-hours {
+  flex-shrink: 0;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #64748b;
+  white-space: nowrap;
 }
 
-.pp-catalog__item-desc {
-  margin: 0.35rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.45;
+.pp-road__card-desc {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
   color: #64748b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.pp-catalog__btn {
-  flex-shrink: 0;
-  padding: 0.5rem 0.85rem;
+.pp-road__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+
+.pp-road__tag {
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+}
+
+.pp-road__card-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.42rem 0.55rem;
   border: none;
   border-radius: 8px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
   background: #0f172a;
   cursor: pointer;
-  white-space: nowrap;
+  transition: background 0.15s ease;
 }
 
-.pp-catalog__btn:hover:not(:disabled) {
+.pp-road__card-btn:hover:not(:disabled) {
   background: #1e293b;
 }
 
-.pp-catalog__btn:disabled {
-  opacity: 0.55;
-  cursor: default;
+.pp-road__card-btn:disabled {
   background: #94a3b8;
+  cursor: default;
+}
+
+.pp-road__card.stage-ilk-adim .pp-road__card-btn:not(:disabled) {
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+}
+
+.pp-road__card.stage-yukselis .pp-road__card-btn:not(:disabled) {
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
+}
+
+.pp-road__card.stage-zirve .pp-road__card-btn:not(:disabled) {
+  background: linear-gradient(135deg, #b45309, #d97706);
 }
 
 @media (max-width: 640px) {
-  .pp-catalog__item {
-    flex-direction: column;
-    align-items: stretch;
+  .pp-road__curve {
+    display: none;
   }
 
-  .pp-catalog__btn {
-    width: 100%;
+  .pp-road__row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .pp-road__node,
+  .pp-road__gap {
+    display: none;
+  }
+
+  .pp-road__row--left .pp-road__card,
+  .pp-road__row--right .pp-road__card {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .pp-road__path {
+    padding-left: 0.65rem;
+    border-left: 2px solid #e0e7ff;
   }
 }
 
