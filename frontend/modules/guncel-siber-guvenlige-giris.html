@@ -9,6 +9,10 @@
     <base href="/">
     <title>Siber Güvenliğe Giriş - SEBS Global</title>
     <meta name="description" content="Siber güvenliğin temelleri, CIA Üçlüsü, temel kavramlar ve tehdit aktörleri. Kapsamlı başlangıç seviyesi eğitim modülü.">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="sebs-content-version" content="20260523">
     <link rel="canonical" href="https://sebsglobal.com/egitimler/siber-guvenlik">
     <meta property="og:url" content="https://sebsglobal.com/egitimler/siber-guvenlik">
     <script type="application/ld+json">
@@ -135,7 +139,8 @@
             <div class="sidebar-header sebs-sidebar-header">
                 <p class="sebs-sidebar-eyebrow">SEBS — Başlangıç seviye</p>
                 <h1>Siber Güvenliğe Giriş</h1>
-                <p class="sebs-sidebar-tagline">CIA üçlüsü, varlık-tehdit-risk ve saldırı zinciri mantığı.</p>
+                <p class="sebs-sidebar-tagline">CIA üçlüsü (eşit derinlik), varlık-tehdit-risk ve saldırı zinciri.</p>
+                <p class="sebs-content-version-badge" style="font-size:0.75rem;opacity:0.7;margin-top:0.35rem;">İçerik sürümü: 2026-05-23</p>
                 <div class="progress-container sebs-sidebar-progress">
                     <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -337,14 +342,25 @@ Dijital varlıkları üç temel sınıfta ele almak pratik bir çerçeve sağlar
 <div class="figure-block"><figure class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=320&q=90" alt="CIA Üçlüsü" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><figcaption class="figure-caption"><span class="figure-number">Şekil 1.</span> Gizlilik, Bütünlük ve Erişilebilirlik — tüm güvenlik modellerinin temeli.</figcaption></figure></div>
 
 <h3 id="gizlilik-confidentiality"><strong>1.2.1) Gizlilik (Confidentiality)</strong></h3>
-<p>Gizlilik, bilgiye yalnızca yetkilendirilmiş kişi, süreç veya cihazların erişebilmesi anlamına gelir. Kişisel verilerin veya ticari sırların ifşası mahremiyet kaybına, dolandırıcılığa ve itibar kaybına yol açabileceği için bu ilke kritik öneme sahiptir. Örneğin bir e-ticaret sitesinde kullanıcı parolalarının veritabanında okunabilir şekilde saklanması, sızma halinde gizlilik açısından ağır sonuçlar doğurur. Parola paylaşımı, yanlış paylaşım izinleri ve kamuya açık ağlarda korunmasız oturumlar günlük hayatta gizlilik ihlallerine sıkça rastlanan örneklerdir.</p>
-<p>Gizliliği sağlamanın en yaygın yollarından biri şifrelemedir; kriptografik yaklaşımlar modül 5’te daha sistematik ele alınacaktır.</p>
+<p><strong>Gizlilik</strong>, bilginin yalnızca yetkili kişi, süreç ve sistemler tarafından görülebilmesidir. İhlal: yetkisiz okuma, kopyalama, ifşa veya dinleme. Kişisel veri veya ticari sır sızıntısı KVKK/GDPR kapsamında bildirim ve yaptırım doğurabilir.</p>
+<p><strong>Teknik kontroller:</strong> Şifreleme (AES-256, TLS 1.3), erişim kontrolü (RBAC, ABAC), maskeleme, güvenli silme, anahtar yönetimi (KMS). <strong>Organizasyonel:</strong> Veri sınıflandırması, minimum veri ilkesi, NDA, tedarikçi sözleşmeleri.</p>
+<p>Gizlilik tek başına yeterli değildir: Veri sızmamış ama <em>değiştirilmiş</em> (bütünlük) veya sistem kapalı (erişilebilirlik) olabilir. Olay analizinde üç boyutu ayrı değerlendirin.</p>
+<div class="example-box"><p><strong>Örnek:</strong> Hasta kaydı yetkisiz indirildi — <em>gizlilik</em> ihlali; kayıt değiştirilmediyse bütünlük ayrı, sistem ayaktaysa erişilebilirlik ayrı tartılır.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Gizlilik etkisi</th></tr></thead><tbody><tr><td>TLS</td><td>İletimde dinleme engeli</td></tr><tr><td>Disk şifreleme</td><td>Çalıntı cihazda veri koruma</td></tr><tr><td>MFA</td><td>Çalıntı parolada hesap koruma</td></tr></tbody></table>
 <h3 id="bütünlük-integrity"><strong>1.2.2) Bütünlük (Integrity)</strong></h3>
-<p>Bütünlük, verinin doğruluğunun ve tamlığının korunmasını; izinsiz veya hatalı şekilde değiştirilmemesini ifade eder. Yanlış veri, yanlış karar ve yanlış işlem demektir; bu yüzden bütünlük ihlalleri ciddi sonuçlar doğurabilir. Bir banka transferinde gönderilen tutarın alıcıya farklı bir tutar olarak ulaşması net bir bütünlük ihlalidir. Dosyaların kazara bozulması, yanlış sürümün paylaşılması veya izinsiz içerik değişikliği gibi durumlar günlük hayatta bütünlük sorunlarına yol açan yaygın örneklerdir.</p>
-<p><strong>Uygulama örneği (bütünlük kontrolü):</strong> Yazılım indirme sayfalarında verilen <strong>checksum/kontrol toplamı</strong> değerleri, indirilen dosyanın yolda bozulmadığını veya değiştirilmediğini doğrulamak için kullanılır.</p>
+<p><strong>Bütünlük</strong>, verinin ve sistemlerin yetkisiz veya hatalı şekilde değiştirilmediğinin güvencesidir. “Doğru, tam, güvenilir ve değişikliklerin izlenebilir” veri demektir. Yanlış veri, yanlış karar üretir — sızıntı olmasa bile ciddi zarar oluşur.</p>
+<p><strong>Teknik kontroller:</strong> Hash (SHA-256), dijital imza (PKI), checksum, audit log, veritabanı transaction bütünlüğü, sürüm kontrolü (Git), WORM depolama. Yazılım indirme sayfalarındaki <strong>kontrol toplamı</strong> bütünlük doğrulamasının günlük örneğidir.</p>
+<p>Bütünlük saldırıları sessiz olabilir: Muhasebe satırında küçük tutar oynaması, üretim sensör manipülasyonu, web sitesine sahte duyuru. <strong>Ransomware</strong> hem bütünlüğü (dosya değişimi) hem erişilebilirliği (kullanılamaz sistem) etkiler.</p>
+<p>Pratik soru: “Bu rapordaki rakama güvenebilir miyim?” — Evet ise bütünlük kontrolleri işliyor demektir.</p>
+<div class="example-box"><p><strong>Örnek:</strong> Banka transferinde tutar alıcıya farklı ulaştı — net <em>bütünlük</em> ihlali. Müşteri listesi çalınmadıysa gizlilik ayrı değerlendirilir.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Bütünlük etkisi</th></tr></thead><tbody><tr><td>Hash karşılaştırma</td><td>Dosya bozulmadı mı</td></tr><tr><td>Dijital imza</td><td>Paket sahte mi</td></tr><tr><td>Audit log</td><td>Kim neyi değiştirdi</td></tr></tbody></table>
 <h3 id="erişilebilirlik-availability"><strong>1.2.3) Erişilebilirlik (Availability)</strong></h3>
-<p>Erişilebilirlik, yetkili kullanıcıların ihtiyaç duyduğu anda sistemlere ve verilere ulaşabilmesidir. İş sürekliliğini sağlaması açısından kritiktir; veri gizli ve doğru olsa bile hizmet çalışmıyorsa pratikte güvenlik hedefleri karşılanamaz. Bir web sitesinin yoğun trafik saldırısı (DDoS) nedeniyle kullanılamaz hale gelmesi tipik bir erişilebilirlik problemidir. Sistem arızaları, bağlantı kesintileri, yanlış yapılandırmalar ve hizmet kesintileri günlük hayatta erişilebilirlik sorunlarına yol açan yaygın durumlardır.</p>
-<p><strong>Kritik örnek:</strong> Bir hastanenin randevu sistemi çalışmıyorsa, veri sızmamış ve bozulmamış olsa bile hizmet üretilemediği için erişilebilirlik hedefi zarar görmüştür.</p>
+<p><strong>Erişilebilirlik</strong>, yetkili kullanıcıların ve süreçlerin ihtiyaç anında sisteme ve veriye ulaşabilmesidir. Veri gizli ve doğru olsa bile hizmet üretilemiyorsa CIA hedefleri pratikte karşılanmaz.</p>
+<p><strong>Teknik kontroller:</strong> Yedekleme ve <strong>restore testi</strong>, felaket kurtarma (DR), yük dengeleme, kapasite planı, DDoS savunması (WAF), yedek güç. <strong>RTO</strong> (ne kadar sürede ayağa kalkmalı) ve <strong>RPO</strong> (ne kadar veri kaybı kabul edilir) SLA’larla yazılır.</p>
+<p>Örnek ihlaller: DDoS ile site çöküşü, ransomware ile şifrelenmiş sunucular, veri merkezi kesintisi, yanlış zamanlanmış yama sonrası günlerce kapalı ERP.</p>
+<p><strong>Kritik örnek:</strong> Hastane randevu sistemi çalışmıyorsa veri sızmamış olsa bile <em>erişilebilirlik</em> ihlalidir; can güvenliği bağlamında öncelik yükselir.</p>
+<div class="example-box"><p><strong>Örnek:</strong> Black Friday’de e-ticaret 4 saat kapalı — gelir kaybı; kapasite ve WAF <em>erişilebilirlik</em> riskini önceden azaltmalıydı.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Erişilebilirlik etkisi</th></tr></thead><tbody><tr><td>Yedek + test</td><td>Felaket sonrası dönüş</td></tr><tr><td>Load balancer</td><td>Tek sunucu arızası</td></tr><tr><td>Anti-DDoS</td><td>Hacim saldırısı</td></tr></tbody></table>
 <h3 id="üçlü-arasında-denge-kurma"><strong>1.2.4) Üçlü Arasında Denge Kurma</strong></h3>
 <p>Güvenlik tasarımında denge şarttır:</p>
 <ul>
@@ -4343,7 +4359,7 @@ D) Üretim sistemlerinde test için yeterlidir</p>
         </main>
     </div>
 
-        <script src="/js/sebs-premium-module-lessons.js?v=20260520b"></script>
+        <script src="/js/sebs-premium-module-lessons.js?v=20260523"></script>
     <script>
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Siber Güvenliğe Giriş',
