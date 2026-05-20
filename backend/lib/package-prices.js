@@ -14,40 +14,6 @@ const PACKAGE_PRICES = {
     'single-stop': { 'single-stop': 120 }
 };
 
-/** Sandbox test fiyatları (TRY) */
-const TEST_ODEME_PRICE = 2;
-const TEST_PACKAGE_PRICES = {
-    cybersecurity: { beginner: 1, intermediate: 3, advanced: 5 },
-    'sebs-road': {
-        'ilk-adim': 1,
-        beginner: 1,
-        yukselis: 3,
-        intermediate: 3,
-        zirve: 5,
-        advanced: 5
-    },
-    'test-odeme': { 'test-odeme': TEST_ODEME_PRICE }
-};
-
-function isTestPaymentMode() {
-    const flag = String(process.env.IYZICO_TEST_MODE || '').toLowerCase();
-    return flag === '1' || flag === 'true';
-}
-
-/** Canlıda tek paket testi: Render → IYZICO_ZIRVE_TEST_PRICE=5 (test bitince silin) */
-function getZirveTestPriceOverride() {
-    const raw = String(process.env.IYZICO_ZIRVE_TEST_PRICE || '').trim();
-    if (!raw) return null;
-    const n = Number(raw);
-    if (Number.isNaN(n) || n <= 0 || n > 999999.99) return null;
-    return n;
-}
-
-function isZirveLevel(level) {
-    const lvl = normalizeLevel(level);
-    return lvl === 'advanced' || level === 'zirve';
-}
-
 const ROAD_STAGE_TO_LEVEL = {
     'ilk-adim': 'beginner',
     yukselis: 'intermediate',
@@ -60,21 +26,6 @@ function normalizeLevel(level) {
 }
 
 function getExpectedPrice(category, level) {
-    const zirveOverride = getZirveTestPriceOverride();
-    if (zirveOverride != null && isZirveLevel(level)) {
-        return zirveOverride;
-    }
-
-    if (isTestPaymentMode()) {
-        if (category === 'test-odeme' || level === 'test-odeme') {
-            return TEST_ODEME_PRICE;
-        }
-        const testCat = TEST_PACKAGE_PRICES[category] || TEST_PACKAGE_PRICES.cybersecurity;
-        const testLvl = normalizeLevel(level);
-        const testPrice = testCat[level] != null ? testCat[level] : testCat[testLvl];
-        if (testPrice != null) return Number(testPrice);
-    }
-
     let prices = PACKAGE_PRICES;
     try {
         const { getPricesSync } = require('./pricing-store');
@@ -90,16 +41,6 @@ function getExpectedPrice(category, level) {
 }
 
 function getRoadPackageDisplayPrice(slug, packages) {
-    const zirveOverride = getZirveTestPriceOverride();
-    if (slug === 'zirve' && zirveOverride != null) return zirveOverride;
-
-    if (isTestPaymentMode()) {
-        const test = TEST_PACKAGE_PRICES['sebs-road'] || TEST_PACKAGE_PRICES.cybersecurity;
-        if (slug === 'ilk-adim') return test['ilk-adim'] || test.beginner;
-        if (slug === 'yukselis') return test.yukselis || test.intermediate;
-        if (slug === 'zirve') return test.zirve || test.advanced;
-    }
-
     const p = packages || PACKAGE_PRICES;
     const cyber = p.cybersecurity || p['sebs-road'] || {};
     if (slug === 'ilk-adim') return cyber.beginner ?? cyber['ilk-adim'] ?? 199;
@@ -119,13 +60,9 @@ function getRoadPackageLabel(slug) {
 
 module.exports = {
     PACKAGE_PRICES,
-    TEST_PACKAGE_PRICES,
-    TEST_ODEME_PRICE,
     ROAD_STAGE_TO_LEVEL,
     normalizeLevel,
     getExpectedPrice,
-    getZirveTestPriceOverride,
     getRoadPackageDisplayPrice,
-    isTestPaymentMode,
     getRoadPackageLabel
 };

@@ -161,11 +161,9 @@ function initializeCheckoutForm({ user, category, level, callbackUrl, packageSlu
     const priceStr = price.toFixed(2);
     const roadSlug = packageSlug || level;
     const itemName =
-        packageSlug === 'test-odeme'
-            ? 'SEBS — Sandbox Test Ödemesi'
-            : packageSlug && getRoadPackageLabel(packageSlug)
-              ? `SEBS Yolu — ${getRoadPackageLabel(packageSlug)} Planı`
-              : `${categoryLabel(category)} — ${levelLabel(backendLevel)} Paket`;
+        packageSlug && getRoadPackageLabel(packageSlug)
+            ? `SEBS Yolu — ${getRoadPackageLabel(packageSlug)} Planı`
+            : `${categoryLabel(category)} — ${levelLabel(backendLevel)} Paket`;
 
     const request = {
         locale: Iyzipay.LOCALE.TR,

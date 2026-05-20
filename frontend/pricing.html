@@ -894,68 +894,6 @@
             box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.45);
         }
 
-        .pricing-test-mode-banner {
-            margin: 1rem auto 0;
-            max-width: 40rem;
-            padding: 0.55rem 1rem;
-            border-radius: 10px;
-            background: rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.45);
-            color: #92400e;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .pricing-test-mode-banner.hidden {
-            display: none;
-        }
-
-        .pricing-test-payment-section {
-            max-width: 42rem;
-            margin: 0 auto 2rem;
-            padding: 1.25rem 1.5rem;
-            border-radius: 16px;
-            border: 2px dashed rgba(245, 158, 11, 0.55);
-            background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(254, 243, 199, 0.5));
-            text-align: center;
-        }
-
-        .pricing-test-payment-section.hidden {
-            display: none;
-        }
-
-        .pricing-test-payment-section h3 {
-            margin: 0 0 0.35rem;
-            font-size: 1.1rem;
-            color: #92400e;
-        }
-
-        .pricing-test-payment-section p {
-            margin: 0 0 1rem;
-            font-size: 0.88rem;
-            color: #78350f;
-        }
-
-        .btn-test-payment {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.35rem;
-            border-radius: 999px;
-            border: none;
-            background: linear-gradient(135deg, #d97706, #f59e0b);
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
-        }
-
-        .btn-test-payment:hover {
-            filter: brightness(1.05);
-        }
-
         .pricing-hero-cta {
             display: inline-flex;
             align-items: center;
@@ -1841,7 +1779,6 @@
                     <i class="fas fa-shopping-cart" aria-hidden="true"></i> Zirve — Satın Al
                 </button>
             </div>
-            <p id="iyzicoTestModeBanner" class="pricing-test-mode-banner hidden" role="status"></p>
         </div>
     </section>
 
@@ -1877,21 +1814,6 @@
         <div class="pricing-plans-intro">
             <h2 id="pricing-plans-heading">Abonelik planları</h2>
             <p>Plan seçerek SEBS Yolu aşamalarını ve ilerleme sistemini açarsın. Aşağıdaki kartlardan doğrudan satın alabilirsin.</p>
-        </div>
-        <div id="testPaymentSection" class="pricing-test-payment-section hidden" aria-labelledby="test-payment-heading">
-            <h3 id="test-payment-heading"><i class="fas fa-flask" aria-hidden="true"></i> Sandbox test ödemesi</h3>
-            <p id="testPaymentDesc">iyzico sandbox’ta düşük tutarla ödeme akışını dene. Başarılı ödemede İlk Adım erişimi tanımlanır.</p>
-            <button
-                type="button"
-                class="btn-purchase btn-test-payment"
-                data-category="sebs-road"
-                data-level="test-odeme"
-                data-price="2"
-                data-title="Sandbox Test Ödemesi"
-            >
-                <i class="fas fa-credit-card" aria-hidden="true"></i>
-                <span id="testPaymentBtnLabel">Test ödemesi — ₺2</span>
-            </button>
         </div>
         <div class="category-tabs" id="categoryTabs" hidden aria-hidden="true">
             <button class="category-tab active" data-category="sebs-road" type="button">SEBS Yolu Planları</button>
@@ -2132,7 +2054,6 @@
                 'ilk-adim': 'beginner',
                 yukselis: 'intermediate',
                 zirve: 'advanced',
-                'test-odeme': 'beginner',
                 'single-stop': 'beginner',
                 'upgrade-yukselis': 'intermediate',
                 'upgrade-zirve-loyalty': 'advanced'
@@ -2598,9 +2519,8 @@
                         'Authorization': `Bearer ${token}`
                     };
                     const roadPackage =
-                        level === 'test-odeme' ||
-                        (category === 'sebs-road' &&
-                            ['ilk-adim', 'yukselis', 'zirve', 'test-odeme'].includes(level));
+                        category === 'sebs-road' &&
+                        ['ilk-adim', 'yukselis', 'zirve'].includes(level);
                     const purchaseBody = JSON.stringify(
                         roadPackage
                             ? { package: level }
@@ -2745,37 +2665,9 @@
                 const cfgJson = await cfgRes.json();
                 if (!cfgJson.success || !cfgJson.data) return;
                 const d = cfgJson.data;
-                if (d.zirveTestActive && d.zirveTestPrice != null) {
-                    const banner = document.getElementById('iyzicoTestModeBanner');
-                    if (banner) {
-                        banner.classList.remove('hidden');
-                        banner.textContent =
-                            'Test fiyatı aktif: Zirve planı şu an ₺' + d.zirveTestPrice + ' (IYZICO_ZIRVE_TEST_PRICE). Diğer planlar normal fiyatta. Test bitince Render\'dan bu değişkeni kaldırın.';
-                    }
-                } else if (d.testMode) {
-                    const banner = document.getElementById('iyzicoTestModeBanner');
-                    if (banner) {
-                        banner.classList.remove('hidden');
-                        banner.textContent =
-                            'Geliştirici test modu (IYZICO_TEST_MODE=1): düşük tutarlar yalnızca sandbox içindir. Canlıda bu bant görünmez.';
-                    }
-                    const testSec = document.getElementById('testPaymentSection');
-                    if (testSec) testSec.classList.remove('hidden');
-                    if (d.testPayment) {
-                        const desc = document.getElementById('testPaymentDesc');
-                        if (desc && d.testPayment.description) desc.textContent = d.testPayment.description;
-                        const testBtn = testSec && testSec.querySelector('.btn-test-payment');
-                        if (testBtn && d.testPayment.price != null) {
-                            testBtn.dataset.price = String(d.testPayment.price);
-                            const lbl = document.getElementById('testPaymentBtnLabel');
-                            if (lbl) lbl.textContent = 'Test ödemesi — ₺' + d.testPayment.price;
-                        }
-                    }
-                }
                 if (d.roadPackages) {
                     document.querySelectorAll('.btn-purchase[data-level]').forEach((btn) => {
                         const slug = btn.dataset.level;
-                        if (slug === 'test-odeme') return;
                         const pkg = d.roadPackages[slug];
                         if (pkg && pkg.price != null) {
                             btn.dataset.price = String(pkg.price);
