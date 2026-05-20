@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <base href="/">
     <title>Paketler ve SEBS Yolu - SEBS Global</title>
-    <meta name="description" content="SEBS Yolu abonelik paketleri, plan fiyatları ve modül müfredatı. Ücretsiz keşif ile başla, planla kilidi aç.">
+    <meta name="description" content="SEBS Yolu abonelik planları: İlk Adım, Yükseliş ve Zirve. Sade fiyatlandırma, ücretsiz keşif ile başla.">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="SEBS Global">
     <meta name="theme-color" content="#1e3a5f">
@@ -43,1626 +43,19 @@
     
     
     
-        <style>
-        /* Minimal inline styles - only for critical loading overlay */
-        /* Main styles are in /css/styles.css */
-        
-        /* Loading overlay - minimal inline style for immediate display */
+    <style>
         .loading-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             display: none;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 9999;
+            background: rgba(255, 255, 255, 0.92);
         }
-        
-        /* ============================================
-           PRICING PAGE - ULTRA MODERN DESIGN
-           ============================================ */
-        
-        /* Hero Section */
-        .pricing-hero {
-            position: relative;
-            min-height: 50vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8rem 0 4rem;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            overflow: hidden;
-        }
-        
-        .pricing-hero::before {
-            content: none;
-        }
-        
-        .pricing-hero .container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-        
-        .pricing-hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #d4a853 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-family: 'Space Grotesk', sans-serif;
-            line-height: 1.2;
-        }
-        
-        .pricing-hero p {
-            font-size: 1.35rem;
-            color: rgba(30, 41, 59, 0.74);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-        
-        /* Category Tabs */
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 3rem auto;
-            max-width: 800px;
-            flex-wrap: wrap;
-        }
-        
-        .category-tab {
-            padding: 1rem 2.5rem;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .category-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .category-tab:hover::before {
-            left: 100%;
-        }
-        
-        .category-tab:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(30, 64, 175, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
-        }
-        
-        .category-tab.active {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            border-color: #1e40af;
-            color: white;
-            box-shadow: 0 8px 30px rgba(30, 64, 175, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        /* Pricing Container */
-        .pricing-container {
-            padding: 4rem 0 6rem;
-            background: var(--bg-primary);
-            position: relative;
-        }
-        
-        .pricing-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(30, 64, 175, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Pricing Card */
-        .pricing-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(30px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .pricing-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #1e40af, #2563eb, #d4a853);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: rgba(30, 64, 175, 0.5);
-            box-shadow: 0 20px 60px rgba(30, 64, 175, 0.4), 0 0 80px rgba(37, 99, 235, 0.2);
-        }
-        
-        .pricing-card:hover::before {
-            opacity: 1;
-        }
-        
-        .pricing-card.featured {
-            border-color: rgba(30, 64, 175, 0.6);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 12px 40px rgba(30, 64, 175, 0.3);
-            transform: scale(1.05);
-        }
-        
-        .pricing-card.featured::before {
-            opacity: 1;
-        }
-        
-        .pricing-card.featured .pricing-level {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            color: white;
-        }
-        
-        /* Pricing Header */
-        .pricing-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .pricing-level {
-            display: inline-block;
-            padding: 0.5rem 1.25rem;
-            background: rgba(30, 64, 175, 0.2);
-            border: 1px solid rgba(30, 64, 175, 0.3);
-            border-radius: 50px;
-            color: #818cf8;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        
-        .pricing-title {
-            font-size: 2rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1rem;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        
-        .pricing-price {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #d4a853 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        
-        .pricing-period {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 500;
-        }
-        
-        /* Pricing Features */
-        .pricing-features {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 2rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .pricing-features li {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            line-height: 1.6;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .pricing-features li:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-            border-color: rgba(30, 64, 175, 0.3);
-        }
-        
-        .pricing-features li.disabled {
-            opacity: 0.5;
-            text-decoration: line-through;
-        }
-        
-        .pricing-features li i {
-            color: #22c55e;
-            font-size: 1.1rem;
-            margin-top: 0.2rem;
-            flex-shrink: 0;
-        }
-        
-        .pricing-features li.disabled i {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Purchase Button */
-        .btn-purchase {
-            width: 100%;
-            padding: 1.25rem 2rem;
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
-            font-family: 'Space Grotesk', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-purchase::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s ease;
-        }
-        
-        .btn-purchase:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(30, 64, 175, 0.6), 0 0 60px rgba(37, 99, 235, 0.4);
-        }
-        
-        .btn-purchase:hover::before {
-            left: 100%;
-        }
-        
-        .btn-purchase:disabled {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            cursor: not-allowed;
-            opacity: 0.9;
-        }
-        
-        .btn-purchase:disabled:hover {
-            transform: none;
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
-        }
-        
-        .btn-purchase i {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .btn-purchase:hover i:not(:disabled) {
-            transform: rotate(360deg) scale(1.2);
-        }
-
-        .purchase-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(2, 6, 23, 0.68);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10010;
-            padding: 1rem;
-        }
-
-        .purchase-modal {
-            width: min(760px, 100%);
-            border-radius: 20px;
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            background: #0f172a;
-            color: #e2e8f0;
-            box-shadow: 0 30px 70px -30px rgba(15, 23, 42, 0.9);
-            overflow: hidden;
-        }
-
-        .purchase-modal-head {
-            padding: 1rem 1.2rem;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .purchase-modal-head h3 {
-            margin: 0;
-            font-size: 1.05rem;
-            color: #f8fafc;
-        }
-
-        .purchase-modal-close {
-            border: 1px solid rgba(148, 163, 184, 0.28);
-            background: rgba(15, 23, 42, 0.45);
-            color: #e2e8f0;
-            border-radius: 999px;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-        }
-
-        .purchase-modal-body {
-            padding: 1rem 1.2rem 1.25rem;
-        }
-
-        .purchase-modal-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 0.9rem;
-        }
-
-        .purchase-modal-card {
-            border-radius: 14px;
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            background: rgba(15, 23, 42, 0.55);
-            padding: 0.9rem;
-        }
-
-        .purchase-modal-card h4 {
-            margin: 0 0 0.25rem;
-            font-size: 0.95rem;
-            color: #f8fafc;
-        }
-
-        .purchase-modal-card p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: #cbd5e1;
-            line-height: 1.45;
-        }
-
-        .purchase-modal-actions {
-            margin-top: 0.9rem;
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.55rem;
-        }
-
-        .btn-modal-cancel,
-        .btn-modal-confirm {
-            border-radius: 999px;
-            padding: 0.55rem 0.95rem;
-            font-size: 0.78rem;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .btn-modal-cancel {
-            background: rgba(15, 23, 42, 0.45);
-            color: #e2e8f0;
-            border-color: rgba(148, 163, 184, 0.35);
-        }
-
-        .btn-modal-confirm {
-            background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
-            color: #fff;
-        }
-
-        .btn-modal-confirm:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
-        .purchase-legal-consents {
-            margin-top: 1rem;
-            padding: 0.85rem 1rem;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            background: rgba(15, 23, 42, 0.35);
-            text-align: left;
-        }
-
-        .purchase-legal-consents label {
-            display: flex;
-            gap: 0.55rem;
-            align-items: flex-start;
-            font-size: 0.72rem;
-            line-height: 1.45;
-            color: #cbd5e1;
-            cursor: pointer;
-        }
-
-        .purchase-legal-consents label + label {
-            margin-top: 0.65rem;
-        }
-
-        .purchase-legal-consents input {
-            margin-top: 0.15rem;
-            flex-shrink: 0;
-        }
-
-        .purchase-legal-consents a {
-            color: #93c5fd;
-            text-decoration: underline;
-        }
-
-        @media (max-width: 760px) {
-            .purchase-modal-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Access Info */
-        .access-info {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
-            color: #22c55e;
-            font-size: 0.9rem;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .access-info i {
-            font-size: 1.1rem;
-        }
-        
-        /* Info Section */
-        .access-info-section {
-            max-width: 1000px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            text-align: center;
-        }
-        
-        .access-info-section p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            line-height: 1.8;
-            margin: 0;
-        }
-        
-        .access-info-section i {
-            color: #818cf8;
-            margin-right: 0.5rem;
-        }
-        
-        .access-info-section strong {
-            color: white;
-            font-weight: 600;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .pricing-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 2rem;
-            }
-            
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .pricing-hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .pricing-hero p {
-                font-size: 1.1rem;
-            }
-            
-            .pricing-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                padding: 0 1.5rem;
-            }
-            
-            .pricing-card {
-                padding: 2rem;
-            }
-            
-            .pricing-price {
-                font-size: 2.75rem;
-            }
-            
-            .category-tabs {
-                gap: 0.75rem;
-            }
-            
-            .category-tab {
-                padding: 0.875rem 1.75rem;
-                font-size: 0.95rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .pricing-hero {
-                padding: 6rem 0 3rem;
-                min-height: 40vh;
-            }
-            
-            .pricing-hero h1 {
-                font-size: 2rem;
-            }
-            
-            .pricing-price {
-                font-size: 2.25rem;
-            }
-        }
-
-        /* Journey roadmap + premium dark overrides */
-        .sebs-pricing-journey {
-            background:
-                radial-gradient(circle at 8% 10%, rgba(59, 130, 246, 0.12), transparent 38%),
-                radial-gradient(circle at 92% 5%, rgba(139, 92, 246, 0.1), transparent 34%),
-                linear-gradient(180deg, #f6f9ff 0%, #edf3ff 38%, #f8fbff 100%);
-            color: #1e293b;
-        }
-
-        .sebs-pricing-journey::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(rgba(140, 154, 196, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(140, 154, 196, 0.06) 1px, transparent 1px);
-            background-size: 46px 46px;
-            opacity: 0.06;
-            z-index: -1;
-        }
-
-        .journey-roadmap-wrap {
-            padding: 1rem 0 0.4rem;
-        }
-
-        .journey-roadmap {
-            position: relative;
-            min-height: 300px;
-            border: 1px solid rgba(147, 197, 253, 0.2);
-            border-radius: 24px;
-            padding: 2.2rem;
-            background: linear-gradient(160deg, rgba(244, 248, 255, 0.94), rgba(232, 240, 255, 0.9));
-            box-shadow: 0 18px 46px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-            overflow: hidden;
-        }
-
-        .journey-roadmap-line {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.96;
-        }
-
-        .journey-roadmap-line path {
-            fill: none;
-            stroke: #4f8cff;
-            stroke-width: 5;
-            stroke-linecap: round;
-            stroke-dasharray: 1700;
-            stroke-dashoffset: 1700;
-            filter: drop-shadow(0 0 14px rgba(79, 140, 255, 0.65));
-            transition: stroke-dashoffset 2.8s cubic-bezier(0.2, 0.65, 0.2, 1);
-        }
-
-        #journeyRoadmap.is-visible .journey-roadmap-line path {
-            stroke-dashoffset: 0;
-        }
-
-        .journey-node {
-            position: absolute;
-            width: min(250px, 36%);
-            padding: 0.95rem 1rem;
-            border-radius: 14px;
-            border: 1px solid rgba(147, 197, 253, 0.34);
-            background: rgba(255, 255, 255, 0.84);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transform: translateY(26px) scale(0.98);
-            transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.35s ease;
-        }
-
-        #journeyRoadmap.is-visible .journey-node {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        #journeyRoadmap.is-visible .node-yukselis { transition-delay: 0.32s; }
-        #journeyRoadmap.is-visible .node-zirve { transition-delay: 0.6s; }
-
-        .journey-node .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 999px;
-            display: inline-block;
-            margin-bottom: 0.5rem;
-            background: #60a5fa;
-            box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62);
-            animation: nodePulse 2.8s infinite;
-        }
-
-        .node-yukselis .dot { background: #5eead4; box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.55); }
-        .node-zirve .dot { background: #a78bfa; box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.65); }
-
-        .journey-node h3 {
-            color: #0f172a;
-            font-size: 1.02rem;
-            font-weight: 700;
-            margin-bottom: 0.16rem;
-        }
-
-        .journey-node p {
-            color: rgba(30, 41, 59, 0.84);
-            margin: 0;
-            font-size: 0.88rem;
-        }
-
-        .journey-node small {
-            display: block;
-            margin-top: 0.45rem;
-            color: rgba(59, 130, 246, 0.86);
-            font-size: 0.78rem;
-            letter-spacing: 0.01em;
-        }
-
-        .node-ilk { left: 3%; bottom: 18px; }
-        .node-yukselis { left: 39%; top: 126px; }
-        .node-zirve { right: 3%; top: 18px; }
-
-        .pricing-flow {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.45rem;
-            margin-top: 0.95rem;
-        }
-
-        .pricing-flow span {
-            font-size: 0.72rem;
-            padding: 0.28rem 0.56rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            background: rgba(15, 23, 42, 0.45);
-            color: rgba(226, 238, 255, 0.88);
-        }
-
-        .pricing-card {
-            cursor: pointer;
-            position: relative;
-        }
-
-        body.sebs-pricing-journey .sebs-yolu-chip-open {
-            color: #15803d;
-        }
-
-        body.sebs-pricing-journey .sebs-yolu-chip-locked {
-            color: #b91c1c;
-        }
-
-        .pricing-card.journey-reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.52s ease, transform 0.52s ease;
-        }
-
-        .pricing-card.journey-reveal.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .pricing-features li.disabled {
-            opacity: 0.42;
-            position: relative;
-        }
-
-        .pricing-features li.disabled::after {
-            content: 'Kilidi aç';
-            position: absolute;
-            right: 0.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.7rem;
-            border: 1px solid rgba(96, 165, 250, 0.4);
-            border-radius: 999px;
-            padding: 0.14rem 0.48rem;
-            color: #bfdbfe;
-            background: rgba(30, 41, 59, 0.72);
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .pricing-features li.disabled:hover::after {
-            opacity: 1;
-        }
-
-        .btn-purchase:active {
-            transform: translateY(1px) scale(0.99);
-        }
-
-        .access-info-section,
-        .sebs-yolu-compare,
-        .sebs-pricing-options-table,
-        .pricing-plans-section {
-            position: relative;
-            z-index: 1;
-        }
-
-        .pricing-hero-bridge {
-            display: block;
-            margin-top: 0.75rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #1e40af;
-        }
-
-        .pricing-hero-ctas {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-top: 1.75rem;
-        }
-
-        .pricing-hero-packages {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.65rem;
-            margin-top: 1.25rem;
-            max-width: 52rem;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .pricing-hero-package-btn {
-            font-size: 0.82rem;
-            padding: 0.65rem 1.1rem;
-        }
-
-        .pricing-hero-package-btn--featured {
-            box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.45);
-        }
-
-        .pricing-hero-cta {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.45rem;
-            padding: 0.75rem 1.35rem;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .pricing-hero-cta--primary {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            color: #fff;
-            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-        }
-
-        .pricing-hero-cta--secondary {
-            background: #fff;
-            color: #1e40af;
-            border: 2px solid rgba(37, 99, 235, 0.35);
-        }
-
-        .pricing-hero-cta--ghost {
-            background: transparent;
-            color: #475569;
-            border: 1px solid rgba(148, 163, 184, 0.45);
-        }
-
-        .pricing-hero-cta:hover {
-            transform: translateY(-2px);
-        }
-
-        .pricing-plans-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .pricing-plans-intro {
-            text-align: center;
-            margin: 2rem 0 1.25rem;
-        }
-
-        .pricing-plans-intro h2 {
-            margin: 0;
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #0f172a;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .pricing-plans-intro p {
-            margin: 0.5rem auto 0;
-            max-width: 640px;
-            font-size: 1rem;
-            color: rgba(51, 65, 85, 0.88);
-            line-height: 1.65;
-        }
-
-        .pricing-featured-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.3rem 0.65rem;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #d4a853 0%, #f59e0b 100%);
-            color: #1e293b;
-            font-size: 0.68rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            z-index: 2;
-        }
-
-        .sebs-pricing-options-table {
-            margin: 2rem auto;
-            max-width: 1100px;
-            padding: 0 2rem;
-        }
-
-        .sebs-pricing-options-table h2 {
-            margin: 0 0 0.35rem;
-            text-align: center;
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: #0f172a;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .sebs-pricing-options-table > p {
-            margin: 0 auto 1rem;
-            max-width: 560px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        .sebs-pricing-options-table .sebs-yolu-compare {
-            margin-top: 0;
-        }
-
-        .sebs-pricing-options-table .option-recommended {
-            display: inline-block;
-            margin-left: 0.35rem;
-            padding: 0.12rem 0.45rem;
-            border-radius: 999px;
-            background: rgba(37, 99, 235, 0.12);
-            color: #1d4ed8;
-            font-size: 0.68rem;
-            font-weight: 700;
-            vertical-align: middle;
-        }
-
-        #detayli-mufredat {
-            scroll-margin-top: 5rem;
-        }
-
-        /* Kompakt, okunur plan kartları — SEBS Yolu görünür kalsın */
-        body.sebs-pricing-journey .pricing-plans-section {
-            padding: 0 1rem;
-        }
-
-        body.sebs-pricing-journey .pricing-plans-intro {
-            margin: 0.75rem 0 0.5rem;
-        }
-
-        body.sebs-pricing-journey .pricing-plans-intro h2 {
-            font-size: 1.2rem;
-        }
-
-        body.sebs-pricing-journey .pricing-plans-intro p {
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        body.sebs-pricing-journey .pricing-container {
-            padding: 0.5rem 0 1.25rem;
-        }
-
-        body.sebs-pricing-journey .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.85rem;
-            max-width: 920px;
-            padding: 0;
-        }
-
-        body.sebs-pricing-journey .pricing-card {
-            background: #ffffff;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            border-radius: 12px;
-            padding: 0.9rem 1rem 1rem;
-            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
-            backdrop-filter: none;
-            cursor: default;
-        }
-
-        body.sebs-pricing-journey .pricing-card::before {
-            height: 3px;
-            opacity: 1;
-        }
-
-        body.sebs-pricing-journey .pricing-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
-        }
-
-        body.sebs-pricing-journey .pricing-card.featured {
-            transform: none;
-            border-color: rgba(37, 99, 235, 0.55);
-            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.14);
-        }
-
-        body.sebs-pricing-journey .pricing-card.journey-reveal.is-visible,
-        body.sebs-pricing-journey .pricing-card.featured.journey-reveal.is-visible {
-            transform: none;
-        }
-
-        body.sebs-pricing-journey .pricing-card.featured .pricing-level {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
-            color: #fff;
-            border-color: transparent;
-        }
-
-        body.sebs-pricing-journey .pricing-header {
-            margin-bottom: 0.65rem;
-            padding-bottom: 0.65rem;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.28);
-        }
-
-        body.sebs-pricing-journey .pricing-level {
-            font-size: 0.62rem;
-            padding: 0.18rem 0.5rem;
-            margin-bottom: 0.35rem;
-            color: #1d4ed8;
-            background: rgba(37, 99, 235, 0.1);
-            border-color: rgba(37, 99, 235, 0.28);
-        }
-
-        body.sebs-pricing-journey .pricing-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
-        }
-
-        body.sebs-pricing-journey .pricing-price {
-            font-size: 1.65rem;
-            margin-bottom: 0.15rem;
-        }
-
-        body.sebs-pricing-journey .pricing-period {
-            font-size: 0.72rem;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        body.sebs-pricing-journey .pricing-subtitle {
-            margin-top: 0.25rem;
-            font-size: 0.7rem;
-            color: #64748b;
-            line-height: 1.35;
-        }
-
-        body.sebs-pricing-journey .pricing-flow {
-            margin-top: 0.4rem;
-            gap: 0.25rem;
-        }
-
-        body.sebs-pricing-journey .pricing-flow span {
-            font-size: 0.62rem;
-            padding: 0.12rem 0.38rem;
-            color: #475569;
-            background: #f1f5f9;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-        }
-
-        body.sebs-pricing-journey .pricing-features {
-            margin: 0 0 0.75rem;
-            gap: 0.3rem;
-        }
-
-        body.sebs-pricing-journey .pricing-features li {
-            font-size: 0.76rem;
-            line-height: 1.35;
-            padding: 0.32rem 0.42rem;
-            gap: 0.4rem;
-            color: #334155;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-        }
-
-        body.sebs-pricing-journey .pricing-features li:hover {
-            transform: none;
-            background: #f1f5f9;
-        }
-
-        body.sebs-pricing-journey .pricing-features li span {
-            color: #334155;
-        }
-
-        body.sebs-pricing-journey .pricing-features li i {
-            font-size: 0.72rem;
-            color: #16a34a;
-            margin-top: 0.1rem;
-        }
-
-        body.sebs-pricing-journey .btn-purchase {
-            padding: 0.6rem 0.85rem;
-            font-size: 0.8rem;
-            border-radius: 9px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        }
-
-        body.sebs-pricing-journey .pricing-featured-badge {
-            top: 0.45rem;
-            right: 0.45rem;
-            font-size: 0.58rem;
-            padding: 0.15rem 0.4rem;
-        }
-
-        @media (max-width: 960px) {
-            body.sebs-pricing-journey .pricing-grid {
-                grid-template-columns: 1fr;
-                max-width: 340px;
-            }
-        }
-
-        .journey-reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.55s ease, transform 0.55s ease;
-        }
-
-        .journey-reveal.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .journey-module-shop {
-            margin: 1.4rem auto 2.2rem;
-            max-width: 1200px;
-            padding: 1.4rem 1rem;
-            border-radius: 24px;
-            border: 1px solid rgba(148, 163, 184, 0.22);
-            background: linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(245, 249, 255, 0.98));
-            box-shadow: 0 14px 32px rgba(37, 99, 235, 0.1);
-        }
-
-        .journey-shop-head {
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .journey-shop-head h3 {
-            margin: 0;
-            color: #0f172a;
-            font-size: 1.35rem;
-            font-weight: 700;
-        }
-
-        .journey-shop-head p {
-            margin: 0.45rem 0 0;
-            color: rgba(51, 65, 85, 0.82);
-            font-size: 0.95rem;
-        }
-
-        .road-controls {
-            margin-top: 0.95rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem;
-        }
-
-        .road-filter-btn,
-        .road-mode-btn {
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.85);
-            color: #1e293b;
-            padding: 0.42rem 0.8rem;
-            font-size: 0.78rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .road-filter-btn:hover,
-        .road-mode-btn:hover {
-            border-color: rgba(37, 99, 235, 0.46);
-            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.16);
-        }
-
-        .road-filter-btn.active,
-        .road-mode-btn.active {
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            color: #fff;
-            border-color: rgba(37, 99, 235, 0.65);
-        }
-
-        .road-purchase-shell {
-            position: relative;
-            margin-top: 1rem;
-            min-height: 1650px;
-            border-radius: 20px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            background: linear-gradient(180deg, #f8fbff, #f2f7ff);
-            overflow: hidden;
-        }
-
-        .road-purchase-shell::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0.8rem;
-            bottom: 0.8rem;
-            width: 1px;
-            transform: translateX(-50%);
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.22), rgba(59, 130, 246, 0.08));
-            z-index: 0;
-        }
-
-        .road-stage-band {
-            position: absolute;
-            left: 0.9rem;
-            right: 0.9rem;
-            border-radius: 14px;
-            border: 2px solid rgba(148, 163, 184, 0.34);
-            background: rgba(255, 255, 255, 0.82);
-            pointer-events: none;
-        }
-
-        .road-stage-band.ilk-adim {
-            background: linear-gradient(90deg, rgba(219, 234, 254, 0.55), rgba(255, 255, 255, 0.55));
-        }
-        .road-stage-band.yukselis {
-            background: linear-gradient(90deg, rgba(204, 251, 241, 0.5), rgba(255, 255, 255, 0.55));
-        }
-        .road-stage-band.zirve {
-            background: linear-gradient(90deg, rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 0.55));
-        }
-
-        .road-stage-divider {
-            position: absolute;
-            left: 1rem;
-            right: 1rem;
-            height: 0;
-            border-top: 2px dashed rgba(100, 116, 139, 0.5);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .road-stage-heading {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.32rem 0.74rem;
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.03em;
-            border: 1px solid rgba(148, 163, 184, 0.45);
-            background: rgba(255, 255, 255, 0.96);
-            color: #0f172a;
-            z-index: 4;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
-        }
-
-        .road-stage-heading.ilk-adim { color: #1d4ed8; border-color: rgba(59, 130, 246, 0.42); }
-        .road-stage-heading.yukselis { color: #0f766e; border-color: rgba(20, 184, 166, 0.45); }
-        .road-stage-heading.zirve { color: #7c3aed; border-color: rgba(139, 92, 246, 0.45); }
-
-        .road-purchase-track {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .road-purchase-track .road-body {
-            fill: none;
-            stroke: rgba(203, 213, 225, 0.95);
-            stroke-width: 64;
-            stroke-linecap: round;
-            filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.2));
-            stroke-dasharray: 2600;
-            stroke-dashoffset: 2600;
-            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .road-purchase-track .road-shoulder {
-            fill: none;
-            stroke: rgba(148, 163, 184, 0.34);
-            stroke-width: 72;
-            stroke-linecap: round;
-            stroke-dasharray: 2600;
-            stroke-dashoffset: 2600;
-            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .road-purchase-track .road-center-line {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.96);
-            stroke-width: 4;
-            stroke-linecap: round;
-            stroke-dasharray: 16 18;
-            stroke-dashoffset: 2600;
-            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
-        }
-
-        .road-purchase-track .road-highlight {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.32);
-            stroke-width: 14;
-            stroke-linecap: round;
-            stroke-dasharray: 2600;
-            stroke-dashoffset: 2600;
-            transition: stroke-dashoffset 3.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .road-purchase-track .road-travel-glow {
-            fill: none;
-            stroke: rgba(59, 130, 246, 0.72);
-            stroke-width: 9;
-            stroke-linecap: round;
-            stroke-dasharray: 18 420;
-            stroke-dashoffset: 0;
-            opacity: 0;
-            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.55));
-        }
-
-        .road-purchase-shell.is-visible .road-purchase-track .road-body,
-        .road-purchase-shell.is-visible .road-purchase-track .road-shoulder,
-        .road-purchase-shell.is-visible .road-purchase-track .road-center-line,
-        .road-purchase-shell.is-visible .road-purchase-track .road-highlight {
-            stroke-dashoffset: 0;
-        }
-
-        .road-purchase-shell.is-visible .road-purchase-track .road-travel-glow {
-            opacity: 0.95;
-            animation: roadTravelFlow 4.8s linear infinite;
-        }
-
-        .road-stop-card {
-            position: absolute;
-            width: min(40%, 380px);
-            padding: 1rem 1.05rem;
-            border-radius: 14px;
-            border: 1.5px solid rgba(148, 163, 184, 0.34);
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 12px 28px rgba(59, 130, 246, 0.16);
-            cursor: pointer;
-            transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
-            opacity: 0;
-            transform: translateY(16px);
-            z-index: 2;
-        }
-
-        .road-stop-card.stage-ilk-adim {
-            border-left: 4px solid rgba(59, 130, 246, 0.72);
-        }
-
-        .road-stop-card.stage-yukselis {
-            border-left: 4px solid rgba(20, 184, 166, 0.72);
-        }
-
-        .road-stop-card.stage-zirve {
-            border-left: 4px solid rgba(139, 92, 246, 0.72);
-        }
-
-        .road-stop-card.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .road-stop-card.left { left: 4%; }
-        .road-stop-card.right { left: 56%; }
-
-        .road-stop-card:hover {
-            transform: translateY(-4px) scale(1.01);
-            border-color: rgba(96, 165, 250, 0.62);
-            box-shadow: 0 18px 34px rgba(30, 64, 175, 0.22);
-        }
-
-        .road-stop-card.locked {
-            opacity: 0.94;
-        }
-
-        .road-stop-card.open {
-            border-color: rgba(74, 222, 128, 0.55);
-            box-shadow: 0 12px 26px rgba(22, 163, 74, 0.22);
-        }
-
-        .road-stop-dot {
-            position: absolute;
-            top: 50%;
-            width: 14px;
-            height: 14px;
-            border-radius: 999px;
-            background: #60a5fa;
-            transform: translateY(-50%);
-            box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.56);
-            animation: nodePulse 2.8s infinite;
-        }
-
-        .road-stop-card.left .road-stop-dot { right: -26px; }
-        .road-stop-card.right .road-stop-dot { left: -26px; }
-        .road-stop-card.open .road-stop-dot { background: #4ade80; }
-
-        .road-stop-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            margin-bottom: 0.34rem;
-        }
-
-        .road-stop-level {
-            font-size: 0.7rem;
-            color: #1e3a8a;
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 999px;
-            padding: 0.14rem 0.48rem;
-            letter-spacing: 0.03em;
-            background: rgba(239, 246, 255, 0.9);
-            font-weight: 700;
-        }
-
-        .road-stop-hours {
-            font-size: 0.68rem;
-            color: rgba(51, 65, 85, 0.82);
-        }
-
-        .road-stop-title {
-            margin: 0.2rem 0;
-            color: #0f172a;
-            font-size: 1.03rem;
-            font-weight: 700;
-            line-height: 1.42;
-        }
-
-        .road-stop-desc {
-            margin: 0;
-            color: rgba(30, 41, 59, 0.96);
-            font-size: 0.88rem;
-            line-height: 1.5;
-        }
-
-        .road-stop-action {
-            margin-top: 0.58rem;
-            font-size: 0.76rem;
-            border: 1px solid rgba(96, 165, 250, 0.45);
-            border-radius: 999px;
-            background: rgba(30, 64, 175, 0.3);
-            color: #dbeafe;
-            padding: 0.38rem 0.72rem;
-            font-weight: 600;
-        }
-
-        .road-stop-actions {
-            display: flex;
-            gap: 0.38rem;
-            flex-wrap: wrap;
-            margin-top: 0.72rem;
-            padding-top: 0.56rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.28);
-        }
-
-        .road-stop-action.secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1e3a8a;
-            border-color: rgba(59, 130, 246, 0.35);
-        }
-
-        .road-stop-action.primary {
-            background: linear-gradient(135deg, #1d4ed8, #2563eb);
-            border-color: rgba(37, 99, 235, 0.7);
-            color: #fff;
-            width: 100%;
-        }
-
-        .road-stop-topics {
-            margin-top: 0.4rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.28rem;
-        }
-
-        .road-stop-topics span {
-            font-size: 0.7rem;
-            color: #1e3a8a;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 999px;
-            padding: 0.16rem 0.44rem;
-            background: rgba(219, 234, 254, 0.86);
-            font-weight: 600;
-        }
-
-        .road-stop-action:disabled {
-            border-color: rgba(74, 222, 128, 0.5);
-            background: rgba(22, 163, 74, 0.18);
-            color: #166534;
-            cursor: not-allowed;
-        }
-
-        .road-stage-marker {
-            position: absolute;
-            right: 1rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            border: 1px solid rgba(59, 130, 246, 0.35);
-            border-radius: 999px;
-            padding: 0.22rem 0.65rem;
-            background: rgba(255, 255, 255, 0.96);
-            z-index: 3;
-        }
-
-        .road-stage-summary {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: rgba(30, 41, 59, 0.78);
-            z-index: 3;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            border-radius: 999px;
-            padding: 0.2rem 0.56rem;
-        }
-
-        .road-stop-card[hidden] {
-            display: none !important;
-        }
-
-        @keyframes nodePulse {
-            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.62); }
-            65% { box-shadow: 0 0 0 14px rgba(96, 165, 250, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
-        }
-
-        @keyframes roadTravelFlow {
-            0% { stroke-dashoffset: 0; opacity: 0; }
-            10% { opacity: 0.95; }
-            90% { opacity: 0.95; }
-            100% { stroke-dashoffset: -880; opacity: 0; }
-        }
-
-        @media (max-width: 860px) {
-            .journey-roadmap {
-                min-height: 390px;
-                padding: 1.15rem;
-            }
-            .journey-node {
-                width: 92%;
-                left: 4% !important;
-            }
-            .node-ilk { top: 16px; bottom: auto; }
-            .node-yukselis { top: 142px; }
-            .node-zirve { top: 268px; right: auto; }
-            .road-purchase-shell {
-                min-height: 2920px;
-            }
-            .road-stop-card {
-                width: min(88%, 560px);
-            }
-            .road-stop-card.left,
-            .road-stop-card.right {
-                left: 7%;
-                right: auto;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .road-purchase-shell {
-                min-height: 3020px;
-            }
-            .road-stop-card {
-                width: 90%;
-                left: 5% !important;
-                right: auto !important;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .journey-roadmap-line path,
-            .journey-node,
-            .journey-reveal,
-            .pricing-card.journey-reveal,
-            .road-purchase-track .road-travel-glow {
-                transition: none !important;
-                animation: none !important;
-            }
-            .journey-roadmap-line path {
-                stroke-dashoffset: 0;
-            }
-        }
+        .loading-overlay.active { display: flex; }
     </style>
+    <link rel="stylesheet" href="/css/pricing-page.css?v=1" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -1689,7 +82,7 @@
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css?v=1" />
 
 </head>
-<body class="landing-site-body sebs-pricing-journey sebs-premium-page font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body sebs-pricing-page sebs-premium-page font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -1750,169 +143,134 @@
 
     
 
-    <section class="pricing-hero">
-        <div class="container">
-            <span class="sebs-yolu-badge"><i class="fas fa-route"></i> Paketler · SEBS Yolu</span>
-            <h1>Siber güvenlikte hedef rolünü seç, adım adım ilerle</h1>
-            <p>
-                <strong>Paketler</strong> ve SEBS Yolu müfredatı bu sayfada: plan fiyatları, aşamalar ve modül yol haritası bir arada.
-                Önce ücretsiz keşif ile yönünü netleştir; sonra plan veya tekli modülle kilitleri aç.
+    <main class="pricing-page">
+    <section class="pp-hero">
+        <div class="pp-container pp-hero__inner">
+            <span class="pp-eyebrow"><i class="fas fa-route" aria-hidden="true"></i> SEBS Yolu</span>
+            <h1>Planını seç, yolculuğa başla</h1>
+            <p class="pp-hero__lead">
+                Aylık abonelikle eğitim aşamalarını ve ilerleme sistemini açarsın.
+                Ücretsiz keşifle başlayabilir veya doğrudan aşağıdaki planlardan birini seçebilirsin.
             </p>
-            <span class="pricing-hero-bridge">SEBS Yolu = İlk Adım → Yükseliş → Zirve · her aşamada duraklar ve simülasyonlar</span>
-            <div class="pricing-hero-ctas">
-                <a href="/signup.html" class="pricing-hero-cta pricing-hero-cta--primary focus-ring">
-                    <i class="fas fa-map" aria-hidden="true"></i> Ücretsiz yol haritamı gör
-                </a>
-                <a href="/tests/kariyer-degerlendirme" class="pricing-hero-cta pricing-hero-cta--secondary focus-ring">
-                    <i class="fas fa-compass" aria-hidden="true"></i> Kariyer testi yap
-                </a>
-                <a href="#pricing-plans" class="pricing-hero-cta pricing-hero-cta--ghost focus-ring">Planları karşılaştır</a>
-            </div>
-            <div class="pricing-hero-packages" id="pricingHeroPackages" aria-label="Paket satın al">
-                <button type="button" class="btn-purchase pricing-hero-package-btn" data-category="sebs-road" data-level="ilk-adim" data-price="199" data-title="İlk Adım Planı">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> İlk Adım — Satın Al
-                </button>
-                <button type="button" class="btn-purchase pricing-hero-package-btn pricing-hero-package-btn--featured" data-category="sebs-road" data-level="yukselis" data-price="349" data-title="Yükseliş Planı">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> Yükseliş — Satın Al
-                </button>
-                <button type="button" class="btn-purchase pricing-hero-package-btn" data-category="sebs-road" data-level="zirve" data-price="799" data-title="Zirve Planı">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i> Zirve — Satın Al
-                </button>
+            <div class="pp-hero__actions">
+                <a href="/signup.html" class="pp-btn pp-btn--primary focus-ring">Ücretsiz keşfet</a>
+                <a href="/tests/kariyer-degerlendirme" class="pp-btn pp-btn--ghost focus-ring">Kariyer testi</a>
             </div>
         </div>
     </section>
 
-    <section class="journey-roadmap-wrap journey-reveal" id="journeyRoadmap">
-        <div class="container">
-            <div class="journey-roadmap">
-                <svg class="journey-roadmap-line" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M40 220 C 200 210, 260 120, 380 130 C 520 140, 560 60, 700 80 C 820 96, 900 48, 960 34"></path>
-                </svg>
-                <div class="journey-node node-ilk">
-                    <span class="dot"></span>
+    <section class="pp-stages" aria-label="SEBS Yolu aşamaları">
+        <div class="pp-container">
+            <div class="pp-stages__grid">
+                <article class="pp-stage">
+                    <span class="pp-stage__label">Aşama 1</span>
                     <h3>İlk Adım</h3>
-                    <p>SEBS Yoluna giriş ve temel yön kazanımı</p>
-                    <small>6 durak · 18 simülasyon · Başlangıç</small>
-                </div>
-                <div class="journey-node node-yukselis">
-                    <span class="dot"></span>
+                    <p>Temel modüller · 6 durak · 18 simülasyon</p>
+                    <span class="pp-stage__price">199 TL/ay</span>
+                </article>
+                <article class="pp-stage pp-stage--featured">
+                    <span class="pp-stage__label">Aşama 2 · Önerilen</span>
                     <h3>Yükseliş</h3>
-                    <p>Derin öğrenme ve gerçek beceri kazanımı</p>
-                    <small>3 durak · 9 simülasyon · Orta Seviye</small>
-                </div>
-                <div class="journey-node node-zirve">
-                    <span class="dot"></span>
+                    <p>İlk Adım + orta seviye · 9 ek simülasyon</p>
+                    <span class="pp-stage__price">349 TL/ay</span>
+                </article>
+                <article class="pp-stage">
+                    <span class="pp-stage__label">Aşama 3</span>
                     <h3>Zirve</h3>
-                    <p>Tam erişim ve ileri seviye performans</p>
-                    <small>4 durak · 12 simülasyon · İleri Seviye</small>
-                </div>
+                    <p>Tüm yol · tüm duraklar ve simülasyonlar</p>
+                    <span class="pp-stage__price">799 TL/ay</span>
+                </article>
             </div>
         </div>
     </section>
 
-    <section class="pricing-plans-section journey-reveal" id="pricing-plans" aria-labelledby="pricing-plans-heading">
-        <div class="pricing-plans-intro">
-            <h2 id="pricing-plans-heading">Abonelik planları</h2>
-            <p>Plan seçerek SEBS Yolu aşamalarını ve ilerleme sistemini açarsın. Aşağıdaki kartlardan doğrudan satın alabilirsin.</p>
-        </div>
-        <div class="category-tabs" id="categoryTabs" hidden aria-hidden="true">
-            <button class="category-tab active" data-category="sebs-road" type="button">SEBS Yolu Planları</button>
-        </div>
-        <div class="pricing-container">
-            <div class="pricing-grid" id="pricingGrid"></div>
-        </div>
-    </section>
-
-    <section class="sebs-pricing-options-table journey-reveal" aria-labelledby="pricing-options-heading">
-        <h2 id="pricing-options-heading">Hangi seçenek sana uygun?</h2>
-        <p>Abonelik ilerleme takibi ve önerileri açar; tekli satın alma yalnızca seçtiğin içeriği verir.</p>
-        <div class="sebs-yolu-compare">
-            <table aria-label="SEBS Yolu satın alma seçenekleri karşılaştırması">
-                <thead>
-                    <tr>
-                        <th scope="col">Seçenek</th>
-                        <th scope="col">Fiyat</th>
-                        <th scope="col">Ne açılır</th>
-                        <th scope="col">Kim için</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>İlk Adım Planı</strong> <span class="option-recommended">Abonelik</span></td>
-                        <td>199 TL/ay</td>
-                        <td>İlk Adım aşaması · 6 durak · 18 simülasyon · ilerleme takibi</td>
-                        <td>Kariyere yeni başlayanlar, yön arayanlar</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Yükseliş Planı</strong> <span class="option-recommended">Önerilen</span></td>
-                        <td>349 TL/ay</td>
-                        <td>İlk Adım + Yükseliş · +9 simülasyon · yol önerileri</td>
-                        <td>Ciddi ilerlemek isteyenler, SOC / ağ odaklı roller</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Zirve Planı</strong></td>
-                        <td>799 TL/ay</td>
-                        <td>Tüm aşamalar · tüm duraklar ve simülasyonlar · premium takip</td>
-                        <td>Tam yol, pentest / IR / ileri seviye hedefler</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tek modül</strong></td>
-                        <td>120 TL · tek sefer</td>
-                        <td>Seçtiğin bir modül ve simülasyonları · sınırlı sistem</td>
-                        <td>Tek konuya hızlı odaklanmak isteyenler</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tek durak</strong></td>
-                        <td>199 TL · tek sefer</td>
-                        <td>Bir durak içeriği · abonelik olmadan düşük taahhüt</td>
-                        <td>Denemek isteyenler; sonradan plana geçilebilir</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="sebs-yolu-compare" style="margin-top: 1.25rem;">
-            <table aria-label="Planlara göre aşama erişimi">
-                <thead>
-                    <tr>
-                        <th scope="col">Plan</th>
-                        <th scope="col">İlk Adım</th>
-                        <th scope="col">Yükseliş</th>
-                        <th scope="col">Zirve</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>İlk Adım Planı</td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                    </tr>
-                    <tr>
-                        <td>Yükseliş Planı</td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                        <td><span class="sebs-yolu-chip-locked">Kilitli</span></td>
-                    </tr>
-                    <tr>
-                        <td>Zirve Planı</td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                        <td><span class="sebs-yolu-chip-open">Açık</span></td>
-                    </tr>
-                </tbody>
-            </table>
+    <section class="pp-plans pricing-plans-section" id="pricing-plans" aria-labelledby="pricing-plans-heading">
+        <div class="pp-container">
+            <header class="pp-section-head">
+                <h2 id="pricing-plans-heading">Abonelik planları</h2>
+                <p>Üst plan alt planları kapsar. Yükseltirken kalan süren korunur.</p>
+            </header>
+            <div class="category-tabs" id="categoryTabs" hidden aria-hidden="true">
+                <button class="category-tab active" data-category="sebs-road" type="button">SEBS Yolu Planları</button>
+            </div>
+            <div class="pricing-container">
+                <div class="pricing-grid" id="pricingGrid"></div>
+            </div>
         </div>
     </section>
 
-    <div class="container">
-        <div class="access-info-section journey-reveal">
-            <p><i class="fas fa-info-circle"></i> <strong>Temel mantık:</strong> Tekli satış içerik verir, abonelik sistem verir (ilerleme, öneriler, aşamalar arası geçiş). Üst planlar alt planları kapsar; yükseltirken kalan süren korunur.</p>
+    <section class="pp-compare" aria-labelledby="pp-compare-heading">
+        <div class="pp-container">
+            <header class="pp-section-head">
+                <h2 id="pp-compare-heading">Abonelik mi, tekli içerik mi?</h2>
+                <p>Plan ilerleme ve yol önerilerini açar; tekli satın alma yalnızca seçtiğin modülü verir.</p>
+            </header>
+            <div class="pp-compare__grid">
+                <article class="pp-compare-card">
+                    <h3>Aylık plan</h3>
+                    <p>SEBS Yolu aşamaları, simülasyonlar, kariyer testleri ve dashboard ilerlemesi bir arada.</p>
+                    <span class="pp-tag">199 – 799 TL/ay</span>
+                </article>
+                <article class="pp-compare-card">
+                    <h3>Tek modül veya durak</h3>
+                    <p>Tek konuya odaklanmak için modül (120 TL) veya durak (199 TL) satın alabilirsin; sonradan plana geçebilirsin.</p>
+                    <span class="pp-tag">Tek seferlik ödeme</span>
+                </article>
+            </div>
+            <div class="pp-access-table-wrap">
+                <table class="pp-access-table" aria-label="Planlara göre aşama erişimi">
+                    <thead>
+                        <tr>
+                            <th scope="col">Plan</th>
+                            <th scope="col">İlk Adım</th>
+                            <th scope="col">Yükseliş</th>
+                            <th scope="col">Zirve</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>İlk Adım</td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                            <td><span class="pp-chip-locked">—</span></td>
+                            <td><span class="pp-chip-locked">—</span></td>
+                        </tr>
+                        <tr>
+                            <td>Yükseliş</td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                            <td><span class="pp-chip-locked">—</span></td>
+                        </tr>
+                        <tr>
+                            <td>Zirve</td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                            <td><span class="pp-chip-open">Açık</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="pp-container">
+        <div class="pp-note">
+            <p><strong>Not:</strong> Tekli satış içerik verir; abonelik ilerleme takibi ve aşamalar arası geçişi açar. Ödeme iyzico güvenli ödeme sayfasında tamamlanır.</p>
         </div>
     </div>
 
-    <section class="container journey-module-shop journey-reveal" id="detayli-mufredat" aria-labelledby="detayli-mufredat-heading">
-        <div id="moduleRoadContainer" style="display:none;"></div>
+    <section class="pp-mufredat" id="detayli-mufredat">
+        <div class="pp-container">
+            <details>
+                <summary>Tüm modül listesi ve yol haritası</summary>
+                <div class="pp-mufredat__body">
+                    <p class="pp-mufredat__hint">Detaylı müfredat ve modül sırası için eğitim modülleri sayfasına da göz atabilirsin.</p>
+                    <a href="/modules.html" class="pp-mufredat__link focus-ring">Eğitim modüllerini gör <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <div id="moduleRoadContainer" class="journey-module-shop" style="display:none;"></div>
+                </div>
+            </details>
+        </div>
     </section>
+    </main>
 
 
     <script src="js/navigation.js"></script>
@@ -2297,26 +655,26 @@
             return data.packages.map((pkg, index) => {
                 const isOwned = hasPurchasedPackage(category, pkg.level);
                 const isFeatured = category === 'sebs-road' ? index === 1 : index === 0;
+                const featureList = (pkg.features || []).slice(0, 4);
+                const moreCount = (pkg.features || []).length - featureList.length;
                 return `
-                    <div class="pricing-card journey-reveal ${isFeatured ? 'featured' : ''}">
-                        ${isFeatured ? '<span class="pricing-featured-badge">En çok tercih edilen</span>' : ''}
+                    <div class="pricing-card ${isFeatured ? 'featured' : ''}">
+                        ${isFeatured ? '<span class="pricing-featured-badge">Önerilen</span>' : ''}
                         <div class="pricing-header">
                             <div class="pricing-level">${getLevelLabel(pkg.level)}</div>
                             <h3 class="pricing-title">${pkg.title}</h3>
                             <div class="pricing-price">₺${pkg.price}</div>
                             <div class="pricing-period">${pkg.period || 'Tek seferlik ödeme'}</div>
                             <div class="pricing-period pricing-subtitle">${pkg.subtitle || ''}</div>
-                            <div class="pricing-flow">
-                                ${getFlowChips(pkg.level).map(chip => `<span>${chip}</span>`).join('')}
-                            </div>
                         </div>
                         <ul class="pricing-features">
-                            ${pkg.features.map(feature => `
+                            ${featureList.map(feature => `
                                 <li ${(pkg.disabled || []).includes(feature) ? 'class="disabled"' : ''}>
-                                    <i class="fas fa-check-circle"></i>
+                                    <i class="fas fa-check"></i>
                                     <span>${feature}</span>
                                 </li>
                             `).join('')}
+                            ${moreCount > 0 ? `<li class="disabled"><i class="fas fa-ellipsis-h"></i><span>+${moreCount} özellik daha</span></li>` : ''}
                         </ul>
                         <button 
                             class="btn-purchase" 
@@ -2347,11 +705,14 @@
             if (category === 'sebs-road') {
                 if (pricingContainer) pricingContainer.style.display = '';
                 if (moduleRoadContainer) {
-                    moduleRoadContainer.style.display = 'block';
-                    renderModuleRoad(category);
+                    moduleRoadContainer.style.display = 'none';
+                    var detailsEl = document.querySelector('.pp-mufredat details');
+                    if (detailsEl && detailsEl.open) {
+                        moduleRoadContainer.style.display = 'block';
+                        renderModuleRoad(category);
+                    }
                 }
                 grid.innerHTML = buildPackageCardsHtml(category, data);
-                setupJourneyReveal();
                 return;
             }
 
@@ -2684,15 +1045,17 @@
             }
         }
 
-        document.querySelectorAll('.pricing-hero-package-btn').forEach((btn) => {
-            btn.addEventListener('click', function (ev) {
-                if (!isLoggedIn()) {
-                    handlePurchaseClick(ev);
-                    return;
-                }
-                handlePurchase(ev);
+        (function bindMufredatDetails() {
+            var detailsEl = document.querySelector('.pp-mufredat details');
+            if (!detailsEl) return;
+            detailsEl.addEventListener('toggle', function () {
+                if (!detailsEl.open || currentCategory !== 'sebs-road') return;
+                var container = document.getElementById('moduleRoadContainer');
+                if (!container) return;
+                container.style.display = 'block';
+                renderModuleRoad('sebs-road');
             });
-        });
+        })();
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
@@ -2714,7 +1077,6 @@
             }
             
             await renderPricingCards(currentCategory);
-            setupJourneyReveal();
             
             // Scroll to pricing cards if level is specified
             if (urlLevel) {
