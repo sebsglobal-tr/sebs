@@ -7,27 +7,27 @@
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <meta name="theme-color" content="#0f172a" />
     <base href="/">
-    <title>Temel Siber Güvenlik - CyberGuard Academy</title>
+    <title>Temel Siber Güvenlik | SEBS Global Premium</title>
     <meta name="description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
     <meta name="keywords" content="temel siber güvenlik, CIA triad, cybersecurity basics, güvenlik temelleri, siber güvenlik eğitimi">
-    <meta name="author" content="CyberGuard Academy">
+    <meta name="author" content="SEBS Global">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Turkish">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="sebs-content-version" content="20260523">
+    <meta name="sebs-content-version" content="20260527">
     
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebsglobal.com/modules/temel-siber-guvenlik.html">
-    <meta property="og:title" content="Temel Siber Güvenlik - CyberGuard Academy">
+    <meta property="og:title" content="Temel Siber Güvenlik - SEBS Global">
     <meta property="og:description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
     <meta property="og:image" content="https://sebsglobal.com/og-temel-siber-guvenlik.jpg">
-    <meta property="og:site_name" content="CyberGuard Academy">
+    <meta property="og:site_name" content="SEBS Global">
     <meta property="og:locale" content="tr_TR">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Temel Siber Güvenlik - CyberGuard Academy">
+    <meta name="twitter:title" content="Temel Siber Güvenlik - SEBS Global">
     <meta name="twitter:description" content="Temel Siber Güvenlik modülü ile CIA triad, güvenlik temelleri ve temel kavramları öğrenin. Kapsamlı eğitim içeriği ve pratik uygulamalar.">
     <meta name="twitter:image" content="https://sebsglobal.com/og-temel-siber-guvenlik.jpg">
 
@@ -41,7 +41,7 @@
         "description": "CIA triad, güvenlik temelleri ve temel kavramları öğrenin",
         "provider": {
             "@type": "Organization",
-            "name": "CyberGuard Academy",
+            "name": "SEBS Global",
             "url": "https://sebsglobal.com"
         },
         "courseMode": "online",
@@ -76,1829 +76,13 @@
     <script src="../utils/module-progress.js"></script>
     <script src="../utils/time-tracker.js"></script>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/premium-lesson.css">
-<link rel="stylesheet" href="/css/module-shell-base.css" />
-    <style>
-        .edu-narrative, .edu-lesson-recap {
-            margin: 1.25rem 0 1.75rem;
-            line-height: 1.8;
-            max-width: 78ch;
-        }
-        .edu-narrative p, .edu-lesson-recap p {
-            margin-bottom: 1rem;
-        }
-        .edu-lesson-recap {
-            padding: 1.25rem 1.5rem;
-            border-radius: 12px;
-            background: var(--bg-secondary, #f7fafc);
-            border-left: 4px solid #667eea;
-        }
-        .edu-chapter-body {
-            margin: 1.5rem 0 2rem;
-            padding: 1.25rem 0;
-            border-top: 1px solid var(--border-color, rgba(0,0,0,0.08));
-        }
-        .edu-chapter-body h3 {
-            margin-top: 1.75rem;
-            margin-bottom: 0.75rem;
-        }
-        .edu-chapter-body h3:first-child {
-            margin-top: 0.5rem;
-        }
-        .edu-chapter-body p {
-            margin-bottom: 1rem;
-            line-height: 1.8;
-            max-width: 78ch;
-        }
-        
-        .cia-triad-visual {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0 2rem;
-        }
-        .cia-pillar {
-            text-align: center;
-            padding: 1.25rem 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color, rgba(0,0,0,0.08));
-            background: var(--bg-secondary, #f7fafc);
-        }
-        .cia-pillar i { font-size: 1.75rem; display: block; margin-bottom: 0.5rem; }
-        .cia-pillar.confidentiality i { color: #3182ce; }
-        .cia-pillar.integrity i { color: #38a169; }
-        .cia-pillar.availability i { color: #d69e2e; }
-        @media (max-width: 640px) {
-            .cia-triad-visual { grid-template-columns: 1fr; }
-        }
-
-        [data-theme="dark"] .edu-lesson-recap {
-            background: var(--bg-secondary, #1e293b);
-        }
-
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7fafc;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --navbar-bg: rgba(255, 255, 255, 0.98);
-            --card-bg: #ffffff;
-            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-soft: linear-gradient(135deg, #667eea 0%, #764ba2 85%, #a855f7 100%);
-            --secondary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --accent-gradient: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-light: #94a3b8;
-            --text-color: #2d3748;
-            --primary-color: #667eea;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] {
-            /* Modern Dark Theme - Professional Design */
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e0;
-            --text-tertiary: #94a3b8;
-            --text-light: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --navbar-bg: rgba(15, 23, 42, 0.95);
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --gradient-purple: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--bg-primary);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navigation */
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            padding: 1rem 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.9rem !important;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
-            gap: 0.5rem;
-            white-space: nowrap;
-        }
-
-        .nav-logo .sebs {
-            color: #2d3748;
-            display: inline-block;
-            line-height: 1;
-            white-space: nowrap;
-            flex-shrink: 0;
-            margin-right: 0.2em;
-        }
-
-        .nav-logo .global {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: inline-block;
-            line-height: 1;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-menu li {
-            margin: 0;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            font-size: 0.813rem !important;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-link:hover {
-            color: #3182ce;
-        }
-
-        .nav-link.active {
-            color: #3182ce;
-            font-weight: 600;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .btn-login {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: white;
-            color: #3182ce;
-            border: 2px solid #3182ce;
-        }
-
-        .btn-login:hover {
-            background: #3182ce;
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .btn-signup {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            color: white;
-            border: none;
-        }
-
-        .btn-signup:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: rgba(102, 126, 234, 0.15);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 70%, #a855f7 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .btn-logout {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: white;
-            color: #e53e3e;
-            border: 2px solid #e53e3e;
-        }
-
-        .btn-logout:hover {
-            background: #e53e3e;
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-            background: none;
-            border: none;
-            padding: 0.5rem;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: #4a5568;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        /* Module Layout */
-        .module-layout {
-            display: flex;
-            min-height: calc(100vh - 80px);
-        }
-
-        .module-sidebar {
-            width: 300px;
-            background: white;
-            border-right: 1px solid #e2e8f0;
-            padding: 2rem 0;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            padding: 0 2rem 2rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .sidebar-header h3 {
-            color: #1e293b;
-            margin-bottom: 1rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-top: 0.5rem;
-        }
-
-        .sidebar-nav {
-            padding: 2rem 0;
-        }
-
-        .nav-section {
-            margin-bottom: 2rem;
-        }
-
-        .nav-section h4 {
-            color: #1e293b;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding: 0 2rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-section h4 i {
-            margin-right: 0.5rem;
-            color: #3b82f6;
-        }
-
-        .nav-list {
-            list-style: none;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .nav-item:hover {
-            background: #f1f5f9;
-        }
-
-        .nav-item.active {
-            background: #eff6ff;
-            border-left-color: #3b82f6;
-            color: #1d4ed8;
-        }
-
-        .nav-item i:first-child {
-            margin-right: 0.75rem;
-            width: 16px;
-            text-align: center;
-        }
-
-        .nav-item span {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-
-        .nav-item i:last-child {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .nav-item.completed i:last-child {
-            color: #10b981;
-        }
-
-        .nav-item.locked i:last-child {
-            color: #ef4444;
-        }
-
-        /* Main Content */
-        .module-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .content-section h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-        }
-
-        .content-section h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 30px 0 15px 0;
-            color: var(--text-primary);
-        }
-
-        .content-section p {
-            margin-bottom: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        .content-section ul,
-        .content-section ol {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-
-        .content-section li {
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-        }
-
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            border: 1px solid #93c5fd;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .info-box h4 {
-            margin: 0 0 15px 0;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 1px solid #f59e0b;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .warning-box h4 {
-            margin: 0 0 15px 0;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .success-box {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            border: 1px solid #10b981;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .success-box h4 {
-            margin: 0 0 15px 0;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        table th {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        table tr:last-child td {
-            border-bottom: none;
-        }
-
-        table tr:hover {
-            background: rgba(102, 126, 234, 0.05);
-        }
-
-        .lesson-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .lesson-status {
-            font-weight: 500;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-complete-lesson {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-complete-lesson:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-complete-lesson:disabled {
-            background: #6b7280;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .lesson.completed .lesson-controls {
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .lesson.completed .lesson-status {
-            color: #10b981;
-        }
-
-        .lesson.completed .btn-complete-lesson {
-            background: #6b7280;
-            cursor: not-allowed;
-        }
-
-        /* Completion Messages */
-        .completion-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
-            z-index: 10000;
-            animation: completionSlideIn 0.5s ease-out;
-            text-align: center;
-            min-width: 300px;
-        }
-
-        .completion-message.module-complete {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
-        }
-
-        .completion-content i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .completion-content h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .completion-content p {
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .btn-dashboard {
-            padding: 0.75rem 1.5rem;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-dashboard:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        @keyframes completionSlideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        .section-header {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .section-header h2 {
-            color: #1e293b;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .section-header p {
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        /* Lesson Content */
-        .lesson-content {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-        }
-
-        .lesson-content h3 {
-            color: #1e293b;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .lesson-content h3 i {
-            color: #3b82f6;
-        }
-
-        .lesson-content p {
-            color: #64748b;
-            font-size: 1rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Detailed Explanation Styles */
-        .detailed-explanation {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid #e2e8f0;
-        }
-
-        .detailed-explanation h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .detailed-explanation h4 i {
-            color: #3b82f6;
-        }
-
-        .cybersecurity-fundamentals, .cybersecurity-domains, .cybersecurity-challenges {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border: 1px solid #e2e8f0;
-        }
-
-        .cybersecurity-fundamentals h5, .cybersecurity-domains h5, .cybersecurity-challenges h5 {
-            color: #1e293b;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .cybersecurity-fundamentals ul, .cybersecurity-domains ul, .cybersecurity-challenges ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .cybersecurity-fundamentals li, .cybersecurity-domains li, .cybersecurity-challenges li {
-            margin-bottom: 8px;
-            color: #64748b;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Concept Box */
-        .concept-box {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .concept-box h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .concept-box h4 i {
-            color: #f59e0b;
-        }
-
-        .concept-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .concept-item {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .concept-item strong {
-            color: #1e293b;
-            font-size: 1rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .concept-detail {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .concept-detail p {
-            margin: 0 0 1rem 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .concept-detail ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .concept-detail li {
-            margin-bottom: 5px;
-            color: #64748b;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        /* Real World Cases */
-        .real-world-cases {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .real-world-cases h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .real-world-cases h4 i {
-            color: #ef4444;
-        }
-
-        .case-studies {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .case-study {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .case-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .case-header h5 {
-            color: #1e293b;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .case-impact {
-            background: #fef2f2;
-            color: #dc2626;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .case-content p {
-            margin: 0 0 1rem 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .case-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.75rem;
-        }
-
-        .detail-item {
-            background: white;
-            padding: 0.75rem;
-            border-radius: 4px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .detail-item strong {
-            color: #1e293b;
-            font-size: 0.8rem;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        /* Cybersecurity Stats */
-        .cybersecurity-stats {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .cybersecurity-stats h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cybersecurity-stats h4 i {
-            color: #10b981;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .stat-card {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-        }
-
-        .stat-icon i {
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-detail {
-            background: white;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px solid #e2e8f0;
-            text-align: left;
-        }
-
-        .stat-detail p {
-            margin: 0 0 1rem 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .stat-detail ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .stat-detail li {
-            margin-bottom: 5px;
-            color: #64748b;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        /* Module Meta Enhancement */
-        .features {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            color: #0c4a6e;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid #0ea5e9;
-        }
-
-        .features i {
-            margin-right: 5px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .module-layout {
-                flex-direction: column;
-            }
-
-            .module-sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-            }
-
-            .module-content {
-                padding: 1rem;
-            }
-
-            .concept-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .case-studies {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-        }
-        
-        /* Enhanced Visual Elements */
-        .visual-timeline {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #0ea5e9;
-        }
-        
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        
-        .timeline-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .timeline-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        .timeline-icon i {
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .timeline-content h6 {
-            margin: 0 0 10px 0;
-            color: #1e293b;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        .timeline-content p {
-            margin: 0;
-            color: #64748b;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .comparison-table {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .comparison-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            background: #1e293b;
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        
-        .comparison-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        
-        .comparison-row:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .comparison-cell {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-        }
-        
-        .comparison-cell i {
-            color: #3b82f6;
-            font-size: 1.1rem;
-        }
-
-        div.comparison-table {
-            display: block !important;
-            table-layout: unset !important;
-        }
-
-        .terimler-block {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .terimler-block table.comparison-table,
-        .terimler-block table.glossary-table {
-            display: table !important;
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .terimler-block table.comparison-table thead th {
-            background: #1e293b;
-            color: #fff;
-            padding: 0.85rem 1rem;
-            text-align: left;
-        }
-
-        .terimler-block table.comparison-table tbody td {
-            padding: 0.75rem 1rem;
-            border-top: 1px solid #e2e8f0;
-            vertical-align: top;
-        }
-
-        .terimler-block table.comparison-table tbody tr:nth-child(even) {
-            background: #f8fafc;
-        }
-        
-        .process-flow {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .flow-step {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            position: relative;
-        }
-        
-        .flow-step::after {
-            content: '';
-            position: absolute;
-            left: 30px;
-            bottom: -20px;
-            width: 2px;
-            height: 20px;
-            background: #3b82f6;
-        }
-        
-        .flow-step:last-child::after {
-            display: none;
-        }
-        
-        .flow-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-        
-        .flow-content h6 {
-            margin: 0 0 8px 0;
-            color: #1e293b;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .flow-content p {
-            margin: 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .security-layers {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .layer-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .layer-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-        }
-        
-        .layer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .layer-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        
-        .layer-icon i {
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .layer-title {
-            margin: 0 0 10px 0;
-            color: #1e293b;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        .layer-description {
-            margin: 0 0 15px 0;
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        
-        .layer-tools {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .tool-tag {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        .detailed-content-box {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #cbd5e1;
-        }
-        
-        .content-section-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .content-section-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .content-section-icon i {
-            color: white;
-            font-size: 1.3rem;
-        }
-        
-        .content-section-title {
-            margin: 0;
-            color: #1e293b;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        
-        .enhanced-text {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 20px 0;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        
-        .enhanced-text h6 {
-            margin: 0 0 15px 0;
-            color: #1e293b;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .enhanced-text h6 i {
-            color: #3b82f6;
-        }
-        
-        .enhanced-text p {
-            margin: 0 0 15px 0;
-            color: #64748b;
-            font-size: 1rem;
-            line-height: 1.7;
-        }
-        
-        .enhanced-text ul {
-            margin: 0 0 15px 0;
-            padding-left: 25px;
-        }
-        
-        .enhanced-text li {
-            margin-bottom: 8px;
-            color: #64748b;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .visual-highlight {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #f59e0b;
-        }
-        
-        .visual-highlight h6 {
-            margin: 0 0 10px 0;
-            color: #92400e;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .visual-highlight p {
-            margin: 0;
-            color: #92400e;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-        
-        .info-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .info-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-        
-        .info-card-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .info-card-icon i {
-            color: white;
-            font-size: 1.1rem;
-        }
-        
-        .info-card-title {
-            margin: 0;
-            color: #1e293b;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .info-card-content {
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        
-        /* Cybersecurity Fundamentals Enhanced Styles */
-        .cybersecurity-fundamentals {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #0ea5e9;
-        }
-        
-        .cybersecurity-fundamentals h5 {
-            color: #0c4a6e;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .cybersecurity-fundamentals ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .cybersecurity-fundamentals li {
-            background: white;
-            border-left: 4px solid #3b82f6;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .cybersecurity-fundamentals li:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .cybersecurity-domains {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #22c55e;
-        }
-        
-        .cybersecurity-domains h5 {
-            color: #166534;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .cybersecurity-domains ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .cybersecurity-domains li {
-            background: white;
-            border-left: 4px solid #22c55e;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .cybersecurity-domains li:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .cybersecurity-challenges {
-            background: linear-gradient(135deg, #fef2f2, #fee2e2);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid #ef4444;
-        }
-        
-        .cybersecurity-challenges h5 {
-            color: #dc2626;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .cybersecurity-challenges ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .cybersecurity-challenges li {
-            background: white;
-            border-left: 4px solid #ef4444;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .cybersecurity-challenges li:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        /* Lesson completion styles */
-        .lesson-completion {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 2rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-complete-lesson {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
-        }
-        
-        .btn-complete-lesson:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
-        }
-        
-        .btn-complete-lesson i {
-            margin-right: 0.5rem;
-        }
-        
-        /* Completion message styles */
-        .completion-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            animation: completionSlideIn 0.5s ease;
-        }
-        
-        .completion-message.module-complete {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-        }
-        
-        .completion-content {
-            text-align: center;
-        }
-        
-        .completion-content i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #22c55e;
-        }
-        
-        .completion-message.module-complete .completion-content i {
-            color: white;
-        }
-        
-        .completion-content h3 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .completion-content p {
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .btn-dashboard {
-            background: white;
-            color: #f59e0b;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-dashboard:hover {
-            background: #f3f4f6;
-            transform: translateY(-1px);
-        }
-        
-        @keyframes completionSlideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -60%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-        }
-
-        .loading-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .loading-logo svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 2rem;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .loading-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .loading-subtext {
-            font-size: 1rem;
-            opacity: 0.8;
-            text-align: center;
-        }
-
-        .loading-progress {
-            width: 300px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-            margin-top: 2rem;
-            overflow: hidden;
-        }
-
-        .loading-progress-bar {
-            height: 100%;
-            background: white;
-            border-radius: 2px;
-            animation: progress 3s ease-in-out;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-    </style>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/module-shell-base.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -1921,12 +105,12 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <link rel="stylesheet" href="/css/module-lesson-landing.css" />
-
+  <link rel="stylesheet" href="/css/module-lesson-landing.css?v=20260527" />
+    <link rel="stylesheet" href="/css/temel-siber-premium.css?v=20260527" />
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
-    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=7" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=20260527" />
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white module-page--temel-siber">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -2027,10 +211,19 @@
     <div class="module-layout">
         <aside class="module-sidebar">
             <div class="sidebar-header sebs-sidebar-header">
-                <p class="sebs-sidebar-eyebrow">SEBS — Başlangıç seviye</p>
+                <div class="sebs-sidebar-hero">
+                    <img class="sebs-sidebar-hero__img" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=640&q=80" alt="" width="640" height="360" loading="lazy" decoding="async" />
+                    <span class="sebs-sidebar-hero__badge"><i class="fas fa-gem" aria-hidden="true"></i> Premium</span>
+                </div>
+                <p class="sebs-sidebar-eyebrow">SEBS Premium · Başlangıç</p>
                 <h1>Temel Siber Güvenlik</h1>
-                <p class="sebs-sidebar-tagline">Eksiksiz başlangıç modülü — kavramlar, CIA (eşit derinlik), tehdit, savunma, risk, politika ve olay müdahalesi.</p>
-                <p class="sebs-content-version-badge" style="font-size:0.75rem;opacity:0.7;margin-top:0.35rem;">İçerik sürümü: 2026-05-23</p>
+                <p class="sebs-sidebar-tagline">Kıdemli eğitim standardı — uzun anlatım, eşit CIA derinliği, vaka ve tablolar.</p>
+                <div class="sebs-module-meta-chips" aria-label="Modül bilgisi">
+                    <span><i class="fas fa-book-open"></i> 7 ders</span>
+                    <span><i class="fas fa-clock"></i> ~8 saat</span>
+                    <span><i class="fas fa-layer-group"></i> CIA eşit derinlik</span>
+                </div>
+                <p class="sebs-content-version-badge">İçerik sürümü: 2026-05-27</p>
                 <div class="progress-container sebs-sidebar-progress">
                     <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -2061,7 +254,7 @@
             </nav>
         </aside>
 
-                        <main class="module-content">
+        <main class="module-content">
             <div id="lesson-route-hero" class="lesson-route-hero" aria-live="polite" hidden>
                 <p class="lesson-route-hero-module"></p>
                 <p class="lesson-route-hero-lesson"></p>
@@ -2074,20 +267,35 @@
                 <div class="section-header">
                     <h2><i class="fas fa-info-circle"></i> Giriş ve modül haritası</h2>
                     <p>SEBS Global’de siber güvenliğe ilk adımınız</p>
-                    <p class="section-intro">Bu modül, dijital dünyada “neyi, neden ve kime karşı koruyoruz?” sorusuna tutarlı cevap vermenizi sağlar. Kısa listeler değil; bağlam, örnek, savunma ve özet içeren eksiksiz bir başlangıç eğitimidir.</p>
+                    <p class="section-intro">Kısa listeler değil: bağlam, örnek, savunma ve özet içeren, kıdemli eğitim standardında uzun anlatımlı başlangıç modülü. CIA üçlüsünde gizlilik, bütünlük ve erişilebilirlik eşit derinlikte işlenir.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Siber güvenliğin tanımını ve bilgi güvenliği ile ilişkisini açıklamak</li><li>Varlık, tehdit, zafiyet, risk, exploit ve payload kavramlarını ayırt etmek</li><li>CIA üçlüsünün üç bileşenini eşit derinlikte açıklamak</li><li>Tehdit aktörleri, savunma prensipleri, risk, politika ve olay müdahalesine giriş yapmak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="modul-vizyon"><i class="fas fa-rocket"></i> Bu modül size ne kazandırır?</h3><p>SEBS’e ilk kez gelen kullanıcılar için bu modül <strong>referans çerçeve</strong>dir. Sonraki eğitimlerde (ağ, penetrasyon testi, uyumluluk) duyacağınız terimler burada tanımlanır.</p><p>Profesyonel ekipler olay konuşurken şu dili kullanır: hangi <strong>varlık</strong> etkilendi, hangi <strong>tehdit</strong> ve <strong>zafiyet</strong> devredeydi, <strong>risk</strong> neden yüksekti, hangi <strong>CIA</strong> boyutu zarar gördü. Bu modül o dili kurar.</p><p>Okuma önerisi: Modülü 3–4 oturuma bölün. Her bölüm sonunda <strong>Dersi tamamla</strong> ile ilerleyin; modül özetindeki soruları kapatmadan sonraki modüle geçmeyin.</p></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül kazanımları</h3><ul>
+<li>Siber güvenliğin tanımını, kapsamını ve bilgi güvenliği ile ilişkisini açıklamak</li>
+<li>Varlık, tehdit, zafiyet, risk, exploit ve payload kavramlarını ayırt etmek</li>
+<li>CIA üçlüsünün üç bileşenini eşit derinlikte örneklemek</li>
+<li>Tehdit aktörleri, savunma prensipleri, risk yönetimi ve olay müdahalesine giriş yapmak</li>
+<li>Güvenlik politikalarının teknik kontrollerle nasıl bağlandığını anlatmak</li>
+</ul></div>
+<div class="edu-narrative enhanced-text">
+<h3 id="modul-vizyon"><i class="fas fa-rocket"></i> Neden bu modül farklı?</h3>
+<p>SEBS Temel Siber Güvenlik modülü, “okudum geçtim” listeleri için değil; <strong>ilk kez siber güvenliğe giren</strong> veya bilgisini sistemleştirmek isteyen profesyoneller için yazıldı. Her ders; tanım, gerçek dünya örneği, hangi CIA boyutunun etkilendiği, hangi kontrolün devreye girdiği ve bölüm sonu özeti içerir.</p><p>Siber güvenlik yalnızca antivirüs veya “güçlü parola” değildir. Dijital varlıklarınızı (veri, sistem, hizmet), tehdit ortamını, zafiyetleri ve risk önceliğini aynı dilde konuşabilmek — SOC’ta, mimari toplantıda veya KVKK hazırlığında — bu modülün hedefidir.</p><p>Modülü <strong>7 ders + kapanış</strong> olarak planlayın. Oturum başına 45–90 dakika, 1–2 ders. Acele etmeyin: CIA üçlüsünde gizlilik, bütünlük ve erişilebilirlik <strong>aynı uzunlukta</strong> işlenir; biri özet geçilmez.</p><p>Okurken not defterinize şu şablonu yazın: <em>Tanım → Örnek olay → Etkilenen CIA → Uygulanan kontrol → Açık kalan risk.</em></p>
+</div>
 <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Modül haritası">
-<div class="kr-inline-breakout__head"><i class="fas fa-map"></i><span>Yedi ders + kapanış</span></div>
-<p class="kr-inline-breakout__hint">Sol menü ile aynı sıra. CIA üçlüsü ayrı derstir; gizlilik, bütünlük ve erişilebilirlik eşit işlenir.</p>
+<div class="kr-inline-breakout__head"><i class="fas fa-map"></i><span>Yol haritası</span></div>
+<p class="kr-inline-breakout__hint">Sol menü ile aynı sıradır. Ders 2 yalnızca CIA üçlüsüne ayrılmıştır.</p>
 <div class="kr-cia-grid">
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-book"></i></span><span>1–2 Kavramlar</span></summary><div class="kr-exp-goal__body">Temeller, varlık–tehdit–risk, CIA.</div></details>
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-bug"></i></span><span>3 Tehditler</span></summary><div class="kr-exp-goal__body">Malware, vektörler, aktörler.</div></details>
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-shield-alt"></i></span><span>4–5 Savunma</span></summary><div class="kr-exp-goal__body">Prensipler ve risk.</div></details>
-<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-landmark"></i></span><span>6–8 Yönetim</span></summary><div class="kr-exp-goal__body">Politika, olay müdahalesi, özet.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-book"></i></span><span>1–2 Temel kavramlar</span></summary><div class="kr-exp-goal__body">Tanım, varlık–tehdit–risk, CIA (gizlilik, bütünlük, erişilebilirlik eşit derinlik).</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-bug"></i></span><span>3 Tehditler</span></summary><div class="kr-exp-goal__body">Malware, phishing, aktörler, saldırı zinciri, vaka analizi.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-shield-alt"></i></span><span>4–5 Savunma</span></summary><div class="kr-exp-goal__body">Katmanlı savunma, sıfır güven, risk matrisi.</div></details>
+<details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon"><i class="fas fa-landmark"></i></span><span>6–8 Yönetim</span></summary><div class="kr-exp-goal__body">Politika, uyumluluk, olay müdahalesi, modül sentezi.</div></details>
 </div></div>
-<h3 id="nasil-calisilir"><i class="fas fa-route"></i> Nasıl çalışılır?</h3><p>Dersler <strong>rota modunda</strong> açılır; alt başlıklar sayfadaki <code>h3</code> ile eşleşir. Oturum başına 1–2 ders önerilir.</p><p>Not şablonu: tanım → gerçek örnek → hangi CIA boyutu? → hangi kontrol?</p><div class="edu-lesson-recap"><h3 id="intro-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Giriş yol haritasını ve çalışma disiplinini netleştirdi; ders 1’e geçmeye hazırsınız.</p><ul><li>Modül haritası ve kazanımlar</li><li>Çalışma disiplini</li><li>Sonraki adımlar</li></ul></div>
+<h3 id="nasil-calisilir"><i class="fas fa-route"></i> Nasıl çalışılır?</h3><p>Dersler <strong>rota modunda</strong> açılır; sayfadaki her <code>h3</code> alt başlık menüde görünür. İlerleme <strong>Dersi tamamla</strong> ile kaydedilir.</p><p>Teknik terimler İngilizce bırakıldığında (ör. ransomware, MFA) bilinçli tercihtir — sertifikasyon ve iş ilanlarında aynı kelimeler geçer.</p><p>Modül sonunda kendinizi sınama sorularını yanıtlamadan sonraki eğitime geçmeyin.</p>
+<div class="edu-lesson-recap"><h3 id="intro-ozet"><i class="fas fa-check-double"></i> Giriş özeti</h3>
+<p>Modül haritası, çalışma disiplini ve beklentiler netleşti. Ders 1 ile ortak güvenlik dili kurulmaya başlanır.</p>
+<ul><li>Yedi derslik yapı</li><li>Not şablonu</li><li>CIA eşit derinlik taahhüdü</li></ul></div>
+
                 </div></div></div>
             </section>
 
@@ -2095,10 +303,19 @@
                 <div class="section-header">
                     <h2><i class="fas fa-book"></i> 1. Siber güvenlik temelleri</h2>
                     <p>Tanım, kapsam ve güvenliğin ortak dili</p>
-                    <p class="section-intro">Siber güvenlik yalnızca antivirüs değildir. Bu derste disiplinin tanımı, üç savunma boyutu ve varlık–tehdit–zafiyet–risk modeli işlenir; CIA ayrı derstir.</p>
+                    <p class="section-intro">Disiplinin tanımı, bilgi güvenliği farkı, üç savunma boyutu ve varlık–tehdit–zafiyet–risk modeli. CIA ayrı derstir.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Siber güvenlik ve bilgi güvenliği ilişkisini açıklamak</li><li>Dijital varlıkları sınıflandırmak</li><li>Tehdit, zafiyet, risk, exploit, payload ve saldırı zincirini tanımlamak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders1-buyuk-resim"><i class="fas fa-compass"></i> Ders 1 — Büyük resim</h3><p>Bu ders modülün omurgasıdır. CIA üçlüsü ders 2’de eşit derinlikte gelir; burada <strong>ortak sözlük</strong> kurulur.</p><p>Dijitalleşme her işletmeyi veri işleyen organizasyona dönüştürdü. Koruma; kimlik yönetimi, yedekleme, hukuk ve insan faktörünü birlikte düşünür.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="sg-tanim"><i class="fas fa-shield-alt"></i> Siber güvenlik nedir?</h3><p><strong>Siber güvenlik</strong>, bilgisayar sistemlerini, ağları, uygulamaları ve verileri yetkisiz erişim, değiştirme veya hizmet kesintisine karşı korumak için uygulanan teknik, süreç ve insan önlemlerinin bütünüdür.</p><p><strong>Bilgi güvenliği</strong> daha geniştir: kağıt arşivden buluta kadar bilginin gizliliği, bütünlüğü ve erişilebilirliği. Siber güvenlik dijital ortama odaklanır.</p><p>Kritik altyapı (enerji, sağlık, finans) kesintisiz çalışması siber olgunluğa bağlıdır. KVKK/GDPR ihlalleri yaptırıma tabidir.</p><h3 id="sg-uc-boyut"><i class="fas fa-layer-group"></i> Teknoloji, süreç ve insan</h3><p><strong>Teknoloji:</strong> Şifreleme, firewall, EDR, SIEM, yama. Yanlış yapılandırılmış bulut bucket’ı pahalı firewall’ı baypas eder.</p><p><strong>Süreç:</strong> Erişim onayı, yedek testi, olay bildirimi, ayrıcalıklı hesap disiplini.</p><p><strong>İnsan:</strong> Farkındalık, phishing direnci. Birçok olayda zayıf halka kullanıcı veya yöneticidir.</p><table class="comparison-table glossary-table"><thead><tr><th>Boyut</th><th>Örnek kontrol</th><th>Başarısızlık</th></tr></thead><tbody><tr><td>Teknoloji</td><td>MFA, şifreleme</td><td>Açık RDP</td></tr><tr><td>Süreç</td><td>Access review</td><td>Ayrılan çalışan hesabı açık</td></tr><tr><td>İnsan</td><td>Phishing tatbikatı</td><td>Sahte fatura tıklanması</td></tr></tbody></table><h3 id="varlik"><i class="fas fa-gem"></i> Varlık (Asset)</h3><p>Korunması gereken her değer <strong>varlıktır</strong>: müşteri verisi, kaynak kodu, ERP, e-posta hizmeti, marka itibarı.</p><p>Envanter olmadan bütçe yanlış yere gider. “Tek kişinin bildiği admin parolası” ayrı satır olmalıdır.</p><div class="example-box"><p><strong>Kuzey Lojistik</strong></p><p>Araç takip uygulaması <strong>hizmet</strong>; sunucu <strong>sistem</strong>; konum kayıtları <strong>veri</strong>. Hedef: konum sızmaması (gizlilik), kayıt değişmemesi (bütünlük), panele erişim (erişilebilirlik).</p></div><h3 id="tehdit"><i class="fas fa-user-ninja"></i> Tehdit (Threat)</h3><p>Zarar verme <em>potansiyeli</em>. Başarısız giriş denemeleri de tehdit ortamıdır.</p><p>Doğal tehditler (yangın) erişilebilirliği etkiler — DR planı bütünleşik güvenliğin parçasıdır.</p><p>Tehdit ≠ risk. Risk = tehdit + zafiyet + varlık değeri.</p><h3 id="zafiyet"><i class="fas fa-door-open"></i> Zafiyet (Vulnerability)</h3><p>Teknik (CVE), yapılandırma (açık bucket), süreç/insan (parola paylaşımı).</p><p>“Sistemler güncel” demek IAM ve süreç zafiyetlerini kapatmaz.</p><h3 id="risk"><i class="fas fa-balance-scale"></i> Risk</h3><p><strong>Risk ≈ olasılık × etki</strong>. Aynı SQLi test ortamında düşük, canlı müşteri DB’de kritik.</p><p>Tedavi: azalt, transfer, kabul et (dokümante), kaçın.</p><h3 id="exploit-payload"><i class="fas fa-code"></i> Exploit, payload ve saldırı zinciri</h3><p><strong>Exploit</strong> zafiyeti tetikler. <strong>Payload</strong> sızma sonrası eylem (şifreleme, exfil).</p><p>Zincir: keşif → hazırlık → iletim → sızma → eylem. <strong>Zero-day</strong> imza tabanlı savunmayı aşabilir.</p><div class="example-box"><p><strong>Ev benzetmesi</strong></p><p>Açık kapı <strong>zafiyet</strong>; hırsız <strong>tehdit</strong>; değer + ihtimal <strong>risk</strong>; alarm <strong>kontrol</strong>.</p></div><h3 id="l1-sektor"><i class="fas fa-building"></i> Sektörden sektöre öncelik</h3><p>Bankacılık: gizlilik ve dolandırıcılık. Hastane: hasta verisi gizliliği + sistem erişilebilirliği. Üretim: OT segmentasyonu ve bütünlük. E-ticaret: ödeme ve müşteri verisi.</p><p>Aynı CIA üçlüsü, farklı ağırlık — mimari karar sektöre göre değişir.</p><h3 id="l1-kariyer"><i class="fas fa-briefcase"></i> Kariyer perspektifi</h3><p>SOC analisti olay triyajı, mimar kontrol tasarımı, GRC uyumluluk, pentester zafiyet bulur. Hepsi aynı dili konuşur: varlık, tehdit, risk, CIA.</p><table class="comparison-table glossary-table"><thead><tr><th>Terim</th><th>Açıklama</th></tr></thead><tbody><tr><td>Asset</td><td>Korunan değer</td></tr><tr><td>Threat</td><td>Zarar potansiyeli</td></tr><tr><td>Vulnerability</td><td>İstismar edilebilir zayıflık</td></tr><tr><td>Risk</td><td>Olasılık × etki</td></tr><tr><td>Exploit</td><td>Zafiyeti tetikleyen yöntem</td></tr><tr><td>Payload</td><td>Sızma sonrası eylem</td></tr></tbody></table></div><div class="edu-lesson-recap"><h3 id="ders1-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Ders 1 ortak dili kurdu; ders 2’de CIA’nın üç boyutu eşit derinlikte işlenecek.</p><ul><li>Siber güvenlik tanımı ve üç boyut</li><li>Varlık–tehdit–zafiyet–risk</li><li>Exploit, payload, zincir</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Siber güvenlik ve bilgi güvenliği (InfoSec) ayrımını gerekçelendirmek</li>
+<li>Veri, sistem ve hizmet varlıklarını somut örneklerle sınıflandırmak</li>
+<li>Tehdit, zafiyet, risk, exploit ve payload ilişkisini olay cümleleriyle kurmak</li>
+<li>Teknoloji, süreç ve insan boyutunun savunmadaki rolünü açıklamak</li>
+</ul></div>
+<div class="edu-narrative enhanced-text">
+<h3 id="ders1-buyuk-resim"><i class="fas fa-compass"></i> Ders 1 — Büyük resim</h3>
+<p>Bu ders, modülün omurgasıdır. Siber güvenliğin ne olduğunu, neyi koruduğunuzu ve olayları nasıl cümle kuracağınızı öğretir. CIA üçlüsü bir sonraki derste ayrı ve <strong>eşit derinlikte</strong> işlenir; burada önce <strong>ortak sözlük</strong> kurulur.</p><p>Profesyonel ortamda “hacklendik” yerine şu dil kullanılır: Hangi <strong>varlık</strong> etkilendi? Hangi <strong>tehdit</strong> ve <strong>zafiyet</strong> devredeydi? <strong>Risk</strong> neden önceden yüksekti? Hangi <strong>CIA</strong> boyutu zarar gördü?</p><p>Dijitalleşme her sektörü veri işleyen organizasyona dönüştürdü. Koruma; firewall satın almak değil, kimlik yönetimi, yedekleme disiplini, tedarikçi sözleşmeleri, çalışan farkındalığı ve hukuki uyumun bir arada tasarlanmasıdır.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="sg-tanim"><i class="fas fa-shield-alt"></i> Siber güvenlik nedir?</h3><p><strong>Siber güvenlik (Cybersecurity)</strong>, bilgisayar sistemlerini, ağları, uygulamaları ve verileri yetkisiz erişim, değiştirme veya hizmet kesintisine karşı korumak için uygulanan <strong>teknik, süreç ve insan</strong> önlemlerinin bütünüdür.</p><p>Akademik ve endüstriyel tanımlar bazen “sanat ve bilim” diye özetlenir: <em>Bilim</em>, şifreleme, ağ protokolleri, zafiyet mekanizmaları bilgisidir. <em>Sanat</em>, iş önceliği, bütçe kısıtı ve insan faktörüyle denge kurmaktır — aynı teknik kontrol her kuruma uymaz.</p><p><strong>Bilgi güvenliği (Information Security)</strong> daha geniş çatıdır: kağıt arşiv, sözlü bilgi, fiziksel kilitli dolap da kapsama girer. Siber güvenlik, bilgi güvenliğinin dijital ve ağ bağlantılı alt kümesidir.</p><p>Kurumsal ölçekte siber güvenlik; CISO öncülüğünde yürütülür ancak İK (ayrılış süreçleri), hukuk (sözleşmeler), satın alma (tedarikçi güvenliği) ve üst yönetim (risk kabulü) paydaştır. Tek ürün “tam koruma” vaadi gerçekçi değildir.</p><h3 id="sg-infosec-fark"><i class="fas fa-book"></i> Bilgi güvenliği ile fark</h3><p>Örnek: Hastane hasta dosyası fiziksel dolapta kilitli → bilgi güvenliği kontrolü. Aynı dosyanın taranmış PDF’i herkese açık bulutta → <strong>siber güvenlik + KVKK</strong> konusu.</p><p>Her iki disiplinde de hedefler CIA ile ifade edilir; fark, koruma alanının genişliğindedir.</p><h3 id="sg-uc-boyut"><i class="fas fa-layer-group"></i> Teknoloji, süreç ve insan</h3><p><strong>Teknoloji:</strong> Şifreleme, firewall, EDR, SIEM, IAM, yama yönetimi, DLP. En pahalı firewall, yanlış yapılandırılmış bulut bucket’ını korumaz.</p><p><strong>Süreç:</strong> Erişim onay workflow’u, yedekleme ve <em>restore testi</em>, olay bildirim prosedürü, ayrıcalıklı hesap (PAM) kaydı, işten ayrılışta hesap kapatma SLA’sı.</p><p><strong>İnsan:</strong> Farkındalık eğitimi, phishing simülasyonu, sosyal mühendislik direnci. İstatistikler hâlâ birçok olayda insan veya içeriden kaynaklı zayıflık gösterir.</p><p>Üçü birlikte olmadan “güvenli” sayılmaz: MFA (teknik) varken çalışan parolayı Slack’te paylaşıyorsa (insan) yine olay çıkar.</p><table class="comparison-table glossary-table"><thead><tr><th>Boyut</th><th>Örnek kontrol</th><th>Başarısızlık belirtisi</th></tr></thead><tbody><tr><td>Teknoloji</td><td>TLS, disk şifreleme, EDR</td><td>Açık RDP, eski TLS</td></tr><tr><td>Süreç</td><td>Access review, yedek testi</td><td>Ayrılan çalışan AD hesabı açık</td></tr><tr><td>İnsan</td><td>Phishing tatbikatı</td><td>Sahte fatura tıklanması</td></tr></tbody></table><h3 id="varlik"><i class="fas fa-gem"></i> Varlık (Asset) — neyi koruyoruz?</h3><p><strong>Varlık</strong>, korunması gereken her değerdir. Envanter olmadan güvenlik bütçesi ve öncelik belirsiz kalır; “her yere firewall” yerine “kritik varlıklara odaklan” stratejisi gerekir.</p><p><strong>Veri:</strong> Müşteri PII, finans kaydı, kaynak kodu, sözleşme, sağlık dosyası. Sızıntı → gizlilik; yetkisiz değişiklik → bütünlük; kayıp (yedek yok) → erişilebilirlik.</p><p><strong>Sistem:</strong> Sunucu, laptop, veritabanı, firewall, OT cihazı. Sistem çökünce üzerindeki veri ve ürettiği hizmet birlikte etkilenir.</p><p><strong>Hizmet:</strong> Web sitesi, e-posta, ödeme, randevu, API. Kullanıcı “sisteme giremiyorum” dediğinde çoğu zaman hizmet varlığı konuşulur.</p><p>Gözden kaçan varlıklar: <strong>itibar</strong>, <strong>iş sürekliliği</strong>, <strong>insan bilgisi</strong> (tek kişinin bildiği admin parolası), <strong>tedarikçi erişimi</strong>.</p><div class="example-box"><p><strong>Kuzey Lojistik (kurgusal vaka)</strong></p><p>Araç takip uygulaması = <strong>hizmet</strong>. Sunucu ve veritabanı = <strong>sistem</strong>. Konum ve rota kayıtları = <strong>veri</strong>.</p><p>Güvenlik hedefleri: konum sızmaması (gizlilik), kayıt değiştirilmemesi (bütünlük), sürücünün panele erişmesi (erişilebilirlik). Tek satır “uygulama” envanteri yeterli değildir.</p></div><h3 id="tehdit"><i class="fas fa-user-ninja"></i> Tehdit (Threat)</h3><p><strong>Tehdit</strong>, bir varlığa zarar verme <em>potansiyeli</em> taşıyan kişi, grup veya koşuldur. Saldırı gerçekleşmemiş olsa bile tehdit ortamı vardır (ör. günde binlerce başarısız giriş denemesi).</p><p>Sınıflandırma eksenleri: kapasite (amatör / organize / devlet destekli), motivasyon (para, ideoloji, casusluk), yöntem (phishing, exploit, içeriden).</p><p>Doğal tehditler (yangın, deprem, kesinti) siber değil ama <strong>erişilebilirlik</strong> hedefini etkiler — felaket kurtarma siber programının parçasıdır.</p><p><strong>Tehdit ≠ risk.</strong> Tehdit “dışarıda biri var”; risk “bizim için ne kadar kötü olur” sorusudur.</p><h3 id="zafiyet"><i class="fas fa-door-open"></i> Zafiyet (Vulnerability)</h3><p><strong>Zafiyet</strong>, istismar edilebilir zayıflıktır. Yalnızca yazılım hatası (CVE) değildir.</p><p><strong>Teknik:</strong> Bilinen açık, zayıf parola politikası, açık port, SQL injection’a açık kod.</p><p><strong>Yapılandırma:</strong> Herkese açık S3 bucket, varsayılan admin şifresi, gereksiz domain admin yetkisi.</p><p><strong>Süreç/insan:</strong> Parola paylaşımı, patch penceresi yok, phishing’e tıklama, yedek testi yapılmaması.</p><div class="callout-box warning"><div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="callout-body"><h5>Yaygın yanılgı</h5><p>“Tüm sistemlerimiz güncel” demek, IAM hatalarını, süreç boşluklarını ve sosyal mühendisliği kapatmaz.</p></div></div><h3 id="risk"><i class="fas fa-balance-scale"></i> Risk — önceliklendirme dili</h3><p><strong>Risk</strong>, tehdidin belirli zafiyet ve varlık bağlamında gerçekleşme olasılığı ile etkinin büyüklüğünün birlikte düşünülmesidir. <strong>Risk ≈ olasılık × etki</strong> (iş etkisi, regülasyon, itibar dahil).</p><p>Aynı SQL injection açığı geliştirme ortamında düşük risk, canlı müşteri veritabanında kritik risk olabilir.</p><p>Tedavi: <strong>azalt</strong> (kontrol ekle), <strong>transfer</strong> (sigorta), <strong>kabul et</strong> (yazılı, onaylı kalan risk), <strong>kaçın</strong> (faaliyeti durdur).</p><h3 id="exploit-payload"><i class="fas fa-code"></i> Exploit, payload ve saldırı zinciri</h3><p><strong>Exploit</strong>, zafiyeti tetikleyen teknik veya araçtır (özel HTTP isteği, phishing linki, kimlik avı sayfası).</p><p><strong>Payload</strong>, sızma sonrası asıl etkidir: veri şifreleme (ransomware), hesap açma, veri sızdırma, web sitesine sahte içerik.</p><p>Olay raporunda ayrım netlik kazandırır: “Exploit başarılı, Cobalt Strike payload yüklendi.”</p><p><strong>Saldırı zinciri:</strong> Keşif → hazırlık → iletim → sızma → yerleşme → eylem. Her halkada savunma fırsatı vardır.</p><p><strong>Zero-day:</strong> Yaması bilinmeyen açık; imza tabanlı savunma yetmeyebilir — segmentasyon, davranış izleme, en az ayrıcalık şart.</p><div class="example-box"><p><strong>Ev benzetmesi</strong></p><p>Açık kapı = <strong>zafiyet</strong>. Hırsız = <strong>tehdit</strong>. Evdeki değer + girme ihtimali = <strong>risk</strong>. Alarm = <strong>kontrol</strong> (riski düşürür, sıfırlamaz).</p></div><h3 id="l1-sektor"><i class="fas fa-building"></i> Sektörden sektöre öncelik</h3><p>Bankacılık: gizlilik, dolandırıcılık önleme, regülasyon. Hastane: hasta verisi gizliliği + sistem erişilebilirliği (hayati). Üretim: OT ağ segmentasyonu, sensör bütünlüğü. E-ticaret: ödeme ve müşteri verisi, Black Friday erişilebilirliği.</p><p>Aynı CIA üçlüsü; ağırlıklar değişir — mimari karar sektöre göre yazılmalıdır.</p><h3 id="l1-kariyer"><i class="fas fa-briefcase"></i> Kariyer yollarına bağlantı</h3><p><strong>SOC analisti</strong> olay triyajı ve log korelasyonu. <strong>Güvenlik mimarı</strong> kontrol tasarımı. <strong>GRC</strong> uyumluluk ve politika. <strong>Pentester</strong> zafiyet bulma. Hepsi varlık–tehdit–risk–CIA dilini kullanır.</p><table class="comparison-table glossary-table"><thead><tr><th>Terim</th><th>Türkçe karşılık / not</th></tr></thead><tbody><tr><td>Asset</td><td>Varlık</td></tr><tr><td>Threat</td><td>Tehdit</td></tr><tr><td>Vulnerability</td><td>Zafiyet</td></tr><tr><td>Risk</td><td>Risk (olasılık × etki)</td></tr><tr><td>Exploit</td><td>Zafiyeti tetikleyen yöntem</td></tr><tr><td>Payload</td><td>Sızma sonrası eylem</td></tr><tr><td>Zero-day</td><td>Bilinmeyen/yamasız açık</td></tr></tbody></table></div><div class="edu-lesson-recap"><h3 id="ders1-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Ders 1 ortak güvenlik dilini kurdu. Ders 2’de CIA’nın üç boyutu aynı derinlikte işlenecek.</p><ul><li>Tanım ve InfoSec farkı</li><li>Varlık sınıfları ve envanter</li><li>Tehdit, zafiyet, risk, exploit, payload</li><li>Üç savunma boyutu</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2106,16 +323,25 @@
                 <div class="section-header">
                     <h2><i class="fas fa-lock"></i> 2. CIA üçlüsü</h2>
                     <p>Gizlilik, bütünlük ve erişilebilirlik — eşit derinlikte</p>
-                    <p class="section-intro">Bu ders yalnızca CIA’ya ayrılmıştır. Üç bileşen aynı önemde; her biri için tanım, kontroller, ihlal örnekleri ve denge işlenir.</p>
+                    <p class="section-intro">Bu ders yalnızca CIA’ya ayrılmıştır. Üç bileşen aynı önemde; kontroller, ihlaller, tablolar ve vakalar her biri için işlenir.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Gizlilik, bütünlük ve erişilebilirliği örneklemek</li><li>Her boyut için teknik ve süreç kontrolleri saymak</li><li>Üçlü arasındaki denge ve çelişkileri tartışmak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders2-cia-buyuk-resim"><i class="fas fa-compass"></i> Ders 2 — CIA üçlüsü</h3><p>CIA onlarca yıldır kullanılan <strong>denge çerçevesidir</strong>. Her kontrol en az bir boyuta hizmet eder.</p><p>Bu derste gizlilik, bütünlük ve erişilebilirlik <strong>aynı uzunlukta</strong> anlatılır — biri özet geçilmez.</p><p>Olay analizinde her zaman sorun: hangi C/I/A zarar gördü?</p></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Gizlilik, bütünlük ve erişilebilirliği ayrı ayrı tanımlamak ve örneklemek</li>
+<li>Her CIA boyutu için teknik ve organizasyonel kontrolleri listelemek</li>
+<li>Çoklu boyut etkilenen olayları (ransomware, DDoS, veri sızıntısı) analiz etmek</li>
+<li>CIA dengesi ve mimari önceliklendirme çelişkilerini tartışmak</li>
+</ul></div>
+<div class="edu-narrative enhanced-text">
+<h3 id="ders2-cia-buyuk-resim"><i class="fas fa-compass"></i> Ders 2 — CIA üçlüsü</h3>
+<p>CIA (Confidentiality, Integrity, Availability) onlarca yıldır bilgi güvenliğinin <strong>denge çerçevesidir</strong>. Her kontrol tasarımında en az bir boyuta hizmet eder; çoğu kontrol ikisine birden dokunur.</p><p>Bu derste <strong>gizlilik, bütünlük ve erişilebilirlik aynı uzunlukta</strong> işlenir. Kısa eğitimlerde sık görülen hata: gizliliği uzun anlatıp bütünlük ve erişilebilirliği bir paragrafa sıkıştırmak. Burada üçü de eşit ağırlıktadır.</p><p>Olay analizinde standart soru: Hangi CIA boyutu zarar gördü? Bazen üçü birden (ör. ransomware). “Sadece veri çalındı” varsayımı tehlikelidir.</p></div>
 <div class="cia-triad-visual" role="img" aria-label="CIA üçlüsü">
 <div class="cia-pillar confidentiality"><i class="fas fa-lock"></i><span>Gizlilik</span></div>
 <div class="cia-pillar integrity"><i class="fas fa-check-double"></i><span>Bütünlük</span></div>
 <div class="cia-pillar availability"><i class="fas fa-plug"></i><span>Erişilebilirlik</span></div>
 </div>
-<div class="edu-chapter-body enhanced-text"><h3 id="cia-genel"><i class="fas fa-triangle"></i> CIA üçlüsüne giriş</h3><p>Şifreleme → gizlilik. Hash/imza → bütünlük. Yedek/yük dengeleme → erişilebilirlik. Çoğu kontrol birden fazla boyuta hizmet eder.</p><h3 id="cia-gizlilik"><i class="fas fa-lock"></i> Gizlilik (Confidentiality)</h3><p><strong>Gizlilik</strong>, bilginin yalnızca yetkili kişi, süreç ve sistemler tarafından görülebilmesidir. İhlal: yetkisiz okuma, kopyalama, ifşa veya dinleme.</p><p>Teknik kontroller: <strong>şifreleme</strong> (AES-256, TLS 1.3), <strong>erişim kontrolü</strong> (RBAC, ABAC), <strong>maskeleme</strong> (destek ekranında kart numarasının gizlenmesi), güvenli silme ve anahtar yönetimi (KMS, HSM).</p><p>Organizasyonel kontroller: veri sınıflandırması (genel / dahili / gizli), minimum veri ilkesi, NDA, tedarikçi sözleşmeleri, fiziksel erişim kartları.</p><p>Örnek ihlaller: veritabanı dump’ının dark web’de satılması, çalışanın ekran görüntüsüyle hasta kaydı paylaşması, yanlışlıkla herkese açık S3 bucket. KVKK/GDPR kapsamında bildirim ve idari para cezası gündeme gelebilir.</p><p>Gizlilik tek başına yeterli değildir: veri sızmamış ama <em>değiştirilmiş</em> olabilir (bütünlük) veya sistem çalışmıyor olabilir (erişilebilirlik). Olay analizinde üç boyutu ayrı değerlendirin.</p><p>Gizlilik ↔ erişilebilirlik: Aşırı kısıtlama işi yavaşlatır. Rol bazlı erişim, MFA ve acil “break-glass” hesap prosedürü denge sağlar.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Gizlilik</th></tr></thead><tbody><tr><td>TLS</td><td>İletimde dinleme</td></tr><tr><td>Disk şifreleme</td><td>Çalıntı cihaz</td></tr><tr><td>MFA</td><td>Çalıntı parola</td></tr></tbody></table><div class="example-box"><p><strong>Gizlilik senaryosu</strong></p><p>Hasta kaydı yetkisiz indirildi — <em>gizlilik</em> ihlali; bütünlük/erişilebilirlik ayrı değerlendirilir.</p></div><h3 id="cia-butunluk"><i class="fas fa-check-double"></i> Bütünlük (Integrity)</h3><p><strong>Bütünlük</strong>, verinin ve sistemlerin yetkisiz veya hatalı şekilde değiştirilmediğinin güvencesidir. “Doğru, tam, güvenilir ve değişikliklerin izlenebilir olduğu” veri anlamına gelir.</p><p>Teknik kontroller: <strong>hash</strong> (SHA-256), <strong>dijital imza</strong> (PKI), checksum, <strong>audit log</strong> (kim, ne zaman, neyi değiştirdi), veritabanı transaction bütünlüğü, sürüm kontrolü (Git), WORM depolama.</p><p>Bütünlük saldırıları gizlilik ihlali kadar görünür olmayabilir: muhasebe satırında küçük tutar oynaması, üretim sensör değerinin manipülasyonu, web sitesine sahte duyuru, yazılım paketine backdoor enjeksiyonu.</p><p>Ransomware hem <em>bütünlüğü</em> (dosyalar şifrelenir/değişir) hem <em>erişilebilirliği</em> (sistem kullanılamaz) etkiler; “sadece veri çalındı” varsayımı tehlikelidir.</p><p>Bütünlük ↔ erişilebilirlik: Her değişiklik için çok katmanlı onay bütünlüğü artırır, acil müdahaleyi geciktirir. Otomasyon + acil değişiklik penceresi tanımlanmalıdır.</p><p>Pratik soru: “Bu rapordaki rakama güvenebilir miyim?” — Evet diyorsanız bütünlük kontrolleri işliyor demektir.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Bütünlük</th></tr></thead><tbody><tr><td>Hash</td><td>Dosya bozulmadı mı</td></tr><tr><td>Dijital imza</td><td>Paket sahte mi</td></tr><tr><td>Audit log</td><td>Kim değiştirdi</td></tr></tbody></table><div class="example-box"><p><strong>Bütünlük senaryosu</strong></p><p>Muhasebe toplam satırı gece değiştirildi — <em>bütünlük</em>; liste çalınmadıysa gizlilik ayrı.</p></div><h3 id="cia-erisilebilirlik"><i class="fas fa-plug"></i> Erişilebilirlik (Availability)</h3><p><strong>Erişilebilirlik</strong>, yetkili kullanıcıların ve süreçlerin ihtiyaç duyduğu anda sisteme ve veriye ulaşabilmesidir. Hizmet üretilemiyorsa diğer CIA hedefleri pratikte anlamsızlaşır.</p><p>Teknik kontroller: yedekleme ve <strong>restore testi</strong>, felaket kurtarma (DR), yük dengeleme, kapasite planı, DDoS savunması (WAF, scrubbing), yedek güç, coğrafi yedeklilik.</p><p>Operasyonel metrikler: <strong>RTO</strong> (Recovery Time Objective — ne kadar sürede ayağa kalkmalı), <strong>RPO</strong> (Recovery Point Objective — ne kadar veri kaybı kabul edilebilir). SLA’lar bu metriklerle yazılır.</p><p>Örnek ihlaller: DDoS ile e-ticaret sitesinin çöküşü, ransomware ile şifrelenmiş sunucular, veri merkezi yangını, yanlış zamanlanmış yama sonrası ERP’nin günlerce kapalı kalması.</p><p>Hastane randevu sistemi çalışmıyorsa veri sızmamış olsa bile <em>erişilebilirlik</em> ihlalidir; can güvenliği bağlamında kritik öncelik alır.</p><p>Erişilebilirlik ↔ gizlilik: Felaket tatbikatları planlı kesinti gerektirir; müşteri ve regülatöre önceden iletişim şarttır.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Erişilebilirlik</th></tr></thead><tbody><tr><td>Yedek + test</td><td>DR</td></tr><tr><td>Load balancer</td><td>Tek sunucu arızası</td></tr><tr><td>Anti-DDoS</td><td>Hacim saldırısı</td></tr></tbody></table><div class="example-box"><p><strong>Erişilebilirlik senaryosu</strong></p><p>Black Friday’de site 4 saat kapalı — gelir kaybı; WAF ve kapasite <em>erişilebilirlik</em> riskini önceden azaltmalıydı.</p></div><h3 id="cia-denge"><i class="fas fa-balance-scale"></i> CIA dengesi</h3><p>Ek şifreleme felaket kurtarmayı zorlaştırabilir. Sıkı onay bütünlüğü artırır, acil müdahaleyi geciktirir.</p><p>Mimari kararda “hangi boyut öncelikli?” yazılı olmalıdır.</p><div class="callout-box tip"><div class="callout-icon"><i class="fas fa-lightbulb"></i></div><div class="callout-body"><h5>Pratik kural</h5><p>Tasarımda üç soru: Gizliliği artırıyor mu? Bütünlüğü? Erişilebilirliği?</p></div></div></div><div class="edu-lesson-recap"><h3 id="ders2-cia-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>CIA’nın üç bileşeni eşit derinlikte işlendi.</p><ul><li>Gizlilik: şifreleme, erişim, maskeleme</li><li>Bütünlük: hash, imza, log</li><li>Erişilebilirlik: yedek, DR, DDoS</li><li>Üçlü denge</li></ul></div>
+<div class="edu-chapter-body enhanced-text"><h3 id="cia-genel"><i class="fas fa-triangle"></i> CIA üçlüsüne giriş</h3><p>Üçlü birbirini tamamlar; biri eksikse güvenlik iddiası zayıflar.</p><p>Şifreleme ve erişim kontrolü → <strong>gizlilik</strong>. Hash, dijital imza, audit log → <strong>bütünlük</strong>. Yedek, yük dengeleme, DR → <strong>erişilebilirlik</strong>.</p><p>Kontrol eşlemesi örneği: TLS hem gizlilik (dinleme) hem bütünlük (aktif müdahale) sağlar. MFA gizliliği artırır; yanlış yapılandırılmışsa erişilebilirliği düşürür (kilitlenme).</p><h3 id="cia-gizlilik"><i class="fas fa-lock"></i> Gizlilik (Confidentiality)</h3><p><strong>Gizlilik</strong>, bilginin yalnızca yetkili kişi, süreç ve sistemler tarafından görülebilmesidir. İhlal: yetkisiz okuma, kopyalama, ifşa, dinleme veya çıkarım (metadata’dan bile).</p><p><strong>Durağan veri şifreleme:</strong> Disk (BitLocker, LUKS), veritabanı TDE, bulut bucket şifreleme. Anahtar yönetimi (KMS, HSM) gizliliğin omurgasıdır — şifreli veri + anahtar aynı yerdeyse fayda sınırlıdır.</p><p><strong>İletimde şifreleme:</strong> TLS 1.2+ (tercihen 1.3), VPN tünelleri, API HTTPS zorunluluğu. MitM saldırılarında paket içeriği okunamaz.</p><p><strong>Erişim kontrolü:</strong> RBAC (role), ABAC (attribute — departman, lokasyon). Minimum veri ilkesi: ekranda yalnızca iş için gereken alanlar. Maskeleme: destek ekranında kartın son 4 hanesi.</p><p><strong>Organizasyonel:</strong> Veri sınıflandırması (genel / dahili / gizli / çok gizli), NDA, tedarikçi DPA, fiziksel erişim kartı, temiz masa.</p><p>Örnek ihlaller: Veritabanı dump’ının dark web’de satılması; çalışanın hasta kaydı ekran görüntüsü; herkese açık S3 bucket; yanlış paylaşılan SharePoint linki. KVKK/GDPR kapsamında bildirim ve idari para cezası gündeme gelir.</p><p>Gizlilik tek başına yeterli değildir: Veri sızmamış ama <em>değiştirilmiş</em> (bütünlük) veya sistem kapalı (erişilebilirlik) olabilir.</p><p>Gizlilik ↔ erişilebilirlik çelişkisi: Aşırı kısıtlama işi yavaşlatır. Çözüm: rol bazlı erişim, MFA, acil <strong>break-glass</strong> hesap prosedürü (kullanım sonrası denetim).</p><p>İçeriden tehdit: Meşru hesapla veri indirme — DLP, davranış analizi, erişim logu şart.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Gizlilik katkısı</th><th>Tipik hata</th></tr></thead><tbody><tr><td>TLS</td><td>İletimde dinleme engeli</td><td>Eski TLS, sertifika süresi</td></tr><tr><td>Disk şifreleme</td><td>Çalıntı cihaz</td><td>Anahtar recovery zayıf</td></tr><tr><td>MFA</td><td>Çalıntı parola</td><td>SMS OTP SIM swap</td></tr><tr><td>DLP</td><td>Exfil tespiti</td><td>Politika tanımsız</td></tr></tbody></table><div class="example-box"><p><strong>Gizlilik — Anadolu Sağlık (kurgu)</strong></p><p>Gece vardiyasında hemşire, 200 hasta kaydını USB’ye kopyaladı — teknik zafiyet yok, <strong>yetkili hesap kötüye kullanımı</strong>.</p><p>Etki: <em>Gizlilik</em> ihlali; kayıtlar değiştirilmediyse bütünlük ayrı; sistem çalışıyorsa erişilebilirlik ayrı.</p><p>Kontroller: DLP uyarısı, USB politikası, erişim logu incelemesi, işten çıkarma sürecinde hesap kapatma.</p></div><h3 id="cia-butunluk"><i class="fas fa-check-double"></i> Bütünlük (Integrity)</h3><p><strong>Bütünlük</strong>, verinin ve sistemlerin yetkisiz veya hatalı şekilde değiştirilmediğinin güvencesidir: doğru, tam, güvenilir ve değişikliklerin izlenebilir olduğu veri.</p><p><strong>Hash ve checksum:</strong> SHA-256 ile dosya bütünlüğü; indirilen yazılım paketinin hash’i yayıncı sitesiyle karşılaştırılır.</p><p><strong>Dijital imza ve PKI:</strong> Kod imzalama, e-posta S/MIME, firmware imzası — sahte paket tespiti.</p><p><strong>Audit log:</strong> Kim, ne zaman, hangi kaydı değiştirdi? WORM / immutable log hedef saldırganın iz silmesini zorlaştırır.</p><p><strong>Uygulama ve veritabanı:</strong> Transaction ACID, foreign key, optimistic locking. Sürüm kontrolü (Git) kaynak kod bütünlüğü.</p><p>Bütünlük saldırıları gizlilik kadar görünür olmayabilir: Muhasebe satırında küçük tutar oynaması; üretim sensör değeri manipülasyonu; web sitesine sahte duyuru; yazılım güncellemesine backdoor.</p><p><strong>Ransomware:</strong> Hem bütünlük (dosyalar şifrelenir/değişir) hem erişilebilirlik (kullanılamaz). “Sadece sızdı” varsayımı yanlış triyajdır.</p><p>Bütünlük ↔ erişilebilirlik: Her değişiklik için çok katmanlı onay bütünlüğü artırır, acil yamayı geciktirir. Acil değişiklik penceresi + otomasyon tanımlanmalı.</p><p>Pratik soru: “Bu rapordaki rakama güvenebilir miyim?” — Evet ise bütünlük kontrolleri işliyor demektir.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Bütünlük katkısı</th><th>Tipik hata</th></tr></thead><tbody><tr><td>Hash / imza</td><td>Paket sahteciliği</td><td>İmza doğrulama kapalı</td></tr><tr><td>Audit log</td><td>Kim değiştirdi</td><td>Log silinebilir depo</td></tr><tr><td>WORM</td><td>Değişmez arşiv</td><td>Maliyet göz ardı</td></tr><tr><td>Code signing</td><td>Supply chain</td><td>Geliştirici anahtarı sızıntısı</td></tr></tbody></table><div class="example-box"><p><strong>Bütünlük — muhasebe manipülasyonu</strong></p><p>Saldırgan müşteri listesini çalmadı; gece toplam satırını %0,3 düşürdü — aylarca fark edilmedi.</p><p>Etki: <em>Bütünlük</em>; gizlilik ayrı değerlendirilir.</p><p>Kontroller: SoD (tek kişi hem giriş hem onay yapamaz), anomali raporu, immutable log.</p></div><h3 id="cia-erisilebilirlik"><i class="fas fa-plug"></i> Erişilebilirlik (Availability)</h3><p><strong>Erişilebilirlik</strong>, yetkili kullanıcıların ve süreçlerin ihtiyaç duyduğu anda sisteme ve veriye ulaşabilmesidir. Hizmet üretilemiyorsa diğer CIA hedefleri pratikte anlamsızlaşır.</p><p><strong>Yedekleme ve restore testi:</strong> Yedek almak yetmez; çeyreklik restore tatbikatı şart. Ransomware yedekleri de hedefler — offline/immutable yedek.</p><p><strong>Felaket kurtarma (DR):</strong> Coğrafi yedeklilik, runbook, iletişim planı. <strong>RTO</strong> (ne kadar sürede ayağa kalkmalı), <strong>RPO</strong> (ne kadar veri kaybı kabul edilir) — SLA’lar bu metriklerle yazılır.</p><p><strong>Kapasite ve yük:</strong> Load balancer, otomatik ölçekleme, Black Friday kapasite planı. Tek sunucu = tek arıza noktası.</p><p><strong>DDoS:</strong> Hacim saldırısı erişilebilirliği hedefler. WAF, CDN, scrubbing, ISP iş birliği.</p><p><strong>Fiziksel ve enerji:</strong> UPS, jeneratör, yangın. Veri merkezi yangını — erişilebilirlik olayı, siber değil ama programınızda DR ile birlikte düşünülür.</p><p>Örnek ihlaller: DDoS ile e-ticaret çöküşü; ransomware ile şifreli sunucular; yanlış yama sonrası ERP’nin günlerce kapalı kalması.</p><p>Hastane randevu sistemi çalışmıyorsa veri sızmamış olsa bile <em>erişilebilirlik</em> ihlalidir; can güvenliği önceliği kritik.</p><p>Erişilebilirlik ↔ gizlilik: Felaket tatbikatı planlı kesinti; müşteri ve regülatöre önceden iletişim.</p><table class="comparison-table glossary-table"><thead><tr><th>Kontrol</th><th>Erişilebilirlik katkısı</th><th>Metrik</th></tr></thead><tbody><tr><td>Yedek + restore test</td><td>DR</td><td>RPO / RTO</td></tr><tr><td>Load balancer</td><td>Tek nokta arızası</td><td>Uptime %</td></tr><tr><td>Anti-DDoS</td><td>Hacim saldırısı</td><td>Mitigation süresi</td></tr><tr><td>Kapasite planı</td><td>Pik trafik</td><td>Latency SLA</td></tr></tbody></table><div class="example-box"><p><strong>Erişilebilirlik — Black Friday</strong></p><p>Ödeme API’si 6 saat yanıt vermedi — gelir kaybı, itibar zararı.</p><p>Önlem: kapasite testi, WAF, rate limit, runbook. Etki: <em>erişilebilirlik</em>; müşteri kartı sızmamış olsa gizlilik ayrı.</p></div><h3 id="cia-denge"><i class="fas fa-balance-scale"></i> CIA dengesi ve mimari öncelik</h3><p>Ek şifreleme felaket kurtarmayı zorlaştırabilir (anahtar yönetimi). Sıkı onay bütünlüğü artırır, acil müdahaleyi geciktirir.</p><p>Mimari karar belgesinde yazılı olmalı: Bu sistem için öncelik sırası (ör. hastane: erişilebilirlik &gt; gizlilik &gt; bütünlük tartışması yönetimle).</p><p>Bulutta paylaşılan sorumluluk: IaaS’ta ağ ve OS sizde; SaaS’ta uygulama sağlayıcıda — CIA hedeflerini sözleşmede netleştirin.</p><div class="callout-box tip"><div class="callout-icon"><i class="fas fa-lightbulb"></i></div><div class="callout-body"><h5>Pratik kural</h5><p>Her yeni kontrol için üç soru: Gizliliği artırıyor mu? Bütünlüğü? Erişilebilirliği? Hepsi hayırsa kontrolü sorgulayın.</p></div></div></div><div class="edu-lesson-recap"><h3 id="ders2-cia-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>CIA’nın üç bileşeni eşit derinlikte işlendi.</p><ul><li>Gizlilik: şifreleme, erişim, DLP, içeriden</li><li>Bütünlük: hash, imza, log, ransomware çift etki</li><li>Erişilebilirlik: yedek, DR, DDoS, RTO/RPO</li><li>Denge ve önceliklendirme</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2123,10 +349,18 @@
                 <div class="section-header">
                     <h2><i class="fas fa-bug"></i> 3. Tehdit türleri ve aktörler</h2>
                     <p>Malware, vektörler ve saldırgan profilleri</p>
-                    <p class="section-intro">Tehditleri “virüs” diye geçiştirmeyin. Malware ailesi, saldırı vektörleri, aktör motivasyonları ve olay dili bu derste kurulur.</p>
+                    <p class="section-intro">Malware ailesi, phishing, saldırı vektörleri, aktör sınıflandırması ve saldırı zinciri.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Malware türlerini ayırt etmek</li><li>Saldırı vektörlerini tanımlamak</li><li>Tehdit aktörlerini sınıflandırmak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders3-buyuk-resim"><i class="fas fa-compass"></i> Ders 3 — Tehditler</h3><p>Aynı teknik farklı aktörlerce farklı amaçla kullanılır. Sınıflandırma panik değil önceliklendirme içindir.</p><p>Savunma katmanlıdır: e-posta filtre, macro engeli, EDR, yedek, segmentasyon, eğitim.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="malware"><i class="fas fa-virus"></i> Malware ailesi</h3><p><strong>Virüs</strong> dosyaya bulaşır; <strong>solucan</strong> ağda yayılır; <strong>trojan</strong> masum görünür; <strong>ransomware</strong> şifreler ve fidye ister; <strong>spyware</strong> izler; <strong>rootkit</strong> gizlenir; <strong>botnet</strong> uzaktan kontrol eder.</p><p>Fileless malware disk izi bırakmadan bellekte çalışabilir — EDR ve davranış analizi önem kazanır.</p><p><strong>Ransomware yaşam döngüsü:</strong> İlk erişim (phishing/RDP) → yatay hareket → yedekleri silme → toplu şifreleme → fidye notu. Savunma: yedek testi, segmentasyon, EDR, MFA, e-posta filtre.</p><h3 id="phishing-detay"><i class="fas fa-fish"></i> Phishing ve sosyal mühendislik</h3><p>Spear phishing hedefli, CEO fraud acil transfer ister, smishing SMS ile link gönderir. Teknik zafiyet yokken bile olay çıkar — bu yüzden farkındalık eğitimi ve raporlama kanalı şart.</p><p>Kırmızı bayraklar: aciliyet, garip gönderen, beklenmeyen ek, URL hover farkı. Kurumsal: DMARC/SPF, sandbox, “Raporla” butonu.</p><h3 id="vektorler"><i class="fas fa-envelope"></i> Saldırı vektörleri</h3><p><strong>Phishing / vishing / smishing</strong> insan hedefler. <strong>SQLi, XSS</strong> uygulama katmanı. <strong>MitM</strong> ağ. <strong>Supply chain</strong> tedarikçi üzerinden (SolarWinds dersi).</p><p>Kullanıcı tıklaması vektör; asıl payload bulut veya AD üzerinde ilerler. Brute force ve credential stuffing kimlik katmanını hedefler — MFA kritik.</p><h3 id="aktorler"><i class="fas fa-user-secret"></i> Tehdit aktörleri</h3><p><strong>Script kiddie</strong> — düşük olgunluk. <strong>Hacktivist</strong> — ideoloji. <strong>Organize suç</strong> — finans/ransomware. <strong>APT</strong> — uzun süre gizli, hedefli. <strong>İçeriden</strong> — meşru hesap, zor tespit.</p><p>Motivasyon (MICE: Money, Ideology, Coercion, Ego) savunma önceliğini şekillendirir.</p><h3 id="saldiri-zinciri-tehdit"><i class="fas fa-link"></i> Saldırı zinciri ve Kill Chain</h3><p>Keşif → silahlandırma → teslimat → sızma → kurulum → C2 → eylem. Her aşamada tespit fırsatı vardır.</p><div class="example-box"><p><strong>NotPetya</strong></p><p>Yedekleme ve segmentasyon “liste maddesi” değil; global olayda iş durdu. Teknik + süreç birlikte.</p></div><table class="comparison-table glossary-table"><thead><tr><th>Aktör</th><th>Motivasyon</th><th>Tipik hedef</th></tr></thead><tbody><tr><td>APT</td><td>Casusluk</td><td>IP, devlet</td></tr><tr><td>Ransomware grubu</td><td>Fidye</td><td>KOBİ, hastane</td></tr><tr><td>İçeriden</td><td>İntikam/para</td><td>Veri sızdırma</td></tr></tbody></table></div><div class="edu-lesson-recap"><h3 id="ders3-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Tehdit sınıflandırması ve savunma önceliği netleşti.</p><ul><li>Malware</li><li>Vektörler</li><li>Aktörler</li><li>Zincir</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Malware türlerini davranış ve etkiye göre ayırt etmek</li>
+<li>Phishing ve sosyal mühendislik vektörlerini tanımak</li>
+<li>Tehdit aktörlerini motivasyon ve kapasiteye göre sınıflandırmak</li>
+<li>Saldırı zinciri / Kill Chain üzerinden savunma noktalarını göstermek</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="ders3-buyuk-resim"><i class="fas fa-compass"></i> Ders 3 — Tehdit ortamı</h3>
+<p>“Virüs var” demek olay analizi değildir. Profesyonel dil: hangi malware ailesi, hangi vektör, hangi aktör, hangi varlık, hangi CIA boyutu.</p><p>Aynı teknik (ör. phishing) script kiddie ile fidye grubu tarafından farklı amaçla kullanılır. Sınıflandırma panik değil <strong>önceliklendirme</strong> içindir.</p><p>Savunma katmanlıdır: e-posta filtre → macro engeli → EDR → segmentasyon → yedek → farkındalık. Tek ürün yeterli değildir.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="malware"><i class="fas fa-virus"></i> Malware ailesi — detaylı sınıflandırma</h3><p><strong>Virüs:</strong> Başka dosyaya bulaşır, kullanıcı dosyayı çalıştırınca yayılır. Günümüzde oran düştü; hâlâ USB/autorun senaryolarında görülür.</p><p><strong>Solucan (Worm):</strong> Ağ protokolü veya zafiyet ile kendi kendine yayılır (WannaCry, EternalBlue). Segmentasyon ve yama kritik.</p><p><strong>Trojan:</strong> Masum yazılım gibi (crack, sahte PDF). Kullanıcı bilinçli çalıştırır — sosyal mühendislik.</p><p><strong>Ransomware:</strong> Şifreleme + fidye. Çift etki: bütünlük + erişilebilirlik. Yaşam döngüsü: ilk erişim → yatay hareket → yedek silme → toplu şifreleme → fidye notu.</p><p><strong>Spyware / infostealer:</strong> Tarayıcı çerezi, parola, kripto cüzdan. Gizlilik hedefi.</p><p><strong>Rootkit / bootkit:</strong> Derin gizlenme; tespit zor. EDR + güvenilir önyükleme.</p><p><strong>Botnet:</strong> Cihazları C2 sunucusuna bağlar; DDoS, spam, kripto madenciliği.</p><p><strong>Fileless:</strong> Disk izi minimum; PowerShell, WMI, bellekte payload. İmza AV yetmez; davranış + EDR.</p><h3 id="phishing-detay"><i class="fas fa-fish"></i> Phishing ve sosyal mühendislik</h3><p><strong>Phishing:</strong> Toplu e-posta, sahte giriş sayfası. <strong>Spear phishing:</strong> Hedefli (isim, proje referansı). <strong>Whaling:</strong> Üst yönetim. <strong>CEO fraud:</strong> Acil havale.</p><p><strong>Vishing:</strong> Sesli arama (“IT destek, parolanızı söyleyin”). <strong>Smishing:</strong> SMS link. <strong>Pretexting:</strong> Uydurma senaryo (kargo, vergi).</p><p>Kırmızı bayraklar: aciliyet, garip gönderen domain, beklenmeyen ek, URL hover farkı, ödül vaadi.</p><p>Kurumsal savunma: DMARC/SPF/DKIM, e-posta sandbox, macro engeli, “Phishing raporla” butonu, yıllık simülasyon + metrik.</p><h3 id="vektorler"><i class="fas fa-envelope"></i> Saldırı vektörleri</h3><p><strong>İnsan odaklı:</strong> Phishing, USB drop, tailgating.</p><p><strong>Uygulama:</strong> SQL injection, XSS, CSRF, API zafiyeti — OWASP Top 10 çerçevesi.</p><p><strong>Ağ:</strong> MitM (kafe Wi‑Fi), açık RDP, SNMP default community.</p><p><strong>Kimlik:</strong> Brute force, credential stuffing (sızdırılmış parola listesi) — MFA şart.</p><p><strong>Tedarik zinciri:</strong> Güncelleme sunucusu, SaaS, HVAC (Target 2013). Üçüncü taraf = sizin saldırı yüzeyiniz.</p><p>Vektör ≠ payload: Tıklama vektör; asıl eylem bulut veya Active Directory üzerinde.</p><h3 id="aktorler"><i class="fas fa-user-secret"></i> Tehdit aktörleri</h3><p><strong>Script kiddie:</strong> Hazır araç, düşük olgunluk, gürültülü.</p><p><strong>Hacktivist:</strong> Defacement, DDoS — itibar ve erişilebilirlik.</p><p><strong>Organize suç / ransomware-as-a-service:</strong> Finans motivasyonu, çift fidye (şifreleme + sızdırma).</p><p><strong>APT (Advanced Persistent Threat):</strong> Uzun süre gizli, hedefli, casusluk / IP hırsızlığı.</p><p><strong>İçeriden (insider):</strong> Meşru hesap; DLP ve davranış analizi zorunlu.</p><p>MICE çerçevesi: Money, Ideology, Coercion, Ego — motivasyon savunma önceliğini şekillendirir.</p><h3 id="saldiri-zinciri-tehdit"><i class="fas fa-link"></i> Saldırı zinciri ve Kill Chain</h3><p>Lockheed Martin Kill Chain: Keşif → silahlandırma → teslimat → sızma → kurulum → komuta-kontrol (C2) → eylem.</p><p>MITRE ATT&CK: Taktik ve teknik kütüphanesi; SOC ve kırmızı takım ortak dil.</p><p>Her aşamada tespit fırsatı: anormal DNS, yeni servis, lateral movement, veri dışarı akışı.</p><div class="example-box"><p><strong>NotPetya (2017) — ders</strong></p><p>Başlangıç tedarikçi yazılımı; global yayıldı. Yedek ve segmentasyon “liste maddesi” değil — iş durdu.</p><p>CIA: erişilebilirlik ve bütünlük ağır; gizlilik ikincil. Teknik + süreç + DR birlikte.</p></div><table class="comparison-table glossary-table"><thead><tr><th>Aktör</th><th>Motivasyon</th><th>Tipik hedef</th><th>Savunma odağı</th></tr></thead><tbody><tr><td>APT</td><td>Casusluk</td><td>IP, devlet</td><td>Segmentasyon, EDR, intel</td></tr><tr><td>Ransomware</td><td>Fidye</td><td>KOBİ, sağlık</td><td>Yedek, MFA, e-posta</td></tr><tr><td>İçeriden</td><td>Para/intikam</td><td>Veri</td><td>DLP, access review</td></tr><tr><td>Hacktivist</td><td>İdeoloji</td><td>Web, PR</td><td>WAF, izleme</td></tr></tbody></table></div><div class="edu-lesson-recap"><h3 id="ders3-ozet"><i class="fas fa-check-double"></i> Özet</h3><p>Tehdit sınıflandırması ve katmanlı savunma netleşti.</p><ul><li>Malware ailesi</li><li>Phishing ve vektörler</li><li>Aktörler ve zincir</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2134,10 +368,17 @@
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> 4. Güvenlik prensipleri</h2>
                     <p>Katmanlı savunma, en az ayrıcalık, sıfır güven</p>
-                    <p class="section-intro">Prensipler ürün değil mimari karardır. Her prensibin tanımı, uygulaması ve ihlal sonuçları işlenir.</p>
+                    <p class="section-intro">Prensiplerin tanımı, uygulaması ve ihlal sonuçları; mimari karar dili.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Defense in depth uygulamasını açıklamak</li><li>Least privilege ilişkisini kurmak</li><li>Zero trust ile sınır modelini karşılaştırmak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders4-buyuk-resim"><i class="fas fa-compass"></i> Ders 4 — Savunma prensipleri</h3><p>“Tek firewall yeter” miti burada çökertilir. Katmanlı savunma + en az ayrıcalık + sıfır güven modern mimarinin üç ayağıdır.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="did"><i class="fas fa-layer-group"></i> Katmanlı savunma (Defense in Depth)</h3><p>Tek duvar yeterli değil. Fiziksel, ağ, uç nokta, uygulama, veri, insan katmanları. Bir katman düşerse diğeri tespit veya sınırlama sağlar.</p><p>Örnek: Phishing → e-posta filtre (1) → macro engel (2) → EDR (3) → segmentasyon (4) → yedek (5).</p><p>Her katman farklı CIA boyutuna hizmet eder: şifreleme gizlilik, log bütünlük, yedek erişilebilirlik.</p><table class="comparison-table glossary-table"><thead><tr><th>Katman</th><th>Örnek araç</th><th>Hedef</th></tr></thead><tbody><tr><td>Ağ</td><td>Firewall, IDS</td><td>Sınırlandırma</td></tr><tr><td>Uç nokta</td><td>EDR, disk şifre</td><td>Cihaz güvenliği</td></tr><tr><td>Uygulama</td><td>WAF, SAST</td><td>Kod zafiyeti</td></tr><tr><td>Veri</td><td>DLP, şifreleme</td><td>Gizlilik</td></tr></tbody></table><h3 id="lp"><i class="fas fa-user-lock"></i> En az ayrıcalık (Least Privilege)</h3><p>Varsayılan minimum yetki; RBAC; düzenli access review; ayrılışta hesap kapatma SLA; PAM ile admin oturumu kaydı.</p><p>Domain Admin herkese verilmez; “geçici yetki” süreli ve onaylı olmalıdır.</p><h3 id="zt"><i class="fas fa-shield-halved"></i> Sıfır güven (Zero Trust)</h3><p>Never trust, always verify. Konum değil kimlik+cihaz+bağlam. MFA, mikro segmentasyon, sürekli doğrulama. Geçiş aşamalı planlanır.</p><p>VPN “içerideyim güvenliyim” modelini kırar; her istek doğrulanır.</p><h3 id="diger-prensipler"><i class="fas fa-list"></i> Diğer temel prensipler</h3><p><strong>Görev ayrımı (SoD):</strong> Tek kişi hem ödeme hem onay yapamaz. <strong>Fail secure:</strong> Arıza güvenli modda kilitler. <strong>Güvenli varsayılan:</strong> Yeni kaynak kapalı başlar. <strong>Need to know:</strong> Rol değil görev bazlı erişim.</p><div class="example-box"><p><strong>Target 2013</strong></p><p>HVAC tedarikçisi yolu — segmentasyon ve tedarikçi riski prensip ihlalinin bedeli.</p></div><table class="comparison-table glossary-table"><thead><tr><th>Prensip</th><th>Özet</th></tr></thead><tbody><tr><td>DiD</td><td>Çok katman</td></tr><tr><td>Least privilege</td><td>Minimum yetki</td></tr><tr><td>Zero trust</td><td>Sürekli doğrulama</td></tr><tr><td>SoD</td><td>Görev ayrımı</td></tr></tbody></table></div><div class="edu-lesson-recap"><h3 id="ders4-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Savunma prensipleri operasyonel dile çevrildi.</p><ul><li>DiD</li><li>Least privilege</li><li>Zero trust</li><li>SoD</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Katmanlı savunmayı somut kontrollerle ilişkilendirmek</li>
+<li>En az ayrıcalık ve sıfır güveni karşılaştırmak</li>
+<li>Görev ayrımı ve güvenli varsayılanı örneklemek</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="ders4-buyuk-resim"><i class="fas fa-compass"></i> Ders 4 — Savunma prensipleri</h3>
+<p>Prensipler ürün değil <strong>mimari karardır</strong>. “Tek firewall yeter” miti burada çökertilir.</p><p>Katmanlı savunma + en az ayrıcalık + sıfır güven modern kurumsal mimarinin üç ayağıdır; SoD ve fail secure tamamlar.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="did"><i class="fas fa-layer-group"></i> Katmanlı savunma (Defense in Depth)</h3><p>Tek duvar yeterli değil. Katmanlar: fiziksel, ağ, uç nokta, uygulama, veri, kimlik, insan.</p><p>Örnek zincir: Phishing e-postası → filtre (1) → kullanıcı raporu (2) → macro engel (3) → EDR (4) → segmentasyon (5) → yedek (6). Bir katman düşerse diğeri sınırlar veya tespit eder.</p><p>Her katman farklı CIA boyutuna hizmet eder; tasarımda eşleme yapın.</p><table class="comparison-table glossary-table"><thead><tr><th>Katman</th><th>Örnek</th><th>CIA</th></tr></thead><tbody><tr><td>Ağ</td><td>Firewall, IDS/IPS</td><td>Sınırlandırma</td></tr><tr><td>Kimlik</td><td>IAM, MFA</td><td>Gizlilik</td></tr><tr><td>Uç nokta</td><td>EDR, disk şifre</td><td>Gizlilik + bütünlük</td></tr><tr><td>Uygulama</td><td>WAF, SAST/DAST</td><td>Bütünlük</td></tr><tr><td>Veri</td><td>DLP, şifreleme</td><td>Gizlilik</td></tr></tbody></table><h3 id="lp"><i class="fas fa-user-lock"></i> En az ayrıcalık (Least Privilege)</h3><p>Varsayılan minimum yetki. RBAC rolleri; düzenli access review (çeyreklik).</p><p>Ayrılış SLA: 24 saat içinde hesap kapatma. PAM: admin oturumu kayıtlı, süreli, onaylı.</p><p>Domain Admin herkese verilmez. Servis hesapları için güçlü parola + rotation.</p><h3 id="zt"><i class="fas fa-shield-halved"></i> Sıfır güven (Zero Trust)</h3><p>Never trust, always verify. Konum (ofis/VPN) güven sinyali değil; kimlik + cihap durumu + bağlam.</p><p>MFA, mikro segmentasyon, sürekli doğrulama, cihaz uyumluluğu (MDM). Geçiş aşamalı — legacy uygulamalar planlanır.</p><p>VPN “içerideyim güvenliyim” modelini kırar; lateral movement zorlaşır.</p><h3 id="diger-prensipler"><i class="fas fa-list"></i> Diğer temel prensipler</h3><p><strong>Görev ayrımı (SoD):</strong> Tek kişi hem ödeme oluşturup hem onaylayamaz.</p><p><strong>Fail secure / fail safe:</strong> Arıza güvenli kilit modunda.</p><p><strong>Güvenli varsayılan:</strong> Yeni kaynak kapalı; açık port yok.</p><p><strong>Need to know:</strong> Rol değil görev bazlı veri erişimi.</p><p><strong>Economy of mechanism:</strong> Basit tasarım daha az hata.</p><div class="example-box"><p><strong>Target (2013)</strong></p><p>HVAC tedarikçisi yolu — segmentasyon ve tedarikçi riski prensip ihlalinin bedeli.</p></div></div><div class="edu-lesson-recap"><h3 id="ders4-ozet"><i class="fas fa-check-double"></i> Özet</h3><p>Prensipler operasyonel dile çevrildi.</p><ul><li>DiD</li><li>Least privilege</li><li>Zero trust</li><li>SoD</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2145,10 +386,17 @@
                 <div class="section-header">
                     <h2><i class="fas fa-chart-line"></i> 5. Risk değerlendirmesi</h2>
                     <p>Önceliklendirme ve yatırım dili</p>
-                    <p class="section-intro">Risk, sınırsız alarm listesini iş kararına çevirir. Süreç, matris ve tedavi seçenekleri bu derste.</p>
+                    <p class="section-intro">Risk süreci, matris, tedavi seçenekleri ve iş etkisi odaklı vaka.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Risk = olasılık × etki mantığını uygulamak</li><li>VTR zincirini dokümante etmek</li><li>Azalt, transfer, kabul, kaçın ayırt etmek</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders5-buyuk-resim"><i class="fas fa-compass"></i> Ders 5 — Risk</h3><p>Güvenlik ekibi “her şeyi kapat” diyemez; risk dili yönetime “şu 3 madde bu çeyrekte” der.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="risk-surec"><i class="fas fa-list-ol"></i> Risk değerlendirme süreci</h3><p>1) Varlık envanteri 2) Tehdit/zafiyet eşleştirme 3) Etki (1–5) 4) Olasılık (1–5) 5) Skor 6) Tedavi 7) Kalan risk izleme.</p><p>ISO 27005 ve NIST RMF bu döngüyü standartlaştırır.</p><h3 id="risk-matris"><i class="fas fa-table"></i> Risk matrisi örneği</h3><p>5×5 matris: yüksek olasılık + yüksek etki = acil. Düşük/düşük = kabul veya izleme.</p><h3 id="risk-ornek"><i class="fas fa-store"></i> Örnek: e-ticaret müşteri veritabanı</h3><p>Varlık: canlı DB (500K kayıt PII). Tehdit: SQLi / credential stuffing. Zafiyet: zayıf kod / parola reuse. Etki: 5 (regülasyon + itibar). Olasılık: 3 (yılda bir deneme). Skor: yüksek → WAF + kod inceleme + MFA bu çeyrek.</p><p>Kontroller: WAF, kod inceleme, MFA, şifreleme, yedek. Kalan risk: sıfır değil — yönetim kurulu yazılı kabul.</p><h3 id="kalan-risk"><i class="fas fa-chart-pie"></i> Kalan risk ve izleme</h3><p>Kontrol sonrası risk sıfır olmaz. Kalan risk periyodik gözden geçirilir; tehdit ortamı değişince skor yenilenir.</p><h3 id="tedavi"><i class="fas fa-hand-holding-medical"></i> Risk tedavi seçenekleri</h3><p><strong>Azalt:</strong> Kontrol ekle. <strong>Transfer:</strong> Sigorta, outsource. <strong>Kabul:</strong> Yazılı onay. <strong>Kaçın:</strong> Faaliyeti durdur.</p><div class="callout-box warning"><div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="callout-body"><h5>Yaygın hata</h5><p>CVSS skorunu iş riski sanmak. İş etkisi (müşteri, regülasyon, itibar) ayrı tartılır.</p></div></div></div><div class="edu-lesson-recap"><h3 id="ders5-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Risk dili yönetim ve teknik arasında köprü kurdu.</p><ul><li>Süreç</li><li>Matris</li><li>Tedavi</li><li>Örnek</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Risk değerlendirme sürecini adım adım uygulamak</li>
+<li>Risk matrisi ile önceliklendirme yapmak</li>
+<li>Azalt, transfer, kabul, kaçın seçeneklerini gerekçelendirmek</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="ders5-buyuk-resim"><i class="fas fa-compass"></i> Ders 5 — Risk yönetimi</h3>
+<p>Güvenlik ekibi “her şeyi kapat” diyemez. Risk dili yönetime “bu çeyrekte şu 3 yatırım” der.</p><p>CVSS teknik önem verir; iş riski müşteri, regülasyon, itibar ve süreklilik içerir — ikisi birlikte okunur.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="risk-surec"><i class="fas fa-list-ol"></i> Risk değerlendirme süreci</h3><p>1) Varlık envanteri ve sahiplik. 2) Tehdit ve zafiyet eşleştirme. 3) Mevcut kontroller. 4) Etki (1–5). 5) Olasılık (1–5). 6) Risk skoru. 7) Tedavi planı. 8) Kalan risk izleme.</p><p>ISO 27005 ve NIST RMF bu döngüyü standartlaştırır. Yıllık veya olay sonrası yenileme.</p><h3 id="risk-matris"><i class="fas fa-table"></i> Risk matrisi</h3><p>5×5 matris: yüksek olasılık + yüksek etki = acil (P1). Düşük/düşük = izle veya kabul (dokümante).</p><p>Renk kodları yönetim kurulunda anlaşılır dil sağlar.</p><h3 id="risk-ornek"><i class="fas fa-store"></i> Vaka: e-ticaret müşteri veritabanı</h3><p>Varlık: Canlı PostgreSQL, 500K PII. Tehdit: SQLi, credential stuffing. Zafiyet: eski ORM, parola reuse.</p><p>Etki: 5 (KVKK, itibar, gelir). Olasılık: 3. Skor: yüksek.</p><p>Tedavi bu çeyrek: WAF, kod inceleme, MFA, şifreleme, yedek testi. Kalan risk: sıfır değil — yönetim kurulu yazılı kabul.</p><h3 id="kalan-risk"><i class="fas fa-chart-pie"></i> Kalan risk</h3><p>Kontrol sonrası risk sıfır olmaz. Tehdit ortamı değişince (yeni APT kampanyası) skor yenilenir.</p><h3 id="tedavi"><i class="fas fa-hand-holding-medical"></i> Tedavi seçenekleri</h3><p><strong>Azalt:</strong> Kontrol ekle. <strong>Transfer:</strong> Sigorta, outsource (risk paylaşımı). <strong>Kabul:</strong> Yazılı, onaylı, süreli. <strong>Kaçın:</strong> Faaliyeti durdur.</p><div class="callout-box warning"><div class="callout-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="callout-body"><h5>Yaygın hata</h5><p>CVSS 9.8 = otomatik P1 değil; iş etkisi düşükse öncelik düşebilir.</p></div></div></div><div class="edu-lesson-recap"><h3 id="ders5-ozet"><i class="fas fa-check-double"></i> Özet</h3><p>Risk köprüsü kuruldu.</p><ul><li>Süreç</li><li>Matris</li><li>Tedavi</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2156,10 +404,15 @@
                 <div class="section-header">
                     <h2><i class="fas fa-file-shield"></i> 6. Güvenlik politikaları</h2>
                     <p>Tekniği işe ve mevzuata bağlama</p>
-                    <p class="section-intro">Politika olmadan MFA “isteğe bağlı” kalır. Belge hiyerarşisi, uyumluluk ve tedarikçi güvenliği işlenir.</p>
+                    <p class="section-intro">Belge hiyerarşisi, AUP, KVKK/ISO ve tedarikçi güvenliği.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Politika, standart, prosedür, kılavuz ayrımını yapmak</li><li>KVKK ve ISO 27001 ile ilişkiyi kurmak</li><li>Tedarikçi riskini açıklamak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders6-buyuk-resim"><i class="fas fa-compass"></i> Ders 6 — Yönetişim</h3><p>Teknik kontrol politika olmadan sürdürülmez. Politika “ne”, standart “minimum nasıl”, prosedür “adım adım” der.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="politika-tur"><i class="fas fa-file-contract"></i> Belge hiyerarşisi</h3><p><strong>Politika:</strong> Üst düzey kural (ör. “Tüm uzaktan erişim MFA ile”). <strong>Standart:</strong> Teknik minimum (TLS 1.2+). <strong>Prosedür:</strong> Olay bildirimi adımları. <strong>Kılavuz:</strong> Öneri (parola yöneticisi kullanımı).</p><h3 id="au"><i class="fas fa-user-check"></i> Kabul edilebilir kullanım (AUP)</h3><p>Kişisel cihaz, sosyal medya, USB politikası. İhlal disiplin sürecine bağlanır.</p><h3 id="uyumluluk"><i class="fas fa-balance-scale"></i> Uyumluluk</h3><p>ISO 27001 (ISMS), SOC 2 (güven), PCI-DSS (kart), KVKK (kişisel veri). Ortak soru: politika var ve uygulanıyor mu?</p><p>KVKK: aydınlatma, açık rıza, veri minimizasyonu, ihlal bildirimi. Politika metni hukuk + IT ortak yazar.</p><h3 id="gizlilik-politikasi"><i class="fas fa-user-shield"></i> Gizlilik ve veri saklama</h3><p>Ne kadar süre saklanır, kim erişir, nasıl silinir — prosedürde net olmalı. Müşteri talebi (unutulma hakkı) için iş akışı tanımlanır.</p><h3 id="tedarikci"><i class="fas fa-handshake"></i> Tedarikçi ve üçüncü taraf riski</h3><p>SOC 2 raporu, güvenlik eki, erişim sınırı, veri işleme sözleşmesi. Target dersi: HVAC = tedarikçi saldırı yüzeyi.</p></div><div class="edu-lesson-recap"><h3 id="ders6-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Yönetişim boyutu tamamlandı.</p><ul><li>Hiyerarşi</li><li>AUP</li><li>Uyumluluk</li><li>Tedarikçi</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>Politika, standart, prosedür, kılavuz ayrımını yapmak</li><li>KVKK ve ISO 27001 ile politika ilişkisini kurmak</li><li>Tedarikçi güvenliğini değerlendirmek</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="ders6-buyuk-resim"><i class="fas fa-compass"></i> Ders 6 — Yönetişim</h3>
+<p>Teknik kontrol politika olmadan sürdürülmez. MFA “isteğe bağlı” kalırsa olay kaçınılmazdır.</p><p>Politika “ne”, standart “minimum nasıl”, prosedür “adım adım”, kılavuz “öneri” der.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="politika-tur"><i class="fas fa-file-contract"></i> Belge hiyerarşisi</h3><p><strong>Politika:</strong> Üst yönetim onaylı (“Tüm uzaktan erişim MFA”). <strong>Standart:</strong> TLS 1.2+, parola uzunluğu. <strong>Prosedür:</strong> Olay bildirimi 1-2-3. <strong>Kılavuz:</strong> Parola yöneticisi önerisi.</p><h3 id="au"><i class="fas fa-user-check"></i> Kabul edilebilir kullanım (AUP)</h3><p>Kişisel cihaz (BYOD), sosyal medya, USB, bulut depolama kuralları. İhlal disiplin sürecine bağlanır.</p><h3 id="uyumluluk"><i class="fas fa-balance-scale"></i> Uyumluluk çerçeveleri</h3><p>ISO 27001 ISMS, SOC 2 güven, PCI-DSS ödeme, KVKK kişisel veri. Ortak soru: politika var mı, kanıtlanıyor mu?</p><p>KVKK: aydınlatma, açık rıza, minimizasyon, ihlal bildirimi (72 saat). Politika metni hukuk + IT ortak.</p><h3 id="gizlilik-politikasi"><i class="fas fa-user-shield"></i> Veri saklama ve silme</h3><p>Ne kadar süre, kim erişir, nasıl silinir — prosedürde net. Unutulma hakkı iş akışı.</p><h3 id="tedarikci"><i class="fas fa-handshake"></i> Tedarikçi riski</h3><p>SOC 2 raporu, güvenlik anketi, erişim sınırı, veri işleme sözleşmesi, düzenli gözden geçirme.</p></div><div class="edu-lesson-recap"><h3 id="ders6-ozet"><i class="fas fa-check-double"></i> Özet</h3><p>Yönetişim tamamlandı.</p><ul><li>Hiyerarşi</li><li>KVKK</li><li>Tedarikçi</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2167,10 +420,15 @@
                 <div class="section-header">
                     <h2><i class="fas fa-ambulance"></i> 7. Olay müdahalesi</h2>
                     <p>Hazırlıktan ders çıkarmaya</p>
-                    <p class="section-intro">Olay anında disiplin şart. NIST tarzı aşamalar, roller ve araçlar eksiksiz anlatılır.</p>
+                    <p class="section-intro">IR aşamaları, ekip, araçlar, iletişim ve tatbikat.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>IR aşamalarını sıralamak</li><li>IR ekibi rollerini tanımlamak</li><li>SIEM ve forensics rolünü açıklamak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="ders7-buyuk-resim"><i class="fas fa-compass"></i> Ders 7 — Olay müdahalesi</h3><p>Panik yerine playbook. İlk 24 saat: sınırla, kanıt topla, iletişim, kök neden, iyileştir.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="ir-asamalar"><i class="fas fa-list-check"></i> Olay müdahale aşamaları</h3><p><strong>1. Hazırlık:</strong> Plan, playbook, iletişim listesi, tatbikat. <strong>2. Tespit:</strong> SIEM alarmı, EDR, kullanıcı şikayeti. <strong>3. Analiz:</strong> Kapsam, IOC. <strong>4. Sınırlandırma:</strong> İzolasyon, hesap kilidi. <strong>5. Ortadan kaldırma:</strong> Malware, kalıcı erişim. <strong>6. Kurtarma:</strong> Restore, doğrulama. <strong>7. Ders:</strong> Post-mortem, KPI.</p><h3 id="ir-ekip"><i class="fas fa-users"></i> Ekip ve roller</h3><p>Olay yöneticisi, analist, forensics, hukuk, iletişim, üst yönetim. Delil zinciri (chain of custody) bozulmadan hareket.</p><h3 id="ir-araclar"><i class="fas fa-tools"></i> Araçlar</h3><p><strong>SIEM:</strong> Korelasyon. <strong>EDR:</strong> Uç nokta. <strong>Forensics:</strong> Disk/bellek imajı. <strong>Ticketing:</strong> İzlenebilirlik.</p><h3 id="ir-iletisim"><i class="fas fa-bullhorn"></i> İletişim ve bildirim</h3><p>Regülatör, müşteri, medya planı önceden yazılır. KVKK 72 saat bildirimi gündeme gelebilir.</p><p>Panik e-postası yerine onaylı şablon; tek sözcü (spokesperson) kuralı.</p><h3 id="ir-tatbikat"><i class="fas fa-dumbbell"></i> Tatbikat ve playbook</h3><p>Masa başı (tabletop) senaryosu: “Ransomware saat 03:00’te.” Playbook: kim izole eder, kim hukuku arar, yedekten dönüş süresi. Tatbikat olmadan plan kağıt üzerinde kalır.</p><div class="example-box"><p><strong>Maersk / NotPetya</strong></p><p>Yedek ve DR — erişilebilirlik ve bütünlük kurtarmasının değeri.</p></div></div><div class="edu-lesson-recap"><h3 id="ders7-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Olay müdahalesi döngüsü tamam.</p><ul><li>Aşamalar</li><li>Ekip</li><li>Araçlar</li><li>İletişim</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu derste hedeflenen kazanımlar</h3><ul>
+<li>IR aşamalarını sıralamak ve playbook mantığını açıklamak</li><li>IR ekibi rollerini tanımlamak</li><li>SIEM, EDR ve forensics rolünü ilişkilendirmek</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="ders7-buyuk-resim"><i class="fas fa-compass"></i> Ders 7 — Olay müdahalesi</h3>
+<p>Panik yerine playbook. İlk 24 saat: sınırla, kanıt topla, iletişim, kök neden, iyileştir.</p><p>Olay = güvenlik ihlali veya politika ihlali; olay değil “alarm” — triyaj şart.</p></div><div class="edu-chapter-body enhanced-text"><h3 id="ir-asamalar"><i class="fas fa-list-check"></i> NIST tarzı aşamalar</h3><p><strong>1. Hazırlık:</strong> Plan, playbook, iletişim listesi, tatbikat. <strong>2. Tespit:</strong> SIEM, EDR, kullanıcı. <strong>3. Analiz:</strong> Kapsam, IOC, zaman çizelgesi. <strong>4. Sınırlandırma:</strong> İzolasyon, hesap kilidi. <strong>5. Ortadan kaldırma:</strong> Malware, kalıcı erişim. <strong>6. Kurtarma:</strong> Restore, doğrulama. <strong>7. Ders:</strong> Post-mortem, KPI.</p><h3 id="ir-ekip"><i class="fas fa-users"></i> Ekip ve roller</h3><p>Olay yöneticisi, analist, forensics, hukuk, iletişim, üst yönetim. Chain of custody delil bütünlüğü.</p><h3 id="ir-araclar"><i class="fas fa-tools"></i> Araçlar</h3><p>SIEM korelasyon, EDR uç nokta, forensics disk imajı, ticketing izlenebilirlik.</p><h3 id="ir-iletisim"><i class="fas fa-bullhorn"></i> İletişim</h3><p>Regülatör, müşteri, medya planı önceden. Tek sözcü kuralı. KVKK bildirimi.</p><h3 id="ir-tatbikat"><i class="fas fa-dumbbell"></i> Tatbikat</h3><p>Tabletop: “Saat 03:00 ransomware.” Playbook: kim izole eder, yedek RTO. Tatbikat olmadan plan kağıt.</p><div class="example-box"><p><strong>Maersk / NotPetya</strong></p><p>Yedek ve DR — erişilebilirlik ve bütünlük kurtarmasının değeri.</p></div></div><div class="edu-lesson-recap"><h3 id="ders7-ozet"><i class="fas fa-check-double"></i> Özet</h3><p>IR döngüsü tamam.</p><ul><li>Aşamalar</li><li>Ekip</li><li>Tatbikat</li></ul></div>
                 </div></div></div>
             </section>
 
@@ -2181,7 +439,12 @@
                     <p class="section-intro">Yedi dersi tamamladıysanız aşağıdaki hikâyeyi kendi cümlelerinizle anlatabilmelisiniz.</p>
                 </div>
                 <div class="content-card"><div class="content-body"><div class="lesson-content">
-<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3><ul><li>Modül kazanımlarını tek olay senaryosunda birleştirmek</li><li>Sonraki SEBS eğitimlerine hazırlık planı yapmak</li></ul></div><div class="edu-narrative enhanced-text"><h3 id="modul-ozet-sentez"><i class="fas fa-layer-group"></i> Sentez: tek hikâye</h3><p><strong>Varlık</strong> → <strong>tehdit</strong> + <strong>zafiyet</strong> → <strong>risk</strong> → kontroller (CIA eşit, prensipler, politika) → olay olursa <strong>IR</strong>.</p><p>Her yeni modülde: Hangi CIA boyutu? Tehdit mi zafiyet mi risk mi?</p></div><div class="edu-chapter-body enhanced-text"><h3 id="kendinizi-sinayin"><i class="fas fa-clipboard-check"></i> Kendinizi sınayın</h3><p>Aşağıdaki soruları kapatmadan sonraki modüle geçmeyin.</p><table class="comparison-table glossary-table"><thead><tr><th>Soru</th><th>Beklenen</th></tr></thead><tbody><tr><td>CIA üçlüsünü örnekle açıkla</td><td>G + B + E ayrı ayrı, eşit derinlik</td></tr><tr><td>Tehdit vs risk</td><td>Potansiyel vs olasılık×etki</td></tr><tr><td>DiD vs zero trust</td><td>Katman vs sürekli doğrulama</td></tr><tr><td>IR aşamaları</td><td>Hazırlık → ders en az 6 adım</td></tr><tr><td>Bütünlük ihlali örneği</td><td>Veri değişikliği, sızmama şart değil</td></tr></tbody></table><div class="callout-box tip"><div class="callout-icon"><i class="fas fa-lightbulb"></i></div><div class="callout-body"><h5>Sonraki adım</h5><p>Güncel Siber Güvenliğe Giriş, Temel Network veya simülasyonlarla pekiştirin.</p></div></div></div><div class="edu-lesson-recap"><h3 id="modul-ozet-final"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3><p>Temel Siber Güvenlik modülünü eksiksiz tamamladınız. İlk izlenim için sağlam bir temel oluşturdunuz.</p><ul><li>Tam modül sentezi</li><li>Öz değerlendirme</li><li>Yol haritası</li></ul></div>
+
+<div class="learning-objectives"><h3><i class="fas fa-bullseye"></i> Modül sentezi</h3><ul>
+<li>Tüm kazanımları tek olay hikâyesinde birleştirmek</li><li>Sonraki SEBS modüllerine hazırlık</li>
+</ul></div>
+<div class="edu-narrative enhanced-text"><h3 id="modul-ozet-sentez"><i class="fas fa-layer-group"></i> Tek hikâye</h3>
+<p><strong>Varlık</strong> envanteri → <strong>tehdit</strong> + <strong>zafiyet</strong> → <strong>risk</strong> skoru → kontroller (CIA eşit, prensipler, politika) → olay olursa <strong>IR</strong>.</p><p>Her yeni modülde sorun: Hangi CIA? Tehdit mi zafiyet mi risk mi?</p></div><div class="edu-chapter-body enhanced-text"><h3 id="kendinizi-sinayin"><i class="fas fa-clipboard-check"></i> Kendinizi sınayın</h3><p>Aşağıdaki soruları kendi cümlelerinizle yanıtlayın; kopyala-yapıştır değil.</p><table class="comparison-table glossary-table"><thead><tr><th>Soru</th><th>Beklenen derinlik</th></tr></thead><tbody><tr><td>CIA üçlüsünü örnekle</td><td>G, B, E ayrı ayrı, eşit</td></tr><tr><td>Tehdit vs risk</td><td>Potansiyel vs olasılık×etki</td></tr><tr><td>DiD vs zero trust</td><td>Katman vs sürekli doğrulama</td></tr><tr><td>IR en az 6 adım</td><td>Hazırlık → ders</td></tr><tr><td>Ransomware hangi CIA</td><td>B + E, sıklıkla G</td></tr><tr><td>İçeriden tehdit</td><td>DLP, access review</td></tr></tbody></table><div class="callout-box tip"><div class="callout-icon"><i class="fas fa-lightbulb"></i></div><div class="callout-body"><h5>Sonraki adım</h5><p>Güncel Siber Güvenliğe Giriş, Temel Network veya simülasyonlarla pekiştirin.</p></div></div></div><div class="edu-lesson-recap"><h3 id="modul-ozet-final"><i class="fas fa-check-double"></i> Modül tamamlandı</h3><p>Temel Siber Güvenlik modülünü eksiksiz tamamladınız.</p><ul><li>Sentez</li><li>Öz değerlendirme</li><li>Yol haritası</li></ul></div>
                 </div></div></div>
             </section>
         </main>
@@ -2199,7 +462,7 @@
             }, 800);
         });
     </script>
-    <script src="/js/sebs-premium-module-lessons.js?v=20260523"></script>
+    <script src="/js/sebs-premium-module-lessons.js?v=20260527"></script>
     <script>
         if (typeof window.sebsMigrateLegacyUserProgressModule === 'function') {
             window.sebsMigrateLegacyUserProgressModule('Temel Siber Güvenlik', 'module_progress_temel_siber_guvenlik', {
