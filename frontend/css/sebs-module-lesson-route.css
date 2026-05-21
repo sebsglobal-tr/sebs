@@ -28,6 +28,16 @@ body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-sec
     animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dış kabuk kart (içte alt ders kartları var — Temel Network vb.) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) > .content-card:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card:has(> .content-card.lesson-route-current-card) {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) > .content-card:has(.lesson-route-current-card) > .content-card:not(.lesson-route-current-card) {
+    display: none !important;
+}
+
 /* Tek ders: üst seviye sarmalayıcılar (edu-narrative vb.) yalnızca aktif kartı taşıyorsa görünür */
 body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-narrative:not(:has(.lesson-route-current-card)),
 body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body:not(:has(.lesson-route-current-card)),

@@ -136,12 +136,12 @@
         var parent = head.parentElement || inner;
         parent.insertBefore(block, head);
         var node = head;
-        var stopTag = lessonHeadingLevel === 'h3' ? 'H3' : 'H2';
+        var stopTag = lessonStopTag();
         while (node) {
             var next = node.nextElementSibling;
             block.appendChild(node);
             if (!next) break;
-            if (lessonHeadingLevel !== 'h3' && next.tagName === 'H2') break;
+            if (lessonHeadingLevel === 'h2' && next.tagName === 'H2') break;
             if (next.tagName === stopTag) break;
             if (subHeadings.indexOf(next) !== -1 && next !== head) break;
             node = next;
@@ -205,6 +205,22 @@
             });
             mergeLeadingOrphansIntoFirstLessonCard(inner);
         });
+        if (lessonHeadingLevel === 'h4') {
+            document.querySelectorAll('.content-section').forEach(function (sec) {
+                if (sec.querySelector('.section-inner')) return;
+                var outer = sec.querySelector(':scope > .content-card');
+                if (!outer || outer.dataset.cardified === '1') return;
+                var h4s = sortHeadingsByDocumentOrder(
+                    Array.from(outer.querySelectorAll('h4.content-section-title')).filter(
+                        isNavigableLessonHeading
+                    )
+                );
+                if (h4s.length < 2) return;
+                outer.dataset.cardified = '1';
+                cardifyByHeading(outer, h4s);
+                mergeLeadingOrphansIntoFirstLessonCard(outer);
+            });
+        }
     }
 
     function isModuleThemeHeading(el) {
@@ -263,9 +279,15 @@
         var sections = document.querySelectorAll('.module-layout .content-section');
         if (!sections.length) return false;
         var flat = 0;
+        var flatWithSubLessons = 0;
         sections.forEach(function (sec) {
-            if (isFlatLessonSection(sec)) flat++;
+            if (!isFlatLessonSection(sec)) return;
+            flat++;
+            if (getFlatSectionSubheadings(sec).length > 1) {
+                flatWithSubLessons++;
+            }
         });
+        if (flatWithSubLessons > 0) return false;
         return flat > 0 && flat >= sections.length * 0.5;
     }
 
@@ -474,7 +496,8 @@
         if (!sec) return [];
         var card = sec.querySelector('.content-card');
         if (!card) return [];
-        var headings = Array.from(card.querySelectorAll('h3'));
+        var selector = lessonHeadingLevel === 'h4' ? 'h4.content-section-title' : 'h3';
+        var headings = Array.from(card.querySelectorAll(selector));
         return sortHeadingsByDocumentOrder(headings).filter(isNavigableLessonHeading);
     }
 
@@ -497,8 +520,14 @@
     }
 
     var lastRunSubNavScroll = null;
-    /** 'h2' (varsayılan) veya 'h3' — İleri Kriptografi gibi h3 ağırlıklı modüller */
+    /** 'h2' (varsayılan), 'h3' veya 'h4' — Temel Network gibi h4 alt başlıklı modüller */
     var lessonHeadingLevel = 'h2';
+
+    function lessonStopTag() {
+        if (lessonHeadingLevel === 'h3') return 'H3';
+        if (lessonHeadingLevel === 'h4') return 'H4';
+        return 'H2';
+    }
 
     function sortHeadingsByDocumentOrder(headings) {
         return headings.slice().sort(function (a, b) {
@@ -1774,7 +1803,12 @@
             console.warn('SebsPremiumModuleLessons.run: moduleName ve storageKey gerekli');
             return;
         }
-        lessonHeadingLevel = cfg.lessonHeadingLevel === 'h3' ? 'h3' : 'h2';
+        lessonHeadingLevel =
+            cfg.lessonHeadingLevel === 'h3'
+                ? 'h3'
+                : cfg.lessonHeadingLevel === 'h4'
+                  ? 'h4'
+                  : 'h2';
         if (!cfg.progressMode) {
             if (isFlatLessonModule()) {
                 cfg = Object.assign({}, cfg, { progressMode: 'lesson' });
