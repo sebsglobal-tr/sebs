@@ -46,12 +46,19 @@ body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-sec
     display: block !important;
 }
 
-body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:not(:has(.lesson-route-current-card)) {
+/* Aktif ders kartı doğrudan .section-inner altında olabilir (:has yalnızca torunları sayar) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:not(:has(.lesson-route-current-card)):not(.lesson-route-current-card) {
     display: none !important;
 }
 
-body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:has(.lesson-route-current-card) {
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > .lesson-route-current-card {
     display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body > .content-card:not(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body > .sebs-lesson-block:not(.lesson-route-current-card) {
+    display: none !important;
 }
 
 /* Tüm bölüm modu: boş alt sayfa yok — section-inner tamamen görünür */

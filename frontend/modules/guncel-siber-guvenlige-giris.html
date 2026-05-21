@@ -12,7 +12,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="sebs-content-version" content="20260528">
+    <meta name="sebs-content-version" content="20260529">
     <link rel="canonical" href="https://sebsglobal.com/egitimler/siber-guvenlik">
     <meta property="og:url" content="https://sebsglobal.com/egitimler/siber-guvenlik">
     <script type="application/ld+json">
@@ -75,7 +75,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=20260528" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=20260529" />
 <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
@@ -89,6 +89,21 @@
         .edu-chapter-body p { margin-bottom: 1rem; line-height: 1.8; max-width: 78ch; }
         .learning-objectives { margin: 1rem 0 1.5rem; padding: 1rem 1.25rem; border-radius: 10px; background: rgba(102,126,234,0.08); }
         .learning-objectives ul { margin: 0.5rem 0 0 1.25rem; }
+        .cia-triad-visual { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+        .cia-pillar { text-align: center; padding: 1.35rem 1rem; border-radius: 14px; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 8px 24px rgba(15,23,42,0.06); position: relative; overflow: hidden; }
+        .cia-pillar::before { content: ''; position: absolute; inset: 0 0 auto; height: 4px; }
+        .cia-pillar.confidentiality::before { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+        .cia-pillar.integrity::before { background: linear-gradient(90deg, #059669, #22c55e); }
+        .cia-pillar.availability::before { background: linear-gradient(90deg, #d97706, #fbbf24); }
+        .cia-pillar i { font-size: 1.75rem; display: block; margin-bottom: 0.5rem; }
+        .cia-pillar.confidentiality i { color: #2563eb; }
+        .cia-pillar.integrity i { color: #059669; }
+        .cia-pillar.availability i { color: #d97706; }
+        .cia-pillar span { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 0.92rem; }
+        .cia-pillar p { margin: 0.65rem 0 0; font-size: 0.88rem; line-height: 1.55; color: #64748b; }
+        @media (max-width: 720px) { .cia-triad-visual { grid-template-columns: 1fr; } }
+        .cia-flow-diagram { margin: 1.25rem 0 1.75rem; padding: 1rem 1.25rem; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.92rem; line-height: 1.7; color: #334155; }
+        .cia-flow-diagram strong { color: #0f172a; }
     </style>
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -377,49 +392,119 @@
 <section class="content-section docx-content" id="temel-güvenlik-prensipleri-cia-üçlüsü" data-section="temel-güvenlik-prensipleri-cia-üçlüsü">
 <div class="section-inner">
 <h2 id="temel-güvenlik-prensipleri-cia-üçlüsü"><strong>1.2) Temel Güvenlik Prensipleri — CIA Üçlüsü</strong></h2>
-<p>CIA Üçlüsü, bilgi güvenliğinin (dolayısıyla siber güvenliğin) en temel modelidir. Bir güvenlik ihlali yaşandığında, bu üç bileşenden en az birinin zarar gördüğü varsayılır.</p>
-<div class="cia-card">
-<div class="cia-item confidentiality"><h4><i class="fas fa-lock"></i> Gizlilik (Confidentiality)</h4><p>Bilgiye yalnızca yetkilendirilmiş kişi veya sistemlerin erişebilmesi. Yetkisiz ifşa engellenir.</p></div>
-<div class="cia-item integrity"><h4><i class="fas fa-shield-alt"></i> Bütünlük (Integrity)</h4><p>Verinin doğruluğu ve tamlığı korunur. İzinsiz veya hatalı değişiklik engellenir.</p></div>
-<div class="cia-item availability"><h4><i class="fas fa-plug"></i> Erişilebilirlik (Availability)</h4><p>Yetkili kullanıcıların ihtiyaç anında sisteme ve veriye ulaşabilmesi sağlanır.</p></div>
-</div>
-<div class="figure-block"><figure class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=320&q=90" alt="CIA Üçlüsü" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><figcaption class="figure-caption"><span class="figure-number">Şekil 1.</span> Gizlilik, Bütünlük ve Erişilebilirlik — tüm güvenlik modellerinin temeli.</figcaption></figure></div>
 
-<h3 id="gizlilik-confidentiality"><strong>1.2.1) Gizlilik (Confidentiality)</strong></h3>
-<p><strong>Gizlilik</strong>, bilginin yalnızca yetkili kişi, süreç ve sistemler tarafından görülebilmesidir. İhlal: yetkisiz okuma, kopyalama, ifşa veya dinleme. Kişisel veri veya ticari sır sızıntısı KVKK/GDPR kapsamında bildirim ve yaptırım doğurabilir.</p>
-<p><strong>Teknik kontroller:</strong> Şifreleme (AES-256, TLS 1.3), erişim kontrolü (RBAC, ABAC), maskeleme, güvenli silme, anahtar yönetimi (KMS). <strong>Organizasyonel:</strong> Veri sınıflandırması, minimum veri ilkesi, NDA, tedarikçi sözleşmeleri.</p>
-<p>Gizlilik tek başına yeterli değildir: Veri sızmamış ama <em>değiştirilmiş</em> (bütünlük) veya sistem kapalı (erişilebilirlik) olabilir. Olay analizinde üç boyutu ayrı değerlendirin.</p>
-<div class="example-box"><p><strong>Örnek:</strong> Hasta kaydı yetkisiz indirildi — <em>gizlilik</em> ihlali; kayıt değiştirilmediyse bütünlük ayrı, sistem ayaktaysa erişilebilirlik ayrı tartılır.</p></div>
-<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Gizlilik etkisi</th></tr></thead><tbody><tr><td>TLS</td><td>İletimde dinleme engeli</td></tr><tr><td>Disk şifreleme</td><td>Çalıntı cihazda veri koruma</td></tr><tr><td>MFA</td><td>Çalıntı parolada hesap koruma</td></tr></tbody></table>
-<h3 id="bütünlük-integrity"><strong>1.2.2) Bütünlük (Integrity)</strong></h3>
-<p><strong>Bütünlük</strong>, verinin ve sistemlerin yetkisiz veya hatalı şekilde değiştirilmediğinin güvencesidir. “Doğru, tam, güvenilir ve değişikliklerin izlenebilir” veri demektir. Yanlış veri, yanlış karar üretir — sızıntı olmasa bile ciddi zarar oluşur.</p>
-<p><strong>Teknik kontroller:</strong> Hash (SHA-256), dijital imza (PKI), checksum, audit log, veritabanı transaction bütünlüğü, sürüm kontrolü (Git), WORM depolama. Yazılım indirme sayfalarındaki <strong>kontrol toplamı</strong> bütünlük doğrulamasının günlük örneğidir.</p>
-<p>Bütünlük saldırıları sessiz olabilir: Muhasebe satırında küçük tutar oynaması, üretim sensör manipülasyonu, web sitesine sahte duyuru. <strong>Ransomware</strong> hem bütünlüğü (dosya değişimi) hem erişilebilirliği (kullanılamaz sistem) etkiler.</p>
-<p>Pratik soru: “Bu rapordaki rakama güvenebilir miyim?” — Evet ise bütünlük kontrolleri işliyor demektir.</p>
-<div class="example-box"><p><strong>Örnek:</strong> Banka transferinde tutar alıcıya farklı ulaştı — net <em>bütünlük</em> ihlali. Müşteri listesi çalınmadıysa gizlilik ayrı değerlendirilir.</p></div>
-<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Bütünlük etkisi</th></tr></thead><tbody><tr><td>Hash karşılaştırma</td><td>Dosya bozulmadı mı</td></tr><tr><td>Dijital imza</td><td>Paket sahte mi</td></tr><tr><td>Audit log</td><td>Kim neyi değiştirdi</td></tr></tbody></table>
-<h3 id="erişilebilirlik-availability"><strong>1.2.3) Erişilebilirlik (Availability)</strong></h3>
-<p><strong>Erişilebilirlik</strong>, yetkili kullanıcıların ve süreçlerin ihtiyaç anında sisteme ve veriye ulaşabilmesidir. Veri gizli ve doğru olsa bile hizmet üretilemiyorsa CIA hedefleri pratikte karşılanmaz.</p>
-<p><strong>Teknik kontroller:</strong> Yedekleme ve <strong>restore testi</strong>, felaket kurtarma (DR), yük dengeleme, kapasite planı, DDoS savunması (WAF), yedek güç. <strong>RTO</strong> (ne kadar sürede ayağa kalkmalı) ve <strong>RPO</strong> (ne kadar veri kaybı kabul edilir) SLA’larla yazılır.</p>
-<p>Örnek ihlaller: DDoS ile site çöküşü, ransomware ile şifrelenmiş sunucular, veri merkezi kesintisi, yanlış zamanlanmış yama sonrası günlerce kapalı ERP.</p>
+<div class="learning-objectives">
+<h3><i class="fas fa-bullseye"></i> Bu bölümde hedeflenen kazanımlar</h3>
+<ul>
+<li>CIA üçlüsünün her boyutunu eşit derinlikte tanımlamak ve örneklemek</li>
+<li>Tek bir olayda hangi CIA bileşeninin etkilendiğini ayırt etmek</li>
+<li>Kontrolleri gizlilik, bütünlük ve erişilebilirlikle eşleştirmek</li>
+<li>Üçlü arasındaki denge ve çatışmayı günlük kararlarda yorumlamak</li>
+</ul>
+</div>
+
+<div class="edu-narrative enhanced-text">
+<h3 id="cia-üçlüsüne-giriş"><i class="fas fa-shield-alt"></i> CIA üçlüsüne giriş — ortak dil</h3>
+<p><strong>CIA Üçlüsü</strong> (Confidentiality, Integrity, Availability), bilgi güvenliğinin ve siber güvenliğin en temel çerçevesidir. Bir olay raporunda “sistem hacklendi” demek yerine şunu netleştirin: <em>Ne sızdı?</em> (gizlilik) <em>Ne değişti?</em> (bütünlük) <em>Ne kullanılamaz hale geldi?</em> (erişilebilirlik).</p>
+<p>Üç boyut birbirini tamamlar; biri zayıfsa “güvenli” iddiası zayıflar. Şifreleme çoğunlukla gizliliği güçlendirir; hash ve imza bütünlüğü; yedek ve kapasite erişilebilirliği destekler. Aynı kontrol birden fazla boyuta dokunabilir: <strong>TLS</strong> hem dinlemeyi engeller (gizlilik) hem paket bozulmasını fark eder (bütünlük).</p>
+
+<div class="cia-triad-visual" role="img" aria-label="CIA üçlüsü: gizlilik, bütünlük, erişilebilirlik">
+<div class="cia-pillar confidentiality"><i class="fas fa-lock" aria-hidden="true"></i><span>Gizlilik</span><p>Yetkisiz göremez, okuyamaz, kopyalayamaz.</p></div>
+<div class="cia-pillar integrity"><i class="fas fa-shield-alt" aria-hidden="true"></i><span>Bütünlük</span><p>Veri doğru, tam ve değişiklikler izlenebilir kalır.</p></div>
+<div class="cia-pillar availability"><i class="fas fa-plug" aria-hidden="true"></i><span>Erişilebilirlik</span><p>Yetkili kullanıcı ihtiyaç anında ulaşır.</p></div>
+</div>
+
+<div class="figure-block"><figure class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=720&q=90" alt="Veri merkezi ve ağ altyapısı — CIA hedeflerinin korunduğu ortam" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><figcaption class="figure-caption"><span class="figure-number">Şekil 1.2.</span> CIA üçlüsü tüm politika, risk ve teknik kontrol kararlarının referans çerçevesidir.</figcaption></figure></div>
+
+<div class="cia-flow-diagram">
+<p><strong>Olay analizi akışı:</strong> Varlık tanımla → Hangi CIA boyutu hedeflendi? → Hangi kontrol başarısız oldu? → Risk ve öncelik. Örnek: Fidye yazılımı → dosya şifrelenir (<strong>bütünlük</strong> + <strong>erişilebilirlik</strong>); veri dışarı sızmamışsa <strong>gizlilik</strong> ayrı değerlendirilir.</p>
+</div>
+<p>Aşağıdaki alt derslerde her boyut <strong>aynı derinlikte</strong> işlenir: tanım, teknik ve süreç kontrolleri, kurumsal örnek, karşılaştırma tablosu ve günlük hayat senaryosu.</p>
+</div>
+
+<div class="edu-chapter-body enhanced-text">
+<h3 id="gizlilik-confidentiality"><i class="fas fa-lock"></i> Gizlilik (Confidentiality)</h3>
+<p><strong>Gizlilik</strong>, bilginin yalnızca yetkili kişi, süreç ve sistemler tarafından görülebilmesidir. İhlal türleri: yetkisiz okuma, kopyalama, ifşa, dinleme (ağ trafiği), ekran görüntüsü veya metadata’dan çıkarım (kimin kimi aradığı bile gizlilik konusudur).</p>
+<p>Kurumsal bağlamda kişisel veri veya ticari sır sızıntısı <strong>KVKK / GDPR</strong> bildirim yükümlülüğü ve yaptırım doğurabilir. Gizlilik ihlali her zaman “dışarı sızdı” anlamına gelmez: içeriden yetkisiz departmana erişim de ihlaldir.</p>
+<p><strong>Teknik kontroller:</strong> Şifreleme (AES-256 durağan veri, TLS 1.3 iletim), erişim kontrolü (RBAC, ABAC), maskeleme, tokenizasyon, güvenli silme, anahtar yönetimi (KMS, HSM). <strong>Organizasyonel:</strong> Veri sınıflandırması (kamuya açık / dahili / gizli), minimum veri ilkesi, NDA, tedarikçi veri işleme sözleşmesi (DPA).</p>
+<p>Gizlilik tek başına yeterli değildir: Veri sızmamış ama <em>değiştirilmiş</em> (bütünlük) veya sistem kapalı (erişilebilirlik) olabilir. Olay analizinde üç boyutu <strong>ayrı satırlarda</strong> değerlendirin.</p>
+<div class="example-box"><p><strong>Kurumsal örnek — sağlık:</strong> Hemşire, yetkisi olmayan ünlü hastanın dosyasını merakla açtı — veri dışarı çıkmamış olsa bile <em>gizlilik</em> ihlali; denetim log’u ve disiplin süreci gerekir.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Nasıl çalışır?</th><th>Gizlilik etkisi</th></tr></thead><tbody>
+<tr><td>TLS 1.3</td><td>İletim şifreleme</td><td>Dinleme ve ortadaki adam okuması engellenir</td></tr>
+<tr><td>Disk şifreleme (BitLocker, LUKS)</td><td>Cihaz çalınsa bile okunamaz</td><td>Durağan veri gizliliği</td></tr>
+<tr><td>MFA</td><td>İkinci faktör</td><td>Çalıntı parolada hesap ele geçirilmesi zorlaşır</td></tr>
+<tr><td>Veri maskeleme</td><td>Test ortamında gerçek PII yok</td><td>Yanlışlıkla ifşa riski düşer</td></tr>
+</tbody></table>
+
+<h3 id="bütünlük-integrity"><i class="fas fa-shield-alt"></i> Bütünlük (Integrity)</h3>
+<p><strong>Bütünlük</strong>, verinin ve sistemlerin yetkisiz veya hatalı şekilde değiştirilmediğinin güvencesidir. “Doğru, tam, güvenilir ve değişikliklerin izlenebilir” veri demektir. Yanlış veri, yanlış karar üretir — sızıntı olmasa bile ciddi zarar oluşur (yanlış ilaç dozu, hatalı kredi notu, sahte seçim sonucu).</p>
+<p><strong>Bütünlük türleri:</strong> (1) <em>Veri bütünlüğü</em> — kayıt değişmedi mi? (2) <em>Sistem bütünlüğü</em> — işletim sistemi veya firmware kurcalanmadı mı? (3) <em>Süreç bütünlüğü</em> — onay akışı atlanmadı mı?</p>
+<p><strong>Teknik kontroller:</strong> Kriptografik hash (SHA-256), <strong>dijital imza</strong> (PKI), checksum, değiştirilemez audit log, veritabanı transaction ACID, sürüm kontrolü (Git), WORM depolama, dosya bütünlük izleme (FIM). Yazılım indirme sayfalarındaki <strong>SHA-256 kontrol toplamı</strong> bütünlük doğrulamasının günlük örneğidir: indirdiğiniz dosya dağıtıcının yayınladığı ile aynı mı?</p>
+<p>Bütünlük saldırıları sessiz olabilir: Muhasebe satırında küçük tutar oynaması, üretim sensör değerinin manipülasyonu, web sitesine sahte duyuru (defacement). <strong>Ransomware</strong> hem bütünlüğü (dosya içeriği değişir/şifrelenir) hem erişilebilirliği (kullanılamaz sistem) etkiler.</p>
+<p>Pratik soru: <em>“Bu rapordaki rakama güvenebilir miyim?”</em> — Evet ise bütünlük kontrolleri (imza, onay, log) işliyor demektir.</p>
+<div class="example-box"><p><strong>Kurumsal örnek — finans:</strong> SWIFT mesajında alıcı hesap numarası saldırgan tarafından değiştirildi; para doğru kuruma gitmedi. Müşteri listesi çalınmadıysa <em>gizlilik</em> ayrı, tutarın yanlış gitmesi net <em>bütünlük</em> ihlalidir.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Nasıl çalışır?</th><th>Bütünlük etkisi</th></tr></thead><tbody>
+<tr><td>Hash karşılaştırma</td><td>Beklenen özet = hesaplanan özet</td><td>Dosya bozulma veya değişim tespiti</td></tr>
+<tr><td>Dijital imza</td><td>Özel anahtarla imza, açık anahtarla doğrulama</td><td>Kaynak ve değişmemişlik kanıtı</td></tr>
+<tr><td>Audit log (SIEM)</td><td>Kim, ne zaman, ne değiştirdi</td><td>İzlenebilirlik ve soruşturma</td></tr>
+<tr><td>Code signing</td><td>Yazılım yayıncısı doğrulanır</td><td>Sahte güncelleme engeli</td></tr>
+</tbody></table>
+
+<div class="figure-block"><figure class="lesson-image-wrap"><img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=720&q=90" alt="Dijital imza ve bütünlük doğrulama kavramı" class="lesson-image" loading="lazy" referrerpolicy="no-referrer"><figcaption class="figure-caption"><span class="figure-number">Şekil 1.2b.</span> Hash ve dijital imza, verinin yol boyunca değişmediğini kanıtlamak için kullanılır.</figcaption></figure></div>
+
+<h3 id="erişilebilirlik-availability"><i class="fas fa-plug"></i> Erişilebilirlik (Availability)</h3>
+<p><strong>Erişilebilirlik</strong>, yetkili kullanıcıların ve süreçlerin ihtiyaç anında sisteme ve veriye ulaşabilmesidir. Veri gizli ve doğru olsa bile hizmet üretilemiyorsa CIA hedefleri pratikte karşılanmaz. 1.1’deki <strong>hizmet varlığı</strong> özellikle bu boyutla ilişkilidir.</p>
+<p><strong>Teknik kontroller:</strong> Yedekleme ve düzenli <strong>restore testi</strong> (yedek var ama açılmıyorsa fayda yok), felaket kurtarma (DR), yük dengeleme, kapasite planı, DDoS savunması (WAF, CDN), yedek güç (UPS/jeneratör), coğrafi yedeklilik.</p>
+<p><strong>RTO</strong> (Recovery Time Objective): Sistem en geç ne kadar sürede ayağa kalkmalı? <strong>RPO</strong> (Recovery Point Objective): En fazla ne kadar veri kaybı kabul edilir? Bu metrikler SLA ve iş sürekliliği planında yazılır.</p>
+<p>Örnek ihlaller: DDoS ile site çöküşü, ransomware ile şifrelenmiş sunucular, veri merkezi yangını, yanlış yama sonrası günlerce kapalı ERP, DNS hatasıyla tüm e-postanın durması.</p>
 <p><strong>Kritik örnek:</strong> Hastane randevu sistemi çalışmıyorsa veri sızmamış olsa bile <em>erişilebilirlik</em> ihlalidir; can güvenliği bağlamında öncelik yükselir.</p>
-<div class="example-box"><p><strong>Örnek:</strong> Black Friday’de e-ticaret 4 saat kapalı — gelir kaybı; kapasite ve WAF <em>erişilebilirlik</em> riskini önceden azaltmalıydı.</p></div>
-<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Erişilebilirlik etkisi</th></tr></thead><tbody><tr><td>Yedek + test</td><td>Felaket sonrası dönüş</td></tr><tr><td>Load balancer</td><td>Tek sunucu arızası</td></tr><tr><td>Anti-DDoS</td><td>Hacim saldırısı</td></tr></tbody></table>
-<h3 id="üçlü-arasında-denge-kurma"><strong>1.2.4) Üçlü Arasında Denge Kurma</strong></h3>
-<p>Güvenlik tasarımında denge şarttır:</p>
+<div class="example-box"><p><strong>Kurumsal örnek — e-ticaret:</strong> Black Friday’de site 4 saat yanıt vermedi — doğrudan gelir kaybı; önceden kapasite testi ve WAF kuralı <em>erişilebilirlik</em> riskini azaltırdı.</p></div>
+<table class="comparison-table"><thead><tr><th>Kontrol</th><th>Nasıl çalışır?</th><th>Erişilebilirlik etkisi</th></tr></thead><tbody>
+<tr><td>Yedek + restore testi</td><td>3-2-1 kuralı, periyodik kurtarma tatbikatı</td><td>Felaket sonrası işe dönüş</td></tr>
+<tr><td>Load balancer</td><td>Trafik birden fazla sunucuya</td><td>Tek sunucu arızasında süreklilik</td></tr>
+<tr><td>Anti-DDoS / WAF</td><td>Anormal trafik filtreleme</td><td>Hacim saldırısına dayanıklılık</td></tr>
+<tr><td>HA küme</td><td>Aktif-yedek düğüm</td><td>Planlı bakımda kesintisizlik</td></tr>
+</tbody></table>
+
+<h3 id="üçlü-arasında-denge-kurma"><i class="fas fa-balance-scale"></i> Üçlü arasında denge kurma</h3>
+<p>Güvenlik tasarımında <strong>denge</strong> şarttır; bir boyutu maksimize etmek diğerini zayıflatabilir:</p>
 <ul>
-<li><p>Çok sıkı gizlilik önlemleri (örn. aşırı karmaşık doğrulama adımları) erişilebilirliği düşürebilir.</p></li>
-<li><p>Erişimi aşırı kolaylaştırmak gizlilik riskini artırabilir.</p></li>
-<li><p>Değişiklikleri aşırı kısıtlamak süreçleri yavaşlatabilir (bütünlük korunurken iş verimi düşebilir).</p></li>
+<li><p>Çok sıkı gizlilik (ör. saatte bir MFA, VPN zorunluluğu) → kullanıcı iş yapamaz, <em>erişilebilirlik</em> düşer.</p></li>
+<li><p>Erişimi aşırı kolaylaştırmak (paylaşılan admin, şifresiz Wi‑Fi) → <em>gizlilik</em> riski artar.</p></li>
+<li><p>Her değişiklik için beş onay → <em>bütünlük</em> artar ama yama gecikir, yeni CVE açık kalır (<em>erişilebilirlik</em> ve risk).</p></li>
 </ul>
-<p>1.1’deki “hizmet” varlığı, özellikle erişilebilirlik hedefiyle doğrudan ilişkilidir.<br />
-Modül 2’de DoS/DDoS gibi saldırıların daha çok erişilebilirliğe, kimlik avı gibi yöntemlerin ise çoğunlukla gizlilik ve kimlik güvenliğine etki ettiğini örneklerle göreceksiniz.</p>
-<h3 id="günlük-hayattan-örnekler-1"><strong>1.2.5) Günlük Hayattan Örnekler</strong> </h3>
+<table class="comparison-table"><thead><tr><th>Çatışma</th><th>Örnek</th><th>Çözüm yaklaşımı</th></tr></thead><tbody>
+<tr><td>Gizlilik ↔ Erişilebilirlik</td><td>Acil durumda doktorun kayda hızlı erişmesi</td><td>“Break-glass” hesabı, sonradan denetim</td></tr>
+<tr><td>Bütünlük ↔ Verim</td><td>Sürekli imza/onay gecikmesi</td><td>Risk bazlı onay (düşük riskte otomasyon)</td></tr>
+<tr><td>Hepsi ↔ Maliyet</td><td>Sınırsız yedek site</td><td>RTO/RPO’ya göre katmanlı yatırım</td></tr>
+</tbody></table>
+<p>Modül 2’de DoS/DDoS gibi saldırıların çoğunlukla <strong>erişilebilirliğe</strong>, kimlik avının ise <strong>gizlilik</strong> ve kimlik güvenliğine etkisini örneklerle göreceksiniz.</p>
+
+<h3 id="günlük-hayattan-örnekler-1"><i class="fas fa-home"></i> Günlük hayattan örnekler</h3>
+<p>Aşağıdaki tablo, aynı olayı üç boyutta okumayı alıştırır:</p>
+<table class="comparison-table"><thead><tr><th>Senaryo</th><th>Gizlilik</th><th>Bütünlük</th><th>Erişilebilirlik</th></tr></thead><tbody>
+<tr><td>Bulut klasörü “herkese açık” link</td><td>Özel belgeler ifşa</td><td>—</td><td>—</td></tr>
+<tr><td>Ortak Word dosyasında yanlış sürüm</td><td>—</td><td>Yanlış içerik teslimi</td><td>—</td></tr>
+<tr><td>Üniversite başvuru formu çöküyor</td><td>—</td><td>—</td><td>Hizmet kullanılamaz</td></tr>
+<tr><td>Telefon çalındı, ekran kilidi yok</td><td>SMS ve fotoğraflar okunur</td><td>—</td><td>—</td></tr>
+</tbody></table>
 <ul>
-<li><p><strong>Gizlilik:</strong> Bir kişi bulut depolama klasörünü yanlışlıkla “herkese açık bağlantı” ile paylaşmıştır; özel belgeler yetkisiz kişilere açılabilir.</p></li>
-<li><p><strong>Bütünlük:</strong> Ortak bir projede aynı dosya farklı sürümlerde düzenlenir; yanlış sürüm teslim edilir. Veri sızmasa bile bütünlük sorunu oluşur.</p></li>
-<li><p><strong>Erişilebilirlik:</strong> Yoğun başvuru gününde bir form sayfası açılmaz; veri sızıntısı yoktur ancak hizmet kullanılamaz.</p></li>
+<li><p><strong>Gizlilik:</strong> Aile WhatsApp grubuna yanlışlıkla maaş bordrosu fotoğrafı — yetkisiz kişiler gördü.</p></li>
+<li><p><strong>Bütünlük:</strong> Staj raporunda son sayfa eski PDF ile birleştirildi — hoca yanlış sürümü değerlendirdi.</p></li>
+<li><p><strong>Erişilebilirlik:</strong> Sınav günü LMS açılmıyor — veri sızmamış olsa bile öğrenci hizmeti yok.</p></li>
 </ul>
+</div>
+
+<div class="edu-lesson-recap">
+<h3 id="cia-ozet"><i class="fas fa-check-double"></i> Bu bölümde neler öğrendik?</h3>
+<p>CIA üçlüsü artık tek satırlık tanım değil; her boyut için kontrol, tablo ve örnek seti var. Sonraki bölüm: <strong>temel kavramlar</strong> (varlık, tehdit, zafiyet, risk).</p>
+<ul>
+<li>Gizlilik, bütünlük, erişilebilirlik eşit derinlikte</li>
+<li>Tek olayda çoklu CIA etkisi (ör. ransomware)</li>
+<li>Kontrol–hedef eşlemesi ve denge / çatışma</li>
+<li>Günlük ve kurumsal senaryolar</li>
+</ul>
+</div>
 </div>
 </section>
 
@@ -4403,7 +4488,7 @@ D) Üretim sistemlerinde test için yeterlidir</p>
         </main>
     </div>
 
-        <script src="/js/sebs-premium-module-lessons.js?v=20260528"></script>
+        <script src="/js/sebs-premium-module-lessons.js?v=20260529"></script>
     <script>
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Siber Güvenliğe Giriş',

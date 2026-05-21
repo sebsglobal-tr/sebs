@@ -18,6 +18,36 @@
             .replace(/-+/g, '-');
     }
 
+    /** URL yolu (ASCII) ile HTML id (Türkçe karakter) eşlemesi */
+    function headingSlugKey(headingId) {
+        return slugifyAnchor(String(headingId || '').replace(/-/g, ' '));
+    }
+
+    function findLessonKeyByHeadingSlug(routeKey, keysOrdered) {
+        var r = String(routeKey || '').trim();
+        var sep = r.indexOf('::');
+        if (sep === -1) return null;
+        var secPart = r.slice(0, sep);
+        var headSlug = r.slice(sep + 2);
+        var keys = keysOrdered || [];
+        var exact = secPart + '::' + headSlug;
+        if (keys.indexOf(exact) !== -1) return exact;
+        var prefix = secPart + '::';
+        var match = null;
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].indexOf(prefix) !== 0) continue;
+            var hid = keys[i].slice(prefix.length);
+            if (hid === headSlug || headingSlugKey(hid) === headSlug) {
+                return keys[i];
+            }
+            var el = document.getElementById(hid);
+            if (el && headingSlugKey(el.id) === headSlug) {
+                match = keys[i];
+            }
+        }
+        return match;
+    }
+
     /** Yan menü ve kahraman başlık: MODÜL 2 — … / 2.5 … öneklerini kaldırır */
     function formatTopicTitle(text) {
         var t = String(text || '')
@@ -834,15 +864,15 @@
         var r = String(raw || '').trim();
         if (!r) return null;
         if (keys.indexOf(r) !== -1) return r;
+        if (r.indexOf('::') !== -1) {
+            var bySlug = findLessonKeyByHeadingSlug(r, keys);
+            if (bySlug) return bySlug;
+        }
         var fromSection = lessonKeyForSection(r);
         if (keys.indexOf(fromSection) !== -1) return fromSection;
         if (r.indexOf('::') !== -1) {
             var secPart = r.split('::')[0];
             if (keys.indexOf(secPart) !== -1) return secPart;
-            var prefix = secPart + '::';
-            for (var j = 0; j < keys.length; j++) {
-                if (keys[j].indexOf(prefix) === 0) return canonicalLessonKey(keys[j]);
-            }
         }
         for (var i = 0; i < keys.length; i++) {
             if (keys[i] === r || keys[i].indexOf(r + '::') === 0) {
