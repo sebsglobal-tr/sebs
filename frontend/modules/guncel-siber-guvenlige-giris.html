@@ -12,7 +12,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="sebs-content-version" content="20260525">
+    <meta name="sebs-content-version" content="20260528">
     <link rel="canonical" href="https://sebsglobal.com/egitimler/siber-guvenlik">
     <meta property="og:url" content="https://sebsglobal.com/egitimler/siber-guvenlik">
     <script type="application/ld+json">
@@ -75,7 +75,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=20260525" />
+    <link rel="stylesheet" href="/css/sebs-module-lesson-route.css?v=20260528" />
 <link rel="stylesheet" href="/css/module-lesson-landing.css" />
 
     <link rel="stylesheet" href="/css/module-isletim-standard.css" />
@@ -314,6 +314,7 @@
 <p>Siber güvenlik, “antivirüs kurmak” veya “parola uzun olsun” demek değildir. Dijital dünyada <strong>neyi</strong> koruduğunuzu, <strong>neye göre</strong> güvenli sayacağınızı (CIA üçlüsü — sonraki bölüm) ve <strong>kime karşı</strong> koruduğunuzu (tehditler — Modül 2) netleştirmeden araçlar anlamsız kalır.</p>
 <p>Bu bölüm modülün ilk taşıdır. Okurken her paragrafta şunu sorun: Bu cümle <em>varlık</em>, <em>tehdit</em> veya <em>hedef</em> (gizlilik / bütünlük / erişilebilirlik) ile ilgili mi?</p>
 <p>Profesyonel ekipler toplantıda “hacklendik” demez; “müşteri verisi (<strong>varlık</strong>) yetkisiz kopyalandı (<strong>gizlilik</strong>), ERP iki saat kapalı kaldı (<strong>erişilebilirlik</strong>)” der. Bu dil, kariyeriniz boyunca referans çerçeveniz olacak.</p>
+<p>Bu derste henüz teknik ayrıntıya girmiyoruz; amaç zihinsel modeli oturtmak. Sonraki alt başlıkta <strong>tanım</strong>, ardından <strong>varlık sınıfları</strong> ve günlük hayat örnekleri gelir — her biri ayrı ders sayfasında, yalnızca o içerik görünecek şekilde ilerleyeceksiniz.</p>
 </div>
 
 <div class="edu-chapter-body enhanced-text">
@@ -329,9 +330,10 @@
 
 <h3 id="dijital-varlik-veri-sistem-hizmet"><i class="fas fa-gem"></i> Dijital varlık: veri, sistem, hizmet</h3>
 <p>Stratejinin ilk sorusu: <strong>Neyi koruyoruz?</strong> Pratik sınıflandırma:</p>
-<p><strong>Veri:</strong> Müşteri PII, finans kaydı, kaynak kodu, sınav dosyası. Sızıntı → gizlilik; değişiklik → bütünlük; kayıp (yedek yok) → erişilebilirlik.</p>
-<p><strong>Sistem:</strong> Sunucu, laptop, veritabanı, firewall. Sistem çökünce üzerindeki veri ve ürettiği hizmet birlikte risk altına girer.</p>
-<p><strong>Hizmet:</strong> Web sitesi, e-posta, ödeme, randevu paneli. Kullanıcı “giremiyorum” dediğinde çoğu zaman hizmet varlığı konuşulur.</p>
+<p><strong>Veri:</strong> Müşteri PII, finans kaydı, kaynak kodu, sınav dosyası. Sızıntı → gizlilik; değişiklik → bütünlük; kayıp (yedek yok) → erişilebilirlik. Veri envanteri yapılmadan “güvenlik” bütçesi dağıtılamaz: hangi tablo, hangi yedek, hangi log satırı kritik?</p>
+<p><strong>Sistem:</strong> Sunucu, laptop, veritabanı, firewall. Sistem çökünce üzerindeki veri ve ürettiği hizmet birlikte risk altına girer. OT üretim hattındaki PLC de bir <em>sistem</em> varlığıdır; sadece “IT” değil.</p>
+<p><strong>Hizmet:</strong> Web sitesi, e-posta, ödeme, randevu paneli. Kullanıcı “giremiyorum” dediğinde çoğu zaman hizmet varlığı konuşulur. SLA (hizmet süresi taahhüdü) doğrudan <strong>erişilebilirlik</strong> hedefidir.</p>
+<p>Pratik alıştırma: Kendi işinizde veya okul projenizde üç satırlık envanter yazın — bir veri, bir sistem, bir hizmet. Her satır için “sızdı / değişti / kapandı” senaryosunda hangi CIA boyutunun etkilendiğini not edin.</p>
 <div class="example-box">
 <p><strong>Kuzey Lojistik (kurgu):</strong> Araç takip uygulaması = <strong>hizmet</strong>; sunucu = <strong>sistem</strong>; konum kayıtları = <strong>veri</strong>. Hedef: konum sızmaması (gizlilik), kayıt değişmemesi (bütünlük), sürücünün panele erişmesi (erişilebilirlik). Tek satır “uygulama” envanteri yeterli değildir.</p>
 </div>
@@ -4401,15 +4403,14 @@ D) Üretim sistemlerinde test için yeterlidir</p>
         </main>
     </div>
 
-        <script src="/js/sebs-premium-module-lessons.js?v=20260525"></script>
+        <script src="/js/sebs-premium-module-lessons.js?v=20260528"></script>
     <script>
         window.SebsPremiumModuleLessons.run({
             moduleName: 'Siber Güvenliğe Giriş',
             storageKey: 'module_progress_siber_guvenlik_giris',
             basePath: '/modules/guncel-siber-guvenlige-giris.html',
             subNavScroll: true,
-            lessonHeadingLevel: 'h3',
-            routeGranularity: 'section'
+            lessonHeadingLevel: 'h3'
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>

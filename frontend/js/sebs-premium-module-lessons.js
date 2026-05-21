@@ -1072,14 +1072,21 @@
                 if (sec.id) {
                     if (isFlatLessonModule()) {
                         keys.push(sec.id);
-                    } else {
-                        var flatHead = flatSectionHeading(sec);
-                        keys.push(
-                            flatHead
-                                ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
-                                : sec.id
-                        );
+                        return;
                     }
+                    var flatSubs = getFlatSectionSubheadings(sec);
+                    if (flatSubs.length > 1) {
+                        flatSubs.forEach(function (head, idx) {
+                            keys.push(makeLessonKey(sec.id, ensureHeadingId(head, sec.id, idx)));
+                        });
+                        return;
+                    }
+                    var flatHead = flatSectionHeading(sec);
+                    keys.push(
+                        flatHead
+                            ? makeLessonKey(sec.id, ensureHeadingId(flatHead, sec.id, 0))
+                            : sec.id
+                    );
                 }
                 return;
             }
@@ -1247,6 +1254,25 @@
         document.querySelectorAll('.content-section').forEach(function (sec) {
             var inner = sec.querySelector('.section-inner');
             if (!inner) {
+                var flatSubs = getFlatSectionSubheadings(sec);
+                if (flatSubs.length > 1 && !isFlatLessonModule()) {
+                    var flatHost =
+                        sec.querySelector('.lesson-content') ||
+                        sec.querySelector('.content-card') ||
+                        sec;
+                    flatSubs.forEach(function (head, idx) {
+                        var hid = ensureHeadingId(head, sec.id, idx);
+                        var lessonKey = makeLessonKey(sec.id, hid);
+                        var block = ensureHeadingLessonCard(head, flatHost);
+                        block.setAttribute('data-lesson-key', lessonKey);
+                        if (routeMode && !block.querySelector('.lesson-complete-footer')) {
+                            appendLessonFooter(block, function () {
+                                completeHandler(lessonKey);
+                            });
+                        }
+                    });
+                    return;
+                }
                 var flatKey = isFlatLessonModule()
                     ? sec.id
                     : (function () {
@@ -1375,6 +1401,13 @@
         var inner = sec.querySelector('.section-inner');
         if (!inner) {
             if (isFlatLessonModule()) return sectionId;
+            var flatSubs = getFlatSectionSubheadings(sec);
+            if (flatSubs.length > 1) {
+                return makeLessonKey(
+                    sectionId,
+                    ensureHeadingId(flatSubs[0], sectionId, 0)
+                );
+            }
             var flatHead = flatSectionHeading(sec);
             return flatHead
                 ? makeLessonKey(sectionId, ensureHeadingId(flatHead, sectionId, 0))
@@ -2009,8 +2042,14 @@
             var card = head ? head.closest('.content-card') : null;
             if (!card && head && section) {
                 var innerForCard = section.querySelector('.section-inner');
+                var flatHost =
+                    section.querySelector('.lesson-content') ||
+                    section.querySelector('.content-card .lesson-content') ||
+                    section.querySelector('.content-card');
                 if (innerForCard) {
                     card = ensureHeadingLessonCard(head, innerForCard);
+                } else if (flatHost) {
+                    card = ensureHeadingLessonCard(head, flatHost);
                 }
             }
             if (!card && section) {
@@ -2022,11 +2061,16 @@
                     card = section.querySelector('.content-card');
                 }
             }
+            var hasExplicitHeading =
+                parsed.headingId &&
+                parsed.headingId !== parsed.sectionId &&
+                String(lessonKey).indexOf('::') !== -1;
             var useWholeSection =
-                cfg.routeGranularity === 'section' ||
-                !card ||
-                !head ||
-                (card && cardVisibleTextLen(card) < 80);
+                !hasExplicitHeading &&
+                (cfg.routeGranularity === 'section' ||
+                    !card ||
+                    !head ||
+                    (card && cardVisibleTextLen(card) < 80));
 
             if (section) {
                 section.classList.add('lesson-route-current-section', 'active');
@@ -2076,7 +2120,7 @@
                 if (linkQuizId && linkSid) {
                     active = lessonKey === makeLessonKey(linkSid, linkQuizId);
                 } else if (linkSid === sid) {
-                    active = !quizEl && (lessonKey === sid || lessonKey.indexOf(sid + '::') === 0);
+                    active = !quizEl && lessonKey === sid;
                 }
                 l.classList.toggle('active', active);
             });
@@ -2193,13 +2237,52 @@
             );
         }
 
-        function goToNextLessonAfter(lessonKey) {
+        function getNextLessonKey(lessonKey) {
             lessonKey = canonicalLessonKey(lessonKey);
             var idx = lessonKeysOrdered.indexOf(lessonKey);
             if (idx >= 0 && idx + 1 < lessonKeysOrdered.length) {
-                var nextKey = lessonKeysOrdered[idx + 1];
-                navigateToLesson(nextKey, { inPlace: true });
-                syncLessonUrl(nextKey, basePath, false);
+                return lessonKeysOrdered[idx + 1];
+            }
+            return null;
+        }
+
+        function completionRedirectHref(lessonKey) {
+            var next = getNextLessonKey(lessonKey);
+            if (next) return hrefForLessonKey(next, basePath);
+            var parsed = parseLessonKey(canonicalLessonKey(lessonKey));
+            var sections = Array.from(
+                document.querySelectorAll('.module-layout .content-section[id]')
+            );
+            var secIdx = -1;
+            for (var i = 0; i < sections.length; i++) {
+                if (sections[i].id === parsed.sectionId) {
+                    secIdx = i;
+                    break;
+                }
+            }
+            for (var j = secIdx + 1; j < sections.length; j++) {
+                var sid = sections[j].id;
+                if (!sid) continue;
+                for (var k = 0; k < lessonKeysOrdered.length; k++) {
+                    var lk = lessonKeysOrdered[k];
+                    if (lk === sid || lk.indexOf(sid + '::') === 0) {
+                        return hrefForLessonKey(lk, basePath);
+                    }
+                }
+            }
+            var slug = moduleSlugFromBasePath(basePath);
+            if (slug === 'guncel-siber-guvenlige-giris') {
+                return '/egitimler/siber-guvenlik';
+            }
+            return '/egitimler';
+        }
+
+        function goToNextLessonAfter(lessonKey) {
+            var href = completionRedirectHref(lessonKey);
+            if (!href) return;
+            var here = global.location.pathname + global.location.search;
+            if (!sameLessonUrl(here, href)) {
+                global.location.href = href;
             }
         }
 
@@ -2326,6 +2409,19 @@
 
     global.SebsPremiumModuleLessons = {
         run: run,
+        getCurrentLessonBySlug: function (slug, keysOrdered) {
+            return resolveLessonKeyFromRoute(slug, keysOrdered || []);
+        },
+        getNextLessonKey: function (lessonKey, keysOrdered) {
+            lessonKey = canonicalLessonKey(lessonKey);
+            var keys = keysOrdered || [];
+            var idx = keys.indexOf(lessonKey);
+            if (idx >= 0 && idx + 1 < keys.length) return keys[idx + 1];
+            return null;
+        },
+        makeLessonKey: makeLessonKey,
+        parseLessonKey: parseLessonKey,
+        hrefForLessonKey: hrefForLessonKey,
         refreshSubheadingNav: function () {
             var list = document.querySelector('.nav-section-list');
             if (!list) return;
