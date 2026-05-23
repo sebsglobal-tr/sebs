@@ -25,6 +25,38 @@ function normalizeLevel(level) {
     return level;
 }
 
+/** Canlı test: Render env TEST_PRICE_YUKSELIS=5 gibi (deploy sonrası kaldırın). */
+function getTestPriceOverride(slugOrLevel) {
+    const envKey = {
+        'ilk-adim': 'TEST_PRICE_ILK_ADIM',
+        beginner: 'TEST_PRICE_ILK_ADIM',
+        yukselis: 'TEST_PRICE_YUKSELIS',
+        intermediate: 'TEST_PRICE_YUKSELIS',
+        zirve: 'TEST_PRICE_ZIRVE',
+        advanced: 'TEST_PRICE_ZIRVE'
+    }[slugOrLevel];
+    if (!envKey) return null;
+    const raw = process.env[envKey];
+    if (raw == null || raw === '') return null;
+    const n = Number(raw);
+    return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+function applyTestPriceOverrides(prices) {
+    const out = JSON.parse(JSON.stringify(prices || PACKAGE_PRICES));
+    for (const slug of ['ilk-adim', 'yukselis', 'zirve']) {
+        const override = getTestPriceOverride(slug);
+        if (override == null) continue;
+        if (!out['sebs-road']) out['sebs-road'] = {};
+        out['sebs-road'][slug] = override;
+        const lvl = ROAD_STAGE_TO_LEVEL[slug];
+        if (lvl) out['sebs-road'][lvl] = override;
+        if (!out.cybersecurity) out.cybersecurity = {};
+        out.cybersecurity[lvl] = override;
+    }
+    return out;
+}
+
 function getExpectedPrice(category, level) {
     let prices = PACKAGE_PRICES;
     try {
@@ -33,6 +65,7 @@ function getExpectedPrice(category, level) {
     } catch {
         /* defaults */
     }
+    prices = applyTestPriceOverrides(prices);
     const cat = prices[category];
     if (!cat) return null;
     const lvl = normalizeLevel(level);
@@ -41,7 +74,9 @@ function getExpectedPrice(category, level) {
 }
 
 function getRoadPackageDisplayPrice(slug, packages) {
-    const p = packages || PACKAGE_PRICES;
+    const p = applyTestPriceOverrides(packages || PACKAGE_PRICES);
+    const direct = getTestPriceOverride(slug);
+    if (direct != null) return direct;
     const cyber = p.cybersecurity || p['sebs-road'] || {};
     if (slug === 'ilk-adim') return cyber.beginner ?? cyber['ilk-adim'] ?? 199;
     if (slug === 'yukselis') return cyber.intermediate ?? cyber.yukselis ?? 349;
@@ -62,6 +97,8 @@ module.exports = {
     PACKAGE_PRICES,
     ROAD_STAGE_TO_LEVEL,
     normalizeLevel,
+    getTestPriceOverride,
+    applyTestPriceOverrides,
     getExpectedPrice,
     getRoadPackageDisplayPrice,
     getRoadPackageLabel

@@ -55,7 +55,7 @@
         }
         .loading-overlay.active { display: flex; }
     </style>
-    <link rel="stylesheet" href="/css/pricing-page.css?v=4" />
+    <link rel="stylesheet" href="/css/pricing-page.css?v=5" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -254,7 +254,7 @@
 
     <div class="pp-container">
         <div class="pp-note">
-            <p><strong>Not:</strong> SEBS Yolu planları aylık aboneliktir; her dönem sonunda otomatik yenilenir. Tekli satış yalnızca seçilen durağı açar. Ödeme iyzico güvenli ödeme sayfasında tamamlanır.</p>
+            <p><strong>Not:</strong> SEBS Yolu planlarında <strong>kredi kartı ile otomatik abonelik</strong> veya <strong>banka kartı ile manuel aylık ödeme</strong> seçeneklerinden birini ödeme adımında seçebilirsiniz. Ödeme iyzico güvenli sayfasında tamamlanır.</p>
         </div>
     </div>
 
@@ -401,6 +401,12 @@
         ];
         let activeRoadStage = 'all';
         let roadPurchaseMode = 'subscription';
+        let sebsRoadPackages = null;
+        let sebsPaymentConfig = null;
+
+        function isSebsRoadPlan(category, level) {
+            return category === 'sebs-road' && ['ilk-adim', 'yukselis', 'zirve'].includes(level);
+        }
 
         // Check login status
         function isLoggedIn() {
@@ -512,9 +518,9 @@
 
             const userRank = getUserRoadRank();
             const stageOrder = [
-                { id: 'ilk-adim', title: 'İlk Adım', planPrice: '199 TL/ay', tone: 'blue' },
-                { id: 'yukselis', title: 'Yükseliş', planPrice: '349 TL/ay', tone: 'violet' },
-                { id: 'zirve', title: 'Zirve', planPrice: '799 TL/ay', tone: 'amber' }
+                { id: 'ilk-adim', title: 'İlk Adım', planPrice: roadPriceLabel('ilk-adim'), tone: 'blue' },
+                { id: 'yukselis', title: 'Yükseliş', planPrice: roadPriceLabel('yukselis'), tone: 'violet' },
+                { id: 'zirve', title: 'Zirve', planPrice: roadPriceLabel('zirve'), tone: 'amber' }
             ];
             const filters = [
                 { id: 'all', label: 'Tümü' },
@@ -810,15 +816,60 @@
             window.location.href = 'login.html?redirect=pricing.html&message=Satın alma işlemi için giriş yapmanız veya kayıt olmanız gerekiyor.';
         }
 
-        function openPurchaseModal({ categoryTitle, packageTitle, price, onConfirm }) {
+        function openPurchaseModal({ categoryTitle, packageTitle, price, category, level, onConfirm }) {
             const existing = document.getElementById('purchaseModalOverlay');
             if (existing) existing.remove();
+
+            const showBillingChoice =
+                isSebsRoadPlan(category, level) &&
+                sebsPaymentConfig &&
+                sebsPaymentConfig.subscriptionEnabled !== false;
+
+            const cardNotice =
+                (sebsPaymentConfig && sebsPaymentConfig.cardNotice) ||
+                'Abonelik ödemeleri yalnızca kredi kartı ile yapılabilir. Banka kartı ile ödeme yapmak istiyorsanız tek seferlik / manuel aylık ödeme seçeneğini kullanabilirsiniz.';
+
+            const defaultBillingMode =
+                sebsPaymentConfig && sebsPaymentConfig.roadBillingMode === 'monthly_checkout'
+                    ? 'monthly_checkout'
+                    : 'subscription';
+
+            const billingBlock = showBillingChoice
+                ? `
+                        <div class="purchase-billing-notice" role="note">
+                            <span class="purchase-billing-notice__icon" aria-hidden="true"><i class="fas fa-info-circle"></i></span>
+                            <p>${cardNotice}</p>
+                        </div>
+                        <fieldset class="purchase-billing-options" role="radiogroup" aria-label="Ödeme yöntemi seçimi">
+                            <legend class="purchase-billing-options__legend">Ödeme yönteminizi seçin</legend>
+                            <label class="purchase-billing-option${defaultBillingMode === 'subscription' ? ' is-selected' : ''}">
+                                <input type="radio" name="purchaseBillingMode" value="subscription"${defaultBillingMode === 'subscription' ? ' checked' : ''} />
+                                <span class="purchase-billing-option__body">
+                                    <span class="purchase-billing-option__head">
+                                        <span class="purchase-billing-option__icon" aria-hidden="true"><i class="fas fa-credit-card"></i></span>
+                                        <span class="purchase-billing-option__title">Kredi kartı ile otomatik abonelik</span>
+                                    </span>
+                                    <span class="purchase-billing-option__desc">Her ay otomatik yenilenir. Kart saklama ile tekrarlayan ödeme. Yalnızca kredi kartı.</span>
+                                </span>
+                            </label>
+                            <label class="purchase-billing-option${defaultBillingMode === 'monthly_checkout' ? ' is-selected' : ''}">
+                                <input type="radio" name="purchaseBillingMode" value="monthly_checkout"${defaultBillingMode === 'monthly_checkout' ? ' checked' : ''} />
+                                <span class="purchase-billing-option__body">
+                                    <span class="purchase-billing-option__head">
+                                        <span class="purchase-billing-option__icon purchase-billing-option__icon--debit" aria-hidden="true"><i class="fas fa-building-columns"></i></span>
+                                        <span class="purchase-billing-option__title">Banka kartı ile manuel aylık ödeme</span>
+                                    </span>
+                                    <span class="purchase-billing-option__desc">Tek seferlik 3D Secure ödeme, 30 gün erişim. Süre bitince planı tekrar satın alırsınız.</span>
+                                </span>
+                            </label>
+                        </fieldset>`
+                : '';
 
             const overlay = document.createElement('div');
             overlay.id = 'purchaseModalOverlay';
             overlay.className = 'purchase-modal-overlay';
             overlay.innerHTML = `
-                <div class="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
+                <div class="purchase-modal${showBillingChoice ? ' purchase-modal--billing' : ''}" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
                     <div class="purchase-modal-head">
                         <div>
                             <p class="purchase-modal-eyebrow">Satın alma</p>
@@ -834,6 +885,7 @@
                             </div>
                             <p class="purchase-modal-summary__note">${categoryTitle} kapsamında erişim hesabınıza tanımlanır. Plan ile ilerleme takibi ve aşamalar arası geçiş açılır.</p>
                         </div>
+                        ${billingBlock}
                         <div class="purchase-modal-trust" aria-label="Ödeme yöntemi">
                             <img
                                 src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg"
@@ -870,6 +922,17 @@
             const confirmBtn = overlay.querySelector('[data-modal-confirm]');
             const termsCb = overlay.querySelector('#purchaseAcceptTerms');
             const digitalCb = overlay.querySelector('#purchaseAcceptDigital');
+            const billingOptions = overlay.querySelectorAll('.purchase-billing-option');
+            billingOptions.forEach(function (opt) {
+                opt.addEventListener('click', function () {
+                    billingOptions.forEach(function (o) {
+                        o.classList.remove('is-selected');
+                    });
+                    opt.classList.add('is-selected');
+                    const radio = opt.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                });
+            });
             function syncPurchaseConfirm() {
                 const ok = termsCb && termsCb.checked && digitalCb && digitalCb.checked;
                 confirmBtn.disabled = !ok;
@@ -879,8 +942,11 @@
             syncPurchaseConfirm();
             confirmBtn.addEventListener('click', () => {
                 if (confirmBtn.disabled) return;
+                let billingMode = 'subscription';
+                const selected = overlay.querySelector('input[name="purchaseBillingMode"]:checked');
+                if (selected) billingMode = selected.value;
                 close();
-                onConfirm();
+                onConfirm(billingMode);
             });
             document.body.appendChild(overlay);
         }
@@ -908,16 +974,22 @@
             const categoryTitle = pricingData[category]?.title || 'SEBS Yolu';
             const packageTitle = button.dataset.title || 'Plan';
             let proceed = false;
+            let selectedBillingMode = 'subscription';
             openPurchaseModal({
                 categoryTitle,
                 packageTitle,
                 price,
-                onConfirm: function () { proceed = true; continuePurchase(); }
+                category,
+                level,
+                onConfirm: function (billingMode) {
+                    proceed = true;
+                    selectedBillingMode = billingMode || 'subscription';
+                    continuePurchase();
+                }
             });
             if (proceed) return;
 
             async function continuePurchase() {
-
                 // Show loading
                 document.getElementById('loadingOverlay').classList.add('active');
                 button.disabled = true;
@@ -938,7 +1010,7 @@
                         ['ilk-adim', 'yukselis', 'zirve'].includes(level);
                     const purchaseBody = JSON.stringify(
                         roadPackage
-                            ? { package: level }
+                            ? { package: level, billingMode: selectedBillingMode }
                             : {
                                   category: backendCategory,
                                   level: backendLevel,
@@ -1004,6 +1076,7 @@
                                         checkoutFormContent: pay.checkoutFormContent || '',
                                         paymentPageUrl: pay.paymentPageUrl || '',
                                         conversationId: pay.conversationId || '',
+                                        billingMode: pay.billingMode || selectedBillingMode,
                                         ts: Date.now()
                                     })
                                 );
@@ -1073,6 +1146,61 @@
             }
         }
 
+        function roadPriceLabel(slug) {
+            const fromApi = sebsRoadPackages && sebsRoadPackages[slug];
+            if (fromApi && fromApi.price != null) return fromApi.price + ' TL/ay';
+            const pkg = pricingData['sebs-road'] && pricingData['sebs-road'].packages.find(function (p) {
+                return p.level === slug;
+            });
+            return (pkg ? pkg.price : '') + ' TL/ay';
+        }
+
+        function applyRoadPackagesToUi(roadPackages) {
+            if (!roadPackages) return;
+            sebsRoadPackages = roadPackages;
+            const sebs = pricingData['sebs-road'];
+            if (sebs && sebs.packages) {
+                sebs.packages.forEach(function (pkg) {
+                    const api = roadPackages[pkg.level];
+                    if (api && api.price != null) pkg.price = api.price;
+                });
+            }
+            const stageEls = document.querySelectorAll('.pp-stage');
+            const slugs = ['ilk-adim', 'yukselis', 'zirve'];
+            stageEls.forEach(function (el, i) {
+                const slug = slugs[i];
+                const api = roadPackages[slug];
+                if (!api || api.price == null) return;
+                const priceEl = el.querySelector('.pp-stage__price');
+                if (priceEl) priceEl.textContent = api.price + ' TL/ay';
+            });
+            const prices = slugs
+                .map(function (s) {
+                    return roadPackages[s] && roadPackages[s].price;
+                })
+                .filter(function (p) {
+                    return p != null;
+                });
+            if (prices.length) {
+                const minP = Math.min.apply(null, prices);
+                const maxP = Math.max.apply(null, prices);
+                const compareTag = document.querySelector('.pp-compare-card .pp-tag');
+                if (compareTag) compareTag.textContent = minP + ' – ' + maxP + ' TL/ay';
+            }
+            document.querySelectorAll('.btn-purchase[data-level]').forEach(function (btn) {
+                const slug = btn.dataset.level;
+                const pkg = roadPackages[slug];
+                if (pkg && pkg.price != null) {
+                    btn.dataset.price = String(pkg.price);
+                    const card = btn.closest('.pricing-card');
+                    if (card) {
+                        const priceEl = card.querySelector('.pricing-price');
+                        if (priceEl) priceEl.textContent = '₺' + pkg.price;
+                    }
+                }
+            });
+        }
+
         async function loadPaymentConfigBanner() {
             try {
                 const apiP =
@@ -1084,19 +1212,18 @@
                 const cfgJson = await cfgRes.json();
                 if (!cfgJson.success || !cfgJson.data) return;
                 const d = cfgJson.data;
+                sebsPaymentConfig = d;
                 if (d.roadPackages) {
-                    document.querySelectorAll('.btn-purchase[data-level]').forEach((btn) => {
-                        const slug = btn.dataset.level;
-                        const pkg = d.roadPackages[slug];
-                        if (pkg && pkg.price != null) {
-                            btn.dataset.price = String(pkg.price);
-                            const card = btn.closest('.pricing-card');
-                            if (card) {
-                                const priceEl = card.querySelector('.pricing-price');
-                                if (priceEl) priceEl.textContent = '₺' + pkg.price;
-                            }
-                        }
-                    });
+                    applyRoadPackagesToUi(d.roadPackages);
+                }
+                if (d.cardNotice && d.subscriptionEnabled) {
+                    const note = document.querySelector('.pp-note p');
+                    if (note) {
+                        note.innerHTML =
+                            '<strong>Not:</strong> ' +
+                            d.cardNotice +
+                            ' Ödeme iyzico güvenli sayfasında tamamlanır.';
+                    }
                 }
             } catch (e) {
                 console.warn('payments/config banner:', e);

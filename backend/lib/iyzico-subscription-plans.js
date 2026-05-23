@@ -21,6 +21,19 @@ function isSubscriptionEnabled() {
     return Boolean(getPricingPlanRef('ilk-adim'));
 }
 
+/**
+ * subscription — iyzico recurring (çoğunlukla kredi kartı)
+ * monthly_checkout — tek çekim + 30 gün erişim (banka kartı / 3D Secure uyumlu)
+ */
+function getRoadBillingMode() {
+    const mode = (process.env.IYZICO_ROAD_BILLING_MODE || 'subscription').trim().toLowerCase();
+    return mode === 'monthly_checkout' ? 'monthly_checkout' : 'subscription';
+}
+
+function isMonthlyCheckoutMode() {
+    return getRoadBillingMode() === 'monthly_checkout';
+}
+
 function getPricingPlanRef(packageSlug) {
     const envKey = {
         'ilk-adim': 'IYZICO_PLAN_ILK_ADIM',
@@ -56,18 +69,34 @@ function isRoadSubscriptionSlug(slug) {
     return ROAD_SLUGS.has(slug);
 }
 
-function shouldUseSubscription(packageSlug) {
-    return isRoadSubscriptionSlug(packageSlug) && isSubscriptionEnabled();
+function shouldUseSubscription(packageSlug, billingMode) {
+    if (!isRoadSubscriptionSlug(packageSlug) || !isSubscriptionEnabled()) return false;
+    const mode = (billingMode || '').trim().toLowerCase();
+    if (mode === 'monthly_checkout') return false;
+    if (mode === 'subscription') return true;
+    return getRoadBillingMode() === 'subscription';
+}
+
+function resolveBillingModeFromRequest(body, packageSlug) {
+    const mode = body && body.billingMode;
+    if (mode === 'monthly_checkout' || mode === 'subscription') return mode;
+    if (isRoadSubscriptionSlug(packageSlug)) {
+        return getRoadBillingMode();
+    }
+    return 'checkout';
 }
 
 module.exports = {
     ROAD_SLUGS,
     subscriptionPeriodDays,
     isSubscriptionEnabled,
+    getRoadBillingMode,
+    isMonthlyCheckoutMode,
     getPricingPlanRef,
     getProductReferenceCode,
     planRefToPackageSlug,
     planRefToLevel,
     isRoadSubscriptionSlug,
-    shouldUseSubscription
+    shouldUseSubscription,
+    resolveBillingModeFromRequest
 };

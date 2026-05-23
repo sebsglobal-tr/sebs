@@ -3,7 +3,7 @@ const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
 const { parseWebhookBody } = require('../lib/iyzico-webhook');
-const { shouldUseSubscription } = require('../lib/iyzico-subscription-plans');
+const { shouldUseSubscription, resolveBillingModeFromRequest } = require('../lib/iyzico-subscription-plans');
 const {
     frontendBaseUrl,
     createCheckoutSession,
@@ -75,11 +75,16 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
             }
 
             const pkg = req.body && req.body.package;
-            const useSubscription = pkg && shouldUseSubscription(pkg);
+            const billingMode = req.body && req.body.billingMode;
+            const useSubscription = pkg && shouldUseSubscription(pkg, billingMode);
 
             const data = useSubscription
                 ? await createSubscriptionSession(pool, req, req.user.userId, req.body)
                 : await createCheckoutSession(pool, req, req.user.userId, req.body);
+
+            if (data && !data.billingMode) {
+                data.billingMode = resolveBillingModeFromRequest(req.body, pkg);
+            }
 
             return res.json({ success: true, data });
         } catch (error) {

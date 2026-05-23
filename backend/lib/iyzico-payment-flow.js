@@ -2,8 +2,19 @@ const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./pac
 const { initializeCheckoutForm, retrieveCheckoutForm } = require('./iyzico-checkout');
 const { grantPackagePurchase } = require('./grant-purchase');
 const { verifyHppWebhookSignature } = require('./iyzico-webhook');
+const { subscriptionPeriodDays, resolveBillingModeFromRequest } = require('./iyzico-subscription-plans');
 
 const ROAD_PACKAGE_SLUGS = new Set(['ilk-adim', 'yukselis', 'zirve']);
+
+function addDays(date, days) {
+    const d = new Date(date);
+    d.setUTCDate(d.getUTCDate() + days);
+    return d;
+}
+
+function isRoadMonthlyCheckoutOrder(order) {
+    return Boolean(order && order.order_type === 'monthly_checkout');
+}
 
 function backendBaseUrl(req) {
     const fromEnv = (process.env.BACKEND_URL || process.env.API_PUBLIC_URL || '').replace(/\/$/, '');
@@ -139,11 +150,16 @@ async function fulfillSuccessfulPayment(pool, order, { paymentId, paidPrice, sou
     }
 
     const priceNum = Number(order.price);
-    await grantPackagePurchase(pool, order.user_id, order.category, order.level, priceNum);
+    const grantOpts = {};
+    if (isRoadMonthlyCheckoutOrder(order)) {
+        grantOpts.expiresAt = addDays(new Date(), subscriptionPeriodDays());
+    }
+    await grantPackagePurchase(pool, order.user_id, order.category, order.level, priceNum, grantOpts);
 
     await pool.query(
         `UPDATE payment_orders SET
             status = 'paid',
+            order_type = CASE WHEN $6 THEN 'monthly_checkout' ELSE COALESCE(order_type, 'checkout') END,
             iyzico_payment_id = COALESCE($1, iyzico_payment_id),
             paid_price = COALESCE($2, paid_price),
             iyzico_status = 'SUCCESS',
@@ -157,7 +173,8 @@ async function fulfillSuccessfulPayment(pool, order, { paymentId, paidPrice, sou
             paidPrice != null ? Number(paidPrice) : priceNum,
             source,
             webhookRef || null,
-            order.id
+            order.id,
+            isRoadMonthlyCheckoutOrder(order)
         ]
     );
 
@@ -295,15 +312,21 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
         clientIp
     });
 
+    const orderType =
+        resolveBillingModeFromRequest(packageInput, packageSlug || level) === 'monthly_checkout'
+            ? 'monthly_checkout'
+            : 'checkout';
+
     await pool.query(
         `INSERT INTO payment_orders (
-            user_id, category, level, price, conversation_id, token, status, package_slug
-         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7)
+            user_id, category, level, price, conversation_id, token, status, package_slug, order_type
+         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, $8)
          ON CONFLICT (conversation_id) DO UPDATE SET
             token = EXCLUDED.token,
             status = 'pending',
             package_slug = EXCLUDED.package_slug,
             price = EXCLUDED.price,
+            order_type = EXCLUDED.order_type,
             updated_at = CURRENT_TIMESTAMP`,
         [
             userId,
@@ -312,7 +335,8 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
             init.price,
             init.conversationId,
             init.token,
-            packageSlug || level
+            packageSlug || level,
+            orderType
         ]
     );
 
@@ -323,6 +347,8 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
         conversationId: init.conversationId,
         price: init.price,
         packageSlug: packageSlug || level,
+        orderType,
+        billingMode: orderType === 'monthly_checkout' ? 'monthly_checkout' : 'checkout',
         checkoutPage: `${base}/odeme/iyzico`,
         successRedirect: `${base}/odeme/basarili`,
         failureRedirect: `${base}/odeme/hata`

@@ -57,10 +57,16 @@
             if (statusJson.data.paid) {
               const isSub =
                 orderType === 'subscription' || statusJson.data.orderType === 'subscription';
+              const isMonthly =
+                orderType === 'monthly_checkout' ||
+                statusJson.data.orderType === 'monthly_checkout' ||
+                statusJson.data.billingMode === 'monthly_checkout';
               const periodEnd = statusJson.data.subscription && statusJson.data.subscription.current_period_end;
-              let msg = isSub
-                ? 'Aboneliğiniz başarıyla başlatıldı. Plan erişiminiz aktif.'
-                : 'Ödeme doğrulandı. Paketiniz hesabınıza tanımlandı; modüllere hemen erişebilirsiniz.';
+              let msg = isMonthly
+                ? 'Ödeme doğrulandı. Plan erişiminiz 30 gün için açıldı (banka kartı / tek çekim).'
+                : isSub
+                  ? 'Aboneliğiniz başarıyla başlatıldı. Plan erişiminiz aktif.'
+                  : 'Ödeme doğrulandı. Paketiniz hesabınıza tanımlandı; modüllere hemen erişebilirsiniz.';
               if (isSub && periodEnd) {
                 try {
                   const d = new Date(periodEnd);

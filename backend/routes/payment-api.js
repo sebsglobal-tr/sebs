@@ -1,7 +1,7 @@
 const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
 const { DEFAULT_PRICES, getPackagePrices } = require('../lib/pricing-store');
-const { getRoadPackageDisplayPrice } = require('../lib/package-prices');
-const { isSubscriptionEnabled } = require('../lib/iyzico-subscription-plans');
+const { getRoadPackageDisplayPrice, applyTestPriceOverrides } = require('../lib/package-prices');
+const { isSubscriptionEnabled, getRoadBillingMode } = require('../lib/iyzico-subscription-plans');
 
 function registerPaymentApiRoutes(app, { pool } = {}) {
     app.get('/api/payments/config', async (req, res) => {
@@ -16,6 +16,7 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
                 /* */
             }
         }
+        packages = applyTestPriceOverrides(packages);
 
         const roadPackages = {
             'ilk-adim': {
@@ -41,6 +42,24 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
                 provider: 'iyzico',
                 iyzicoConfigured: iyzico,
                 subscriptionEnabled: iyzico && isSubscriptionEnabled(),
+                roadBillingMode: getRoadBillingMode(),
+                debitFriendlyCheckout: getRoadBillingMode() === 'monthly_checkout',
+                billingOptions: {
+                    subscription: {
+                        id: 'subscription',
+                        label: 'Kredi kartı ile otomatik abonelik',
+                        description: 'Her ay otomatik yenilenir. Yalnızca kredi kartı.',
+                        creditCardOnly: true
+                    },
+                    monthlyCheckout: {
+                        id: 'monthly_checkout',
+                        label: 'Banka kartı ile manuel aylık ödeme',
+                        description: 'Tek çekim, 30 gün erişim. Süre bitince tekrar ödersiniz.',
+                        debitFriendly: true
+                    }
+                },
+                cardNotice:
+                    'Abonelik ödemeleri yalnızca kredi kartı ile yapılabilir. Banka kartı ile ödeme yapmak istiyorsanız tek seferlik / manuel aylık ödeme seçeneğini kullanabilirsiniz.',
                 checkoutCreatePath: '/api/payments/iyzico/checkout/create',
                 subscriptionCreatePath: '/api/payments/iyzico/subscription/create',
                 paymentsRequireIyzico: disableDirect || (isProd && process.env.ALLOW_DEV_PURCHASE !== '1'),
