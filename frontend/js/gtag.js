@@ -4,6 +4,7 @@ function gtag() {
 }
 gtag('js', new Date());
 gtag('config', 'G-YTXQPHCH3L');
+gtag('config', 'AW-18167051322');
 
 var _sebsGtag = document.createElement('script');
 _sebsGtag.async = true;
