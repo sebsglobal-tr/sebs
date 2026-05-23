@@ -235,8 +235,12 @@ function retrieveCheckoutForm(token) {
 module.exports = {
     isIyzicoConfigured,
     validateCredentialEnvironment,
+    getIyzipayClient,
     initializeCheckoutForm,
     retrieveCheckoutForm,
     conversationId,
+    splitName,
+    buildBuyer,
+    buildAddress,
     crypto
 };

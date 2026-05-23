@@ -254,7 +254,7 @@
 
     <div class="pp-container">
         <div class="pp-note">
-            <p><strong>Not:</strong> Tekli satış içerik verir; abonelik ilerleme takibi ve aşamalar arası geçişi açar. Ödeme iyzico güvenli ödeme sayfasında tamamlanır.</p>
+            <p><strong>Not:</strong> SEBS Yolu planları aylık aboneliktir; her dönem sonunda otomatik yenilenir. Tekli satış yalnızca seçilen durağı açar. Ödeme iyzico güvenli ödeme sayfasında tamamlanır.</p>
         </div>
     </div>
 
@@ -992,6 +992,10 @@
 
                     if (iyzicoInit.ok && iyzData && iyzData.success && iyzData.data) {
                         const pay = iyzData.data;
+                        if (pay.upgraded && pay.successRedirect) {
+                            window.location.href = pay.successRedirect;
+                            return;
+                        }
                         if (pay.checkoutFormContent || pay.paymentPageUrl) {
                             try {
                                 sessionStorage.setItem(

@@ -36,7 +36,15 @@
       const token = localStorage.getItem('authToken');
       const params = new URLSearchParams(window.location.search);
       const conversationId = params.get('conversationId');
+      const orderType = params.get('type');
+      const upgraded = params.get('upgraded') === '1';
       const hintEl = document.getElementById('statusHint');
+
+      if (upgraded) {
+        document.getElementById('statusText').textContent =
+          'Planınız yükseltildi. Yeni abonelik döneminiz hesabınıza tanımlandı.';
+        return;
+      }
 
       if (token && conversationId) {
         try {
@@ -47,8 +55,19 @@
           const statusJson = statusRes.ok ? await statusRes.json() : null;
           if (statusJson && statusJson.success && statusJson.data) {
             if (statusJson.data.paid) {
-              document.getElementById('statusText').textContent =
-                'Ödeme doğrulandı. Paketiniz hesabınıza tanımlandı; modüllere hemen erişebilirsiniz.';
+              const isSub =
+                orderType === 'subscription' || statusJson.data.orderType === 'subscription';
+              const periodEnd = statusJson.data.subscription && statusJson.data.subscription.current_period_end;
+              let msg = isSub
+                ? 'Aboneliğiniz başarıyla başlatıldı. Plan erişiminiz aktif.'
+                : 'Ödeme doğrulandı. Paketiniz hesabınıza tanımlandı; modüllere hemen erişebilirsiniz.';
+              if (isSub && periodEnd) {
+                try {
+                  const d = new Date(periodEnd);
+                  msg += ' Mevcut dönem: ' + d.toLocaleDateString('tr-TR') + ' tarihine kadar.';
+                } catch (e) { /* */ }
+              }
+              document.getElementById('statusText').textContent = msg;
             } else {
               document.getElementById('statusText').textContent =
                 'Ödeme henüz onaylanmadı. Birkaç saniye bekleyip sayfayı yenileyin.';

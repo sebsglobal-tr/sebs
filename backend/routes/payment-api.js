@@ -1,6 +1,7 @@
 const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
 const { DEFAULT_PRICES, getPackagePrices } = require('../lib/pricing-store');
 const { getRoadPackageDisplayPrice } = require('../lib/package-prices');
+const { isSubscriptionEnabled } = require('../lib/iyzico-subscription-plans');
 
 function registerPaymentApiRoutes(app, { pool } = {}) {
     app.get('/api/payments/config', async (req, res) => {
@@ -39,7 +40,9 @@ function registerPaymentApiRoutes(app, { pool } = {}) {
             data: {
                 provider: 'iyzico',
                 iyzicoConfigured: iyzico,
+                subscriptionEnabled: iyzico && isSubscriptionEnabled(),
                 checkoutCreatePath: '/api/payments/iyzico/checkout/create',
+                subscriptionCreatePath: '/api/payments/iyzico/subscription/create',
                 paymentsRequireIyzico: disableDirect || (isProd && process.env.ALLOW_DEV_PURCHASE !== '1'),
                 directPurchaseAllowed:
                     !disableDirect &&

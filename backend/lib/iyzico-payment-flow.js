@@ -263,7 +263,8 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
 
     const existing = await pool.query(
         `SELECT id FROM purchases
-         WHERE user_id = $1 AND category = $2 AND level = $3 AND is_active = TRUE`,
+         WHERE user_id = $1 AND category = $2 AND level = $3 AND is_active = TRUE
+         AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)`,
         [userId, category, level]
     );
     if (existing.rows.length > 0) {

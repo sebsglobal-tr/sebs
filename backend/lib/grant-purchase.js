@@ -1,20 +1,27 @@
 /** Activate a package purchase for a user (shared by free purchase + Iyzico callback). */
-async function grantPackagePurchase(pool, userId, category, level, priceNum) {
+async function grantPackagePurchase(pool, userId, category, level, priceNum, options = {}) {
+    const expiresAt = options.expiresAt || null;
+    const subscriptionRef = options.subscriptionRef || null;
     let purchaseId;
+
+    const expiresSql = expiresAt ? expiresAt : null;
 
     try {
         const userPackagePurchaseResult = await pool.query(
-            `INSERT INTO user_package_purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
-             VALUES ($1, $2, $3, $4, 'completed', CURRENT_TIMESTAMP, TRUE)
+            `INSERT INTO user_package_purchases (
+                user_id, category, level, price, payment_status, purchased_at, is_active, expires_at, transaction_id
+             ) VALUES ($1, $2, $3, $4, 'completed', CURRENT_TIMESTAMP, TRUE, $5, $6)
              ON CONFLICT (user_id, category, level)
              DO UPDATE SET
                  price = EXCLUDED.price,
                  payment_status = 'completed',
                  is_active = TRUE,
                  purchased_at = CURRENT_TIMESTAMP,
+                 expires_at = EXCLUDED.expires_at,
+                 transaction_id = COALESCE(EXCLUDED.transaction_id, user_package_purchases.transaction_id),
                  updated_at = CURRENT_TIMESTAMP
              RETURNING id`,
-            [userId, category, level, priceNum]
+            [userId, category, level, priceNum, expiresSql, subscriptionRef]
         );
         purchaseId = userPackagePurchaseResult.rows[0]?.id;
     } catch (err) {
@@ -23,17 +30,20 @@ async function grantPackagePurchase(pool, userId, category, level, priceNum) {
 
     try {
         const purchaseResult = await pool.query(
-            `INSERT INTO purchases (user_id, category, level, price, payment_status, purchased_at, is_active)
-             VALUES ($1, $2, $3, $4::decimal, 'completed', CURRENT_TIMESTAMP, TRUE)
+            `INSERT INTO purchases (
+                user_id, category, level, price, payment_status, purchased_at, is_active, expires_at, transaction_id
+             ) VALUES ($1, $2, $3, $4::decimal, 'completed', CURRENT_TIMESTAMP, TRUE, $5, $6)
              ON CONFLICT (user_id, category, level)
              DO UPDATE SET
                  price = EXCLUDED.price,
                  payment_status = 'completed',
                  is_active = TRUE,
                  purchased_at = CURRENT_TIMESTAMP,
+                 expires_at = EXCLUDED.expires_at,
+                 transaction_id = COALESCE(EXCLUDED.transaction_id, purchases.transaction_id),
                  updated_at = CURRENT_TIMESTAMP
              RETURNING id`,
-            [userId, category, level, priceNum]
+            [userId, category, level, priceNum, expiresSql, subscriptionRef]
         );
         if (!purchaseId) purchaseId = purchaseResult.rows[0]?.id;
     } catch (err) {
