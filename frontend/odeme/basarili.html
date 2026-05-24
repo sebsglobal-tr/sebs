@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+  <script src="/js/gtag.js"></script>
+  <script src="/js/gtag-ads.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
@@ -61,6 +63,25 @@
                 orderType === 'monthly_checkout' ||
                 statusJson.data.orderType === 'monthly_checkout' ||
                 statusJson.data.billingMode === 'monthly_checkout';
+              const txValue =
+                statusJson.data.paidPrice != null
+                  ? statusJson.data.paidPrice
+                  : statusJson.data.price;
+              const adsPayload = {
+                transactionId: conversationId || statusJson.data.paymentId,
+                conversationId: conversationId,
+                value: txValue,
+                category: statusJson.data.category,
+                level: statusJson.data.level || statusJson.data.packageSlug,
+                packageTitle: statusJson.data.packageSlug || statusJson.data.level
+              };
+              if (window.sebsAds) {
+                if (isSub) {
+                  window.sebsAds.trackSubscribe(adsPayload);
+                } else {
+                  window.sebsAds.trackPurchase(adsPayload);
+                }
+              }
               const periodEnd = statusJson.data.subscription && statusJson.data.subscription.current_period_end;
               let msg = isMonthly
                 ? 'Ödeme doğrulandı. Plan erişiminiz 30 gün için açıldı (banka kartı / tek çekim).'

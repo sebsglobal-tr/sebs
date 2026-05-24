@@ -32,7 +32,61 @@ function getBearerTokenFromStorage() {
     return null;
 }
 
+function getApiBase() {
+    if (typeof window.getSebsApiBase === 'function') {
+        return window.getSebsApiBase();
+    }
+    var defaultRemote = 'https://sebs-z9tr.onrender.com/api';
+    var loc = window.location;
+    if (loc && loc.hostname) {
+        var h = String(loc.hostname).toLowerCase();
+        if (
+            h === 'sebsglobal.com' ||
+            h === 'www.sebsglobal.com' ||
+            h.endsWith('.vercel.app') ||
+            h.endsWith('.pages.dev') ||
+            h.endsWith('.netlify.app') ||
+            h.endsWith('.cloudflarepages.com')
+        ) {
+            return defaultRemote;
+        }
+        if (h === 'localhost' || h === '127.0.0.1' || h === 'sebs-z9tr.onrender.com') {
+            return (loc.origin || '').replace(/\/$/, '') + '/api';
+        }
+    }
+    return (loc && loc.origin ? loc.origin : 'http://localhost:8006') + '/api';
+}
+
+function normalizePurchaseLevel(level) {
+    const map = {
+        'ilk-adim': 'beginner',
+        yukselis: 'intermediate',
+        zirve: 'advanced',
+        'single-stop': 'beginner'
+    };
+    const k = String(level || '').toLowerCase();
+    if (map[k]) return map[k];
+    if (['beginner', 'intermediate', 'advanced'].includes(k)) return k;
+    return null;
+}
+
+function isActivePurchase(p) {
+    if (!p || !p.level) return false;
+    if (p.isActive === false || p.is_active === false) return false;
+    const exp = p.expiresAt || p.expires_at;
+    if (exp && new Date(exp) <= new Date()) return false;
+    return true;
+}
+
+function hasAnyActivePackagePurchase(purchases) {
+    return (purchases || []).some(function (p) {
+        if (!isActivePurchase(p)) return false;
+        return normalizePurchaseLevel(p.level) !== null;
+    });
+}
 function levelRank(level) {
+    const normalized = normalizePurchaseLevel(level);
+    if (normalized) level = normalized;
     const order = { beginner: 0, intermediate: 1, advanced: 2 };
     const k = String(level || 'beginner').toLowerCase();
     return order[k] != null ? order[k] : 0;
@@ -77,10 +131,7 @@ async function fetchUserMe() {
         return null;
     }
 
-    const apiBase =
-        typeof window.getSebsApiBase === 'function'
-            ? window.getSebsApiBase()
-            : (window.location && window.location.origin ? window.location.origin + '/api' : 'http://localhost:8006/api');
+    const apiBase = getApiBase();
     userMePromise = fetch(apiBase + '/users/me', {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -315,15 +366,14 @@ async function checkAssessmentAccess() {
         return { hasAccess: true, message: '' };
     }
     const purchases = await fetchUserPurchases();
-    const maxRank = getMaxPurchaseRank(purchases, 'cybersecurity');
-    if (maxRank < 0) {
-        return {
-            hasAccess: false,
-            message:
-                'Big Five ve kariyer değerlendirme testleri yalnızca paket satın alan kullanıcılara açıktır. Fiyatlandırma sayfasından plan seçebilirsiniz.'
-        };
+    if (hasAnyActivePackagePurchase(purchases)) {
+        return { hasAccess: true, message: '' };
     }
-    return { hasAccess: true, message: '' };
+    return {
+        hasAccess: false,
+        message:
+            'Big Five ve kariyer değerlendirme testleri yalnızca paket satın alan kullanıcılara açıktır. Fiyatlandırma sayfasından plan seçebilirsiniz.'
+    };
 }
 
 async function checkSimulationAccess(simulationNameOrLevel, category = 'cybersecurity') {

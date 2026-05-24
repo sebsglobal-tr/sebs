@@ -621,20 +621,26 @@ body.sebs-pricing-page .journey-reveal {
   background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 10010;
-  padding: 1rem;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .purchase-modal {
   width: min(480px, 100%);
+  max-height: min(calc(100dvh - 2rem), calc(100vh - 2rem));
+  margin: auto 0;
   border-radius: 16px;
   border: 1px solid #e8ecf1;
   background: #fff;
   color: #0f172a;
   box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .purchase-modal-head {
@@ -644,6 +650,7 @@ body.sebs-pricing-page .journey-reveal {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .purchase-modal-eyebrow {
@@ -683,7 +690,11 @@ body.sebs-pricing-page .journey-reveal {
 }
 
 .purchase-modal-body {
-  padding: 1.15rem 1.25rem 1.25rem;
+  padding: 1.15rem 1.25rem 1rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .purchase-modal-summary {
@@ -903,11 +914,14 @@ body.sebs-pricing-page .journey-reveal {
 }
 
 .purchase-modal-actions {
-  margin-top: 1.15rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.55rem;
   flex-wrap: wrap;
+  flex-shrink: 0;
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid #f1f5f9;
+  background: #fff;
 }
 
 .btn-modal-cancel,
