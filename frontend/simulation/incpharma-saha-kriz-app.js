@@ -4,7 +4,11 @@
   var CFG = window.INCPHARMA_SIM;
   var UI = window.INCPHARMA_UI;
   var VIS = window.INCPHARMA_VISUALS;
-  var REPORT = window.INCPHARMA_REPORT;
+
+  function reportApi() {
+    return window.INCPHARMA_REPORT;
+  }
+
   if (!CFG) return;
 
   var state = null;
@@ -31,13 +35,14 @@
       fatalErrors: [],
       history: [],
       reportAnswers: {},
-      fieldReport: REPORT ? REPORT.createEmpty() : { entries: [] },
+      fieldReport: reportApi() ? reportApi().createEmpty() : { reportNo: 'SR-LOCAL', entries: [] },
       lastReportEntryId: null,
       openingLogged: false,
     };
   }
 
   function renderLiveReportDock() {
+    var REPORT = reportApi();
     if (!REPORT || state.sceneId === 'intro' || state.sceneId === 'finale') {
       var gone = document.getElementById('ipLiveReportWrap');
       if (gone) gone.remove();
@@ -298,9 +303,27 @@
     }
 
     if (scene.type === 'report') {
-      html += REPORT ? REPORT.renderFinalScene(state.fieldReport, state) : '<p>Rapor modülü yüklenemedi.</p>';
+      var R = reportApi();
+      if (!R) {
+        html +=
+          '<div class="ip-fr-error"><p><i class="fas fa-circle-exclamation"></i> Rapor modülü yüklenemedi.</p>' +
+          '<button type="button" class="ip-btn ip-btn--primary" id="ipReloadReport">Yeniden yükle</button></div>';
+      } else {
+        if (!state.fieldReport.entries.length && state.history.length) {
+          rebuildReportFromHistory(R);
+        }
+        html += R.renderFinalScene(state.fieldReport, state);
+      }
       html += '</div></article>';
       root.innerHTML = html;
+      var reloadBtn = $('ipReloadReport');
+      if (reloadBtn) {
+        reloadBtn.addEventListener('click', function () {
+          loadReportScript(function () {
+            render();
+          });
+        });
+      }
       var confirmBtn = $('ipReportConfirm');
       if (confirmBtn) confirmBtn.addEventListener('click', onReportConfirm);
       var printBtn = $('ipPrintReport');
@@ -328,8 +351,9 @@
     var cont = $('ipContinue');
     if (cont && scene.next) {
       cont.addEventListener('click', function () {
-        if (state.sceneId === 'opening' && REPORT && !state.openingLogged) {
-          REPORT.appendOpening(state.fieldReport);
+        var R = reportApi();
+        if (state.sceneId === 'opening' && R && !state.openingLogged) {
+          R.appendOpening(state.fieldReport);
           state.openingLogged = true;
           state.lastReportEntryId = state.fieldReport.entries[0]
             ? state.fieldReport.entries[state.fieldReport.entries.length - 1].id
@@ -344,7 +368,7 @@
 
   function onReportConfirm() {
     var scene = getScene('report');
-    var ratio = REPORT ? REPORT.assessReportingScore(state) : 0.75;
+    var ratio = reportApi() ? reportApi().assessReportingScore(state) : 0.75;
     applyEffects({
       reportingDiscipline: ratio >= 1 ? 12 : ratio >= 0.75 ? 6 : ratio >= 0.5 ? 0 : -8,
       escalationDiscipline: ratio >= 0.75 ? 4 : -4,
@@ -363,7 +387,8 @@
     });
     if (!ch) return;
     state.history.push({ scene: state.sceneId, choice: choiceId });
-    if (REPORT) REPORT.appendFromChoice(state, state.sceneId, scene, ch);
+    var R = reportApi();
+    if (R) R.appendFromChoice(state, state.sceneId, scene, ch);
     applyEffects(ch.effects);
     goNext(ch.next);
   }
@@ -496,9 +521,46 @@
     renderScene();
   }
 
+  function rebuildReportFromHistory(R) {
+    if (!R || !state.history.length) return;
+    state.fieldReport = R.createEmpty();
+    state.openingLogged = true;
+    R.appendOpening(state.fieldReport);
+    state.history.forEach(function (h) {
+      var sc = getScene(h.scene);
+      if (!sc || !sc.choices) return;
+      var ch = sc.choices.find(function (c) {
+        return c.id === h.choice;
+      });
+      if (ch) R.appendFromChoice(state, h.scene, sc, ch);
+    });
+  }
+
+  function loadReportScript(cb) {
+    if (window.INCPHARMA_REPORT) {
+      cb();
+      return;
+    }
+    var existing = document.querySelector('script[data-ip-report]');
+    if (existing) {
+      existing.addEventListener('load', cb);
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = '/simulation/incpharma-saha-kriz-report.js?v=9';
+    s.dataset.ipReport = '1';
+    s.onload = cb;
+    s.onerror = function () {
+      cb();
+    };
+    document.body.appendChild(s);
+  }
+
   function boot() {
-    state = initState();
-    render();
+    loadReportScript(function () {
+      state = initState();
+      render();
+    });
   }
 
   if (document.readyState === 'loading') {
