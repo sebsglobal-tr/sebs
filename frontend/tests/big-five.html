@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
-  <link rel="stylesheet" href="/css/big-five-test.css?v=2" />
+  <link rel="stylesheet" href="/css/big-five-test.css?v=3" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -43,16 +43,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" defer></script>
 </head>
-<body class="bf-page font-sans text-slate-800 antialiased">
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/85 bf-glass">
-    <div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
-      <a href="/" class="flex items-center gap-2 font-bold text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg">
+<body class="landing-site-body bf-page font-sans text-slate-800 antialiased bg-slate-50">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl print:hidden">
+    <div class="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+      <a href="/dashboard.html" class="flex items-center gap-2 text-sm font-semibold text-slate-700 transition hover:text-blue-700 focus-ring rounded-lg">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span class="hidden sm:inline">Panele dön</span>
+      </a>
+      <a href="/" class="landing-brand-link absolute left-1/2 flex -translate-x-1/2 items-center gap-2 focus-ring rounded-lg">
         <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="32" height="32" class="h-8 w-8 object-contain" />
-        <span>SEBS</span>
+        <span class="landing-brand-wordmark hidden sm:inline">SEBS</span>
       </a>
       <nav class="flex items-center gap-2 text-sm font-semibold">
-        <a href="/dashboard.html" class="hidden rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 sm:inline">Panel</a>
-        <a href="/fiyatlandirma" class="rounded-full bg-slate-900 px-3 py-2 text-xs text-white shadow-sm transition hover:bg-slate-800 sm:text-sm">Kariyer yolu</a>
+        <a href="/tests/kariyer-degerlendirme" class="hidden rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100 sm:inline">Kariyer paketi</a>
+        <a href="/dashboard.html" class="rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100">Panel</a>
       </nav>
     </div>
   </header>

@@ -77,10 +77,10 @@ export function buildCombinedReportHtml(session) {
         </p>
       </header>
 
-      <nav class="ca-toc" aria-label="Rapor içeriği">
-        <a href="#report-holland">1. Meslek ilgi sonuçları</a>
-        <a href="#report-bigfive">2. Big Five sonuçları</a>
-        <a href="#report-careers">3. Meslek önerileri</a>
+      <nav class="ca-toc print:hidden" aria-label="Rapor içeriği">
+        <a href="#report-holland"><i class="fas fa-briefcase" aria-hidden="true"></i> Meslek ilgi</a>
+        <a href="#report-bigfive"><i class="fas fa-brain" aria-hidden="true"></i> Big Five</a>
+        <a href="#report-careers"><i class="fas fa-route" aria-hidden="true"></i> Meslek önerileri</a>
       </nav>
 
       ${hollandSection}
@@ -103,12 +103,15 @@ export function buildCombinedReportHtml(session) {
       </section>
 
       <div class="ca-report-actions no-print">
-        <button type="button" id="btnDownloadPdf" class="inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-indigo-700">
+        <button type="button" id="btnDownloadPdf" class="ca-btn-primary ca-btn-accent">
           <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF indir
         </button>
-        <button type="button" id="btnPrintReport" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">
+        <button type="button" id="btnPrintReport" class="ca-btn-secondary">
           <i class="fas fa-print" aria-hidden="true"></i> Yazdır
         </button>
+        <a href="/dashboard.html" class="ca-btn-secondary">
+          <i class="fas fa-th-large" aria-hidden="true"></i> Panele dön
+        </a>
       </div>
     </div>`;
 }
