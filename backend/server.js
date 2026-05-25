@@ -73,32 +73,36 @@ const FULL_ACCESS_EMAIL = (process.env.SUPER_ADMIN_EMAIL ||
 
 function parseCorsOrigins() {
     const set = new Set();
-    function addOrigin(raw) {
+    function addOriginWithWwwVariants(raw) {
         let u = String(raw || '').trim();
         if (!u) return;
         u = u.replace(/\/+$/, '');
-        set.add(u);
+        try {
+            const urlStr = /^https?:\/\//i.test(u) ? u : `https://${u}`;
+            const parsed = new URL(urlStr);
+            const host = parsed.hostname.toLowerCase();
+            if (host === 'localhost' || host === '127.0.0.1') {
+                set.add(parsed.origin);
+                return;
+            }
+            const proto = parsed.protocol;
+            set.add(`${proto}//${host}`);
+            if (host.startsWith('www.')) {
+                const bare = host.slice(4);
+                if (bare) set.add(`${proto}//${bare}`);
+            } else {
+                set.add(`${proto}//www.${host}`);
+            }
+        } catch (_) {
+            set.add(u);
+        }
     }
     (process.env.CORS_ORIGIN || '')
         .split(',')
-        .forEach((s) => addOrigin(s));
+        .forEach((s) => addOriginWithWwwVariants(s));
 
     const pub = (process.env.PUBLIC_SITE_URL || '').trim();
-    if (pub) {
-        addOrigin(pub);
-        try {
-            const urlStr = /^https?:\/\//i.test(pub) ? pub : `https://${pub}`;
-            const parsed = new URL(urlStr);
-            const proto = parsed.protocol;
-            const host = parsed.hostname.toLowerCase();
-            if (host.startsWith('www.')) {
-                addOrigin(`${proto}//${host.slice(4)}`);
-            } else if (host.split('.').length === 2) {
-                addOrigin(`${proto}//www.${host}`);
-            }
-        } catch (_) {
-        }
-    }
+    if (pub) addOriginWithWwwVariants(pub);
 
     const out = Array.from(set);
     return out.length ? out : null;
@@ -199,11 +203,16 @@ if (corsOrigins && corsOrigins.length) {
 }
 app.use(cors({
     origin: corsOrigins && corsOrigins.length
-        ? (corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins)
+        ? function (origin, callback) {
+            if (!origin) return callback(null, true);
+            if (corsOrigins.includes(origin)) return callback(null, true);
+            logger.warn('CORS reddedildi: ' + origin);
+            callback(null, false);
+        }
         : 'http://localhost:8000',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     maxAge: 86400
 }));
 

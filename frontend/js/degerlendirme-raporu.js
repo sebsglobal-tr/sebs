@@ -288,11 +288,11 @@
         }
 
         var apiBase =
-            typeof window.getApiBaseUrl === 'function'
-                ? window.getApiBaseUrl()
-                : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                      ? 'http://localhost:8006/api'
-                      : 'https://sebs-global.onrender.com/api');
+            typeof window.getSebsApiBase === 'function'
+                ? window.getSebsApiBase()
+                : typeof window.getApiBaseUrl === 'function'
+                  ? window.getApiBaseUrl()
+                  : (window.location.origin || '').replace(/\/$/, '') + '/api';
 
         try {
             var response = await fetch(apiBase + '/evaluation/report', {
@@ -339,14 +339,6 @@
                     /* ignore */
                 }
                 return localStorage.getItem('authToken');
-            };
-        }
-        if (typeof window.getApiBaseUrl !== 'function') {
-            window.getApiBaseUrl = function () {
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    return 'http://localhost:8006/api';
-                }
-                return 'https://sebs-global.onrender.com/api';
             };
         }
         window.loadDetailedEvaluationReport();
