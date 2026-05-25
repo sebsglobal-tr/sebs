@@ -10,6 +10,10 @@ const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
 const logger = require('./utils/logger');
 const { enrichEvaluationReportWithMl } = require('./lib/student-evaluation-ml');
+const {
+    buildDetailedEvaluationReport,
+    loadModulesCatalog
+} = require('./lib/detailed-evaluation-report');
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: false });
@@ -2894,12 +2898,20 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
         let progressResult;
         try {
             progressResult = await pool.query(
-                `SELECT module_id, percent_complete, time_spent_minutes, updated_at
+                `SELECT module_id, percent_complete, time_spent_minutes, updated_at, last_step
                  FROM module_progress WHERE user_id = $1`,
                 [userId]
             );
         } catch (e) {
-            progressResult = { rows: [] };
+            try {
+                progressResult = await pool.query(
+                    `SELECT module_id, percent_complete, time_spent_minutes, updated_at
+                     FROM module_progress WHERE user_id = $1`,
+                    [userId]
+                );
+            } catch (e2) {
+                progressResult = { rows: [] };
+            }
         }
 
         const quizResults = [];
@@ -2907,14 +2919,33 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
         for (const row of progressResult.rows) {
             const mins = row.time_spent_minutes || 0;
             totalTimeMinutes += mins;
+            if (!row.last_step) continue;
+            try {
+                const meta = typeof row.last_step === 'string' ? JSON.parse(row.last_step) : row.last_step;
+                if (meta.quizResults && Array.isArray(meta.quizResults)) {
+                    for (const q of meta.quizResults) {
+                        quizResults.push({
+                            score: q.score != null ? q.score : 0,
+                            moduleId: row.module_id,
+                            quizId: q.quizId || q.id,
+                            correctAnswers: q.correctAnswers,
+                            wrongAnswers: q.wrongAnswers,
+                            answers: q.answers,
+                            timeSpent: q.timeSpent,
+                            timestamp: q.timestamp
+                        });
+                    }
+                }
+            } catch (parseErr) { /* skip */ }
         }
-        try {
-            const stepResult = await pool.query(
-                `SELECT module_id, last_step FROM module_progress WHERE user_id = $1`,
-                [userId]
-            );
-            for (const row of stepResult.rows) {
-                if (row.last_step) {
+        if (quizResults.length === 0) {
+            try {
+                const stepResult = await pool.query(
+                    `SELECT module_id, last_step FROM module_progress WHERE user_id = $1`,
+                    [userId]
+                );
+                for (const row of stepResult.rows) {
+                    if (!row.last_step) continue;
                     try {
                         const meta = typeof row.last_step === 'string' ? JSON.parse(row.last_step) : row.last_step;
                         if (meta.quizResults && Array.isArray(meta.quizResults)) {
@@ -2922,21 +2953,27 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
                                 quizResults.push({
                                     score: q.score != null ? q.score : 0,
                                     moduleId: row.module_id,
-                                    quizId: q.quizId || q.id
+                                    quizId: q.quizId || q.id,
+                                    correctAnswers: q.correctAnswers,
+                                    wrongAnswers: q.wrongAnswers,
+                                    answers: q.answers,
+                                    timeSpent: q.timeSpent,
+                                    timestamp: q.timestamp
                                 });
                             }
                         }
                     } catch (e) { /* skip */ }
                 }
-            }
-        } catch (e) { /* last_step kolonu yoksa görmezden gel */ }
+            } catch (e) { /* last_step kolonu yoksa görmezden gel */ }
+        }
 
         let simRows = [];
         try {
             const simResult = await pool.query(
                 `SELECT simulation_id, module_id, score, time_spent, completed_at,
                         COALESCE(hint_used_count, 0) AS hint_used_count,
-                        COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count
+                        COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count,
+                        final_grade_label
                  FROM simulation_runs
                  WHERE user_id = $1 AND completed_at IS NOT NULL
                  ORDER BY completed_at DESC`,
@@ -2945,14 +2982,18 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             simRows = simResult.rows;
         } catch (simErr) {
             logger.warn('evaluation report simulation query (extended):', simErr.message);
-            const simFallback = await pool.query(
-                `SELECT simulation_id, score, time_spent, completed_at
-                 FROM simulation_runs
-                 WHERE user_id = $1 AND completed_at IS NOT NULL
-                 ORDER BY completed_at DESC`,
-                [userId]
-            );
-            simRows = simFallback.rows;
+            try {
+                const simFallback = await pool.query(
+                    `SELECT simulation_id, module_id, score, time_spent, completed_at
+                     FROM simulation_runs
+                     WHERE user_id = $1 AND completed_at IS NOT NULL
+                     ORDER BY completed_at DESC`,
+                    [userId]
+                );
+                simRows = simFallback.rows;
+            } catch (e2) {
+                simRows = [];
+            }
         }
         const simulationResults = simRows.map(r => ({
             simulationId: r.simulation_id,
@@ -2960,7 +3001,9 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             score: r.score != null ? r.score : 0,
             timeSpent: r.time_spent || 0,
             hintUsedCount: r.hint_used_count != null ? Number(r.hint_used_count) : 0,
-            wrongActionsCount: r.wrong_actions_count != null ? Number(r.wrong_actions_count) : 0
+            wrongActionsCount: r.wrong_actions_count != null ? Number(r.wrong_actions_count) : 0,
+            finalGradeLabel: r.final_grade_label || null,
+            completedAt: r.completed_at
         }));
 
         const quizScores = quizResults.map(q => q.score).filter(s => typeof s === 'number');
@@ -2991,7 +3034,14 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             overallText = 'Henüz yeterli quiz veya simülasyon verisi yok. Modülleri tamamlayıp quiz/simülasyon yaptıkça raporunuz dolacaktır.';
         }
 
+        const modulesCatalog = await loadModulesCatalog(pool);
+
         const report = {
+            user: {
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email
+            },
             scores: {
                 overall: overallScore,
                 quizAverage: Math.round(quizAvg * 100) / 100,
@@ -3021,6 +3071,15 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             progressRows: progressResult.rows,
             quizResults,
             simulationRows: simulationResults
+        });
+
+        report.detailed = buildDetailedEvaluationReport({
+            user,
+            progressRows: progressResult.rows,
+            quizResults,
+            simulationResults,
+            modulesCatalog,
+            report
         });
 
         res.json({ success: true, data: report });
