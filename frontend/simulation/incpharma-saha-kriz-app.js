@@ -3,6 +3,7 @@
 
   var CFG = window.INCPHARMA_SIM;
   var UI = window.INCPHARMA_UI;
+  var VIS = window.INCPHARMA_VISUALS;
   if (!CFG) return;
 
   var state = null;
@@ -168,10 +169,15 @@
     var html = '<div class="ip-choices">';
     scene.choices.forEach(function (ch, i) {
       if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
+      var st = VIS ? VIS.choiceStyle(ch.id) : { tone: 'neutral' };
       html +=
-        '<button type="button" class="ip-choice" data-choice="' +
+        '<button type="button" class="ip-choice ip-choice--' +
+        esc(st.tone) +
+        '" data-choice="' +
         esc(ch.id) +
-        '">' +
+        '">';
+      if (VIS) html += VIS.renderChoiceIcon(ch.id);
+      html +=
         '<span class="ip-choice__n">' +
         (i + 1) +
         '</span>' +
@@ -197,19 +203,21 @@
     var root = $('ipRoot');
     var phoneOpts = UI ? UI.phoneFromScene(scene, state.sceneId) : null;
     var hasPhoneHero = !!(scene.phoneVisual || phoneOpts);
-    var html = '<article class="ip-scene' + (hasPhoneHero ? ' ip-scene--with-phone' : '') + '">';
+    var html =
+      '<article class="ip-scene ip-scene--' +
+      esc(state.sceneId) +
+      (hasPhoneHero ? ' ip-scene--with-phone' : '') +
+      '">';
 
-    if (UI) {
+    if (VIS) {
+      html += VIS.renderDayTimeline(state.sceneId);
+      html += VIS.renderSceneHero(state.sceneId, scene);
+    } else if (UI) {
       html += UI.renderLocationBanner(state.sceneId, scene.location);
+      html += '<h2 class="ip-scene-title">' + esc(scene.title) + '</h2>';
     }
 
-    if (scene.time && !hasPhoneHero) {
-      html += '<p class="ip-meta"><i class="fas fa-clock"></i> ' + esc(scene.time);
-      if (scene.location) html += ' · ' + esc(scene.location);
-      html += '</p>';
-    }
-
-    html += '<h2 class="ip-scene-title">' + esc(scene.title) + '</h2>';
+    html += '<div class="ip-scene-stage">';
 
     if (hasPhoneHero && UI) {
       html += '<div class="ip-scene-grid">';
@@ -226,11 +234,11 @@
     }
 
     if (scene.thought) {
-      html += '<p class="ip-thought">' + esc(scene.thought) + '</p>';
+      html += '<p class="ip-thought"><i class="fas fa-brain"></i> ' + esc(scene.thought) + '</p>';
     }
 
     if (scene.agenda && scene.agenda.length) {
-      html += '<div class="ip-agenda"><h4>Günün programı</h4><ul>';
+      html += '<div class="ip-agenda"><h4><i class="fas fa-list-check"></i> Günün programı</h4><ul>';
       scene.agenda.forEach(function (item) {
         html += '<li><span>' + esc(item.time) + '</span> ' + esc(item.label) + '</li>';
       });
@@ -238,7 +246,9 @@
     }
 
     if (scene.narrative) {
-      html += '<p class="ip-narrative">' + esc(scene.narrative) + '</p>';
+      html += VIS
+        ? VIS.renderNarrativeCard(scene.narrative, state.sceneId)
+        : '<p class="ip-narrative">' + esc(scene.narrative) + '</p>';
     }
 
     if (scene.productNote) {
@@ -248,17 +258,21 @@
         '</p></div>';
     }
 
-    if (scene.dialogue && UI) {
-      html += UI.renderDialogueList(scene.dialogue);
-    } else if (scene.dialogue) {
-      scene.dialogue.forEach(function (d) {
-        html +=
-          '<div class="ip-dialogue"><span class="ip-dialogue__who">' +
-          esc(d.who) +
-          '</span><p>' +
-          esc(d.text) +
-          '</p></div>';
-      });
+    if (scene.dialogue && scene.dialogue.length) {
+      html += '<div class="ip-dialogue-zone">';
+      if (VIS) html += VIS.renderDecisionPrompt(state.sceneId);
+      if (UI) html += UI.renderDialogueList(scene.dialogue);
+      else {
+        scene.dialogue.forEach(function (d) {
+          html +=
+            '<div class="ip-dialogue"><span class="ip-dialogue__who">' +
+            esc(d.who) +
+            '</span><p>' +
+            esc(d.text) +
+            '</p></div>';
+        });
+      }
+      html += '</div>';
     }
 
     if (hasPhoneHero && UI) {
@@ -283,14 +297,15 @@
       });
       html +=
         '<button type="submit" class="ip-btn ip-btn--primary">Raporu gönder ve devam et</button></form>';
-      root.innerHTML = html + '</article>';
+      html += '</div></article>';
+      root.innerHTML = html;
       $('ipReportForm').addEventListener('submit', onReportSubmit);
       renderProgress();
       return;
     }
 
     html += renderChoices(scene);
-    html += '</article>';
+    html += '</div></article>';
     root.innerHTML = html;
 
     root.querySelectorAll('[data-choice]').forEach(function (btn) {

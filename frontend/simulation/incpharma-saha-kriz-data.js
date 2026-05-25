@@ -75,7 +75,8 @@ window.INCPHARMA_SIM = {
 
     crisis: {
       title: 'Anafilaktik kriz — İlk 60 saniye',
-      location: 'Onkoloji servisi',
+      time: '09:05',
+      location: 'Onkoloji servisi — Koridor',
       narrative:
         'Koridor hareketli. Hemşire Ece sizi görür; Dr. Selim Arda hasta odasından çıkmıştır. Ekip net ve sorumlu açıklama bekliyor.',
       dialogue: [
