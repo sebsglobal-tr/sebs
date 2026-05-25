@@ -25,7 +25,7 @@ function registerAdminApiRoutes(app, { pool, authenticateToken }) {
 
     app.get('/api/admin/stats', admin, async (req, res) => {
         try {
-            const [users, purchases, orders, revenue] = await Promise.all([
+            const [users, purchases, orders, revenue, userMeta] = await Promise.all([
                 pool.query(`SELECT COUNT(*)::int AS c FROM users`),
                 pool.query(
                     `SELECT COUNT(*)::int AS c FROM purchases WHERE is_active = TRUE`
@@ -35,7 +35,15 @@ function registerAdminApiRoutes(app, { pool, authenticateToken }) {
                 ).catch(() => ({ rows: [{ c: 0 }] })),
                 pool.query(
                     `SELECT COALESCE(SUM(price), 0)::float AS s FROM purchases WHERE is_active = TRUE`
-                ).catch(() => ({ rows: [{ s: 0 }] }))
+                ).catch(() => ({ rows: [{ s: 0 }] })),
+                pool
+                    .query(
+                        `SELECT
+                            COUNT(*) FILTER (WHERE NOT COALESCE(is_active, true))::int AS inactive,
+                            COUNT(*) FILTER (WHERE email IS NULL OR TRIM(email) = '')::int AS no_email
+                         FROM users`
+                    )
+                    .catch(() => ({ rows: [{ inactive: 0, no_email: 0 }] }))
             ]);
 
             const roleBreakdown = await pool.query(
@@ -46,6 +54,8 @@ function registerAdminApiRoutes(app, { pool, authenticateToken }) {
                 success: true,
                 data: {
                     totalUsers: users.rows[0]?.c || 0,
+                    inactiveUsers: userMeta.rows[0]?.inactive || 0,
+                    usersWithoutEmail: userMeta.rows[0]?.no_email || 0,
                     activePurchases: purchases.rows[0]?.c || 0,
                     paidOrders: orders.rows[0]?.c || 0,
                     revenueTry: revenue.rows[0]?.s || 0,
@@ -61,35 +71,43 @@ function registerAdminApiRoutes(app, { pool, authenticateToken }) {
     app.get('/api/admin/users', admin, async (req, res) => {
         try {
             const q = String(req.query.q || '').trim();
-            const limit = Math.min(parseInt(req.query.limit, 10) || 50, 100);
-            const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
+            const limit = Math.min(parseInt(req.query.limit, 10) || 100, 500);
+            let offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
+
+            const countAllResult = await pool.query('SELECT COUNT(*)::int AS c FROM users');
+            const countAll = countAllResult.rows[0]?.c || 0;
+
+            const whereClause = q
+                ? ` WHERE email ILIKE $1 OR first_name ILIKE $1 OR last_name ILIKE $1 OR id::text ILIKE $1`
+                : '';
+            const filterParams = q ? [`%${q}%`] : [];
+
+            const countFiltered = await pool.query(
+                `SELECT COUNT(*)::int AS c FROM users${whereClause}`,
+                filterParams
+            );
+            const total = countFiltered.rows[0]?.c || 0;
+
+            if (offset >= total && total > 0) {
+                offset = 0;
+            }
 
             let sql = `SELECT id, email, first_name, last_name, role, access_level, is_active, is_verified, created_at, last_login
-                       FROM users`;
-            const params = [];
-            if (q) {
-                params.push(`%${q}%`);
-                sql += ` WHERE email ILIKE $1 OR first_name ILIKE $1 OR last_name ILIKE $1`;
-            }
-            sql += ` ORDER BY created_at DESC NULLS LAST LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-            params.push(limit, offset);
+                       FROM users${whereClause}`;
+            const params = [...filterParams, limit, offset];
+            sql += ` ORDER BY created_at DESC NULLS LAST LIMIT $${filterParams.length + 1} OFFSET $${filterParams.length + 2}`;
 
             const rows = await pool.query(sql, params);
-            let countSql = 'SELECT COUNT(*)::int AS c FROM users';
-            const countParams = [];
-            if (q) {
-                countParams.push(`%${q}%`);
-                countSql += ' WHERE email ILIKE $1 OR first_name ILIKE $1 OR last_name ILIKE $1';
-            }
-            const total = await pool.query(countSql, countParams);
 
             res.json({
                 success: true,
                 data: {
                     users: rows.rows,
-                    total: total.rows[0]?.c || 0,
+                    total,
+                    countAll,
                     limit,
-                    offset
+                    offset,
+                    search: q || null
                 }
             });
         } catch (e) {

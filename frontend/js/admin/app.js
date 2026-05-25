@@ -24,7 +24,7 @@
     let currentView = 'dashboard';
     let userSearch = '';
     let userListOffset = 0;
-    const userListLimit = 50;
+    const userListLimit = 100;
     let pricingDraft = null;
 
     function apiBase() {
@@ -180,6 +180,9 @@
 
     function setView(name) {
         currentView = name;
+        if (name === 'users') {
+            userListOffset = 0;
+        }
         document.querySelectorAll('#adminNav a').forEach(function (a) {
             a.classList.toggle('is-active', a.dataset.view === name);
         });
@@ -216,9 +219,15 @@
             })
             .join('');
 
+        const userStatLabel =
+            d.totalUsers != null
+                ? String(d.totalUsers) +
+                  (d.inactiveUsers ? ' (' + d.inactiveUsers + ' pasif)' : '')
+                : '—';
+
         box.innerHTML =
             '<div class="admin-stat-grid">' +
-            statCard('Toplam kullanıcı', d.totalUsers) +
+            statCard('Toplam kullanıcı (veritabanı)', userStatLabel) +
             statCard('Aktif satın alma', d.activePurchases) +
             statCard('Ödenen sipariş', d.paidOrders) +
             statCard('Gelir (TRY)', fmtMoney(d.revenueTry)) +
@@ -251,8 +260,11 @@
         const res = await api('/admin/users' + usersQueryString());
         const users = res.data?.users || [];
         const total = res.data?.total || 0;
+        const countAll = res.data?.countAll != null ? res.data.countAll : total;
         const limit = res.data?.limit || userListLimit;
         const offset = res.data?.offset ?? userListOffset;
+        userListOffset = offset;
+        const activeSearch = Boolean(res.data?.search || userSearch);
         const from = total === 0 ? 0 : offset + 1;
         const to = Math.min(offset + users.length, total);
         const hasPrev = offset > 0;
@@ -281,26 +293,41 @@
             })
             .join('');
 
+        const titleCount = activeSearch ? total + ' eşleşme / ' + countAll + ' toplam' : String(countAll);
+
         box.innerHTML =
             '<div class="admin-card">' +
             '<div class="admin-card-head">' +
             '<h2>Kullanıcılar (' +
-            total +
+            esc(titleCount) +
             ')</h2>' +
             '<div class="admin-card-head-actions">' +
-            '<input type="search" class="admin-search" id="userSearchInput" placeholder="E-posta veya ad ara…" value="' +
+            '<input type="search" class="admin-search" id="userSearchInput" placeholder="E-posta, ad veya kullanıcı ID ara…" value="' +
             esc(userSearch) +
             '">' +
+            (activeSearch
+                ? '<button type="button" class="admin-btn admin-btn--ghost" id="clearUserSearchBtn">Aramayı temizle</button>'
+                : '') +
             '<button type="button" class="admin-btn admin-btn--ghost" id="syncSupabaseUsersBtn" title="Supabase Auth kayıtlarını veritabanına aktarır">' +
             '<i class="fas fa-cloud-download-alt"></i> Supabase senkron' +
             '</button>' +
             '</div></div>' +
-            (total > limit && !userSearch
-                ? '<p class="admin-list-hint">Liste sayfalıdır; özet kartındaki toplam (' +
-                  total +
-                  ') ile tabloda görünen (' +
+            (activeSearch
+                ? '<p class="admin-list-hint admin-list-hint--warn">Arama filtresi aktif — yalnızca eşleşen kayıtlar listeleniyor. Tüm ' +
+                  countAll +
+                  ' kullanıcıyı görmek için aramayı temizleyin.</p>'
+                : '') +
+            (offset > 0
+                ? '<p class="admin-list-hint">Sayfa 2+ görüntüleniyor (kayıt ' +
+                  from +
+                  '–' +
+                  to +
+                  '). İlk sayfaya dönmek için <strong>Önceki</strong> veya <strong>Başa dön</strong> kullanın.</p>'
+                : '') +
+            (total > limit && !activeSearch
+                ? '<p class="admin-list-hint">Liste sayfalıdır (' +
                   limit +
-                  ' kayıt/sayfa) farklı olabilir. Tüm kayıtlar için sayfalar arasında geçin veya arama kullanın.</p>'
+                  ' kayıt/sayfa). Tüm kayıtlar için sayfalar arasında geçin.</p>'
                 : '') +
             '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr>' +
             '<th>E-posta</th><th>Ad</th><th>Rol</th><th>Seviye</th><th>Durum</th><th>Kayıt</th><th></th>' +
@@ -316,6 +343,9 @@
             total +
             '</span>' +
             '<div class="admin-pagination__btns">' +
+            '<button type="button" class="admin-btn admin-btn--ghost" id="usersFirstPage"' +
+            (offset > 0 ? '' : ' disabled') +
+            '>Başa dön</button>' +
             '<button type="button" class="admin-btn admin-btn--ghost" id="usersPrevPage"' +
             (hasPrev ? '' : ' disabled') +
             '>Önceki</button>' +
@@ -334,6 +364,23 @@
                     userListOffset = 0;
                     renderUsers(box);
                 }, 350);
+            });
+        }
+
+        const clearSearchBtn = document.getElementById('clearUserSearchBtn');
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function () {
+                userSearch = '';
+                userListOffset = 0;
+                renderUsers(box);
+            });
+        }
+
+        const firstBtn = document.getElementById('usersFirstPage');
+        if (firstBtn && offset > 0) {
+            firstBtn.addEventListener('click', function () {
+                userListOffset = 0;
+                renderUsers(box);
             });
         }
 
