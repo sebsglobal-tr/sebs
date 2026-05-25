@@ -126,6 +126,10 @@ window.INCPHARMA_SIM = {
       dynamic: 'lot',
     },
 
+    doctor: {
+      dynamic: 'doctor',
+    },
+
     particle: {
       title: 'Partikül şüphesi — Hemşire ikna olmuyor',
       location: 'Servis — flakon kontrolü',
@@ -587,12 +591,15 @@ window.INCPHARMA_SIM = {
 
 /** Dinamik sahneler: önceki kararlara göre */
 window.INCPHARMA_SIM.resolveScene = function (sceneId, state) {
-  var base = window.INCPHARMA_SIM.scenes[sceneId];
-  if (!base) return null;
   if (sceneId === 'doctor') {
     return window.INCPHARMA_SIM.buildDoctorScene(state);
   }
   if (sceneId === 'lot') {
+    return window.INCPHARMA_SIM.buildLotScene(state);
+  }
+  var base = window.INCPHARMA_SIM.scenes[sceneId];
+  if (!base) return null;
+  if (base.dynamic === 'lot') {
     return window.INCPHARMA_SIM.buildLotScene(state);
   }
   if (sceneId === 'whatsapp') {
@@ -639,7 +646,7 @@ window.INCPHARMA_SIM.buildDoctorScene = function (state) {
         detail:
           'Klinik karar sizin alanınızda. İki bildirim ciddiye alınmalı; lot ve şüpheli flakon ayrıştırılarak kalite ve farmakovijilans değerlendirmesine taşınmalı.',
         effects: { crisisCommunication: 10, escalationDiscipline: 8, scientificAccuracy: 6 },
-        next: 'competitor',
+        next: 'nermin',
       },
       {
         id: 'doc_recover',
@@ -647,7 +654,7 @@ window.INCPHARMA_SIM.buildDoctorScene = function (state) {
         detail:
           'Savunmaya çalıştıysam düzeltirim. Neden-sonuç yorumu yapamam; reaksiyon farmakovijilans, flakon kalite sürecine — yazılı dönüş organize edeceğim.',
         effects: { flags: { recoveryStrong: true }, crisisRecovery: 10, relationshipManagement: 8 },
-        next: 'competitor',
+        next: 'nermin',
       },
       {
         id: 'doc_own_particle',
@@ -655,7 +662,7 @@ window.INCPHARMA_SIM.buildDoctorScene = function (state) {
         detail:
           'İlk ifadem yanlış izlenim oluşturdu. Şüpheli flakon normal ürün gibi işlem görmemeli; kalite bildirimi ve ayrıştırma gerekir.',
         effects: { flags: { recoveryStrong: true }, crisisCommunication: 8, crisisRecovery: 8 },
-        next: 'competitor',
+        next: 'nermin',
         showIf: function (s) {
           return s.flags.particleRisk;
         },

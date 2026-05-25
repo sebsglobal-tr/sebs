@@ -459,8 +459,12 @@
       return;
     }
     var scene = getScene(state.sceneId);
+    if (!scene && CFG.resolveScene) {
+      scene = CFG.resolveScene(state.sceneId, state);
+    }
     if (!scene) {
-      $('ipRoot').innerHTML = '<p class="ip-error">Sahne bulunamadı.</p>';
+      $('ipRoot').innerHTML =
+        '<p class="ip-error">Sahne bulunamadı: <code>' + esc(state.sceneId) + '</code></p>';
       return;
     }
     if (scene.type === 'finale') {
