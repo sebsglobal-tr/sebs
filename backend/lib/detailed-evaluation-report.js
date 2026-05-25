@@ -45,10 +45,19 @@ function statusLabelTr(status) {
     const map = {
         not_started: 'Başlanmadı',
         in_progress: 'Devam ediyor',
+        completed: 'Tamamlandı',
         weak: 'Geliştirilmeli',
         strong: 'Güçlü',
     };
     return map[status] || status;
+}
+
+function isModuleStarted(prog, quizzes, sims) {
+    return (
+        (quizzes && quizzes.length > 0) ||
+        (sims && sims.length > 0) ||
+        (prog && (Number(prog.percentComplete) > 0 || Number(prog.timeSpentMinutes) > 0))
+    );
 }
 
 function analyzeQuizEntry(q) {
@@ -437,7 +446,6 @@ function buildDetailedEvaluationReport(ctx) {
     }
 
     const moduleIds = new Set([
-        ...modulesCatalog.map((m) => m.id),
         ...progressByModule.keys(),
         ...quizResults.map((q) => q.moduleId).filter(Boolean),
         ...simulationResults.map((s) => s.moduleId).filter(Boolean),
@@ -460,17 +468,16 @@ function buildDetailedEvaluationReport(ctx) {
         const simScores = sims.map((s) => Number(s.score) || 0);
         const simBest = simScores.length ? Math.max(...simScores) : null;
 
-        const hasActivity =
-            quizzes.length > 0 || sims.length > 0 || prog.percentComplete > 0 || prog.timeSpentMinutes > 0;
-        const status = moduleStatus(prog.percentComplete, quizAvg, simBest, hasActivity);
+        if (!isModuleStarted(prog, quizzes, sims)) continue;
+
+        const hasActivity = true;
+        let status = moduleStatus(prog.percentComplete, quizAvg, simBest, hasActivity);
+        if (Number(prog.percentComplete) >= 100) {
+            status = 'completed';
+        }
 
         const issues = [];
         const recommendations = [];
-
-        if (status === 'not_started') {
-            issues.push('Bu modüle henüz anlamlı ilerleme veya ölçüm kaydı düşmemiş.');
-            recommendations.push(`«${title}» modülünü açın; en az bir ders + değerlendirme testi tamamlayın.`);
-        }
         if (prog.percentComplete > 0 && prog.percentComplete < 50 && quizzes.length === 0) {
             issues.push('Modülde ilerleme var ancak quiz sonucu yok — teorik seviye ölçülemiyor.');
             recommendations.push('Modül sonundaki değerlendirme testini mutlaka gönderin (sonuçlar rapora yansır).');
@@ -527,7 +534,7 @@ function buildDetailedEvaluationReport(ctx) {
     }
 
     modules.sort((a, b) => {
-        const order = { weak: 0, in_progress: 1, not_started: 2, strong: 3 };
+        const order = { weak: 0, in_progress: 1, strong: 2, completed: 3 };
         return (order[a.status] ?? 9) - (order[b.status] ?? 9) || a.title.localeCompare(b.title, 'tr');
     });
 

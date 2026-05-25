@@ -34,9 +34,10 @@
     function statusBadgeClass(status) {
         var map = {
             weak: 'bg-rose-100 text-rose-800 border-rose-200',
-            strong: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-            in_progress: 'bg-amber-100 text-amber-800 border-amber-200',
-            not_started: 'bg-slate-100 text-slate-600 border-slate-200',
+        strong: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        completed: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        in_progress: 'bg-amber-100 text-amber-800 border-amber-200',
+        not_started: 'bg-slate-100 text-slate-600 border-slate-200',
         };
         return map[status] || map.not_started;
     }
@@ -441,7 +442,7 @@
         if (d.modules && d.modules.length) {
             html += sectionOpen('report-moduller');
             html += '<h2><i class="fas fa-book-open text-emerald-600"></i> Modül modül ayrıntılı analiz</h2>';
-            html += '<p class="report-muted">Hangi derste ne eksik, quiz ve simülasyonlarda nerede zorlandığınız.</p>';
+            html += '<p class="report-muted">Yalnızca başladığınız veya tamamladığınız modüller — quiz ve simülasyon analizi.</p>';
             html += '<div class="report-modules">';
             d.modules.forEach(function (m) {
                 html += renderModuleCard(m);
