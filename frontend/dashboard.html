@@ -1799,8 +1799,39 @@
                 const report = data.data;
                 const s = report.scores || {};
                 const i = report.interpretation || {};
+                const ml = report.ml || {};
 
                 let html = '';
+                if (ml.available && ml.profile) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 12px; background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%); border: 1px solid #bfdbfe;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="fas fa-robot" style="color: #2563eb;"></i> Yapay Zeka Öğrenme Profili</h3>';
+                    html += '<p style="margin: 0 0 0.5rem; font-size: 1.05rem;"><strong>' + escapeHtml(ml.profile) + '</strong>';
+                    if (ml.confidencePercent != null) {
+                        html += ' <span style="color: #64748b; font-size: 0.9rem;">(güven: %' + escapeHtml(String(ml.confidencePercent)) + ')</span>';
+                    }
+                    html += '</p>';
+                    if (i.mlProfile) {
+                        html += '<p style="margin: 0; color: #334155;">' + escapeHtml(i.mlProfile) + '</p>';
+                    }
+                    if (ml.probabilities && typeof ml.probabilities === 'object') {
+                        var probs = Object.keys(ml.probabilities).map(function (k) {
+                            return { label: k, pct: Math.round(ml.probabilities[k] * 1000) / 10 };
+                        }).sort(function (a, b) { return b.pct - a.pct; });
+                        if (probs.length) {
+                            html += '<ul style="margin: 0.75rem 0 0; padding: 0; list-style: none;">';
+                            probs.forEach(function (p) {
+                                html += '<li style="margin-bottom: 0.35rem; font-size: 0.85rem; color: #475569;">';
+                                html += '<span style="display: inline-block; min-width: 12rem;">' + escapeHtml(p.label) + '</span> %' + p.pct;
+                                html += '</li>';
+                            });
+                            html += '</ul>';
+                        }
+                    }
+                    html += '</div>';
+                } else if (ml.available === false && ml.error) {
+                    html += '<p class="text-slate-500" style="font-size: 0.9rem; margin-bottom: 1rem;">Yapay zeka profili şu an hesaplanamadı; skor özeti gösteriliyor.</p>';
+                }
+
                 html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
                 html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Skor Özeti</h3>';
                 html += '<p><strong>Genel skor:</strong> ' + (s.overall != null ? s.overall + '%' : '-') + '</p>';

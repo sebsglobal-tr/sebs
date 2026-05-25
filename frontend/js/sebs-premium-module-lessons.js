@@ -325,6 +325,12 @@
     }
 
     /** Yinelenen modül testi bloklarını kaldırır (aynı id iki kez enjekte edilmişse) */
+    function refreshModuleQuizzes() {
+        if (global.SebsQuizExam && typeof global.SebsQuizExam.processAll === 'function') {
+            global.SebsQuizExam.processAll();
+        }
+    }
+
     function dedupeEmbeddedQuizSections() {
         var seen = new Set();
         document.querySelectorAll('.eval-quiz-section[id]').forEach(function (q) {
@@ -1560,6 +1566,7 @@
             ev.initEvent('sebs-lesson-cards-ready', true, true);
             global.dispatchEvent(ev);
         }
+        refreshModuleQuizzes();
 
         lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
         if (lastRunSubNavScroll) {
@@ -1858,6 +1865,7 @@
             ev.initEvent('sebs-lesson-cards-ready', true, true);
             global.dispatchEvent(ev);
         }
+        refreshModuleQuizzes();
 
         lastRunSubNavScroll = shouldBuildSubheadingNav(cfg);
         if (lastRunSubNavScroll) {

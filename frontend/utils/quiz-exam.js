@@ -103,72 +103,63 @@
     return wrap;
   }
 
+  function visibleQuizChildren(inner) {
+    return Array.from(inner.children).filter(function (el) {
+      if (!el || el.style.display === 'none') return false;
+      if (el.classList.contains('eval-question-block')) return false;
+      if (el.classList.contains('eval-submit-btn')) return false;
+      if (el.classList.contains('eval-result')) return false;
+      return true;
+    });
+  }
+
+  /** <ol><li>1) Soru</li></ol><p>A)…</p>…<ul><li>Doğru: X</li> (Temel Network modül testi) */
   function processSplitFormatQuestions(inner) {
-    const nodes = Array.from(inner.children);
     let created = 0;
-    let i = 0;
+    var guard = 0;
 
-    while (i < nodes.length) {
+    while (guard++ < 120) {
+      const nodes = visibleQuizChildren(inner);
+      const i = nodes.findIndex(function (el) {
+        return el.tagName === 'OL';
+      });
+      if (i === -1) break;
+
       const el = nodes[i];
-      if (
-        !el ||
-        el.classList.contains('eval-question-block') ||
-        el.classList.contains('eval-submit-btn') ||
-        el.classList.contains('eval-result')
-      ) {
-        i++;
-        continue;
-      }
-
-      if (el.tagName !== 'OL') {
-        i++;
-        continue;
-      }
-
       const li = el.querySelector(':scope > li');
-      if (!li) {
-        i++;
-        continue;
-      }
+      if (!li) break;
 
       const qText = (li.textContent || '').trim().replace(/^\d+\)\s*/, '');
       const optLines = [];
-      let j = i + 1;
+      var j = i + 1;
 
       while (j < nodes.length && optLines.length < 5) {
         const p = nodes[j];
-        if (!p || p.tagName !== 'P' || p.style.display === 'none') break;
+        if (!p || p.tagName !== 'P') break;
         const m = (p.textContent || '').trim().match(OPTION_LINE_REGEX);
         if (!m) break;
         optLines.push({ letter: m[1].toUpperCase(), text: m[2] });
         j++;
       }
 
-      if (!isValidOptionCount(optLines.length)) {
-        i++;
-        continue;
-      }
+      if (!isValidOptionCount(optLines.length)) break;
 
-      let correct = null;
-      let rationale = '';
+      var correct = null;
+      var rationale = '';
       if (j < nodes.length && nodes[j].tagName === 'UL') {
         correct = parseCorrect(nodes[j].textContent || '');
         rationale = extractRationaleFromUl(nodes[j]);
         j++;
       }
-      if (!correct) {
-        i++;
-        continue;
-      }
+      if (!correct) break;
 
       const block = createEvalQuestionBlock(qText, optLines, correct, 'eval-split-format', rationale);
       inner.insertBefore(block, el);
       el.style.display = 'none';
-      for (let k = i + 1; k < j; k++) {
+      for (var k = i + 1; k < j; k++) {
         if (nodes[k]) nodes[k].style.display = 'none';
       }
       created++;
-      i = j;
     }
 
     return created;
@@ -540,12 +531,24 @@
   }
 
   function processSection(section) {
+    if (!section) return 0;
     const inner = section.querySelector('.section-inner') || section;
+    if (
+      inner.getAttribute('data-sebs-quiz-processed') === '1' &&
+      inner.querySelector('.eval-options-wrap')
+    ) {
+      if (!inner.querySelector('.eval-submit-btn')) {
+        attachSubmitButton(inner);
+      }
+      return inner.querySelectorAll('.eval-question-block').length;
+    }
+    inner.removeAttribute('data-sebs-quiz-processed');
 
-    processSplitFormatQuestions(inner);
-    processOlListBrQuestions(inner);
-    processH3StackQuestions(inner);
-    processBrParagraphQuestions(inner);
+    var created =
+      processSplitFormatQuestions(inner) +
+      processOlListBrQuestions(inner) +
+      processH3StackQuestions(inner) +
+      processBrParagraphQuestions(inner);
 
     inner.querySelectorAll('p').forEach(function (p) {
       const t = (p.textContent || '').trim();
@@ -603,6 +606,10 @@
     });
 
     attachSubmitButton(inner);
+    if (inner.querySelectorAll('.eval-options-wrap').length) {
+      inner.setAttribute('data-sebs-quiz-processed', '1');
+    }
+    return created;
   }
 
   function addStyles() {
@@ -610,7 +617,12 @@
     const s = document.createElement('style');
     s.id = 'sebs-quiz-exam-styles';
     s.textContent = `
-      .eval-question-block { margin: 1.25rem 0; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid transparent; }
+      .eval-question-block { margin: 1.25rem 0; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+      body.landing-site-body .eval-question-block,
+      body.module-page--temel-network .eval-question-block,
+      body.module-page--temel-siber .eval-question-block { background: #f8fafc; border-color: #e2e8f0; }
+      body.landing-site-body .eval-option:hover,
+      body.module-page--temel-network .eval-option:hover { background: #f1f5f9; }
       .eval-question-block--correct { border-color: rgba(34, 197, 94, 0.45); background: rgba(34, 197, 94, 0.08); }
       .eval-question-block--wrong { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.06); }
       .eval-question-text { margin-bottom: 0.75rem; font-weight: 500; }
@@ -640,15 +652,28 @@
     document.querySelectorAll('.eval-quiz-section').forEach(processSection);
   }
 
+  function scheduleInit() {
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(init);
+      });
+    } else {
+      setTimeout(init, 0);
+    }
+  }
+
   window.SebsQuizExam = {
     init: init,
+    scheduleInit: scheduleInit,
     processSection: processSection,
     processAll: init
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', scheduleInit);
   } else {
-    init();
+    scheduleInit();
   }
+
+  window.addEventListener('sebs-lesson-cards-ready', scheduleInit);
 })();

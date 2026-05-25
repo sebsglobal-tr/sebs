@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
 const logger = require('./utils/logger');
+const { enrichEvaluationReportWithMl } = require('./lib/student-evaluation-ml');
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: false });
@@ -2930,17 +2931,36 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             }
         } catch (e) { /* last_step kolonu yoksa görmezden gel */ }
 
-        const simResult = await pool.query(
-            `SELECT simulation_id, score, time_spent, completed_at
-             FROM simulation_runs
-             WHERE user_id = $1 AND completed_at IS NOT NULL
-             ORDER BY completed_at DESC`,
-            [userId]
-        );
-        const simulationResults = simResult.rows.map(r => ({
+        let simRows = [];
+        try {
+            const simResult = await pool.query(
+                `SELECT simulation_id, module_id, score, time_spent, completed_at,
+                        COALESCE(hint_used_count, 0) AS hint_used_count,
+                        COALESCE(wrong_actions_count, wrong_count, 0) AS wrong_actions_count
+                 FROM simulation_runs
+                 WHERE user_id = $1 AND completed_at IS NOT NULL
+                 ORDER BY completed_at DESC`,
+                [userId]
+            );
+            simRows = simResult.rows;
+        } catch (simErr) {
+            logger.warn('evaluation report simulation query (extended):', simErr.message);
+            const simFallback = await pool.query(
+                `SELECT simulation_id, score, time_spent, completed_at
+                 FROM simulation_runs
+                 WHERE user_id = $1 AND completed_at IS NOT NULL
+                 ORDER BY completed_at DESC`,
+                [userId]
+            );
+            simRows = simFallback.rows;
+        }
+        const simulationResults = simRows.map(r => ({
             simulationId: r.simulation_id,
+            moduleId: r.module_id,
             score: r.score != null ? r.score : 0,
-            timeSpent: r.time_spent || 0
+            timeSpent: r.time_spent || 0,
+            hintUsedCount: r.hint_used_count != null ? Number(r.hint_used_count) : 0,
+            wrongActionsCount: r.wrong_actions_count != null ? Number(r.wrong_actions_count) : 0
         }));
 
         const quizScores = quizResults.map(q => q.score).filter(s => typeof s === 'number');
@@ -2995,6 +3015,13 @@ app.get('/api/evaluation/report', authenticateToken, async (req, res) => {
             },
             generatedAt: new Date().toISOString()
         };
+
+        await enrichEvaluationReportWithMl(report, {
+            pool,
+            progressRows: progressResult.rows,
+            quizResults,
+            simulationRows: simulationResults
+        });
 
         res.json({ success: true, data: report });
     } catch (error) {
