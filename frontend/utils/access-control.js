@@ -250,6 +250,7 @@ async function hasAccess(requiredLevel, category = 'cybersecurity') {
 const SIMULATION_PATH_LEVELS = [
     ['sessiz-tekrar-lasfin', 'advanced'],
     ['ileri-kriptografi-simulasyonlari', 'advanced'],
+    ['bexacmp-kriptografik', 'advanced'],
     ['penetration-testing', 'advanced'],
     ['threat-hunting', 'advanced'],
     ['incident-response', 'advanced'],
@@ -257,6 +258,7 @@ const SIMULATION_PATH_LEVELS = [
     ['gece-acilan-kapi', 'intermediate'],
     ['sessiz-birakilan-dosya', 'intermediate'],
     ['malware-analizi', 'intermediate'],
+    ['kor-nokta-soc', 'intermediate'],
     ['network-guvenligi', 'intermediate'],
     ['misafir-agini', 'intermediate'],
     ['terminalden-trafik', 'intermediate'],
@@ -273,6 +275,8 @@ const SIMULATION_PATH_LEVELS = [
     ['bir-seyler-yanlis', 'beginner'],
     ['semptom-etki-zinciri', 'beginner'],
     ['temel-siber-guvenlik', 'beginner'],
+    ['mertin-bilgisayari', 'beginner'],
+    ['temel-siber-guvenlik-simulasyonlari', 'beginner'],
     ['siber-guvenlige-giris', 'beginner'],
     ['web-app-security', 'intermediate']
 ];
