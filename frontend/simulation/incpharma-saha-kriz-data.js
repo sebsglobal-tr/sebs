@@ -781,6 +781,8 @@ window.INCPHARMA_SIM.buildWhatsappScene = function (state, base) {
     phoneMessage: msg,
     priorWaMessage: prior,
     narrative: 'Koridorda telefon titrer. Ekranda WhatsApp açılıyor — kişisel kanal baskısı.',
+    dialogue: [{ who: 'Dr. Hakan Er', text: msg }],
+    replyPrompt: 'Mesaj kişisel kanaldan geldi — nasıl yanıt verirsiniz?',
   });
 };
 

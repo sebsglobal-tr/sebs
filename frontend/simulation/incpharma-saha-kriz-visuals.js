@@ -62,27 +62,6 @@ window.INCPHARMA_VISUALS = (function () {
     manager: { env: 'meeting', mood: 'boss', chars: ['Murat Bey'] },
   };
 
-  var CHOICE_STYLES = {
-    crisis_own: { tone: 'ok', icon: 'fa-shield-heart' },
-    crisis_defensive: { tone: 'warn', icon: 'fa-scale-balanced' },
-    crisis_clinical: { tone: 'danger', icon: 'fa-ban' },
-    particle_clear: { tone: 'ok', icon: 'fa-eye' },
-    particle_delegate: { tone: 'warn', icon: 'fa-user-doctor' },
-    particle_soften: { tone: 'danger', icon: 'fa-triangle-exclamation' },
-    mini_empathy: { tone: 'ok', icon: 'fa-hand-holding-heart' },
-    mini_legal: { tone: 'warn', icon: 'fa-gavel' },
-    mini_soft: { tone: 'danger', icon: 'fa-question' },
-    comp_neutral: { tone: 'ok', icon: 'fa-handshake' },
-    comp_delay: { tone: 'warn', icon: 'fa-clock' },
-    comp_claim: { tone: 'danger', icon: 'fa-comment-slash' },
-    off_cold: { tone: 'warn', icon: 'fa-shield' },
-    off_channel: { tone: 'ok', icon: 'fa-route' },
-    off_grey: { tone: 'danger', icon: 'fa-door-open' },
-    wa_official: { tone: 'ok', icon: 'fa-building' },
-    wa_send: { tone: 'danger', icon: 'fa-paper-plane' },
-    wa_verbal: { tone: 'danger', icon: 'fa-comment-dots' },
-  };
-
   var DAY_INDEX_ALIAS = {
     particle_mini: 'particle',
     doctor: 'doctor',
@@ -398,32 +377,61 @@ window.INCPHARMA_VISUALS = (function () {
     );
   }
 
-  function renderDecisionPrompt(sceneId) {
-    var labels = {
-      crisis: 'İlk 60 saniye — ne söylersiniz?',
-      particle: 'Flakon kararı — netlik gerekli',
-      offlabel: 'Sınırı nasıl korursunuz?',
-      whatsapp: 'Mesaja nasıl yanıt verirsiniz?',
-    };
-    var t = labels[sceneId];
-    if (!t) return '';
-    return (
-      '<div class="ip-decision-prompt"><i class="fas fa-crosshairs"></i> ' + esc(t) + '</div>'
-    );
+  var REPLY_PROMPTS = {
+    crisis: 'Koridorda herkes sizi dinliyor…',
+    particle: 'Hemşire net bir cümle bekliyor.',
+    particle_mini: 'Ece hâlâ netlik istiyor.',
+    offlabel: 'Dr. Hakan sizi dinliyor.',
+    whatsapp: 'Mesajı nasıl yanıtlarsınız?',
+    service: 'Levent Bey size bakıyor.',
+    competitor: 'Dr. Hakan bekliyor.',
+    nermin: 'Dr. Nermin kısa bir özet istiyor.',
+  };
+
+  /** Konuşma balonu — test şıkkı değil, temsilcinin söyleyeceği cümle */
+  function renderReplies(scene, state) {
+    if (!scene.choices || !scene.choices.length) return '';
+    var prompt =
+      scene.replyPrompt || REPLY_PROMPTS[state.sceneId] || 'Ne söylersiniz?';
+    var html =
+      '<div class="ip-replies">' +
+      '<div class="ip-replies__divider"><span>Siz konuşuyorsunuz</span></div>' +
+      '<p class="ip-replies__prompt">' +
+      esc(prompt) +
+      '</p>' +
+      '<div class="ip-replies__list">';
+
+    scene.choices.forEach(function (ch) {
+      if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
+      var spoken = ch.say || ch.detail || ch.label;
+      html +=
+        '<button type="button" class="ip-reply" data-choice="' +
+        esc(ch.id) +
+        '" aria-label="Yanıt: ' +
+        esc(spoken.slice(0, 80)) +
+        '…">' +
+        '<span class="ip-reply__avatar" aria-hidden="true"><i class="fas fa-user-tie"></i></span>' +
+        '<span class="ip-reply__bubble"><q>' +
+        esc(spoken) +
+        '</q></span>' +
+        '<span class="ip-reply__go" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>' +
+        '</button>';
+    });
+
+    html += '</div></div>';
+    return html;
   }
 
-  function choiceStyle(choiceId) {
-    return CHOICE_STYLES[choiceId] || { tone: 'neutral', icon: 'fa-circle-dot' };
-  }
-
-  function renderChoiceIcon(choiceId) {
-    var st = choiceStyle(choiceId);
+  function renderSceneAction(label, id) {
     return (
-      '<span class="ip-choice__icon ip-choice__icon--' +
-      esc(st.tone) +
-      '"><i class="fas ' +
-      esc(st.icon) +
-      '"></i></span>'
+      '<div class="ip-scene-action">' +
+      '<button type="button" class="ip-scene-action__btn" id="' +
+      esc(id || 'ipContinue') +
+      '">' +
+      '<span>' +
+      esc(label) +
+      '</span>' +
+      '<i class="fas fa-arrow-right" aria-hidden="true"></i></button></div>'
     );
   }
 
@@ -431,9 +439,8 @@ window.INCPHARMA_VISUALS = (function () {
     renderDayTimeline: renderDayTimeline,
     renderSceneHero: renderSceneHero,
     renderNarrativeCard: renderNarrativeCard,
-    renderDecisionPrompt: renderDecisionPrompt,
-    choiceStyle: choiceStyle,
-    renderChoiceIcon: renderChoiceIcon,
+    renderReplies: renderReplies,
+    renderSceneAction: renderSceneAction,
     DAY_STEPS: DAY_STEPS,
   };
 })();

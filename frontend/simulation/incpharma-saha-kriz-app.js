@@ -136,9 +136,9 @@
       '</p>' +
       renderFlakon() +
       '<ul class="ip-intro-list">' +
-      '<li>16+ karar sahnesi · hafızalı skor</li>' +
-      '<li>Fatal compliance error takibi</li>' +
-      '<li>Performans kartı ve özet rapor</li>' +
+      '<li>Gün boyu canlı saha akışı · diyalog ve kriz anları</li>' +
+      '<li>Telefon bildirimi, WhatsApp, gün sonu raporu</li>' +
+      '<li>Performans özeti — test değil, senaryo deneyimi</li>' +
       '</ul>' +
       '<p class="ip-tagline"><i class="fas fa-quote-left"></i> ' +
       esc(CFG.tagline) +
@@ -154,40 +154,33 @@
 
   function renderContinue(scene) {
     var label = scene.continueLabel || 'Devam et';
-    return (
-      '<div class="ip-continue-wrap">' +
-      '<button type="button" class="ip-btn ip-btn--primary" id="ipContinue">' +
-      esc(label) +
-      '</button></div>'
-    );
+    return VIS
+      ? VIS.renderSceneAction(label, 'ipContinue')
+      : '<div class="ip-continue-wrap"><button type="button" class="ip-btn ip-btn--primary" id="ipContinue">' +
+          esc(label) +
+          '</button></div>';
   }
 
-  function renderChoices(scene) {
-    if (!scene.choices || !scene.choices.length) {
-      return scene.next ? renderContinue(scene) : '';
+  function renderPlayerTurn(scene) {
+    if (scene.choices && scene.choices.length) {
+      return VIS ? VIS.renderReplies(scene, state) : renderRepliesFallback(scene);
     }
-    var html = '<div class="ip-choices">';
-    scene.choices.forEach(function (ch, i) {
+    return scene.next ? renderContinue(scene) : '';
+  }
+
+  function renderRepliesFallback(scene) {
+    var html = '<div class="ip-replies"><div class="ip-replies__list">';
+    scene.choices.forEach(function (ch) {
       if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
-      var st = VIS ? VIS.choiceStyle(ch.id) : { tone: 'neutral' };
+      var spoken = ch.say || ch.detail || ch.label;
       html +=
-        '<button type="button" class="ip-choice ip-choice--' +
-        esc(st.tone) +
-        '" data-choice="' +
+        '<button type="button" class="ip-reply" data-choice="' +
         esc(ch.id) +
-        '">';
-      if (VIS) html += VIS.renderChoiceIcon(ch.id);
-      html +=
-        '<span class="ip-choice__n">' +
-        (i + 1) +
-        '</span>' +
-        '<span class="ip-choice__body"><strong>' +
-        esc(ch.label) +
-        '</strong>' +
-        (ch.detail ? '<span>' + esc(ch.detail) + '</span>' : '') +
-        '</span></button>';
+        '"><span class="ip-reply__bubble"><q>' +
+        esc(spoken) +
+        '</q></span></button>';
     });
-    html += '</div>';
+    html += '</div></div>';
     return html;
   }
 
@@ -259,8 +252,7 @@
     }
 
     if (scene.dialogue && scene.dialogue.length) {
-      html += '<div class="ip-dialogue-zone">';
-      if (VIS) html += VIS.renderDecisionPrompt(state.sceneId);
+      html += '<div class="ip-conversation">';
       if (UI) html += UI.renderDialogueList(scene.dialogue);
       else {
         scene.dialogue.forEach(function (d) {
@@ -272,6 +264,9 @@
             '</p></div>';
         });
       }
+      if (!scene.type || scene.type !== 'report') {
+        html += renderPlayerTurn(scene);
+      }
       html += '</div>';
     }
 
@@ -280,23 +275,25 @@
     }
 
     if (scene.type === 'report') {
-      html += '<form class="ip-report" id="ipReportForm">';
+      html += '<div class="ip-saha-form-wrap">';
+      html += '<div class="ip-saha-form__bar"><i class="fas fa-tablet-screen-button"></i> INCPHARMA Saha · Gün sonu raporu</div>';
+      html += '<form class="ip-report ip-saha-form" id="ipReportForm">';
       scene.fields.forEach(function (field) {
-        html += '<fieldset class="ip-report-field"><legend>' + esc(field.q) + '</legend>';
+        html += '<div class="ip-saha-field"><h4>' + esc(field.q) + '</h4><div class="ip-saha-field__opts">';
         field.options.forEach(function (opt) {
           html +=
-            '<label class="ip-report-opt"><input type="radio" name="' +
+            '<label class="ip-saha-opt"><input type="radio" name="' +
             esc(field.id) +
             '" value="' +
             esc(opt.id) +
-            '" required /> ' +
+            '" required /><span>' +
             esc(opt.label) +
-            '</label>';
+            '</span></label>';
         });
-        html += '</fieldset>';
+        html += '</div></div>';
       });
       html +=
-        '<button type="submit" class="ip-btn ip-btn--primary">Raporu gönder ve devam et</button></form>';
+        '<button type="submit" class="ip-scene-action__btn ip-scene-action__btn--submit">Raporu gönder</button></form></div>';
       html += '</div></article>';
       root.innerHTML = html;
       $('ipReportForm').addEventListener('submit', onReportSubmit);
@@ -304,7 +301,9 @@
       return;
     }
 
-    html += renderChoices(scene);
+    if (!scene.dialogue || !scene.dialogue.length) {
+      html += renderPlayerTurn(scene);
+    }
     html += '</div></article>';
     root.innerHTML = html;
 
