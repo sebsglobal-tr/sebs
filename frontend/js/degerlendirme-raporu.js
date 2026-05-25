@@ -374,6 +374,75 @@
         return html;
     }
 
+    function renderStudyPlanWeek(w) {
+        var html = '<div class="report-week">';
+        html += '<div class="report-week__badge">H' + escapeHtml(String(w.week)) + '</div>';
+        html += '<div class="report-week__body">';
+        html += '<h3>' + escapeHtml(w.focus) + '</h3>';
+        if (w.goal) {
+            html += '<p class="report-week__goal"><i class="fas fa-bullseye"></i> ' + escapeHtml(w.goal) + '</p>';
+        }
+        if (w.weeklyHours || w.rhythm) {
+            html += '<div class="report-week__meta">';
+            if (w.weeklyHours) {
+                html += '<span class="report-week__meta-item"><i class="fas fa-clock"></i> ' + escapeHtml(w.weeklyHours) + '</span>';
+            }
+            if (w.rhythm) {
+                html += '<span class="report-week__meta-item"><i class="fas fa-calendar-day"></i> ' + escapeHtml(w.rhythm) + '</span>';
+            }
+            html += '</div>';
+        }
+        if (w.howToStudy) {
+            html +=
+                '<div class="report-week__method"><h4><i class="fas fa-graduation-cap"></i> Nasıl çalışmalısınız?</h4><p>' +
+                escapeHtml(w.howToStudy) +
+                '</p></div>';
+        }
+        if (w.dailyPlan && w.dailyPlan.length) {
+            html += '<div class="report-week__days"><h4><i class="fas fa-list-check"></i> Günlük plan</h4>';
+            w.dailyPlan.forEach(function (day) {
+                html += '<div class="report-day-plan">';
+                html += '<div class="report-day-plan__head"><span class="report-day-plan__day">' + escapeHtml(day.day) + '</span>';
+                html += '<span class="report-day-plan__title">' + escapeHtml(day.title) + '</span></div>';
+                if (day.tasks && day.tasks.length) {
+                    html += '<ul>';
+                    day.tasks.forEach(function (t) {
+                        html += '<li>' + escapeHtml(t) + '</li>';
+                    });
+                    html += '</ul>';
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+        }
+        if (w.steps && w.steps.length) {
+            html += '<div class="report-week__steps"><h4><i class="fas fa-shoe-prints"></i> Adım adım ne yapmalısınız?</h4>';
+            w.steps.forEach(function (step, idx) {
+                html += '<div class="report-step-card">';
+                html += '<span class="report-step-card__num">' + (idx + 1) + '</span>';
+                html += '<div><strong>' + escapeHtml(step.title) + '</strong>';
+                html += '<p>' + escapeHtml(step.detail) + '</p></div></div>';
+            });
+            html += '</div>';
+        }
+        if (w.successCriteria && w.successCriteria.length) {
+            html += '<div class="report-week__success"><h4><i class="fas fa-flag-checkered"></i> Hafta sonu başarı kriterleri</h4><ul class="report-success-list">';
+            w.successCriteria.forEach(function (c) {
+                html += '<li>' + escapeHtml(c) + '</li>';
+            });
+            html += '</ul></div>';
+        }
+        if ((!w.steps || !w.steps.length) && w.actions && w.actions.length) {
+            html += '<ul class="report-week__legacy">';
+            w.actions.forEach(function (a) {
+                html += '<li>' + escapeHtml(a) + '</li>';
+            });
+            html += '</ul>';
+        }
+        html += '</div></div>';
+        return html;
+    }
+
     function renderGapCards(gaps) {
         var html = '';
         gaps.forEach(function (g) {
@@ -540,17 +609,15 @@
 
         if (d.studyPlan && d.studyPlan.length) {
             html += sectionOpen('report-plan', 'report-card--plan');
-            html += sectionHead('report-section-head__icon--violet', 'fa-calendar-check', 'Önerilen çalışma planı', 'Haftalık odak ve yapılacaklar');
+            html += sectionHead(
+                'report-section-head__icon--violet',
+                'fa-calendar-check',
+                'Önerilen çalışma planı',
+                'Ne yapacağınız, nasıl çalışacağınız ve hafta sonu nasıl ölçeceğiniz'
+            );
             html += '<div class="report-timeline">';
             d.studyPlan.forEach(function (w) {
-                html += '<div class="report-week">';
-                html += '<div class="report-week__badge">H' + w.week + '</div>';
-                html += '<div class="report-week__body">';
-                html += '<h3>' + escapeHtml(w.focus) + '</h3><ul>';
-                (w.actions || []).forEach(function (a) {
-                    html += '<li>' + escapeHtml(a) + '</li>';
-                });
-                html += '</ul></div></div>';
+                html += renderStudyPlanWeek(w);
             });
             html += '</div></section>';
         }

@@ -389,6 +389,312 @@ function buildTheoryPracticeNarrative(theory, practice, mlProfile) {
     return { theory, practice, gap, explanation };
 }
 
+function buildStudyWeekForWeak(m, week) {
+    const pct = Number(m.percentComplete) || 0;
+    const target = Math.min(100, pct + 25);
+    const hasQuiz = (m.quizzes || []).length > 0;
+    const hasSim = (m.simulations || []).length > 0;
+    const lowQuiz = m.quizAverage != null && m.quizAverage < 60;
+    const lowSim = m.simulationBest != null && m.simulationBest < 60;
+    const quizFocus = !hasQuiz || lowQuiz;
+    const simFocus = hasSim && lowSim;
+
+    const steps = [
+        {
+            title: 'Durum tespiti (30 dk)',
+            detail:
+                `Modül sayfasında ilerlemeniz %${pct}. «${m.title}» için rapordaki eksikler listesini okuyun; ` +
+                'hangi quiz veya simülasyonun düşük kaldığını işaretleyin. Bu haftanın hedefi: ölçülebilir en az bir iyileşme.',
+        },
+        {
+            title: 'Teorik pekiştirme (2 oturum × 45 dk)',
+            detail: quizFocus
+                ? hasQuiz
+                    ? `Quiz ortalamanız %${m.quizAverage}. Yanlış soruların altındaki açıklamaları okuyun; ` +
+                      'aynı testi 48 saat sonra tekrar çözün. Her dersten sonra 3 cümlelik özet yazın (pasif izleme yerine aktif not).'
+                    : 'Henüz quiz kaydı yok. Modülde tamamladığınız her bölümün değerlendirme testini çözüp «Testi Gönder» ile kaydedin; aksi halde rapor teorik tarafı boş kalır.'
+                : 'Teori tarafı kabul edilebilir; bu hafta süreyi zayıf kalan pratik adımlara ayırın.',
+        },
+        {
+            title: 'Uygulamalı çalışma (2 oturum × 50 dk)',
+            detail: simFocus
+                ? `En iyi simülasyon skorunuz %${m.simulationBest}. Senaryoyu ipucusuz ikinci kez oynayın; ` +
+                  'her hatalı adımı not alıp doğru sırayı kendi kelimelerinizle yazın.'
+                : hasSim
+                  ? 'Mevcut simülasyonu bir kez daha oynayın; bu sefer acele etmeden kontrol listesi gibi ilerleyin.'
+                  : 'Modüle bağlı en az bir simülasyonu tamamlayın. Önce ilgili ders özetini 10 dk okuyun, sonra senaryoya geçin.',
+        },
+        {
+            title: 'Hafta sonu kontrolü (45 dk)',
+            detail:
+                `Modül ilerlemesini %${target} hedefine yaklaştırın. Quiz veya simülasyon tekrarı yapın; ` +
+                'raporu yenileyerek skorun güncellendiğini doğrulayın.',
+        },
+    ];
+
+    const dailyPlan = [
+        {
+            day: 'Pazartesi–Salı',
+            title: 'Teori ve eksik kavramlar',
+            tasks: quizFocus
+                ? [
+                      'Modül derslerinde zayıf kaldığınız bölümleri yeniden okuyun.',
+                      hasQuiz ? 'Son quizdeki yanlışları konu başlığına göre listeleyin.' : 'İlk değerlendirme testini çözüp gönderin.',
+                      'Her oturum sonunda 3 madde «ne öğrendim?» yazın.',
+                  ]
+                : ['İlerleme için kaldığınız dersleri tamamlayın.', 'Kısa not özeti çıkarın.'],
+        },
+        {
+            day: 'Çarşamba–Perşembe',
+            title: 'Pratik ve simülasyon',
+            tasks: [
+                simFocus ? 'Simülasyonu ipucusuz tekrarlayın.' : 'İlk simülasyonu tamamlayın veya skoru yükseltin.',
+                'Hatalı adımları tek tek not edin.',
+                'Gerekirse modül forumu / materyalinde örnek çözüme bakın (kopyalamadan).',
+            ],
+        },
+        {
+            day: 'Cuma–Cumartesi',
+            title: 'Ölçüm ve tekrar',
+            tasks: [
+                `İlerleme hedefi: %${pct} → %${target}.`,
+                hasQuiz ? 'Quiz tekrarı veya yeni bölüm testi.' : 'Eksik testleri tamamlayıp gönderin.',
+                'Raporu yenileyip skor değişimini kontrol edin.',
+            ],
+        },
+    ];
+
+    return {
+        week,
+        focus: m.title,
+        moduleId: m.moduleId,
+        goal: `«${m.title}» modülünde zayıf alanları kapatıp ilerlemeyi %${target} seviyesine çıkarmak.`,
+        weeklyHours: '5–6 saat',
+        rhythm: 'Haftada 5 oturum: 45–50 dk çalışma + 10 dk ara + 5 dk özet',
+        howToStudy:
+            'Pomodoro (45 dk odak + 10 dk mola) kullanın. Pasif video izlemek yerine: oku → not al → quiz/simülasyon → hatayı düzelt → tekrar. ' +
+            'Aynı gün içinde hem teori hem pratik karıştırmayın; önce teori günleri, sonra uygulama günleri daha verimli.',
+        dailyPlan,
+        steps,
+        successCriteria: [
+            `Modül ilerlemesi en az %${target} veya +15 puan.`,
+            hasQuiz ? 'Quiz ortalamasında en az 5 puan iyileşme veya tekrar test gönderimi.' : 'En az 1 quiz sonucu rapora yansıdı.',
+            hasSim ? 'Simülasyonda ipucusuz tur veya daha yüksek skor.' : 'En az 1 simülasyon tamamlandı.',
+        ],
+    };
+}
+
+function buildStudyWeekForUnstarted(u, week) {
+    const dailyPlan = [
+        {
+            day: 'Gün 1',
+            title: 'Keşif ve plan',
+            tasks: [
+                'Eğitim modülleri sayfasından modülü açın; içindekiler / ders listesini baştan sona tarayın.',
+                'Haftalık hedefi yazın: «Bu hafta giriş + ilk test».',
+                'Takvimde 5×45 dk blok ayırın (aynı saatler tekrar ederse alışkanlık oluşur).',
+            ],
+        },
+        {
+            day: 'Gün 2–3',
+            title: 'Temel içerik',
+            tasks: [
+                'Giriş ve ilk 2–3 dersi sırayla tamamlayın (atlama yapmayın).',
+                'Her dersten sonra 3 cümle özet + 1 «neden önemli?» cümlesi yazın.',
+                'Anlamadığınız terimleri modül içi arama veya not defterine ekleyin.',
+            ],
+        },
+        {
+            day: 'Gün 4',
+            title: 'İlk ölçüm',
+            tasks: [
+                'İlk değerlendirme / mini quiz’i çözün ve mutlaka «Testi Gönder» ile kaydedin.',
+                'Yanlışları konu başlığına göre listeleyin; ilgili dersi tekrar okuyun.',
+            ],
+        },
+        {
+            day: 'Gün 5',
+            title: 'Pratik ve kayıt',
+            tasks: [
+                'Modülle ilişkili bir simülasyonu başlatın (varsa giriş seviyesinden).',
+                'Simülasyon bitince raporu yenileyin; ilerleme ve skorların göründüğünü kontrol edin.',
+            ],
+        },
+    ];
+
+    const steps = [
+        {
+            title: 'Modüle nasıl başlanır?',
+            detail:
+                `«${u.title}» sayfasını açın. Önce «Giriş» veya «Tanıtım» derslerini bitirin; ` +
+                'platform ilerlemenizi ancak ders tamamlama + test/simülasyon kaydıyla ölçer.',
+        },
+        {
+            title: 'Nasıl çalışmalısınız?',
+            detail:
+                'Oturum yapısı: (1) 5 dk önceki özet, (2) 35 dk ders/okuma, (3) 10 dk not, (4) 15 dk quiz veya mini alıştırma. ' +
+                'Günde en fazla 1 yeni ders + 1 tekrar; bilgi yüklemesi yapmayın.',
+        },
+        {
+            title: 'Ne zaman test / simülasyon?',
+            detail:
+                'Her 2–3 dersten sonra ara quiz çözün. Simülasyonu en az bir ders bitirdikten sonra başlatın; ' +
+                'boş bilgiyle simülasyon verimsizdir.',
+        },
+        {
+            title: 'Başarı kriteri',
+            detail:
+                'Hafta sonunda: modülde %10–20 ilerleme, en az 1 quiz kaydı, mümkünse 1 simülasyon denemesi. ' +
+                'Bunlar raporda «başlanmış modül» olarak görünür.',
+        },
+    ];
+
+    return {
+        week,
+        focus: u.title,
+        moduleId: u.moduleId,
+        goal: `«${u.title}» modülüne düzenli giriş yapıp ilk ölçülebilir ilerlemeyi (ders + test) oluşturmak.`,
+        weeklyHours: '4–5 saat',
+        rhythm: '5 gün × 45–50 dk; hafta sonu 30 dk hafif tekrar (isteğe bağlı)',
+        howToStudy:
+            'Yeni modülde amaç «hızlı bitirmek» değil «sisteme kayıt oluşturmak». Küçük adımlar: ders → not → quiz gönder → simülasyon. ' +
+            'Telefon bildirimlerini kapatın; her oturumda tek sekme (modül sayfası).',
+        dailyPlan,
+        steps,
+        successCriteria: [
+            'Modül ilerlemesi en az %10–15.',
+            'En az 1 quiz sonucu veritabanına kaydedildi.',
+            'En az 1 simülasyon denemesi (skor düşük olsa bile tamamlanmış sayılır).',
+        ],
+    };
+}
+
+function buildStudyWeekForInProgress(m, week) {
+    const pct = Number(m.percentComplete) || 0;
+    const target = Math.min(100, pct + 20);
+    const hasQuiz = (m.quizzes || []).length > 0;
+
+    return {
+        week,
+        focus: m.title,
+        moduleId: m.moduleId,
+        goal: `«${m.title}» modülünü yarıda bırakmadan %${target} seviyesine taşımak ve ölçümü güncel tutmak.`,
+        weeklyHours: '4–5 saat',
+        rhythm: '3 yoğun gün (50 dk) + 2 hafif gün (30 dk tekrar)',
+        howToStudy:
+            'Kaldığınız dersten devam edin; geriye dönük tüm modülü baştan okumayın. ' +
+            'Her oturum: önce son quiz yanlışlarına 10 dk, sonra yeni ders, sonra kısa test.',
+        dailyPlan: [
+            {
+                day: 'Gün 1–2',
+                title: 'Devam ve not',
+                tasks: [
+                    `Kaldığınız yerden 2–3 ders tamamlayın (şu an %${pct}).`,
+                    'Her ders için 5 maddelik mini not.',
+                ],
+            },
+            {
+                day: 'Gün 3',
+                title: 'Ara değerlendirme',
+                tasks: [
+                    hasQuiz ? 'Son quiz’i tekrar çözün veya yeni bölüm testini gönderin.' : 'İlk quiz’i tamamlayıp gönderin.',
+                    'Yanlış konuları işaretleyin.',
+                ],
+            },
+            {
+                day: 'Gün 4–5',
+                title: 'Pratik ve kapanış',
+                tasks: [
+                    'Modül simülasyonundan birini tamamlayın veya skoru iyileştirin.',
+                    `İlerlemeyi %${target} hedefine yaklaştırın.`,
+                    'Detaylı raporu yenileyin.',
+                ],
+            },
+        ],
+        steps: [
+            {
+                title: 'Öncelik sırası',
+                detail: 'Önce yarım kalan dersler → sonra eksik quiz → en son simülasyon. Quiz gönderilmeden simülasyona ağırlık vermeyin.',
+            },
+            {
+                title: 'Çalışma disiplini',
+                detail: 'Aynı modülde günde en fazla 2 yeni ders; 3. oturumu tekrar ve quiz’e ayırın. Yorgunken yeni konu açmayın.',
+            },
+            {
+                title: 'Hafta sonu',
+                detail: 'Cumartesi 30 dk: haftanın notlarını gözden geçirin; Pazar dinlenme veya hafif okuma.',
+            },
+        ],
+        successCriteria: [
+            `İlerleme ≥ %${target}.`,
+            hasQuiz ? 'Yeni veya tekrar quiz kaydı.' : 'İlk quiz gönderildi.',
+            'En az bir simülasyon oturumu tamamlandı.',
+        ],
+    };
+}
+
+function buildDetailedStudyPlan({ weakModules, modules, unstartedModules, scores }) {
+    const plan = [];
+    let week = 1;
+
+    for (const m of weakModules.slice(0, 3)) {
+        plan.push(buildStudyWeekForWeak(m, week));
+        week += 1;
+    }
+
+    if (plan.length < 3) {
+        const inProgress = modules
+            .filter((m) => m.status === 'in_progress' && (m.percentComplete || 0) < 85)
+            .sort((a, b) => (a.percentComplete || 0) - (b.percentComplete || 0));
+        for (const m of inProgress) {
+            if (plan.length >= 3) break;
+            if (plan.some((p) => p.moduleId === m.moduleId)) continue;
+            plan.push(buildStudyWeekForInProgress(m, week));
+            week += 1;
+        }
+    }
+
+    if (plan.length < 4 && unstartedModules.length > 0) {
+        const u = unstartedModules[0];
+        if (!plan.some((p) => p.moduleId === u.moduleId)) {
+            plan.push(buildStudyWeekForUnstarted(u, week));
+        }
+    }
+
+    if (plan.length === 0) {
+        plan.push({
+            week: 1,
+            focus: 'Genel platform rutini',
+            goal: 'Düzenli çalışma alışkanlığı oluşturmak ve ilk ölçülebilir kayıtları üretmek.',
+            weeklyHours: '3–4 saat',
+            rhythm: 'Haftada 4×40 dk',
+            howToStudy:
+                'Henüz analiz edilecek modül aktiviteniz sınırlı. Bir modül seçin; her oturumda ders + test gönderimi yapın. ' +
+                'Simülasyonu ikinci haftaya bırakmayın — teoriden hemen sonra pratik en kalıcı öğrenmedir.',
+            dailyPlan: [
+                {
+                    day: 'Hafta içi',
+                    title: 'Başlangıç',
+                    tasks: [
+                        'Modüller sayfasından ilgi alanınıza uygun bir modül açın.',
+                        'İlk 2 ders + 1 quiz gönderin.',
+                        'Raporu yenileyerek verinin işlendiğini doğrulayın.',
+                    ],
+                },
+            ],
+            steps: [
+                {
+                    title: 'İlk adım',
+                    detail: 'Kariyer testi ve Big Five tamamsa, haftalık zamanın %70’ini modül + quiz + simülasyona ayırın.',
+                },
+            ],
+            successCriteria: ['En az 1 modülde ilerleme ve quiz veya simülasyon kaydı.'],
+        });
+    }
+
+    return plan;
+}
+
 async function loadModulesCatalog(pool) {
     try {
         const sch = await pool.query(
@@ -582,32 +888,12 @@ function buildDetailedEvaluationReport(ctx) {
 
     const weakModules = modules.filter((m) => m.status === 'weak');
 
-    const studyPlan = [];
-    let week = 1;
-    for (const m of weakModules.slice(0, 3)) {
-        studyPlan.push({
-            week,
-            focus: m.title,
-            actions: [
-                `Modül ilerlemesi: %${m.percentComplete} → hedef %${Math.min(100, m.percentComplete + 25)}`,
-                m.quizzes.length
-                    ? 'Mevcut quizleri tekrar çözün; yanlış soruların konu başlıklarını listeleyin.'
-                    : 'İlk değerlendirme testini tamamlayıp gönderin.',
-                m.simulations.length
-                    ? 'Son simülasyonu ipucusuz tekrar oynayın.'
-                    : 'Modüle bağlı en az bir simülasyon tamamlayın.',
-            ],
-        });
-        week += 1;
-    }
-    if (unstartedModules.length > 0 && studyPlan.length < 4) {
-        const u = unstartedModules[0];
-        studyPlan.push({
-            week,
-            focus: u.title,
-            actions: ['Modüle giriş derslerini izleyin/okuyun.', 'İlk quiz veya mini testi tamamlayın.'],
-        });
-    }
+    const studyPlan = buildDetailedStudyPlan({
+        weakModules,
+        modules,
+        unstartedModules,
+        scores,
+    });
 
     const userName = [user.first_name, user.last_name].filter(Boolean).join(' ') || user.email || 'Öğrenci';
     const theory = scores.quizAverage || 0;
@@ -662,6 +948,7 @@ function buildDetailedEvaluationReport(ctx) {
 module.exports = {
     buildDetailedEvaluationReport,
     buildDetailedPersonalizedAdvice,
+    buildDetailedStudyPlan,
     loadModulesCatalog,
     humanizeSlug,
     slugModuleAnchor,
