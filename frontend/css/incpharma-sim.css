@@ -773,9 +773,308 @@
 
 @media print {
   .ip-top,
-  .ip-finale-actions {
-    display: none;
+  .ip-finale-actions,
+  .ip-fr-dock,
+  #ipLiveReportWrap,
+  .ip-fr-final__actions {
+    display: none !important;
   }
+
+  .ip-fr-doc {
+    box-shadow: none;
+    border: none;
+  }
+}
+
+/* Canlı saha raporu — dock */
+#ipLiveReportWrap {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  max-width: min(360px, calc(100vw - 2rem));
+}
+
+.ip-fr-dock {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.ip-fr-dock__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1e293b, #312e81);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 32px -12px rgb(15 23 42 / 0.55);
+}
+
+.ip-fr-dock__toggle em {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 0.65rem;
+  opacity: 0.85;
+  background: rgb(255 255 255 / 0.15);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+}
+
+.ip-fr-dock--flash .ip-fr-dock__toggle {
+  animation: ip-fr-flash 0.6s ease;
+}
+
+@keyframes ip-fr-flash {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 4px rgb(59 130 246 / 0.45);
+  }
+}
+
+.ip-fr-dock__panel {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 50px -20px rgb(15 23 42 / 0.35);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.ip-fr-dock__latest-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.ip-fr-dock__more {
+  margin: 0.5rem 0 0;
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+/* Rapor belgesi */
+.ip-fr-entry {
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.ip-fr-entry--new {
+  animation: ip-fr-entry-in 0.45s ease;
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+@keyframes ip-fr-entry-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ip-fr-entry__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.62rem;
+  color: #64748b;
+}
+
+.ip-fr-entry__section {
+  font-weight: 700;
+  color: #4338ca;
+}
+
+.ip-fr-entry__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ip-fr-entry__lines {
+  margin: 0;
+  padding-left: 1rem;
+  line-height: 1.45;
+  color: #334155;
+}
+
+.ip-fr-entry__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+
+.ip-fr-tag {
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 0.12rem 0.4rem;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.ip-fr-entry__risk {
+  margin: 0.4rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #be123c;
+}
+
+.ip-fr-final__lead {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-size: 0.88rem;
+  color: #1e40af;
+}
+
+.ip-fr-doc {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 16px 48px -24px rgb(15 23 42 / 0.2);
+}
+
+.ip-fr-doc__letterhead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem;
+  background: linear-gradient(135deg, #1e3a8a, #312e81);
+  color: #fff;
+}
+
+.ip-fr-doc__logo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.ip-fr-doc__meta h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.ip-fr-doc__meta dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.75rem;
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.ip-fr-doc__meta dt {
+  opacity: 0.75;
+  font-weight: 600;
+}
+
+.ip-fr-doc__meta dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ip-fr-doc__exec,
+.ip-fr-doc__summary,
+.ip-fr-doc__body,
+.ip-fr-doc__fatal {
+  padding: 1rem 1.35rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.ip-fr-doc__exec h3,
+.ip-fr-doc__summary h3,
+.ip-fr-doc__body h3,
+.ip-fr-doc__fatal h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #475569;
+}
+
+.ip-fr-doc__exec p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.ip-fr-summary-grid {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ip-fr-summary-item {
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.45rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.ip-fr-summary-item strong {
+  display: block;
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-bottom: 0.15rem;
+}
+
+.ip-fr-summary-item--ok {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.ip-fr-summary-item--warn {
+  background: #fff1f2;
+  border-color: #fecaca;
+}
+
+.ip-fr-doc__body .ip-fr-entry {
+  background: #fff;
+}
+
+.ip-fr-doc__foot {
+  padding: 0.75rem 1.35rem;
+  background: #f8fafc;
+  font-size: 0.65rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.ip-fr-final__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  justify-content: center;
 }
 
 @media (max-width: 640px) {

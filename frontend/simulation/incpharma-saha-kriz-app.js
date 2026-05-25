@@ -4,6 +4,7 @@
   var CFG = window.INCPHARMA_SIM;
   var UI = window.INCPHARMA_UI;
   var VIS = window.INCPHARMA_VISUALS;
+  var REPORT = window.INCPHARMA_REPORT;
   if (!CFG) return;
 
   var state = null;
@@ -30,7 +31,29 @@
       fatalErrors: [],
       history: [],
       reportAnswers: {},
+      fieldReport: REPORT ? REPORT.createEmpty() : { entries: [] },
+      lastReportEntryId: null,
+      openingLogged: false,
     };
+  }
+
+  function renderLiveReportDock() {
+    if (!REPORT || state.sceneId === 'intro' || state.sceneId === 'finale') {
+      var gone = document.getElementById('ipLiveReportWrap');
+      if (gone) gone.remove();
+      return;
+    }
+    if (!state.fieldReport.entries.length) return;
+
+    var wrap = document.getElementById('ipLiveReportWrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'ipLiveReportWrap';
+      document.body.appendChild(wrap);
+    }
+    wrap.innerHTML = REPORT.renderDock(state.fieldReport, state.lastReportEntryId);
+    state.lastReportEntryId = null;
+    REPORT.bindDock();
   }
 
   function clamp(n) {
@@ -275,29 +298,19 @@
     }
 
     if (scene.type === 'report') {
-      html += '<div class="ip-saha-form-wrap">';
-      html += '<div class="ip-saha-form__bar"><i class="fas fa-tablet-screen-button"></i> INCPHARMA Saha · Gün sonu raporu</div>';
-      html += '<form class="ip-report ip-saha-form" id="ipReportForm">';
-      scene.fields.forEach(function (field) {
-        html += '<div class="ip-saha-field"><h4>' + esc(field.q) + '</h4><div class="ip-saha-field__opts">';
-        field.options.forEach(function (opt) {
-          html +=
-            '<label class="ip-saha-opt"><input type="radio" name="' +
-            esc(field.id) +
-            '" value="' +
-            esc(opt.id) +
-            '" required /><span>' +
-            esc(opt.label) +
-            '</span></label>';
-        });
-        html += '</div></div>';
-      });
-      html +=
-        '<button type="submit" class="ip-scene-action__btn ip-scene-action__btn--submit">Raporu gönder</button></form></div>';
+      html += REPORT ? REPORT.renderFinalScene(state.fieldReport, state) : '<p>Rapor modülü yüklenemedi.</p>';
       html += '</div></article>';
       root.innerHTML = html;
-      $('ipReportForm').addEventListener('submit', onReportSubmit);
+      var confirmBtn = $('ipReportConfirm');
+      if (confirmBtn) confirmBtn.addEventListener('click', onReportConfirm);
+      var printBtn = $('ipPrintReport');
+      if (printBtn) {
+        printBtn.addEventListener('click', function () {
+          window.print();
+        });
+      }
       renderProgress();
+      renderLiveReportDock();
       return;
     }
 
@@ -315,35 +328,31 @@
     var cont = $('ipContinue');
     if (cont && scene.next) {
       cont.addEventListener('click', function () {
+        if (state.sceneId === 'opening' && REPORT && !state.openingLogged) {
+          REPORT.appendOpening(state.fieldReport);
+          state.openingLogged = true;
+          state.lastReportEntryId = state.fieldReport.entries[0]
+            ? state.fieldReport.entries[state.fieldReport.entries.length - 1].id
+            : null;
+        }
         goNext(scene.next);
       });
     }
     renderProgress();
+    renderLiveReportDock();
   }
 
-  function onReportSubmit(e) {
-    e.preventDefault();
+  function onReportConfirm() {
     var scene = getScene('report');
-    var correct = 0;
-    var total = scene.fields.length;
-    scene.fields.forEach(function (field) {
-      var picked = (e.target.elements[field.id] && e.target.elements[field.id].value) || '';
-      var ok = field.options.find(function (o) {
-        return o.id === picked && o.correct;
-      });
-      state.reportAnswers[field.id] = picked;
-      if (ok) correct++;
-    });
-    var ratio = correct / total;
+    var ratio = REPORT ? REPORT.assessReportingScore(state) : 0.75;
     applyEffects({
-      reportingDiscipline: ratio >= 1 ? 12 : ratio >= 0.75 ? 6 : -8,
+      reportingDiscipline: ratio >= 1 ? 12 : ratio >= 0.75 ? 6 : ratio >= 0.5 ? 0 : -8,
       escalationDiscipline: ratio >= 0.75 ? 4 : -4,
       ethicalIntegrity: ratio >= 0.75 ? 4 : -6,
       decisionQuality: ratio >= 0.75 ? 4 : -4,
     });
-    if (ratio < 0.75) {
-      state.flags.reportWeak = true;
-    }
+    if (ratio < 0.75) state.flags.reportWeak = true;
+    state.flags.reportSubmitted = true;
     goNext(scene.next);
   }
 
@@ -354,6 +363,7 @@
     });
     if (!ch) return;
     state.history.push({ scene: state.sceneId, choice: choiceId });
+    if (REPORT) REPORT.appendFromChoice(state, state.sceneId, scene, ch);
     applyEffects(ch.effects);
     goNext(ch.next);
   }

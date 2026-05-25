@@ -490,45 +490,10 @@ window.INCPHARMA_SIM = {
     report: {
       title: 'Gün sonu saha raporu',
       type: 'report',
-      fields: [
-        {
-          id: 'r1',
-          q: 'Ciddi reaksiyon şüphesi hangi süreç altında raporlanmalı?',
-          options: [
-            { id: 'a', label: 'Farmakovijilans bildirimi', correct: true },
-            { id: 'b', label: 'Rutin ürün tanıtım notu' },
-            { id: 'c', label: 'Satış fırsatı takibi' },
-            { id: 'd', label: 'Rakip ürün karşılaştırma notu' },
-          ],
-        },
-        {
-          id: 'r2',
-          q: 'Partikül/görsel şüphe hangi süreçte izlenmeli?',
-          options: [
-            { id: 'a', label: 'Kalite bildirimi / ürün şikâyeti', correct: true },
-            { id: 'b', label: 'Doktor tercih notu' },
-            { id: 'c', label: 'Pazarlama geri bildirimi' },
-          ],
-        },
-        {
-          id: 'r3',
-          q: 'Off-label bilgi talebi nasıl raporlanmalı?',
-          options: [
-            { id: 'a', label: 'Resmi medikal bilgi talebi olarak yönlendirilmeli', correct: true },
-            { id: 'b', label: 'Temsilci yayın göndermeli' },
-            { id: 'c', label: 'Sözlü açıklanmalı — rapor gerekmez' },
-          ],
-        },
-        {
-          id: 'r4',
-          q: 'Levent Bey’in “moral/kolaylık” talebi nasıl ele alınmalı?',
-          options: [
-            { id: 'a', label: 'Etik dışı beklenti — net sınır; uyumlu bilgilendirme resmi kanaldan', correct: true },
-            { id: 'b', label: 'Bölge müdürüne sorulup destek aranmalı' },
-            { id: 'c', label: 'Hastane stratejik — küçük destek planlanmalı' },
-          ],
-        },
-      ],
+      time: '17:05',
+      location: 'INCPHARMA Saha uygulaması',
+      narrative:
+        'Gün boyunca verdiğiniz her yanıt otomatik olarak saha raporuna işlendi. Aşağıdaki belgeyi kontrol edin; onayladığınızda Murat Bey ile görüşme aşamasına geçilir.',
       next: 'evening_return',
     },
 
