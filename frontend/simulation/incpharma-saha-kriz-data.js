@@ -52,15 +52,21 @@ window.INCPHARMA_SIM = {
         { time: '14.00', label: 'Servis ekibi bilgilendirme (ihtimal)' },
         { time: '17.30', label: 'Murat Bey — gün sonu saha raporu' },
       ],
-      alert: {
+      phoneVisual: {
+        mode: 'field-app',
+        ring: true,
+        vibrate: true,
+        critical: true,
+        time: '08:42',
+        app: 'INCPHARMA Saha',
         title: 'Acil Saha Bildirimi',
+        body: 'OncoRelief IV — ciddi reaksiyon / anafilaktik reaksiyon şüphesi',
         lines: [
-          'Hastane: Atlas Üniversitesi Hastanesi',
-          'Bölüm: Onkoloji Servisi',
-          'Ürün: OncoRelief IV · Lot: ORV-24-118A',
-          'Bildirim: Uygulama sonrası ciddi reaksiyon / anafilaktik reaksiyon şüphesi',
-          'Durum: Servis ekibi ürünle ilgili açıklama bekliyor',
+          'Atlas Üniversitesi Hastanesi · Onkoloji',
+          'Lot: ORV-24-118A',
+          'Servis ekibi açıklama bekliyor',
         ],
+        caption: 'Kapıya yürürken telefon titredi — sıradan gün bitti.',
       },
       thought:
         'Bugün ürün anlatmaya gelmiştin. Ama şimdi konu ürün tanıtımı değil — hasta güvenliği, bildirim süreci ve hastane güveni aynı anda masada.',
@@ -350,6 +356,7 @@ window.INCPHARMA_SIM = {
     whatsapp: {
       title: 'WhatsApp tuzağı',
       type: 'phone',
+      time: '11:24',
       choices: [
         {
           id: 'wa_official',
@@ -419,7 +426,8 @@ window.INCPHARMA_SIM = {
       title: 'Gün içi — Murat Bey mesajı',
       type: 'sms',
       time: '16:10',
-      smsFrom: 'Murat Bey · Bölge Müdürü',
+      smsFrom: 'Murat Bey',
+      smsRole: 'Bölge Müdürü · INCPHARMA',
       smsBody:
         'Atlas ziyareti nasıl gidiyor? Hastane stratejik — ama stratejik diye uyum sınırını esnetme. Gün sonu raporunda olay-risk-aksiyon net olsun.',
       narrative: 'Saha uygulamasından kısa mesaj. Ticari baskı ile etik sınır aynı anda.',
@@ -760,13 +768,18 @@ window.INCPHARMA_SIM.buildLotScene = function (state) {
 window.INCPHARMA_SIM.buildWhatsappScene = function (state, base) {
   var msg =
     state.flags.offLabelRisk
-      ? 'Dr. Hakan: «Az önceki off-label konu için yayınları gönderebilir misiniz? Konsey öncesi göz atmak isterim.»'
+      ? 'Az önce konuştuğumuz off-label konu için yayınları gönderebilir misiniz? Konsey öncesi göz atmak isterim.'
       : state.flags.offLabelClean
-        ? 'Dr. Hakan: «Medikal bilgi talebini nasıl açıyoruz? Asistanıma bilgi vereyim.»'
-        : 'Dr. Hakan: «Off-label konusu için resmi kanaldan yanıt bekliyorum.»';
+        ? 'Medikal bilgi talebini nasıl açıyoruz? Asistanıma bilgi vereyim.'
+        : 'Off-label konusu için resmi kanaldan yanıt bekliyorum.';
+  var prior =
+    state.flags.offLabelRisk
+      ? 'Tamam, gönderin. Klinik karar sizin — ben bakarım.'
+      : null;
   return Object.assign({}, base, {
     phoneMessage: msg,
-    narrative: 'Koridorda telefon titrer. Kişisel kanal baskısı.',
+    priorWaMessage: prior,
+    narrative: 'Koridorda telefon titrer. Ekranda WhatsApp açılıyor — kişisel kanal baskısı.',
   });
 };
 

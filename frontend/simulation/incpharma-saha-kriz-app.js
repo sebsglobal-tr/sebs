@@ -2,6 +2,7 @@
   'use strict';
 
   var CFG = window.INCPHARMA_SIM;
+  var UI = window.INCPHARMA_UI;
   if (!CFG) return;
 
   var state = null;
@@ -194,17 +195,30 @@
     }
 
     var root = $('ipRoot');
-    var html = '<article class="ip-scene">';
+    var phoneOpts = UI ? UI.phoneFromScene(scene, state.sceneId) : null;
+    var hasPhoneHero = !!(scene.phoneVisual || phoneOpts);
+    var html = '<article class="ip-scene' + (hasPhoneHero ? ' ip-scene--with-phone' : '') + '">';
 
-    if (scene.time) {
+    if (UI) {
+      html += UI.renderLocationBanner(state.sceneId, scene.location);
+    }
+
+    if (scene.time && !hasPhoneHero) {
       html += '<p class="ip-meta"><i class="fas fa-clock"></i> ' + esc(scene.time);
       if (scene.location) html += ' · ' + esc(scene.location);
       html += '</p>';
-    } else if (scene.location) {
-      html += '<p class="ip-meta"><i class="fas fa-location-dot"></i> ' + esc(scene.location) + '</p>';
     }
 
     html += '<h2 class="ip-scene-title">' + esc(scene.title) + '</h2>';
+
+    if (hasPhoneHero && UI) {
+      html += '<div class="ip-scene-grid">';
+      html +=
+        '<div class="ip-scene-grid__phone">' +
+        UI.renderPhone(scene.phoneVisual || phoneOpts) +
+        '</div>';
+      html += '<div class="ip-scene-grid__body">';
+    }
 
     if (scene.transition) {
       html +=
@@ -215,14 +229,6 @@
       html += '<p class="ip-thought">' + esc(scene.thought) + '</p>';
     }
 
-    if (scene.alert) {
-      html += '<div class="ip-alert"><strong>' + esc(scene.alert.title) + '</strong><ul>';
-      scene.alert.lines.forEach(function (ln) {
-        html += '<li>' + esc(ln) + '</li>';
-      });
-      html += '</ul></div>';
-    }
-
     if (scene.agenda && scene.agenda.length) {
       html += '<div class="ip-agenda"><h4>Günün programı</h4><ul>';
       scene.agenda.forEach(function (item) {
@@ -231,25 +237,20 @@
       html += '</ul></div>';
     }
 
-    if (scene.type === 'sms') {
-      html += '<div class="ip-sms">';
-      html += '<div class="ip-sms__from">' + esc(scene.smsFrom || 'Mesaj') + '</div>';
-      html += '<div class="ip-sms__body">' + esc(scene.smsBody || '') + '</div>';
-      html += '</div>';
-    }
-
     if (scene.narrative) {
       html += '<p class="ip-narrative">' + esc(scene.narrative) + '</p>';
     }
 
     if (scene.productNote) {
       html +=
-        '<div class="ip-product-note"><h4>Ürün bilgi notu</h4><p>' +
+        '<div class="ip-product-note"><h4><i class="fas fa-vial"></i> Ürün bilgi notu</h4><p>' +
         esc(scene.productNote) +
         '</p></div>';
     }
 
-    if (scene.dialogue) {
+    if (scene.dialogue && UI) {
+      html += UI.renderDialogueList(scene.dialogue);
+    } else if (scene.dialogue) {
       scene.dialogue.forEach(function (d) {
         html +=
           '<div class="ip-dialogue"><span class="ip-dialogue__who">' +
@@ -260,11 +261,8 @@
       });
     }
 
-    if (scene.type === 'phone') {
-      html += '<div class="ip-phone">';
-      html += '<div class="ip-phone__bar"><i class="fab fa-whatsapp"></i> WhatsApp</div>';
-      html += '<div class="ip-phone__msg">' + esc(scene.phoneMessage || 'Yeni mesaj') + '</div>';
-      html += '</div>';
+    if (hasPhoneHero && UI) {
+      html += '</div></div>';
     }
 
     if (scene.type === 'report') {
