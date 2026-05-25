@@ -143,7 +143,20 @@
     });
   }
 
+  function renderContinue(scene) {
+    var label = scene.continueLabel || 'Devam et';
+    return (
+      '<div class="ip-continue-wrap">' +
+      '<button type="button" class="ip-btn ip-btn--primary" id="ipContinue">' +
+      esc(label) +
+      '</button></div>'
+    );
+  }
+
   function renderChoices(scene) {
+    if (!scene.choices || !scene.choices.length) {
+      return scene.next ? renderContinue(scene) : '';
+    }
     var html = '<div class="ip-choices">';
     scene.choices.forEach(function (ch, i) {
       if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
@@ -265,6 +278,12 @@
         pickChoice(btn.getAttribute('data-choice'));
       });
     });
+    var cont = $('ipContinue');
+    if (cont && scene.next) {
+      cont.addEventListener('click', function () {
+        goNext(scene.next);
+      });
+    }
     renderProgress();
   }
 

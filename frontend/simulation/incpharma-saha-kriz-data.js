@@ -40,6 +40,7 @@ window.INCPHARMA_SIM = {
 
     opening: {
       title: 'Sıradan gün, ani bildirim',
+      continueLabel: 'Onkoloji servisine gir',
       time: '08:42',
       location: 'Atlas Üniversitesi Hastanesi — Otopark',
       narrative:
