@@ -319,14 +319,17 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
 
     await pool.query(
         `INSERT INTO payment_orders (
-            user_id, category, level, price, conversation_id, token, status, package_slug, order_type
-         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, $8)
+            user_id, category, level, price, conversation_id, token, status, package_slug, order_type,
+            payment_page_url, checkout_form_content
+         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, $8, $9, $10)
          ON CONFLICT (conversation_id) DO UPDATE SET
             token = EXCLUDED.token,
             status = 'pending',
             package_slug = EXCLUDED.package_slug,
             price = EXCLUDED.price,
             order_type = EXCLUDED.order_type,
+            payment_page_url = EXCLUDED.payment_page_url,
+            checkout_form_content = EXCLUDED.checkout_form_content,
             updated_at = CURRENT_TIMESTAMP`,
         [
             userId,
@@ -336,20 +339,24 @@ async function createCheckoutSession(pool, req, userId, packageInput) {
             init.conversationId,
             init.token,
             packageSlug || level,
-            orderType
+            orderType,
+            init.paymentPageUrl || null,
+            init.checkoutFormContent || null
         ]
     );
 
     const base = frontendBaseUrl(req);
+    const checkoutPage = `${base}/odeme/iyzico?t=${encodeURIComponent(init.token || '')}`;
     return {
         paymentPageUrl: init.paymentPageUrl,
         checkoutFormContent: init.checkoutFormContent,
+        checkoutToken: init.token,
         conversationId: init.conversationId,
         price: init.price,
         packageSlug: packageSlug || level,
         orderType,
         billingMode: orderType === 'monthly_checkout' ? 'monthly_checkout' : 'checkout',
-        checkoutPage: `${base}/odeme/iyzico`,
+        checkoutPage,
         successRedirect: `${base}/odeme/basarili`,
         failureRedirect: `${base}/odeme/hata`
     };

@@ -1078,7 +1078,19 @@
                             window.location.href = pay.successRedirect;
                             return;
                         }
-                        if (pay.checkoutFormContent || pay.paymentPageUrl) {
+                        if (pay.checkoutFormContent || pay.paymentPageUrl || pay.checkoutToken) {
+                            if (pay.paymentPageUrl) {
+                                window.location.replace(pay.paymentPageUrl);
+                                return;
+                            }
+
+                            const launchUrl =
+                                pay.checkoutPage ||
+                                '/odeme/iyzico' +
+                                    (pay.checkoutToken
+                                        ? '?t=' + encodeURIComponent(pay.checkoutToken)
+                                        : '');
+
                             try {
                                 sessionStorage.setItem(
                                     'sebs_iyzico_checkout',
@@ -1096,12 +1108,9 @@
                                 );
                             } catch (storageErr) {
                                 console.warn('sessionStorage:', storageErr);
-                                if (pay.paymentPageUrl) {
-                                    window.location.replace(pay.paymentPageUrl);
-                                    return;
-                                }
                             }
-                            window.location.href = pay.checkoutPage || '/odeme/iyzico';
+
+                            window.location.replace(launchUrl);
                             return;
                         }
                     }

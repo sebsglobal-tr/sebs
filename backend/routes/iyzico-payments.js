@@ -29,7 +29,7 @@ async function ensurePaymentOrdersTable(pool) {
         await pool.query(sql);
         console.log('✅ payment_orders table created');
     }
-    for (const name of ['016_payment_orders_webhook.sql', '017_payment_orders_uuid_fix.sql', '018_user_subscriptions.sql']) {
+    for (const name of ['016_payment_orders_webhook.sql', '017_payment_orders_uuid_fix.sql', '018_user_subscriptions.sql', '019_payment_orders_checkout_payload.sql']) {
         try {
             const extPath = path.join(__dirname, '..', '..', 'database', 'migrations', name);
             if (fs.existsSync(extPath)) {
@@ -113,6 +113,52 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
     app.post('/api/payments/iyzico/checkout/create', authenticateToken, handleCheckoutCreate);
     /** @deprecated use checkout/create */
     app.post('/api/payments/iyzico/initialize', authenticateToken, handleCheckoutCreate);
+
+    app.get('/api/payments/iyzico/checkout/launch', iyzicoCallbackLimiter, async (req, res) => {
+        try {
+            const token = String(req.query.t || req.query.token || '').trim();
+            if (!token || token.length < 8) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Geçersiz ödeme oturumu.'
+                });
+            }
+
+            const r = await pool.query(
+                `SELECT token, status, payment_page_url, checkout_form_content, conversation_id, created_at
+                 FROM payment_orders
+                 WHERE token = $1
+                   AND status = 'pending'
+                   AND created_at > NOW() - INTERVAL '20 minutes'
+                 LIMIT 1`,
+                [token]
+            );
+
+            if (!r.rows.length) {
+                return res.status(404).json({
+                    success: false,
+                    code: 'CHECKOUT_SESSION_NOT_FOUND',
+                    message: 'Ödeme oturumu bulunamadı veya süresi doldu. Lütfen satın almayı tekrar başlatın.'
+                });
+            }
+
+            const row = r.rows[0];
+            res.json({
+                success: true,
+                data: {
+                    paymentPageUrl: row.payment_page_url || '',
+                    checkoutFormContent: row.checkout_form_content || '',
+                    conversationId: row.conversation_id || ''
+                }
+            });
+        } catch (error) {
+            console.error('checkout launch:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Ödeme oturumu yüklenemedi.'
+            });
+        }
+    });
 
     app.post(
         '/api/payments/iyzico/subscription/create',

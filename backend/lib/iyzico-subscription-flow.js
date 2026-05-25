@@ -397,8 +397,8 @@ async function createSubscriptionSession(pool, req, userId, packageInput) {
     await pool.query(
         `INSERT INTO payment_orders (
             user_id, category, level, price, conversation_id, token, status,
-            package_slug, order_type, pricing_plan_ref
-         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, 'subscription', $8)
+            package_slug, order_type, pricing_plan_ref, payment_page_url, checkout_form_content
+         ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, 'subscription', $8, $9, $10)
          ON CONFLICT (conversation_id) DO UPDATE SET
             token = EXCLUDED.token,
             status = 'pending',
@@ -406,6 +406,8 @@ async function createSubscriptionSession(pool, req, userId, packageInput) {
             price = EXCLUDED.price,
             order_type = 'subscription',
             pricing_plan_ref = EXCLUDED.pricing_plan_ref,
+            payment_page_url = EXCLUDED.payment_page_url,
+            checkout_form_content = EXCLUDED.checkout_form_content,
             updated_at = CURRENT_TIMESTAMP`,
         [
             userId,
@@ -415,19 +417,23 @@ async function createSubscriptionSession(pool, req, userId, packageInput) {
             init.conversationId,
             init.token,
             packageSlug || level,
-            init.pricingPlanReferenceCode
+            init.pricingPlanReferenceCode,
+            init.paymentPageUrl || null,
+            init.checkoutFormContent || null
         ]
     );
 
     const base = frontendBaseUrl(req);
+    const checkoutPage = `${base}/odeme/iyzico?t=${encodeURIComponent(init.token || '')}`;
     return {
         paymentPageUrl: '',
         checkoutFormContent: init.checkoutFormContent,
+        checkoutToken: init.token,
         conversationId: init.conversationId,
         price: expectedPrice,
         packageSlug: packageSlug || level,
         orderType: 'subscription',
-        checkoutPage: `${base}/odeme/iyzico`,
+        checkoutPage,
         successRedirect: `${base}/odeme/basarili`,
         failureRedirect: `${base}/odeme/hata`
     };
