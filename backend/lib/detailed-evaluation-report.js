@@ -543,21 +543,20 @@ function buildDetailedEvaluationReport(ctx) {
             .filter(([, p]) => p.percentComplete > 0 || p.timeSpentMinutes > 0)
             .map(([id]) => id)
     );
-    const unstartedModules = modulesCatalog
+    const unstartedAll = modulesCatalog
         .filter((m) => !startedIds.has(m.id) && !(quizzesByModule.has(m.id) || simsByModule.has(m.id)))
         .map((m) => ({
             moduleId: m.id,
             title: m.title,
-            reason:
-                'Henüz bu modülde kayıtlı ilerleme, quiz veya simülasyon yok. Öğrenme yol haritanızda boşluk oluşturabilir.',
         }));
+    const unstartedModules = unstartedAll.slice(0, 24);
 
-    if (unstartedModules.length > 0) {
+    if (unstartedAll.length > 0) {
         globalGaps.push({
             severity: 'medium',
             type: 'unstarted_modules',
             title: 'Başlanmamış modüller',
-            description: `${unstartedModules.length} modülde henüz ölçülebilir aktivite yok.`,
+            description: `${unstartedAll.length} modülde henüz ölçülebilir aktivite yok.`,
         });
     }
 
@@ -642,7 +641,12 @@ function buildDetailedEvaluationReport(ctx) {
         executiveSummary,
         theoryVsPractice: tvp,
         modules,
-        unstartedModules: unstartedModules.slice(0, 12),
+        unstartedModules,
+        unstartedTotal: unstartedAll.length,
+        unstartedSummary:
+            unstartedAll.length > 0
+                ? `${unstartedAll.length} modülde henüz ölçülebilir aktivite yok. Aşağıdaki liste planlama içindir; önceliğiniz aktif modüllerinizde.`
+                : '',
         globalGaps,
         personalizedAdvice,
         detailedAdvice,
@@ -650,7 +654,7 @@ function buildDetailedEvaluationReport(ctx) {
         stats: {
             moduleCount: modules.length,
             weakCount: weakModules.length,
-            unstartedCount: unstartedModules.length,
+            unstartedCount: unstartedAll.length,
         },
     };
 }

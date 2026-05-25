@@ -31,6 +31,15 @@
         );
     }
 
+    function sectionHead(iconClass, icon, title, subtitle) {
+        var html = '<div class="report-section-head">';
+        html += '<div class="report-section-head__icon ' + iconClass + '"><i class="fas ' + icon + '"></i></div>';
+        html += '<div><h2>' + escapeHtml(title) + '</h2>';
+        if (subtitle) html += '<p class="report-muted">' + escapeHtml(subtitle) + '</p>';
+        html += '</div></div>';
+        return html;
+    }
+
     function statusBadgeClass(status) {
         var map = {
             weak: 'bg-rose-100 text-rose-800 border-rose-200',
@@ -236,10 +245,27 @@
         return 'report-modul-' + String(m.moduleId || '').replace(/[^a-zA-Z0-9_-]/g, '');
     }
 
+    function moduleProgressTone(status) {
+        if (status === 'weak') return 'report-progress--weak';
+        if (status === 'completed' || status === 'strong') return 'report-progress--strong';
+        return 'report-progress--active';
+    }
+
     function renderModuleCard(m) {
-        var html = '<article id="' + escapeHtml(moduleAnchorId(m)) + '" class="report-module scroll-mt-28" data-status="' + escapeHtml(m.status) + '">';
+        var pct = Math.min(100, Math.max(0, Number(m.percentComplete) || 0));
+        var html =
+            '<article id="' +
+            escapeHtml(moduleAnchorId(m)) +
+            '" class="report-module scroll-mt-28" data-status="' +
+            escapeHtml(m.status) +
+            '">';
+        html += '<div class="report-module__accent" aria-hidden="true"></div>';
+        html += '<div class="report-module__inner">';
         html += '<header class="report-module__head">';
+        html += '<div class="report-module__title-wrap">';
+        html += '<span class="report-module__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>';
         html += '<h3>' + escapeHtml(m.title) + '</h3>';
+        html += '</div>';
         html +=
             '<span class="report-badge ' +
             statusBadgeClass(m.status) +
@@ -247,12 +273,26 @@
             escapeHtml(m.statusLabel) +
             '</span>';
         html += '</header>';
-        html += '<ul class="report-module__meta">';
-        html += '<li>İlerleme: <strong>%' + escapeHtml(String(m.percentComplete || 0)) + '</strong></li>';
-        if (m.timeSpentMinutes) html += '<li>Süre: <strong>' + Math.round(m.timeSpentMinutes) + ' dk</strong></li>';
-        if (m.quizAverage != null) html += '<li>Quiz ort.: <strong>%' + m.quizAverage + '</strong></li>';
-        if (m.simulationBest != null) html += '<li>En iyi sim.: <strong>%' + m.simulationBest + '</strong></li>';
-        html += '</ul>';
+        html += '<div class="report-module__progress">';
+        html += '<div class="report-module__progress-label"><span>İlerleme</span><strong>%' + pct + '</strong></div>';
+        html +=
+            '<div class="report-progress-track"><div class="report-progress-fill ' +
+            moduleProgressTone(m.status) +
+            '" style="width:' +
+            pct +
+            '%"></div></div>';
+        html += '</div>';
+        html += '<div class="report-chip-row">';
+        if (m.timeSpentMinutes) {
+            html += '<span class="report-chip"><i class="fas fa-clock"></i> ' + Math.round(m.timeSpentMinutes) + ' dk</span>';
+        }
+        if (m.quizAverage != null) {
+            html += '<span class="report-chip"><i class="fas fa-clipboard-check"></i> Quiz %' + m.quizAverage + '</span>';
+        }
+        if (m.simulationBest != null) {
+            html += '<span class="report-chip"><i class="fas fa-gamepad"></i> Sim. %' + m.simulationBest + '</span>';
+        }
+        html += '</div>';
 
         if (m.issues && m.issues.length) {
             html += '<div class="report-block report-block--warn"><h4><i class="fas fa-exclamation-triangle"></i> Tespit edilen eksikler</h4><ul>';
@@ -300,7 +340,49 @@
             html += '</ul></div>';
         }
 
-        html += '</article>';
+        html += '</div></article>';
+        return html;
+    }
+
+    function renderUnstartedSection(d) {
+        var list = d.unstartedModules || [];
+        if (!list.length) return '';
+        var total = d.unstartedTotal != null ? d.unstartedTotal : list.length;
+        var html = sectionOpen('report-baslanmamis', 'report-card report-card--muted');
+        html += '<div class="report-section-head">';
+        html += '<div class="report-section-head__icon report-section-head__icon--slate"><i class="fas fa-compass"></i></div>';
+        html += '<div><h2>Henüz başlanmamış modüller</h2>';
+        html += '<p class="report-muted">' + escapeHtml(d.unstartedSummary || '') + '</p></div>';
+        html += '<span class="report-count-pill">' + total + ' modül</span>';
+        html += '</div>';
+        html += '<div class="report-unstarted-grid">';
+        list.forEach(function (u) {
+            html += '<a href="/modules.html" class="report-unstarted-card">';
+            html += '<span class="report-unstarted-card__icon"><i class="fas fa-book-open"></i></span>';
+            html += '<span class="report-unstarted-card__title">' + escapeHtml(u.title) + '</span>';
+            html += '<span class="report-unstarted-card__cta">Modüllere git <i class="fas fa-arrow-right"></i></span>';
+            html += '</a>';
+        });
+        html += '</div>';
+        if (total > list.length) {
+            html +=
+                '<p class="report-more-note">+ ' +
+                (total - list.length) +
+                ' modül daha — tam listeyi <a href="/modules.html">eğitim modülleri</a> sayfasında görebilirsiniz.</p>';
+        }
+        html += '</section>';
+        return html;
+    }
+
+    function renderGapCards(gaps) {
+        var html = '';
+        gaps.forEach(function (g) {
+            var sev = g.severity === 'high' ? 'report-gap-card--high' : 'report-gap-card--medium';
+            html += '<div class="report-gap-card ' + sev + '">';
+            html += '<div class="report-gap-card__icon"><i class="fas fa-info-circle"></i></div>';
+            html += '<div><h3>' + escapeHtml(g.title) + '</h3><p>' + escapeHtml(g.description) + '</p></div>';
+            html += '</div>';
+        });
         return html;
     }
 
@@ -395,7 +477,7 @@
 
         if (d.executiveSummary) {
             html += sectionOpen('report-ozet');
-            html += '<h2><i class="fas fa-file-alt text-slate-700"></i> Yönetici özeti</h2>';
+            html += sectionHead('report-section-head__icon--slate', 'fa-file-alt', 'Yönetici özeti', '');
             html += '<p class="report-lead">' + escapeHtml(d.executiveSummary) + '</p>';
             html += '</section>';
         }
@@ -403,37 +485,37 @@
         html += mlBlock.html;
         html += tvpBlock.html;
 
-        html += sectionOpen('report-skor');
-        html += '<h2><i class="fas fa-chart-bar text-blue-600"></i> Skor özeti</h2>';
+        html += sectionOpen('report-skor', 'report-card--stats');
+        html += sectionHead('report-section-head__icon--blue', 'fa-chart-bar', 'Skor özeti', 'Platform genelinde ölçülen performans göstergeleri');
         html += '<div class="report-stats-grid">';
-        html += '<div class="report-stat"><span>Quiz ort.</span><strong>%' + (s.quizAverage != null ? s.quizAverage : '-') + '</strong><small>' + (s.quizCount || 0) + ' quiz</small></div>';
         html +=
-            '<div class="report-stat"><span>Simülasyon ort.</span><strong>%' +
+            '<div class="report-stat report-stat--premium"><div class="report-stat__icon"><i class="fas fa-clipboard-check"></i></div><span>Quiz ort.</span><strong>%' +
+            (s.quizAverage != null ? s.quizAverage : '-') +
+            '</strong><small>' +
+            (s.quizCount || 0) +
+            ' quiz</small></div>';
+        html +=
+            '<div class="report-stat report-stat--premium"><div class="report-stat__icon"><i class="fas fa-gamepad"></i></div><span>Simülasyon ort.</span><strong>%' +
             (s.simulationAverage != null ? s.simulationAverage : '-') +
             '</strong><small>' +
             (s.simulationCount || 0) +
             ' sim.</small></div>';
         html +=
-            '<div class="report-stat"><span>Çalışma süresi</span><strong>' +
+            '<div class="report-stat report-stat--premium"><div class="report-stat__icon"><i class="fas fa-hourglass-half"></i></div><span>Çalışma süresi</span><strong>' +
             Math.round((s.totalTimeMinutes || 0) / 60) +
             ' sa</strong><small>modül süreleri</small></div>';
         html +=
-            '<div class="report-stat"><span>Modül sayısı</span><strong>' +
+            '<div class="report-stat report-stat--premium"><div class="report-stat__icon"><i class="fas fa-book-open"></i></div><span>Aktif modül</span><strong>' +
             (d.stats && d.stats.moduleCount != null ? d.stats.moduleCount : '-') +
             '</strong><small>' +
-            (d.stats && d.stats.weakCount ? d.stats.weakCount + ' geliştirilmeli' : '') +
+            (d.stats && d.stats.weakCount ? d.stats.weakCount + ' geliştirilmeli' : 'analiz edildi') +
             '</small></div>';
         html += '</div></section>';
 
         if (d.globalGaps && d.globalGaps.length) {
             html += sectionOpen('report-bosluklar');
-            html += '<h2><i class="fas fa-search text-amber-600"></i> Genel boşluklar ve nedenler</h2>';
-            d.globalGaps.forEach(function (g) {
-                html += '<div class="report-gap">';
-                html += '<h3>' + escapeHtml(g.title) + '</h3>';
-                html += '<p>' + escapeHtml(g.description) + '</p>';
-                html += '</div>';
-            });
+            html += sectionHead('report-section-head__icon--amber', 'fa-search', 'Genel boşluklar ve nedenler', '');
+            html += renderGapCards(d.globalGaps);
             html += '</section>';
         }
 
@@ -441,8 +523,12 @@
 
         if (d.modules && d.modules.length) {
             html += sectionOpen('report-moduller');
-            html += '<h2><i class="fas fa-book-open text-emerald-600"></i> Modül modül ayrıntılı analiz</h2>';
-            html += '<p class="report-muted">Yalnızca başladığınız veya tamamladığınız modüller — quiz ve simülasyon analizi.</p>';
+            html += sectionHead(
+                'report-section-head__icon--emerald',
+                'fa-book-open',
+                'Modül modül ayrıntılı analiz',
+                'Yalnızca başladığınız veya tamamladığınız modüller'
+            );
             html += '<div class="report-modules">';
             d.modules.forEach(function (m) {
                 html += renderModuleCard(m);
@@ -450,27 +536,23 @@
             html += '</div></section>';
         }
 
-        if (d.unstartedModules && d.unstartedModules.length) {
-            html += sectionOpen('report-baslanmamis');
-            html += '<h2><i class="fas fa-hourglass-start"></i> Henüz başlanmamış modüller</h2><ul class="report-simple-list">';
-            d.unstartedModules.forEach(function (u) {
-                html += '<li><strong>' + escapeHtml(u.title) + '</strong> — ' + escapeHtml(u.reason) + '</li>';
-            });
-            html += '</ul></section>';
-        }
+        html += renderUnstartedSection(d);
 
         if (d.studyPlan && d.studyPlan.length) {
-            html += sectionOpen('report-plan');
-            html += '<h2><i class="fas fa-calendar-check text-violet-600"></i> Önerilen çalışma planı</h2>';
+            html += sectionOpen('report-plan', 'report-card--plan');
+            html += sectionHead('report-section-head__icon--violet', 'fa-calendar-check', 'Önerilen çalışma planı', 'Haftalık odak ve yapılacaklar');
+            html += '<div class="report-timeline">';
             d.studyPlan.forEach(function (w) {
                 html += '<div class="report-week">';
-                html += '<h3>Hafta ' + w.week + ': ' + escapeHtml(w.focus) + '</h3><ul>';
+                html += '<div class="report-week__badge">H' + w.week + '</div>';
+                html += '<div class="report-week__body">';
+                html += '<h3>' + escapeHtml(w.focus) + '</h3><ul>';
                 (w.actions || []).forEach(function (a) {
                     html += '<li>' + escapeHtml(a) + '</li>';
                 });
-                html += '</ul></div>';
+                html += '</ul></div></div>';
             });
-            html += '</section>';
+            html += '</div></section>';
         }
 
         var interp = report.interpretation || {};
