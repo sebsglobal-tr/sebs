@@ -110,6 +110,251 @@ function analyzeSimulationEntry(s) {
     return lines.join(' ');
 }
 
+function slugModuleAnchor(moduleId) {
+    return 'report-modul-' + String(moduleId || '').replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+function buildDetailedPersonalizedAdvice({
+    scores,
+    report,
+    modules,
+    weakModules,
+    unstartedModules,
+    globalGaps,
+    theoryVsPractice,
+}) {
+    const items = [];
+    let order = 0;
+
+    function push(item) {
+        items.push({ ...item, order: order++ });
+    }
+
+    const theory = theoryVsPractice?.theory ?? scores.quizAverage ?? 0;
+    const practice = theoryVsPractice?.practice ?? scores.simulationAverage ?? 0;
+    const gap = theoryVsPractice?.gap ?? theory - practice;
+
+    if ((scores.quizCount || 0) === 0 && (scores.simulationCount || 0) > 0) {
+        push({
+            id: 'advice-missing-quiz',
+            priority: 'high',
+            category: 'theory',
+            title: 'Değerlendirme testlerini sisteme kaydedin',
+            why:
+                'Simülasyon oynuyorsunuz ancak quiz sonuçları rapora düşmüyor. Hangi derste hangi konuda yanlış yaptığınızı görmek için her modül testinde «Testi Gönder» kullanılmalı.',
+            actions: [
+                'Tamamladığınız her modül bölümünde değerlendirme testini çözün ve gönderin.',
+                'Göndermeden sayfadan ayrılırsanız skor veritabanına yazılmaz; rapor teorik tarafı boş kalır.',
+                'Önce en son çalıştığınız modülün testini gönderin; ardından raporu yenileyin.',
+            ],
+            timeframe: 'Bu hafta — 1. öncelik',
+            relatedSection: 'report-bosluklar',
+        });
+    }
+
+    if (gap > 15 && theory >= 40) {
+        push({
+            id: 'advice-theory-practice-gap',
+            priority: 'high',
+            category: 'practice',
+            title: 'Teoriyi simülasyona taşıyın',
+            why:
+                `Quiz ortalamanız (%${Math.round(theory)}) pratik skorunuzdan (%${Math.round(practice)}) yüksek. Bilgiyi biliyor olabilirsiniz; senaryo ve komut satırında uygulama eksik.`,
+            actions: [
+                'Her simülasyon öncesi ilgili modülün özet dersini 10 dakika gözden geçirin.',
+                'Simülasyonu ikinci kez ipucusuz oynayın; ilk turdaki hatalı adımları not defterine yazın.',
+                'Haftada en az 2 farklı simülasyon tamamlayın (aynı senaryoyu tekrar tercih edin).',
+            ],
+            timeframe: '2–3 hafta',
+            relatedSection: 'report-teori',
+        });
+    } else if (gap < -15 && practice >= 35) {
+        push({
+            id: 'advice-practice-theory-gap',
+            priority: 'high',
+            category: 'theory',
+            title: 'Pratik gücünüzü teorik testlerle destekleyin',
+            why:
+                `Simülasyon (%${Math.round(practice)}) quiz ortalamanızdan (%${Math.round(theory)}) yüksek. Uygulama iyi; kavram testlerinde boşluk rapora yansıyor.`,
+            actions: [
+                'Zayıf quiz bölümlerinde soru altı açıklamalarını okuyun; aynı testi 48 saat sonra tekrar çözün.',
+                'Modül ders notlarında vurgulanan tanımları (CIA, OSI, hash vb.) kendi cümlelerinizle özetleyin.',
+                'Her simülasyon sonrası «ne öğrendim?» için 3 madde yazın.',
+            ],
+            timeframe: '2 hafta',
+            relatedSection: 'report-teori',
+        });
+    }
+
+    if ((scores.overall || 0) < 60 && (scores.quizCount || 0) + (scores.simulationCount || 0) > 0) {
+        push({
+            id: 'advice-low-overall',
+            priority: 'high',
+            category: 'habit',
+            title: 'Temel seviyede sistematik tekrar planı',
+            why: `Genel skorunuz %${scores.overall}; hedef aralık genelde %70+. Dağınık çalışma yerine modül modül kapanış yapılmalı.`,
+            actions: [
+                'Günde 45–60 dk: 25 dk ders okuma + 20 dk quiz veya simülasyon.',
+                'Önce zayıf modülleri bitirin; yeni modüle geçmeden quiz ≥ %60 olana kadar tekrar.',
+                'Çalışma sürenizi modül içinde tutun (rapor süreyi takip eder).',
+            ],
+            timeframe: '4 hafta',
+            relatedSection: 'report-plan',
+        });
+    }
+
+    if (report.ml && report.ml.profile) {
+        const prof = report.ml.profile;
+        let profWhy =
+            'Yapay zeka modeli öğrenme stilinizi bu profille sınıflandırdı. Aşağıdaki adımlar profile özel yönlendirmedir.';
+        let profActions = [];
+        if (prof.includes('Gelişime Açık')) {
+            profActions = [
+                'Temel Siber Güvenlik ve Giriş modüllerini baştan sona tekrarlayın.',
+                'Her gün 1 kısa quiz + haftada 1 simülasyon minimum.',
+                'Yanlış soru sayısını haftalık takip edin; hedef: önceki haftadan az yanlış.',
+            ];
+        } else if (prof.includes('Teorisyen')) {
+            profActions = [
+                'Teori testlerinizi koruyun; zamanın %60\'ını simülasyona ayırın.',
+                'Lab senaryolarında süre tutun; hız ve doğruluk birlikte artsın.',
+            ];
+        } else if (prof.includes('Pratik Zeka')) {
+            profActions = [
+                'Simülasyon öncesi 15 dk konu özeti; ardından değerlendirme testi.',
+                'Yanlış quiz konu başlıklarını listeleyip derslere geri dönün.',
+            ];
+        } else if (prof.includes('Uzman')) {
+            profActions = [
+                'İleri modül ve zor simülasyonlara geçin.',
+                'SOC / forensik gibi çok adımlı senaryolarda ekip notu tutun.',
+            ];
+        } else {
+            profActions = [
+                'Teori ve pratik skorlarınızı dengede tutun; haftalık ritim koruyun.',
+            ];
+        }
+        push({
+            id: 'advice-ml-profile',
+            priority: 'medium',
+            category: 'profile',
+            title: `AI profili: ${prof}`,
+            why: profWhy + (report.ml.confidencePercent != null ? ` (Güven: %${report.ml.confidencePercent})` : ''),
+            actions: profActions,
+            timeframe: 'Sürekli — profil hedefinize göre',
+            relatedSection: 'report-ai',
+        });
+    }
+
+    for (const m of weakModules.slice(0, 6)) {
+        const anchor = slugModuleAnchor(m.moduleId);
+        const quizDetail =
+            m.quizzes && m.quizzes.length
+                ? m.quizzes
+                      .filter((q) => (q.wrongAnswers || 0) > 0 || (q.score || 0) < 70)
+                      .map((q) => `«${q.quizTitle}»: %${Math.round(q.score || 0)}${q.wrongAnswers ? `, ${q.wrongAnswers} yanlış` : ''}`)
+                      .join('; ')
+                : 'Quiz kaydı yok';
+        const simDetail =
+            m.simulations && m.simulations.length
+                ? m.simulations
+                      .map(
+                          (s) =>
+                              `«${s.title}»: %${Math.round(s.score || 0)}` +
+                              (s.wrongActionsCount ? `, ${s.wrongActionsCount} hatalı aksiyon` : '')
+                      )
+                      .join('; ')
+                : 'Simülasyon kaydı yok';
+
+        push({
+            id: 'advice-module-' + m.moduleId,
+            priority: 'high',
+            category: 'module',
+            title: `Modül odağı: ${m.title}`,
+            why:
+                (m.issues && m.issues[0]) ||
+                `İlerleme %${m.percentComplete}; quiz ort. ${m.quizAverage != null ? '%' + m.quizAverage : '—'}, sim. ${m.simulationBest != null ? '%' + m.simulationBest : '—'}.`,
+            actions: [
+                ...(m.recommendations || []),
+                `Quiz durumu: ${quizDetail}.`,
+                `Simülasyon durumu: ${simDetail}.`,
+                'Modül sayfasında eksik ders bölümlerini tamamlayıp ardından test + simülasyon tekrarı yapın.',
+            ].filter(Boolean),
+            timeframe: 'Bu ve gelecek hafta',
+            relatedSection: anchor,
+            relatedModuleId: m.moduleId,
+            relatedModuleTitle: m.title,
+        });
+    }
+
+    for (const g of globalGaps || []) {
+        if (g.type === 'unstarted_modules') {
+            push({
+                id: 'advice-unstarted',
+                priority: 'medium',
+                category: 'habit',
+                title: 'Başlanmamış modüllere giriş yapın',
+                why: g.description + ' Öğrenme yolunda boşluk, ileride zorlanmaya yol açar.',
+                actions: [
+                    (unstartedModules[0] && `İlk hedef: «${unstartedModules[0].title}» — giriş dersi + mini test.`) ||
+                        'Katalogdan bir giriş modülü seçin.',
+                    'Haftada 1 yeni modüle «tanışma» seansı ayırın (30 dk).',
+                    'Her yeni modülde en az %20 ilerleme kaydedin.',
+                ].filter(Boolean),
+                timeframe: '3 hafta içinde',
+                relatedSection: 'report-baslanmamis',
+            });
+        }
+    }
+
+    const highHintSims = modules.flatMap((m) =>
+        (m.simulations || [])
+            .filter((s) => (s.hintUsedCount || 0) >= 3)
+            .map((s) => ({ module: m, sim: s }))
+    );
+    if (highHintSims.length > 0) {
+        const ex = highHintSims[0];
+        push({
+            id: 'advice-hints',
+            priority: 'medium',
+            category: 'practice',
+            title: 'İpucu kullanımını azaltın',
+            why:
+                'Birden fazla simülasyonda sık ipucu kullanılmış. Bağımsız müdahale becerisi gelişimi için ipucusuz tur hedeflenmeli.',
+            actions: [
+                `«${ex.sim.title}» simülasyonunu ipucusuz tekrar oynayın.`,
+                'Takıldığınızda 5 dk kendi notlarınıza bakın; hemen ipucu açmayın.',
+                'Her simülasyon sonrası ipucu sayısını bir önceki turdan azaltmayı hedefleyin.',
+            ],
+            timeframe: '2 hafta',
+            relatedSection: slugModuleAnchor(ex.module.moduleId),
+            relatedModuleTitle: ex.module.title,
+        });
+    }
+
+    if (items.length < 4) {
+        push({
+            id: 'advice-routine',
+            priority: 'low',
+            category: 'habit',
+            title: 'Sürdürülebilir öğrenme ritmi',
+            why: 'Düzenli kısa oturumlar, uzun aralıklı yoğun çalışmadan daha etkilidir.',
+            actions: [
+                'Haftada 2 modül dersi + 1 simülasyon + 1 quiz tekrarı.',
+                'Her oturum sonunda 1 paragraf özet yazın.',
+                'Ayda bir bu raporu yenileyerek ilerlemeyi karşılaştırın.',
+            ],
+            timeframe: 'Sürekli',
+            relatedSection: 'report-ozet',
+        });
+    }
+
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    items.sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9) || a.order - b.order);
+
+    return items;
+}
+
 function buildTheoryPracticeNarrative(theory, practice, mlProfile) {
     const gap = Math.round((theory - practice) * 10) / 10;
     let explanation;
@@ -200,7 +445,6 @@ function buildDetailedEvaluationReport(ctx) {
 
     const modules = [];
     const globalGaps = [];
-    const advice = [];
 
     for (const moduleId of moduleIds) {
         if (!moduleId || moduleId === '_general') continue;
@@ -319,7 +563,6 @@ function buildDetailedEvaluationReport(ctx) {
             description:
                 'Simülasyon veriniz var ancak quiz kaydı yok. Değerlendirme testlerini göndermezseniz hangi derste hangi konuda yanlış yaptığınız rapora işlenmez.',
         });
-        advice.push('Her tamamladığınız modülde «Testi Gönder» ile quiz sonucunu kaydedin.');
     }
 
     if ((scores.overall || 0) < 60 && (scores.quizCount || 0) + (scores.simulationCount || 0) > 0) {
@@ -332,18 +575,6 @@ function buildDetailedEvaluationReport(ctx) {
     }
 
     const weakModules = modules.filter((m) => m.status === 'weak');
-    for (const m of weakModules.slice(0, 5)) {
-        advice.push(`Öncelik: «${m.title}» — ${m.issues[0] || 'quiz ve simülasyon tekrarı'}`);
-    }
-
-    if (report.ml && report.ml.profile) {
-        advice.push(`AI profil hedefi (${report.ml.profile}): ${(report.interpretation && report.interpretation.recommendations && report.interpretation.recommendations[0]) || 'haftalık plana uygun çalışın'}`);
-    }
-
-    if (advice.length < 3) {
-        advice.push('Haftada en az 2 modül dersi + 1 simülasyon tamamlayın.');
-        advice.push('Zayıf gördüğünüz bölümlerde not alın; aynı hatayı üçüncü kez yapmayın.');
-    }
 
     const studyPlan = [];
     let week = 1;
@@ -387,6 +618,18 @@ function buildDetailedEvaluationReport(ctx) {
         executiveSummary += report.interpretation.overall.split('\n\n')[0];
     }
 
+    const detailedAdvice = buildDetailedPersonalizedAdvice({
+        scores,
+        report,
+        modules,
+        weakModules,
+        unstartedModules,
+        globalGaps,
+        theoryVsPractice: tvp,
+    });
+
+    const personalizedAdvice = detailedAdvice.map((a) => a.title);
+
     return {
         userName,
         executiveSummary,
@@ -394,7 +637,8 @@ function buildDetailedEvaluationReport(ctx) {
         modules,
         unstartedModules: unstartedModules.slice(0, 12),
         globalGaps,
-        personalizedAdvice: [...new Set(advice)].slice(0, 12),
+        personalizedAdvice,
+        detailedAdvice,
         studyPlan,
         stats: {
             moduleCount: modules.length,
@@ -406,6 +650,8 @@ function buildDetailedEvaluationReport(ctx) {
 
 module.exports = {
     buildDetailedEvaluationReport,
+    buildDetailedPersonalizedAdvice,
     loadModulesCatalog,
     humanizeSlug,
+    slugModuleAnchor,
 };

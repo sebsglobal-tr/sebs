@@ -1,11 +1,34 @@
 (function () {
     'use strict';
 
+    var REPORT_NAV = [
+        { id: 'report-ozet', label: 'Özet', icon: 'fa-file-alt' },
+        { id: 'report-ai', label: 'AI profili', icon: 'fa-robot', optional: true },
+        { id: 'report-teori', label: 'Teori / pratik', icon: 'fa-balance-scale' },
+        { id: 'report-skor', label: 'Skorlar', icon: 'fa-chart-bar' },
+        { id: 'report-bosluklar', label: 'Boşluklar', icon: 'fa-search', optional: true },
+        { id: 'report-tavsiyeler', label: 'Kişisel tavsiyeler', icon: 'fa-user-graduate' },
+        { id: 'report-moduller', label: 'Modül analizi', icon: 'fa-book-open', optional: true },
+        { id: 'report-baslanmamis', label: 'Başlanmamış', icon: 'fa-hourglass-start', optional: true },
+        { id: 'report-plan', label: 'Çalışma planı', icon: 'fa-calendar-check', optional: true },
+        { id: 'report-guclu', label: 'Güçlü yönler', icon: 'fa-thumbs-up', optional: true },
+    ];
+
     function escapeHtml(text) {
         if (text == null) return '';
         var div = document.createElement('div');
         div.textContent = String(text);
         return div.innerHTML;
+    }
+
+    function sectionOpen(id, extraClass) {
+        return (
+            '<section id="' +
+            escapeHtml(id) +
+            '" class="report-section report-card scroll-mt-28 ' +
+            (extraClass || '') +
+            '" tabindex="-1">'
+        );
     }
 
     function statusBadgeClass(status) {
@@ -18,11 +41,134 @@
         return map[status] || map.not_started;
     }
 
+    function priorityLabel(p) {
+        var map = { high: 'Yüksek öncelik', medium: 'Orta öncelik', low: 'Rutin' };
+        return map[p] || 'Öneri';
+    }
+
+    function priorityClass(p) {
+        var map = { high: 'report-priority--high', medium: 'report-priority--medium', low: 'report-priority--low' };
+        return map[p] || 'report-priority--medium';
+    }
+
+    function categoryLabel(c) {
+        var map = {
+            theory: 'Teori',
+            practice: 'Pratik',
+            habit: 'Alışkanlık',
+            module: 'Modül',
+            profile: 'AI profili',
+        };
+        return map[c] || 'Genel';
+    }
+
+    function renderReportNav(presentIds) {
+        var present = presentIds || {};
+        var links = REPORT_NAV.filter(function (item) {
+            if (!item.optional) return true;
+            return present[item.id];
+        });
+        if (!links.length) return '';
+
+        var html = '<nav class="report-nav print:hidden" aria-label="Rapor bölümleri">';
+        html += '<p class="report-nav__title"><i class="fas fa-list-ul"></i> Rapor içeriği</p>';
+        html += '<div class="report-nav__links">';
+        links.forEach(function (item) {
+            html +=
+                '<a href="#' +
+                escapeHtml(item.id) +
+                '" class="report-nav__link" data-report-nav="' +
+                escapeHtml(item.id) +
+                '"><i class="fas ' +
+                escapeHtml(item.icon) +
+                '"></i><span>' +
+                escapeHtml(item.label) +
+                '</span></a>';
+        });
+        html += '</div></nav>';
+        return html;
+    }
+
+    function renderDetailedAdvice(d) {
+        var list = d.detailedAdvice || [];
+        if (!list.length && d.personalizedAdvice && d.personalizedAdvice.length) {
+            list = d.personalizedAdvice.map(function (text, idx) {
+                return {
+                    id: 'advice-fallback-' + idx,
+                    priority: 'medium',
+                    category: 'habit',
+                    title: text,
+                    why: '',
+                    actions: [],
+                    timeframe: '',
+                };
+            });
+        }
+        if (!list.length) return { html: '', hasSection: false };
+
+        var html = sectionOpen('report-tavsiyeler', 'report-card--advice');
+        html += '<h2><i class="fas fa-user-graduate text-blue-600"></i> Kişisel tavsiyeler</h2>';
+        html +=
+            '<p class="report-muted">Verilerinize göre hazırlanmış öncelikli öneriler. Her kartta neden ve adım adım ne yapmanız gerektiği açıklanır.</p>';
+        html += '<div class="report-advice-cards">';
+
+        list.forEach(function (a, idx) {
+            html += '<article class="report-advice-card ' + priorityClass(a.priority) + '">';
+            html += '<header class="report-advice-card__head">';
+            html += '<span class="report-advice-card__num">' + (idx + 1) + '</span>';
+            html += '<div class="report-advice-card__titles">';
+            html += '<h3>' + escapeHtml(a.title) + '</h3>';
+            html += '<div class="report-advice-card__tags">';
+            html += '<span class="report-advice-tag ' + priorityClass(a.priority) + '">' + escapeHtml(priorityLabel(a.priority)) + '</span>';
+            if (a.category) {
+                html += '<span class="report-advice-tag report-advice-tag--cat">' + escapeHtml(categoryLabel(a.category)) + '</span>';
+            }
+            if (a.timeframe) {
+                html += '<span class="report-advice-tag report-advice-tag--time"><i class="fas fa-clock"></i> ' + escapeHtml(a.timeframe) + '</span>';
+            }
+            html += '</div></div></header>';
+
+            if (a.why) {
+                html += '<div class="report-advice-card__why">';
+                html += '<h4><i class="fas fa-question-circle"></i> Neden?</h4>';
+                html += '<p>' + escapeHtml(a.why) + '</p>';
+                html += '</div>';
+            }
+
+            if (a.actions && a.actions.length) {
+                html += '<div class="report-advice-card__actions">';
+                html += '<h4><i class="fas fa-tasks"></i> Yapılacaklar</h4><ol>';
+                a.actions.forEach(function (act) {
+                    html += '<li>' + escapeHtml(act) + '</li>';
+                });
+                html += '</ol></div>';
+            }
+
+            if (a.relatedSection) {
+                var linkLabel = a.relatedModuleTitle
+                    ? 'Modül analizine git: ' + a.relatedModuleTitle
+                    : 'İlgili bölüme git';
+                html +=
+                    '<a href="#' +
+                    escapeHtml(a.relatedSection) +
+                    '" class="report-advice-card__jump"><i class="fas fa-arrow-down"></i> ' +
+                    escapeHtml(linkLabel) +
+                    '</a>';
+            }
+
+            html += '</article>';
+        });
+
+        html += '</div></section>';
+        return { html: html, hasSection: true };
+    }
+
     function renderMlSection(report) {
         var ml = report.ml || {};
         var i = report.interpretation || {};
-        if (!ml.available && !ml.profile) return '';
-        var html = '<section class="report-card report-card--hero">';
+        if (!ml.available && !ml.profile) return { html: '', hasSection: false };
+
+        var html = sectionOpen('report-ai', 'report-card--hero');
         html += '<h2><i class="fas fa-robot text-blue-600"></i> Yapay zeka öğrenme profili</h2>';
         if (ml.profile) {
             html += '<p class="report-hero-profile">' + escapeHtml(ml.profile);
@@ -58,13 +204,13 @@
                 '<p class="report-note"><i class="fas fa-info-circle"></i> Tam XGBoost modeli sunucuda yüklenemedi; skorlarınıza göre yaklaşık profil gösteriliyor.</p>';
         }
         html += '</section>';
-        return html;
+        return { html: html, hasSection: true };
     }
 
     function renderTheoryPractice(d) {
-        if (!d) return '';
-        var tvp = d.theoryVsPractice || {};
-        var html = '<section class="report-card">';
+        if (!d || !d.theoryVsPractice) return { html: '', hasSection: false };
+        var tvp = d.theoryVsPractice;
+        var html = sectionOpen('report-teori');
         html += '<h2><i class="fas fa-balance-scale text-indigo-600"></i> Teori ve pratik dengesi</h2>';
         html += '<div class="report-tvp-bars">';
         html +=
@@ -82,11 +228,15 @@
         html += '</div>';
         if (tvp.explanation) html += '<p class="report-lead">' + escapeHtml(tvp.explanation) + '</p>';
         html += '</section>';
-        return html;
+        return { html: html, hasSection: true };
+    }
+
+    function moduleAnchorId(m) {
+        return 'report-modul-' + String(m.moduleId || '').replace(/[^a-zA-Z0-9_-]/g, '');
     }
 
     function renderModuleCard(m) {
-        var html = '<article class="report-module" data-status="' + escapeHtml(m.status) + '">';
+        var html = '<article id="' + escapeHtml(moduleAnchorId(m)) + '" class="report-module scroll-mt-28" data-status="' + escapeHtml(m.status) + '">';
         html += '<header class="report-module__head">';
         html += '<h3>' + escapeHtml(m.title) + '</h3>';
         html +=
@@ -153,11 +303,79 @@
         return html;
     }
 
+    function initReportNav() {
+        var navLinks = document.querySelectorAll('[data-report-nav]');
+        var sections = [];
+        navLinks.forEach(function (link) {
+            var id = link.getAttribute('data-report-nav');
+            var el = document.getElementById(id);
+            if (el) sections.push({ id: id, el: el, link: link });
+        });
+
+        function setActive(id) {
+            navLinks.forEach(function (l) {
+                l.classList.toggle('report-nav__link--active', l.getAttribute('data-report-nav') === id);
+            });
+        }
+
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                var id = link.getAttribute('data-report-nav');
+                var target = document.getElementById(id);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setActive(id);
+                    if (history.replaceState) {
+                        history.replaceState(null, '', '#' + id);
+                    }
+                }
+            });
+        });
+
+        if ('IntersectionObserver' in window && sections.length) {
+            var observer = new IntersectionObserver(
+                function (entries) {
+                    var visible = entries
+                        .filter(function (en) {
+                            return en.isIntersecting;
+                        })
+                        .sort(function (a, b) {
+                            return b.intersectionRatio - a.intersectionRatio;
+                        });
+                    if (visible[0]) setActive(visible[0].target.id);
+                },
+                { rootMargin: '-20% 0px -55% 0px', threshold: [0.1, 0.25, 0.5] }
+            );
+            sections.forEach(function (s) {
+                observer.observe(s.el);
+            });
+        }
+    }
+
     function renderReport(report) {
         var d = report.detailed || {};
         var s = report.scores || {};
         var root = document.getElementById('reportRoot');
         if (!root) return;
+
+        var mlBlock = renderMlSection(report);
+        var tvpBlock = renderTheoryPractice(d);
+        var hasAdvice =
+            (d.detailedAdvice && d.detailedAdvice.length) || (d.personalizedAdvice && d.personalizedAdvice.length);
+
+        var present = {
+            'report-ozet': !!d.executiveSummary,
+            'report-ai': mlBlock.hasSection,
+            'report-teori': tvpBlock.hasSection,
+            'report-skor': true,
+            'report-bosluklar': !!(d.globalGaps && d.globalGaps.length),
+            'report-tavsiyeler': hasAdvice,
+            'report-moduller': !!(d.modules && d.modules.length),
+            'report-baslanmamis': !!(d.unstartedModules && d.unstartedModules.length),
+            'report-plan': !!(d.studyPlan && d.studyPlan.length),
+            'report-guclu': !!(report.interpretation && report.interpretation.strengths && report.interpretation.strengths.length),
+        };
 
         var html = '';
 
@@ -172,17 +390,19 @@
             '</strong></p>';
         html += '</header>';
 
+        html += renderReportNav(present);
+
         if (d.executiveSummary) {
-            html += '<section class="report-card">';
+            html += sectionOpen('report-ozet');
             html += '<h2><i class="fas fa-file-alt text-slate-700"></i> Yönetici özeti</h2>';
             html += '<p class="report-lead">' + escapeHtml(d.executiveSummary) + '</p>';
             html += '</section>';
         }
 
-        html += renderMlSection(report);
-        html += renderTheoryPractice(d);
+        html += mlBlock.html;
+        html += tvpBlock.html;
 
-        html += '<section class="report-card">';
+        html += sectionOpen('report-skor');
         html += '<h2><i class="fas fa-chart-bar text-blue-600"></i> Skor özeti</h2>';
         html += '<div class="report-stats-grid">';
         html += '<div class="report-stat"><span>Quiz ort.</span><strong>%' + (s.quizAverage != null ? s.quizAverage : '-') + '</strong><small>' + (s.quizCount || 0) + ' quiz</small></div>';
@@ -205,7 +425,7 @@
         html += '</div></section>';
 
         if (d.globalGaps && d.globalGaps.length) {
-            html += '<section class="report-card">';
+            html += sectionOpen('report-bosluklar');
             html += '<h2><i class="fas fa-search text-amber-600"></i> Genel boşluklar ve nedenler</h2>';
             d.globalGaps.forEach(function (g) {
                 html += '<div class="report-gap">';
@@ -216,8 +436,10 @@
             html += '</section>';
         }
 
+        html += renderDetailedAdvice(d).html;
+
         if (d.modules && d.modules.length) {
-            html += '<section class="report-card">';
+            html += sectionOpen('report-moduller');
             html += '<h2><i class="fas fa-book-open text-emerald-600"></i> Modül modül ayrıntılı analiz</h2>';
             html += '<p class="report-muted">Hangi derste ne eksik, quiz ve simülasyonlarda nerede zorlandığınız.</p>';
             html += '<div class="report-modules">';
@@ -228,7 +450,7 @@
         }
 
         if (d.unstartedModules && d.unstartedModules.length) {
-            html += '<section class="report-card">';
+            html += sectionOpen('report-baslanmamis');
             html += '<h2><i class="fas fa-hourglass-start"></i> Henüz başlanmamış modüller</h2><ul class="report-simple-list">';
             d.unstartedModules.forEach(function (u) {
                 html += '<li><strong>' + escapeHtml(u.title) + '</strong> — ' + escapeHtml(u.reason) + '</li>';
@@ -237,7 +459,7 @@
         }
 
         if (d.studyPlan && d.studyPlan.length) {
-            html += '<section class="report-card">';
+            html += sectionOpen('report-plan');
             html += '<h2><i class="fas fa-calendar-check text-violet-600"></i> Önerilen çalışma planı</h2>';
             d.studyPlan.forEach(function (w) {
                 html += '<div class="report-week">';
@@ -250,18 +472,10 @@
             html += '</section>';
         }
 
-        if (d.personalizedAdvice && d.personalizedAdvice.length) {
-            html += '<section class="report-card report-card--advice">';
-            html += '<h2><i class="fas fa-user-graduate text-blue-600"></i> Kişisel tavsiyeler</h2><ol class="report-advice-list">';
-            d.personalizedAdvice.forEach(function (a, idx) {
-                html += '<li><span class="report-advice-num">' + (idx + 1) + '</span>' + escapeHtml(a) + '</li>';
-            });
-            html += '</ol></section>';
-        }
-
         var interp = report.interpretation || {};
         if (interp.strengths && interp.strengths.length) {
-            html += '<section class="report-card"><h2>Güçlü yönler</h2><ul class="report-simple-list">';
+            html += sectionOpen('report-guclu');
+            html += '<h2><i class="fas fa-thumbs-up text-emerald-600"></i> Güçlü yönler</h2><ul class="report-simple-list">';
             interp.strengths.forEach(function (x) {
                 html += '<li>' + escapeHtml(x) + '</li>';
             });
@@ -271,6 +485,14 @@
         root.innerHTML = html;
         document.getElementById('reportLoading').classList.add('hidden');
         root.classList.remove('hidden');
+        initReportNav();
+
+        var hash = (window.location.hash || '').replace('#', '');
+        if (hash && document.getElementById(hash)) {
+            setTimeout(function () {
+                document.getElementById(hash).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
     }
 
     window.loadDetailedEvaluationReport = async function () {
@@ -307,15 +529,6 @@
                 throw new Error(data.message || 'Rapor alınamadı');
             }
             renderReport(data.data);
-            try {
-                var bf =
-                    typeof window.buildBigFiveReportAppendixHtml === 'function'
-                        ? window.buildBigFiveReportAppendixHtml()
-                        : '';
-                if (bf && root) root.innerHTML += bf;
-            } catch (e) {
-                /* ignore */
-            }
         } catch (err) {
             if (loading) loading.classList.add('hidden');
             if (errBox) {
