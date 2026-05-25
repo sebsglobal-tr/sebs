@@ -16,6 +16,15 @@
   background: linear-gradient(165deg, #eef2ff 0%, var(--ip-bg) 40%, #f8fafc 100%);
 }
 
+.ip-app--demo {
+  background: #0f172a linear-gradient(160deg, #0f172a 0%, #1e1b4b 35%, #312e81 70%, #1e293b 100%);
+  background-attachment: fixed;
+}
+
+.ip-app--demo .ip-main {
+  padding-bottom: 5rem;
+}
+
 .ip-top {
   position: sticky;
   top: 0;
@@ -2595,4 +2604,518 @@
   .ip-scene-grid__body {
     order: 2;
   }
+
+  .ip-cinema {
+    grid-template-columns: 1fr;
+  }
+
+  .ip-cinema__visual {
+    min-height: 200px;
+  }
+
+  .ip-companion-phone {
+    display: none;
+  }
+}
+
+/* —— Kurumsal demo: üst bar —— */
+.ip-top-brands {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0.15rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ip-top-brand--inc {
+  color: #4338ca;
+}
+.ip-top-brand--sebs {
+  color: #64748b;
+}
+.ip-top-brand--sep {
+  color: #cbd5e1;
+  font-weight: 400;
+}
+
+.ip-app--demo .ip-top {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgb(255 255 255 / 0.08);
+  color: #fff;
+}
+
+.ip-app--demo .ip-top h1,
+.ip-app--demo .ip-top .sub,
+.ip-app--demo .ip-progress-label {
+  color: #e2e8f0;
+}
+
+.ip-app--demo .ip-back {
+  color: #93c5fd;
+}
+
+/* —— Sinematik intro —— */
+.ip-intro-cinema {
+  position: relative;
+  min-height: calc(100vh - 8rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  border-radius: var(--ip-radius);
+  overflow: hidden;
+}
+
+.ip-intro-cinema__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgb(59 130 246 / 0.35), transparent),
+    linear-gradient(180deg, #1e3a8a 0%, #0f172a 70%);
+}
+
+.ip-intro-cinema__bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'%3E%3Cpath fill='%2394a3b8' opacity='0.25' d='M0 120 L80 40 L160 80 L240 20 L320 70 L400 30 L400 120 Z'/%3E%3C/svg%3E")
+    bottom center / cover no-repeat;
+}
+
+.ip-intro-cinema__content {
+  position: relative;
+  z-index: 1;
+  max-width: 32rem;
+  text-align: center;
+  color: #fff;
+}
+
+.ip-intro-cinema__brands {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.ip-brand-pill {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ip-brand-pill--sebs {
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.ip-brand-pill--inc {
+  background: linear-gradient(135deg, #4338ca, #1d4ed8);
+}
+
+.ip-intro-cinema h1 {
+  margin: 0.5rem 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.ip-intro-cinema__lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgb(226 232 240 / 0.9);
+}
+
+.ip-role-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 auto 1.25rem;
+  max-width: 20rem;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.15);
+}
+
+.ip-role-card__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.ip-role-card strong {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.ip-role-card p {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ip-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.72rem;
+  color: #cbd5e1;
+}
+
+.ip-trust-row li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ip-intro-cinema__disclaimer {
+  margin: 0 0 1.25rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.ip-intro-cinema__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.ip-btn-cinema {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 32px -8px rgb(59 130 246 / 0.55);
+  text-decoration: none;
+  transition: transform 0.15s, filter 0.15s;
+}
+
+.ip-btn-cinema:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.ip-btn-cinema--ghost {
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  box-shadow: none;
+}
+
+.ip-intro-cinema__quote {
+  margin: 1.5rem 0 0;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #a5b4fc;
+  border: none;
+}
+
+/* —— Sinematik sahne düzeni —— */
+.ip-cinema {
+  display: grid;
+  grid-template-columns: minmax(280px, 42%) 1fr;
+  gap: 0;
+  border-radius: var(--ip-radius);
+  overflow: hidden;
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.45);
+  animation: ip-cinema-enter 0.55s ease-out;
+}
+
+@keyframes ip-cinema-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ip-cinema__visual {
+  position: relative;
+  min-height: 420px;
+  background: #0f172a;
+}
+
+.ip-cinema__visual .ip-hero {
+  min-height: 420px;
+  border-bottom: none;
+}
+
+.ip-cinema__play {
+  background: var(--ip-panel);
+}
+
+.ip-cinema__play .ip-scene {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ip-cinema--phone-focus .ip-cinema__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #0f172a, #1e3a8a);
+}
+
+.ip-visual-phone-focus .ip-device {
+  max-width: 260px;
+}
+
+.ip-visual-phone-focus .ip-device-wrap--ring .ip-device {
+  animation: ip-phone-ring 0.45s ease-in-out infinite;
+}
+
+.ip-companion-phone {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 3;
+  width: 120px;
+  transform: scale(0.72);
+  transform-origin: bottom right;
+  opacity: 0.95;
+}
+
+.ip-companion-phone__label {
+  margin: 0 0 0.25rem;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: rgb(255 255 255 / 0.7);
+  text-align: right;
+}
+
+.ip-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ip-atmosphere__pulse {
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgb(239 68 68 / 0.15);
+  animation: ip-atmo-pulse 2s ease-in-out infinite;
+}
+
+.ip-atmosphere__pulse--2 {
+  left: auto;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+@keyframes ip-atmo-pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+/* —— An kaydı (seçim sonrası) —— */
+.ip-moment {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.ip-moment__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(15 23 42 / 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.ip-moment__card {
+  position: relative;
+  max-width: 22rem;
+  width: 100%;
+  padding: 1.35rem 1.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 24px 64px -16px rgb(0 0 0 / 0.4);
+  text-align: center;
+  transform: scale(0.92);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.ip-moment--show .ip-moment__card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.ip-moment__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.ip-moment__card h3 {
+  margin: 0.65rem 0 0.35rem;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.ip-moment__card p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.ip-moment__bar {
+  height: 4px;
+  margin: 1rem 0 0.35rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.ip-moment__bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: width 1.2s linear;
+}
+
+.ip-moment__skip {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+/* —— Premium finale —— */
+.ip-finale-wrap {
+  background: var(--ip-panel);
+  border-radius: var(--ip-radius);
+  padding: 1.5rem;
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.35);
+}
+
+.ip-finale-premium__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem 1.25rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.ip-finale-premium__brand {
+  grid-column: 1 / -1;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #4338ca;
+}
+
+.ip-finale-premium__score-ring {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: conic-gradient(
+    #3b82f6 calc(var(--score, 70) * 1%),
+    #e2e8f0 0
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ip-finale-premium__score-ring::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.ip-finale-premium__score-val {
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  line-height: 1;
+}
+
+.ip-finale-premium__score-max {
+  position: relative;
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.ip-finale-premium__titles h2 {
+  margin: 0.2rem 0 0;
+  font-size: 1.25rem;
+}
+
+.ip-finale-premium__sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ip-muted);
+}
+
+.ip-finale-premium__note {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
 }

@@ -4,6 +4,7 @@
   var CFG = window.INCPHARMA_SIM;
   var UI = window.INCPHARMA_UI;
   var VIS = window.INCPHARMA_VISUALS;
+  var DEMO = window.INCPHARMA_DEMO;
 
   function reportApi() {
     return window.INCPHARMA_REPORT;
@@ -151,29 +152,11 @@
 
   function renderIntro() {
     var root = $('ipRoot');
-    root.innerHTML =
-      '<div class="ip-intro">' +
-      '<p class="ip-kicker">INCPHARMA · Kurumsal demo</p>' +
-      '<h1>' +
-      esc(CFG.title) +
-      '</h1>' +
-      '<p class="ip-lead">' +
-      esc(
-        'Sıradan bir saha günü — onkoloji ziyareti, hekim görüşmeleri ve gün sonu raporu. Hastaneye girmeden acil bildirim: ciddi reaksiyon şüphesi. Kurgusal ürün; gerçek tedavi önerisi yoktur.'
-      ) +
-      '</p>' +
-      renderFlakon() +
-      '<ul class="ip-intro-list">' +
-      '<li>Gün boyu canlı saha akışı · diyalog ve kriz anları</li>' +
-      '<li>Telefon bildirimi, WhatsApp, gün sonu raporu</li>' +
-      '<li>Performans özeti — test değil, senaryo deneyimi</li>' +
-      '</ul>' +
-      '<p class="ip-tagline"><i class="fas fa-quote-left"></i> ' +
-      esc(CFG.tagline) +
-      '</p>' +
-      '<button type="button" class="ip-btn ip-btn--primary" id="ipStart">Simülasyonu başlat</button>' +
-      '<a href="/isverenler.html" class="ip-btn ip-btn--ghost">İşverenler sayfası</a>' +
-      '</div>';
+    root.innerHTML = DEMO
+      ? DEMO.renderPremiumIntro(CFG)
+      : '<div class="ip-intro"><h1>' +
+        esc(CFG.title) +
+        '</h1><button type="button" class="ip-btn ip-btn--primary" id="ipStart">Başlat</button></div>';
     $('ipStart').addEventListener('click', function () {
       state.sceneId = 'opening';
       render();
@@ -222,25 +205,38 @@
     }
 
     var root = $('ipRoot');
+    if (DEMO) DEMO.setSceneId(state.sceneId);
+
     var phoneOpts = UI ? UI.phoneFromScene(scene, state.sceneId) : null;
     var hasPhoneHero = !!(scene.phoneVisual || phoneOpts);
+    var useCinema = DEMO && DEMO.isCinemaScene(state.sceneId, scene);
+
+    var visualHtml = '';
+    if (useCinema && hasPhoneHero && UI) {
+      visualHtml =
+        '<div class="ip-visual-phone-focus">' + UI.renderPhone(scene.phoneVisual || phoneOpts) + '</div>';
+    } else if (VIS) {
+      visualHtml += VIS.renderSceneHero(state.sceneId, scene);
+      if (DEMO && !hasPhoneHero) visualHtml += DEMO.renderCompanionPhone(state.sceneId, scene);
+    }
+
     var html =
       '<article class="ip-scene ip-scene--' +
       esc(state.sceneId) +
       (hasPhoneHero ? ' ip-scene--with-phone' : '') +
       '">';
 
-    if (VIS) {
-      html += VIS.renderDayTimeline(state.sceneId);
-      html += VIS.renderSceneHero(state.sceneId, scene);
-    } else if (UI) {
+    if (VIS) html += VIS.renderDayTimeline(state.sceneId);
+
+    if (!useCinema && VIS) html += visualHtml;
+    else if (!useCinema && UI) {
       html += UI.renderLocationBanner(state.sceneId, scene.location);
       html += '<h2 class="ip-scene-title">' + esc(scene.title) + '</h2>';
     }
 
     html += '<div class="ip-scene-stage">';
 
-    if (hasPhoneHero && UI) {
+    if (hasPhoneHero && UI && !useCinema) {
       html += '<div class="ip-scene-grid">';
       html +=
         '<div class="ip-scene-grid__phone">' +
@@ -298,7 +294,7 @@
       html += '</div>';
     }
 
-    if (hasPhoneHero && UI) {
+    if (hasPhoneHero && UI && !useCinema) {
       html += '</div></div>';
     }
 
@@ -341,7 +337,13 @@
       html += renderPlayerTurn(scene);
     }
     html += '</div></article>';
-    root.innerHTML = html;
+
+    var bodyHtml = html;
+    if (useCinema && DEMO) {
+      var extra = hasPhoneHero ? ' ip-cinema--phone-focus' : '';
+      bodyHtml = DEMO.wrapCinema(state.sceneId, visualHtml, html, extra);
+    }
+    root.innerHTML = bodyHtml;
 
     root.querySelectorAll('[data-choice]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -353,11 +355,15 @@
       cont.addEventListener('click', function () {
         var R = reportApi();
         if (state.sceneId === 'opening' && R && !state.openingLogged) {
-          R.appendOpening(state.fieldReport);
+          var openEntry = R.appendOpening(state.fieldReport);
           state.openingLogged = true;
-          state.lastReportEntryId = state.fieldReport.entries[0]
-            ? state.fieldReport.entries[state.fieldReport.entries.length - 1].id
-            : null;
+          state.lastReportEntryId = openEntry.id;
+          if (DEMO) {
+            DEMO.showMoment(openEntry, scene, { id: 'opening' }, function () {
+              goNext(scene.next);
+            });
+            return;
+          }
         }
         goNext(scene.next);
       });
@@ -388,9 +394,17 @@
     if (!ch) return;
     state.history.push({ scene: state.sceneId, choice: choiceId });
     var R = reportApi();
-    if (R) R.appendFromChoice(state, state.sceneId, scene, ch);
+    var entry = R ? R.appendFromChoice(state, state.sceneId, scene, ch) : null;
     applyEffects(ch.effects);
-    goNext(ch.next);
+
+    var advance = function () {
+      goNext(ch.next);
+    };
+    if (DEMO && entry) {
+      DEMO.showMoment(entry, scene, ch, advance);
+    } else {
+      advance();
+    }
   }
 
   function goNext(nextId) {
@@ -429,42 +443,34 @@
   function renderFinale() {
     var overall = overallScore();
     var root = $('ipRoot');
-    var html = '<div class="ip-finale">';
-    html += '<header class="ip-finale__head">';
-    html += renderFlakon();
-    html += '<div><p class="ip-kicker">INCPHARMA performans kartı</p>';
-    html += '<h2>' + esc(CFG.title) + '</h2>';
-    html +=
-      '<p class="ip-finale__score">Genel skor <strong>' +
-      overall +
-      '</strong>/100 · <span>' +
-      esc(performanceLabel(overall)) +
-      '</span></p></div></header>';
-
+    var label = performanceLabel(overall);
+    var fatalHtml = '';
     if (state.fatalErrors.length) {
-      html += '<div class="ip-fatal"><h3><i class="fas fa-triangle-exclamation"></i> Kritik uyum uyarısı</h3><p>';
-      html +=
-        'Simülasyon sırasında ' +
+      fatalHtml =
+        '<div class="ip-fatal"><h3><i class="fas fa-triangle-exclamation"></i> Kritik uyum uyarısı</h3><p>' +
         state.fatalErrors.length +
-        ' fatal compliance error tespit edildi. Genel skor yeterli görünse bile ilgili karar kırmızı risk olarak değerlendirilmelidir.</p><ul>';
+        ' kritik uyum uyarısı kayıt altında.</p><ul>';
       state.fatalErrors.forEach(function (code) {
-        html += '<li><code>' + esc(code) + '</code> — ' + esc(CFG.fatalLabels[code] || code) + '</li>';
+        fatalHtml += '<li><code>' + esc(code) + '</code> — ' + esc(CFG.fatalLabels[code] || code) + '</li>';
       });
-      html += '</ul></div>';
+      fatalHtml += '</ul></div>';
     } else {
-      html +=
-        '<p class="ip-fatal-ok"><i class="fas fa-check-circle"></i> Kritik uyum uyarısı: Yok (demo kapsamında).</p>';
+      fatalHtml =
+        '<p class="ip-fatal-ok"><i class="fas fa-check-circle"></i> Kritik uyum uyarısı yok (demo).</p>';
     }
-
-    html += '<div class="ip-comp-grid">';
+    var compsHtml = '<div class="ip-comp-grid">';
     CFG.competencies.forEach(function (c) {
       var v = state.scores[c.key] || 0;
-      html += '<div class="ip-comp"><span>' + esc(c.label) + '</span>';
-      html += '<div class="ip-comp__track"><i style="width:' + v + '%"></i></div>';
-      html += '<strong>' + v + '</strong></div>';
+      compsHtml += '<div class="ip-comp"><span>' + esc(c.label) + '</span>';
+      compsHtml += '<div class="ip-comp__track"><i style="width:' + v + '%"></i></div>';
+      compsHtml += '<strong>' + v + '</strong></div>';
     });
-    html += '</div>';
+    compsHtml += '</div>';
 
+    var html = '<div class="ip-finale-wrap">';
+    html += DEMO
+      ? DEMO.renderFinalePremium(CFG, state, renderFlakon(), compsHtml, fatalHtml, overall, label)
+      : '<div class="ip-finale"><p>Skor: ' + overall + '</p></div>';
     html += '<div class="ip-finale-actions">';
     html +=
       '<button type="button" class="ip-btn ip-btn--primary" id="ipRestart">Simülasyonu tekrarla</button>';
