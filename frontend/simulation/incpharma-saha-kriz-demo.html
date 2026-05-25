@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <base href="/" />
+  <title>INCPHARMA — Bir Günde Sahada (Demo) | SEBS Kurumsal</title>
+  <meta name="description" content="Kurgusal medikal temsilci simülasyonu: kriz, etik sınır, off-label, farmakovijilans ve saha performans değerlendirmesi. Eğitim amaçlıdır; gerçek ürün iddiası içermez." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#1e40af" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/css/incpharma-sim.css?v=1" />
+  <script src="/utils/simulation-tracker.js"></script>
+</head>
+<body class="ip-app">
+  <header class="ip-top">
+    <div class="ip-top-inner">
+      <div>
+        <a href="/isverenler.html#demo-sim" class="ip-back"><i class="fas fa-arrow-left"></i> İşverenler · Demo</a>
+        <h1>INCPHARMA — Sahada Kriz Simülasyonu</h1>
+        <p class="sub">OncoRelief IV · Kurgusal assessment tool · Demo</p>
+      </div>
+      <div class="ip-progress-wrap">
+        <div class="ip-progress-label"><span>İlerleme</span><span id="ipProgressLbl">0%</span></div>
+        <div class="ip-progress-bar"><i id="ipProgress"></i></div>
+      </div>
+    </div>
+  </header>
+  <main class="ip-main" id="ipRoot" aria-live="polite"></main>
+  <script src="/simulation/incpharma-saha-kriz-data.js?v=1"></script>
+  <script src="/simulation/incpharma-saha-kriz-app.js?v=1"></script>
+</body>
+</html>
