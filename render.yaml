@@ -11,11 +11,11 @@
 services:
   - type: web
     name: sebs-staging
-    runtime: node
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     region: frankfurt
     plan: free
-    buildCommand: npm ci --prefix backend
-    startCommand: node backend/server.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV

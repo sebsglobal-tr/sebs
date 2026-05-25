@@ -34,3 +34,12 @@ echo '{"module_name":"Temel Siber Güvenlik","theory_score":80,"practice_score":
 - Uzman (Eksiksiz)
 
 Model yüklenemezse API kural tabanlı raporu döndürür; `data.ml.available === false` olur.
+
+## Production (Render / Railway)
+
+Node-only ortamda Python olmadığı için XGBoost çalışmaz. Çözüm:
+
+1. **Docker deploy** (önerilen): repo kökündeki `Dockerfile` Python + XGBoost kurar. Render’da servis **Runtime: Docker** olmalı (`render.yaml` güncellendi).
+2. **Geçici yedek**: Python yoksa `STUDENT_ML_HEURISTIC_FALLBACK` (varsayılan açık) skorlara göre yaklaşık profil üretir. Kapatmak için `STUDENT_ML_HEURISTIC_FALLBACK=0`.
+
+Render panelinde hâlâ **Node** runtime kullanıyorsanız → Settings → Runtime → **Docker** ve yeniden deploy.

@@ -9,14 +9,43 @@ const REPO_VENV_PYTHON = path.join(__dirname, '..', '..', '.venv-ml', 'bin', 'py
 
 const DEFAULT_MODULE_NAME = 'Siber Güvenliğe Giriş';
 
+/** XGBoost OneHotEncoder eğitim kategorileri */
+const TRAINING_MODULE_NAMES = [
+    'Malware Analizi (Orta Seviye)',
+    'Network Güvenliği',
+    'Olay Müdahalesi & Digital Forensic',
+    'Red Team & Pentest (İleri)',
+    'SOC Eğitimi',
+    'Siber Güvenliğe Giriş',
+    'Sosyal Mühendisliğe Giriş',
+    'Temel Kriptografi',
+    'Temel Network Eğitimi',
+    'Threat Intelligence',
+    'Web Uygulama Güvenliği',
+    'İleri Kriptografi',
+    'İleri Malware Analizi & Reverse Engineering',
+    'İşletim Sistemi Güvenliği (İleri Temel)',
+    'İşletim Sistemleri Güvenliği (Temel)',
+];
+
+const ML_PROFILE_CLASSES = [
+    'Dengeli',
+    'Gelişime Açık (Temel Eksik)',
+    'Pratik Zeka (Teorisi Zayıf)',
+    'Teorisyen (Pratiği Zayıf)',
+    'Uzman (Eksiksiz)',
+];
+
 /** Model eğitiminde kullanılan modül adlarına yakın eşleme */
 const MODULE_TITLE_ALIASES = {
     'siber guvenlige giris': 'Siber Güvenliğe Giriş',
-    'guncel siber guvenlige giris': 'Güncel Siber Güvenliğe Giriş',
-    'temel siber guvenlik': 'Temel Siber Güvenlik',
+    'guncel siber guvenlige giris': 'Siber Güvenliğe Giriş',
+    'temel siber guvenlik': 'Siber Güvenliğe Giriş',
     'temel network egitimi': 'Temel Network Eğitimi',
     'temel kriptografi': 'Temel Kriptografi',
     'network guvenligi': 'Network Güvenliği',
+    'soc egitimi': 'SOC Eğitimi',
+    'soc security operations center egitimi': 'SOC Eğitimi',
 };
 
 const PROFILE_INTERPRETATIONS = {
@@ -99,7 +128,61 @@ function resolveModuleNameForModel(title) {
     if (!raw) return DEFAULT_MODULE_NAME;
     const key = normalizeTitleKey(raw);
     if (MODULE_TITLE_ALIASES[key]) return MODULE_TITLE_ALIASES[key];
-    return raw.slice(0, 120);
+    if (TRAINING_MODULE_NAMES.includes(raw)) return raw;
+    for (const name of TRAINING_MODULE_NAMES) {
+        if (normalizeTitleKey(name) === key) return name;
+    }
+    for (const name of TRAINING_MODULE_NAMES) {
+        const nk = normalizeTitleKey(name);
+        if (key.includes(nk) || nk.includes(key)) return name;
+    }
+    return DEFAULT_MODULE_NAME;
+}
+
+function heuristicFallbackEnabled() {
+    return process.env.STUDENT_ML_HEURISTIC_FALLBACK !== '0';
+}
+
+function predictStudentProfileHeuristic(features) {
+    const theory = Number(features.theory_score) || 0;
+    const practice = Number(features.practice_score) || 0;
+    const avg = (theory + practice) / 2;
+    const gap = theory - practice;
+    const hints = Number(features.hint_used_count) || 0;
+    const wrongs = Number(features.wrong_actions_count) || 0;
+
+    let profile;
+    if (avg >= 82 && theory >= 75 && practice >= 75 && hints <= 3 && wrongs <= 8) {
+        profile = 'Uzman (Eksiksiz)';
+    } else if (avg < 50 || (theory < 45 && practice < 50)) {
+        profile = 'Gelişime Açık (Temel Eksik)';
+    } else if (gap >= 18 && theory >= 55) {
+        profile = 'Teorisyen (Pratiği Zayıf)';
+    } else if (gap <= -18 && practice >= 35) {
+        profile = 'Pratik Zeka (Teorisi Zayıf)';
+    } else if (Math.abs(gap) <= 12 && avg >= 55) {
+        profile = 'Dengeli';
+    } else if (avg < 62) {
+        profile = 'Gelişime Açık (Temel Eksik)';
+    } else if (gap > 8) {
+        profile = 'Teorisyen (Pratiği Zayıf)';
+    } else if (gap < -8) {
+        profile = 'Pratik Zeka (Teorisi Zayıf)';
+    } else {
+        profile = 'Dengeli';
+    }
+
+    const probabilities = {};
+    for (const c of ML_PROFILE_CLASSES) probabilities[c] = 0.04;
+    probabilities[profile] = 0.88;
+
+    return {
+        ok: true,
+        profile,
+        probabilities,
+        features,
+        modelVersion: 'heuristic-fallback-v1',
+    };
 }
 
 function resolvePythonExecutable() {
@@ -222,6 +305,7 @@ function applyProfileToInterpretation(report, mlResult) {
         probabilities: mlResult.probabilities || {},
         features: mlResult.features || {},
         modelVersion: mlResult.modelVersion || 'xgboost_student_model_noisy',
+        fallback: Boolean(mlResult.modelVersion && String(mlResult.modelVersion).includes('heuristic')),
     };
 
     const mlLine = copy.summary + (confidence != null ? ` (Güven: %${confidence})` : '');
@@ -277,8 +361,15 @@ async function enrichEvaluationReportWithMl(report, ctx) {
         const mlResult = await predictStudentProfile(features);
         applyProfileToInterpretation(report, mlResult);
     } catch (err) {
-        logger.warn('Öğrenci ML raporu atlandı:', err.message);
-        report.ml = { available: false, error: err.message, features };
+        logger.warn('Öğrenci ML Python kullanılamadı:', err.message);
+        if (heuristicFallbackEnabled()) {
+            const mlResult = predictStudentProfileHeuristic(features);
+            applyProfileToInterpretation(report, mlResult);
+            report.ml.fallback = true;
+            report.ml.pythonError = err.message;
+        } else {
+            report.ml = { available: false, error: err.message, features };
+        }
     }
 }
 
@@ -286,6 +377,7 @@ module.exports = {
     enrichEvaluationReportWithMl,
     buildMlFeatures,
     predictStudentProfile,
+    predictStudentProfileHeuristic,
     resolveModuleNameForModel,
     PROFILE_INTERPRETATIONS,
 };
