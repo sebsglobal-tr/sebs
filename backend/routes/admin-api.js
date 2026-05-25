@@ -3,6 +3,7 @@ const { logAdminAction } = require('../lib/admin-audit');
 const { getPackagePrices, savePackagePrices, DEFAULT_PRICES } = require('../lib/pricing-store');
 const { grantPackagePurchase } = require('../lib/grant-purchase');
 const { normalizeLevel } = require('../lib/package-prices');
+const { syncAllSupabaseUsers } = require('../lib/supabase-user-sync');
 
 const ROLES = ['user', 'admin', 'instructor'];
 const LEVELS = ['beginner', 'intermediate', 'advanced'];
@@ -94,6 +95,39 @@ function registerAdminApiRoutes(app, { pool, authenticateToken }) {
         } catch (e) {
             console.error('admin users:', e);
             res.status(500).json({ success: false, message: 'Kullanıcı listesi alınamadı.' });
+        }
+    });
+
+    app.post('/api/admin/users/sync-supabase', admin, async (req, res) => {
+        try {
+            const result = await syncAllSupabaseUsers(pool);
+            await logAdminAction(pool, {
+                adminId: req.user.userId,
+                action: 'sync_supabase_users',
+                resource: 'users',
+                details: result,
+                req
+            });
+            res.json({
+                success: true,
+                message:
+                    'Supabase kullanıcıları senkronlandı. Yeni: ' +
+                    result.imported +
+                    ', güncellenen: ' +
+                    result.updated +
+                    (result.skipped ? ', atlanan: ' + result.skipped : '') +
+                    '.',
+                data: result
+            });
+        } catch (e) {
+            console.error('admin sync supabase:', e);
+            const code = e.code || 'SYNC_FAILED';
+            const status = code === 'SUPABASE_SYNC_NOT_CONFIGURED' ? 503 : 500;
+            res.status(status).json({
+                success: false,
+                code,
+                message: e.message || 'Senkron başarısız.'
+            });
         }
     });
 

@@ -23,6 +23,8 @@
 
     let currentView = 'dashboard';
     let userSearch = '';
+    let userListOffset = 0;
+    const userListLimit = 50;
     let pricingDraft = null;
 
     function apiBase() {
@@ -237,11 +239,24 @@
         );
     }
 
+    function usersQueryString() {
+        const params = new URLSearchParams();
+        params.set('limit', String(userListLimit));
+        params.set('offset', String(userListOffset));
+        if (userSearch) params.set('q', userSearch);
+        return '?' + params.toString();
+    }
+
     async function renderUsers(box) {
-        const q = userSearch ? '?q=' + encodeURIComponent(userSearch) + '&limit=50' : '?limit=50';
-        const res = await api('/admin/users' + q);
+        const res = await api('/admin/users' + usersQueryString());
         const users = res.data?.users || [];
         const total = res.data?.total || 0;
+        const limit = res.data?.limit || userListLimit;
+        const offset = res.data?.offset ?? userListOffset;
+        const from = total === 0 ? 0 : offset + 1;
+        const to = Math.min(offset + users.length, total);
+        const hasPrev = offset > 0;
+        const hasNext = offset + users.length < total;
 
         const rows = users
             .map(function (u) {
@@ -272,15 +287,42 @@
             '<h2>Kullanıcılar (' +
             total +
             ')</h2>' +
+            '<div class="admin-card-head-actions">' +
             '<input type="search" class="admin-search" id="userSearchInput" placeholder="E-posta veya ad ara…" value="' +
             esc(userSearch) +
             '">' +
-            '</div>' +
+            '<button type="button" class="admin-btn admin-btn--ghost" id="syncSupabaseUsersBtn" title="Supabase Auth kayıtlarını veritabanına aktarır">' +
+            '<i class="fas fa-cloud-download-alt"></i> Supabase senkron' +
+            '</button>' +
+            '</div></div>' +
+            (total > limit && !userSearch
+                ? '<p class="admin-list-hint">Liste sayfalıdır; özet kartındaki toplam (' +
+                  total +
+                  ') ile tabloda görünen (' +
+                  limit +
+                  ' kayıt/sayfa) farklı olabilir. Tüm kayıtlar için sayfalar arasında geçin veya arama kullanın.</p>'
+                : '') +
             '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr>' +
             '<th>E-posta</th><th>Ad</th><th>Rol</th><th>Seviye</th><th>Durum</th><th>Kayıt</th><th></th>' +
             '</tr></thead><tbody>' +
             (rows || '<tr><td colspan="7">Kullanıcı bulunamadı</td></tr>') +
-            '</tbody></table></div></div>';
+            '</tbody></table></div>' +
+            '<div class="admin-pagination">' +
+            '<span class="admin-pagination__info">Gösterilen: ' +
+            from +
+            '–' +
+            to +
+            ' / ' +
+            total +
+            '</span>' +
+            '<div class="admin-pagination__btns">' +
+            '<button type="button" class="admin-btn admin-btn--ghost" id="usersPrevPage"' +
+            (hasPrev ? '' : ' disabled') +
+            '>Önceki</button>' +
+            '<button type="button" class="admin-btn admin-btn--ghost" id="usersNextPage"' +
+            (hasNext ? '' : ' disabled') +
+            '>Sonraki</button>' +
+            '</div></div></div>';
 
         const searchEl = document.getElementById('userSearchInput');
         if (searchEl) {
@@ -289,8 +331,42 @@
                 clearTimeout(debounce);
                 debounce = setTimeout(function () {
                     userSearch = searchEl.value.trim();
+                    userListOffset = 0;
                     renderUsers(box);
                 }, 350);
+            });
+        }
+
+        const syncBtn = document.getElementById('syncSupabaseUsersBtn');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', async function () {
+                if (!confirm('Supabase Auth\'taki tüm kullanıcılar veritabanına aktarılsın mı?')) return;
+                syncBtn.disabled = true;
+                try {
+                    const syncRes = await api('/admin/users/sync-supabase', { method: 'POST' });
+                    toast(syncRes.message || 'Senkron tamamlandı');
+                    userListOffset = 0;
+                    await renderUsers(box);
+                } catch (e) {
+                    toast(e.message || 'Senkron başarısız');
+                } finally {
+                    syncBtn.disabled = false;
+                }
+            });
+        }
+
+        const prevBtn = document.getElementById('usersPrevPage');
+        const nextBtn = document.getElementById('usersNextPage');
+        if (prevBtn && hasPrev) {
+            prevBtn.addEventListener('click', function () {
+                userListOffset = Math.max(0, offset - limit);
+                renderUsers(box);
+            });
+        }
+        if (nextBtn && hasNext) {
+            nextBtn.addEventListener('click', function () {
+                userListOffset = offset + limit;
+                renderUsers(box);
             });
         }
 
