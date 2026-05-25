@@ -57,10 +57,14 @@
   }
 
   function getScene(id) {
-    if (id === 'doctor' || id === 'whatsapp' || id === 'manager') {
+    if (id === 'doctor' || id === 'lot' || id === 'whatsapp' || id === 'manager') {
       return CFG.resolveScene(id, state);
     }
-    return CFG.scenes[id];
+    var base = CFG.scenes[id];
+    if (base && base.dynamic === 'lot') {
+      return CFG.resolveScene('lot', state);
+    }
+    return base;
   }
 
   function sceneProgress() {
@@ -72,12 +76,15 @@
       'particle',
       'particle_mini',
       'doctor',
+      'nermin',
       'competitor',
       'offlabel',
       'whatsapp',
       'service',
       'brief',
+      'murat_sms',
       'report',
+      'evening_return',
       'manager',
       'finale',
     ];
@@ -127,7 +134,7 @@
       '</p>' +
       renderFlakon() +
       '<ul class="ip-intro-list">' +
-      '<li>13 karar sahnesi · hafızalı skor</li>' +
+      '<li>16+ karar sahnesi · hafızalı skor</li>' +
       '<li>Fatal compliance error takibi</li>' +
       '<li>Performans kartı ve özet rapor</li>' +
       '</ul>' +
@@ -214,6 +221,21 @@
         html += '<li>' + esc(ln) + '</li>';
       });
       html += '</ul></div>';
+    }
+
+    if (scene.agenda && scene.agenda.length) {
+      html += '<div class="ip-agenda"><h4>Günün programı</h4><ul>';
+      scene.agenda.forEach(function (item) {
+        html += '<li><span>' + esc(item.time) + '</span> ' + esc(item.label) + '</li>';
+      });
+      html += '</ul></div>';
+    }
+
+    if (scene.type === 'sms') {
+      html += '<div class="ip-sms">';
+      html += '<div class="ip-sms__from">' + esc(scene.smsFrom || 'Mesaj') + '</div>';
+      html += '<div class="ip-sms__body">' + esc(scene.smsBody || '') + '</div>';
+      html += '</div>';
     }
 
     if (scene.narrative) {

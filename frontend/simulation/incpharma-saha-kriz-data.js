@@ -44,7 +44,14 @@ window.INCPHARMA_SIM = {
       time: '08:42',
       location: 'Atlas Üniversitesi Hastanesi — Otopark',
       narrative:
-        'Takviminizde onkoloji servisi, iki hekim görüşmesi ve gün sonu raporu var. Tam kapıdan girecekken telefon titrer.',
+        'Arabanızı otoparka park ettiniz. Her şey sıradan görünüyor — ta ki hastane kapısına yürürken telefon titreyene kadar.',
+      agenda: [
+        { time: '09.00', label: 'Onkoloji servisi — kısa ziyaret' },
+        { time: '10.30', label: 'Dr. Selim Arda görüşmesi' },
+        { time: '11.15', label: 'Dr. Hakan Er — kısa ürün değerlendirmesi' },
+        { time: '14.00', label: 'Servis ekibi bilgilendirme (ihtimal)' },
+        { time: '17.30', label: 'Murat Bey — gün sonu saha raporu' },
+      ],
       alert: {
         title: 'Acil Saha Bildirimi',
         lines: [
@@ -116,39 +123,7 @@ window.INCPHARMA_SIM = {
 
     lot: {
       title: 'Lot izleme — Hangi parti, hangi flakon?',
-      location: 'İlaç hazırlama alanı',
-      narrative:
-        'Masa üzerinde kullanılmış ambalaj, raftaki kutular ve teslim fişi var. Kullanılan lot: ORV-24-118A.',
-      dialogue: [{ who: 'Hemşire Ece', text: 'Kullanılan flakon bu kutudan. Aynı lot ürünleri kullanmaya devam edelim mi, ayıralım mı?' }],
-      choices: [
-        {
-          id: 'lot_record',
-          label: 'Kayıt ve ayrıştırmayı hastane prosedürüyle birleştirmek',
-          detail:
-            'Lot, uygulama zamanı, ambalaj ve aynı lot ürünler ayrı kayıt altına; şüpheli ürünler hastane prosedürüyle ayrıştırılmalı. Kalite ve farmakovijilans bildirimi başlatılacak.',
-          effects: { escalationDiscipline: 10, relationshipManagement: 6, crisisCommunication: 6, decisionQuality: 6 },
-          next: 'particle',
-        },
-        {
-          id: 'lot_stop',
-          label: 'Aynı lotu şimdilik kullanmayın',
-          detail: 'Aynı lot ürünleri şimdilik kullanmayın; lot ve fişi alıp ileteceğim.',
-          effects: {
-            flags: { roleOverreach: true },
-            relationshipManagement: -4,
-            escalationDiscipline: 4,
-            decisionQuality: -2,
-          },
-          next: 'particle',
-        },
-        {
-          id: 'lot_analyze',
-          label: 'Önce kanıt eşleştirmesi — yavaş ama analitik',
-          detail: 'Uygulama kaydı ve ambalaj eşleşmeden tüm lotu şüpheli saymak doğru olmayabilir.',
-          effects: { scientificAccuracy: 6, crisisCommunication: -4, relationshipManagement: -3 },
-          next: 'particle',
-        },
-      ],
+      dynamic: 'lot',
     },
 
     particle: {
@@ -232,6 +207,44 @@ window.INCPHARMA_SIM = {
           detail: 'Emin değilsek doktorla bakarız; belki yansımadır.',
           effects: { flags: { particleUnclear: true }, crisisCommunication: -6, scientificAccuracy: -4 },
           next: 'doctor',
+        },
+      ],
+    },
+
+    nermin: {
+      title: 'Ara olay — Dr. Nermin Kaya',
+      time: 'Öğleden sonra',
+      location: 'Onkoloji servisi — koridor',
+      narrative:
+        'Kriz sonrası servis ekibi kısa açıklama bekliyor. Dr. Nermin Kaya kapıda belirir; net ve sabırsız.',
+      dialogue: [
+        {
+          who: 'Dr. Nermin Kaya',
+          text: 'Uzun anlatmayın. Ekip ürün kaynaklı mı değil mi bilmek istemiyor — süreç ne, kim ne zaman dönecek? Abartılı ürün savunması istemiyorum.',
+        },
+      ],
+      choices: [
+        {
+          id: 'nermin_process',
+          label: '60 saniyelik şeffaf süreç özeti',
+          detail:
+            'İki bildirim var: reaksiyon şüphesi farmakovijilans, flakon şüphesi kalite. Klinik karar sizin; biz kayıt, ayrıştırma ve yazılı resmi dönüş.',
+          effects: { crisisRecovery: 10, crisisCommunication: 8, professionalRepresentation: 6 },
+          next: 'competitor',
+        },
+        {
+          id: 'nermin_short',
+          label: 'Çok kısa — detay sonra',
+          detail: 'Firmaya ilettik, değerlendirme sonrası döneceğiz.',
+          effects: { crisisRecovery: 2, relationshipManagement: -4 },
+          next: 'competitor',
+        },
+        {
+          id: 'nermin_defend',
+          label: 'Ürünü savun — endişe abartılı',
+          detail: 'OncoRelief onaylı çerçevede kullanılıyor; ürün kaynaklı kanıt yok, endişe abartılı.',
+          effects: { crisisRecovery: -10, relationshipManagement: -8, flags: { earlyDefensive: true } },
+          next: 'competitor',
         },
       ],
     },
@@ -398,6 +411,40 @@ window.INCPHARMA_SIM = {
       ],
     },
 
+    murat_sms: {
+      title: 'Gün içi — Murat Bey mesajı',
+      type: 'sms',
+      time: '16:10',
+      smsFrom: 'Murat Bey · Bölge Müdürü',
+      smsBody:
+        'Atlas ziyareti nasıl gidiyor? Hastane stratejik — ama stratejik diye uyum sınırını esnetme. Gün sonu raporunda olay-risk-aksiyon net olsun.',
+      narrative: 'Saha uygulamasından kısa mesaj. Ticari baskı ile etik sınır aynı anda.',
+      choices: [
+        {
+          id: 'sms_process',
+          label: 'Süreç odaklı kısa yanıt',
+          detail:
+            'İki bildirim açıldı (FV + kalite). Off-label medikal kanala, destek talebi sınırlandı. Raporu olay sınıflandırmasıyla ileteceğim.',
+          effects: { reportingDiscipline: 6, ethicalIntegrity: 6, professionalRepresentation: 6 },
+          next: 'report',
+        },
+        {
+          id: 'sms_vague',
+          label: 'Belirsiz — «iyi gidiyor»',
+          detail: 'Genel olarak kontrol altında, akşam raporlarım.',
+          effects: { reportingDiscipline: -4, decisionQuality: -2 },
+          next: 'report',
+        },
+        {
+          id: 'sms_pressure',
+          label: 'İlişkiyi kurtarmak için esnek davrandığımı yaz',
+          detail: 'Hastane gerildi, ilişkiyi korumak için esnek davrandım.',
+          effects: { ethicalIntegrity: -8, relationshipManagement: 4 },
+          next: 'report',
+        },
+      ],
+    },
+
     brief: {
       title: 'Servis ekibine kısa açıklama',
       narrative: 'Levent Bey sonrası servis ekibi 60–90 saniyelik bilgilendirme bekliyor. Tonunuz Kriz Sonrası Güven Onarımı puanını belirler.',
@@ -408,21 +455,21 @@ window.INCPHARMA_SIM = {
           detail:
             'İki bildirim: reaksiyon şüphesi (farmakovijilans) ve flakon şüphesi (kalite). Klinik yorum hekimlerin; kesin neden-sonuç yorumu yapmayacağız; resmi yazılı süreç.',
           effects: { crisisRecovery: 12, relationshipManagement: 8, professionalRepresentation: 8 },
-          next: 'report',
+          next: 'murat_sms',
         },
         {
           id: 'brief_short',
           label: 'Kısa ama yetersiz',
           detail: 'Olayları ileteceğiz; ürün bilgi dosyasındaki uyarılar dikkate alınmalı.',
           effects: { crisisRecovery: 4, scientificAccuracy: 4 },
-          next: 'report',
+          next: 'murat_sms',
         },
         {
           id: 'brief_defensive',
           label: 'Savunmacı ürün dili',
           detail: 'Doğrudan ürün kaynaklı veri yok; gereksiz endişe oluşmaması önemli.',
           effects: { crisisRecovery: -10, relationshipManagement: -8, flags: { earlyDefensive: true } },
-          next: 'report',
+          next: 'murat_sms',
         },
       ],
     },
@@ -469,6 +516,18 @@ window.INCPHARMA_SIM = {
           ],
         },
       ],
+      next: 'evening_return',
+    },
+
+    evening_return: {
+      title: 'Gün sonu — Ofise dönüş',
+      time: '18:05',
+      location: 'INCPHARMA · Saha uygulaması',
+      continueLabel: 'Murat Bey ile görüşmeye gir',
+      narrative:
+        'Gün boyunca yaşananlar sistem notlarına, saha rapor taslağına ve hastane geri bildirimlerine işlendi. Toplantı odasında Murat Bey bekliyor — bu «gün nasıl geçti» sohbeti değil.',
+      thought:
+        'Kriz dili, etik sınır ve ilişki yönetimi aynı masada sorulacak. Kriz sonrası kısa bilgilendirmen de değerlendirildi: ürünü mü savundun, süreci mi şeffaflaştırdın?',
       next: 'manager',
     },
 
@@ -532,6 +591,9 @@ window.INCPHARMA_SIM.resolveScene = function (sceneId, state) {
   if (!base) return null;
   if (sceneId === 'doctor') {
     return window.INCPHARMA_SIM.buildDoctorScene(state);
+  }
+  if (sceneId === 'lot') {
+    return window.INCPHARMA_SIM.buildLotScene(state);
   }
   if (sceneId === 'whatsapp') {
     return window.INCPHARMA_SIM.buildWhatsappScene(state, base);
@@ -603,9 +665,88 @@ window.INCPHARMA_SIM.buildDoctorScene = function (state) {
         label: 'Sorumluluğu hastaneye at',
         detail: 'Bu kararı zaten siz veriyorsunuz; ben sadece not alacağımı söyledim.',
         effects: { flags: { relationshipDamaged: true }, relationshipManagement: -10 },
-        next: 'competitor',
+        next: 'nermin',
       },
     ],
+  };
+};
+
+window.INCPHARMA_SIM.buildLotScene = function (state) {
+  var f = state.flags || {};
+  var narrative =
+    'İlaç hazırlama alanında kullanılmış ambalaj, raftaki kutular (aynı lot ORV-24-118A ve bir farklı lot) ve teslim fişi var.';
+  var dialogue = [];
+
+  if (f.roleOverreach) {
+    narrative +=
+      ' Servis sorumlusu Levent Bey yaklaşır — az önce «kullanımı durdurun» ifadesini duymuş.';
+    dialogue.push({
+      who: 'Levent Bey',
+      text: 'Firma temsilcisi olarak servis kullanım kararımıza siz mi müdahale ediyorsunuz? Hangi yetkiyle söylüyorsunuz?',
+    });
+  } else if (f.earlyDefensive) {
+    dialogue.push({
+      who: 'Hemşire Ece',
+      text: 'Lütfen bu kez net olalım. Biz olayı küçük göstermeye çalışmıyoruz. Hangi bilgileri kayda almalıyız?',
+    });
+  } else {
+    dialogue.push({
+      who: 'Hemşire Ece',
+      text: 'Tamam, hangi bilgileri kayda almamız gerektiğini birlikte netleştirelim. Kullanılan flakon bu kutudan — aynı lot ürünleri ayıralım mı?',
+    });
+  }
+
+  var choices = [
+    {
+      id: 'lot_record',
+      label: 'Kayıt ve ayrıştırmayı hastane prosedürüyle birleştirmek',
+      detail:
+        'Lot, uygulama zamanı, ambalaj ve aynı lot ürünler ayrı kayıt altına; şüpheli ürünler hastane prosedürüyle ayrıştırılmalı. Kalite ve farmakovijilans bildirimi başlatılacak.',
+      effects: { escalationDiscipline: 10, relationshipManagement: 6, crisisCommunication: 6, decisionQuality: 6 },
+      next: 'particle',
+    },
+    {
+      id: 'lot_stop',
+      label: 'Aynı lotu şimdilik kullanmayın (firma önerisi)',
+      detail: 'Aynı lot ürünleri şimdilik kullanmayın; lot ve fişi alıp ileteceğim — hastane kararı olarak değil, firma önerisi.',
+      effects: {
+        relationshipManagement: -4,
+        escalationDiscipline: 4,
+        decisionQuality: -2,
+      },
+      next: 'particle',
+    },
+    {
+      id: 'lot_analyze',
+      label: 'Önce kanıt eşleştirmesi — yavaş ama analitik',
+      detail: 'Uygulama kaydı ve ambalaj eşleşmeden tüm lotu şüpheli saymak doğru olmayabilir; ama servis ne yapacağını da bilmeli.',
+      effects: { scientificAccuracy: 6, crisisCommunication: -4, relationshipManagement: -3 },
+      next: 'particle',
+    },
+  ];
+
+  if (f.roleOverreach) {
+    choices.unshift({
+      id: 'lot_recover_levent',
+      label: 'Levent Bey’e rol sınırını netleştir (toparlama)',
+      detail:
+        'Klinik veya operasyon kararı vermek istemem. Kastım, şüpheli ürünlerin hastane prosedürünüzle ayrıştırılması ve kayıt altına alınmasıydı.',
+      effects: {
+        flags: { recoveryStrong: true },
+        relationshipManagement: 8,
+        crisisCommunication: 6,
+        professionalRepresentation: 6,
+      },
+      next: 'particle',
+    });
+  }
+
+  return {
+    title: 'Lot izleme — Hangi parti, hangi flakon?',
+    location: 'İlaç hazırlama alanı',
+    narrative: narrative,
+    dialogue: dialogue,
+    choices: choices,
   };
 };
 
