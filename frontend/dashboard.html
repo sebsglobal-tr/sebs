@@ -65,6 +65,7 @@
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
+  <link rel="stylesheet" href="/css/dashboard-study-plan.css?v=1" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -333,6 +334,23 @@
                 <p class="text-slate-700">Hangi derste nerede eksik olduğunuz, yanlışlarınız ve kişisel çalışma planınız ayrı sayfada.</p>
                 <p class="mt-2 text-sm text-slate-500">&quot;Detaylı raporu aç&quot; ile modül modül analiz, AI profili ve haftalık tavsiyeleri görün.</p>
             </div>
+
+            <div class="mt-10 rounded-2xl border border-violet-200/80 bg-white p-6 shadow-card sm:p-8" id="dashboardStudyPlanSection">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                            <i class="fas fa-calendar-check mr-2 text-violet-600" aria-hidden="true"></i>Raporuna göre çalışma programın
+                        </h3>
+                        <p class="mt-1 max-w-2xl text-sm text-slate-600">
+                            Değerlendirme raporundaki modül, quiz ve simülasyon verilerine göre haftalık ne yapmanız ve nasıl çalışmanız gerektiğini özetler.
+                        </p>
+                    </div>
+                    <a href="/degerlendirme-raporu.html#report-plan" class="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-violet-700 hover:text-violet-900 focus-ring rounded-lg">
+                        Tam plan <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div id="dashboardStudyPlanMount" class="dashboard-study-plan-mount" aria-live="polite"></div>
+            </div>
             </div>
         </section>
     </main>
@@ -356,6 +374,7 @@
     <script src="/utils/module-progress.js"></script>
     <script src="/js/dashboard-simulation-history.js?v=1"></script>
     <script src="/js/dashboard-module-progress.js?v=1"></script>
+    <script src="/js/dashboard-study-plan.js?v=1"></script>
     <script>
         // Boş ilerleme kartında gösterilen kısa açıklama (cihazlar arası localStorage / API)
         var dashboardCrossDeviceHintHtml =
@@ -642,11 +661,21 @@
                 // Paketler ve ilerleme birbirini beklemesin; /users/me yavaşsa simülasyon listesi gecikmesin
                 await Promise.all([loadPurchases(), loadProgress()]);
                 renderBigFiveDashboardCard();
+                if (typeof window.loadDashboardStudyPlan === 'function') {
+                    window.loadDashboardStudyPlan().catch(function (e) {
+                        console.warn('loadDashboardStudyPlan:', e);
+                    });
+                }
 
                 document.addEventListener('visibilitychange', function onVis() {
                     if (document.visibilityState !== 'visible') return;
                     loadProgress().catch(function (e) { console.warn('loadProgress on visibility:', e); });
                     renderBigFiveDashboardCard();
+                    if (typeof window.loadDashboardStudyPlan === 'function') {
+                        window.loadDashboardStudyPlan(true).catch(function (e) {
+                            console.warn('loadDashboardStudyPlan on visibility:', e);
+                        });
+                    }
                 });
                 
             } catch (error) {
