@@ -1,7 +1,7 @@
 /**
- * INCPHARMA — sahne illüstrasyonları, zaman çizelgesi, seçenek stilleri
+ * Medikal saha — sahne illüstrasyonları, zaman çizelgesi, seçenek stilleri
  */
-window.INCPHARMA_VISUALS = (function () {
+window.SEBS_SAHA_VISUALS = (function () {
   'use strict';
 
   function esc(s) {
@@ -155,7 +155,7 @@ window.INCPHARMA_VISUALS = (function () {
 
   function renderHeroChars(names) {
     if (!names || !names.length) return '';
-    var chars = window.INCPHARMA_UI && window.INCPHARMA_UI.character;
+    var chars = window.SEBS_SAHA_UI && window.SEBS_SAHA_UI.character;
     var html = '<div class="ip-hero__cast">';
     names.forEach(function (name, i) {
       var c = chars ? chars(name) : { initials: '?', hue: '#64748b', icon: 'fa-user' };
@@ -284,10 +284,20 @@ window.INCPHARMA_VISUALS = (function () {
 
   function envConsult() {
     return (
-      '<div class="ip-hero__env ip-env-consult">' +
-      '<div class="ip-consult__desk"></div>' +
-      '<div class="ip-consult__doc"></div>' +
-      '<div class="ip-consult__folder"><i class="fas fa-file-medical"></i> Ruhsatlı bilgi</div></div>'
+      '<div class="ip-hero__env ip-env-consult" aria-hidden="true">' +
+      '<div class="ip-consult__room">' +
+      '<div class="ip-consult__window"></div>' +
+      '<div class="ip-consult__bookshelf"></div>' +
+      '<div class="ip-consult__desk">' +
+      '<div class="ip-consult__monitor">' +
+      '<span class="ip-consult__monitor-tag"><i class="fas fa-file-medical"></i> Ruhsatlı bilgi</span>' +
+      '<span class="ip-consult__monitor-line"></span><span class="ip-consult__monitor-line"></span>' +
+      '</div>' +
+      '<div class="ip-consult__folder ip-consult__folder--smcp"><i class="fas fa-book"></i> SmPC</div>' +
+      '</div>' +
+      '<div class="ip-consult__chair"></div>' +
+      '<div class="ip-consult__badge"><i class="fas fa-scale-balanced"></i> Etik sınır</div>' +
+      '</div></div>'
     );
   }
 
@@ -328,7 +338,7 @@ window.INCPHARMA_VISUALS = (function () {
   function envOffice() {
     return (
       '<div class="ip-hero__env ip-env-office">' +
-      '<div class="ip-office__logo">INCPHARMA</div>' +
+      '<div class="ip-office__logo">Kurumsal</div>' +
       '<div class="ip-office__glass"></div></div>'
     );
   }

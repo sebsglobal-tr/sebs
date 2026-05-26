@@ -1,7 +1,7 @@
 /**
- * INCPHARMA — seçimlerden oluşan canlı saha raporu
+ * Medikal saha — seçimlerden oluşan canlı saha raporu
  */
-window.INCPHARMA_REPORT = (function () {
+window.SEBS_SAHA_REPORT = (function () {
   'use strict';
 
   function esc(s) {
@@ -202,7 +202,7 @@ window.INCPHARMA_REPORT = (function () {
   }
 
   function appendOpening(report) {
-    var sim = window.INCPHARMA_SIM;
+    var sim = window.SEBS_SAHA_SIM;
     return append(
       report,
       entry(
@@ -321,7 +321,7 @@ window.INCPHARMA_REPORT = (function () {
   }
 
   function renderFullDocument(report, state) {
-    var sim = window.INCPHARMA_SIM;
+    var sim = window.SEBS_SAHA_SIM;
     var dateStr = new Date().toLocaleDateString('tr-TR', {
       weekday: 'long',
       year: 'numeric',
@@ -332,7 +332,7 @@ window.INCPHARMA_REPORT = (function () {
     var html =
       '<div class="ip-fr-doc" id="ipFieldReportDoc">' +
       '<header class="ip-fr-doc__letterhead">' +
-      '<div class="ip-fr-doc__logo">INCPHARMA</div>' +
+      '<div class="ip-fr-doc__logo">Saha raporu</div>' +
       '<div class="ip-fr-doc__meta"><h2>Gün Sonu Saha Raporu</h2><dl>' +
       '<div><dt>Rapor no</dt><dd>' +
       esc(report.reportNo) +
@@ -377,7 +377,7 @@ window.INCPHARMA_REPORT = (function () {
     }
     return (
       html +
-      '<footer class="ip-fr-doc__foot"><p>INCPHARMA Saha · Simülasyon raporu</p></footer></div>'
+      '<footer class="ip-fr-doc__foot"><p>Saha uygulaması · Simülasyon raporu</p></footer></div>'
     );
   }
 

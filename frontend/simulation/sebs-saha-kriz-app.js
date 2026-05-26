@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  var CFG = window.INCPHARMA_SIM;
-  var UI = window.INCPHARMA_UI;
-  var VIS = window.INCPHARMA_VISUALS;
-  var DEMO = window.INCPHARMA_DEMO;
+  var CFG = window.SEBS_SAHA_SIM;
+  var UI = window.SEBS_SAHA_UI;
+  var VIS = window.SEBS_SAHA_VISUALS;
+  var DEMO = window.SEBS_SAHA_DEMO;
 
   function reportApi() {
-    return window.INCPHARMA_REPORT;
+    return window.SEBS_SAHA_REPORT;
   }
 
   if (!CFG) return;
@@ -117,7 +117,7 @@
       '<div class="ip-flakon" aria-hidden="true">' +
       '<div class="ip-flakon__cap"></div>' +
       '<div class="ip-flakon__body">' +
-      '<span class="ip-flakon__logo">INCPHARMA</span>' +
+      '<span class="ip-flakon__logo">' + esc(CFG.product) + '</span>' +
       '<strong>OncoRelief IV</strong>' +
       '<span>Relivansetron</span>' +
       '<span class="ip-flakon__sub">Steril IV Flakon</span>' +
@@ -524,7 +524,7 @@
   }
 
   function loadReportScript(cb) {
-    if (window.INCPHARMA_REPORT) {
+    if (window.SEBS_SAHA_REPORT) {
       cb();
       return;
     }
@@ -534,7 +534,7 @@
       return;
     }
     var s = document.createElement('script');
-    s.src = '/simulation/incpharma-saha-kriz-report.js?v=9';
+    s.src = '/simulation/sebs-saha-kriz-report.js?v=16';
     s.dataset.ipReport = '1';
     s.onload = cb;
     s.onerror = function () {

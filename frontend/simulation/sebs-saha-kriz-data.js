@@ -1,11 +1,11 @@
 /**
- * INCPHARMA — Bir Günde Sahada (Demo Assessment)
+ * Medikal saha simülasyonu — Bir Günde Sahada (Demo)
  * Kurgusal ürün; gerçek tedavi/ürün iddiası yoktur.
  */
-window.INCPHARMA_SIM = {
-  id: 'incpharma-saha-kriz-demo',
+window.SEBS_SAHA_SIM = {
+  id: 'saha-kriz-demo',
   title: 'Bir Günde Sahada — Kriz, Etik ve Bilimsel Temsil',
-  company: 'INCPHARMA',
+  company: 'Kurgusal ilaç firması',
   product: 'OncoRelief IV',
   molecule: 'Relivansetron',
   lot: 'ORV-24-118A',
@@ -58,7 +58,7 @@ window.INCPHARMA_SIM = {
         vibrate: true,
         critical: true,
         time: '08:42',
-        app: 'INCPHARMA Saha',
+        app: 'Saha uygulaması',
         title: 'Acil Saha Bildirimi',
         body: 'OncoRelief IV — ciddi reaksiyon / anafilaktik reaksiyon şüphesi',
         lines: [
@@ -80,7 +80,7 @@ window.INCPHARMA_SIM = {
       narrative:
         'Koridor hareketli. Hemşire Ece sizi görür; Dr. Selim Arda hasta odasından çıkmıştır. Ekip net ve sorumlu açıklama bekliyor.',
       dialogue: [
-        { who: 'Hemşire Ece', text: 'Siz INCPHARMA temsilcisisiniz değil mi? Az önce OncoRelief IV sonrası hasta ciddi reaksiyon verdi. Ekip üründen şüpheleniyor. Ne söyleyebilirsiniz?' },
+        { who: 'Hemşire Ece', text: 'Siz saha temsilcisisiniz değil mi? Az önce OncoRelief IV sonrası hasta ciddi reaksiyon verdi. Ekip üründen şüpheleniyor. Ne söyleyebilirsiniz?' },
         { who: 'Dr. Selim Arda', text: 'Tedavi kararına karışmanızı istemiyorum. Ürün güvenliliği, bildirim süreci ve bundan sonra nasıl ilerleyeceğimiz konusunda net olmanız gerekiyor.' },
       ],
       choices: [
@@ -428,7 +428,7 @@ window.INCPHARMA_SIM = {
       type: 'sms',
       time: '16:10',
       smsFrom: 'Murat Bey',
-      smsRole: 'Bölge Müdürü · INCPHARMA',
+      smsRole: 'Bölge Müdürü',
       smsBody:
         'Atlas ziyareti nasıl gidiyor? Hastane stratejik — ama stratejik diye uyum sınırını esnetme. Gün sonu raporunda olay-risk-aksiyon net olsun.',
       narrative: 'Saha uygulamasından kısa mesaj. Ticari baskı ile etik sınır aynı anda.',
@@ -491,7 +491,7 @@ window.INCPHARMA_SIM = {
       title: 'Gün sonu saha raporu',
       type: 'report',
       time: '17:05',
-      location: 'INCPHARMA Saha uygulaması',
+      location: 'Saha uygulaması',
       narrative:
         'Gün boyunca verdiğiniz her yanıt otomatik olarak saha raporuna işlendi. Aşağıdaki belgeyi kontrol edin; onayladığınızda Murat Bey ile görüşme aşamasına geçilir.',
       next: 'evening_return',
@@ -500,7 +500,7 @@ window.INCPHARMA_SIM = {
     evening_return: {
       title: 'Gün sonu — Ofise dönüş',
       time: '18:05',
-      location: 'INCPHARMA · Saha uygulaması',
+      location: 'Saha uygulaması — rapor',
       continueLabel: 'Murat Bey ile görüşmeye gir',
       narrative:
         'Gün boyunca yaşananlar sistem notlarına, saha rapor taslağına ve hastane geri bildirimlerine işlendi. Toplantı odasında Murat Bey bekliyor — bu «gün nasıl geçti» sohbeti değil.',
@@ -512,7 +512,7 @@ window.INCPHARMA_SIM = {
     manager: {
       title: 'Müdür baskısı — Boss fight',
       time: '18:20',
-      location: 'INCPHARMA — Toplantı odası',
+      location: 'Toplantı odası',
       narrative:
         'Murat Bey dosyaya bakar. «Etik kararı nasıl savundun, ilişkiyi nasıl korudun, kriz sonrası açıklaman güveni onardı mı?»',
       choices: [
@@ -564,28 +564,28 @@ window.INCPHARMA_SIM = {
 };
 
 /** Dinamik sahneler: önceki kararlara göre */
-window.INCPHARMA_SIM.resolveScene = function (sceneId, state) {
+window.SEBS_SAHA_SIM.resolveScene = function (sceneId, state) {
   if (sceneId === 'doctor') {
-    return window.INCPHARMA_SIM.buildDoctorScene(state);
+    return window.SEBS_SAHA_SIM.buildDoctorScene(state);
   }
   if (sceneId === 'lot') {
-    return window.INCPHARMA_SIM.buildLotScene(state);
+    return window.SEBS_SAHA_SIM.buildLotScene(state);
   }
-  var base = window.INCPHARMA_SIM.scenes[sceneId];
+  var base = window.SEBS_SAHA_SIM.scenes[sceneId];
   if (!base) return null;
   if (base.dynamic === 'lot') {
-    return window.INCPHARMA_SIM.buildLotScene(state);
+    return window.SEBS_SAHA_SIM.buildLotScene(state);
   }
   if (sceneId === 'whatsapp') {
-    return window.INCPHARMA_SIM.buildWhatsappScene(state, base);
+    return window.SEBS_SAHA_SIM.buildWhatsappScene(state, base);
   }
   if (sceneId === 'manager') {
-    return window.INCPHARMA_SIM.buildManagerScene(state, base);
+    return window.SEBS_SAHA_SIM.buildManagerScene(state, base);
   }
   return base;
 };
 
-window.INCPHARMA_SIM.buildDoctorScene = function (state) {
+window.SEBS_SAHA_SIM.buildDoctorScene = function (state) {
   var f = state.flags || {};
   var dialogue = [];
   var narrative = 'Dr. Selim Arda sizi kenara çağırır. Reaksiyon şüphesi ve flakon görsel şüphesi birlikte değerlendiriliyor.';
@@ -652,7 +652,7 @@ window.INCPHARMA_SIM.buildDoctorScene = function (state) {
   };
 };
 
-window.INCPHARMA_SIM.buildLotScene = function (state) {
+window.SEBS_SAHA_SIM.buildLotScene = function (state) {
   var f = state.flags || {};
   var narrative =
     'İlaç hazırlama alanında kullanılmış ambalaj, raftaki kutular (aynı lot ORV-24-118A ve bir farklı lot) ve teslim fişi var.';
@@ -732,7 +732,7 @@ window.INCPHARMA_SIM.buildLotScene = function (state) {
   };
 };
 
-window.INCPHARMA_SIM.buildWhatsappScene = function (state, base) {
+window.SEBS_SAHA_SIM.buildWhatsappScene = function (state, base) {
   var msg =
     state.flags.offLabelRisk
       ? 'Az önce konuştuğumuz off-label konu için yayınları gönderebilir misiniz? Konsey öncesi göz atmak isterim.'
@@ -752,7 +752,7 @@ window.INCPHARMA_SIM.buildWhatsappScene = function (state, base) {
   });
 };
 
-window.INCPHARMA_SIM.buildManagerScene = function (state, base) {
+window.SEBS_SAHA_SIM.buildManagerScene = function (state, base) {
   var choices = base.choices.filter(function (c) {
     if (c.requiresFatal && !(state.fatalErrors && state.fatalErrors.length)) return false;
     if (c.id === 'mgr_own_fatal' && !(state.fatalErrors && state.fatalErrors.length)) return false;

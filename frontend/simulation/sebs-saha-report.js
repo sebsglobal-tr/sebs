@@ -1,11 +1,11 @@
 /**
- * INCPHARMA — seçimlerden oluşan canlı saha raporu
+ * Medikal saha — seçimlerden oluşan canlı saha raporu
  */
-window.INCPHARMA_REPORT = (function () {
+window.SEBS_SAHA_REPORT = (function () {
   'use strict';
 
   var CFG = function () {
-    return window.INCPHARMA_SIM;
+    return window.SEBS_SAHA_SIM;
   };
 
   function esc(s) {
@@ -463,7 +463,7 @@ window.INCPHARMA_REPORT = (function () {
         'Acil saha bildirimi — ziyaret öncesi',
         [
           '08:42 · Atlas Üniversitesi Hastanesi · Otopark',
-          'INCPHARMA Saha uygulaması bildirimi alındı',
+          'Saha uygulaması bildirimi alındı',
           'Ürün: ' + (sim && sim.product) + ' · Lot ' + (sim && sim.lot),
           'Bildirim: Ciddi reaksiyon / anafilaktik reaksiyon şüphesi — Onkoloji',
           'Durum: Saha temsilcisi servise yönlendirildi',
@@ -612,7 +612,7 @@ window.INCPHARMA_REPORT = (function () {
 
     var html = '<div class="ip-fr-doc" id="ipFieldReportDoc">';
     html += '<header class="ip-fr-doc__letterhead">';
-    html += '<div class="ip-fr-doc__logo">INCPHARMA</div>';
+    html += '<div class="ip-fr-doc__logo">Saha raporu</div>';
     html += '<div class="ip-fr-doc__meta">';
     html += '<h2>Gün Sonu Saha Raporu</h2>';
     html += '<dl>';
@@ -661,7 +661,7 @@ window.INCPHARMA_REPORT = (function () {
     }
 
     html +=
-      '<footer class="ip-fr-doc__foot"><p>Bu rapor INCPHARMA Saha uygulaması simülasyon çıktısıdır · Eğitim amaçlı kurgu</p></footer>';
+      '<footer class="ip-fr-doc__foot"><p>Bu rapor saha uygulaması simülasyon çıktısıdır · Eğitim amaçlı kurgu</p></footer>';
     html += '</div>';
     return html;
   }

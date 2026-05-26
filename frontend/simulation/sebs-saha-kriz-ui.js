@@ -1,7 +1,7 @@
 /**
- * INCPHARMA simülasyonu — telefon ve sahne görselleri
+ * Medikal saha simülasyonu — telefon ve sahne görselleri
  */
-window.INCPHARMA_UI = (function () {
+window.SEBS_SAHA_UI = (function () {
   'use strict';
 
   function esc(s) {
@@ -33,7 +33,7 @@ window.INCPHARMA_UI = (function () {
     service: { icon: 'fa-users', label: 'Servis sorumlusu', tone: 'slate' },
     brief: { icon: 'fa-bullhorn', label: 'Servis ekibi', tone: 'emerald' },
     report: { icon: 'fa-file-lines', label: 'Saha uygulaması — rapor', tone: 'blue' },
-    evening_return: { icon: 'fa-building', label: 'INCPHARMA ofis', tone: 'indigo' },
+    evening_return: { icon: 'fa-building', label: 'Kurumsal ofis', tone: 'indigo' },
     manager: { icon: 'fa-user-tie', label: 'Murat Bey — değerlendirme', tone: 'indigo' },
   };
 
@@ -101,10 +101,12 @@ window.INCPHARMA_UI = (function () {
     var vibrateClass = o.vibrate !== false && o.ring ? ' ip-device-wrap--vibrate' : '';
     var criticalClass = o.critical ? ' ip-push--critical' : '';
 
+    var compactClass = o.compact ? ' ip-device-wrap--compact' : '';
     var html =
       '<div class="ip-device-wrap' +
       ringClass +
       vibrateClass +
+      compactClass +
       '">' +
       (o.ring
         ? '<div class="ip-device-wrap__alert-band"><i class="fas fa-bell"></i> Telefon titriyor</div>'
@@ -135,7 +137,7 @@ window.INCPHARMA_UI = (function () {
         '<span class="ip-push__icon"><i class="fas fa-briefcase-medical"></i></span>' +
         '<div class="ip-push__meta">' +
         '<span class="ip-push__app">' +
-        esc(o.app || 'INCPHARMA Saha') +
+        esc(o.app || 'Saha uygulaması') +
         '</span>' +
         '<span class="ip-push__when">şimdi</span></div></div>' +
         '<div class="ip-push__title">' +

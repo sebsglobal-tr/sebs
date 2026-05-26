@@ -1,7 +1,7 @@
 /**
- * INCPHARMA — kurumsal demo deneyimi (sinematik düzen, anlar, güven sunumu)
+ * Medikal saha — kurumsal demo deneyimi (sinematik düzen, anlar, güven sunumu)
  */
-window.INCPHARMA_DEMO = (function () {
+window.SEBS_SAHA_DEMO = (function () {
   'use strict';
 
   function esc(s) {
@@ -11,18 +11,10 @@ window.INCPHARMA_DEMO = (function () {
     return d.innerHTML;
   }
 
-  var HOSPITAL_SCENES = {
+  /** Yalnızca bildirim / mesaj odaklı sahnelerde küçük telefon */
+  var COMPANION_PHONE_SCENES = {
     opening: 1,
     crisis: 1,
-    lot: 1,
-    particle: 1,
-    particle_mini: 1,
-    doctor: 1,
-    nermin: 1,
-    competitor: 1,
-    offlabel: 1,
-    service: 1,
-    brief: 1,
     whatsapp: 1,
     murat_sms: 1,
   };
@@ -34,7 +26,7 @@ window.INCPHARMA_DEMO = (function () {
       '<div class="ip-intro-cinema__content">' +
       '<div class="ip-intro-cinema__brands">' +
       '<span class="ip-brand-pill ip-brand-pill--sebs">SEBS Global</span>' +
-      '<span class="ip-brand-pill ip-brand-pill--inc">INCPHARMA</span>' +
+      '<span class="ip-brand-pill ip-brand-pill--inc">Medikal saha</span>' +
       '</div>' +
       '<p class="ip-intro-cinema__kicker">Kurumsal saha simülasyonu · Demo</p>' +
       '<h1>' +
@@ -44,7 +36,7 @@ window.INCPHARMA_DEMO = (function () {
       'Sıradan bir ziyaret — bir bildirimle krize dönüşür. Telefonunuz, koridorunuz ve gün sonu raporunuz aynı masada.</p>' +
       '<div class="ip-role-card">' +
       '<div class="ip-role-card__avatar"><i class="fas fa-user-tie"></i></div>' +
-      '<div><strong>Rolünüz</strong><p>INCPHARMA saha temsilcisi · OncoRelief IV</p></div>' +
+      '<div><strong>Rolünüz</strong><p>Saha temsilcisi · OncoRelief IV</p></div>' +
       '</div>' +
       '<ul class="ip-trust-row">' +
       '<li><i class="fas fa-mobile-screen"></i> Canlı telefon bildirimi</li>' +
@@ -75,24 +67,27 @@ window.INCPHARMA_DEMO = (function () {
   }
 
   function renderCompanionPhone(sceneId, scene) {
-    if (!window.INCPHARMA_UI) return '';
+    if (!window.SEBS_SAHA_UI) return '';
     if (sceneId === 'lot' || sceneId === 'particle' || sceneId === 'particle_mini') return '';
-    var UI = window.INCPHARMA_UI;
+    var UI = window.SEBS_SAHA_UI;
     var opts = scene.phoneVisual || UI.phoneFromScene(scene, sceneId);
-    if (!opts && !HOSPITAL_SCENES[sceneId]) return '';
-    if (!opts && HOSPITAL_SCENES[sceneId]) {
+    if (!opts && !COMPANION_PHONE_SCENES[sceneId]) return '';
+    if (!opts && COMPANION_PHONE_SCENES[sceneId]) {
       opts = {
         mode: 'field-app',
         time: scene.time || '09:15',
-        app: 'INCPHARMA Saha',
+        app: 'Saha uygulaması',
         title: 'Saha uygulaması',
         body: 'Gün içi bildirimler aktif',
-        ring: false,
+        ring: sceneId === 'opening' || sceneId === 'crisis',
+        compact: true,
       };
+    } else if (opts) {
+      opts = Object.assign({ compact: true }, opts);
     }
     return (
-      '<div class="ip-companion-phone">' +
-      '<p class="ip-companion-phone__label"><i class="fas fa-mobile"></i> Cebinizde</p>' +
+      '<div class="ip-companion-phone" aria-hidden="true">' +
+      '<p class="ip-companion-phone__label"><i class="fas fa-mobile-screen-button"></i> Cebinizde</p>' +
       UI.renderPhone(opts) +
       '</div>'
     );
@@ -243,7 +238,7 @@ window.INCPHARMA_DEMO = (function () {
     return (
       '<div class="ip-finale-premium">' +
       '<header class="ip-finale-premium__head">' +
-      '<div class="ip-finale-premium__brand">INCPHARMA</div>' +
+      '<div class="ip-finale-premium__brand">Saha performansı</div>' +
       flakonHtml +
       '<div class="ip-finale-premium__score-ring" style="--score:' +
       score +
