@@ -76,6 +76,7 @@ window.INCPHARMA_DEMO = (function () {
 
   function renderCompanionPhone(sceneId, scene) {
     if (!window.INCPHARMA_UI) return '';
+    if (sceneId === 'lot' || sceneId === 'particle' || sceneId === 'particle_mini') return '';
     var UI = window.INCPHARMA_UI;
     var opts = scene.phoneVisual || UI.phoneFromScene(scene, sceneId);
     if (!opts && !HOSPITAL_SCENES[sceneId]) return '';

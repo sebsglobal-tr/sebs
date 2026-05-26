@@ -724,6 +724,7 @@ window.INCPHARMA_SIM.buildLotScene = function (state) {
 
   return {
     title: 'Lot izleme — Hangi parti, hangi flakon?',
+    time: '09:25',
     location: 'İlaç hazırlama alanı',
     narrative: narrative,
     dialogue: dialogue,

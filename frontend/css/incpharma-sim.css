@@ -2287,50 +2287,347 @@
   opacity: 0.6;
 }
 
-/* Eczane / lot */
+/* İlaç hazırlama / lot */
 .ip-env-pharmacy {
-  background: linear-gradient(180deg, #e0f2fe, #bae6fd);
+  background: linear-gradient(165deg, #0c1929 0%, #132f4c 45%, #1e3a5f 100%);
 }
 
-.ip-pharmacy__shelf {
+.ip-pharmacy__room {
   position: absolute;
-  left: 10%;
-  top: 15%;
-  width: 35%;
-  height: 8%;
-  background: #fff;
-  border-radius: 0.2rem;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+  inset: 0;
 }
 
-.ip-pharmacy__shelf--2 {
-  left: 55%;
-  top: 28%;
+.ip-pharmacy__lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.12), transparent);
+  pointer-events: none;
+}
+
+.ip-pharmacy__lights span {
+  position: absolute;
+  top: 12%;
+  width: 55%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgb(186 230 253 / 0.5), transparent);
+  border-radius: 999px;
+}
+
+.ip-pharmacy__lights span:nth-child(1) {
+  left: 8%;
+}
+.ip-pharmacy__lights span:nth-child(2) {
+  left: 32%;
+  opacity: 0.85;
+}
+.ip-pharmacy__lights span:nth-child(3) {
+  right: 8%;
+  width: 40%;
+}
+
+.ip-pharmacy__sign {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgb(15 23 42 / 0.65);
+  border: 1px solid rgb(148 163 184 / 0.35);
+  color: #bae6fd;
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ip-pharmacy__sign i {
+  margin-right: 0.25rem;
+  opacity: 0.9;
+}
+
+.ip-pharmacy__fridge {
+  position: absolute;
+  left: 6%;
+  top: 18%;
+  width: 28%;
+  height: 42%;
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, #e2e8f0, #94a3b8);
+  border: 2px solid #64748b;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.15), 0 8px 24px -8px rgb(0 0 0 / 0.45);
+}
+
+.ip-pharmacy__fridge-glass {
+  position: absolute;
+  inset: 8% 6% 22%;
+  border-radius: 0.2rem;
+  background: linear-gradient(135deg, rgb(186 230 253 / 0.25), rgb(59 130 246 / 0.08));
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.ip-pharmacy__fridge-shelves {
+  position: absolute;
+  inset: 14% 10% 28%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0.15rem;
+}
+
+.ip-pharmacy__vial {
+  display: block;
+  width: 42%;
+  height: 18%;
+  margin: 0 auto;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #f0f9ff, #7dd3fc);
+  border: 1px solid #38bdf8;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+}
+
+.ip-pharmacy__vial::before {
+  content: '';
+  display: block;
+  width: 55%;
+  height: 22%;
+  margin: -22% auto 0;
+  background: #94a3b8;
+  border-radius: 2px 2px 0 0;
+}
+
+.ip-pharmacy__vial--alt {
+  opacity: 0.75;
+  transform: scale(0.92);
+}
+
+.ip-pharmacy__fridge-temp {
+  position: absolute;
+  bottom: 6%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.48rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.ip-pharmacy__rack {
+  position: absolute;
+  left: 36%;
+  top: 22%;
+  width: 32%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ip-pharmacy__box {
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.3rem;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border: 1px solid #94a3b8;
+  box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.35);
+  font-size: 0.42rem;
+  line-height: 1.25;
+  color: #1e3a8a;
+}
+
+.ip-pharmacy__box span {
+  display: block;
+  font-weight: 800;
+  font-size: 0.46rem;
+}
+
+.ip-pharmacy__box em {
+  display: block;
+  margin-top: 0.1rem;
+  font-style: normal;
+  font-family: ui-monospace, monospace;
+  font-size: 0.4rem;
+  color: #475569;
+}
+
+.ip-pharmacy__box--active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.45), 0 6px 14px -6px rgb(37 99 235 / 0.5);
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+
+.ip-pharmacy__box--active em {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.ip-pharmacy__box--small {
+  height: 0.55rem;
+  padding: 0;
+  opacity: 0.5;
+}
+
+.ip-pharmacy__bench {
+  position: absolute;
+  bottom: 14%;
+  left: 8%;
+  right: 34%;
+  height: 26%;
+  border-radius: 0.4rem;
+  background: linear-gradient(180deg, #cbd5e1, #94a3b8);
+  border: 1px solid #64748b;
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.2);
+}
+
+.ip-pharmacy__tray {
+  position: absolute;
+  left: 8%;
+  top: 18%;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+}
+
+.ip-pharmacy__flakon-used {
+  width: 22px;
+  height: 48px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(180deg, #e2e8f0, #94a3b8);
+  border: 1px solid #64748b;
+  opacity: 0.85;
+}
+
+.ip-pharmacy__flakon-used::before {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 8px;
+  margin: -8px auto 0;
+  background: #64748b;
+  border-radius: 2px 2px 0 0;
+}
+
+.ip-pharmacy__label-slip {
+  padding: 0.25rem 0.35rem;
+  border-radius: 0.2rem;
+  background: #fff;
+  border: 1px dashed #f59e0b;
+  font-size: 0.38rem;
+  color: #92400e;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+}
+
+.ip-pharmacy__label-slip strong {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.42rem;
+  color: #b45309;
+}
+
+.ip-pharmacy__receipt {
+  position: absolute;
+  right: 8%;
+  bottom: 18%;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  background: #fff;
+  font-size: 0.38rem;
+  font-weight: 700;
+  color: #475569;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+}
+
+.ip-pharmacy__receipt i {
+  margin-right: 0.2rem;
+  color: #64748b;
+}
+
+.ip-pharmacy__terminal {
+  position: absolute;
+  right: 5%;
+  top: 20%;
   width: 30%;
 }
 
-.ip-pharmacy__counter {
-  position: absolute;
-  bottom: 20%;
-  left: 15%;
-  right: 15%;
-  height: 22%;
-  background: #f8fafc;
-  border-radius: 0.35rem;
-  border: 1px solid #cbd5e1;
+.ip-pharmacy__terminal-head {
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.3rem 0.3rem 0 0;
+  background: #1e293b;
+  color: #7dd3fc;
+  font-size: 0.42rem;
+  font-weight: 800;
+  text-align: center;
 }
 
-.ip-pharmacy__screen {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.35rem 0.75rem;
-  background: #1e293b;
+.ip-pharmacy__terminal-head i {
+  margin-right: 0.2rem;
+}
+
+.ip-pharmacy__terminal-screen {
+  padding: 0.45rem 0.4rem 0.5rem;
+  border-radius: 0 0 0.35rem 0.35rem;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  border: 2px solid #334155;
+  border-top: none;
+  text-align: center;
+}
+
+.ip-pharmacy__terminal-lot {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.52rem;
+  font-weight: 800;
   color: #38bdf8;
-  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+}
+
+.ip-pharmacy__terminal-status {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.36rem;
+  color: #94a3b8;
+}
+
+.ip-pharmacy__barcode {
+  margin: 0.35rem auto 0;
+  width: 70%;
+  height: 14px;
+  background: repeating-linear-gradient(
+    90deg,
+    #f8fafc 0 2px,
+    transparent 2px 4px,
+    #f8fafc 4px 5px,
+    transparent 5px 8px
+  );
+  opacity: 0.85;
+}
+
+.ip-pharmacy__quarantine {
+  position: absolute;
+  bottom: 8%;
+  right: 6%;
+  padding: 0.22rem 0.45rem;
+  border-radius: 0.3rem;
+  background: rgb(190 18 60 / 0.2);
+  border: 1px dashed #fb7185;
+  color: #fecdd3;
+  font-size: 0.4rem;
   font-weight: 700;
-  border-radius: 0.35rem;
+}
+
+.ip-pharmacy__quarantine i {
+  margin-right: 0.2rem;
+}
+
+.ip-hero--env-pharmacy .ip-hero__shade {
+  background: linear-gradient(
+    180deg,
+    rgb(15 23 42 / 0.05) 0%,
+    rgb(15 23 42 / 0.35) 50%,
+    rgb(15 23 42 / 0.88) 100%
+  );
 }
 
 /* Flakon */

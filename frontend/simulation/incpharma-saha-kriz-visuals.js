@@ -216,11 +216,44 @@ window.INCPHARMA_VISUALS = (function () {
 
   function envPharmacy() {
     return (
-      '<div class="ip-hero__env ip-env-pharmacy">' +
-      '<div class="ip-pharmacy__shelf"></div>' +
-      '<div class="ip-pharmacy__shelf ip-pharmacy__shelf--2"></div>' +
-      '<div class="ip-pharmacy__counter"></div>' +
-      '<div class="ip-pharmacy__screen"><span>Lot sorgu</span></div></div>'
+      '<div class="ip-hero__env ip-env-pharmacy" aria-hidden="true">' +
+      '<div class="ip-pharmacy__room">' +
+      '<div class="ip-pharmacy__lights"><span></span><span></span><span></span></div>' +
+      '<div class="ip-pharmacy__sign"><i class="fas fa-vials"></i> İlaç hazırlama</div>' +
+      '<div class="ip-pharmacy__fridge">' +
+      '<div class="ip-pharmacy__fridge-glass"></div>' +
+      '<div class="ip-pharmacy__fridge-shelves">' +
+      '<span class="ip-pharmacy__vial"></span><span class="ip-pharmacy__vial"></span><span class="ip-pharmacy__vial ip-pharmacy__vial--alt"></span>' +
+      '</div>' +
+      '<span class="ip-pharmacy__fridge-temp"><i class="fas fa-temperature-low"></i> 2–8°C</span>' +
+      '</div>' +
+      '<div class="ip-pharmacy__rack">' +
+      '<div class="ip-pharmacy__box ip-pharmacy__box--active"><span>OncoRelief IV</span><em>' +
+      esc(LOT) +
+      '</em></div>' +
+      '<div class="ip-pharmacy__box"><span>OncoRelief IV</span><em>ORV-23-902C</em></div>' +
+      '<div class="ip-pharmacy__box ip-pharmacy__box--small"></div>' +
+      '</div>' +
+      '<div class="ip-pharmacy__bench">' +
+      '<div class="ip-pharmacy__tray">' +
+      '<div class="ip-pharmacy__flakon-used" title="Kullanılmış flakon"></div>' +
+      '<div class="ip-pharmacy__label-slip"><span>Lot</span><strong>' +
+      esc(LOT) +
+      '</strong></div>' +
+      '</div>' +
+      '<div class="ip-pharmacy__receipt"><i class="fas fa-receipt"></i> Teslim fişi</div>' +
+      '</div>' +
+      '<div class="ip-pharmacy__terminal">' +
+      '<div class="ip-pharmacy__terminal-head"><i class="fas fa-barcode"></i> Lot izleme</div>' +
+      '<div class="ip-pharmacy__terminal-screen">' +
+      '<span class="ip-pharmacy__terminal-lot">' +
+      esc(LOT) +
+      '</span>' +
+      '<span class="ip-pharmacy__terminal-status">Sorgu · Kayıt bekliyor</span>' +
+      '<div class="ip-pharmacy__barcode" aria-hidden="true"></div>' +
+      '</div></div>' +
+      '<div class="ip-pharmacy__quarantine"><i class="fas fa-box-open"></i> Ayrıştırma alanı</div>' +
+      '</div></div>'
     );
   }
 
