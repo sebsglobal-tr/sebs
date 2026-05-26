@@ -99,29 +99,10 @@
   }
 
   function sceneProgress() {
-    var order = [
-      'intro',
-      'opening',
-      'crisis',
-      'lot',
-      'particle',
-      'particle_mini',
-      'doctor',
-      'nermin',
-      'competitor',
-      'offlabel',
-      'whatsapp',
-      'service',
-      'brief',
-      'murat_sms',
-      'report',
-      'evening_return',
-      'manager',
-      'finale',
-    ];
-    var idx = order.indexOf(state.sceneId);
-    if (idx < 0) return 0;
-    return Math.round((idx / (order.length - 1)) * 100);
+    if (VIS && typeof VIS.dayProgressPercent === 'function') {
+      return VIS.dayProgressPercent(state.sceneId);
+    }
+    return 0;
   }
 
   function renderProgress() {

@@ -22,7 +22,14 @@
 }
 
 .ip-app--demo .ip-main {
+  max-width: min(1360px, calc(100vw - 1.25rem));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
   padding-bottom: max(6.5rem, calc(env(safe-area-inset-bottom, 0px) + 5rem));
+}
+
+.ip-app--demo .ip-top-inner {
+  max-width: min(1360px, calc(100vw - 1.25rem));
 }
 
 .ip-top {
@@ -2858,7 +2865,7 @@
 /* —— Sinematik sahne düzeni —— */
 .ip-cinema {
   display: grid;
-  grid-template-columns: minmax(280px, 42%) 1fr;
+  grid-template-columns: minmax(300px, 36%) 1fr;
   align-items: start;
   gap: 0;
   border-radius: var(--ip-radius);

@@ -19,10 +19,10 @@ window.INCPHARMA_VISUALS = (function () {
     { id: 'lot', time: '09:25', label: 'Lot' },
     { id: 'particle', time: '09:40', label: 'Flakon' },
     { id: 'doctor', time: '10:15', label: 'Hekim' },
+    { id: 'whatsapp', time: '11:24', label: 'WA' },
     { id: 'nermin', time: '12:00', label: 'Servis' },
     { id: 'competitor', time: '13:30', label: 'Koridor' },
     { id: 'offlabel', time: '14:45', label: 'Off-label' },
-    { id: 'whatsapp', time: '11:24', label: 'WA' },
     { id: 'service', time: '15:20', label: 'Destek' },
     { id: 'brief', time: '16:00', label: 'Brifing' },
     { id: 'murat_sms', time: '16:10', label: 'SMS' },
@@ -30,6 +30,43 @@ window.INCPHARMA_VISUALS = (function () {
     { id: 'evening_return', time: '17:45', label: 'Ofis' },
     { id: 'manager', time: '18:00', label: 'Sonuç' },
   ];
+
+  var DAY_START = '08:42';
+  var DAY_END = '18:00';
+
+  var SCENE_TIME_OVERRIDE = {
+    intro: '08:42',
+    particle_mini: '09:40',
+    finale: '18:00',
+  };
+
+  function parseTimeToMinutes(t) {
+    if (!t || typeof t !== 'string') return null;
+    var m = t.trim().match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return null;
+    return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+  }
+
+  function sceneClockTime(sceneId) {
+    if (SCENE_TIME_OVERRIDE[sceneId]) return SCENE_TIME_OVERRIDE[sceneId];
+    var id = DAY_INDEX_ALIAS[sceneId] || sceneId;
+    for (var i = 0; i < DAY_STEPS.length; i++) {
+      if (DAY_STEPS[i].id === id) return DAY_STEPS[i].time;
+    }
+    return null;
+  }
+
+  function dayProgressPercent(sceneId) {
+    if (sceneId === 'intro') return 0;
+    if (sceneId === 'finale') return 100;
+    var cur = parseTimeToMinutes(sceneClockTime(sceneId));
+    var start = parseTimeToMinutes(DAY_START);
+    var end = parseTimeToMinutes(DAY_END);
+    if (cur == null || start == null || end == null || end <= start) return 0;
+    if (cur <= start) return 0;
+    if (cur >= end) return 100;
+    return Math.round(((cur - start) / (end - start)) * 100);
+  }
 
   var SCENE_HEROES = {
     opening: {
@@ -78,7 +115,7 @@ window.INCPHARMA_VISUALS = (function () {
   function renderDayTimeline(sceneId) {
     var idx = dayIndex(sceneId);
     if (idx < 0) return '';
-    var pct = Math.round((idx / (DAY_STEPS.length - 1)) * 100);
+    var pct = dayProgressPercent(sceneId);
     var html =
       '<div class="ip-dayline" aria-label="Gün akışı">' +
       '<div class="ip-dayline__head"><i class="fas fa-calendar-day"></i> Bir günde sahada</div>' +
@@ -441,6 +478,8 @@ window.INCPHARMA_VISUALS = (function () {
     renderNarrativeCard: renderNarrativeCard,
     renderReplies: renderReplies,
     renderSceneAction: renderSceneAction,
+    dayProgressPercent: dayProgressPercent,
+    sceneClockTime: sceneClockTime,
     DAY_STEPS: DAY_STEPS,
   };
 })();
