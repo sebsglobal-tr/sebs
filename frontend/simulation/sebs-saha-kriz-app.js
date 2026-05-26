@@ -163,8 +163,11 @@
 
   function renderRepliesFallback(scene) {
     var html = '<div class="ip-replies"><div class="ip-replies__list">';
-    scene.choices.forEach(function (ch) {
-      if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
+    var list =
+      VIS && typeof VIS.orderedChoices === 'function'
+        ? VIS.orderedChoices(scene, state)
+        : scene.choices || [];
+    list.forEach(function (ch) {
       var spoken = ch.say || ch.detail || ch.label;
       html +=
         '<button type="button" class="ip-reply" data-choice="' +

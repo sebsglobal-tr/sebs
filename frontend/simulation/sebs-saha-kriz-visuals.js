@@ -468,6 +468,29 @@ window.SEBS_SAHA_VISUALS = (function () {
     nermin: 'Dr. Nermin kısa bir özet istiyor.',
   };
 
+  function visibleChoices(scene, state) {
+    if (!scene || !scene.choices || !scene.choices.length) return [];
+    return scene.choices.filter(function (ch) {
+      if (typeof ch.showIf === 'function' && state && !ch.showIf(state)) return false;
+      return true;
+    });
+  }
+
+  function shuffleChoices(list) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+    return a;
+  }
+
+  function orderedChoices(scene, state) {
+    return shuffleChoices(visibleChoices(scene, state));
+  }
+
   /** Konuşma balonu — test şıkkı değil, temsilcinin söyleyeceği cümle */
   function renderReplies(scene, state) {
     if (!scene.choices || !scene.choices.length) return '';
@@ -481,8 +504,7 @@ window.SEBS_SAHA_VISUALS = (function () {
       '</p>' +
       '<div class="ip-replies__list">';
 
-    scene.choices.forEach(function (ch) {
-      if (typeof ch.showIf === 'function' && !ch.showIf(state)) return;
+    orderedChoices(scene, state).forEach(function (ch) {
       var spoken = ch.say || ch.detail || ch.label;
       html +=
         '<button type="button" class="ip-reply" data-choice="' +
@@ -520,6 +542,7 @@ window.SEBS_SAHA_VISUALS = (function () {
     renderSceneHero: renderSceneHero,
     renderNarrativeCard: renderNarrativeCard,
     renderReplies: renderReplies,
+    orderedChoices: orderedChoices,
     renderSceneAction: renderSceneAction,
     dayProgressPercent: dayProgressPercent,
     sceneClockTime: sceneClockTime,
