@@ -21,14 +21,16 @@ window.SEBS_SAHA_DEMO = (function () {
 
   function renderPremiumIntro(cfg) {
     return (
-      '<div class="ip-intro-cinema">' +
+      '<div class="ip-intro-cinema ip-intro-cinema--premium">' +
+      '<div class="ip-intro-cinema__mesh" aria-hidden="true"></div>' +
       '<div class="ip-intro-cinema__bg" aria-hidden="true"></div>' +
       '<div class="ip-intro-cinema__content">' +
+      '<span class="ip-intro-cinema__badge"><i class="fas fa-building-circle-check"></i> Kurumsal demo</span>' +
       '<div class="ip-intro-cinema__brands">' +
       '<span class="ip-brand-pill ip-brand-pill--sebs">SEBS Global</span>' +
       '<span class="ip-brand-pill ip-brand-pill--inc">Medikal saha</span>' +
       '</div>' +
-      '<p class="ip-intro-cinema__kicker">Kurumsal saha simülasyonu · Demo</p>' +
+      '<p class="ip-intro-cinema__kicker">Canlı senaryo · İnteraktif değerlendirme</p>' +
       '<h1>' +
       esc(cfg.title) +
       '</h1>' +
@@ -36,9 +38,9 @@ window.SEBS_SAHA_DEMO = (function () {
       'Sıradan bir ziyaret — bir bildirimle krize dönüşür. Telefonunuz, koridorunuz ve gün sonu raporunuz aynı masada.</p>' +
       '<div class="ip-role-card">' +
       '<div class="ip-role-card__avatar"><i class="fas fa-user-tie"></i></div>' +
-      '<div><strong>Rolünüz</strong><p>Saha temsilcisi · OncoRelief IV</p></div>' +
+      '<div><strong>Rolünüz</strong><p>Saha temsilcisi · ' + esc(cfg.product) + '</p></div>' +
       '</div>' +
-      '<ul class="ip-trust-row">' +
+      '<ul class="ip-trust-grid">' +
       '<li><i class="fas fa-mobile-screen"></i> Canlı telefon bildirimi</li>' +
       '<li><i class="fas fa-comments"></i> Diyalog simülasyonu</li>' +
       '<li><i class="fas fa-file-medical"></i> Otomatik saha raporu</li>' +
@@ -95,7 +97,7 @@ window.SEBS_SAHA_DEMO = (function () {
 
   function wrapCinema(sceneId, visualHtml, playHtml, extraClass) {
     return (
-      '<div class="ip-cinema ip-cinema--' +
+      '<div class="ip-cinema ip-cinema--premium ip-cinema--' +
       esc(sceneId) +
       ' ip-cinema--enter' +
       (extraClass ? ' ' + extraClass : '') +
