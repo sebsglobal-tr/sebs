@@ -39,6 +39,7 @@
       fieldReport: reportApi() ? reportApi().createEmpty() : { reportNo: 'SR-LOCAL', entries: [] },
       lastReportEntryId: null,
       openingLogged: false,
+      reactionLog: [],
     };
   }
 
@@ -340,7 +341,7 @@
           state.openingLogged = true;
           state.lastReportEntryId = openEntry.id;
           if (DEMO) {
-            DEMO.showMoment(openEntry, scene, { id: 'opening' }, function () {
+            DEMO.showMoment(openEntry, scene, { id: 'opening' }, state, function () {
               goNext(scene.next);
             });
             return;
@@ -349,6 +350,7 @@
         goNext(scene.next);
       });
     }
+    if (DEMO && DEMO.paintReactionRail) DEMO.paintReactionRail(state);
     renderProgress();
     renderLiveReportDock();
   }
@@ -377,12 +379,15 @@
     var R = reportApi();
     var entry = R ? R.appendFromChoice(state, state.sceneId, scene, ch) : null;
     applyEffects(ch.effects);
+    if (DEMO && DEMO.recordChoiceReaction) {
+      DEMO.recordChoiceReaction(state, ch, CFG);
+    }
 
     var advance = function () {
       goNext(ch.next);
     };
     if (DEMO && entry) {
-      DEMO.showMoment(entry, scene, ch, advance);
+      DEMO.showMoment(entry, scene, ch, state, advance);
     } else {
       advance();
     }
@@ -432,7 +437,10 @@
         state.fatalErrors.length +
         ' kritik uyum uyarısı kayıt altında.</p><ul>';
       state.fatalErrors.forEach(function (code) {
-        fatalHtml += '<li><code>' + esc(code) + '</code> — ' + esc(CFG.fatalLabels[code] || code) + '</li>';
+        fatalHtml +=
+          '<li class="ip-fatal__item"><i class="fas fa-circle-exclamation"></i> ' +
+          esc(CFG.fatalLabels[code] || code) +
+          '</li>';
       });
       fatalHtml += '</ul></div>';
     } else {
@@ -450,7 +458,16 @@
 
     var html = '<div class="ip-finale-wrap">';
     html += DEMO
-      ? DEMO.renderFinalePremium(CFG, state, renderFlakon(), compsHtml, fatalHtml, overall, label)
+      ? DEMO.renderFinalePremium(
+          CFG,
+          state,
+          renderFlakon(),
+          compsHtml,
+          fatalHtml,
+          overall,
+          label,
+          DEMO.renderFinaleTimeline ? DEMO.renderFinaleTimeline(state) : ''
+        )
       : '<div class="ip-finale"><p>Skor: ' + overall + '</p></div>';
     html += '<div class="ip-finale-actions">';
     html +=

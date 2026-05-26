@@ -356,6 +356,220 @@
   color: #93c5fd;
 }
 
+/* Finale — okunabilir uyarı & skorlar */
+.ip-app--demo .ip-fatal {
+  background: rgb(127 29 29 / 0.35);
+  border: 1px solid rgb(248 113 113 / 0.55);
+}
+
+.ip-app--demo .ip-fatal h3 {
+  color: #fecaca;
+}
+
+.ip-app--demo .ip-fatal p {
+  margin: 0 0 0.65rem;
+  color: #fde68a;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.ip-app--demo .ip-fatal ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ip-app--demo .ip-fatal__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.2);
+  color: #fff;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.ip-app--demo .ip-fatal__item i {
+  color: #f87171;
+  margin-top: 0.15rem;
+}
+
+.ip-app--demo .ip-fatal-ok {
+  color: #6ee7b7;
+}
+
+.ip-app--demo .ip-comp span {
+  color: #cbd5e1;
+}
+
+.ip-app--demo .ip-comp strong {
+  color: #f8fafc;
+}
+
+.ip-app--demo .ip-comp__track {
+  background: rgb(255 255 255 / 0.12);
+}
+
+/* Günün izleri — seçim şeridi */
+.ip-reaction-rail {
+  padding: 0.65rem 1rem 0.5rem;
+  background: linear-gradient(180deg, #eef2ff, #f8fafc);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ip-reaction-rail__head {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4338ca;
+}
+
+.ip-reaction-rail__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-height: 4.5rem;
+  overflow-y: auto;
+}
+
+.ip-reaction-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.25;
+  animation: ip-chip-in 0.35s ease-out;
+}
+
+@keyframes ip-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ip-reaction-chip--ok {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.ip-reaction-chip--warn {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.ip-reaction-chip--danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.ip-reaction-chip--info {
+  background: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #a5b4fc;
+}
+
+/* An kartı — etkileşim */
+.ip-moment__story {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.ip-moment__reactions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Finale zaman çizgisi */
+.ip-finale-timeline {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.05);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.ip-finale-timeline h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+}
+
+.ip-finale-timeline h3 i {
+  margin-right: 0.35rem;
+}
+
+.ip-finale-timeline__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ip-finale-timeline__item {
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.2);
+  border-left: 3px solid #64748b;
+}
+
+.ip-finale-timeline__item--ok {
+  border-left-color: #34d399;
+}
+.ip-finale-timeline__item--warn {
+  border-left-color: #fbbf24;
+}
+.ip-finale-timeline__item--danger {
+  border-left-color: #f87171;
+}
+.ip-finale-timeline__item--info {
+  border-left-color: #818cf8;
+}
+
+.ip-finale-timeline__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.ip-finale-timeline__item p {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+
 /* Canlı rapor dock */
 .ip-app--demo .ip-fr-dock__toggle {
   background: linear-gradient(135deg, #1e293b 0%, #312e81 50%, #4338ca 100%);
