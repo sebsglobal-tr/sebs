@@ -563,6 +563,7 @@
   }
 
   function boot() {
+    if (DEMO && DEMO.resetMomentOverlay) DEMO.resetMomentOverlay();
     loadReportScript(function () {
       state = initState();
       render();

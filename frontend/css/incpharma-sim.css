@@ -2960,10 +2960,20 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  pointer-events: none;
+}
+
+.ip-moment.ip-moment--show {
+  display: flex;
+  pointer-events: auto;
+}
+
+.ip-moment[hidden] {
+  display: none !important;
 }
 
 .ip-moment__backdrop {
@@ -2971,6 +2981,12 @@
   inset: 0;
   background: rgb(15 23 42 / 0.72);
   backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.ip-moment--show .ip-moment__backdrop {
+  opacity: 1;
 }
 
 .ip-moment__card {

@@ -126,38 +126,52 @@ async function fetchUserMe() {
         return userMePromise;
     }
 
-    const token = getBearerTokenFromStorage();
-    if (!token) {
-        return null;
-    }
-
-    const apiBase = getApiBase();
-    userMePromise = fetch(apiBase + '/users/me', {
-        headers: {
-            'Authorization': `Bearer ${token}`
+    userMePromise = (async function () {
+        if (typeof window.ensureSebsFreshAuth === 'function') {
+            await window.ensureSebsFreshAuth();
         }
-    })
-        .then(response => {
+
+        const token = getBearerTokenFromStorage();
+        if (!token) {
+            return null;
+        }
+
+        const apiBase = getApiBase();
+        const doFetch =
+            typeof window.sebsAuthFetch === 'function'
+                ? window.sebsAuthFetch
+                : fetch;
+
+        try {
+            const response = await doFetch(apiBase + '/users/me', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
             if (!response.ok) {
+                if (response.status === 401) {
+                    try {
+                        localStorage.removeItem('isLoggedIn');
+                    } catch (e) {
+                        /* */
+                    }
+                }
                 return null;
             }
-            return response.json();
-        })
-        .then(result => {
+            const result = await response.json();
             if (result && result.success && result.data) {
                 userMeCache = result.data;
-                userMeCacheTime = now;
+                userMeCacheTime = Date.now();
                 return userMeCache;
             }
             return null;
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('Error fetching user data:', error);
             return null;
-        })
-        .finally(() => {
+        } finally {
             userMePromise = null;
-        });
+        }
+    })();
 
     return userMePromise;
 }

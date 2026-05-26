@@ -126,6 +126,26 @@ window.INCPHARMA_DEMO = (function () {
     return beats[choice.id] || 'An kayda geçti — gün devam ediyor.';
   }
 
+  function dismissMoment(overlay, done) {
+    if (!overlay || overlay.dataset.ipMomentOpen !== '1') return;
+    overlay.dataset.ipMomentOpen = '0';
+    if (overlay._ipMomentTimer) {
+      window.clearTimeout(overlay._ipMomentTimer);
+      overlay._ipMomentTimer = null;
+    }
+    overlay.classList.remove('ip-moment--show');
+    overlay.hidden = true;
+    overlay.onclick = null;
+    if (overlay._ipMomentEsc) {
+      document.removeEventListener('keydown', overlay._ipMomentEsc);
+      overlay._ipMomentEsc = null;
+    }
+    var cb = overlay._ipMomentDone;
+    overlay._ipMomentDone = null;
+    if (typeof cb === 'function') cb();
+    if (typeof done === 'function' && done !== cb) done();
+  }
+
   function showMoment(entry, scene, choice, done) {
     var overlay = document.getElementById('ipMoment');
     if (!overlay) {
@@ -134,13 +154,16 @@ window.INCPHARMA_DEMO = (function () {
       overlay.className = 'ip-moment';
       overlay.hidden = true;
       document.body.appendChild(overlay);
+    } else if (overlay.dataset.ipMomentOpen === '1') {
+      dismissMoment(overlay);
     }
 
+    var sceneId = (scene && scene.id) || _sceneId;
     var title = entry ? entry.title : (scene && scene.title) || 'Kayıt';
     var line =
       entry && entry.lines && entry.lines.length
         ? entry.lines[0]
-        : momentBeat(_sceneId, choice);
+        : momentBeat(sceneId, choice);
 
     overlay.innerHTML =
       '<div class="ip-moment__backdrop"></div>' +
@@ -153,9 +176,11 @@ window.INCPHARMA_DEMO = (function () {
       esc(line) +
       '</p>' +
       '<div class="ip-moment__bar"><i></i></div>' +
-      '<span class="ip-moment__skip">Devam ediliyor…</span></div>';
+      '<span class="ip-moment__skip">Tıklayın veya bekleyin…</span></div>';
 
     overlay.hidden = false;
+    overlay.dataset.ipMomentOpen = '1';
+    overlay._ipMomentDone = done;
     overlay.classList.add('ip-moment--show');
 
     var bar = overlay.querySelector('.ip-moment__bar i');
@@ -165,21 +190,44 @@ window.INCPHARMA_DEMO = (function () {
       });
     }
 
-    var t = window.setTimeout(function () {
-      overlay.classList.remove('ip-moment--show');
-      window.setTimeout(function () {
-        overlay.hidden = true;
-        if (typeof done === 'function') done();
-      }, 320);
+    overlay._ipMomentTimer = window.setTimeout(function () {
+      overlay._ipMomentTimer = null;
+      dismissMoment(overlay);
     }, 1400);
 
     overlay.onclick = function () {
-      window.clearTimeout(t);
-      overlay.classList.remove('ip-moment--show');
-      overlay.hidden = true;
-      overlay.onclick = null;
-      if (typeof done === 'function') done();
+      dismissMoment(overlay);
     };
+
+    overlay._ipMomentEsc = function (e) {
+      if (e.key === 'Escape') dismissMoment(overlay);
+    };
+    document.addEventListener('keydown', overlay._ipMomentEsc);
+  }
+
+  function resetMomentOverlay() {
+    var overlay = document.getElementById('ipMoment');
+    if (!overlay) return;
+    if (overlay.dataset.ipMomentOpen === '1') {
+      dismissMoment(overlay);
+      return;
+    }
+    overlay.classList.remove('ip-moment--show');
+    overlay.hidden = true;
+    overlay.onclick = null;
+    if (overlay._ipMomentEsc) {
+      document.removeEventListener('keydown', overlay._ipMomentEsc);
+      overlay._ipMomentEsc = null;
+    }
+  }
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') resetMomentOverlay();
+    });
+    window.addEventListener('pageshow', function () {
+      resetMomentOverlay();
+    });
   }
 
   var _sceneId = '';
@@ -224,6 +272,7 @@ window.INCPHARMA_DEMO = (function () {
     renderCompanionPhone: renderCompanionPhone,
     wrapCinema: wrapCinema,
     showMoment: showMoment,
+    resetMomentOverlay: resetMomentOverlay,
     setSceneId: setSceneId,
     renderFinalePremium: renderFinalePremium,
     isCinemaScene: function (sceneId, scene) {

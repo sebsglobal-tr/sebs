@@ -114,7 +114,18 @@ class SupabaseAuthSystem {
       }
 
       const { data: { session }, error } = await this.supabase.auth.getSession();
-      if (error) {
+      let activeSession = session;
+
+      if (this.sessionNeedsRefresh(activeSession)) {
+        const { data: refData, error: refError } = await this.supabase.auth.refreshSession();
+        if (!refError && refData && refData.session) {
+          activeSession = refData.session;
+        } else if (!activeSession) {
+          console.warn('Session refresh failed:', refError && refError.message);
+        }
+      }
+
+      if (error && !activeSession) {
         console.warn('Session check error:', error);
         this.isLoggedIn = false;
         this.user = null;
@@ -122,14 +133,14 @@ class SupabaseAuthSystem {
         return;
       }
 
-      if (session && session.user) {
+      if (activeSession && activeSession.user) {
         this.isLoggedIn = true;
-        this.user = session.user;
+        this.user = activeSession.user;
         try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
-        if (session.access_token) {
-          try { localStorage.setItem('authToken', session.access_token); } catch (e) {}
+        if (activeSession.access_token) {
+          try { localStorage.setItem('authToken', activeSession.access_token); } catch (e) {}
         }
-        const ownerId = session.user.id || session.user.email;
+        const ownerId = activeSession.user.id || activeSession.user.email;
         if (ownerId && typeof window.ensureSebsProgressOwnerForUser === 'function') {
           window.ensureSebsProgressOwnerForUser(ownerId);
         }
@@ -137,15 +148,16 @@ class SupabaseAuthSystem {
           window.syncSebsSessionCookie().catch(function () {});
         }
         console.log('✅ Session found:', {
-          email: session.user.email,
-          confirmed: !!session.user.email_confirmed_at,
-          expiresAt: session.expires_at
+          email: activeSession.user.email,
+          confirmed: !!activeSession.user.email_confirmed_at,
+          expiresAt: activeSession.expires_at
         });
         
       } else {
         this.isLoggedIn = false;
         this.user = null;
         try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
+        try { localStorage.removeItem('authToken'); } catch (e) {}
         console.log('ℹ️ No active session');
       }
     } catch (error) {
@@ -154,6 +166,12 @@ class SupabaseAuthSystem {
       this.user = null;
       try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
     }
+  }
+
+  sessionNeedsRefresh(session) {
+    if (!session) return true;
+    if (!session.expires_at) return false;
+    return Date.now() >= session.expires_at * 1000 - 5 * 60 * 1000;
   }
 
   isModulePage() {
@@ -596,6 +614,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   try {
     if (typeof window.initSupabase !== 'undefined') {
       await window.initSupabase();
+    }
+
+    if (typeof window.ensureSebsFreshAuth !== 'function') {
+      await new Promise(function (resolve) {
+        var s = document.createElement('script');
+        s.src = '/js/sebs-auth-refresh.js';
+        s.onload = resolve;
+        s.onerror = resolve;
+        document.head.appendChild(s);
+      });
     }
     
     supabaseAuthSystem = new SupabaseAuthSystem();
