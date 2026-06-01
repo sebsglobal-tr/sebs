@@ -50,6 +50,52 @@
 (function() {
     'use strict';
 
+    function ensureStripeThemeAssets() {
+        if (document.querySelector('link[data-sebs-stripe="design"]')) return;
+        var files = [
+            { href: '/css/sebs-stripe-tokens.css?v=1', mark: 'tokens' },
+            { href: '/css/sebs-stripe-design.css?v=1', mark: 'design' },
+            { href: '/css/sebs-stripe-lesson.css?v=1', mark: 'lesson' },
+        ];
+        files.forEach(function (file) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = file.href;
+            link.setAttribute('data-sebs-stripe', file.mark);
+            document.head.appendChild(link);
+        });
+    }
+
+    function ensureStripeSiteClass() {
+        var body = document.body;
+        if (!body) return;
+        var path = (window.location.pathname || '').toLowerCase();
+        var skip =
+            /\/(dashboard|admin|report-output|degerlendirme-raporu)(\.html)?$/i.test(path) ||
+            body.classList.contains('dashboard-page') ||
+            body.id === 'admin-app';
+        if (skip) return;
+        var eligible =
+            body.classList.contains('landing-site-body') ||
+            body.classList.contains('modules-page') ||
+            body.classList.contains('legal-page') ||
+            body.classList.contains('sebs-premium-site') ||
+            document.querySelector('link[href*="sebs-stripe-design"]');
+        if (!eligible) return;
+        if (!body.classList.contains('sebs-stripe-site')) {
+            body.classList.add('sebs-stripe-site');
+        }
+        if (!document.querySelector('link[data-sebs-stripe="design"]')) {
+            ensureStripeThemeAssets();
+        }
+    }
+
+    if (document.body) {
+        ensureStripeSiteClass();
+    } else {
+        document.addEventListener('DOMContentLoaded', ensureStripeSiteClass, { once: true });
+    }
+
     function ensurePremiumExperienceAssets() {
         try {
             if (!document.querySelector('link[data-sebs-premium="css"]')) {
