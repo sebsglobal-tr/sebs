@@ -1,0 +1,320 @@
+/* Adaface tarzı: girdi → SEBS işleme → skorlu çıktı */
+.sebs-flow-diagram {
+  --flow-card-w: 5.5rem;
+  --flow-card-h: 6.75rem;
+  --flow-border: #1e293b;
+  --flow-engine-w: 8.5rem;
+  --flow-engine-h: 7.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 11rem;
+  padding: 1.5rem 0.5rem;
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .sebs-flow-diagram {
+    margin-inline: 0;
+    max-width: none;
+    justify-content: flex-end;
+    padding-right: 0;
+  }
+}
+
+.sebs-flow-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  z-index: 2;
+}
+
+.sebs-flow-cards--in {
+  margin-right: -1.25rem;
+  z-index: 1;
+}
+
+.sebs-flow-cards--out {
+  margin-left: -1.1rem;
+  z-index: 3;
+}
+
+.sebs-flow-card {
+  position: relative;
+  width: var(--flow-card-w);
+  height: var(--flow-card-h);
+  border: 2px solid var(--flow-border);
+  border-radius: 0.65rem;
+  background: #fff;
+  box-shadow: 2px 3px 0 rgb(15 23 42 / 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 0.4rem 0.55rem;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.sebs-flow-card--input {
+  opacity: 0.92;
+  transform: translateX(0.35rem) rotate(-2deg);
+}
+
+.sebs-flow-card--out-1 {
+  animation: sebs-flow-card-in 0.6s ease 0.15s both;
+}
+
+.sebs-flow-card--out-2 {
+  animation: sebs-flow-card-in 0.6s ease 0.35s both;
+}
+
+@keyframes sebs-flow-card-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sebs-flow-avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 9999px;
+  border: 2px solid var(--flow-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-bottom: auto;
+  margin-top: 0.15rem;
+}
+
+.sebs-flow-avatar--a {
+  background: linear-gradient(145deg, #fde68a, #fbbf24);
+}
+
+.sebs-flow-avatar--b {
+  background: linear-gradient(145deg, #bfdbfe, #60a5fa);
+}
+
+.sebs-flow-avatar--c {
+  background: linear-gradient(145deg, #fbcfe8, #f472b6);
+}
+
+.sebs-flow-score {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.sebs-flow-badge {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.45rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 9999px;
+  border: 2px solid var(--flow-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  box-shadow: 1px 2px 0 rgb(15 23 42 / 0.15);
+}
+
+.sebs-flow-badge--pass {
+  background: #22c55e;
+  color: #fff;
+}
+
+.sebs-flow-badge--warn {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.sebs-flow-badge--fail {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* 3D işleme kutusu */
+.sebs-flow-engine {
+  position: relative;
+  width: var(--flow-engine-w);
+  height: var(--flow-engine-h);
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.sebs-flow-engine__top {
+  position: absolute;
+  left: 0.55rem;
+  top: 0;
+  width: calc(100% - 0.55rem);
+  height: 1.1rem;
+  background: #334155;
+  border: 2px solid var(--flow-border);
+  border-bottom: none;
+  transform: skewX(-38deg);
+  transform-origin: bottom left;
+  border-radius: 2px 2px 0 0;
+}
+
+.sebs-flow-engine__body {
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  width: 100%;
+  height: calc(100% - 0.85rem);
+  background: #fff;
+  border: 2px solid var(--flow-border);
+  border-radius: 0.5rem;
+  box-shadow: 4px 5px 0 rgb(15 23 42 / 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+
+.sebs-flow-engine__body::after {
+  content: '';
+  position: absolute;
+  right: -0.15rem;
+  top: 38%;
+  width: 0.55rem;
+  height: 28%;
+  background: #e2e8f0;
+  border: 2px solid var(--flow-border);
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+
+.sebs-flow-engine__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sebs-flow-engine__logo img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.sebs-flow-engine__logo span {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+}
+
+.sebs-flow-engine__tag {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.35;
+  max-width: 6.5rem;
+}
+
+.sebs-flow-engine__pulse {
+  position: absolute;
+  inset: auto 0.5rem 0.45rem;
+  height: 3px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.sebs-flow-engine__pulse span {
+  display: block;
+  height: 100%;
+  width: 45%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  animation: sebs-flow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes sebs-flow-pulse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+/* Bağlantı okları (dekoratif) */
+.sebs-flow-arrow {
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 2px;
+  background: #94a3b8;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.sebs-flow-arrow--left {
+  left: calc(var(--flow-card-w) + 0.25rem);
+}
+
+.sebs-flow-arrow--right {
+  right: calc(var(--flow-card-w) + 0.25rem);
+}
+
+.sebs-flow-caption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  line-height: 1.45;
+  max-width: 22rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .sebs-flow-caption {
+    text-align: right;
+    margin-inline: 0 0 auto;
+  }
+}
+
+/* Bölüm varyantı (tam genişlik) */
+.sebs-flow-section {
+  padding: 3rem 0 3.5rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sebs-flow-section .sebs-flow-diagram {
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+.sebs-flow-section .sebs-flow-caption {
+  text-align: center;
+  margin-inline: auto;
+}
+
+@media (max-width: 480px) {
+  .sebs-flow-diagram {
+    transform: scale(0.92);
+    transform-origin: center top;
+  }
+}
