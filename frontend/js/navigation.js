@@ -96,9 +96,6 @@
                 localStorage.removeItem('userData');
                 return false;
             }
-            if (localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('userData')) {
-                return true;
-            }
             return false;
         } catch (error) {
             console.warn('isLoggedIn check error:', error);
@@ -211,7 +208,17 @@
         dash.className =
             'user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
         dash.setAttribute('role', 'menuitem');
-        dash.textContent = 'Profilim';
+        dash.textContent = 'Dashboard';
+
+        function makeMenuLink(href, label) {
+            var a = document.createElement('a');
+            a.href = href;
+            a.className =
+                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
+            a.setAttribute('role', 'menuitem');
+            a.textContent = label;
+            return a;
+        }
 
         var themeRow = document.createElement('div');
         themeRow.className =
@@ -236,6 +243,9 @@
         lb.style.display = 'none';
 
         panel.appendChild(dash);
+        panel.appendChild(makeMenuLink('/modules.html', 'Eğitimlerim'));
+        panel.appendChild(makeMenuLink('/simulations.html', 'Simülasyonlarım'));
+        panel.appendChild(makeMenuLink('/dashboard.html', 'Profilim'));
         panel.appendChild(themeRow);
         panel.appendChild(lb);
 

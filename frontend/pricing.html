@@ -79,7 +79,7 @@
     };
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
-  <link rel="stylesheet" href="/css/landing-chrome.css?v=6" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css?v=1" />
   <link rel="stylesheet" href="/css/homepage-clarity.css?v=1" />
 
@@ -103,8 +103,8 @@
       <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
       <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
       <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
-        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
-        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true"></span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm"></span>
       </div>
       <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
       <details class="relative xl:hidden">
@@ -149,10 +149,9 @@
     <section class="pp-hero">
         <div class="pp-container pp-hero__inner">
             <span class="pp-eyebrow"><i class="fas fa-route" aria-hidden="true"></i> SEBS Yolu</span>
-            <h1>Planını seç, yolculuğa başla</h1>
+            <h1>Sana uygun SEBS planını seç</h1>
             <p class="pp-hero__lead">
-                Aylık abonelikle eğitim aşamalarını ve ilerleme sistemini açarsın.
-                Ücretsiz keşifle başlayabilir veya doğrudan aşağıdaki planlardan birini seçebilirsin.
+                Yeni başlıyorsan İlk Adım, düzenli ilerlemek istiyorsan Yükseliş, tüm eğitim ve simülasyonlara erişmek istiyorsan Zirve paketini seçebilirsin.
             </p>
             <div class="pp-hero__actions">
                 <a href="/signup.html" class="pp-btn pp-btn--primary focus-ring">Ücretsiz keşfet</a>
@@ -272,11 +271,26 @@
             </details>
         </div>
     </section>
+
+    <section class="pp-faq reveal-on-scroll" id="sik-sorulan-sorular" aria-labelledby="pp-faq-heading">
+        <div class="pp-container">
+            <h2 id="pp-faq-heading" class="pp-section-title">Sık sorulan sorular</h2>
+            <dl class="pp-faq-list pricing-decision-block" style="max-width: 42rem;">
+                <dt>Kredi kartı olmadan ödeme yapabilir miyim?</dt>
+                <dd>Evet. Kredi kartı ile otomatik abonelik veya banka kartı ile manuel aylık ödeme seçenekleri sunulur.</dd>
+                <dt>Aboneliğim ne zaman başlar?</dt>
+                <dd>Ödeme tamamlandıktan sonra erişimin açılır.</dd>
+                <dt>Tek modül satın alırsam ne olur?</dt>
+                <dd>Sadece seçtiğin modüle erişirsin. Aylık paket satın alırsan paket kapsamındaki eğitimler, simülasyonlar ve ilerleme paneli açılır.</dd>
+                <dt>Paketimi sonradan yükseltebilir miyim?</dt>
+                <dd>Evet. Üst plana geçişte erişimin güncellenir; kalan süren korunur.</dd>
+                <dt>İptal etmek istersem ne yapmalıyım?</dt>
+                <dd>Hesap panelinden veya destek üzerinden iptal talebi oluşturabilirsin.</dd>
+            </dl>
+        </div>
+    </section>
     </main>
 
-
-    <script src="js/navigation.js"></script>
-    
     <script>
         const PACKAGE_DECISION = {
             'ilk-adim': {
@@ -1426,7 +1440,8 @@
     <script src="/js/api-base.js"></script>
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js?v=2.1"></script>
-    <script src="js/navigation.js"></script>
+    <script src="/js/sebs-page-ready.js?v=1"></script>
+    <script src="/js/navigation.js?v=3.8" defer></script>
 </body>
 </html>
 
