@@ -1,0 +1,122 @@
+/**
+ * SEBS Premium — eğitim, simülasyon ve fiyatlandırma kartları (görsel katman)
+ */
+.sebs-premium-site .module-card-detailed,
+.sebs-premium-site .simulation-card-detailed {
+  border-radius: var(--sebs-radius-card);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-main);
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.sebs-premium-site .module-card-detailed::before,
+.sebs-premium-site .simulation-card-detailed::before {
+  background: var(--sebs-gradient);
+}
+
+.sebs-premium-site .module-card-detailed:hover,
+.sebs-premium-site .simulation-card-detailed:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 58, 237, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.sebs-premium-site .module-info h3,
+.sebs-premium-site .simulation-card-detailed h3,
+.sebs-premium-site .simulation-card-detailed h4 {
+  color: var(--text-main) !important;
+}
+
+.sebs-premium-site .module-info p,
+.sebs-premium-site .module-description,
+.sebs-premium-site .simulation-card-detailed p {
+  color: var(--text-muted) !important;
+}
+
+.sebs-premium-site .level-badge {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-strong);
+  color: var(--text-muted);
+}
+
+.sebs-premium-site .level-badge.beginner,
+.sebs-premium-site .level-badge.baslangic {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #bae6fd;
+}
+
+.sebs-premium-site .level-badge.intermediate,
+.sebs-premium-site .level-badge.orta {
+  border-color: rgba(124, 58, 237, 0.4);
+  color: #e9d5ff;
+}
+
+.sebs-premium-site .level-badge.advanced,
+.sebs-premium-site .level-badge.ileri {
+  border-color: rgba(167, 139, 250, 0.45);
+  color: #ddd6fe;
+}
+
+.sebs-premium-site .module-icon {
+  background: var(--sebs-gradient);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+}
+
+/* Fiyatlandırma */
+.sebs-premium-site .pp-stage,
+.sebs-premium-site .pp-compare-card,
+.sebs-premium-site .pp-plan-card {
+  border-radius: var(--sebs-radius-card);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-main);
+  color: var(--text-main);
+}
+
+.sebs-premium-site .pp-stage--featured {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.2);
+}
+
+.sebs-premium-site .pp-stage h3,
+.sebs-premium-site .pp-compare-card h3,
+.sebs-premium-site .pp-section-head h2 {
+  color: var(--text-main) !important;
+}
+
+.sebs-premium-site .pp-stage p,
+.sebs-premium-site .pp-compare-card p,
+.sebs-premium-site .pp-section-head p,
+.sebs-premium-site .pp-hero__lead {
+  color: var(--text-muted) !important;
+}
+
+.sebs-premium-site .pp-btn--primary {
+  background: var(--sebs-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+}
+
+.sebs-premium-site .pp-btn--ghost {
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+  background: transparent;
+  border-radius: 999px;
+}
+
+.sebs-premium-site .pp-access-table-wrap {
+  border-color: var(--border-soft);
+  background: var(--surface-main);
+}
+
+.sebs-premium-site .pp-access-table th {
+  color: var(--text-main);
+  background: var(--surface-strong);
+}
+
+.sebs-premium-site .pp-access-table td {
+  color: var(--text-muted);
+  border-color: var(--border-soft);
+}
