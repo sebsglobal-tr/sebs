@@ -11,11 +11,24 @@
         if (signupBtn) {
             if (loggedIn) {
                 signupBtn.style.display = 'none';
+                signupBtn.classList.add('hidden');
             } else {
                 signupBtn.setAttribute('href', '/signup.html');
-                signupBtn.textContent = 'Ücretsiz başla';
+                signupBtn.textContent = 'Ücretsiz Başla';
                 signupBtn.removeAttribute('aria-label');
+                signupBtn.classList.remove('hidden');
                 signupBtn.style.removeProperty('display');
+            }
+        }
+
+        var loginBtnNav = document.getElementById('loginBtn');
+        if (loginBtnNav) {
+            if (loggedIn) {
+                loginBtnNav.style.display = 'none';
+                loginBtnNav.classList.add('hidden');
+            } else {
+                loginBtnNav.classList.remove('hidden');
+                loginBtnNav.style.removeProperty('display');
             }
         }
 
@@ -460,7 +473,9 @@
             }
         }
 
-        const landingNavLinks = document.querySelectorAll('header.fixed nav[aria-label="Ana menü"] a[href]');
+        const landingNavLinks = document.querySelectorAll(
+            'header.sebs-ertay-header nav[aria-label="Ana menü"] a[href], header.fixed nav[aria-label="Ana menü"] a[href]'
+        );
         landingNavLinks.forEach(link => {
             const isActive = landingNavHrefIsActive(link.getAttribute('href'));
             link.classList.toggle('is-active', isActive);
@@ -577,6 +592,9 @@
     /** Landing üst menü: Ana sayfa | Platform | Paketler | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
+            return;
+        }
+        if (document.querySelector('[data-sebs-nav="standard"]')) {
             return;
         }
 

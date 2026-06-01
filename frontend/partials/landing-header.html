@@ -1,4 +1,4 @@
-  <header class="sebs-nav--ux sebs-ertay-header">
+  <header class="sebs-nav--ux sebs-ertay-header" data-sebs-nav="standard">
     <div class="ertay-header__inner">
       <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
         <img src="/images/sebs-navbar-mark.png?v=1" alt="SEBS Global" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
@@ -8,50 +8,52 @@
         <a href="/" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Ana Sayfa</a>
         <a href="/modules.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Eğitimler</a>
         <a href="/simulations.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Simülasyonlar</a>
-        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Kurumsal</a>
         <a href="/pricing.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Fiyatlandırma</a>
+        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Kurumsal</a>
         <a href="/hakkimizda" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Hakkımızda</a>
       </nav>
-      <div class="ertay-header__actions shrink-0">
-        <a href="/login.html" id="loginBtn" class="hidden md:inline focus-ring">Giriş Yap</a>
-        <a href="/signup.html" id="signupBtn" class="hidden focus-ring" aria-hidden="true">Ücretsiz başla</a>
-        <a href="/modules.html" class="ertay-btn-project focus-ring">
-          Eğitimleri Keşfet
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
+      <div class="ertay-header__actions shrink-0 flex items-center gap-2 sm:gap-3">
+        <a href="/login.html" id="loginBtn" class="sebs-btn-ghost hidden md:inline-flex focus-ring">Giriş Yap</a>
+        <a href="/signup.html" id="signupBtn" class="sebs-btn sebs-btn-primary hidden md:inline-flex focus-ring" data-sebs-primary-cta>Ücretsiz Başla</a>
         <div id="userProfile" class="relative hidden max-w-[10rem] sm:max-w-[12rem]" style="display: none;">
-          <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
-            <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
-            <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+          <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border py-1 pl-1 pr-2.5 text-left transition focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
+            <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold" aria-hidden="true"></span>
+            <span id="userName" class="truncate text-xs font-semibold sm:text-sm"></span>
           </button>
-          <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
-            <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
-            <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5" role="none">
-              <span class="text-sm text-slate-600">Gece modu</span>
+          <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border py-1 shadow-lg" role="menu" hidden>
+            <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold focus-ring" role="menuitem">Dashboard</a>
+            <a href="/modules.html" class="js-auth-only block px-4 py-2.5 text-sm font-semibold focus-ring" role="menuitem">Eğitimlerim</a>
+            <a href="/simulations.html" class="js-auth-only block px-4 py-2.5 text-sm font-semibold focus-ring" role="menuitem">Simülasyonlarım</a>
+            <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-semibold focus-ring" role="menuitem">Profilim</a>
+            <div class="flex items-center justify-between gap-3 border-t px-4 py-2.5" role="none" style="border-color: var(--border-soft);">
+              <span class="text-sm" style="color: var(--text-muted);">Gece modu</span>
               <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
             </div>
-            <button type="button" id="logoutBtn" class="hidden w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring" style="display: none;" role="menuitem">Çıkış yap</button>
+            <button type="button" id="logoutBtn" class="hidden w-full border-t px-4 py-2.5 text-left text-sm font-semibold focus-ring" style="display: none;" role="menuitem">Çıkış Yap</button>
           </div>
         </div>
         <details class="relative xl:hidden">
-          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          <summary class="list-none cursor-pointer rounded-lg border px-2.5 py-2 text-xs font-semibold shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
             Menü
           </summary>
-        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
-          <a href="/" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Ana Sayfa</a>
-            <a href="/modules.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitimler</a>
-            <a href="/simulations.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
-            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Kurumsal</a>
-            <a href="/pricing.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Fiyatlandırma</a>
-            <a href="/hakkimizda" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Hakkımızda</a>
-            <a href="/contact.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İletişim</a>
-            <hr class="my-1 border-slate-100" />
+          <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border py-2 shadow-lg" style="border-color: var(--border-soft); background: var(--bg-soft);">
+            <a href="/" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold">Ana Sayfa</a>
+            <a href="/modules.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold">Eğitimler</a>
+            <a href="/simulations.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold">Simülasyonlar</a>
+            <a href="/pricing.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold">Fiyatlandırma</a>
+            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium">Kurumsal</a>
+            <a href="/hakkimizda" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium">Hakkımızda</a>
+            <hr class="my-1" style="border-color: var(--border-soft);" />
             <div id="mobileGuestLinks">
-              <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş Yap</a>
-              <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+              <a href="/login.html" class="block px-4 py-2.5 text-sm">Giriş Yap</a>
+              <a href="/signup.html" class="block px-4 py-2.5 text-sm font-semibold">Ücretsiz Başla</a>
             </div>
             <div id="mobileUserLinks" style="display: none;">
-                            <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+              <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-semibold">Dashboard</a>
+              <a href="/modules.html" class="js-auth-only block px-4 py-2.5 text-sm">Eğitimlerim</a>
+              <a href="/simulations.html" class="js-auth-only block px-4 py-2.5 text-sm">Simülasyonlarım</a>
+              <a href="/dashboard.html" class="block px-4 py-2.5 text-sm">Profilim</a>
+              <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold">Çıkış Yap</button>
             </div>
           </div>
         </details>
