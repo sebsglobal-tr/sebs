@@ -1,3 +1,161 @@
+/* Hero — animasyon bölümüne önizleme (Adaface SVG yerine) */
+.sebs-hero-engine-teaser {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
+  padding: 1.1rem 1.15rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(165deg, #0f172a 0%, #1e293b 55%, #0f172a 100%);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+@media (min-width: 1024px) {
+  .sebs-hero-engine-teaser {
+    margin-inline: 0 0 auto;
+    max-width: 24rem;
+  }
+}
+
+.sebs-hero-engine-teaser:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 20px 48px -16px rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+}
+
+.sebs-hero-engine-teaser__glow {
+  position: absolute;
+  inset: -40% -20%;
+  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.35), transparent 55%);
+  animation: sebs-hero-teaser-glow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sebs-hero-teaser-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.08); }
+}
+
+.sebs-hero-engine-teaser__preview {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 4.5rem;
+}
+
+.sebs-hero-engine-teaser__lane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sebs-hero-engine-teaser__chip {
+  display: block;
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  animation: sebs-hero-teaser-chip 3s ease-in-out infinite;
+}
+
+.sebs-hero-engine-teaser__chip:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+@keyframes sebs-hero-teaser-chip {
+  0%, 100% { opacity: 0.45; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(4px); }
+}
+
+.sebs-hero-engine-teaser__engine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(129, 140, 248, 0.45);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 24px rgba(99, 102, 241, 0.25);
+  text-align: center;
+}
+
+.sebs-hero-engine-teaser__engine img {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+}
+
+.sebs-hero-engine-teaser__engine span {
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #e2e8f0;
+  max-width: 5.5rem;
+}
+
+.sebs-hero-engine-teaser__score {
+  justify-self: end;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(6, 78, 59, 0.25);
+  animation: sebs-hero-teaser-score 3s ease-in-out infinite 1s;
+}
+
+@keyframes sebs-hero-teaser-score {
+  0%, 30% { opacity: 0.35; transform: scale(0.92); }
+  45%, 70% { opacity: 1; transform: scale(1); }
+  85%, 100% { opacity: 0.5; }
+}
+
+.sebs-hero-engine-teaser__text {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+
+.sebs-hero-engine-teaser__link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #a5b4fc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sebs-hero-engine-teaser__glow,
+  .sebs-hero-engine-teaser__chip,
+  .sebs-hero-engine-teaser__score {
+    animation: none !important;
+  }
+  .sebs-hero-engine-teaser__chip,
+  .sebs-hero-engine-teaser__score {
+    opacity: 1;
+  }
+}
+
 /* SEBS Simülasyon Analiz Motoru — hero altı döngüsel animasyon */
 .sebs-sim-engine-section {
   --sim-cycle: 10s;
@@ -127,6 +285,7 @@
   position: relative;
   margin-top: 2.5rem;
   min-height: 22rem;
+  contain: layout style;
   border-radius: 1.25rem;
   border: 1px solid var(--sim-border);
   background: rgba(7, 11, 20, 0.55);
@@ -236,7 +395,20 @@
 
 @media (min-width: 900px) {
   .sebs-sim-engine-lane--in {
-    min-height: 16rem;
+    position: relative;
+    min-height: 11rem;
+    overflow: hidden;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .sebs-sim-engine-card--in {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: -1.1rem;
+    width: calc(100% - 0.5rem);
+    max-width: 13.5rem;
   }
 }
 
@@ -590,6 +762,14 @@
 @media (prefers-reduced-motion: reduce) {
   .sebs-sim-engine-section {
     --sim-cycle: 1ms;
+  }
+
+  @media (min-width: 900px) {
+    .sebs-sim-engine-card--in {
+      position: relative;
+      top: auto;
+      margin-top: 0;
+    }
   }
 
   .sebs-sim-engine-stage::before,
