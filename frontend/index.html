@@ -7,7 +7,7 @@
   <base href="/" />
   <title>SEBS Global | Simülasyon tabanlı eğitim ve yetkinlik analizi</title>
   <meta name="description" content="SEBS Global; gerçekçi simülasyonlarla eğitim, performans ölçümü ve yetkinlik raporlarını tek platformda sunar. Eğitimleri keşfedin veya kurumsal demo talep edin." />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#05070d" />
   <link rel="canonical" href="https://sebsglobal.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sebsglobal.com/" />
@@ -52,7 +52,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -79,7 +79,8 @@
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=9" />
   <link rel="stylesheet" href="/css/homepage-clarity.css?v=3" />
-  <link rel="stylesheet" href="/css/sebs-homepage-ux.css?v=2" />
+  <link rel="stylesheet" href="/css/sebs-homepage-ux.css?v=3" />
+  <link rel="stylesheet" href="/css/sebs-spatial-ui.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-simulation-engine-animation.css?v=4" />
   <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
@@ -90,9 +91,9 @@
     <style>.reveal-on-scroll { opacity: 1 !important; transform: none !important; }</style>
   </noscript>
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
+<body class="landing-site-body sebs-spatial-site font-sans text-slate-800 antialiased">
 
-  <header class="sebs-nav--ux fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+  <header class="sebs-nav--ux sebs-spatial-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
     <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
       <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
         <img src="/images/sebs-navbar-mark.png?v=1" alt="SEBS Global" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
@@ -157,24 +158,135 @@
   </header>
 
   <main id="top">
-    <section class="sebs-hero-premium" aria-labelledby="hero-heading">
-      <div class="sebs-hero-premium__inner">
-        <p class="sebs-hero-premium__eyebrow">SEBS Global · Türkiye</p>
-        <h1 id="hero-heading" class="sebs-hero-premium__title">Simülasyon Tabanlı Eğitim ve Yetkinlik Analizi Platformu</h1>
-        <p class="sebs-hero-premium__lead">
-          SEBS Global, gerçekçi senaryolarla öğrenmeyi, performans ölçümünü ve gelişim raporlamasını tek platformda birleştirir.
-        </p>
-        <div class="sebs-hero-premium__ctas">
-          <a href="/modules.html" class="sebs-ux-btn sebs-ux-btn--primary focus-ring">Eğitimleri Keşfet</a>
-          <a href="/simulations.html" class="sebs-ux-btn sebs-ux-btn--secondary focus-ring">Simülasyonları Gör</a>
-          <a href="/isverenler.html" class="sebs-ux-btn sebs-ux-btn--ghost focus-ring">Kurumsal Çözümleri İncele</a>
+    <section class="sebs-spatial-hero" aria-labelledby="hero-heading">
+      <div class="sebs-spatial-hero__inner">
+        <div class="sebs-spatial-hero__grid">
+          <div class="sebs-spatial-hero__content">
+            <p class="sebs-spatial-hero__role">SEBS Global · Simülasyon &amp; Yetkinlik</p>
+            <h1 id="hero-heading" class="sebs-spatial-hero__title">
+              <span class="sebs-spatial-hero__line">Senaryoda öğren,</span>
+              <span class="sebs-spatial-hero__line sebs-spatial-hero__line--accent">performansını ölç</span>
+            </h1>
+            <p class="sebs-spatial-hero__lead">
+              Gerçekçi simülasyonlarla eğitim veren, kararlarınızı analiz eden ve gelişim raporu üreten platform. Sadece içerik değil; ölçülebilir yetkinlik.
+            </p>
+            <div class="sebs-spatial-hero__ctas">
+              <a href="/modules.html" class="sebs-spatial-btn sebs-spatial-btn--fill focus-ring">
+                Eğitimleri Keşfet
+                <span class="sebs-spatial-btn__arrow" aria-hidden="true">→</span>
+              </a>
+              <a href="/simulations.html" class="sebs-spatial-btn sebs-spatial-btn--outline focus-ring">
+                Simülasyonları Gör
+                <span class="sebs-spatial-btn__arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
+            <p class="sebs-spatial-hero__note">Kredi kartı gerekmez · Ücretsiz keşif · Kurumsal demo için iletişim</p>
+          </div>
+          <div class="sebs-spatial-hero__visual" aria-hidden="true">
+            <div class="sebs-spatial-hero__orb"></div>
+            <div class="sebs-spatial-hero__cards">
+              <div class="sebs-spatial-float-card">
+                <strong>Eğitim</strong>
+                <span>Modüler yol haritası</span>
+                <p>Siber güvenlikle başlayan, genişleyebilen müfredat.</p>
+              </div>
+              <div class="sebs-spatial-float-card">
+                <strong>Simülasyon</strong>
+                <span>Karar analizi</span>
+                <p>Görev zincirinde verdiğiniz her adım kayıt altında.</p>
+              </div>
+              <div class="sebs-spatial-float-card">
+                <strong>Rapor</strong>
+                <span>87/100 · Gelişim alanı</span>
+                <p>Skor, rol uygunluğu ve öneriler tek panelde.</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="sebs-hero-premium__trust">Kredi kartı gerekmez · Ücretsiz keşif · Güvenli ödeme altyapısı</p>
-        <div class="sebs-hero-premium__pills" aria-hidden="true">
-          <div class="sebs-hero-pill"><strong>Eğitim</strong><span>Modüler içerik yolları</span></div>
-          <div class="sebs-hero-pill"><strong>Simülasyon</strong><span>Karar ve davranış ölçümü</span></div>
-          <div class="sebs-hero-pill"><strong>Rapor</strong><span>Skor ve gelişim özeti</span></div>
+      </div>
+    </section>
+
+    <section class="sebs-spatial-marquee" aria-label="Platform alanları">
+      <p class="sebs-spatial-marquee__label">Ölçülebilir yetkinlik alanları</p>
+      <div class="sebs-spatial-marquee__track">
+        <div class="sebs-spatial-marquee__group" aria-hidden="true">
+          <span class="sebs-spatial-marquee__pill">Siber Güvenlik</span>
+          <span class="sebs-spatial-marquee__pill">SOC Operasyonları</span>
+          <span class="sebs-spatial-marquee__pill">Web Uygulama Güvenliği</span>
+          <span class="sebs-spatial-marquee__pill">Bulut Güvenliği</span>
+          <span class="sebs-spatial-marquee__pill">Olay Müdahalesi</span>
+          <span class="sebs-spatial-marquee__pill">İnsan Kaynakları</span>
+          <span class="sebs-spatial-marquee__pill">Müşteri Destek</span>
+          <span class="sebs-spatial-marquee__pill">Kurumsal Değerlendirme</span>
         </div>
+        <div class="sebs-spatial-marquee__group" aria-hidden="true">
+          <span class="sebs-spatial-marquee__pill">Siber Güvenlik</span>
+          <span class="sebs-spatial-marquee__pill">SOC Operasyonları</span>
+          <span class="sebs-spatial-marquee__pill">Web Uygulama Güvenliği</span>
+          <span class="sebs-spatial-marquee__pill">Bulut Güvenliği</span>
+          <span class="sebs-spatial-marquee__pill">Olay Müdahalesi</span>
+          <span class="sebs-spatial-marquee__pill">İnsan Kaynakları</span>
+          <span class="sebs-spatial-marquee__pill">Müşteri Destek</span>
+          <span class="sebs-spatial-marquee__pill">Kurumsal Değerlendirme</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="hizmetler" class="sebs-spatial-services reveal-on-scroll" aria-labelledby="hizmetler-heading">
+      <header class="sebs-spatial-services__head">
+        <p class="sebs-ux-eyebrow">Platform yetenekleri</p>
+        <h2 id="hizmetler-heading">Eğitimden rapora tek sistem</h2>
+        <p>Modül, simülasyon ve yetkinlik analizi birbirinden ayrı ama aynı akışta çalışır.</p>
+      </header>
+      <div class="sebs-spatial-services__list" role="list">
+        <a href="/modules.html" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">01</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Yapılandırılmış eğitim modülleri</h3>
+            <p>Seviye, modül sayısı ve kazanımlar net; video yerine uygulamalı yol.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Eğitim</span>
+        </a>
+        <a href="/simulations.html" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">02</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Gerçekçi simülasyon senaryoları</h3>
+            <p>Karar noktaları, süre ve zorluk; ölçülen beceriler rapora yansır.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Simülasyon</span>
+        </a>
+        <a href="#sebs-simulation-engine" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">03</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Performans analiz motoru</h3>
+            <p>Karar kalitesi, risk farkındalığı ve rol uygunluğu sinyalleri.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Analiz</span>
+        </a>
+        <a href="/pricing.html#pricing-plans" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">04</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Yetkinlik ve gelişim raporu</h3>
+            <p>Skor, gelişim alanı ve kişisel öneri — birey ve kurum için.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Rapor</span>
+        </a>
+        <a href="/isverenler.html" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">05</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Kurumsal değerlendirme</h3>
+            <p>Aday ve çalışan için simülasyon tabanlı yetkinlik ölçümü.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Kurumsal</span>
+        </a>
+        <a href="/contact.html" class="sebs-spatial-service focus-ring" role="listitem">
+          <span class="sebs-spatial-service__num">06</span>
+          <div class="sebs-spatial-service__body">
+            <h3>Özel senaryo ve pilot</h3>
+            <p>Departmanınıza özel içerik; brief’ten üretime şeffaf süreç.</p>
+          </div>
+          <span class="sebs-spatial-service__tag">Proje</span>
+        </a>
       </div>
     </section>
 
@@ -428,40 +540,60 @@
       </div>
     </section>
 
-    <section id="one-cikan" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll border-t border-slate-100 scroll-mt-24" aria-labelledby="one-cikan-heading">
+    <section id="one-cikan" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24" aria-labelledby="one-cikan-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
-          <p class="sebs-ux-eyebrow">Platform</p>
-          <h2 id="one-cikan-heading" class="sebs-ux-title">Eğitim ve simülasyon ayrı; ikisi birlikte çalışır</h2>
-          <p class="sebs-ux-lead">Modül öğretir, simülasyon ölçer — kartlarda ne aldığınız bellidir.</p>
+          <p class="sebs-ux-eyebrow">Öne çıkanlar</p>
+          <h2 id="one-cikan-heading" class="sebs-ux-title">Eğitim ve simülasyon — ayrı ürünler, tek platform</h2>
+          <p class="sebs-ux-lead">Kartlarda ne aldığınız net: modül mü, senaryo mu, hangi beceriler ölçülüyor.</p>
         </header>
-        <div class="sebs-ux-split">
-          <div class="sebs-ux-split-col">
-            <h3>Eğitim modülleri</h3>
-            <p>Yapılandırılmış öğrenme yolu; seviye ve kazanımlar net.</p>
-            <div class="sebs-ux-card-list">
-              <a href="/modules/temel-siber-guvenlik.html" class="sebs-ux-offer-card">
-                <span class="sebs-ux-offer-card__type">Eğitim modülü</span>
-                <h4>Temel Siber Güvenlik</h4>
-                <div class="sebs-ux-offer-card__meta"><span>Başlangıç</span><span>Modüler dersler</span><span>Simülasyonlu</span></div>
-                <p>Ağ, tehdit ve savunma temelleri; uygulamalı simülasyonlarla desteklenir.</p>
-              </a>
-              <a href="/modules.html" class="sebs-ux-btn sebs-ux-btn--secondary focus-ring" style="margin-top:0.5rem;width:100%;color:#0f172a;border-color:#e2e8f0">Tüm eğitimleri gör</a>
+        <div class="sebs-spatial-work-grid">
+          <a href="/modules/temel-siber-guvenlik.html" class="sebs-spatial-work-card focus-ring">
+            <span class="sebs-spatial-work-card__num">001</span>
+            <span class="sebs-spatial-work-card__type">Eğitim modülü</span>
+            <h4>Temel Siber Güvenlik</h4>
+            <p>Ağ, tehdit ve savunma temelleri; modüler dersler ve simülasyon destekli ilerleme.</p>
+            <div class="sebs-spatial-work-card__meta">
+              <span>Başlangıç</span>
+              <span>Modüler</span>
+              <span>Simülasyonlu</span>
             </div>
-          </div>
-          <div class="sebs-ux-split-col">
-            <h3>Simülasyonlar</h3>
-            <p>Senaryoda karar verirsin; ölçülen beceriler rapora yansır.</p>
-            <div class="sebs-ux-card-list">
-              <a href="/simulation/temel-siber-guvenlik.html" class="sebs-ux-offer-card sebs-ux-offer-card--sim">
-                <span class="sebs-ux-offer-card__type">Simülasyon</span>
-                <h4>Temel Siber Güvenlik Senaryosu</h4>
-                <div class="sebs-ux-offer-card__meta"><span>~20 dk</span><span>Orta</span><span>Karar + log analizi</span></div>
-                <p>Olay müdahalesi ve önceliklendirme; her karar skora işlenir.</p>
-              </a>
-              <a href="/simulations.html" class="sebs-ux-btn sebs-ux-btn--secondary focus-ring" style="margin-top:0.5rem;width:100%;color:#0f172a;border-color:#e2e8f0">Tüm simülasyonları gör</a>
+            <span class="sebs-spatial-work-card__cta">Modülü incele →</span>
+          </a>
+          <a href="/simulation/temel-siber-guvenlik.html" class="sebs-spatial-work-card focus-ring">
+            <span class="sebs-spatial-work-card__num">002</span>
+            <span class="sebs-spatial-work-card__type">Simülasyon</span>
+            <h4>Temel Siber Güvenlik Senaryosu</h4>
+            <p>Olay müdahalesi ve önceliklendirme; kararlarınız skor ve rapora işlenir.</p>
+            <div class="sebs-spatial-work-card__meta">
+              <span>~20 dk</span>
+              <span>Orta</span>
+              <span>Karar analizi</span>
             </div>
-          </div>
+            <span class="sebs-spatial-work-card__cta">Simülasyona başla →</span>
+          </a>
+          <a href="/modules.html" class="sebs-spatial-work-card focus-ring">
+            <span class="sebs-spatial-work-card__num">003</span>
+            <span class="sebs-spatial-work-card__type">Katalog</span>
+            <h4>Tüm eğitim modülleri</h4>
+            <p>SOC, web güvenliği, bulut ve daha fazlası — seviye ve kazanımlarla listelenir.</p>
+            <div class="sebs-spatial-work-card__meta">
+              <span>Çoklu alan</span>
+              <span>Yol haritası</span>
+            </div>
+            <span class="sebs-spatial-work-card__cta">Eğitimleri keşfet →</span>
+          </a>
+          <a href="/simulations.html" class="sebs-spatial-work-card focus-ring">
+            <span class="sebs-spatial-work-card__num">004</span>
+            <span class="sebs-spatial-work-card__type">Katalog</span>
+            <h4>Tüm simülasyonlar</h4>
+            <p>Senaryo adı, süre, zorluk ve ölçülen beceriler her kartta görünür.</p>
+            <div class="sebs-spatial-work-card__meta">
+              <span>Senaryo tabanlı</span>
+              <span>Performans skoru</span>
+            </div>
+            <span class="sebs-spatial-work-card__cta">Simülasyonları gör →</span>
+          </a>
         </div>
       </div>
     </section>
@@ -482,8 +614,8 @@
           <article class="sebs-ux-corp-card"><h3>Gelişim alanı tespiti</h3><p>Birey ve kohort bazlı öneriler.</p></article>
         </div>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="/contact.html" class="sebs-ux-btn sebs-ux-btn--primary focus-ring">Kurumsal Demo Talep Et</a>
-          <a href="/isverenler.html" class="sebs-ux-btn sebs-ux-btn--secondary focus-ring">Kurumsal Çözümleri İncele</a>
+          <a href="/contact.html" class="sebs-spatial-btn sebs-spatial-btn--fill focus-ring">Kurumsal Demo Talep Et</a>
+          <a href="/isverenler.html" class="sebs-spatial-btn sebs-spatial-btn--outline focus-ring">Kurumsal Çözümleri İncele</a>
         </div>
       </div>
     </section>
@@ -1203,16 +1335,16 @@
         <div class="sebs-ux-cta-band">
           <h2 id="cta-heading">Öğrenmeyi ölçülebilir hale getirin</h2>
           <p>Bireysel yol veya kurumsal pilot — hangisi size uygunsa bugün başlayın.</p>
-          <div class="sebs-hero-premium__ctas" style="margin-top:1.25rem">
-            <a href="/signup.html" data-sebs-primary-cta class="sebs-ux-btn sebs-ux-btn--primary focus-ring">Ücretsiz Hesap Oluştur</a>
-            <a href="/contact.html" class="sebs-ux-btn sebs-ux-btn--secondary focus-ring">İletişime Geç</a>
+          <div class="sebs-spatial-hero__ctas" style="margin-top:1.25rem;justify-content:center">
+            <a href="/signup.html" data-sebs-primary-cta class="sebs-spatial-btn sebs-spatial-btn--fill focus-ring">Ücretsiz Hesap Oluştur</a>
+            <a href="/contact.html" class="sebs-spatial-btn sebs-spatial-btn--outline focus-ring">İletişime Geç</a>
           </div>
         </div>
       </div>
     </section>
     </main>
 
-  <footer class="border-t border-slate-200 bg-white py-14">
+  <footer class="sebs-spatial-footer border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
         <div>
@@ -1276,6 +1408,7 @@
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
   <script src="/js/sebs-premium-animations.js?v=1" defer></script>
+  <script src="/js/sebs-spatial-ui.js?v=1" defer></script>
   <script src="/js/sebs-page-ready.js?v=1"></script>
   <script src="/js/navigation.js?v=3.9" defer></script>
 
