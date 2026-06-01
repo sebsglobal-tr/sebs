@@ -1,0 +1,119 @@
+/* Ana sayfa — soğuk kullanıcı netliği */
+.home-hero-steps {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+@media (min-width: 640px) {
+  .home-hero-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.home-hero-step {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240 / 0.9);
+  background: rgb(248 250 252 / 0.8);
+  padding: 0.75rem 0.875rem;
+}
+.home-hero-step strong {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(100 116 139);
+}
+.home-hero-step span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgb(30 41 59);
+}
+.home-free-box {
+  margin-top: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px dashed rgb(191 219 254);
+  background: rgb(239 246 255 / 0.65);
+  padding: 0.875rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgb(51 65 85);
+}
+.home-audience-grid {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .home-audience-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.home-audience-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  border: 1px solid rgb(226 232 240);
+  background: #fff;
+  padding: 1.25rem 1.375rem;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+.home-audience-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+.home-audience-card p {
+  margin-top: 0.5rem;
+  flex: 1;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgb(71 85 105);
+}
+.home-audience-card a {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.home-early-banner {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgb(71 85 105);
+}
+.home-early-banner strong {
+  color: rgb(30 41 59);
+}
+.pricing-decision-block {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.625rem;
+  background: rgb(248 250 252);
+  border: 1px solid rgb(226 232 240);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: rgb(51 65 85);
+}
+.pricing-decision-block dt {
+  font-weight: 700;
+  color: rgb(30 41 59);
+  margin-top: 0.5rem;
+}
+.pricing-decision-block dt:first-child {
+  margin-top: 0;
+}
+.pricing-decision-block dd {
+  margin: 0.15rem 0 0;
+}
+.module-decision-overview {
+  margin: 1rem 1.25rem 1.5rem;
+  max-width: 72rem;
+}
+@media (min-width: 1024px) {
+  .module-decision-overview {
+    margin: 1.25rem 1.5rem 1.75rem;
+  }
+}

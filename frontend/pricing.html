@@ -81,6 +81,7 @@
   <link rel="stylesheet" href="/css/saas-landing.css" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=6" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css?v=1" />
+  <link rel="stylesheet" href="/css/homepage-clarity.css?v=1" />
 
 </head>
 <body class="landing-site-body sebs-pricing-page sebs-premium-page font-sans text-slate-800 antialiased bg-white">
@@ -277,6 +278,27 @@
     <script src="js/navigation.js"></script>
     
     <script>
+        const PACKAGE_DECISION = {
+            'ilk-adim': {
+                forWho: 'Siber güvenliğe yeni başlayanlar',
+                includes: 'İlk Adım aşaması: tüm duraklar, bu aşamadaki simülasyonlar, Big Five ve temel ilerleme takibi',
+                notFor: 'Orta/ileri seviye kullanıcılar (Yükseliş veya Zirve daha uygun)',
+                firstStep: 'Ücretsiz hesap → ilk simülasyon → İlk Adım planı'
+            },
+            'yukselis': {
+                forWho: 'Temeli olan, düzenli pratik yapmak isteyenler',
+                includes: 'İlk Adım + Yükseliş: ek duraklar ve 9 ek simülasyon, güçlü analitik',
+                notFor: 'Sadece tek konuya odaklanmak isteyenler (tek durak daha uygun)',
+                firstStep: 'İlk Adım tamamsa yükselt; yoksa doğrudan Yükseliş'
+            },
+            'zirve': {
+                forWho: 'Tüm yolu ve simülasyonları açmak isteyenler',
+                includes: 'İlk Adım + Yükseliş + Zirve: tüm duraklar ve simülasyonlar',
+                notFor: 'Tek modül/durak denemek isteyenler',
+                firstStep: 'Tam erişim için Zirve planını seç'
+            }
+        };
+
         // Pricing data
         const pricingData = {
             'sebs-road': {
@@ -710,12 +732,33 @@
         }
 
 
+        function buildPackageDecisionHtml(level) {
+            const d = PACKAGE_DECISION[level];
+            if (!d) return '';
+            return `
+                <dl class="pricing-decision-block">
+                    <dt>Kimler için?</dt>
+                    <dd>${d.forWho}</dd>
+                    <dt>İçinde ne var?</dt>
+                    <dd>${d.includes}</dd>
+                    <dt>Kim almamalı?</dt>
+                    <dd>${d.notFor}</dd>
+                    <dt>İlk adım</dt>
+                    <dd>${d.firstStep}</dd>
+                </dl>
+            `;
+        }
+
         function buildPackageCardsHtml(category, data) {
             return data.packages.map((pkg, index) => {
                 const isOwned = hasPurchasedPackage(category, pkg.level);
                 const isFeatured = category === 'sebs-road' ? index === 1 : index === 0;
                 const featureList = (pkg.features || []).slice(0, 4);
                 const moreCount = (pkg.features || []).length - featureList.length;
+                const decisionHtml = category === 'sebs-road' ? buildPackageDecisionHtml(pkg.level) : '';
+                const ctaLabel = category === 'sebs-road'
+                    ? (pkg.level === 'ilk-adim' ? 'İlk Adım ile başla' : pkg.level === 'yukselis' ? 'Yükseliş ile devam et' : 'Zirve planını seç')
+                    : 'Satın al';
                 return `
                     <div class="pricing-card ${isFeatured ? 'featured' : ''}">
                         ${isFeatured ? '<span class="pricing-featured-badge">Önerilen</span>' : ''}
@@ -726,6 +769,7 @@
                             <div class="pricing-period">${pkg.period || 'Tek seferlik ödeme'}</div>
                             <div class="pricing-period pricing-subtitle">${pkg.subtitle || ''}</div>
                         </div>
+                        ${decisionHtml}
                         <ul class="pricing-features">
                             ${featureList.map(feature => `
                                 <li ${(pkg.disabled || []).includes(feature) ? 'class="disabled"' : ''}>
@@ -744,7 +788,7 @@
                             ${isOwned ? 'disabled' : ''}
                             ${!isLoggedIn() ? 'onclick="handlePurchaseClick(event)"' : 'onclick="handlePurchase(event)"'}
                         >
-                            ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-unlock-alt"></i> Kilidi Aç'}
+                            ${isOwned ? '<i class="fas fa-check"></i> Satın Alındı' : '<i class="fas fa-shopping-cart"></i> ' + ctaLabel}
                         </button>
                         ${isOwned ? '<div class="access-info"><i class="fas fa-check-circle"></i> Bu pakete sahipsiniz</div>' : ''}
                     </div>

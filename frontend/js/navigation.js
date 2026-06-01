@@ -89,15 +89,44 @@
         try {
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                 const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
-                if (session && session.user) {
+                if (session && session.user && session.access_token) {
                     return true;
                 }
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userData');
+                return false;
             }
-            return localStorage.getItem('isLoggedIn') === 'true';
+            if (localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('userData')) {
+                return true;
+            }
+            return false;
         } catch (error) {
             console.warn('isLoggedIn check error:', error);
-            return localStorage.getItem('isLoggedIn') === 'true';
+            return false;
         }
+    }
+
+    function setGuestNavChrome() {
+        var loginBtn = document.getElementById('loginBtn');
+        var userProfile = document.getElementById('userProfile');
+        var logoutBtn = document.getElementById('logoutBtn');
+        if (loginBtn) {
+            loginBtn.classList.remove('hidden');
+            loginBtn.style.removeProperty('display');
+        }
+        if (userProfile) {
+            userProfile.style.display = 'none';
+            userProfile.classList.add('hidden');
+            userProfile.setAttribute('hidden', '');
+        }
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+            logoutBtn.classList.add('hidden');
+        }
+        var mobileGuest = document.getElementById('mobileGuestLinks');
+        var mobileUser = document.getElementById('mobileUserLinks');
+        if (mobileGuest) mobileGuest.style.display = 'block';
+        if (mobileUser) mobileUser.style.display = 'none';
     }
 
     async function getUserData() {
@@ -490,6 +519,7 @@
             if (dashboardBtn) dashboardBtn.style.display = 'none';
 
             if (userProfile) {
+                userProfile.removeAttribute('hidden');
                 userProfile.classList.remove('hidden');
                 userProfile.style.display = 'block';
                 var dashLink = userProfile.querySelector('.user-dashboard-link');
@@ -504,7 +534,10 @@
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'none';
             if (mobileUserLinks) mobileUserLinks.style.display = 'block';
         } else {
-            if (loginBtn) loginBtn.style.removeProperty('display');
+            if (loginBtn) {
+                loginBtn.classList.remove('hidden');
+                loginBtn.style.removeProperty('display');
+            }
             if (logoutBtn) {
                 logoutBtn.style.display = 'none';
                 logoutBtn.classList.add('hidden');
@@ -513,6 +546,7 @@
             if (userProfile) {
                 userProfile.style.display = 'none';
                 userProfile.classList.add('hidden');
+                userProfile.setAttribute('hidden', '');
             }
 
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'block';
@@ -954,6 +988,7 @@
     }
 
     async function initNavigation() {
+        setGuestNavChrome();
         upgradeUserAccountMenu();
         wireUserAccountDropdown();
         maybeLoadSaasShellForLanding();
@@ -1005,9 +1040,11 @@
     
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
+            setGuestNavChrome();
             initNavigation();
         });
     } else {
+        setGuestNavChrome();
         initNavigation();
     }
 
