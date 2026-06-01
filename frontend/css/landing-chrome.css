@@ -3761,3 +3761,41 @@ body.landing-site-body:not(.sebs-user-logged-in) #userName {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* —— SEBS UX nav (site geneli) —— */
+.sebs-nav--ux .landing-nav-pill-link {
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.sebs-nav-cta {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sebs-nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+}
+
+@media (min-width: 1024px) {
+  .sebs-nav-cta {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sebs-nav-cta:hover {
+    transform: none;
+  }
+}
