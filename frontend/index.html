@@ -86,6 +86,7 @@
   <link rel="stylesheet" href="/css/sebs-premium-theme.css?v=4" />
   <link rel="stylesheet" href="/css/sebs-premium-cards.css?v=2" />
   <link rel="stylesheet" href="/css/sebs-journey-scroll.css?v=5" />
+  <link rel="stylesheet" href="/css/sebs-premium-polish.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-simulation-engine-animation.css?v=4" />
   <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
@@ -325,6 +326,7 @@
       <div class="sebs-journey-scroll__track" aria-hidden="false">
         <div class="sebs-journey-scroll__sticky">
           <header class="sebs-journey-scroll__header">
+            <h2 class="sebs-journey-scroll__section-title sebs-journey-scroll__section-title--desktop" aria-hidden="true">SEBS deneyimi nasıl ilerler?</h2>
             <p class="sebs-journey-scroll__section-lead">Aşağı kaydırın — her adımda ürün akışı değişir.</p>
           </header>
 
@@ -1574,6 +1576,7 @@
   <script src="/js/sebs-premium-animations.js?v=1" defer></script>
   <script src="/js/sebs-ertay-ui.js?v=1" defer></script>
   <script src="/js/sebs-journey-scroll.js?v=1" defer></script>
+  <script src="/js/sebs-premium-motion.js?v=1" defer></script>
   <script src="/js/sebs-page-ready.js?v=1"></script>
   <script src="/js/navigation.js?v=3.9" defer></script>
 
@@ -1582,7 +1585,11 @@
       el.textContent = '2025';
     });
 
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.reveal-on-scroll').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    } else if (!document.body.classList.contains('sebs-premium-site')) {
       var reveal = document.querySelectorAll('.reveal-on-scroll');
       var io = new IntersectionObserver(
         function (entries) {
@@ -1595,10 +1602,8 @@
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
       );
-      reveal.forEach(function (el) { io.observe(el); });
-        } else {
-      document.querySelectorAll('.reveal-on-scroll').forEach(function (el) {
-        el.classList.add('is-visible');
+      reveal.forEach(function (el) {
+        io.observe(el);
       });
     }
 
