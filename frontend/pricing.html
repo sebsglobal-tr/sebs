@@ -83,6 +83,8 @@
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css?v=1" />
   <link rel="stylesheet" href="/css/homepage-clarity.css?v=2" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
 
 </head>
 <body class="landing-site-body sebs-pricing-page sebs-premium-page font-sans text-slate-800 antialiased bg-white">
@@ -206,6 +208,34 @@
                     <span class="pp-stage__price">799 TL/ay</span>
                 </article>
             </div>
+        </div>
+    </section>
+
+    <section class="sebs-anim-section sebs-anim--unlock reveal-on-scroll" aria-labelledby="sebs-anim-unlock-title">
+        <div class="sebs-anim-section__inner">
+            <header class="sebs-anim-section__header">
+                <p class="sebs-anim-section__eyebrow">SEBS Yolu erişimi</p>
+                <h2 id="sebs-anim-unlock-title" class="sebs-anim-section__title">Plan yükseldikçe yol açılır</h2>
+                <p class="sebs-anim-section__lead">İlk Adım ile başlayın; Yükseliş ve Zirve ile tüm duraklar ve simülasyonlar erişime girer.</p>
+            </header>
+            <div class="sebs-anim-stage" aria-hidden="true">
+                <div class="sebs-anim-unlock-path">
+                    <div class="sebs-anim-unlock-gate">
+                        <div class="sebs-anim-unlock-gate__icon">1</div>
+                        <span class="sebs-anim-unlock-gate__label">İlk Adım</span>
+                    </div>
+                    <div class="sebs-anim-unlock-gate">
+                        <div class="sebs-anim-unlock-gate__icon">2</div>
+                        <span class="sebs-anim-unlock-gate__label">Yükseliş</span>
+                    </div>
+                    <div class="sebs-anim-unlock-gate">
+                        <div class="sebs-anim-unlock-gate__icon">3</div>
+                        <span class="sebs-anim-unlock-gate__label">Zirve</span>
+                    </div>
+                </div>
+                <p class="sebs-anim-unlock-caption">Tam yol erişimi aktif — tüm simülasyonlar açık</p>
+            </div>
+            <p class="sr-only">Abonelik planları İlk Adım, Yükseliş ve Zirve aşamalarını sırayla açar.</p>
         </div>
     </section>
 
@@ -1465,7 +1495,8 @@
     <script src="/js/supabase-client.js"></script>
     <script src="/js/supabase-auth.js?v=2.1"></script>
     <script src="/js/sebs-page-ready.js?v=1"></script>
-    <script src="/js/navigation.js?v=3.8" defer></script>
+    <script src="/js/sebs-premium-animations.js?v=1" defer></script>
+  <script src="/js/navigation.js?v=3.8" defer></script>
 </body>
 </html>
 

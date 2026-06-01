@@ -26,6 +26,8 @@
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/legal-document.css?v=5" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
 </head>
 <body class="landing-site-body about-page font-sans text-slate-800 antialiased bg-white">
   <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
@@ -74,6 +76,30 @@
             <a href="#yasal-belgeler">Yasal belgeler</a>
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="sebs-anim-section sebs-anim--ecosystem" aria-labelledby="sebs-anim-eco-title">
+      <div class="sebs-anim-section__inner">
+        <header class="sebs-anim-section__header">
+          <p class="sebs-anim-section__eyebrow">Ekosistem</p>
+          <h2 id="sebs-anim-eco-title" class="sebs-anim-section__title">Akademi, platform ve iş dünyası birlikte</h2>
+          <p class="sebs-anim-section__lead">SEBS; üniversite iş birliği, ölçülebilir simülasyonlar ve kurumsal raporlama arasında köprü kurar.</p>
+        </header>
+        <div class="sebs-anim-stage" aria-hidden="true">
+          <div class="sebs-anim-ecosystem-graph">
+            <svg class="sebs-anim-ecosystem-svg" viewBox="0 0 200 200" aria-hidden="true">
+              <line class="sebs-anim-ecosystem-line" x1="100" y1="42" x2="42" y2="158" />
+              <line class="sebs-anim-ecosystem-line" x1="100" y1="42" x2="158" y2="158" />
+              <line class="sebs-anim-ecosystem-line" x1="42" y1="158" x2="158" y2="158" />
+            </svg>
+            <div class="sebs-anim-ecosystem-node sebs-anim-ecosystem-node--top">Akademi</div>
+            <div class="sebs-anim-ecosystem-node sebs-anim-ecosystem-node--center">SEBS</div>
+            <div class="sebs-anim-ecosystem-node sebs-anim-ecosystem-node--left">Öğrenci</div>
+            <div class="sebs-anim-ecosystem-node sebs-anim-ecosystem-node--right">İş dünyası</div>
+          </div>
+        </div>
+        <p class="sr-only">SEBS ekosistemi akademi, öğrenci ve işveren arasında ölçülebilir yetkinlik akışı sağlar.</p>
       </div>
     </section>
 
@@ -374,6 +400,7 @@
       </p>
     </div>
   </footer>
+  <script src="/js/sebs-premium-animations.js?v=1" defer></script>
   <script>
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {
       el.textContent = String(new Date().getFullYear());

@@ -106,6 +106,8 @@
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/homepage-clarity.css?v=2" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -205,6 +207,15 @@
         <li>Gelişim panelini gör</li>
       </ul>
       <p class="signup-benefits__note"><strong>Kredi kartı gerekmez.</strong> Ücretsiz hesap oluşturmak için ödeme bilgisi istenmez.</p>
+      <div class="sebs-anim-section sebs-anim--onboarding" aria-hidden="true">
+        <div class="sebs-anim-onboarding-track">
+          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">✓</span><span class="sebs-anim-onboarding-bead__label">Hesap</span></div>
+          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">2</span><span class="sebs-anim-onboarding-bead__label">Modül</span></div>
+          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">3</span><span class="sebs-anim-onboarding-bead__label">Simülasyon</span></div>
+          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">4</span><span class="sebs-anim-onboarding-bead__label">Rapor</span></div>
+        </div>
+      </div>
+      <p class="sr-only">Kayıt sonrası modül, simülasyon ve rapor akışına geçilir.</p>
     </aside>
     <div class="signup-container">
         <div class="signup-header">
@@ -818,6 +829,7 @@
         }
     </script>
     <script src="/js/sebs-page-ready.js?v=1"></script>
+    <script src="/js/sebs-premium-animations.js?v=1" defer></script>
     <script src="/js/navigation.js?v=3.8" defer></script>
 </body>
 </html>

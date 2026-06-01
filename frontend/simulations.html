@@ -73,6 +73,8 @@
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css" data-sebs-premium="css" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
 
 </head>
 <body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -198,6 +200,30 @@
                         <span>Rapor Çıktısı</span>
                     </div>
                 </aside>
+            </div>
+        </section>
+
+        <section class="sebs-anim-section sebs-anim--scenario reveal-on-scroll" aria-labelledby="sebs-anim-scenario-title">
+            <div class="sebs-anim-section__inner">
+                <header class="sebs-anim-section__header">
+                    <p class="sebs-anim-section__eyebrow">Karar simülasyonu</p>
+                    <h2 id="sebs-anim-scenario-title" class="sebs-anim-section__title">Senaryo → karar → ölçülebilir sonuç</h2>
+                    <p class="sebs-anim-section__lead">Her oturumda verdiğiniz kararlar kaydedilir; hız, isabet ve rapor kalitesi tek skorda birleşir.</p>
+                </header>
+                <div class="sebs-anim-stage" aria-hidden="true">
+                    <div class="sebs-anim-scenario-tree">
+                        <div class="sebs-anim-scenario-root">Olay: Kimlik avı alarmı</div>
+                        <div class="sebs-anim-scenario-branches">
+                            <div class="sebs-anim-scenario-branch sebs-anim-scenario-branch--a">A: Logları önce doğrula</div>
+                            <div class="sebs-anim-scenario-branch sebs-anim-scenario-branch--b">B: Hemen izole et</div>
+                        </div>
+                        <div class="sebs-anim-scenario-outcome">
+                            <div class="sebs-anim-scenario-ring">82</div>
+                            <p class="sebs-anim-scenario-outcome-text"><strong>Karar kalitesi: Yüksek</strong>Risk süresi kısaldı · mentor notu eklendi</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="sr-only">Simülasyon akışı: senaryo sunulur, kullanıcı karar verir, performans skoru ve rapor üretilir.</p>
             </div>
         </section>
 
@@ -1740,6 +1766,7 @@
         });
     </script>
     <script src="/js/sebs-page-ready.js?v=1"></script>
+    <script src="/js/sebs-premium-animations.js?v=1" defer></script>
     <script src="/js/navigation.js?v=3.8" defer></script>
     <script src="/js/animations.js" defer></script>
     <script src="utils/access-control.js"></script>

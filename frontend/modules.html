@@ -91,6 +91,8 @@
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css" data-sebs-premium="css" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
 
 </head>
 <body class="modules-page landing-site-body font-sans text-slate-800 antialiased bg-white">
@@ -181,6 +183,23 @@
                     Farklı alanlarda uzmanlaşmak için kapsamlı eğitim programlarımızı keşfedin.
                 </p>
             </div>
+        </section>
+
+        <section class="sebs-anim-section sebs-anim--stack reveal-on-scroll mx-auto mt-6 max-w-6xl px-4 sm:px-6 lg:px-8" aria-labelledby="sebs-anim-stack-title">
+            <header class="sebs-anim-section__header">
+                <p class="sebs-anim-section__eyebrow">Modüler öğrenme</p>
+                <h2 id="sebs-anim-stack-title" class="sebs-anim-section__title">Katman katman yetkinlik inşa edin</h2>
+                <p class="sebs-anim-section__lead">Temel kavramlar üstüne uygulama ve ileri modüller kilitlenerek açılır.</p>
+            </header>
+            <div class="sebs-anim-stage" aria-hidden="true">
+                <div class="sebs-anim-stack-layers">
+                    <div class="sebs-anim-stack-layer sebs-anim-stack-layer--3"><strong>İleri modül</strong><span>Kurumsal senaryolar · Zirve</span></div>
+                    <div class="sebs-anim-stack-layer sebs-anim-stack-layer--2"><strong>Uygulama katmanı</strong><span>SOC · Threat Hunting · Yükseliş</span></div>
+                    <div class="sebs-anim-stack-layer sebs-anim-stack-layer--1"><strong>Temel modül</strong><span>Giriş · İlk Adım</span></div>
+                </div>
+                <p class="sebs-anim-stack-lock">✓ İlerleme kaydedildi — sonraki katman açıldı</p>
+            </div>
+            <p class="sr-only">Eğitim modülleri temel, uygulama ve ileri katmanlar halinde üst üste tamamlanır.</p>
         </section>
 
         <section class="mx-auto mt-8 max-w-6xl px-4 sm:px-6 lg:px-8" aria-label="SEBS Yolu özeti">
@@ -2233,6 +2252,7 @@
     <script src="/utils/api-client.js"></script>
     <script src="/utils/module-progress.js"></script>
     <script src="/js/sebs-page-ready.js?v=1"></script>
+    <script src="/js/sebs-premium-animations.js?v=1" defer></script>
     <script src="/js/navigation.js?v=3.8" defer></script>
     <script src="/js/animations.js" defer></script>
     
