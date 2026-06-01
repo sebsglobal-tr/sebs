@@ -103,17 +103,10 @@
     };
   </script>
   <link rel="stylesheet" href="/css/saas-landing.css" />
-  <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
-  <link rel="stylesheet" href="/css/homepage-clarity.css?v=2" />
-  <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
-  <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
-  <link rel="stylesheet" href="/css/sebs-premium-animations.css?v=1" />
-
-  <link rel="stylesheet" href="/css/sebs-stripe-tokens.css?v=1" />
-  <link rel="stylesheet" href="/css/sebs-stripe-design.css?v=1" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=5" />
 
 </head>
-<body class="landing-site-body font-sans text-slate-800 antialiased bg-white sebs-stripe-site">
+<body class="landing-site-body font-sans text-slate-800 antialiased bg-white">
 <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
     <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
@@ -140,14 +133,11 @@
       <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
       <div id="userProfile" class="relative hidden max-w-[10rem] sm:max-w-[12rem]" style="display: none;">
         <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
-          <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true"></span>
-          <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm"></span>
+          <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+          <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
         </button>
         <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
-          <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Dashboard</a>
-          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Eğitimlerim</a>
-          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Simülasyonlarım</a>
-          <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
+          <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
           <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5" role="none">
             <span class="text-sm text-slate-600">Gece modu</span>
             <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
@@ -200,26 +190,6 @@
     <div class="floating-element"></div>
     <div class="floating-element"></div>
 
-    <div class="signup-layout">
-    <aside class="signup-benefits" aria-label="Ücretsiz hesap faydaları">
-      <h2 class="signup-benefits__title">Ücretsiz hesapla neler yapabilirsin?</h2>
-      <ul class="signup-benefits__list">
-        <li>SEBS yolunu keşfet</li>
-        <li>İlk ücretsiz simülasyonu dene</li>
-        <li>Eğitim modüllerini incele</li>
-        <li>Gelişim panelini gör</li>
-      </ul>
-      <p class="signup-benefits__note"><strong>Kredi kartı gerekmez.</strong> Ücretsiz hesap oluşturmak için ödeme bilgisi istenmez.</p>
-      <div class="sebs-anim-section sebs-anim--onboarding" aria-hidden="true">
-        <div class="sebs-anim-onboarding-track">
-          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">✓</span><span class="sebs-anim-onboarding-bead__label">Hesap</span></div>
-          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">2</span><span class="sebs-anim-onboarding-bead__label">Modül</span></div>
-          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">3</span><span class="sebs-anim-onboarding-bead__label">Simülasyon</span></div>
-          <div class="sebs-anim-onboarding-bead"><span class="sebs-anim-onboarding-bead__dot">4</span><span class="sebs-anim-onboarding-bead__label">Rapor</span></div>
-        </div>
-      </div>
-      <p class="sr-only">Kayıt sonrası modül, simülasyon ve rapor akışına geçilir.</p>
-    </aside>
     <div class="signup-container">
         <div class="signup-header">
             <div class="signup-logo">
@@ -314,7 +284,6 @@
             <p>Zaten hesabınız var mı? <a href="/login.html">Giriş Yapın</a></p>
             <p style="margin-top: 1rem;"><a href="/index.html">← Ana Sayfaya Dön</a></p>
         </div>
-    </div>
     </div>
 
   <footer class="border-t border-slate-200 bg-white py-14">
@@ -831,8 +800,6 @@
             }, 1000);
         }
     </script>
-    <script src="/js/sebs-page-ready.js?v=1"></script>
-    <script src="/js/sebs-premium-animations.js?v=1" defer></script>
-    <script src="/js/navigation.js?v=3.8" defer></script>
+    <script src="/js/navigation.js?v=3.7"></script>
 </body>
 </html>

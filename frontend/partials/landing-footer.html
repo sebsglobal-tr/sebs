@@ -1,62 +1,56 @@
-  <footer class="sebs-premium-footer">
+  <footer class="border-t border-slate-200 bg-white py-14">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
-        <div class="lg:col-span-2">
-          <div class="footer-brand flex items-center gap-2 text-lg font-bold">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
             <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
-            SEBS Global
+            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
           </div>
-          <p class="mt-4 max-w-sm text-sm" style="color: var(--text-muted);">
-            Simülasyon tabanlı eğitim, performans ölçümü ve yetkinlik raporları—tek platformda ölçülebilir gelişim.
+          <p class="mt-4 max-w-xs text-sm text-slate-500">
+            Simülasyon tabanlı siber güvenlik eğitimi ve mentor desteği—yapmacık ilerleme yerine ölçülebilir sonuç.
           </p>
         </div>
-        <div>
-          <p class="footer-col-title">Ürün</p>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li><a href="/modules.html" class="focus-ring rounded">Eğitimler</a></li>
-            <li><a href="/simulations.html" class="focus-ring rounded">Simülasyonlar</a></li>
-            <li><a href="/pricing.html" class="focus-ring rounded">Fiyatlandırma</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="footer-col-title">Kurumsal</p>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li><a href="/isverenler.html" class="focus-ring rounded">Kurumsal Çözümler</a></li>
-            <li><a href="/contact.html" class="focus-ring rounded">Demo Talep Et</a></li>
-            <li><a href="/hakkimizda" class="focus-ring rounded">Hakkımızda</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="footer-col-title">Destek</p>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li><a href="/contact.html" class="focus-ring rounded">İletişim</a></li>
-            <li><a href="/#sss" class="focus-ring rounded">SSS</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="footer-col-title">Yasal</p>
-          <ul class="mt-4 space-y-2 text-sm">
-            <li><a href="/gizlilik" class="focus-ring rounded">Gizlilik</a></li>
-            <li><a href="/kullanim-sartlari" class="focus-ring rounded">Kullanım Şartları</a></li>
-            <li><a href="/teslimat-iade" class="focus-ring rounded">Teslimat ve iade</a></li>
-            <li><a href="/mesafeli-satis" class="focus-ring rounded">Mesafeli satış</a></li>
-          </ul>
+        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
+              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
+              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="/teslimat-iade" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Teslimat ve iade</a></li>
+              <li><a href="/mesafeli-satis" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Mesafeli satış</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div class="sebs-payment-trust mt-10" aria-label="Ödeme yöntemleri">
-        <p class="sebs-payment-trust__label text-xs uppercase tracking-wider" style="color: var(--text-soft);">Güvenli ödeme</p>
+      <div class="sebs-payment-trust" aria-label="Ödeme yöntemleri">
+        <p class="sebs-payment-trust__label">Güvenli ödeme</p>
         <img
           src="/images/payments/iyzico/logo-band-footer.svg"
           alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
           width="429"
           height="32"
           loading="lazy"
-          class="sebs-payment-trust__band mt-2 max-w-full opacity-90"
+          class="sebs-payment-trust__band"
         />
       </div>
-      <div class="mt-10 flex flex-col items-start justify-between gap-4 border-t pt-8 sm:flex-row sm:items-center" style="border-color: var(--border-soft);">
-        <p class="text-xs" style="color: var(--text-soft);">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
-        <p class="text-xs" style="color: var(--text-soft);">Sivas · Türkiye</p>
+      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
+        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p class="text-xs text-slate-400">Sivas · Türkiye</p>
       </div>
     </div>
   </footer>

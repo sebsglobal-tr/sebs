@@ -11,24 +11,11 @@
         if (signupBtn) {
             if (loggedIn) {
                 signupBtn.style.display = 'none';
-                signupBtn.classList.add('hidden');
             } else {
                 signupBtn.setAttribute('href', '/signup.html');
-                signupBtn.textContent = 'Ücretsiz Başla';
+                signupBtn.textContent = 'Ücretsiz başla';
                 signupBtn.removeAttribute('aria-label');
-                signupBtn.classList.remove('hidden');
                 signupBtn.style.removeProperty('display');
-            }
-        }
-
-        var loginBtnNav = document.getElementById('loginBtn');
-        if (loginBtnNav) {
-            if (loggedIn) {
-                loginBtnNav.style.display = 'none';
-                loginBtnNav.classList.add('hidden');
-            } else {
-                loginBtnNav.classList.remove('hidden');
-                loginBtnNav.style.removeProperty('display');
             }
         }
 
@@ -49,52 +36,6 @@
 
 (function() {
     'use strict';
-
-    function ensureStripeThemeAssets() {
-        if (document.querySelector('link[data-sebs-stripe="design"]')) return;
-        var files = [
-            { href: '/css/sebs-stripe-tokens.css?v=1', mark: 'tokens' },
-            { href: '/css/sebs-stripe-design.css?v=1', mark: 'design' },
-            { href: '/css/sebs-stripe-lesson.css?v=1', mark: 'lesson' },
-        ];
-        files.forEach(function (file) {
-            var link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = file.href;
-            link.setAttribute('data-sebs-stripe', file.mark);
-            document.head.appendChild(link);
-        });
-    }
-
-    function ensureStripeSiteClass() {
-        var body = document.body;
-        if (!body) return;
-        var path = (window.location.pathname || '').toLowerCase();
-        var skip =
-            /\/(dashboard|admin|report-output|degerlendirme-raporu)(\.html)?$/i.test(path) ||
-            body.classList.contains('dashboard-page') ||
-            body.id === 'admin-app';
-        if (skip) return;
-        var eligible =
-            body.classList.contains('landing-site-body') ||
-            body.classList.contains('modules-page') ||
-            body.classList.contains('legal-page') ||
-            body.classList.contains('sebs-premium-site') ||
-            document.querySelector('link[href*="sebs-stripe-design"]');
-        if (!eligible) return;
-        if (!body.classList.contains('sebs-stripe-site')) {
-            body.classList.add('sebs-stripe-site');
-        }
-        if (!document.querySelector('link[data-sebs-stripe="design"]')) {
-            ensureStripeThemeAssets();
-        }
-    }
-
-    if (document.body) {
-        ensureStripeSiteClass();
-    } else {
-        document.addEventListener('DOMContentLoaded', ensureStripeSiteClass, { once: true });
-    }
 
     function ensurePremiumExperienceAssets() {
         try {
@@ -148,41 +89,15 @@
         try {
             if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
                 const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
-                if (session && session.user && session.access_token) {
+                if (session && session.user) {
                     return true;
                 }
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userData');
-                return false;
             }
-            return false;
+            return localStorage.getItem('isLoggedIn') === 'true';
         } catch (error) {
             console.warn('isLoggedIn check error:', error);
-            return false;
+            return localStorage.getItem('isLoggedIn') === 'true';
         }
-    }
-
-    function setGuestNavChrome() {
-        var loginBtn = document.getElementById('loginBtn');
-        var userProfile = document.getElementById('userProfile');
-        var logoutBtn = document.getElementById('logoutBtn');
-        if (loginBtn) {
-            loginBtn.classList.remove('hidden');
-            loginBtn.style.removeProperty('display');
-        }
-        if (userProfile) {
-            userProfile.style.display = 'none';
-            userProfile.classList.add('hidden');
-            userProfile.setAttribute('hidden', '');
-        }
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
-            logoutBtn.classList.add('hidden');
-        }
-        var mobileGuest = document.getElementById('mobileGuestLinks');
-        var mobileUser = document.getElementById('mobileUserLinks');
-        if (mobileGuest) mobileGuest.style.display = 'block';
-        if (mobileUser) mobileUser.style.display = 'none';
     }
 
     async function getUserData() {
@@ -267,17 +182,7 @@
         dash.className =
             'user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
         dash.setAttribute('role', 'menuitem');
-        dash.textContent = 'Dashboard';
-
-        function makeMenuLink(href, label) {
-            var a = document.createElement('a');
-            a.href = href;
-            a.className =
-                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
-            a.setAttribute('role', 'menuitem');
-            a.textContent = label;
-            return a;
-        }
+        dash.textContent = 'Profilim';
 
         var themeRow = document.createElement('div');
         themeRow.className =
@@ -302,9 +207,6 @@
         lb.style.display = 'none';
 
         panel.appendChild(dash);
-        panel.appendChild(makeMenuLink('/modules.html', 'Eğitimlerim'));
-        panel.appendChild(makeMenuLink('/simulations.html', 'Simülasyonlarım'));
-        panel.appendChild(makeMenuLink('/dashboard.html', 'Profilim'));
         panel.appendChild(themeRow);
         panel.appendChild(lb);
 
@@ -519,9 +421,7 @@
             }
         }
 
-        const landingNavLinks = document.querySelectorAll(
-            'header.sebs-ertay-header nav[aria-label="Ana menü"] a[href], header.fixed nav[aria-label="Ana menü"] a[href]'
-        );
+        const landingNavLinks = document.querySelectorAll('header.fixed nav[aria-label="Ana menü"] a[href]');
         landingNavLinks.forEach(link => {
             const isActive = landingNavHrefIsActive(link.getAttribute('href'));
             link.classList.toggle('is-active', isActive);
@@ -590,7 +490,6 @@
             if (dashboardBtn) dashboardBtn.style.display = 'none';
 
             if (userProfile) {
-                userProfile.removeAttribute('hidden');
                 userProfile.classList.remove('hidden');
                 userProfile.style.display = 'block';
                 var dashLink = userProfile.querySelector('.user-dashboard-link');
@@ -605,10 +504,7 @@
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'none';
             if (mobileUserLinks) mobileUserLinks.style.display = 'block';
         } else {
-            if (loginBtn) {
-                loginBtn.classList.remove('hidden');
-                loginBtn.style.removeProperty('display');
-            }
+            if (loginBtn) loginBtn.style.removeProperty('display');
             if (logoutBtn) {
                 logoutBtn.style.display = 'none';
                 logoutBtn.classList.add('hidden');
@@ -617,7 +513,6 @@
             if (userProfile) {
                 userProfile.style.display = 'none';
                 userProfile.classList.add('hidden');
-                userProfile.setAttribute('hidden', '');
             }
 
             if (mobileGuestLinks) mobileGuestLinks.style.display = 'block';
@@ -638,9 +533,6 @@
     /** Landing üst menü: Ana sayfa | Platform | Paketler | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
-            return;
-        }
-        if (document.querySelector('[data-sebs-nav="standard"]')) {
             return;
         }
 
@@ -1062,7 +954,6 @@
     }
 
     async function initNavigation() {
-        setGuestNavChrome();
         upgradeUserAccountMenu();
         wireUserAccountDropdown();
         maybeLoadSaasShellForLanding();
@@ -1114,11 +1005,9 @@
     
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            setGuestNavChrome();
             initNavigation();
         });
     } else {
-        setGuestNavChrome();
         initNavigation();
     }
 
