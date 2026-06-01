@@ -80,7 +80,7 @@
   <link rel="stylesheet" href="/css/landing-chrome.css?v=9" />
   <link rel="stylesheet" href="/css/homepage-clarity.css?v=3" />
   <link rel="stylesheet" href="/css/sebs-homepage-ux.css?v=3" />
-  <link rel="stylesheet" href="/css/sebs-ertay-design.css?v=2" />
+  <link rel="stylesheet" href="/css/sebs-ertay-design.css?v=3" />
   <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-simulation-engine-animation.css?v=4" />
   <link rel="stylesheet" href="/css/sebs-premium-animations-base.css?v=1" />
@@ -280,22 +280,10 @@
             <p class="ertay-service-panel__tag">Kurumsal</p>
           </div>
         </a>
-        <a href="/contact.html" class="ertay-service-panel focus-ring" role="listitem">
-          <div class="ertay-service-panel__top">
-            <span class="ertay-service-panel__num">06</span>
-            <span class="ertay-service-panel__badge">Proje</span>
-          </div>
-          <div class="ertay-service-panel__body">
-            <h3>Özel senaryo ve pilot</h3>
-            <p>Departmanınıza özel içerik; brief’ten üretime şeffaf süreç.</p>
-            <div class="ertay-service-panel__rule" aria-hidden="true"></div>
-            <p class="ertay-service-panel__tag">Proje</p>
-          </div>
-        </a>
       </div>
     </section>
 
-    <section id="sebs-nedir" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24" aria-labelledby="nedir-heading">
+    <section id="sebs-nedir" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24 hidden" aria-hidden="true" hidden aria-labelledby="nedir-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">SEBS nedir?</p>
@@ -325,20 +313,28 @@
       </div>
     </section>
 
-    <section id="sebs-simulation-engine" class="sebs-sim-engine-section sebs-anim-section" aria-labelledby="sebs-sim-engine-heading">
+    <section id="sebs-simulation-engine" class="ertay-engine-band reveal-on-scroll" aria-labelledby="sebs-sim-engine-heading">
+      <div class="ertay-engine-band__inner">
+        <div class="ertay-engine-band__copy">
+          <p class="ertay-engine-band__eyebrow">Analiz motoru</p>
+          <h2 id="sebs-sim-engine-heading" class="ertay-engine-band__title">Senaryo → karar → skor → <span class="ertay-title-muted">rapor</span></h2>
+          <p class="ertay-engine-band__lead">Simülasyondaki her adım işlenir; yetkinlik skoru ve gelişim özeti üretilir.</p>
+        </div>
+        <div class="ertay-engine-band__metrics" aria-hidden="true">
+          <div><span>Skor</span><strong>87/100</strong></div>
+          <div><span>Karar</span><strong>Yüksek</strong></div>
+          <div><span>Rapor</span><strong>Hazır</strong></div>
+        </div>
+        <a href="/simulations.html" class="ertay-btn-project focus-ring">Simülasyonları Gör</a>
+      </div>
+    </section>
+
+    <section class="sebs-sim-engine-section sebs-anim-section hidden" aria-hidden="true" hidden>
       <div class="sebs-sim-engine-section__inner">
         <header class="sebs-sim-engine-section__header">
           <p class="sebs-sim-engine-section__eyebrow">SEBS Simülasyon Analiz Motoru</p>
-          <h2 id="sebs-sim-engine-heading" class="sebs-sim-engine-section__title">Simülasyonlardan Ölçülebilir Yetkinlik Raporlarına</h2>
-          <p class="sebs-sim-engine-section__lead">
-            SEBS, kullanıcıların gerçekçi senaryolardaki kararlarını analiz ederek skor, gelişim alanı ve rol uygunluğu raporları üretir.
-          </p>
-          <div class="sebs-sim-engine-section__ctas">
-            <a href="/simulations.html" class="sebs-sim-engine-section__cta sebs-sim-engine-section__cta--primary focus-ring">Simülasyonları Keşfet</a>
-            <a href="/isverenler.html" class="sebs-sim-engine-section__cta sebs-sim-engine-section__cta--ghost focus-ring">Kurumsal Çözümleri İncele</a>
-          </div>
+          <h2 class="sebs-sim-engine-section__title">Simülasyonlardan Ölçülebilir Yetkinlik Raporlarına</h2>
         </header>
-
         <div class="sebs-sim-engine-stage" aria-hidden="true">
           <div class="sebs-sim-engine-flow-lines" aria-hidden="true">
             <svg viewBox="0 0 800 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -442,7 +438,7 @@
       </div>
     </section>
 
-    <section id="nasil-calisir" class="sebs-ux-section sebs-ux-section--dark reveal-on-scroll scroll-mt-24" aria-labelledby="nasil-heading">
+    <section id="nasil-calisir" class="sebs-ux-section sebs-ux-section--dark reveal-on-scroll scroll-mt-24 hidden" aria-hidden="true" hidden aria-labelledby="nasil-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">Nasıl çalışır?</p>
@@ -478,7 +474,7 @@
       </div>
     </section>
 
-    <section id="fark" class="sebs-ux-section sebs-ux-section--muted reveal-on-scroll scroll-mt-24" aria-labelledby="fark-heading">
+    <section id="fark" class="sebs-ux-section sebs-ux-section--muted reveal-on-scroll scroll-mt-24 hidden" aria-hidden="true" hidden aria-labelledby="fark-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">SEBS farkı</p>
@@ -514,38 +510,7 @@
       </div>
     </section>
 
-    <section id="kimler" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24" aria-labelledby="kimler-heading">
-      <div class="sebs-ux-wrap">
-        <header class="sebs-ux-head">
-          <p class="sebs-ux-eyebrow">Kimler için?</p>
-          <h2 id="kimler-heading" class="sebs-ux-title">Birey, kurum ve akademi için ayrı çıktılar</h2>
-          <p class="sebs-ux-lead">Aynı platform; farklı kullanım senaryoları.</p>
-        </header>
-        <div class="sebs-ux-audience">
-          <article class="sebs-ux-audience-card">
-            <span class="sebs-ux-audience-card__label">Birey</span>
-            <h3>Öğrenci ve yeni mezun</h3>
-            <p>Pratik yaparak öğrenir, yetkinliğini kanıtlayan rapor oluşturur.</p>
-            <ul><li>Modül + simülasyon</li><li>Kişisel ilerleme</li></ul>
-          </article>
-          <article class="sebs-ux-audience-card">
-            <span class="sebs-ux-audience-card__label">Kurum / İK</span>
-            <h3>İşveren ve L&amp;D ekipleri</h3>
-            <p>Mülakat ötesi objektif sinyal; aday ve ekip karşılaştırması.</p>
-            <ul><li>Rol bazlı simülasyon</li><li>Kohort raporu</li></ul>
-            <a href="/isverenler.html" class="mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-800 focus-ring">Kurumsal çözümler →</a>
-          </article>
-          <article class="sebs-ux-audience-card">
-            <span class="sebs-ux-audience-card__label">Akademi</span>
-            <h3>Üniversite ve eğitim kurumu</h3>
-            <p>Müfredatı ölçülebilir çıktıya bağlar; mezun profili güçlenir.</p>
-            <ul><li>Rubrik tabanlı ölçüm</li><li>Ölçeklenebilir rapor</li></ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="one-cikan" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24" aria-labelledby="one-cikan-heading">
+    <section id="one-cikan" class="sebs-ux-section sebs-ux-section--light sebs-ux-section--compact reveal-on-scroll scroll-mt-24" aria-labelledby="one-cikan-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">Seçili içerikler</p>
@@ -577,55 +542,48 @@
             </div>
             <span class="sebs-spatial-work-card__cta">Simülasyona başla →</span>
           </a>
-          <a href="/modules.html" class="sebs-spatial-work-card focus-ring">
-            <span class="sebs-spatial-work-card__num">003</span>
-            <span class="sebs-spatial-work-card__type">Katalog</span>
-            <h4>Tüm eğitim modülleri</h4>
-            <p>SOC, web güvenliği, bulut ve daha fazlası — seviye ve kazanımlarla listelenir.</p>
-            <div class="sebs-spatial-work-card__meta">
-              <span>Çoklu alan</span>
-              <span>Yol haritası</span>
-            </div>
-            <span class="sebs-spatial-work-card__cta">Eğitimleri keşfet →</span>
-          </a>
-          <a href="/simulations.html" class="sebs-spatial-work-card focus-ring">
-            <span class="sebs-spatial-work-card__num">004</span>
-            <span class="sebs-spatial-work-card__type">Katalog</span>
-            <h4>Tüm simülasyonlar</h4>
-            <p>Senaryo adı, süre, zorluk ve ölçülen beceriler her kartta görünür.</p>
-            <div class="sebs-spatial-work-card__meta">
-              <span>Senaryo tabanlı</span>
-              <span>Performans skoru</span>
-            </div>
-            <span class="sebs-spatial-work-card__cta">Simülasyonları gör →</span>
-          </a>
         </div>
+        <p class="ertay-catalog-links">
+          <a href="/modules.html" class="focus-ring">Tüm eğitimler</a>
+          <span aria-hidden="true">·</span>
+          <a href="/simulations.html" class="focus-ring">Tüm simülasyonlar</a>
+        </p>
       </div>
     </section>
 
-    <section id="kurumsal" class="sebs-ux-section sebs-ux-section--dark reveal-on-scroll scroll-mt-24" aria-labelledby="kurumsal-heading">
+    <section id="kimler" class="sebs-ux-section sebs-ux-section--light sebs-ux-section--compact reveal-on-scroll scroll-mt-24" aria-labelledby="kimler-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
-          <p class="sebs-ux-eyebrow">Kurumsal</p>
-          <h2 id="kurumsal-heading" class="sebs-ux-title">Kurumlar için simülasyon ve ölçüm</h2>
-          <p class="sebs-ux-lead">Markanıza özel senaryo, güvenli raporlama ve pilot ile üretime geçiş.</p>
+          <p class="sebs-ux-eyebrow">Kimler için?</p>
+          <h2 id="kimler-heading" class="sebs-ux-title">Birey, kurum ve akademi</h2>
+          <p class="sebs-ux-lead ertay-section-sub">Aynı platform · farklı çıktılar</p>
         </header>
-        <div class="sebs-ux-corp-grid">
-          <article class="sebs-ux-corp-card"><h3>Aday değerlendirme</h3><p>Mülakat ötesi performans sinyali.</p></article>
-          <article class="sebs-ux-corp-card"><h3>Çalışan yetkinlik analizi</h3><p>Ekip içi karşılaştırma ve gelişim.</p></article>
-          <article class="sebs-ux-corp-card"><h3>Simülasyon tabanlı eğitim</h3><p>L&amp;D programına entegre senaryolar.</p></article>
-          <article class="sebs-ux-corp-card"><h3>Özel senaryo üretimi</h3><p>Departman ve marka dilinize uygun.</p></article>
-          <article class="sebs-ux-corp-card"><h3>Performans raporlama</h3><p>İK ve yönetim için özet panel.</p></article>
-          <article class="sebs-ux-corp-card"><h3>Gelişim alanı tespiti</h3><p>Birey ve kohort bazlı öneriler.</p></article>
-        </div>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="/contact.html" class="sebs-spatial-btn sebs-spatial-btn--fill focus-ring">Kurumsal Demo Talep Et</a>
-          <a href="/isverenler.html" class="sebs-spatial-btn sebs-spatial-btn--outline focus-ring">Kurumsal Çözümleri İncele</a>
+        <div class="sebs-ux-audience">
+          <article class="sebs-ux-audience-card">
+            <span class="sebs-ux-audience-card__label">Birey</span>
+            <h3>Öğrenci ve yeni mezun</h3>
+            <p>Modül + simülasyon; kişisel ilerleme raporu.</p>
+          </article>
+          <article class="sebs-ux-audience-card">
+            <span class="sebs-ux-audience-card__label">Kurum</span>
+            <h3>İşveren ve L&amp;D</h3>
+            <p>Aday ve ekip için simülasyon tabanlı ölçüm.</p>
+            <a href="/isverenler.html" class="ertay-inline-link mt-3 focus-ring">Kurumsal →</a>
+          </article>
+          <article class="sebs-ux-audience-card">
+            <span class="sebs-ux-audience-card__label">Akademi</span>
+            <h3>Üniversite</h3>
+            <p>Ölçülebilir müfredat çıktısı ve mezun profili.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section id="paketler" class="sebs-ux-section sebs-ux-section--muted reveal-on-scroll scroll-mt-24" aria-labelledby="paketler-heading">
+    <section id="kurumsal" class="sebs-ux-section sebs-ux-section--dark reveal-on-scroll scroll-mt-24 hidden" aria-hidden="true" hidden aria-labelledby="kurumsal-heading">
+      <div class="sebs-ux-wrap"><h2 id="kurumsal-heading">Kurumsal</h2></div>
+    </section>
+
+    <section id="paketler" class="sebs-ux-section sebs-ux-section--muted sebs-ux-section--compact reveal-on-scroll scroll-mt-24" aria-labelledby="paketler-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">Fiyatlandırma</p>
@@ -670,54 +628,18 @@
       </div>
     </section>
 
-    <section class="reveal-on-scroll border-y border-slate-100 bg-white py-12 home-trust-strip-only" aria-labelledby="trust-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p id="trust-heading" class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-          Güven unsurları
-        </p>
-        <div class="sebs-ux-trust-grid mt-6">
-          <span class="sebs-ux-trust-chip">Gerçekçi senaryo tabanlı öğrenme</span>
-          <span class="sebs-ux-trust-chip">Performans odaklı değerlendirme</span>
-          <span class="sebs-ux-trust-chip">Kişisel gelişim raporu</span>
-          <span class="sebs-ux-trust-chip">Kurumsal kullanım senaryoları</span>
-          <span class="sebs-ux-trust-chip">Türkiye merkezli girişim</span>
+    <section class="ertay-trust-strip reveal-on-scroll home-trust-strip-only" aria-labelledby="trust-heading">
+      <div class="ertay-trust-strip__inner">
+        <p id="trust-heading" class="ertay-trust-strip__label">Güven</p>
+        <div class="sebs-ux-trust-grid">
+          <span class="sebs-ux-trust-chip">Senaryo tabanlı öğrenme</span>
+          <span class="sebs-ux-trust-chip">Performans ölçümü</span>
+          <span class="sebs-ux-trust-chip">Türkiye merkezli</span>
         </div>
-        <p class="home-early-banner mx-auto mt-8 mb-6 max-w-2xl text-center text-sm text-slate-600">
-          <strong>Erken erişim:</strong> Platform birlikte geliştiriliyor; içerik ve simülasyon kapsamı şeffaf şekilde genişliyor.
-        </p>
-        <div class="logo-strip mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-          <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
-            <i class="fas fa-university text-slate-400" aria-hidden="true"></i>
-            SCÜ Teknokent
-          </span>
-          <a href="https://www.sertifikapp.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" aria-label="SertifikApp — iş ortağımız">
-            <img src="/images/partners/sertifikapp-light.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--light h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
-            <img src="/images/partners/sertifikapp-dark.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--dark h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
-          </a>
-          <a href="https://www.iyzico.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" aria-label="iyzico — ödeme altyapısı">
-            <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="" width="210" height="31" class="partner-logo-iyzico h-8 w-auto max-w-[168px] object-contain object-center" loading="lazy" decoding="async" />
-          </a>
-          <span class="text-lg font-bold text-slate-400">İşe alım &amp; L&amp;D</span>
-          <span class="text-lg font-bold text-slate-400">Kamu · finans</span>
-          <span class="text-lg font-bold text-slate-400">Yazılım &amp; veri</span>
-          <span class="text-lg font-bold text-slate-400">Siber güvenlik · bulut</span>
-        </div>
-        <blockquote class="mx-auto mt-8 max-w-2xl text-center">
-          <p class="text-base leading-relaxed text-slate-700 sm:text-lg">
-            SEBS, Sivas Cumhuriyet Üniversitesi Teknokent ekosisteminde geliştirilen simülasyon tabanlı eğitim platformudur.
-          </p>
-        </blockquote>
-        <div class="sebs-payment-trust sebs-payment-trust--homepage mt-10 border-t border-slate-100 pt-8">
-          <p class="sebs-payment-trust__label text-center">Güvenli ödeme</p>
-          <img
-            src="/images/payments/iyzico/logo-band-footer.svg"
-            alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
-            width="429"
-            height="32"
-            loading="lazy"
-            decoding="async"
-            class="sebs-payment-trust__band mx-auto"
-          />
+        <div class="ertay-trust-strip__partners">
+          <span>SCÜ Teknokent</span>
+          <a href="https://www.sertifikapp.com/" target="_blank" rel="noopener noreferrer">SertifikApp</a>
+          <a href="https://www.iyzico.com/" target="_blank" rel="noopener noreferrer">iyzico</a>
         </div>
       </div>
     </section>
@@ -1308,7 +1230,7 @@
       </div>
     </section>
 
-    <section id="sss" class="sebs-ux-section sebs-ux-section--light reveal-on-scroll scroll-mt-24" aria-labelledby="sss-heading">
+    <section id="sss" class="sebs-ux-section sebs-ux-section--light sebs-ux-section--compact reveal-on-scroll scroll-mt-24" aria-labelledby="sss-heading">
       <div class="sebs-ux-wrap">
         <header class="sebs-ux-head">
           <p class="sebs-ux-eyebrow">SSS</p>
@@ -1335,7 +1257,7 @@
       </div>
     </section>
 
-    <section id="cta" class="sebs-ux-section sebs-ux-section--dark reveal-on-scroll scroll-mt-24" aria-labelledby="cta-heading">
+    <section id="cta" class="sebs-ux-section sebs-ux-section--compact reveal-on-scroll scroll-mt-24" aria-labelledby="cta-heading">
       <div class="sebs-ux-wrap">
         <div class="sebs-ux-cta-band">
           <h2 id="cta-heading">Öğrenmeyi ölçülebilir hale getirin</h2>
