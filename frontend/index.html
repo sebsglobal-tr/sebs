@@ -77,7 +77,8 @@
     </script>
   <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
   <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
-  <link rel="stylesheet" href="/css/homepage-clarity.css?v=1" />
+  <link rel="stylesheet" href="/css/homepage-clarity.css?v=2" />
+  <link rel="stylesheet" href="/css/sebs-ui-fixes.css?v=1" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css" data-sebs-premium="css" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <noscript>
@@ -146,10 +147,13 @@
             <div id="mobileGuestLinks">
               <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
               <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
-        </div>
+            </div>
             <div id="mobileUserLinks" style="display: none;">
-                            <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
-    </div>
+              <a href="/dashboard.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">Dashboard</a>
+              <a href="/modules.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Eğitimlerim</a>
+              <a href="/simulations.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Simülasyonlarım</a>
+              <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış yap</button>
+            </div>
           </div>
         </details>
       </div>
@@ -262,29 +266,11 @@
         </div>
     </section>
 
-    <section class="reveal-on-scroll border-b border-slate-100 bg-slate-50/60 py-14 sm:py-16" aria-labelledby="home-audience-heading">
+    <section class="reveal-on-scroll border-y border-slate-100 bg-white py-12 home-trust-strip-only" aria-labelledby="trust-heading">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="home-early-banner mb-8">
+        <p class="home-early-banner mx-auto mb-6 max-w-2xl text-center">
           <strong>SEBS Global erken erişimde.</strong> İlk kullanıcılarla birlikte eğitim ve simülasyon deneyimini geliştiriyoruz.
         </p>
-        <h2 id="home-audience-heading" class="sr-only">Kimler için SEBS</h2>
-        <div class="home-audience-grid">
-          <article class="home-audience-card">
-            <h3>Bireysel başla</h3>
-            <p>Eğitim modülleri, interaktif simülasyonlar ve kişisel ilerleme takibi. Siber güvenlik ve teknoloji alanında pratik yaparak öğren.</p>
-            <a href="/signup.html" class="text-blue-700 hover:text-blue-900 focus-ring rounded">Ücretsiz hesap oluştur <span aria-hidden="true">→</span></a>
-          </article>
-          <article class="home-audience-card">
-            <h3>Kurumsal demo al</h3>
-            <p>Şirket, kurum ve üniversiteler için özel simülasyon, aday ve çalışan değerlendirme, rubrik ve raporlama paneli.</p>
-            <a href="/isverenler.html" class="text-slate-800 hover:text-blue-700 focus-ring rounded">İşverenler için SEBS <span aria-hidden="true">→</span></a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="reveal-on-scroll border-y border-slate-100 bg-white py-12" aria-labelledby="trust-heading">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p id="trust-heading" class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
           Akademik altyapı ve sektör iş birlikleri
         </p>
@@ -330,10 +316,10 @@
         <div class="mx-auto max-w-3xl text-center">
           <span class="sebs-yolu-badge">SEBS Yolu Deneyimi</span>
           <h2 id="sebs-yolu-heading" class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Atlas ile 30 saniyede SEBS yolunu gör
+            SEBS nasıl çalışır?
           </h2>
           <p class="mt-4 text-base text-slate-600">
-            Chatbox → Yol → Kilit Aç akışı.
+            Alanını seç, eğitimle öğren, simülasyonda uygula, raporunu gör.
           </p>
             </div>
             
@@ -386,10 +372,10 @@
                 </div>
                 
           <div class="space-y-3">
-            <div class="sebs-yolu-flow-node"><strong>1.</strong> Hedefi al</div>
-            <div class="sebs-yolu-flow-node"><strong>2.</strong> Yolu göster</div>
-            <div class="sebs-yolu-flow-node"><strong>3.</strong> Kilidi aç</div>
-            <div class="sebs-yolu-flow-node"><strong>4.</strong> Süreyi koru</div>
+            <div class="sebs-yolu-flow-node"><strong>1.</strong> Alanını seç</div>
+            <div class="sebs-yolu-flow-node"><strong>2.</strong> Eğitimle öğren</div>
+            <div class="sebs-yolu-flow-node"><strong>3.</strong> Simülasyonda uygula</div>
+            <div class="sebs-yolu-flow-node"><strong>4.</strong> Raporunu gör</div>
 
             <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card">
               <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Hangi seçenek size uygun?</p>
@@ -695,7 +681,7 @@
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Nasıl çalışır</h2>
-          <p class="mt-4 text-base text-slate-600">3 adım: hedef, uygulama, ölçüm.</p>
+          <p class="mt-4 text-base text-slate-600">Eğitim, simülasyon ve ölçüm tek döngüde.</p>
                 </div>
         <div class="sebs-how-premium mt-12">
           <div class="sebs-how-showcase">
@@ -703,12 +689,12 @@
               <li class="sebs-how-card is-active" data-how-step="1">
                 <span class="sebs-how-step">1</span>
                 <span class="sebs-how-icon" aria-hidden="true"><i class="fas fa-bullseye"></i></span>
-                <h3 class="mt-3 text-lg font-semibold text-slate-900">Hedefi Seç</h3>
-                <p class="mt-1 text-sm text-slate-600">İsteğe bağlı Big Five testi öğrenme eğilimlerini netleştirir; chatbox hedef, seviye ve zamanı alır.</p>
+                <h3 class="mt-3 text-lg font-semibold text-slate-900">Alanı seç</h3>
+                <p class="mt-1 text-sm text-slate-600">Siber güvenlik, bulut, yazılım veya veri alanında ilerlemek istediğin yolu belirle.</p>
                 <ul class="sebs-how-mini-points">
-                  <li>Big Five ile kariyer ve öğrenme profili</li>
-                  <li>Rol ve süre bilgisi toplanır</li>
-                  <li>Kişisel başlangıç seviyesi hesaplanır</li>
+                  <li>Modüler eğitim yolu</li>
+                  <li>İsteğe bağlı kariyer profili</li>
+                  <li>Seviyene uygun başlangıç</li>
                 </ul>
               </li>
               <li class="sebs-how-card" data-how-step="2">
@@ -837,11 +823,11 @@
               <span class="sebs-persona-label">Birey</span>
             </div>
             <h3>Kariyerine hız vermek isteyenler</h3>
-            <p>Big Five öğrenme profili ile başlayıp simülasyonlarda kanıt üretir; öğrenmeyi CV satırına değil, ölçülebilir performansa çevirir.</p>
+            <p>Eğitimleri simülasyonlarla tamamlar, karar kalitesini ve gelişimini raporlarla takip eder.</p>
             <ul class="sebs-persona-points">
-              <li>Big Five ile çalışma ve öğrenme eğilimleri raporu</li>
+              <li>Modüler eğitim + uygulama</li>
               <li>Senaryoda karar kalitesi görünür</li>
-              <li>Kariyer yolu ve modül önerisi kişiselleşir</li>
+              <li>Kişisel ilerleme paneli</li>
             </ul>
             <div class="sebs-persona-outcome">Çıktı: Kanıtlanabilir yetkinlik özeti</div>
           </article>
@@ -973,7 +959,7 @@
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
   <script src="/js/sebs-page-ready.js?v=1"></script>
-  <script src="/js/navigation.js?v=3.8" defer></script>
+  <script src="/js/navigation.js?v=3.9" defer></script>
 
     <script>
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {

@@ -1,0 +1,107 @@
+/**
+ * SEBS — ortak UI/UX düzeltmeleri (navbar, kayıt, auth, sayfa düzeni)
+ */
+
+/* Eski header: header’daki ayrı “Çıkış” düğmesi (dropdown kullanılır) */
+body.landing-site-body header > .mx-auto > .flex > #logoutBtn,
+body.landing-site-body header > .mx-auto > div:last-child > #logoutBtn {
+  display: none !important;
+}
+
+/* Giriş yapılmışken profil düğmesi görünür olsun */
+body.landing-site-body.sebs-user-logged-in #userProfile,
+body.landing-site-body.sebs-user-logged-in #userProfileTrigger {
+  display: flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.landing-site-body.sebs-user-logged-in #userName {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  color: rgb(30 41 59);
+}
+
+@media (min-width: 640px) {
+  body.landing-site-body.sebs-user-logged-in #userName {
+    font-size: 0.875rem;
+  }
+}
+
+body.landing-site-body.sebs-user-logged-in #userAvatar {
+  font-size: 0.875rem;
+  line-height: 1;
+  color: rgb(30 64 175);
+}
+
+body.landing-site-body.sebs-user-logged-in #userAvatar:empty::before {
+  content: '·';
+  opacity: 0;
+}
+
+/* Eski profil kartı (role=link) — upgrade öncesi misafirde gizle */
+body.landing-site-body:not(.sebs-user-logged-in) #userProfile[role='link'] {
+  display: none !important;
+}
+
+/* Kayıt sayfası — iki sütun düzen */
+body.landing-site-body .signup-layout {
+  min-height: calc(100vh - 4rem);
+  padding: 5.5rem 1rem 3rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  align-items: start;
+}
+
+body.landing-site-body .signup-layout .signup-container {
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  background: transparent;
+  justify-content: flex-start;
+}
+
+body.landing-site-body .signup-layout .signup-header,
+body.landing-site-body .signup-layout .signup-form,
+body.landing-site-body .signup-layout .signup-links,
+body.landing-site-body .signup-layout .verification-container {
+  max-width: 100%;
+}
+
+body.landing-site-body .signup-benefits {
+  order: -1;
+}
+
+@media (min-width: 900px) {
+  body.landing-site-body .signup-benefits {
+    order: 0;
+    position: sticky;
+    top: 5.5rem;
+  }
+}
+
+/* Mobil menü — taşma ve dokunma alanı */
+header.fixed details > div {
+  max-height: min(80vh, 32rem);
+  overflow-y: auto;
+}
+
+/* Paket / fiyat kartı karar kutusu */
+.pricing-decision-block {
+  text-align: left;
+}
+
+/* Hero — mobilde CTA üstte kalsın */
+@media (max-width: 639px) {
+  .hero-mesh .animate-in.delay-3.mt-8 {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Yinelenen erken erişim bandı — sadece trust altında */
+.home-trust-strip-only .home-early-banner {
+  margin-bottom: 0;
+}
