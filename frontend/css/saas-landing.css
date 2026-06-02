@@ -750,6 +750,75 @@ html {
   transition: opacity 0.25s ease, filter 0.25s ease;
 }
 
+.logo-strip-marquee {
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid #e5e7eb;
+  padding-block: 0.9rem;
+}
+
+.logo-strip-marquee::before,
+.logo-strip-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(1.5rem, 4vw, 3.75rem);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.logo-strip-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.logo-strip-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.logo-strip-track {
+  display: flex;
+  width: max-content;
+  animation: sebs-logo-marquee 28s linear infinite;
+}
+
+.logo-strip-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2.2rem, 5vw, 4.5rem);
+  padding-inline: clamp(1rem, 3vw, 1.75rem);
+  white-space: nowrap;
+}
+
+.logo-strip-marquee:hover .logo-strip-track {
+  animation-play-state: paused;
+}
+
+.logo-strip-group img,
+.logo-strip-group span {
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.logo-strip-group a:hover img,
+.logo-strip-group a:hover span {
+  opacity: 0.88;
+  filter: grayscale(0.25);
+}
+
+@keyframes sebs-logo-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .logo-strip a:hover img,
 .logo-strip a:hover span {
   opacity: 0.85;
@@ -788,6 +857,13 @@ header.fixed details > summary:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .logo-strip-track {
+    animation: none;
+    width: 100%;
+  }
+  .logo-strip-group[aria-hidden="true"] {
+    display: none;
+  }
   .reveal-on-scroll {
     opacity: 1;
     transform: none;
