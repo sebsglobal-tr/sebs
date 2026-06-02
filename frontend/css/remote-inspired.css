@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 html:not([data-theme="dark"]) {
     --remote-bg: #ffffff;
@@ -29,8 +30,25 @@ html:not([data-theme="dark"]) {
 }
 
 html:not([data-theme="dark"]) body {
+    font-family: var(--sebs-font-sans) !important;
     color: var(--remote-text);
     background: var(--remote-bg) !important;
+}
+
+html:not([data-theme="dark"]) h1,
+html:not([data-theme="dark"]) h2,
+html:not([data-theme="dark"]) h3,
+html:not([data-theme="dark"]) h4,
+html:not([data-theme="dark"]) h5,
+html:not([data-theme="dark"]) h6,
+html:not([data-theme="dark"]) .section-title,
+html:not([data-theme="dark"]) .hero-title,
+html:not([data-theme="dark"]) .nav-logo,
+html:not([data-theme="dark"]) .btn-primary,
+html:not([data-theme="dark"]) .btn-secondary,
+html:not([data-theme="dark"]) .btn-signup,
+html:not([data-theme="dark"]) .btn-login {
+    font-family: var(--sebs-font-sans) !important;
 }
 
 html:not([data-theme="dark"]) body::before {
