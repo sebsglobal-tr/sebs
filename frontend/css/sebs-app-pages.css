@@ -12,6 +12,73 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.sebs-app-page img {
+  max-width: 100%;
+  height: auto;
+}
+
+.sebs-app-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sebs-app-page :focus-visible {
+  outline: 2px solid var(--sh-cyan);
+  outline-offset: 3px;
+}
+
+/* Tailwind yoksa kutu sınırları (özellikle Hakkımızda) */
+body.sebs-app-page .max-w-6xl {
+  width: 100%;
+  max-width: var(--sh-container);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  body.sebs-app-page .max-w-6xl {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+body.sebs-app-page .mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.sebs-app-page .main-content,
+body.sebs-app-page .sebs-app-main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Navbar — linklerin üst üste binmesini önle */
+.sh-nav__inner {
+  min-width: 0;
+}
+
+.sh-nav__links {
+  flex-shrink: 1;
+  max-width: 100%;
+}
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .sh-nav__link {
+    padding: 0.45rem 0.55rem;
+    font-size: 0.8125rem;
+  }
+
+  .sh-nav__cta {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+}
+
 .sebs-app-page *,
 .sebs-app-page *::before,
 .sebs-app-page *::after {
@@ -261,20 +328,107 @@ body.sebs-app-page .sebs-yolu-badge {
   color: #c4b5fd;
 }
 
-/* Hakkımızda — legal-document.css açık tema override */
+/* Accordion / kategori listesi — koyu tema (saas-landing.css üzerine) */
+body.sebs-app-page .modules-category-tabs.sebs-accordion-stack,
+body.sebs-app-page .simulations-category-tabs.sebs-accordion-stack {
+  border-color: var(--sh-border) !important;
+  background: var(--sh-glass) !important;
+  box-shadow: var(--sh-shadow-card) !important;
+}
+
+body.sebs-app-page .modules-category-tabs.sebs-accordion-stack .sebs-accordion-item:not(:last-child) .sebs-acc-block,
+body.sebs-app-page .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item:not(:last-child) .sebs-acc-block {
+  border-bottom-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .sebs-acc-btn {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .sebs-acc-btn .text-slate-500,
+body.sebs-app-page .sebs-accordion-item.is-open [data-sebs-summary] {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page .sebs-acc-icon {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #a5b4fc !important;
+}
+
+body.sebs-app-page .sebs-accordion-item.is-open .sebs-acc-btn,
+body.sebs-app-page .modules-category-tabs .sebs-acc-btn.tab-btn.active,
+body.sebs-app-page .simulations-category-tabs .sebs-acc-btn.tab-btn.active {
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.22), rgba(37, 99, 235, 0.08)) !important;
+  color: var(--sh-text) !important;
+  box-shadow: inset 3px 0 0 0 var(--sh-violet) !important;
+}
+
+body.sebs-app-page .modules-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover,
+body.sebs-app-page .simulations-category-tabs .sebs-accordion-item:not(.is-open) .sebs-acc-btn.tab-btn:hover {
+  background: var(--sh-glass-hover) !important;
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .sebs-acc-panel,
+body.sebs-app-page .sebs-accordion-item.is-open .sebs-acc-panel {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-top-color: var(--sh-border) !important;
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page .sebs-acc-cta {
+  border: 1px solid var(--sh-border);
+  background: var(--sh-glass);
+  color: var(--sh-text);
+}
+
+body.sebs-app-page .sebs-acc-cta:hover {
+  border-color: rgba(124, 58, 237, 0.5);
+  background: var(--sh-glass-hover);
+}
+
+body.sebs-app-page .sebs-roadmap-flow {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  body.sebs-app-page .sebs-roadmap-flow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+body.sebs-app-page .sebs-visual-strip-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  body.sebs-app-page .sebs-visual-strip-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Hakkımızda — legal-document.css açık tema override (dosya sırası: legal → app-pages) */
 body.sebs-app-page.about-page {
   padding-top: 0 !important;
 }
 
-body.sebs-app-page.about-page main.sebs-app-main {
+body.sebs-app-page.about-page .sebs-about-main {
   padding-top: 0 !important;
   padding-bottom: 0;
 }
 
-body.sebs-app-page.about-page .about-hero {
+body.sebs-app-page.about-page .about-hero,
+body.sebs-app-page.about-page .about-hero.hero-mesh {
   background: linear-gradient(165deg, rgba(124, 58, 237, 0.14) 0%, var(--sh-bg-elevated) 50%, var(--sh-bg-deep) 100%) !important;
   border-bottom: 1px solid var(--sh-border-soft);
   padding-top: calc(var(--sh-nav-h) + 2rem);
+  padding-bottom: 2.5rem;
+}
+
+body.sebs-app-page.about-page .about-hero__inner {
+  max-width: 42rem;
 }
 
 body.sebs-app-page.about-page .about-hero h1,
@@ -284,20 +438,51 @@ body.sebs-app-page.about-page .about-section__title {
 
 body.sebs-app-page.about-page .about-hero__lead,
 body.sebs-app-page.about-page .about-section__intro,
-body.sebs-app-page.about-page .legal-updated {
+body.sebs-app-page.about-page .legal-updated,
+body.sebs-app-page.about-page .about-story-panel p,
+body.sebs-app-page.about-page .about-vm-card p,
+body.sebs-app-page.about-page .about-trust-card p,
+body.sebs-app-page.about-page .about-team-card p,
+body.sebs-app-page.about-page .about-pillar-card span,
+body.sebs-app-page.about-page .about-process-steps li span {
   color: var(--sh-text-muted) !important;
 }
 
+body.sebs-app-page.about-page .about-hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-top: 1.5rem;
+}
+
 body.sebs-app-page.about-page .about-hero__links a {
-  color: #c4b5fd;
+  color: #c4b5fd !important;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 body.sebs-app-page.about-page .about-hero__links a:hover {
-  color: var(--sh-cyan);
+  color: var(--sh-cyan) !important;
+}
+
+body.sebs-app-page.about-page .about-hero__sep {
+  color: var(--sh-text-subtle);
+  margin: 0;
 }
 
 body.sebs-app-page.about-page .about-body {
   background: transparent;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+body.sebs-app-page.about-page .about-section {
+  margin-top: 2.75rem;
+}
+
+body.sebs-app-page.about-page .about-section:first-child {
+  margin-top: 0;
 }
 
 body.sebs-app-page.about-page .about-pillar-card,
@@ -309,29 +494,147 @@ body.sebs-app-page.about-page .about-company-panel,
 body.sebs-app-page.about-page .about-process-steps li {
   background: var(--sh-glass) !important;
   border: 1px solid var(--sh-border) !important;
+  box-shadow: var(--sh-shadow-card) !important;
   color: var(--sh-text-muted);
 }
 
 body.sebs-app-page.about-page .about-pillar-card strong,
 body.sebs-app-page.about-page .about-trust-card h3,
 body.sebs-app-page.about-page .about-vm-card h3,
-body.sebs-app-page.about-page .about-team-card h3 {
+body.sebs-app-page.about-page .about-team-card h3,
+body.sebs-app-page.about-page .about-process-steps li strong,
+body.sebs-app-page.about-page .about-company-panel dt {
   color: var(--sh-text) !important;
 }
 
+body.sebs-app-page.about-page .about-company-panel dd {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page.about-page .about-company-panel dd a {
+  color: #c4b5fd !important;
+}
+
+body.sebs-app-page.about-page .about-team-role {
+  color: #a5b4fc !important;
+}
+
+body.sebs-app-page.about-page .about-team-role--muted {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page.about-page .about-pillars-grid,
+body.sebs-app-page.about-page .about-vm-grid,
+body.sebs-app-page.about-page .about-trust-grid,
+body.sebs-app-page.about-page .about-team-grid,
+body.sebs-app-page.about-page .about-legal-links,
+body.sebs-app-page.about-page .about-process-steps {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  body.sebs-app-page.about-page .about-pillars-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.sebs-app-page.about-page .about-pillars-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.sebs-app-page.about-page .about-vm-grid,
+  body.sebs-app-page.about-page .about-trust-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.sebs-app-page.about-page .about-team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.sebs-app-page.about-page .about-process-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  body.sebs-app-page.about-page .about-pillars-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+body.sebs-app-page.about-page .about-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+body.sebs-app-page.about-page .about-legal-links li {
+  margin: 0;
+  list-style: none;
+}
+
 body.sebs-app-page.about-page .about-legal-links a {
-  background: var(--sh-glass);
-  border-color: var(--sh-border);
-  color: var(--sh-text-muted);
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--sh-radius-pill);
+  background: var(--sh-glass) !important;
+  border: 1px solid var(--sh-border) !important;
+  color: var(--sh-text-muted) !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 body.sebs-app-page.about-page .about-legal-links a:hover {
-  border-color: rgba(124, 58, 237, 0.45);
-  color: var(--sh-text);
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  color: var(--sh-text) !important;
+  background: var(--sh-glass-hover) !important;
+}
+
+body.sebs-app-page.about-page .about-section__intro a,
+body.sebs-app-page.about-page .about-trust-card a,
+body.sebs-app-page.about-page .about-section__cta-inline a {
+  color: #c4b5fd !important;
+  font-weight: 600;
+}
+
+body.sebs-app-page.about-page .about-section__cta-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-top: 1.25rem;
+}
+
+body.sebs-app-page.about-page .about-process-steps__num {
+  background: rgba(124, 58, 237, 0.2) !important;
+  color: #c4b5fd !important;
+}
+
+body.sebs-app-page.about-page .about-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--sh-border-soft);
 }
 
 body.sebs-app-page.about-page .about-cta-row a {
-  color: #c4b5fd;
+  color: #c4b5fd !important;
+  font-weight: 600;
+}
+
+body.sebs-app-page.about-page .sebs-payment-trust__label {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page.about-page .about-team-photo {
+  border-color: var(--sh-border) !important;
+  background: var(--sh-bg-elevated) !important;
 }
 
 /* Loading overlay */
@@ -377,4 +680,15 @@ body.sebs-app-page #userProfileTrigger {
 
 body.sebs-app-page #userName {
   color: var(--sh-text) !important;
+}
+
+/* remote-inspired / saas-landing: html koyu iken gövdeyi sabitle */
+html[data-theme="dark"] body.sebs-app-page {
+  background: var(--sh-bg-deep) !important;
+  color: var(--sh-text-muted) !important;
+}
+
+html[data-theme="dark"] body.sebs-app-page .main-content,
+html[data-theme="dark"] body.sebs-app-page .sebs-app-main {
+  background: transparent !important;
 }
