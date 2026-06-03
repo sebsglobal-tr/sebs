@@ -76,7 +76,8 @@
     };
   </script>
   <link rel="stylesheet" href="/css/sebs-app-pages.css?v=7" />
-  <link rel="stylesheet" href="/css/sebs-modules-accordion.css?v=1" />
+  <link rel="stylesheet" href="/css/sebs-categories-haccordion.css?v=1" />
+  <script src="/js/sebs-categories-haccordion.js?v=1" defer></script>
   <style id="sebs-app-critical">
     html, body.sebs-app-page { background: #050510 !important; color: #a1a1aa !important; }
     body.sebs-app-page main { background: transparent !important; }
@@ -239,8 +240,8 @@
                         Eğitim yollarımızı keşfetmek için bir kategori seçin. Aşağıdaki modül listesi anında filtrelenir.
                     </p>
                 </div>
-                <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
-                    <div class="modules-category-tabs sebs-accordion-stack">
+                <div class="mt-12 sebs-cat-haccordion-wrap">
+                    <div class="modules-category-tabs sebs-cat-haccordion" role="tablist" aria-label="Eğitim alanları">
                         <div class="sebs-accordion-item is-open" data-sebs-panel="0" data-category="cybersecurity">
                             <div class="sebs-acc-block">
                                 <button type="button" class="sebs-acc-btn tab-btn active" aria-expanded="true" data-sebs-acc data-category="cybersecurity">
@@ -1698,6 +1699,10 @@
                 });
             }
 
+            if (window.sebsEnhanceCategoryAccordion) {
+                window.sebsEnhanceCategoryAccordion(exploreRoot, activateModulesAccordion);
+            }
+
             function switchCategory(targetCategory) {
                 categoryTabs.forEach(function (t) {
                     t.classList.remove('active');
@@ -2076,7 +2081,6 @@
     </script>
     <script src="utils/access-control.js" defer></script>
     <script src="/js/road-access-ui.js" defer></script>
-    <script src="/js/sebs-modules-accordion.js?v=1" defer></script>
     
     <script>
         // Handle purchase button click - check if user is logged in

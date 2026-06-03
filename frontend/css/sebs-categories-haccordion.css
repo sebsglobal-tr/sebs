@@ -1,0 +1,326 @@
+/**
+ * Eğitim alanları — yatay accordion (esmanurertay.com referansı, SEBS koyu tema)
+ */
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion-wrap {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
+  display: flex !important;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: clamp(380px, 48vh, 480px);
+  padding: 0;
+  margin: 0;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.45) transparent;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scrollbar {
+  height: 5px;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.45);
+  border-radius: 999px;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
+  flex: 1 0 4.25rem;
+  min-width: 4.25rem;
+  max-width: 4.25rem;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.35rem;
+  border: 1px solid var(--sh-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    flex 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  scroll-snap-align: start;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
+  flex: 6 1 22rem;
+  min-width: min(22rem, 72vw);
+  max-width: min(32rem, 78vw);
+  background: linear-gradient(165deg, rgba(18, 18, 38, 0.98), rgba(8, 8, 22, 0.99));
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.55);
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
+  position: absolute;
+  top: 1rem;
+  left: 0.85rem;
+  z-index: 2;
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(161, 161, 170, 0.55);
+  pointer-events: none;
+  transition: color 0.35s ease;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
+  color: #67e8f9;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
+  display: none;
+  position: absolute;
+  top: 1rem;
+  right: 0.85rem;
+  z-index: 2;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-badge {
+  display: inline-flex;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 0.35rem 1rem;
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(161, 161, 170, 0.75);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-collapsed {
+  display: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  padding: 2.75rem 1.15rem 1rem;
+  overflow: hidden;
+  transition: opacity 0.35s ease 0.05s, visibility 0.35s;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-body {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  overflow-y: auto;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn {
+  width: 100%;
+  text-align: left;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 0 0.65rem !important;
+  margin: 0;
+  cursor: pointer;
+  gap: 0.75rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .sebs-acc-chevron {
+  display: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .font-semibold,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .block.font-semibold {
+  font-size: 1.0625rem !important;
+  color: var(--app-color-heading, #fafafa) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn [data-sebs-summary] {
+  color: var(--app-color-muted, #71717a) !important;
+  font-size: 0.75rem !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-icon {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  border-radius: 0.65rem !important;
+  flex-shrink: 0;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-panel {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-panel p {
+  font-size: 0.8125rem !important;
+  line-height: 1.55;
+  color: var(--app-color-body, #a1a1aa) !important;
+  margin: 0 0 0.65rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  font-size: 1rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview {
+  flex-shrink: 0;
+  margin-top: auto;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  border: 1px solid var(--sh-border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .sebs-visual-card {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: none !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-slate-900,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .font-bold.text-slate-900 {
+  color: var(--app-color-heading, #fafafa) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-slate-500,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-slate-400,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-slate-600 {
+  color: var(--app-color-muted, #71717a) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .bg-slate-50,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .bg-slate-100 {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-foot {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-foot {
+  display: flex;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-foot::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(103, 232, 249, 0.35);
+}
+
+body.modules-page #modulesCategoriesExplore #modules-explore-preview.sebs-cat-hacc-preview-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+body.modules-page #modulesCategoriesExplore #modules-explore-heading {
+  color: var(--app-color-heading) !important;
+  font-size: clamp(1.375rem, 2.5vw, 1.75rem) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .text-slate-600 {
+  color: var(--app-color-body) !important;
+  font-size: var(--app-text-base, 0.9375rem) !important;
+}
+
+@media (max-width: 767px) {
+  body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+    overflow-x: hidden;
+    scroll-snap-type: none;
+  }
+
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
+    flex: none;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 3.75rem;
+  }
+
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 20rem;
+  }
+
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
+    writing-mode: horizontal-tb;
+    transform: none;
+    justify-content: flex-start;
+    padding: 0 1rem 0.85rem;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item,
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
+    transition: none;
+  }
+}
