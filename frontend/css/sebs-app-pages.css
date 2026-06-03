@@ -1290,7 +1290,7 @@ body.sebs-app-page .module-category-section {
   max-width: 100%;
 }
 
-body.sebs-app-page .simulations-grid {
+body.sebs-app-page .simulations-grid:not(.sebs-modules-accordion) {
   display: grid !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -1301,19 +1301,19 @@ body.sebs-app-page .simulations-grid {
 }
 
 @media (min-width: 640px) {
-  body.sebs-app-page .simulations-grid {
+  body.sebs-app-page .simulations-grid:not(.sebs-modules-accordion) {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
 @media (min-width: 1100px) {
-  body.sebs-app-page .simulations-grid {
+  body.sebs-app-page .simulations-grid:not(.sebs-modules-accordion) {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)) !important;
   }
 }
 
-body.sebs-app-page .simulations-grid > .simulation-card-detailed,
-body.sebs-app-page .simulations-grid > .reveal {
+body.sebs-app-page .simulations-grid:not(.sebs-modules-accordion) > .simulation-card-detailed,
+body.sebs-app-page .simulations-grid:not(.sebs-modules-accordion) > .reveal {
   min-width: 0 !important;
   max-width: 100% !important;
   width: 100% !important;

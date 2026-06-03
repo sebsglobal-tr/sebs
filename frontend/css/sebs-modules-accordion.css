@@ -1,0 +1,424 @@
+/**
+ * Eğitim modülleri — yatay accordion (esmanurertay.com Hizmetler & Uzmanlık referansı)
+ * SEBS koyu tema uyarlaması
+ */
+body.modules-page .module-category-section .section-title {
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: clamp(1.625rem, 3.2vw, 2.125rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--app-color-heading, var(--sh-text)) !important;
+  margin-bottom: 0.35rem;
+}
+
+body.modules-page .module-category-section .section-subtitle {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--app-color-muted, var(--sh-text-subtle)) !important;
+  max-width: none;
+  margin-bottom: 0;
+}
+
+body.sebs-app-page .simulations-grid.sebs-modules-accordion {
+  display: flex !important;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: clamp(400px, 50vh, 520px);
+  margin-top: 1.75rem !important;
+  padding: 0.15rem 0 0.35rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.45) transparent;
+  grid-template-columns: unset !important;
+}
+
+body.sebs-app-page .simulations-grid.sebs-modules-accordion::-webkit-scrollbar {
+  height: 5px;
+}
+
+body.sebs-app-page .simulations-grid.sebs-modules-accordion::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.45);
+  border-radius: 999px;
+}
+
+.sebs-mod-acc-panel {
+  flex: 1 0 4.25rem;
+  min-width: 4.25rem;
+  max-width: 4.25rem;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.35rem;
+  border: 1px solid var(--sh-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0 !important;
+  animation: none !important;
+  box-shadow: none !important;
+  transition:
+    flex 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  scroll-snap-align: start;
+}
+
+.sebs-mod-acc-panel.is-active {
+  flex: 6 1 22rem;
+  min-width: min(22rem, 72vw);
+  max-width: min(28rem, 78vw);
+  background: linear-gradient(165deg, rgba(18, 18, 38, 0.98), rgba(8, 8, 22, 0.99));
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.55);
+}
+
+.sebs-mod-acc-panel::before {
+  display: none !important;
+}
+
+.sebs-mod-acc-panel .simulation-card-detailed:hover,
+.sebs-mod-acc-panel:hover {
+  transform: none !important;
+}
+
+.sebs-mod-acc-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.85rem 0.5rem;
+  flex-shrink: 0;
+}
+
+.sebs-mod-acc-num {
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(161, 161, 170, 0.55);
+  transition: color 0.35s ease;
+}
+
+.sebs-mod-acc-panel.is-active .sebs-mod-acc-num {
+  color: #67e8f9;
+}
+
+.sebs-mod-acc-badge {
+  display: none;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+.sebs-mod-acc-panel.is-active .sebs-mod-acc-badge {
+  display: inline-flex;
+}
+
+.sebs-mod-acc-collapsed-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.35rem 1rem;
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(161, 161, 170, 0.75);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+}
+
+.sebs-mod-acc-panel.is-active .sebs-mod-acc-collapsed-title {
+  display: none;
+}
+
+.sebs-mod-acc-expanded {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  padding: 0 1.15rem 1rem;
+  overflow: hidden;
+  transition: opacity 0.35s ease 0.05s, visibility 0.35s;
+}
+
+.sebs-mod-acc-panel.is-active .sebs-mod-acc-expanded {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  overflow-y: auto;
+}
+
+.sebs-mod-acc-panel .card-image-top {
+  display: none !important;
+}
+
+.sebs-mod-acc-panel .simulation-header {
+  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+}
+
+.sebs-mod-acc-panel .simulation-icon {
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+  font-size: 1rem !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}
+
+.sebs-mod-acc-panel .simulation-info h3 {
+  font-size: 1.0625rem !important;
+  margin-bottom: 0.35rem !important;
+}
+
+.sebs-mod-acc-panel .simulation-meta {
+  gap: 0.45rem !important;
+}
+
+.sebs-mod-acc-panel .simulation-content {
+  flex: 1;
+  min-height: 0;
+}
+
+.sebs-mod-acc-panel .simulation-content > p {
+  font-size: 0.8125rem !important;
+  line-height: 1.55;
+  margin-bottom: 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sebs-mod-acc-panel .simulation-scenarios {
+  margin-top: 0.35rem;
+}
+
+.sebs-mod-acc-panel .simulation-scenarios h4 {
+  font-size: 0.6875rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.sebs-mod-acc-panel .simulation-scenarios ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sebs-mod-acc-panel .simulation-scenarios li {
+  font-size: 0.75rem !important;
+  padding-left: 1rem;
+  margin-bottom: 0.2rem;
+  line-height: 1.4;
+}
+
+.sebs-mod-acc-panel .simulation-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top-color: var(--sh-border) !important;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sebs-mod-acc-panel .btn-simulation {
+  padding: 0.55rem 1rem !important;
+  font-size: 0.75rem !important;
+  border-radius: 999px !important;
+}
+
+.sebs-mod-acc-foot {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+.sebs-mod-acc-panel.is-active .sebs-mod-acc-foot {
+  display: flex;
+}
+
+.sebs-mod-acc-foot::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(103, 232, 249, 0.35);
+}
+
+/* CTA panel — referans sitedeki yeşil kart */
+.sebs-mod-acc-panel--cta {
+  flex: 1 0 4.25rem;
+  min-width: 4.25rem;
+  max-width: 4.25rem;
+  background: linear-gradient(160deg, rgba(124, 58, 237, 0.95), rgba(99, 102, 241, 0.88));
+  border-color: rgba(167, 139, 250, 0.45);
+}
+
+.sebs-mod-acc-panel--cta.is-active,
+.sebs-mod-acc-panel--cta:hover {
+  flex: 4 1 16rem;
+  min-width: min(16rem, 62vw);
+  max-width: min(20rem, 68vw);
+}
+
+.sebs-mod-acc-panel--cta .sebs-mod-acc-num {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.sebs-mod-acc-panel--cta.is-active .sebs-mod-acc-num,
+.sebs-mod-acc-panel--cta:hover .sebs-mod-acc-num {
+  color: #fff;
+}
+
+.sebs-mod-acc-panel--cta .sebs-mod-acc-collapsed-title {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.sebs-mod-acc-cta-body {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  padding: 0 1rem 1.15rem;
+  gap: 0.75rem;
+}
+
+.sebs-mod-acc-panel--cta.is-active .sebs-mod-acc-cta-body,
+.sebs-mod-acc-panel--cta:hover .sebs-mod-acc-cta-body {
+  display: flex;
+}
+
+.sebs-mod-acc-panel--cta.is-active .sebs-mod-acc-collapsed-title,
+.sebs-mod-acc-panel--cta:hover .sebs-mod-acc-collapsed-title {
+  display: none;
+}
+
+.sebs-mod-acc-cta-body p {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+}
+
+.sebs-mod-acc-cta-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #1e1b4b !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  width: fit-content;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sebs-mod-acc-cta-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sebs-mod-acc-panel.road-access-locked.is-active {
+  opacity: 0.95;
+}
+
+.sebs-mod-acc-panel .road-access-lock-banner {
+  font-size: 0.6875rem !important;
+  padding: 0.45rem 0.6rem !important;
+  margin-top: 0.45rem !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  border-color: var(--sh-border) !important;
+  color: var(--app-color-muted) !important;
+}
+
+@media (max-width: 767px) {
+  body.sebs-app-page .simulations-grid.sebs-modules-accordion {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: visible;
+    scroll-snap-type: none;
+  }
+
+  .sebs-mod-acc-panel,
+  .sebs-mod-acc-panel--cta {
+    flex: none;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 3.75rem;
+  }
+
+  .sebs-mod-acc-panel.is-active,
+  .sebs-mod-acc-panel--cta.is-active {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 22rem;
+  }
+
+  .sebs-mod-acc-collapsed-title {
+    writing-mode: horizontal-tb;
+    transform: none;
+    justify-content: flex-start;
+    padding: 0 1rem 0.85rem;
+    text-align: left;
+  }
+
+  .sebs-mod-acc-panel:not(.is-active) .sebs-mod-acc-expanded {
+    display: none;
+  }
+
+  .sebs-mod-acc-panel:not(.is-active) .sebs-mod-acc-head {
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sebs-mod-acc-panel,
+  .sebs-mod-acc-expanded {
+    transition: none;
+  }
+}
