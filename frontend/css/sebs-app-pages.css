@@ -1134,3 +1134,122 @@ body.sebs-app-page .level-badge,
 body.sebs-app-page .status-badge {
   font-size: var(--app-text-xs) !important;
 }
+
+/* =============================================================================
+   Koyu tema kilidi — landing-chrome / remote-inspired açık sızıntılarını kapat
+   ============================================================================= */
+html body.sebs-app-page,
+html body.sebs-app-page.landing-site-body {
+  background: var(--sh-bg-deep) !important;
+  color: var(--app-color-body) !important;
+}
+
+html body.sebs-app-page main,
+html body.sebs-app-page .main-content,
+html body.sebs-app-page .sebs-app-main,
+html body.sebs-app-page section {
+  background-color: transparent !important;
+}
+
+html body.sebs-app-page section.bg-white,
+html body.sebs-app-page .bg-white {
+  background: transparent !important;
+}
+
+/* landing-chrome: .simulations-grid-section { background: #f8fafc } */
+html body.sebs-app-page.landing-site-body .simulations-grid-section,
+body.landing-site-body.sebs-app-page .simulations-grid-section,
+html.sebs-sim-list body.sebs-app-page .simulations-grid-section {
+  background: transparent !important;
+  padding-top: 2rem !important;
+  padding-bottom: 3rem !important;
+}
+
+html body.sebs-app-page.landing-site-body .simulations-grid-section .section-title,
+html.sebs-sim-list body.sebs-app-page .section-title,
+body.landing-site-body.sebs-app-page .simulations-grid-section .section-title {
+  color: var(--app-color-heading) !important;
+  text-shadow: none !important;
+}
+
+html body.sebs-app-page.landing-site-body .simulations-grid-section .section-subtitle,
+html.sebs-sim-list body.sebs-app-page .section-subtitle,
+body.landing-site-body.sebs-app-page .simulations-grid-section .section-subtitle {
+  color: var(--app-color-body) !important;
+  text-shadow: none !important;
+}
+
+/* landing-chrome: kartlar #ffffff — opak koyu yüzey */
+html body.sebs-app-page.landing-site-body .simulation-card-detailed,
+body.landing-site-body.sebs-app-page .simulation-card-detailed,
+html.sebs-sim-list body.sebs-app-page .simulation-card-detailed,
+html body.sebs-app-page .module-card-detailed,
+body.landing-site-body.sebs-app-page .module-card-detailed {
+  background: linear-gradient(165deg, rgba(22, 22, 42, 0.97), rgba(11, 11, 31, 0.99)) !important;
+  border: 1px solid var(--sh-border) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: var(--sh-shadow-card) !important;
+  color: var(--app-color-body) !important;
+}
+
+html body.sebs-app-page.landing-site-body .simulation-card-detailed:hover,
+body.landing-site-body.sebs-app-page .simulation-card-detailed:hover {
+  background: linear-gradient(165deg, rgba(30, 27, 55, 0.98), rgba(15, 15, 35, 1)) !important;
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* styles.css: h3 rengi #fff — koyu kartta okunur başlık */
+html body.sebs-app-page .simulation-info h3,
+html body.sebs-app-page .simulation-scenarios h4,
+body.landing-site-body.sebs-app-page .simulation-info h3,
+body.landing-site-body.sebs-app-page .simulation-scenarios h4 {
+  color: var(--app-color-heading) !important;
+  font-family: var(--sh-font) !important;
+  font-size: var(--app-text-lg) !important;
+  font-weight: 600 !important;
+  -webkit-text-fill-color: var(--app-color-heading) !important;
+}
+
+html body.sebs-app-page .simulation-content p,
+html body.sebs-app-page .simulation-scenarios li,
+body.landing-site-body.sebs-app-page .simulation-content p {
+  color: var(--app-color-body) !important;
+}
+
+html body.sebs-app-page .simulation-content p strong,
+body.landing-site-body.sebs-app-page .simulation-content p strong {
+  color: var(--app-color-heading) !important;
+}
+
+html body.sebs-app-page .simulation-card-detailed .simulation-icon,
+body.landing-site-body.sebs-app-page .simulation-card-detailed .simulation-icon {
+  background: rgba(124, 58, 237, 0.22) !important;
+  color: #c4b5fd !important;
+  border: 1px solid var(--sh-border) !important;
+  box-shadow: none !important;
+}
+
+html body.sebs-app-page .simulation-card-detailed .duration,
+html body.sebs-app-page .simulation-card-detailed .participants,
+body.landing-site-body.sebs-app-page .simulation-card-detailed .duration,
+body.landing-site-body.sebs-app-page .simulation-card-detailed .participants {
+  color: var(--app-color-muted) !important;
+}
+
+html body.sebs-app-page .simulation-footer,
+body.landing-site-body.sebs-app-page .simulation-footer {
+  border-top-color: var(--sh-border) !important;
+}
+
+html body.sebs-app-page .modules-detailed,
+body.landing-site-body.sebs-app-page .modules-detailed {
+  background: transparent !important;
+}
+
+html body.sebs-app-page .modules-hero,
+body.landing-site-body.sebs-app-page .hero-section.modules-hero {
+  background: linear-gradient(165deg, rgba(124, 58, 237, 0.1) 0%, var(--sh-bg-elevated) 45%, var(--sh-bg-deep) 100%) !important;
+  color: var(--app-color-heading) !important;
+}
