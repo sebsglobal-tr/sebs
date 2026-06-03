@@ -1,0 +1,229 @@
+/**
+ * SEBS Global — premium bireysel odaklı yüzey (esmanurertay.com referansı).
+ * landing-site-body ve sebs-stripe-site üzerinde çalışır.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  --sebs-font-display: "Instrument Serif", "Georgia", "Times New Roman", serif;
+  --sebs-premium-bg: #f8f7f4;
+  --sebs-premium-ink: #0a0f1c;
+  --sebs-premium-muted: #5c6478;
+  --sebs-premium-line: rgba(15, 23, 42, 0.09);
+  --sebs-premium-glow: rgba(99, 102, 241, 0.12);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body,
+html:not([data-theme="dark"]) body.sebs-stripe-site {
+  font-family: var(--sebs-font-sans) !important;
+  color: var(--sebs-premium-ink);
+  background: var(--sebs-premium-bg) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body h1,
+html:not([data-theme="dark"]) body.landing-site-body .hero-title,
+html:not([data-theme="dark"]) body.sebs-stripe-site h1 {
+  font-family: var(--sebs-font-display);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--sebs-premium-ink);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body h2,
+html:not([data-theme="dark"]) body.landing-site-body h3 {
+  font-family: var(--sebs-font-sans);
+  letter-spacing: -0.025em;
+}
+
+/* —— Header: hafif, cam efekti —— */
+html:not([data-theme="dark"]) body.landing-site-body header.fixed {
+  background: rgba(248, 247, 244, 0.82) !important;
+  border-bottom-color: var(--sebs-premium-line) !important;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: var(--sebs-premium-line) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .landing-brand-wordmark {
+  font-family: var(--sebs-font-sans);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+}
+
+/* —— Hero: sıcak mesh, bireysel CTA —— */
+html:not([data-theme="dark"]) body.landing-site-body .hero-mesh {
+  background:
+    radial-gradient(ellipse 85% 60% at 12% 0%, var(--sebs-premium-glow) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(14, 165, 233, 0.08) 0%, transparent 52%),
+    radial-gradient(ellipse 55% 40% at 50% 100%, rgba(52, 211, 153, 0.06) 0%, transparent 48%),
+    linear-gradient(180deg, #f3f2ef 0%, var(--sebs-premium-bg) 42%, #ffffff 100%);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .hero-mesh h1 {
+  line-height: 1.08;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .hero-mesh .hero-emphasis {
+  font-style: italic;
+  font-family: var(--sebs-font-display);
+  color: #1e3a8a;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600,
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-slate-900,
+html:not([data-theme="dark"]) body.landing-site-body [data-sebs-primary-cta] {
+  background: var(--sebs-premium-ink) !important;
+  box-shadow: 0 12px 28px -14px rgba(10, 15, 28, 0.45);
+  transition: transform 0.2s var(--sebs-ease-out), box-shadow 0.2s ease, background 0.2s ease;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600:hover,
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-slate-900:hover,
+html:not([data-theme="dark"]) body.landing-site-body [data-sebs-primary-cta]:hover {
+  background: #151b2e !important;
+  transform: translateY(-1px);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.border.border-slate-200.bg-white {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: var(--sebs-premium-line) !important;
+}
+
+/* —— Güven bandı: avatar + italic partner strip —— */
+.sebs-trust-avatars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.75rem;
+}
+
+.sebs-trust-avatars img {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  margin-left: -0.65rem;
+  background: #e2e8f0;
+}
+
+.sebs-trust-avatars img:first-child {
+  margin-left: 0;
+}
+
+.sebs-trust-caption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee {
+  border-block-color: var(--sebs-premium-line);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::before {
+  background: linear-gradient(to right, var(--sebs-premium-bg) 0%, rgba(248, 247, 244, 0) 100%);
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::after {
+  background: linear-gradient(to left, var(--sebs-premium-bg) 0%, rgba(248, 247, 244, 0) 100%);
+}
+
+.sebs-partner-wordmark {
+  font-family: var(--sebs-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  opacity: 0.85;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  white-space: nowrap;
+}
+
+.sebs-partner-wordmark:hover {
+  color: #64748b;
+  opacity: 1;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-group img {
+  filter: grayscale(0.35);
+  opacity: 0.7;
+}
+
+/* —— Kartlar ve bölümler —— */
+html:not([data-theme="dark"]) body.landing-site-body .shadow-card,
+html:not([data-theme="dark"]) body.landing-site-body .sebs-feature-card,
+html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card,
+html:not([data-theme="dark"]) body.landing-site-body .hero-mock-panel {
+  border-color: var(--sebs-premium-line) !important;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 18px 40px -24px rgba(15, 23, 42, 0.14) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body section.border-t.border-slate-100.bg-white,
+html:not([data-theme="dark"]) body.landing-site-body footer.border-t {
+  background: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/80,
+html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/70,
+html:not([data-theme="dark"]) body.landing-site-body #sebs-yolu-roadmap {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card:first-child {
+  border-color: rgba(37, 99, 235, 0.22) !important;
+  background: linear-gradient(165deg, #ffffff 0%, rgba(239, 246, 255, 0.65) 100%) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-label {
+  background: rgba(10, 15, 28, 0.06);
+  color: var(--sebs-premium-ink);
+}
+
+/* —— Bireysel rozet —— */
+.sebs-individual-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--sebs-premium-line);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sebs-premium-muted);
+}
+
+.sebs-individual-pill span.dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-strip-track {
+    animation: none !important;
+  }
+}

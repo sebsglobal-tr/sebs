@@ -1,0 +1,36 @@
+/**
+ * Yasal ve statik içerik sayfaları — premium yüzey.
+ */
+@import url("/css/sebs-stripe-tokens.css?v=1");
+@import url("/css/sebs-premium-theme.css?v=1");
+
+html:not([data-theme="dark"]) body.sebs-stripe-site {
+  background: var(--stripe-bg) !important;
+}
+
+html:not([data-theme="dark"]) body.sebs-stripe-site header.fixed {
+  background: rgba(248, 247, 244, 0.88) !important;
+  border-bottom-color: var(--stripe-line) !important;
+}
+
+html:not([data-theme="dark"]) body.sebs-stripe-site .legal-prose h1 {
+  font-family: var(--sebs-font-display);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+html:not([data-theme="dark"]) body.sebs-stripe-site .legal-prose h2 {
+  font-family: var(--sebs-font-sans);
+}
+
+html:not([data-theme="dark"]) body.sebs-stripe-site .legal-table-wrap {
+  border-radius: var(--stripe-radius);
+  border: 1px solid var(--stripe-line);
+  box-shadow: var(--stripe-shadow);
+  overflow: hidden;
+}
+
+html:not([data-theme="dark"]) body.sebs-stripe-site footer.border-t {
+  background: #ffffff !important;
+  border-top-color: var(--stripe-line) !important;
+}

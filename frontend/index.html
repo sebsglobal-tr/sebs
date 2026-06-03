@@ -52,7 +52,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -60,7 +60,8 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Instrument Serif"', 'Georgia', 'serif'],
           },
           colors: {
             ink: '#0c1222',
@@ -75,8 +76,8 @@
       },
     };
     </script>
-  <link rel="stylesheet" href="/css/saas-landing.css?v=2" />
-  <link rel="stylesheet" href="/css/landing-chrome.css?v=7" />
+  <link rel="stylesheet" href="/css/saas-landing.css?v=3" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=8" />
   <link rel="stylesheet" href="/css/sebs-yolu-premium.css" data-sebs-premium="css" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <noscript>
@@ -100,8 +101,9 @@
             <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Simülasyonlar</a>
           </div>
         </div>
+        <a href="/#sebs-yolu" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">SEBS Yolu</a>
         <a href="/pricing.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Paketler</a>
-        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İşverenler İçin</a>
+        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Kurumsal</a>
         <a href="/blog" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Blog</a>
         <a href="/hakkimizda" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Hakkımızda</a>
         <a href="/contact.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İletişim</a>
@@ -133,8 +135,9 @@
             <a href="/modules.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
             <a href="/simulations.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
             <hr class="my-1 border-slate-100" />
+            <a href="/#sebs-yolu" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">SEBS Yolu</a>
             <a href="/pricing.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Paketler</a>
-            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İşverenler İçin</a>
+            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Kurumsal</a>
             <a href="/blog" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Blog</a>
             <a href="/hakkimizda" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Hakkımızda</a>
             <a href="/contact.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İletişim</a>
@@ -166,16 +169,18 @@
         <div>
           <div class="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12 xl:gap-14 py-1 sm:py-3 lg:py-4">
             <div>
-              <p class="animate-in mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                <span class="h-1.5 w-1.5 rounded-full bg-blue-500/80" aria-hidden="true"></span>
-                Software Education &amp; Business Solutions
+              <p class="animate-in mb-4">
+                <span class="sebs-individual-pill">
+                  <span class="dot" aria-hidden="true"></span>
+                  Bireysel kariyer yolculuğu
+                </span>
               </p>
-              <h1 class="animate-in delay-1 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
-                <span class="block">Yapay Zeka Destekli, Deneyim Tabanlı</span>
-                <span class="block mt-2">Kariyer ve Yetkinlik Platformu</span>
+              <h1 class="animate-in delay-1 text-4xl tracking-tight text-slate-900 sm:text-5xl lg:text-[3.35rem] lg:leading-[1.1]">
+                <span class="block">Hedefini seç,</span>
+                <span class="block mt-2"><em class="hero-emphasis">yolunu gör</em>, simülasyonda kanıtla</span>
               </h1>
               <p class="animate-in delay-2 mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
-                SEBS ile hedefini netleştir, <strong class="font-semibold text-slate-800">Big Five öğrenme profili</strong> testiyle çalışma ve kariyer eğilimlerini gör, alanına uygun yol haritasını oluştur; eğitim ve simülasyonlarla pratik yaparak gelişimini ölçülebilir şekilde takip et.
+                Ücretsiz başla: <strong class="font-semibold text-slate-800">Big Five öğrenme profili</strong> ile çalışma tarzını keşfet, kişisel SEBS yolunu aç ve gerçek senaryolarda karar vererek yetkinliğini ölçülebilir şekilde göster — CV satırı değil, performans profili.
               </p>
               <div class="animate-in delay-2" id="hero-sebs-funnel">
                 <div class="sebs-hero-funnel-tabs" role="tablist" aria-label="SEBS Yolu mini akış">
@@ -297,16 +302,22 @@
 
     <section class="reveal-on-scroll border-y border-slate-100 bg-white py-12" aria-labelledby="trust-heading">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p id="trust-heading" class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-          Akademik altyapı ve sektör iş birlikleri
+        <div class="sebs-trust-avatars" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=96&h=96&fit=crop&crop=faces" alt="" width="44" height="44" loading="lazy" decoding="async" />
+        </div>
+        <p id="trust-heading" class="sebs-trust-caption">
+          Bireyler ve yenilikçi iş ortakları tarafından tercih ediliyor
         </p>
-        <div class="logo-strip-marquee mt-8" aria-label="İş ortakları ve referans alanları">
+        <div class="logo-strip-marquee mt-6" aria-label="İş ortakları ve referans alanları">
           <div class="logo-strip-track">
             <div class="logo-strip-group">
-              <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
-                <i class="fas fa-university text-slate-400" aria-hidden="true"></i>
-                SCÜ Teknokent
-              </span>
+              <span class="sebs-partner-wordmark">SCÜ Teknokent</span>
               <a href="https://www.sertifikapp.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" aria-label="SertifikApp — iş ortağımız">
                 <img src="/images/partners/sertifikapp-light.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--light h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
                 <img src="/images/partners/sertifikapp-dark.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--dark h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
@@ -314,16 +325,13 @@
               <a href="https://www.iyzico.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" aria-label="iyzico — ödeme altyapısı">
                 <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="" width="210" height="31" class="partner-logo-iyzico h-8 w-auto max-w-[168px] object-contain object-center" loading="lazy" decoding="async" />
               </a>
-              <span class="text-lg font-bold text-slate-400">İşe alım &amp; L&amp;D</span>
-              <span class="text-lg font-bold text-slate-400">Kamu · finans</span>
-              <span class="text-lg font-bold text-slate-400">Yazılım &amp; veri</span>
-              <span class="text-lg font-bold text-slate-400">Siber güvenlik · bulut</span>
+              <span class="sebs-partner-wordmark">İşe alım &amp; L&amp;D</span>
+              <span class="sebs-partner-wordmark">Kamu · finans</span>
+              <span class="sebs-partner-wordmark">Yazılım &amp; veri</span>
+              <span class="sebs-partner-wordmark">Siber güvenlik · bulut</span>
             </div>
             <div class="logo-strip-group" aria-hidden="true">
-              <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
-                <i class="fas fa-university text-slate-400" aria-hidden="true"></i>
-                SCÜ Teknokent
-              </span>
+              <span class="sebs-partner-wordmark">SCÜ Teknokent</span>
               <a href="https://www.sertifikapp.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" tabindex="-1">
                 <img src="/images/partners/sertifikapp-light.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--light h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
                 <img src="/images/partners/sertifikapp-dark.png?v=1" alt="" width="200" height="44" class="partner-logo-sertifikapp--dark h-10 w-auto max-w-[200px] object-contain object-center" decoding="async" />
@@ -331,10 +339,10 @@
               <a href="https://www.iyzico.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-link inline-flex shrink-0 items-center justify-center rounded-lg px-2 py-1 ring-offset-2 transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30" tabindex="-1">
                 <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="" width="210" height="31" class="partner-logo-iyzico h-8 w-auto max-w-[168px] object-contain object-center" loading="lazy" decoding="async" />
               </a>
-              <span class="text-lg font-bold text-slate-400">İşe alım &amp; L&amp;D</span>
-              <span class="text-lg font-bold text-slate-400">Kamu · finans</span>
-              <span class="text-lg font-bold text-slate-400">Yazılım &amp; veri</span>
-              <span class="text-lg font-bold text-slate-400">Siber güvenlik · bulut</span>
+              <span class="sebs-partner-wordmark">İşe alım &amp; L&amp;D</span>
+              <span class="sebs-partner-wordmark">Kamu · finans</span>
+              <span class="sebs-partner-wordmark">Yazılım &amp; veri</span>
+              <span class="sebs-partner-wordmark">Siber güvenlik · bulut</span>
             </div>
           </div>
         </div>
@@ -922,10 +930,10 @@
           <div class="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-violet-500/[0.1] blur-3xl" aria-hidden="true"></div>
           <div class="relative mx-auto max-w-3xl text-center">
             <h2 id="cta-heading" class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Yeni nesil yetkinlik ölçümüne geçin
+              Kariyer yoluna bugün başla
             </h2>
             <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-              Bireysel veya kurumsal: öğrenme, işe alım veya özel senaryo ihtiyacınızı birlikte netleştirelim. Ölçülebilir yetkinlik standardı ve yol haritası için kısa bir demo veya pilot planlayın.
+              Ücretsiz hesap aç, Big Five profilini oluştur ve ilk simülasyonunu aynı gün dene. Kurumsal ihtiyaçların için <a href="/isverenler.html" class="font-semibold text-blue-700 hover:text-blue-900 focus-ring rounded">kurumsal sayfamıza</a> göz atabilirsin.
             </p>
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
               <a href="/signup.html" data-sebs-primary-cta class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus-ring">
