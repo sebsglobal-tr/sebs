@@ -2,11 +2,26 @@
  * SEBS Global — Eğitimler, Simülasyonlar, Hakkımızda (ana sayfa ile uyumlu koyu shell)
  */
 .sebs-app-page {
+  /* Tipografi ölçeği — tüm alt sayfalarda aynı */
+  --app-text-xs: 0.75rem;
+  --app-text-sm: 0.8125rem;
+  --app-text-base: 0.9375rem;
+  --app-text-md: 1rem;
+  --app-text-lg: 1.0625rem;
+  --app-text-xl: 1.25rem;
+  --app-text-2xl: 1.375rem;
+  --app-text-hero: clamp(1.5rem, 3vw, 2rem);
+  --app-color-heading: var(--sh-text);
+  --app-color-body: var(--sh-text-muted);
+  --app-color-muted: var(--sh-text-subtle);
+  --app-color-link: #c4b5fd;
+  --app-color-link-hover: #67e8f9;
+
   margin: 0;
   font-family: var(--sh-font);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--sh-text-muted);
+  font-size: var(--app-text-base);
+  line-height: 1.55;
+  color: var(--app-color-body);
   background: var(--sh-bg-deep);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -190,22 +205,32 @@ body.sebs-app-page .modules-hero::before {
 
 body.sebs-app-page .modules-hero .hero-title,
 body.sebs-app-page .modules-hero .hero-content h1 {
-  color: var(--sh-text) !important;
+  font-size: var(--app-text-hero) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--app-color-heading) !important;
   font-family: var(--sh-font) !important;
   font-weight: 700 !important;
 }
 
 body.sebs-app-page .modules-hero .hero-subtitle,
 body.sebs-app-page .modules-hero .hero-content p {
-  color: var(--sh-text-muted) !important;
+  font-size: var(--app-text-base) !important;
+  line-height: 1.55 !important;
+  color: var(--app-color-body) !important;
+  max-width: 34rem;
 }
 
 body.sebs-app-page.modules-page .section-title {
-  color: var(--sh-text) !important;
+  font-size: var(--app-text-xl) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: var(--app-color-heading) !important;
 }
 
 body.sebs-app-page.modules-page .section-subtitle {
-  color: var(--sh-text-muted) !important;
+  font-size: var(--app-text-base) !important;
+  color: var(--app-color-body) !important;
 }
 
 body.sebs-app-page .modules-categories-explore {
@@ -280,12 +305,15 @@ body.sebs-app-page .sim-hero-content {
 
 body.sebs-app-page .sim-hero-content .hero-title,
 body.sebs-app-page .sim-hero-content h1 {
-  color: var(--sh-text) !important;
+  font-size: var(--app-text-hero) !important;
+  line-height: 1.2 !important;
+  color: var(--app-color-heading) !important;
 }
 
 body.sebs-app-page .sim-hero-content .hero-subtitle,
 body.sebs-app-page .sim-hero-content p {
-  color: var(--sh-text-muted) !important;
+  font-size: var(--app-text-base) !important;
+  color: var(--app-color-body) !important;
 }
 
 body.sebs-app-page .sim-kpi-item {
@@ -294,11 +322,14 @@ body.sebs-app-page .sim-kpi-item {
 }
 
 body.sebs-app-page .sim-kpi-item strong {
-  color: var(--sh-text) !important;
+  font-size: var(--app-text-xl) !important;
+  font-weight: 700 !important;
+  color: var(--app-color-heading) !important;
 }
 
 body.sebs-app-page .sim-kpi-item span {
-  color: var(--sh-text-subtle) !important;
+  font-size: var(--app-text-xs) !important;
+  color: var(--app-color-muted) !important;
 }
 
 body.sebs-app-page .sim-hero-visual {
@@ -431,9 +462,27 @@ body.sebs-app-page.about-page .about-hero__inner {
   max-width: 42rem;
 }
 
-body.sebs-app-page.about-page .about-hero h1,
+body.sebs-app-page.about-page .about-hero h1 {
+  font-size: var(--app-text-hero) !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  color: var(--app-color-heading) !important;
+}
+
 body.sebs-app-page.about-page .about-section__title {
-  color: var(--sh-text) !important;
+  font-size: var(--app-text-lg) !important;
+  font-weight: 700 !important;
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page.about-page .about-hero__lead {
+  font-size: var(--app-text-base) !important;
+  line-height: 1.55 !important;
+}
+
+body.sebs-app-page.about-page .about-section__intro,
+body.sebs-app-page.about-page .legal-updated {
+  font-size: var(--app-text-sm) !important;
 }
 
 body.sebs-app-page.about-page .about-hero__lead,
@@ -445,7 +494,11 @@ body.sebs-app-page.about-page .about-trust-card p,
 body.sebs-app-page.about-page .about-team-card p,
 body.sebs-app-page.about-page .about-pillar-card span,
 body.sebs-app-page.about-page .about-process-steps li span {
-  color: var(--sh-text-muted) !important;
+  color: var(--app-color-body) !important;
+}
+
+body.sebs-app-page.about-page .about-pillar-card strong {
+  font-size: var(--app-text-sm) !important;
 }
 
 body.sebs-app-page.about-page .about-hero__links {
@@ -691,4 +744,209 @@ html[data-theme="dark"] body.sebs-app-page {
 html[data-theme="dark"] body.sebs-app-page .main-content,
 html[data-theme="dark"] body.sebs-app-page .sebs-app-main {
   background: transparent !important;
+}
+
+/* —— Tipografi ve renk birliği (Tailwind + modules.css + legal-document üzerine) —— */
+body.sebs-app-page main,
+body.sebs-app-page .main-content {
+  font-family: var(--sh-font) !important;
+  font-size: var(--app-text-base);
+  color: var(--app-color-body);
+}
+
+body.sebs-app-page main h1,
+body.sebs-app-page main .hero-title,
+body.sebs-app-page .modules-hero h1 {
+  font-size: var(--app-text-hero) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page main h2,
+body.sebs-app-page .section-title,
+body.sebs-app-page #modules-explore-heading,
+body.sebs-app-page #simulations-explore-heading {
+  font-size: var(--app-text-xl) !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page main h3,
+body.sebs-app-page .module-title,
+body.sebs-app-page .simulation-title,
+body.sebs-app-page .module-card-detailed h3 {
+  font-size: var(--app-text-lg) !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page main h4,
+body.sebs-app-page .sebs-roadmap-step h4,
+body.sebs-app-page .sebs-visual-mini h4 {
+  font-size: var(--app-text-md) !important;
+  font-weight: 600 !important;
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page main p,
+body.sebs-app-page main li,
+body.sebs-app-page .module-card-detailed p,
+body.sebs-app-page .simulation-card p,
+body.sebs-app-page .sebs-acc-panel p {
+  font-size: var(--app-text-base) !important;
+  line-height: 1.55 !important;
+  color: var(--app-color-body) !important;
+}
+
+body.sebs-app-page .text-3xl,
+body.sebs-app-page .sm\:text-3xl {
+  font-size: var(--app-text-xl) !important;
+  line-height: 1.3 !important;
+}
+
+body.sebs-app-page .text-2xl,
+body.sebs-app-page .sm\:text-2xl {
+  font-size: var(--app-text-xl) !important;
+  line-height: 1.3 !important;
+}
+
+body.sebs-app-page .text-xl {
+  font-size: var(--app-text-lg) !important;
+  line-height: 1.35 !important;
+}
+
+body.sebs-app-page .text-lg,
+body.sebs-app-page .sm\:text-lg {
+  font-size: var(--app-text-md) !important;
+  line-height: 1.45 !important;
+}
+
+body.sebs-app-page .text-base {
+  font-size: var(--app-text-base) !important;
+}
+
+body.sebs-app-page .text-sm {
+  font-size: var(--app-text-sm) !important;
+}
+
+body.sebs-app-page .text-xs,
+body.sebs-app-page .text-\[10px\] {
+  font-size: var(--app-text-xs) !important;
+}
+
+/* Başlık / gövde renkleri — slate ve mavi tonlarını tek palete çek */
+body.sebs-app-page .font-bold,
+body.sebs-app-page .font-semibold {
+  color: inherit;
+}
+
+body.sebs-app-page .text-slate-900,
+body.sebs-app-page .text-slate-800,
+body.sebs-app-page .font-bold.text-slate-900,
+body.sebs-app-page .font-semibold.text-slate-900 {
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page .text-slate-700,
+body.sebs-app-page .text-slate-600,
+body.sebs-app-page .text-slate-500 {
+  color: var(--app-color-body) !important;
+}
+
+body.sebs-app-page .text-slate-400 {
+  color: var(--app-color-muted) !important;
+}
+
+body.sebs-app-page .text-blue-600,
+body.sebs-app-page .text-blue-700,
+body.sebs-app-page .text-violet-700 {
+  color: var(--app-color-link) !important;
+}
+
+/* İçerik linkleri */
+body.sebs-app-page main a[href]:not(.sh-btn):not(.sh-nav__link):not(.sh-brand):not(.sebs-acc-cta):not(.btn-simulation):not(.btn-primary):not(.btn-secondary) {
+  color: var(--app-color-link);
+  font-weight: 500;
+}
+
+body.sebs-app-page main a[href]:not(.sh-btn):not(.sh-nav__link):not(.sh-brand):hover {
+  color: var(--app-color-link-hover);
+}
+
+body.sebs-app-page.about-page .about-hero__links a,
+body.sebs-app-page.about-page .about-section__intro a,
+body.sebs-app-page.about-page .about-trust-card a,
+body.sebs-app-page.about-page .about-section__cta-inline a,
+body.sebs-app-page.about-page .about-cta-row a,
+body.sebs-app-page.about-page .about-company-panel dd a {
+  color: var(--app-color-link) !important;
+}
+
+body.sebs-app-page.about-page .about-hero__links a:hover,
+body.sebs-app-page.about-page .about-trust-card a:hover {
+  color: var(--app-color-link-hover) !important;
+}
+
+/* Accordion satır metinleri */
+body.sebs-app-page .sebs-acc-btn .text-sm,
+body.sebs-app-page .sebs-acc-btn .sm\:text-base {
+  font-size: var(--app-text-sm) !important;
+}
+
+body.sebs-app-page .sebs-acc-btn .font-semibold {
+  color: var(--app-color-heading) !important;
+}
+
+/* Hero alanı daha kompakt */
+body.sebs-app-page .modules-hero,
+body.sebs-app-page .hero-section.modules-hero {
+  padding: calc(var(--sh-nav-h) + 1.25rem) 1.25rem 2rem !important;
+  min-height: 0 !important;
+}
+
+body.sebs-app-page .sim-hero-content {
+  padding: 1.25rem 1.35rem !important;
+}
+
+/* KPI / rozet — küçük ve koyu uyumlu */
+body.sebs-app-page .rounded-full.bg-emerald-100,
+body.sebs-app-page .rounded-full.bg-orange-100,
+body.sebs-app-page .rounded-full.bg-sky-100,
+body.sebs-app-page .rounded-full.bg-violet-100 {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--sh-border);
+}
+
+body.sebs-app-page .text-emerald-800,
+body.sebs-app-page .text-orange-800,
+body.sebs-app-page .text-sky-800,
+body.sebs-app-page .text-violet-700 {
+  color: var(--app-color-muted) !important;
+  font-size: var(--app-text-xs) !important;
+}
+
+body.sebs-app-page .sebs-yolu-badge {
+  font-size: var(--app-text-xs) !important;
+}
+
+body.sebs-app-page .sebs-roadmap-step p,
+body.sebs-app-page .sebs-visual-mini p,
+body.sebs-app-page .sebs-roadmap-step .meta {
+  font-size: var(--app-text-sm) !important;
+  color: var(--app-color-muted) !important;
+}
+
+body.sebs-app-page .module-card-detailed,
+body.sebs-app-page .simulation-card {
+  font-size: var(--app-text-base);
+}
+
+body.sebs-app-page .level-badge,
+body.sebs-app-page .status-badge {
+  font-size: var(--app-text-xs) !important;
 }
