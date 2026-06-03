@@ -1,0 +1,380 @@
+/**
+ * SEBS Global — Eğitimler, Simülasyonlar, Hakkımızda (ana sayfa ile uyumlu koyu shell)
+ */
+.sebs-app-page {
+  margin: 0;
+  font-family: var(--sh-font);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--sh-text-muted);
+  background: var(--sh-bg-deep);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sebs-app-page *,
+.sebs-app-page *::before,
+.sebs-app-page *::after {
+  box-sizing: border-box;
+}
+
+.sebs-app-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
+    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%);
+}
+
+.sebs-app-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+}
+
+.sebs-app-main,
+body.sebs-app-page .main-content {
+  padding-top: var(--sh-nav-h);
+  background: transparent !important;
+  color: var(--sh-text-muted);
+}
+
+/* Tailwind yüzeyleri — koyu tema */
+body.sebs-app-page .bg-white,
+body.sebs-app-page .bg-white\/90 {
+  background: var(--sh-glass) !important;
+  backdrop-filter: blur(12px);
+}
+
+body.sebs-app-page .border-slate-100,
+body.sebs-app-page .border-slate-200,
+body.sebs-app-page .border-slate-200\/80 {
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .text-slate-900,
+body.sebs-app-page .text-slate-800 {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .text-slate-700,
+body.sebs-app-page .text-slate-600 {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page .text-slate-500,
+body.sebs-app-page .text-slate-400 {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page .text-blue-700 {
+  color: #a5b4fc !important;
+}
+
+body.sebs-app-page .hover\:text-slate-900:hover {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .hover\:bg-slate-50:hover {
+  background: var(--sh-glass-hover) !important;
+}
+
+body.sebs-app-page .shadow-card {
+  box-shadow: var(--sh-shadow-card) !important;
+}
+
+body.sebs-app-page .rounded-3xl.border {
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .bg-slate-900,
+body.sebs-app-page button.bg-slate-900 {
+  background: var(--sh-gradient-btn) !important;
+  border: none;
+}
+
+body.sebs-app-page .bg-slate-900:hover {
+  filter: brightness(1.08);
+}
+
+/* Modüller hero */
+body.sebs-app-page.modules-page .modules-hero,
+body.sebs-app-page .hero-section.modules-hero {
+  background: linear-gradient(165deg, rgba(124, 58, 237, 0.12) 0%, var(--sh-bg-elevated) 45%, var(--sh-bg-deep) 100%) !important;
+  color: var(--sh-text) !important;
+  border-bottom: 1px solid var(--sh-border-soft);
+}
+
+body.sebs-app-page .modules-hero::before {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(34, 211, 238, 0.15), transparent 34%) !important;
+}
+
+body.sebs-app-page .modules-hero .hero-title,
+body.sebs-app-page .modules-hero .hero-content h1 {
+  color: var(--sh-text) !important;
+  font-family: var(--sh-font) !important;
+  font-weight: 700 !important;
+}
+
+body.sebs-app-page .modules-hero .hero-subtitle,
+body.sebs-app-page .modules-hero .hero-content p {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page.modules-page .section-title {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.modules-page .section-subtitle {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page .modules-categories-explore {
+  background: transparent !important;
+  border-color: var(--sh-border-soft) !important;
+}
+
+body.sebs-app-page .modules-page .simulation-categories:not(.modules-categories-explore) {
+  background: rgba(124, 58, 237, 0.06) !important;
+  border-color: var(--sh-border-soft) !important;
+}
+
+/* Modül kartları */
+body.sebs-app-page .module-card-detailed {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+  color: var(--sh-text-muted);
+}
+
+body.sebs-app-page .module-card-detailed:hover {
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  box-shadow: var(--sh-shadow-glow) !important;
+}
+
+body.sebs-app-page .module-card-detailed h3,
+body.sebs-app-page .module-card-detailed .module-title {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .tab-btn {
+  color: var(--sh-text-muted);
+  border-color: var(--sh-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+body.sebs-app-page .tab-btn.active,
+body.sebs-app-page .tab-btn:hover {
+  color: var(--sh-text);
+  background: var(--sh-glass-hover);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+body.sebs-app-page .modules-category-preview {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .simulation-card {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .simulation-card:hover {
+  border-color: rgba(124, 58, 237, 0.4) !important;
+}
+
+body.sebs-app-page .simulation-card h3,
+body.sebs-app-page .simulation-title {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .simulation-card p {
+  color: var(--sh-text-muted) !important;
+}
+
+/* Simülasyonlar hero (simulations-page.css override) */
+body.sebs-app-page .sim-hero-content {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(11, 11, 31, 0.92)) !important;
+  border-color: var(--sh-border) !important;
+  box-shadow: var(--sh-shadow-card) !important;
+}
+
+body.sebs-app-page .sim-hero-content .hero-title,
+body.sebs-app-page .sim-hero-content h1 {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .sim-hero-content .hero-subtitle,
+body.sebs-app-page .sim-hero-content p {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page .sim-kpi-item {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .sim-kpi-item strong {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .sim-kpi-item span {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page .sim-hero-visual {
+  background: linear-gradient(180deg, var(--sh-bg-elevated), rgba(7, 7, 22, 0.95)) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page .sim-visual-card {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--sh-border) !important;
+  color: var(--sh-text-muted);
+}
+
+body.sebs-app-page .sebs-roadmap-step,
+body.sebs-app-page .sebs-visual-mini {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+  color: var(--sh-text-muted);
+}
+
+body.sebs-app-page .sebs-roadmap-step h4,
+body.sebs-app-page .sebs-visual-mini h4 {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .sebs-yolu-badge {
+  color: #c4b5fd;
+}
+
+/* Hakkımızda — legal-document.css açık tema override */
+body.sebs-app-page.about-page {
+  padding-top: 0 !important;
+}
+
+body.sebs-app-page.about-page main.sebs-app-main {
+  padding-top: 0 !important;
+  padding-bottom: 0;
+}
+
+body.sebs-app-page.about-page .about-hero {
+  background: linear-gradient(165deg, rgba(124, 58, 237, 0.14) 0%, var(--sh-bg-elevated) 50%, var(--sh-bg-deep) 100%) !important;
+  border-bottom: 1px solid var(--sh-border-soft);
+  padding-top: calc(var(--sh-nav-h) + 2rem);
+}
+
+body.sebs-app-page.about-page .about-hero h1,
+body.sebs-app-page.about-page .about-section__title {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.about-page .about-hero__lead,
+body.sebs-app-page.about-page .about-section__intro,
+body.sebs-app-page.about-page .legal-updated {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page.about-page .about-hero__links a {
+  color: #c4b5fd;
+}
+
+body.sebs-app-page.about-page .about-hero__links a:hover {
+  color: var(--sh-cyan);
+}
+
+body.sebs-app-page.about-page .about-body {
+  background: transparent;
+}
+
+body.sebs-app-page.about-page .about-pillar-card,
+body.sebs-app-page.about-page .about-story-panel,
+body.sebs-app-page.about-page .about-trust-card,
+body.sebs-app-page.about-page .about-vm-card,
+body.sebs-app-page.about-page .about-team-card,
+body.sebs-app-page.about-page .about-company-panel,
+body.sebs-app-page.about-page .about-process-steps li {
+  background: var(--sh-glass) !important;
+  border: 1px solid var(--sh-border) !important;
+  color: var(--sh-text-muted);
+}
+
+body.sebs-app-page.about-page .about-pillar-card strong,
+body.sebs-app-page.about-page .about-trust-card h3,
+body.sebs-app-page.about-page .about-vm-card h3,
+body.sebs-app-page.about-page .about-team-card h3 {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.about-page .about-legal-links a {
+  background: var(--sh-glass);
+  border-color: var(--sh-border);
+  color: var(--sh-text-muted);
+}
+
+body.sebs-app-page.about-page .about-legal-links a:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+  color: var(--sh-text);
+}
+
+body.sebs-app-page.about-page .about-cta-row a {
+  color: #c4b5fd;
+}
+
+/* Loading overlay */
+body.sebs-app-page .loading-overlay,
+body.sebs-app-page .loading-screen {
+  background: var(--sh-bg-deep) !important;
+}
+
+body.sebs-app-page .loading-text {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page .loading-subtext {
+  color: var(--sh-text-muted) !important;
+}
+
+/* Eski açık footer gizlenir — sh-footer kullanılır */
+body.sebs-app-page > footer:not(.sh-footer) {
+  display: none;
+}
+
+/* user account dropdown on dark nav */
+body.sebs-app-page #userAccountPanel {
+  background: var(--sh-bg-elevated) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page #userAccountPanel a,
+body.sebs-app-page #userAccountPanel button {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page #userAccountPanel a:hover,
+body.sebs-app-page #userAccountPanel button:hover {
+  background: var(--sh-glass-hover) !important;
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page #userProfileTrigger {
+  border-color: var(--sh-border) !important;
+  background: var(--sh-glass) !important;
+}
+
+body.sebs-app-page #userName {
+  color: var(--sh-text) !important;
+}
