@@ -945,7 +945,7 @@
                 if (src.indexOf('saas-shell.js') !== -1) return;
             }
             var s = document.createElement('script');
-            s.src = '/js/saas-shell.js?v=2.2';
+            s.src = '/js/saas-shell.js?v=2.3';
             s.async = false;
             (document.head || document.documentElement).appendChild(s);
         } catch (e) {

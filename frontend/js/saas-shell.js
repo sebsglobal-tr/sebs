@@ -50,12 +50,29 @@
         btn.setAttribute('title', dark ? 'Açık temaya geç' : 'Koyu temaya geç');
     }
 
+    function isAppShellPage() {
+        return document.body && document.body.classList.contains('sebs-app-page');
+    }
+
     function isSimulationRoute() {
         var p = (window.location && window.location.pathname) ? window.location.pathname : '';
         if (!p) return false;
         if (p.indexOf('/simulation/') === 0) return true;
-        if (p.indexOf('/simulasyonlar/') === 0) return true;
+        if (p.indexOf('/simulasyonlar') === 0) return true;
         return false;
+    }
+
+    function isListingShellPage() {
+        var p = (window.location && window.location.pathname) ? window.location.pathname : '';
+        if (!p) return false;
+        return (
+            p === '/simulasyonlar' ||
+            p === '/simulations.html' ||
+            p === '/egitimler' ||
+            p === '/modules.html' ||
+            p === '/hakkimizda' ||
+            p === '/about.html'
+        );
     }
 
     function injectThemeToggle() {
@@ -105,10 +122,17 @@
     }
 
     function initTheme() {
+        /* Eğitimler / Simülasyonlar / Hakkımızda — her zaman koyu shell */
+        if (isAppShellPage() || isListingShellPage()) {
+            document.body.classList.add('sebs-sim-theme-lock');
+            applyTheme('dark');
+            injectThemeToggle();
+            return;
+        }
         if (isSimulationRoute()) {
             document.body.classList.add('sebs-sim-theme-lock');
-            document.documentElement.removeAttribute('data-theme');
-            document.body.classList.remove('theme-dark', 'theme-light');
+            applyTheme('dark');
+            injectThemeToggle();
             return;
         }
         applyTheme(resolveInitialTheme());

@@ -46,27 +46,6 @@
     <link rel="stylesheet" href="/css/sebs-yolu-premium.css" />
     <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=1" />
     <link rel="stylesheet" href="/css/sebs-home.css?v=1" />
-    <link rel="stylesheet" href="/css/sebs-app-pages.css?v=5" />
-    
-    
-    
-    <style>
-        /* Minimal inline styles - only for critical loading overlay */
-        /* Main styles are in /css/styles.css and /css/modules.css */
-        
-        /* Loading overlay - minimal inline style for immediate display */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-    </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -96,6 +75,14 @@
       },
     };
   </script>
+  <link rel="stylesheet" href="/css/sebs-app-pages.css?v=6" />
+  <style id="sebs-app-critical">
+    html, body.sebs-app-page { background: #050510 !important; color: #a1a1aa !important; }
+    body.sebs-app-page main { background: transparent !important; }
+    .loading-overlay {
+      position: fixed; inset: 0; display: none; justify-content: center; align-items: center; z-index: 9999;
+    }
+  </style>
 </head>
 <body id="top" class="sebs-app-page landing-site-body modules-page" data-theme="dark">
   <a href="#top" class="sh-skip">İçeriğe atla</a>
@@ -241,7 +228,7 @@
             </div>
         </section>
 
-        <section id="modulesCategoriesExplore" class="simulation-categories modules-categories-explore border-b border-slate-100 bg-white py-14 sm:py-20" aria-labelledby="modules-explore-heading">
+        <section id="modulesCategoriesExplore" class="simulation-categories modules-categories-explore border-b border-slate-100 py-14 sm:py-20" aria-labelledby="modules-explore-heading">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="mx-auto max-w-2xl text-center">
                     <h2 id="modules-explore-heading" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">

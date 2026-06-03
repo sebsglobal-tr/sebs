@@ -104,24 +104,40 @@ body.sebs-app-page .sebs-app-main {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: -3;
   pointer-events: none;
   background:
     radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
     radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
-    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%);
+    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%) !important;
 }
 
 .sebs-app-page::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: -2;
   pointer-events: none;
   opacity: 0.35;
   background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+}
+
+/* styles.css body::before (açık gradient) — app sayfalarında kapat */
+body.sebs-app-page::before {
+  background:
+    radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
+    linear-gradient(180deg, #050510 0%, #070716 50%, #050510 100%) !important;
+  opacity: 1 !important;
+}
+
+body.sebs-app-page::after {
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(5, 5, 16, 0.4) 0%, rgba(5, 5, 16, 0.85) 100%) !important;
+  opacity: 1 !important;
 }
 
 .sebs-app-main,
