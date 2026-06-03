@@ -1269,3 +1269,85 @@ body.landing-site-body.sebs-app-page .hero-section.modules-hero {
   background: linear-gradient(165deg, rgba(124, 58, 237, 0.1) 0%, var(--sh-bg-elevated) 45%, var(--sh-bg-deep) 100%) !important;
   color: var(--app-color-heading) !important;
 }
+
+/* Modül / simülasyon kart grid — yatay taşmayı kapat, iki kart ekrana sığsın */
+body.sebs-app-page .simulations-grid-section {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body.sebs-app-page .simulations-grid-section > .mx-auto {
+  width: 100%;
+  max-width: min(100%, var(--sh-container, 72rem));
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+body.sebs-app-page .module-category-section {
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.sebs-app-page .simulations-grid {
+  display: grid !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-top: 1.5rem !important;
+  gap: 1.25rem !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+@media (min-width: 640px) {
+  body.sebs-app-page .simulations-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1100px) {
+  body.sebs-app-page .simulations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)) !important;
+  }
+}
+
+body.sebs-app-page .simulations-grid > .simulation-card-detailed,
+body.sebs-app-page .simulations-grid > .reveal {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.sebs-app-page .simulation-card-detailed {
+  padding: 1.25rem 1.35rem !important;
+  overflow: hidden !important;
+}
+
+body.sebs-app-page .simulation-header {
+  min-width: 0;
+  gap: 1rem;
+}
+
+body.sebs-app-page .simulation-info {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body.sebs-app-page .simulation-card-detailed .simulation-icon {
+  width: 52px !important;
+  height: 52px !important;
+  font-size: 1.25rem !important;
+  flex-shrink: 0;
+}
+
+body.sebs-app-page .simulation-card-detailed .card-image-top {
+  margin-left: -1.35rem !important;
+  margin-right: -1.35rem !important;
+}
+
+html body.sebs-app-page.landing-site-body .simulation-card-detailed:hover,
+body.landing-site-body.sebs-app-page .simulation-card-detailed:hover {
+  transform: translateY(-3px) !important;
+}
