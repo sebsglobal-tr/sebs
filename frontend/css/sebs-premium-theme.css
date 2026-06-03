@@ -1,103 +1,252 @@
 /**
- * SEBS Global — premium bireysel odaklı yüzey (esmanurertay.com referansı).
- * landing-site-body ve sebs-stripe-site üzerinde çalışır.
+ * SEBS Global — tam yüzey teması (esmanurertay.com referansı).
+ * landing-chrome.css SONRASINDA yüklenmeli.
  */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap");
 
 :root {
-  --sebs-font-display: "Instrument Serif", "Georgia", "Times New Roman", serif;
+  --sebs-font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --sebs-premium-bg: #f8f7f4;
+  --sebs-premium-bg-soft: #f3f2ef;
+  --sebs-premium-surface: #ffffff;
   --sebs-premium-ink: #0a0f1c;
   --sebs-premium-muted: #5c6478;
   --sebs-premium-line: rgba(15, 23, 42, 0.09);
-  --sebs-premium-glow: rgba(99, 102, 241, 0.12);
+  --sebs-premium-glow: rgba(99, 102, 241, 0.11);
+  --sebs-premium-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 18px 40px -22px rgba(15, 23, 42, 0.14);
 }
 
-html:not([data-theme="dark"]) body.landing-site-body,
-html:not([data-theme="dark"]) body.sebs-stripe-site {
+/* —— Global baseline —— */
+html:not([data-theme="dark"]) body.landing-site-body:not(.os-sim-premium):not(.sebs-sim-theme-lock),
+html:not([data-theme="dark"]) body.sebs-stripe-site,
+html:not([data-theme="dark"]) body.sebs-premium-site {
   font-family: var(--sebs-font-sans) !important;
-  color: var(--sebs-premium-ink);
+  color: var(--sebs-premium-ink) !important;
   background: var(--sebs-premium-bg) !important;
   -webkit-font-smoothing: antialiased;
 }
 
+html:not([data-theme="dark"]) body.landing-site-body::before,
+html:not([data-theme="dark"]) body.landing-site-body::after,
+html:not([data-theme="dark"]) body.sebs-premium-site::before,
+html:not([data-theme="dark"]) body.sebs-premium-site::after {
+  display: none !important;
+  opacity: 0 !important;
+  content: none !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body.bg-white,
+html:not([data-theme="dark"]) body.sebs-premium-site.bg-white {
+  background: var(--sebs-premium-bg) !important;
+}
+
 html:not([data-theme="dark"]) body.landing-site-body h1,
 html:not([data-theme="dark"]) body.landing-site-body .hero-title,
-html:not([data-theme="dark"]) body.sebs-stripe-site h1 {
-  font-family: var(--sebs-font-display);
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  color: var(--sebs-premium-ink);
+html:not([data-theme="dark"]) body.landing-site-body .pp-hero h1,
+html:not([data-theme="dark"]) body.sebs-stripe-site h1,
+html:not([data-theme="dark"]) body.sebs-premium-site h1 {
+  font-family: var(--sebs-font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--sebs-premium-ink) !important;
 }
 
 html:not([data-theme="dark"]) body.landing-site-body h2,
 html:not([data-theme="dark"]) body.landing-site-body h3 {
-  font-family: var(--sebs-font-sans);
-  letter-spacing: -0.025em;
+  font-family: var(--sebs-font-sans) !important;
+  letter-spacing: -0.02em;
+  color: var(--sebs-premium-ink);
 }
 
-/* —— Header: hafif, cam efekti —— */
+html:not([data-theme="dark"]) body.landing-site-body p,
+html:not([data-theme="dark"]) body.landing-site-body li {
+  color: var(--sebs-premium-muted);
+}
+
+/* Ambient orbs (pricing, modules, sim list) */
+html:not([data-theme="dark"]) body.landing-site-body.sebs-premium-page,
+html:not([data-theme="dark"]) body.sebs-pricing-page,
+html:not([data-theme="dark"]) body.modules-page {
+  background-image:
+    radial-gradient(ellipse 70% 50% at 0% 0%, var(--sebs-premium-glow), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(14, 165, 233, 0.07), transparent 50%),
+    linear-gradient(180deg, var(--sebs-premium-bg-soft) 0%, var(--sebs-premium-bg) 100%) !important;
+}
+
+/* —— Header —— */
 html:not([data-theme="dark"]) body.landing-site-body header.fixed {
-  background: rgba(248, 247, 244, 0.82) !important;
+  background: rgba(248, 247, 244, 0.86) !important;
   border-bottom-color: var(--sebs-premium-line) !important;
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(20px) saturate(1.12);
+  -webkit-backdrop-filter: blur(20px) saturate(1.12);
 }
 
 html:not([data-theme="dark"]) body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
   border-color: var(--sebs-premium-line) !important;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset;
 }
 
 html:not([data-theme="dark"]) body.landing-site-body .landing-brand-wordmark {
-  font-family: var(--sebs-font-sans);
+  font-family: var(--sebs-font-sans) !important;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
   text-transform: uppercase;
+  color: var(--sebs-premium-ink) !important;
 }
 
-/* —— Hero: sıcak mesh, bireysel CTA —— */
-html:not([data-theme="dark"]) body.landing-site-body .hero-mesh {
-  background:
-    radial-gradient(ellipse 85% 60% at 12% 0%, var(--sebs-premium-glow) 0%, transparent 58%),
-    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(14, 165, 233, 0.08) 0%, transparent 52%),
-    radial-gradient(ellipse 55% 40% at 50% 100%, rgba(52, 211, 153, 0.06) 0%, transparent 48%),
-    linear-gradient(180deg, #f3f2ef 0%, var(--sebs-premium-bg) 42%, #ffffff 100%);
+html:not([data-theme="dark"]) body.landing-site-body header .landing-nav-pill-link--accent,
+html:not([data-theme="dark"]) body.landing-site-body header .landing-nav-drawer-link {
+  color: var(--sebs-premium-ink) !important;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body .hero-mesh h1 {
-  line-height: 1.08;
+html:not([data-theme="dark"]) body.landing-site-body header .landing-nav-pill-link--accent.is-active,
+html:not([data-theme="dark"]) body.landing-site-body header .landing-nav-pill-link--accent[aria-current="page"] {
+  background: rgba(10, 15, 28, 0.06) !important;
+  color: var(--sebs-premium-ink) !important;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body .hero-mesh .hero-emphasis {
-  font-style: italic;
-  font-family: var(--sebs-font-display);
-  color: #1e3a8a;
+html:not([data-theme="dark"]) body.landing-site-body header a.text-blue-700,
+html:not([data-theme="dark"]) body.landing-site-body header .text-blue-700 {
+  color: var(--sebs-premium-ink) !important;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600,
+html:not([data-theme="dark"]) body.landing-site-body #signupBtn,
 html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-slate-900,
-html:not([data-theme="dark"]) body.landing-site-body [data-sebs-primary-cta] {
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600,
+html:not([data-theme="dark"]) body.landing-site-body [data-sebs-primary-cta],
+html:not([data-theme="dark"]) body.landing-site-body .btn-primary,
+html:not([data-theme="dark"]) body.landing-site-body .btn-signup,
+html:not([data-theme="dark"]) body.landing-site-body .pp-btn--primary {
   background: var(--sebs-premium-ink) !important;
-  box-shadow: 0 12px 28px -14px rgba(10, 15, 28, 0.45);
-  transition: transform 0.2s var(--sebs-ease-out), box-shadow 0.2s ease, background 0.2s ease;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 12px 28px -14px rgba(10, 15, 28, 0.42) !important;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600:hover,
+html:not([data-theme="dark"]) body.landing-site-body #signupBtn:hover,
 html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-slate-900:hover,
+html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.bg-blue-600:hover,
 html:not([data-theme="dark"]) body.landing-site-body [data-sebs-primary-cta]:hover {
   background: #151b2e !important;
   transform: translateY(-1px);
 }
 
-html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.border.border-slate-200.bg-white {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-color: var(--sebs-premium-line) !important;
+/* —— Hero alanları —— */
+html:not([data-theme="dark"]) body.landing-site-body .hero-mesh,
+html:not([data-theme="dark"]) body.landing-site-body .hero-remote-shell {
+  background:
+    radial-gradient(ellipse 85% 60% at 12% 0%, var(--sebs-premium-glow) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(14, 165, 233, 0.08) 0%, transparent 52%),
+    linear-gradient(180deg, var(--sebs-premium-bg-soft) 0%, var(--sebs-premium-bg) 45%, #fff 100%) !important;
 }
 
-/* —— Güven bandı: avatar + italic partner strip —— */
+html:not([data-theme="dark"]) body.landing-site-body .hero-mesh .hero-emphasis {
+  font-style: italic;
+  font-family: var(--sebs-font-display) !important;
+  color: #1e3a8a;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero,
+html:not([data-theme="dark"]) body.landing-site-body section.hero-section.modules-hero {
+  background:
+    radial-gradient(ellipse 90% 70% at 50% -25%, var(--sebs-premium-glow) 0%, transparent 55%),
+    linear-gradient(180deg, var(--sebs-premium-bg-soft) 0%, var(--sebs-premium-bg) 100%) !important;
+  color: var(--sebs-premium-ink) !important;
+  border-bottom: 1px solid var(--sebs-premium-line) !important;
+  min-height: auto !important;
+  padding: 5.5rem 1.5rem 3.5rem !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero::before,
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero::after,
+html:not([data-theme="dark"]) body.landing-site-body .hero-section::before,
+html:not([data-theme="dark"]) body.landing-site-body .hero-section::after {
+  display: none !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero .hero-title,
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero .hero-content h1 {
+  font-family: var(--sebs-font-display) !important;
+  font-weight: 400 !important;
+  font-size: clamp(2.35rem, 5vw, 3.5rem) !important;
+  color: var(--sebs-premium-ink) !important;
+  text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero .hero-subtitle,
+html:not([data-theme="dark"]) body.landing-site-body .modules-hero .hero-content p {
+  color: var(--sebs-premium-muted) !important;
+  text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) body.sebs-pricing-page {
+  background: var(--sebs-premium-bg) !important;
+}
+
+html:not([data-theme="dark"]) body.sebs-pricing-page .pp-hero h1 {
+  font-family: var(--sebs-font-display) !important;
+  font-weight: 400 !important;
+}
+
+html:not([data-theme="dark"]) body.sebs-pricing-page .pp-eyebrow {
+  color: var(--sebs-premium-muted);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--sebs-premium-line);
+}
+
+/* —— Bölümler —— */
+html:not([data-theme="dark"]) body.landing-site-body main,
+html:not([data-theme="dark"]) body.landing-site-body .main-content {
+  background: transparent !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body section.bg-white,
+html:not([data-theme="dark"]) body.landing-site-body footer.bg-white,
+html:not([data-theme="dark"]) body.landing-site-body footer.border-t {
+  background: var(--sebs-premium-surface) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/80,
+html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/70,
+html:not([data-theme="dark"]) body.landing-site-body #sebs-yolu-roadmap,
+html:not([data-theme="dark"]) body.landing-site-body .sebs-feat-grid {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .simulations-grid-section,
+html:not([data-theme="dark"]) body.landing-site-body .modules-content-section {
+  background: var(--sebs-premium-bg) !important;
+}
+
+/* —— Kartlar —— */
+html:not([data-theme="dark"]) body.landing-site-body .shadow-card,
+html:not([data-theme="dark"]) body.landing-site-body .sebs-feature-card,
+html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card,
+html:not([data-theme="dark"]) body.landing-site-body .hero-mock-panel,
+html:not([data-theme="dark"]) body.landing-site-body .module-card-detailed,
+html:not([data-theme="dark"]) body.landing-site-body .simulation-card-detailed,
+html:not([data-theme="dark"]) body.landing-site-body .pricing-card,
+html:not([data-theme="dark"]) body.landing-site-body .pp-plan-card,
+html:not([data-theme="dark"]) body.landing-site-body .login-card,
+html:not([data-theme="dark"]) body.landing-site-body .signup-form,
+html:not([data-theme="dark"]) body.landing-site-body .form-wrapper,
+html:not([data-theme="dark"]) body.landing-site-body .contact-card-modern,
+html:not([data-theme="dark"]) body.landing-site-body .faq-item,
+html:not([data-theme="dark"]) body.landing-site-body .card {
+  background: var(--sebs-premium-surface) !important;
+  border-color: var(--sebs-premium-line) !important;
+  box-shadow: var(--sebs-premium-shadow) !important;
+  border-radius: 1rem !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card:first-child {
+  background: linear-gradient(165deg, #fff 0%, rgba(239, 246, 255, 0.55) 100%) !important;
+  border-color: rgba(37, 99, 235, 0.18) !important;
+}
+
+/* —— Güven şeridi —— */
 .sebs-trust-avatars {
   display: flex;
   align-items: center;
@@ -111,9 +260,8 @@ html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.border.borde
   border-radius: 999px;
   border: 2px solid #fff;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
   margin-left: -0.65rem;
-  background: #e2e8f0;
 }
 
 .sebs-trust-avatars img:first-child {
@@ -130,19 +278,6 @@ html:not([data-theme="dark"]) body.landing-site-body a.rounded-full.border.borde
   color: #94a3b8;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee {
-  border-block-color: var(--sebs-premium-line);
-  background: rgba(255, 255, 255, 0.45);
-}
-
-html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::before {
-  background: linear-gradient(to right, var(--sebs-premium-bg) 0%, rgba(248, 247, 244, 0) 100%);
-}
-
-html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::after {
-  background: linear-gradient(to left, var(--sebs-premium-bg) 0%, rgba(248, 247, 244, 0) 100%);
-}
-
 .sebs-partner-wordmark {
   font-family: var(--sebs-font-display);
   font-style: italic;
@@ -151,61 +286,34 @@ html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::after 
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #94a3b8;
-  opacity: 0.85;
-  transition: color 0.25s ease, opacity 0.25s ease;
   white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .sebs-partner-wordmark:hover {
   color: #64748b;
-  opacity: 1;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body .logo-strip-group img {
-  filter: grayscale(0.35);
-  opacity: 0.7;
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee {
+  border-block-color: var(--sebs-premium-line);
+  background: rgba(255, 255, 255, 0.42);
 }
 
-/* —— Kartlar ve bölümler —— */
-html:not([data-theme="dark"]) body.landing-site-body .shadow-card,
-html:not([data-theme="dark"]) body.landing-site-body .sebs-feature-card,
-html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card,
-html:not([data-theme="dark"]) body.landing-site-body .hero-mock-panel {
-  border-color: var(--sebs-premium-line) !important;
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 18px 40px -24px rgba(15, 23, 42, 0.14) !important;
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::before {
+  background: linear-gradient(to right, var(--sebs-premium-bg), transparent);
 }
 
-html:not([data-theme="dark"]) body.landing-site-body section.border-t.border-slate-100.bg-white,
-html:not([data-theme="dark"]) body.landing-site-body footer.border-t {
-  background: #ffffff !important;
+html:not([data-theme="dark"]) body.landing-site-body .logo-strip-marquee::after {
+  background: linear-gradient(to left, var(--sebs-premium-bg), transparent);
 }
 
-html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/80,
-html:not([data-theme="dark"]) body.landing-site-body section.bg-slate-50\/70,
-html:not([data-theme="dark"]) body.landing-site-body #sebs-yolu-roadmap {
-  background: rgba(255, 255, 255, 0.55) !important;
-}
-
-html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-card:first-child {
-  border-color: rgba(37, 99, 235, 0.22) !important;
-  background: linear-gradient(165deg, #ffffff 0%, rgba(239, 246, 255, 0.65) 100%) !important;
-}
-
-html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-label {
-  background: rgba(10, 15, 28, 0.06);
-  color: var(--sebs-premium-ink);
-}
-
-/* —— Bireysel rozet —— */
 .sebs-individual-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   border-radius: 999px;
   border: 1px solid var(--sebs-premium-line);
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.8);
   padding: 0.35rem 0.85rem 0.35rem 0.5rem;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -214,12 +322,82 @@ html:not([data-theme="dark"]) body.landing-site-body .sebs-persona-label {
   color: var(--sebs-premium-muted);
 }
 
-.sebs-individual-pill span.dot {
+.sebs-individual-pill .dot {
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 999px;
   background: #22c55e;
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+/* Login / signup eski koyu hero kapat */
+html:not([data-theme="dark"]) body.landing-site-body .login-section,
+html:not([data-theme="dark"]) body.landing-site-body .signup-section,
+html:not([data-theme="dark"]) body.landing-site-body .auth-section {
+  background: var(--sebs-premium-bg) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .login-section .hero-section,
+html:not([data-theme="dark"]) body.landing-site-body .signup-section .hero-section {
+  min-height: auto !important;
+  padding-top: 6rem !important;
+  background: transparent !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .text-slate-900 {
+  color: var(--sebs-premium-ink) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .text-slate-800 {
+  color: #1a2236 !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .text-slate-600,
+html:not([data-theme="dark"]) body.landing-site-body .text-slate-500 {
+  color: var(--sebs-premium-muted) !important;
+}
+
+/* Blog — blog-premium.css sonrası override */
+html:not([data-theme="dark"]) body.landing-site-body.blog-premium-page {
+  background:
+    radial-gradient(ellipse 75% 50% at 50% -18%, var(--sebs-premium-glow), transparent 55%),
+    linear-gradient(180deg, var(--sebs-premium-bg-soft) 0%, var(--sebs-premium-bg) 45%, #fff 100%) !important;
+  color: var(--sebs-premium-ink) !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body.blog-premium-page h1,
+html:not([data-theme="dark"]) body.landing-site-body.blog-premium-page .blog-hero h1 {
+  font-family: var(--sebs-font-display) !important;
+  font-weight: 400 !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body.blog-premium-page .blog-card,
+html:not([data-theme="dark"]) body.landing-site-body.blog-premium-page article {
+  border-color: var(--sebs-premium-line) !important;
+}
+
+/* Yasal sayfalar */
+html:not([data-theme="dark"]) body.sebs-stripe-site.legal-page {
+  background: var(--sebs-premium-bg) !important;
+}
+
+/* Eski styles.css koyu hero katmanini kapat */
+html:not([data-theme="dark"]) body.landing-site-body .hero-section:not(.modules-hero):not(.hero-mesh) {
+  min-height: auto !important;
+  padding: 6rem 1.5rem 3rem !important;
+  background: transparent !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .hero-section:not(.modules-hero):not(.hero-mesh)::before,
+html:not([data-theme="dark"]) body.landing-site-body .hero-section:not(.modules-hero):not(.hero-mesh)::after {
+  display: none !important;
+}
+
+html:not([data-theme="dark"]) body.landing-site-body .hero-section:not(.modules-hero) .hero-title,
+html:not([data-theme="dark"]) body.landing-site-body .hero-section:not(.modules-hero) h1 {
+  color: var(--sebs-premium-ink) !important;
+  -webkit-text-fill-color: var(--sebs-premium-ink) !important;
+  text-shadow: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
