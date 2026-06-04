@@ -1,5 +1,5 @@
 /**
- * Eğitim alanları keşif bölümü — yatay accordion
+ * Eğitim alanları keşif bölümü — yatay accordion (premium açık panel)
  */
 (function () {
   'use strict';
@@ -9,26 +9,81 @@
     return el ? el.textContent.trim() : 'Alan';
   }
 
-  function layoutItemBody(item) {
-    var body = item.querySelector('.sebs-cat-hacc-body');
-    if (!body || body.querySelector('.sebs-cat-hacc-inner')) return;
+  function buildPremiumBody(item, body) {
+    if (body.querySelector('.sebs-cat-hacc-premium')) return;
 
     var btn = body.querySelector('.sebs-acc-btn');
     var panel = body.querySelector('.sebs-acc-panel');
-    var preview = body.querySelector('.sebs-cat-hacc-preview');
+    if (!btn) return;
+
+    var title = getItemTitle(item);
+    var summaryEl = btn.querySelector('[data-sebs-summary]');
+    var summary = summaryEl ? summaryEl.textContent.trim() : '';
+    var descEl = panel ? panel.querySelector('p') : null;
+    var desc = descEl ? descEl.textContent.trim() : '';
+    var cta = panel ? panel.querySelector('.sebs-acc-cta') : null;
+    var icon = btn.querySelector('.sebs-acc-icon');
+
+    btn.classList.add('sebs-cat-hacc-sr-btn');
 
     var inner = document.createElement('div');
     inner.className = 'sebs-cat-hacc-inner';
 
-    var main = document.createElement('div');
-    main.className = 'sebs-cat-hacc-main';
-    if (btn) main.appendChild(btn);
-    if (panel) main.appendChild(panel);
+    var premium = document.createElement('div');
+    premium.className = 'sebs-cat-hacc-premium';
 
-    inner.appendChild(main);
-    if (preview) inner.appendChild(preview);
+    var headline = document.createElement('div');
+    headline.className = 'sebs-cat-hacc-headline';
+
+    if (icon) {
+      var iconWrap = document.createElement('div');
+      iconWrap.className = 'sebs-cat-hacc-headline-icon';
+      iconWrap.appendChild(icon.cloneNode(true));
+      headline.appendChild(iconWrap);
+    }
+
+    var textWrap = document.createElement('div');
+    textWrap.className = 'sebs-cat-hacc-headline-text';
+    var h3 = document.createElement('h3');
+    h3.textContent = title;
+    textWrap.appendChild(h3);
+    if (summary) {
+      var sum = document.createElement('p');
+      sum.className = 'sebs-cat-hacc-summary';
+      sum.textContent = summary;
+      textWrap.appendChild(sum);
+    }
+    headline.appendChild(textWrap);
+    premium.appendChild(headline);
+
+    if (desc) {
+      var descP = document.createElement('p');
+      descP.className = 'sebs-cat-hacc-desc';
+      descP.textContent = desc;
+      premium.appendChild(descP);
+    }
+
+    var actions = document.createElement('div');
+    actions.className = 'sebs-cat-hacc-actions';
+    if (cta) {
+      var link = document.createElement('a');
+      link.className = 'sebs-cat-hacc-link';
+      link.href = cta.getAttribute('href') || '#';
+      link.setAttribute('aria-label', cta.getAttribute('aria-label') || title + ' modüllerine git');
+      link.innerHTML = 'Modülleri keşfet <span class="sebs-cat-hacc-link-arrow" aria-hidden="true">→</span>';
+      actions.appendChild(link);
+    }
+    premium.appendChild(actions);
+
+    var footline = document.createElement('div');
+    footline.className = 'sebs-cat-hacc-footline';
+    footline.innerHTML = '<span class="sebs-cat-hacc-footline-rule" aria-hidden="true"></span><em>' + title + '</em>';
+    premium.appendChild(footline);
+
+    inner.appendChild(premium);
 
     body.textContent = '';
+    body.appendChild(btn);
     body.appendChild(inner);
   }
 
@@ -43,10 +98,7 @@
     stack.classList.remove('sebs-accordion-stack');
 
     var previewRoot = exploreRoot.querySelector('#modules-explore-preview');
-    if (previewRoot) {
-      previewRoot.classList.add('sebs-cat-hacc-preview-source');
-      previewRoot.setAttribute('aria-hidden', 'true');
-    }
+    if (previewRoot) previewRoot.remove();
 
     var items = stack.querySelectorAll('.sebs-accordion-item');
     items.forEach(function (item, index) {
@@ -85,20 +137,7 @@
         body.className = 'sebs-cat-hacc-body';
         while (block.firstChild) body.appendChild(block.firstChild);
         block.replaceWith(body);
-
-        var panelId = item.getAttribute('data-sebs-panel');
-        if (previewRoot && panelId !== null) {
-          var slide = previewRoot.querySelector('[data-sebs-visual="' + panelId + '"]');
-          if (slide) {
-            slide.classList.remove('is-active');
-            var previewWrap = document.createElement('div');
-            previewWrap.className = 'sebs-cat-hacc-preview';
-            previewWrap.appendChild(slide);
-            body.appendChild(previewWrap);
-          }
-        }
-
-        layoutItemBody(item);
+        buildPremiumBody(item, body);
       }
     });
 
