@@ -1,5 +1,5 @@
 /**
- * Eğitim alanları — yatay accordion (esmanurertay.com referansı, SEBS koyu tema)
+ * Eğitim alanları — yatay accordion (SEBS koyu tema)
  */
 body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion-wrap {
   margin-top: 2.5rem;
@@ -12,13 +12,13 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
   display: flex !important;
   flex-direction: row;
   align-items: stretch;
-  gap: 0.45rem;
+  gap: 0.5rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: clamp(380px, 48vh, 480px);
+  height: clamp(340px, 44vh, 420px);
   padding: 0;
-  margin: 0;
+  margin: 0 !important;
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -39,14 +39,14 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scroll
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
-  flex: 1 0 4.25rem;
-  min-width: 4.25rem;
-  max-width: 4.25rem;
+  flex: 1 0 4rem;
+  min-width: 4rem;
+  max-width: 4rem;
   height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 1.35rem;
+  border-radius: 1.25rem;
   border: 1px solid var(--sh-border, rgba(255, 255, 255, 0.1));
   background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
@@ -62,9 +62,9 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
-  flex: 6 1 22rem;
-  min-width: min(22rem, 72vw);
-  max-width: min(32rem, 78vw);
+  flex: 10 1 36rem;
+  min-width: min(36rem, 88vw);
+  max-width: min(48rem, 92vw);
   background: linear-gradient(165deg, rgba(18, 18, 38, 0.98), rgba(8, 8, 22, 0.99));
   border-color: rgba(124, 58, 237, 0.35);
   box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.55);
@@ -72,17 +72,16 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
   position: absolute;
-  top: 1rem;
-  left: 0.85rem;
+  top: 0.9rem;
+  left: 0.75rem;
   z-index: 2;
   font-family: var(--sh-font, Inter, system-ui, sans-serif);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1;
   color: rgba(161, 161, 170, 0.55);
   pointer-events: none;
-  transition: color 0.35s ease;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
@@ -92,11 +91,10 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-ca
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
   display: none;
   position: absolute;
-  top: 1rem;
-  right: 0.85rem;
+  top: 0.9rem;
+  right: 0.75rem;
   z-index: 2;
-  align-items: center;
-  padding: 0.2rem 0.55rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   font-size: 0.5625rem;
@@ -116,11 +114,9 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 0.35rem 1rem;
-  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  padding: 2.25rem 0.25rem 0.85rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
   color: rgba(161, 161, 170, 0.75);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -137,12 +133,10 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
   flex: 1;
   min-height: 0;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  padding: 2.75rem 1.15rem 1rem;
+  padding: 2.5rem 0.9rem 0.85rem;
   overflow: hidden;
   transition: opacity 0.35s ease 0.05s, visibility 0.35s;
 }
@@ -151,79 +145,134 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-ca
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  overflow-y: auto;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(9.5rem, 11.5rem);
+  gap: 0.85rem;
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  justify-content: flex-start;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn {
+  display: flex !important;
+  align-items: flex-start !important;
   width: 100%;
   text-align: left;
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
-  padding: 0 0 0.65rem !important;
+  padding: 0 !important;
   margin: 0;
   cursor: pointer;
-  gap: 0.75rem;
+  gap: 0.65rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn.tab-btn.active {
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .sebs-acc-chevron {
-  display: none;
+  display: none !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .font-semibold,
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn .block.font-semibold {
-  font-size: 1.0625rem !important;
+  font-size: 1rem !important;
+  line-height: 1.3 !important;
   color: var(--app-color-heading, #fafafa) !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-btn [data-sebs-summary] {
   color: var(--app-color-muted, #71717a) !important;
   font-size: 0.75rem !important;
+  line-height: 1.4 !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-icon {
-  width: 2.25rem !important;
-  height: 2.25rem !important;
-  border-radius: 0.65rem !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  border-radius: 0.6rem !important;
   flex-shrink: 0;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-panel {
+/* saas-landing dikey panel kurallarını geçersiz kıl */
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-acc-panel,
+body.modules-page #modulesCategoriesExplore .modules-category-tabs .sebs-cat-hacc-item.is-open .sebs-acc-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 0.5rem !important;
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
-  margin: 0 0 0.75rem;
+  margin: 0 !important;
+  min-height: 0 !important;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-panel p {
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-acc-panel p {
+  flex: none !important;
+  align-self: stretch !important;
+  margin: 0 !important;
   font-size: 0.8125rem !important;
-  line-height: 1.55;
+  line-height: 1.55 !important;
   color: var(--app-color-body, #a1a1aa) !important;
-  margin: 0 0 0.65rem;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body .sebs-acc-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+body.modules-page #modulesCategoriesExplore .modules-category-tabs .sebs-cat-hacc-item.is-open .sebs-acc-panel .sebs-acc-cta,
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-acc-panel .sebs-acc-cta {
+  margin: 0 !important;
+  align-self: flex-start !important;
+  flex-shrink: 0;
   width: 2rem;
   height: 2rem;
   border-radius: 999px;
-  font-size: 1rem;
+  border: 1px solid var(--sh-border) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #c4b5fd !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview {
-  flex-shrink: 0;
-  margin-top: auto;
-  border-radius: 0.85rem;
+  margin: 0 !important;
+  min-width: 0;
+  border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid var(--sh-border);
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px),
+    rgba(255, 255, 255, 0.03);
+  background-size: 18px 18px, 18px 18px, auto;
+  display: flex;
+  align-items: stretch;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .sebs-visual-slide {
+  display: block !important;
+  width: 100%;
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .sebs-visual-card {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
   border: none !important;
+  padding: 0.75rem !important;
+  height: 100%;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-slate-900,
@@ -242,38 +291,36 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .bg-slate-100
   background: rgba(255, 255, 255, 0.06) !important;
 }
 
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .bg-blue-100 {
+  background: rgba(59, 130, 246, 0.2) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-blue-800 {
+  color: #93c5fd !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .bg-emerald-100 {
+  background: rgba(16, 185, 129, 0.18) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview .text-emerald-800 {
+  color: #6ee7b7 !important;
+}
+
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-foot {
-  display: none;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.65rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #67e8f9;
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-foot {
-  display: flex;
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-foot::before {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(103, 232, 249, 0.35);
+  display: none !important;
 }
 
 body.modules-page #modulesCategoriesExplore #modules-explore-preview.sebs-cat-hacc-preview-source {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: -1px !important;
 }
 
 body.modules-page #modulesCategoriesExplore #modules-explore-heading {
@@ -281,18 +328,32 @@ body.modules-page #modulesCategoriesExplore #modules-explore-heading {
   font-size: clamp(1.375rem, 2.5vw, 1.75rem) !important;
 }
 
-body.modules-page #modulesCategoriesExplore .text-slate-600 {
+body.modules-page #modulesCategoriesExplore .text-slate-600,
+body.modules-page #modulesCategoriesExplore .text-slate-900 {
   color: var(--app-color-body) !important;
-  font-size: var(--app-text-base, 0.9375rem) !important;
+}
+
+body.modules-page #modulesCategoriesExplore .text-slate-900#modules-explore-heading {
+  color: var(--app-color-heading) !important;
+}
+
+@media (max-width: 900px) {
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-inner {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-preview {
+    max-height: 9rem;
+    overflow-y: auto;
+  }
 }
 
 @media (max-width: 767px) {
   body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
     flex-direction: column;
     height: auto;
-    max-height: none;
     overflow-x: hidden;
-    scroll-snap-type: none;
   }
 
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
@@ -300,20 +361,20 @@ body.modules-page #modulesCategoriesExplore .text-slate-600 {
     min-width: 100%;
     max-width: 100%;
     height: auto;
-    min-height: 3.75rem;
+    min-height: 3.5rem;
   }
 
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
     min-width: 100%;
     max-width: 100%;
-    min-height: 20rem;
+    min-height: 18rem;
   }
 
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
     writing-mode: horizontal-tb;
     transform: none;
     justify-content: flex-start;
-    padding: 0 1rem 0.85rem;
+    padding: 0 1rem 0.75rem;
     text-align: left;
   }
 }
