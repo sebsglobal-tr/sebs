@@ -1401,45 +1401,355 @@
   color: var(--sh-text-muted);
 }
 
-.sh-profile-mock {
-  padding: 1.5rem;
-  border-radius: var(--sh-radius-xl);
-  border: 1px solid var(--sh-border);
-  background: var(--sh-glass);
-  box-shadow: var(--sh-shadow-glow);
+/* CodeSignal tarzı beceri hub (Big Five) */
+.sh-skillhub {
+  position: relative;
+  min-height: 22rem;
+  margin: 0 auto;
+  max-width: 28rem;
 }
 
-.sh-radar {
-  width: 100%;
-  max-width: 220px;
-  margin: 0 auto 1.25rem;
-  aspect-ratio: 1;
+@media (min-width: 960px) {
+  .sh-skillhub {
+    min-height: 26rem;
+    max-width: none;
+  }
 }
 
-.sh-profile-mock__scores {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--sh-text-muted);
+.sh-skillhub__orbit {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 16.5rem;
+  height: 16.5rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-.sh-profile-mock__scores strong {
+.sh-skillhub__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px dashed rgba(56, 189, 248, 0.35);
+}
+
+.sh-skillhub__ring--inner {
+  inset: 1.35rem;
+  border-style: dotted;
+  border-color: rgba(250, 204, 21, 0.35);
+}
+
+.sh-skillhub__avatar {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: 2;
+  width: 6.5rem;
+  height: 6.5rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #38bdf8, #a78bfa);
+  box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.55);
+}
+
+.sh-skillhub__avatar img {
   display: block;
-  color: var(--sh-text);
-  font-weight: 700;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
 }
 
-.sh-profile-mock__ready {
-  margin-top: 1rem;
-  text-align: center;
-  padding: 0.6rem;
-  border-radius: var(--sh-radius-pill);
-  background: rgba(124, 58, 237, 0.2);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  font-size: 0.75rem;
+.sh-skillhub__card {
+  position: absolute;
+  z-index: 3;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 4px 6px -2px rgba(15, 23, 42, 0.06),
+    0 18px 40px -16px rgba(15, 23, 42, 0.18);
+  color: #0f172a;
+}
+
+.sh-skillhub__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sh-skillhub__card-head strong {
+  font-size: 0.8125rem;
   font-weight: 700;
-  color: #e9d5ff;
+  color: #0f172a;
+}
+
+.sh-skillhub__badge {
+  flex-shrink: 0;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.sh-skillhub__badge--ok {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.sh-skillhub__badge--warn {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.sh-skillhub__card--profile {
+  left: 0;
+  top: 18%;
+  width: min(11.5rem, 46%);
+}
+
+.sh-skillhub__score {
+  margin: 0;
+  font-size: 2.125rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.sh-skillhub__bar {
+  height: 6px;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.sh-skillhub__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+}
+
+.sh-skillhub__bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.2rem 0 0.5rem;
+  font-size: 0.625rem;
+  color: #64748b;
+}
+
+.sh-skillhub__link {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.sh-skillhub__skills {
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.sh-skillhub__skills > span {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.sh-skillhub__skills ul {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sh-skillhub__skills li {
+  width: 1.65rem;
+  height: 1.65rem;
+  display: grid;
+  place-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  font-size: 0.625rem;
+  font-weight: 800;
+  font-style: normal;
+  color: #fff;
+}
+
+.sh-skillhub__skills li:nth-child(1) {
+  background: #14b8a6;
+}
+
+.sh-skillhub__skills li:nth-child(2) {
+  background: #8b5cf6;
+}
+
+.sh-skillhub__skills li:nth-child(3) {
+  background: #f59e0b;
+}
+
+.sh-skillhub__skills li:nth-child(4) {
+  background: #22c55e;
+}
+
+.sh-skillhub__card--insight {
+  right: 0;
+  top: 4%;
+  width: min(10.5rem, 42%);
+}
+
+.sh-skillhub__wave {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 2.25rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.sh-skillhub__wave span {
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #38bdf8, #818cf8);
+  animation: sh-skillhub-wave 1.2s ease-in-out infinite;
+}
+
+.sh-skillhub__wave span:nth-child(odd) {
+  height: 55%;
+}
+
+.sh-skillhub__wave span:nth-child(even) {
+  height: 85%;
+}
+
+.sh-skillhub__wave span:nth-child(3n) {
+  height: 40%;
+}
+
+.sh-skillhub__wave span:nth-child(1) {
+  animation-delay: 0s;
+}
+.sh-skillhub__wave span:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.sh-skillhub__wave span:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.sh-skillhub__wave span:nth-child(4) {
+  animation-delay: 0.24s;
+}
+.sh-skillhub__wave span:nth-child(5) {
+  animation-delay: 0.32s;
+}
+
+@keyframes sh-skillhub-wave {
+  0%,
+  100% {
+    transform: scaleY(0.65);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.sh-skillhub__play {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.sh-skillhub__play-btn {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: #2563eb;
+  position: relative;
+}
+
+.sh-skillhub__play-btn::after {
+  content: "";
+  position: absolute;
+  left: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 4px solid transparent;
+  border-left: 6px solid #fff;
+  border-right: 0;
+}
+
+.sh-skillhub__card--plan {
+  right: 0;
+  bottom: 6%;
+  width: min(11.25rem, 48%);
+}
+
+.sh-skillhub__plan {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.sh-skillhub__plan li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.sh-skillhub__plan li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  background: #fff;
+}
+
+.sh-skillhub__plan li.is-done::before {
+  border-color: #2563eb;
+  background: #2563eb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' d='M2 6l3 3 5-6'/%3E%3C/svg%3E") center / 0.55rem no-repeat;
+}
+
+@media (max-width: 520px) {
+  .sh-skillhub {
+    min-height: 24rem;
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+
+  .sh-skillhub__card--profile {
+    width: 52%;
+  }
+
+  .sh-skillhub__card--insight {
+    width: 48%;
+  }
+
+  .sh-skillhub__card--plan {
+    width: 54%;
+  }
 }
 
 /* —— Pricing —— */
@@ -1683,6 +1993,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sh-skillhub__wave span {
+    animation: none;
+  }
+
   .sh-marquee__row--a,
   .sh-marquee__row--b,
   .sh-partners-marquee__track {
