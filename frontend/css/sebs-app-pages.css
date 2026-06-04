@@ -32,9 +32,42 @@
   height: auto;
 }
 
-.sebs-app-page a {
+.sebs-app-page a:not(.sh-btn):not(.sh-brand):not(.sh-nav__link):not(.sh-nav__login):not(.sebs-acc-cta):not(.btn-simulation):not(.btn-primary):not(.btn-secondary) {
   color: inherit;
   text-decoration: none;
+}
+
+/* Buton metinleri — inherit / gradient text-fill çakışmasını kapat */
+.sebs-app-page a.sh-btn,
+.sebs-app-page button.sh-btn,
+.sebs-app-page a.btn-simulation,
+.sebs-app-page a.btn-primary,
+.sebs-app-page a.btn-secondary,
+.sebs-app-page a.sebs-acc-cta,
+.sebs-app-page button.sebs-acc-cta {
+  -webkit-text-fill-color: currentColor;
+}
+
+.sebs-app-page a.sh-btn--primary,
+.sebs-app-page button.sh-btn--primary {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.sebs-app-page a.sh-btn--ghost,
+.sebs-app-page button.sh-btn--ghost {
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
+}
+
+.sebs-app-page a.sh-nav__login {
+  color: var(--sh-text-muted) !important;
+  -webkit-text-fill-color: var(--sh-text-muted) !important;
+}
+
+.sebs-app-page a.sh-nav__login:hover {
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
 }
 
 .sebs-app-page :focus-visible {
@@ -418,12 +451,15 @@ body.sebs-app-page .sebs-accordion-item.is-open .sebs-acc-panel {
 body.sebs-app-page .sebs-acc-cta {
   border: 1px solid var(--sh-border);
   background: var(--sh-glass);
-  color: var(--sh-text);
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
 }
 
 body.sebs-app-page .sebs-acc-cta:hover {
   border-color: rgba(124, 58, 237, 0.5);
   background: var(--sh-glass-hover);
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
 }
 
 /* —— Simülasyonlar keşif bölümü (simulations-page.css beyaz tema override) —— */
@@ -469,13 +505,31 @@ body.sebs-app-page #modulesCategoriesExplore .sebs-acc-icon {
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-panel,
 body.sebs-app-page #simulationsCategoriesExplore .sebs-accordion-item.is-open .sebs-acc-panel,
-body.sebs-app-page #simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-panel {
+body.sebs-app-page #simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-panel,
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-panel,
+body.sebs-app-page #modulesCategoriesExplore .sebs-accordion-item.is-open .sebs-acc-panel {
   background: rgba(11, 11, 31, 0.55) !important;
   border-top-color: var(--sh-border) !important;
 }
 
-body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-panel p {
+body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-panel p,
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-panel p {
   color: var(--app-color-body) !important;
+}
+
+body.sebs-app-page #modulesCategoriesExplore .modules-category-tabs.sebs-accordion-stack,
+body.sebs-app-page #modulesCategoriesExplore .simulations-category-tabs.sebs-accordion-stack {
+  background: var(--sh-glass) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-btn {
+  color: var(--app-color-heading) !important;
+}
+
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-btn .font-semibold,
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-btn .block.font-semibold {
+  color: var(--app-color-heading) !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example {
@@ -491,16 +545,20 @@ body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example span {
   color: var(--app-color-body) !important;
 }
 
-body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta {
+body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta,
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-cta {
   background: rgba(124, 58, 237, 0.12) !important;
   border-color: var(--sh-border) !important;
   color: #c4b5fd !important;
+  -webkit-text-fill-color: #c4b5fd !important;
 }
 
-body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta:hover {
+body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta:hover,
+body.sebs-app-page #modulesCategoriesExplore .sebs-acc-cta:hover {
   background: var(--sh-violet) !important;
   border-color: var(--sh-violet) !important;
   color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-chevron {
@@ -607,7 +665,23 @@ body.sebs-app-page .simulation-card-detailed .status-badge.available {
 body.sebs-app-page .btn-simulation {
   background: var(--sh-gradient-btn) !important;
   color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
   border: none;
+}
+
+body.sebs-app-page .btn-simulation:hover {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+body.sebs-app-page .btn-simulation.disabled,
+body.sebs-app-page .btn-simulation:disabled {
+  background: var(--sh-glass) !important;
+  color: var(--sh-text-subtle) !important;
+  -webkit-text-fill-color: var(--sh-text-subtle) !important;
+  border: 1px solid var(--sh-border) !important;
+  opacity: 0.85;
+  cursor: not-allowed;
 }
 
 body.sebs-app-page .sebs-roadmap-flow {
@@ -1299,6 +1373,26 @@ body.sebs-app-page .text-slate-500 {
 
 body.sebs-app-page .text-slate-400 {
   color: var(--app-color-muted) !important;
+}
+
+/* modules.css / simulations-page.css açık tema kalıntıları */
+body.sebs-app-page.modules-page .section-title,
+body.sebs-app-page.simulations-page .section-title,
+body.landing-site-body.modules-page.sebs-app-page .section-title {
+  color: var(--app-color-heading) !important;
+  text-shadow: none !important;
+}
+
+body.sebs-app-page.modules-page .section-subtitle,
+body.sebs-app-page.simulations-page .section-subtitle,
+body.landing-site-body.modules-page.sebs-app-page .section-subtitle {
+  color: var(--app-color-body) !important;
+  text-shadow: none !important;
+}
+
+body.sebs-app-page.modules-page .category-title,
+body.sebs-app-page.simulations-page .category-title {
+  color: var(--app-color-heading) !important;
 }
 
 body.sebs-app-page .text-blue-600,
