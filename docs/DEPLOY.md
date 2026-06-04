@@ -1,72 +1,85 @@
 # SEBS — Deploy rehberi
 
-Canlı site **www.sebsglobal.com** → **Vercel** (statik `frontend/`).  
-API ayrıysa → **Render** (`render.yaml`, Docker).
+| Ortam | Nerede | Nasıl |
+|--------|--------|--------|
+| **www.sebsglobal.com** | Vercel | `frontend/` (repo kökünde `vercel.json`) |
+| **API** (varsa) | Render | `render.yaml` + Docker |
 
-## Sorun: Git push sonrası site güncellenmiyor
+---
 
-GitHub `main` güncel olsa bile Vercel bağlantısı kopmuş olabilir. Kontrol:
+## Deploy edemiyorum — hızlı teşhis
 
-1. [Vercel Dashboard](https://vercel.com/dashboard) → proje → **Deployments**
-2. Son commit `82d6407…` (veya güncel SHA) listede yoksa otomatik deploy çalışmıyor.
+### 1) GitHub Actions kırmızı / “secret eksik”
 
-### Hızlı çözüm (panel)
+`.github/workflows/deploy-vercel.yml` şu üç secret olmadan **bilerek fail** eder:
 
-1. Vercel → proje → **Deployments** → **Redeploy** → Production
-2. Veya **Settings → Git** → repoyu yeniden bağla (`sebsglobal-tr/sebs`, branch `main`)
-3. **Settings → General**:
-   - Root Directory: *(boş — repo kökü)*
-   - Output Directory: `frontend` *(vercel.json ile aynı)*
-   - Framework Preset: Other
+| Secret | Nereden |
+|--------|---------|
+| `VERCEL_TOKEN` | [Vercel → Account → Tokens](https://vercel.com/account/tokens) → Create |
+| `VERCEL_ORG_ID` | Vercel → Team/Account **Settings → General → Team ID** (kişisel hesap: User ID) |
+| `VERCEL_PROJECT_ID` | Proje → **Settings → General → Project ID** |
 
-### Kalıcı çözüm (GitHub Actions)
+**GitHub:** `sebsglobal-tr/sebs` → **Settings → Secrets and variables → Actions** → her birini ekle.
 
-Repo kökünde `.github/workflows/deploy-vercel.yml` var. Şu secret’ları ekleyin:
+Sonra: **Actions → Deploy frontend (Vercel) → Run workflow** veya `git push origin main`.
 
-**GitHub** → repo → **Settings → Secrets and variables → Actions → New repository secret**
+### 2) Actions yok / secret eklemeden deploy (en kolay)
 
-| Secret | Nereden alınır |
-|--------|----------------|
-| `VERCEL_TOKEN` | Vercel → Account Settings → Tokens → Create |
-| `VERCEL_ORG_ID` | Vercel → Project → Settings → General → **Project ID** yanında veya `vercel link` çıktısı |
-| `VERCEL_PROJECT_ID` | Aynı sayfadaki **Project ID** |
+Vercel’in Git bağlantısı çalışıyorsa push yeterli; çalışmıyorsa:
 
-`VERCEL_ORG_ID` için: Vercel → Team/Account Settings → General → **Team ID** (kişisel hesapta User ID).
+1. [vercel.com/dashboard](https://vercel.com/dashboard) → **sebs** (veya sebsglobal) projesi  
+2. **Deployments** → son deployment → **⋯ → Redeploy** → **Production**  
+3. **Settings → Git** → `sebsglobal-tr/sebs`, branch **`main`** bağlı mı kontrol et  
+4. **Settings → General:**
+   - Root Directory: *(boş)*
+   - Output Directory: **`frontend`**
+   - Framework: **Other**
+   - Build Command: `VERCEL=1 npm run build` *(veya `vercel.json` ile aynı)*
 
-Secret’lar eklendikten sonra:
-
-```bash
-git push origin main
-```
-
-veya GitHub → **Actions** → **Deploy frontend (Vercel)** → **Run workflow**.
-
-### Yerelden tek seferlik deploy
+### 3) Bilgisayardan deploy (`npx vercel` takılıyor / login yok)
 
 ```bash
-npx vercel login
-npx vercel link    # mevcut sebsglobal projesini seçin
-npx vercel deploy --prod
+cd /path/to/sebs
+npx vercel@39 login          # tarayıcı açılır
+npx vercel@39 link           # mevcut production projesini seç
+chmod +x scripts/deploy-vercel.sh
+./scripts/deploy-vercel.sh
 ```
+
+Token ile (CI ile aynı):
+
+```bash
+export VERCEL_TOKEN="..."
+export VERCEL_ORG_ID="..."
+export VERCEL_PROJECT_ID="..."
+npx vercel@39 deploy --prod --yes --token "$VERCEL_TOKEN"
+```
+
+---
+
+## Push sonrası doğrulama
+
+```bash
+curl -sI https://www.sebsglobal.com/ | head -3
+curl -s https://www.sebsglobal.com/ | grep -o 'sebs-home.css?v=[0-9]*' | head -1
+curl -sI https://www.sebsglobal.com/images/career-mountain-bg.jpg | head -3
+```
+
+Güncel ana sayfada `career-mountain-bg.jpg` ve `sebs-home.js?v=19` (veya daha yeni) görünmeli.
+
+---
 
 ## Render (API)
 
 `render.yaml` → Docker, `healthCheckPath: /api/health`.
 
-Deploy başarısızsa **Logs** içinde şunlara bakın:
-
-- `CRITICAL: JWT_SECRET` / `DATABASE_URL` / `CORS_ORIGIN` / `SUPABASE_JWT_SECRET`
-- `SUPABASE_URL` ile `DATABASE_URL` farklı projelere işaret ediyor mu
+Log’da sık hatalar: `JWT_SECRET`, `DATABASE_URL`, `CORS_ORIGIN`, `SUPABASE_JWT_SECRET`, Supabase URL ile DB URL uyumsuzluğu.
 
 Geçici (önerilmez): `SKIP_ENV_VALIDATION=1`
 
-## Doğrulama
+---
 
-Deploy sonrası:
+## Not
 
-```bash
-curl -sI https://www.sebsglobal.com/ | head -3
-curl -sI https://www.sebsglobal.com/images/career-mountain-path.png | head -3
-```
-
-Ana sayfa HTML içinde `career-mountain-path.png` ve güncel `sebs-home.css?v=…` görünmeli.
+- `git push` yaptığınız halde site eskiyse: Vercel **Deployments** listesinde son commit SHA’nız var mı bakın. Yoksa Git bağlantısı veya Actions secret’ları sorunludur.  
+- Yerel `git status` temiz ve `origin/main` ile aynıysa önce değişiklikleri commit + push edin.
