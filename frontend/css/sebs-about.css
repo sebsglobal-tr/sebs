@@ -770,8 +770,106 @@ body.about-page .sh-marquee {
 
 @media (min-width: 48rem) {
   .about-product-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .about-product-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .about-product-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* —— Kimler için —— */
+.about-audiences {
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+}
+
+.about-audiences__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 48rem) {
+  .about-audiences__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-audience-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 1.5rem;
+  border-radius: var(--sh-radius-xl);
+  border: 1px solid var(--sh-border-soft);
+  background: linear-gradient(165deg, #ffffff 0%, var(--sh-bg-mid) 100%);
+  box-shadow: var(--sh-shadow-card);
+}
+
+.about-audience-card--employer {
+  background: linear-gradient(165deg, rgba(99, 102, 241, 0.06) 0%, #ffffff 55%);
+  border-color: rgba(99, 102, 241, 0.18);
+}
+
+.about-audience-card__tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sh-violet);
+  margin-bottom: 0.5rem;
+}
+
+.about-audience-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--sh-text);
+}
+
+.about-audience-card > p {
+  margin: 0.65rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--sh-text-muted);
+  flex: 1;
+}
+
+.about-audience-card__list {
+  margin: 1rem 0 1.35rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.about-audience-card__list li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sh-text-muted);
+}
+
+.about-audience-card__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--sh-blue);
+}
+
+.about-audience-card .sh-btn {
+  align-self: flex-start;
+  margin-top: auto;
 }
 
 .about-product-card {
@@ -816,6 +914,15 @@ body.about-page .sh-marquee {
   max-width: 4.5rem;
   max-height: 4.5rem;
   object-fit: contain;
+}
+
+.about-product-card__media--contain {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+.about-product-card__media--contain img {
+  object-fit: contain;
+  object-position: center bottom;
 }
 
 .about-product-card__body {
