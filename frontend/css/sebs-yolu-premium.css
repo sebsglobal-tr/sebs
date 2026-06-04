@@ -1198,16 +1198,16 @@ html[data-theme="dark"] body.landing-site-body #simulations .text-slate-900 {
 }
 
 /* Nasıl çalışır / Kimler için — açık gri şeritleri kaldır */
-html[data-theme="dark"] body.landing-site-body #how {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #how {
   background: linear-gradient(180deg, #111827 0%, #0f172a 100%) !important;
   border-top-color: rgba(51, 65, 85, 0.55) !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #how h2.text-slate-900 {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #how h2.text-slate-900 {
   color: #f8fafc !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #how .text-slate-600 {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #how .text-slate-600 {
   color: #94a3b8 !important;
 }
 
@@ -1228,12 +1228,12 @@ html[data-theme="dark"] body.landing-site-body #audience .text-slate-600 {
  * CTA: bg-white + html[data-theme=dark] genel h2→beyaz = görünmez metin.
  * Bölümü ve iç kartı koyu yüzeye çekiyoruz.
  */
-html[data-theme="dark"] body.landing-site-body #cta {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta {
   background: linear-gradient(180deg, #111827 0%, #0b1220 100%) !important;
   border-top-color: rgba(51, 65, 85, 0.55) !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #cta .relative.overflow-hidden.rounded-3xl.border {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta .relative.overflow-hidden.rounded-3xl.border {
   background: linear-gradient(145deg, #111827 0%, #1e293b 48%, rgba(30, 58, 138, 0.22) 100%) !important;
   border-color: rgba(71, 85, 105, 0.55) !important;
   box-shadow:
@@ -1241,22 +1241,22 @@ html[data-theme="dark"] body.landing-site-body #cta .relative.overflow-hidden.ro
     0 24px 48px -24px rgb(2 6 23 / 0.55) !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #cta #cta-heading,
-html[data-theme="dark"] body.landing-site-body #cta h2.text-slate-900 {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta #cta-heading,
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta h2.text-slate-900 {
   color: #f8fafc !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #cta p.text-lg.text-slate-600 {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta p.text-lg.text-slate-600 {
   color: #cbd5e1 !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #cta a.border-slate-200.bg-white {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta a.border-slate-200.bg-white {
   background: #1e293b !important;
   border-color: rgba(71, 85, 105, 0.65) !important;
   color: #e2e8f0 !important;
 }
 
-html[data-theme="dark"] body.landing-site-body #cta a.border-slate-200.bg-white:hover {
+html[data-theme="dark"] body.landing-site-body:not(.sebs-home-page) #cta a.border-slate-200.bg-white:hover {
   background: #334155 !important;
   border-color: rgba(96, 165, 250, 0.38) !important;
 }

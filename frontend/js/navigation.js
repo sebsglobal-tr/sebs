@@ -39,6 +39,10 @@
 
     function ensurePremiumExperienceAssets() {
         try {
+            /* Yeni ana sayfa (sebs-home) kendi CSS’ini kullanır; eski landing premium kuralları çakışır */
+            if (document.body && document.body.classList.contains('sebs-home-page')) {
+                return;
+            }
             if (!document.querySelector('link[data-sebs-premium="css"]')) {
                 var link = document.createElement('link');
                 link.rel = 'stylesheet';
