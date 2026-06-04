@@ -509,18 +509,34 @@
 
 /* —— Hero —— */
 .sh-hero {
-  padding: clamp(3rem, 8vw, 5rem) 0 clamp(4rem, 10vw, 6rem);
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3.5rem, 8vw, 5.5rem);
+  overflow: visible;
 }
 
 .sh-hero__grid {
   display: grid;
-  gap: 3rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 3rem);
   align-items: center;
 }
 
-.sh-hero__copy {
+.sh-hero__grid > * {
   min-width: 0;
-  max-width: 36rem;
+}
+
+.sh-hero__copy {
+  width: 100%;
+  max-width: 34rem;
+  overflow: visible;
+}
+
+.sh-hero__copy .sh-h1 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.sh-hero__copy .sh-lead {
+  max-width: 32rem;
 }
 
 /* Hero grid: sebs-design-system.css (64rem+) */
@@ -529,21 +545,34 @@
 .sh-hero-flow {
   position: relative;
   width: 100%;
-  min-height: 17.5rem;
+  min-width: 0;
+  min-height: 16rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sh-hero-flow.sh-reveal {
+  transform: translateY(12px);
+}
+
+.sh-hero-flow.sh-reveal.is-visible {
+  transform: translateY(0);
 }
 
 .sh-hero-flow__viewport {
   position: relative;
   overflow: hidden;
-  min-height: 17.5rem;
-  padding: 2.25rem 0;
+  width: 100%;
+  min-height: 16rem;
+  padding: 2rem 0;
   border-radius: var(--sh-radius-xl);
   border: 1px solid var(--sh-border-soft);
   background:
     radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124, 58, 237, 0.14), transparent 65%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.15) 100%);
   box-shadow: var(--sh-shadow-card), 0 0 60px -20px var(--sh-glow-violet);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
 .sh-hero-flow__viewport::before,
@@ -794,9 +823,15 @@
 
 .sh-hero-flow__hub {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
   z-index: 8;
+  width: 9.75rem;
+  height: 10.75rem;
+  margin: 0;
+  transform: translate(-50%, -50%);
   display: grid;
+  grid-template: 1fr / 1fr;
   place-items: center;
   pointer-events: none;
 }
@@ -830,13 +865,15 @@
     0 28px 48px -16px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(124, 58, 237, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  transform: perspective(900px) rotateY(-12deg) rotateX(8deg);
-  transform-origin: center center;
-  transition: transform 0.45s var(--sh-ease);
+  transform: none;
+  transition: box-shadow 0.35s var(--sh-ease);
 }
 
 .sh-hero-flow:hover .sh-hero-flow__cube {
-  transform: perspective(900px) rotateY(-8deg) rotateX(5deg) translateY(-2px);
+  box-shadow:
+    0 32px 52px -14px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(124, 58, 237, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .sh-hero-flow__logo {

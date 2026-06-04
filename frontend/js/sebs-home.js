@@ -40,19 +40,19 @@
 
     function updateCards() {
       var hubRect = hub.getBoundingClientRect();
-      var centerX = hubRect.left + hubRect.width / 2;
-      var gateHalf = hubRect.width * 0.46;
+      var hubLeft = hubRect.left;
+      var hubRight = hubRect.right;
+      var edgePad = 6;
 
       cards.forEach(function (card) {
         var rect = card.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
         var result = card.getAttribute('data-result');
 
         card.classList.remove('is-pending', 'is-processing', 'is-positive', 'is-negative');
 
-        if (cx > centerX + gateHalf) {
+        if (rect.left > hubRight - edgePad) {
           card.classList.add('is-pending');
-        } else if (cx < centerX - gateHalf) {
+        } else if (rect.right < hubLeft + edgePad) {
           if (result === 'negative') {
             card.classList.add('is-negative');
           } else {
@@ -97,24 +97,9 @@
 
     initHeroFlowEvaluation(true);
 
-    var flowCube = document.querySelector('.sh-hero-flow__cube');
-    var flowWrap = document.querySelector('.sh-hero-flow');
-    if (flowCube && flowWrap) {
-      window.addEventListener(
-        'mousemove',
-        function (ev) {
-          var rect = flowWrap.getBoundingClientRect();
-          var cx = (ev.clientX - rect.left) / rect.width - 0.5;
-          var cy = (ev.clientY - rect.top) / rect.height - 0.5;
-          flowCube.style.transform =
-            'perspective(900px) rotateY(' +
-            (-12 + cx * 8) +
-            'deg) rotateX(' +
-            (8 + cy * 5) +
-            'deg)';
-        },
-        { passive: true }
-      );
+    var heroFlow = document.querySelector('.sh-hero-flow.sh-reveal');
+    if (heroFlow) {
+      heroFlow.classList.add('is-visible');
     }
   } else {
     document.querySelectorAll('.sh-reveal').forEach(function (el) {
