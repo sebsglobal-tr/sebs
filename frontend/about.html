@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=4" />
   <link rel="stylesheet" href="/css/sebs-home.css?v=39" />
   <link rel="stylesheet" href="/css/sebs-app-pages.css?v=13" />
-  <link rel="stylesheet" href="/css/sebs-about.css?v=3" />
+  <link rel="stylesheet" href="/css/sebs-about.css?v=4" />
   <style id="sebs-app-critical">
     html, body.sebs-app-page { background: #f6f7fb !important; color: #475569 !important; }
     body.sebs-app-page main { background: transparent !important; }
@@ -221,41 +221,78 @@
     <div class="about-body">
       <div class="sh-container">
 
-        <section class="about-section sh-reveal" id="hikaye" aria-labelledby="about-story-title">
-          <header class="about-section-head">
-            <h2 class="about-section__title" id="about-story-title">Hikâyemiz</h2>
-            <p class="about-section__intro">Ezberle geçilen eğitim modelinden, sahada ölçülebilir yetkinliğe geçiş için kurulduk.</p>
+        <section class="about-story sh-reveal" id="hikaye" aria-labelledby="about-story-title">
+          <header class="about-story__head">
+            <p class="about-story__kicker">Sivas · Cumhuriyet Teknokent</p>
+            <h2 class="about-story__title" id="about-story-title">Hikâyemiz</h2>
+            <p class="about-story__lead">Eğitimde "izledim, geçtim" modelini bırakıp "uyguladım, skorladım" modeline geçmek için yola çıktık.</p>
           </header>
-          <div class="about-story__grid">
-            <div class="about-story-panel">
-              <p>Siber güvenlik eğitiminde çoğu zaman video izlenir, sınav geçilir; sahada ne yapılacağı belirsiz kalır. SEBS Global ekibi; bulut, siber güvenlik ve ürün geliştirme sahasında gördüğü bu boşluğu kapatmak için modüler anlatımı, senaryo tabanlı simülasyonları ve ölçülebilir ilerlemeyi tek platformda birleştirdi.</p>
-              <p>Bugün <strong>SEBS Yolu</strong> ile bireyler hedef role göre yönlenir; kurumlar cohort ve raporlama ile yetkinliği aynı dilde takip eder. Platform sürekli büyüyen bir müfredatla gelişir; satın alınan paket, ödeme anında erişilebilir içerikle sınırlıdır — yol haritası şeffaftır.</p>
-            </div>
-            <figure class="about-story-visual">
-              <img src="/images/sebs-atlas.png?v=6" alt="Atlas — SEBS öğrenme rehberi" width="480" height="400" loading="lazy" decoding="async" />
-              <span class="about-story-visual__badge">Atlas — öğrenme rehberi</span>
-            </figure>
-          </div>
-        </section>
 
-        <section class="about-showcase sh-reveal" aria-label="Platform görselleri">
-          <div class="about-showcase__grid">
-            <figure class="about-showcase__tile about-showcase__tile--wide">
-              <img src="/images/career-mountain-bg.jpg" alt="SEBS Yolu — kariyer aşamaları görseli" width="800" height="480" loading="lazy" decoding="async" />
-              <figcaption>SEBS Yolu · İlk Adım, Yükseliş, Zirve</figcaption>
-            </figure>
-            <figure class="about-showcase__tile">
-              <img src="/images/sebs-yolu-katalog.svg" alt="Paket kataloğu" width="400" height="320" loading="lazy" decoding="async" />
-              <figcaption>Paket ve modül kataloğu</figcaption>
-            </figure>
-            <figure class="about-showcase__tile">
-              <img src="/images/sebs-atlas.png?v=6" alt="Atlas öğrenme rehberi" width="400" height="320" loading="lazy" decoding="async" />
-              <figcaption>Atlas rehber arayüzü</figcaption>
-            </figure>
-            <figure class="about-showcase__tile about-showcase__tile--mark">
-              <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="120" height="120" loading="lazy" decoding="async" />
-              <figcaption>SEBS Global markası</figcaption>
-            </figure>
+          <div class="about-story__layout">
+            <div class="about-story__media" role="img" aria-label="Teknokent, SEBS Yolu ve Atlas görselleri">
+              <div class="about-story__composition">
+                <figure class="about-story__frame about-story__frame--mountain">
+                  <img src="/images/career-mountain-bg.jpg" alt="" width="640" height="420" loading="lazy" decoding="async" />
+                  <figcaption class="about-story__path">
+                    <span>İlk Adım</span>
+                    <span>Yükseliş</span>
+                    <span>Zirve</span>
+                  </figcaption>
+                </figure>
+                <figure class="about-story__frame about-story__frame--atlas">
+                  <img src="/images/sebs-atlas.png?v=6" alt="Atlas öğrenme rehberi arayüzü" width="280" height="300" loading="lazy" decoding="async" />
+                  <figcaption>Atlas</figcaption>
+                </figure>
+                <div class="about-story__teknokent">
+                  <img src="/images/partners/cumhuriyet-teknokent-logo.png" alt="Cumhuriyet Teknokent" width="160" height="34" loading="lazy" decoding="async" />
+                  <span>AR-GE merkezi · Sivas</span>
+                </div>
+                <div class="about-story__mark" aria-hidden="true">
+                  <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="48" height="48" decoding="async" />
+                </div>
+              </div>
+            </div>
+
+            <div class="about-story__content">
+              <ol class="about-story__timeline">
+                <li class="about-story__chapter">
+                  <span class="about-story__step">01</span>
+                  <div>
+                    <h3>Gördüğümüz boşluk</h3>
+                    <p>Siber güvenlik eğitiminde çoğu zaman video izlenir, sınav geçilir; SOC veya pentest sahasında hangi kararı vereceğiniz belirsiz kalır. Saha ekiplerimiz bu ayrımı her gün görüyordu.</p>
+                  </div>
+                </li>
+                <li class="about-story__chapter">
+                  <span class="about-story__step">02</span>
+                  <div>
+                    <h3>Teknokent'te kuruluş</h3>
+                    <p>Sivas Cumhuriyet Üniversitesi Teknokent bünyesinde modüler ders anlatımı, senaryo simülasyonları ve rubrik tabanlı puanlamayı tek platformda birleştirdik. Amaç: öğrenilenin sahada ölçülebilir olması.</p>
+                  </div>
+                </li>
+                <li class="about-story__chapter">
+                  <span class="about-story__step">03</span>
+                  <div>
+                    <h3>Bugünkü platform</h3>
+                    <p><strong>SEBS Yolu</strong> ile bireyler hedef role göre ilerler; kurumlar cohort ve raporlarla aynı dili konuşur. Paket kapsamı ve fiyat ödeme öncesi açıktır; erişim onay sonrası hesaba tanımlanır.</p>
+                  </div>
+                </li>
+              </ol>
+
+              <ul class="about-story__facts" aria-label="Özet bilgiler">
+                <li>
+                  <strong>2020+</strong>
+                  <span>Platform geliştirme</span>
+                </li>
+                <li>
+                  <strong>50+</strong>
+                  <span>Modül ve simülasyon</span>
+                </li>
+                <li>
+                  <strong>4 aşama</strong>
+                  <span>SEBS Yolu paketleri</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
