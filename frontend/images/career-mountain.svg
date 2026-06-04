@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 400" aria-hidden="true">
+  <defs>
+    <linearGradient id="sh-mt-sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1240"/>
+      <stop offset="45%" stop-color="#120a24"/>
+      <stop offset="100%" stop-color="#06040e"/>
+    </linearGradient>
+    <linearGradient id="sh-mt-far" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a1228" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0d0816" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="sh-mt-rock" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4a3568"/>
+      <stop offset="35%" stop-color="#2d2044"/>
+      <stop offset="70%" stop-color="#1a1228"/>
+      <stop offset="100%" stop-color="#0c0814"/>
+    </linearGradient>
+    <linearGradient id="sh-mt-ridge-lit" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b4f8f" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#2a1d42" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sh-mt-trail-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="45%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <radialGradient id="sh-mt-summit-glow" cx="72%" cy="18%" r="28%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.35"/>
+      <stop offset="55%" stop-color="#6d28d9" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sh-mt-start-glow" cx="12%" cy="88%" r="22%">
+      <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="sh-mt-glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="sh-mt-flag-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="sh-mt-text-shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.65"/>
+    </filter>
+  </defs>
+  <rect width="560" height="400" fill="url(#sh-mt-sky)"/>
+  <ellipse cx="400" cy="95" rx="200" ry="110" fill="url(#sh-mt-summit-glow)"/>
+  <ellipse cx="70" cy="340" rx="120" ry="80" fill="url(#sh-mt-start-glow)"/>
+  <path fill="url(#sh-mt-far)" opacity="0.7" d="M0 280 L40 255 L95 268 L150 240 L210 258 L270 230 L330 248 L400 220 L460 238 L520 215 L560 228 L560 400 L0 400 Z"/>
+  <path fill="url(#sh-mt-far)" opacity="0.45" d="M0 310 L80 285 L160 300 L240 275 L320 292 L400 265 L480 280 L560 260 L560 400 L0 400 Z"/>
+  <path fill="url(#sh-mt-rock)" d="M248 400 L288 310 L318 248 L348 188 L378 138 L402 98 L418 78 L432 92 L452 128 L472 178 L492 238 L512 298 L532 360 L560 400 Z"/>
+  <path fill="url(#sh-mt-ridge-lit)" d="M318 248 L348 188 L378 138 L402 98 L418 78 L432 92 L452 128 L418 200 L378 280 L318 248 Z"/>
+  <path fill="none" stroke="rgba(167,139,250,0.18)" stroke-width="1.5" d="M302 320 L338 250 L368 195 L398 145 L418 98"/>
+  <path fill="none" stroke="rgba(103,232,249,0.06)" stroke-width="8" stroke-linecap="round" d="M58 352 C 92 322, 138 288, 178 258 C 218 228, 252 205, 288 182 C 318 162, 348 138, 378 112 C 392 98, 404 88, 412 80"/>
+  <path id="shMountainTrailBase" fill="none" stroke="rgba(34,211,238,0.22)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M58 352 C 92 322, 138 288, 178 258 C 218 228, 252 205, 288 182 C 318 162, 348 138, 378 112 C 392 98, 404 88, 412 80"/>
+  <path id="shMountainTrail" fill="none" stroke="url(#sh-mt-trail-grad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#sh-mt-glow)" d="M58 352 C 92 322, 138 288, 178 258 C 218 228, 252 205, 288 182 C 318 162, 348 138, 378 112 C 392 98, 404 88, 412 80"/>
+  <g class="sh-mountain-viz__flag" transform="translate(408, 68)" filter="url(#sh-mt-flag-glow)">
+    <line x1="0" y1="0" x2="0" y2="26" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M0 0 L16 5.5 L0 11 Z" fill="#f8fafc"/>
+  </g>
+  <circle class="sh-mountain-viz__marker is-start" data-path-step="0" cx="58" cy="352" r="16"/>
+  <circle class="sh-mountain-viz__marker" data-path-step="1" cx="288" cy="182" r="9"/>
+  <circle class="sh-mountain-viz__marker" data-path-step="2" cx="348" cy="138" r="9"/>
+  <circle class="sh-mountain-viz__runner" r="5"/>
+  <g class="sh-mountain-viz__labels" filter="url(#sh-mt-text-shadow)">
+    <text class="sh-mountain-viz__label" data-path-step="0" x="58" y="382" text-anchor="middle">0lk Ad1m</text>
+    <text class="sh-mountain-viz__label" data-path-step="1" x="308" y="186">Yükseli_</text>
+    <text class="sh-mountain-viz__label" data-path-step="2" x="368" y="142">Zirve</text>
+  </g>
+</svg>

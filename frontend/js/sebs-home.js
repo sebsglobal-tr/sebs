@@ -36,12 +36,13 @@
     if (!viz || !trail || !cards.length) return;
 
     var len = trail.getTotalLength();
-    var progresses = [0.2, 0.55, 0.92];
+    var progresses = [0.06, 0.58, 0.82];
     trail.style.strokeDasharray = len;
     trail.style.strokeDashoffset = len;
     viz.style.setProperty('--sh-mt-len', String(len));
 
     var markers = viz.querySelectorAll('.sh-mountain-viz__marker');
+    var labels = viz.querySelectorAll('.sh-mountain-viz__label');
     var runner = viz.querySelector('.sh-mountain-viz__runner');
     var autoPlay = !reduced;
     var paused = false;
@@ -51,6 +52,10 @@
       markers.forEach(function (m) {
         var s = parseInt(m.getAttribute('data-path-step'), 10);
         m.classList.toggle('is-active', s === step);
+      });
+      labels.forEach(function (l) {
+        var s = parseInt(l.getAttribute('data-path-step'), 10);
+        l.classList.toggle('is-active', s === step);
       });
     }
 
@@ -92,10 +97,8 @@
     } else {
       viz.classList.remove('is-animated');
       setProgress(1);
-      activateStep(2, false);
-      markers.forEach(function (m, i) {
-        m.classList.toggle('is-active', i === 2);
-      });
+      activateStep(2, true);
+      viz.classList.remove('is-paused');
     }
 
     cards.forEach(function (card) {

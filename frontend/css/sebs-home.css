@@ -1179,7 +1179,7 @@
   box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.2), 0 20px 40px -24px rgba(34, 211, 238, 0.3);
 }
 
-/* Dağ paneli: referans görsel + üstte animasyonlu yol */
+/* Dağ paneli — referans SVG illüstrasyon */
 .sh-mountain-viz {
   position: relative;
   width: 100%;
@@ -1187,31 +1187,60 @@
   overflow: hidden;
   border: 1px solid var(--sh-border-soft);
   box-shadow: var(--sh-shadow-card), 0 0 48px -16px var(--sh-glow-violet);
-  aspect-ratio: 488 / 449;
-  background: #080612;
+  aspect-ratio: 560 / 400;
+  background: #06040e;
 }
 
-.sh-mountain-viz__art {
+.sh-mountain-viz__svg {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
-.sh-mountain-viz__overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  mix-blend-mode: screen;
+.sh-mountain-viz__far {
+  fill: url(#sh-mt-far);
+  opacity: 0.7;
 }
 
-.sh-mountain-viz__trail-dim {
+.sh-mountain-viz__far--back {
+  opacity: 0.45;
+}
+
+.sh-mountain-viz__peak {
+  fill: url(#sh-mt-rock);
+}
+
+.sh-mountain-viz__peak-face {
+  fill: url(#sh-mt-ridge-lit);
+}
+
+.sh-mountain-viz__mist {
+  fill: rgba(88, 28, 135, 0.14);
+}
+
+.sh-mountain-viz__ridge-line,
+.sh-mountain-viz__peak-crag {
   fill: none;
-  stroke: rgba(103, 232, 249, 0.08);
-  stroke-width: 6;
+  stroke: rgba(167, 139, 250, 0.18);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.sh-mountain-viz__peak-crag {
+  stroke: rgba(139, 92, 246, 0.22);
+}
+
+.sh-mountain-viz__trail-halo {
+  fill: none;
+  stroke: rgba(103, 232, 249, 0.06);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.sh-mountain-viz__trail-base {
+  fill: none;
+  stroke: rgba(34, 211, 238, 0.28);
+  stroke-width: 4.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1219,17 +1248,10 @@
 .sh-mountain-viz__trail {
   fill: none;
   stroke: url(#sh-mt-trail-grad);
-  stroke-width: 5;
+  stroke-width: 3.5;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: url(#sh-mt-glow);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.sh-mountain-viz.is-animated .sh-mountain-viz__trail,
-.sh-mountain-viz.is-paused .sh-mountain-viz__trail {
-  opacity: 1;
 }
 
 .sh-mountain-viz:not(.is-animated) .sh-mountain-viz__trail {
@@ -1253,24 +1275,49 @@
   }
 }
 
+.sh-mountain-viz__flag {
+  filter: url(#sh-mt-flag-glow);
+}
+
 .sh-mountain-viz__marker {
-  fill: rgba(148, 163, 184, 0.35);
-  stroke: rgba(255, 255, 255, 0.25);
+  fill: rgba(148, 163, 184, 0.28);
+  stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 2;
-  opacity: 0;
-  transition: opacity 0.35s ease, fill 0.35s ease, r 0.35s ease;
+  opacity: 0.85;
+  transition: fill 0.35s ease, stroke 0.35s ease, filter 0.35s ease;
 }
 
+.sh-mountain-viz__marker.is-start,
 .sh-mountain-viz__marker.is-active {
-  opacity: 1;
-  fill: rgba(103, 232, 249, 0.55);
+  fill: rgba(224, 242, 254, 0.95);
   stroke: #e0f2fe;
-  filter: drop-shadow(0 0 10px rgba(103, 232, 249, 0.9));
+  opacity: 1;
+  filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.95));
 }
 
-.sh-mountain-viz__marker[data-path-step="0"].is-active {
-  r: 16;
-  fill: rgba(224, 242, 254, 0.95);
+.sh-mountain-viz__marker.is-start {
+  fill: #f0f9ff;
+}
+
+.sh-mountain-viz__marker.is-active:not(.is-start) {
+  fill: rgba(103, 232, 249, 0.65);
+}
+
+.sh-mountain-viz__label {
+  fill: rgba(255, 255, 255, 0.72);
+  font-family: var(--sh-font, "Inter", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: fill 0.35s ease;
+}
+
+.sh-mountain-viz__label.is-active {
+  fill: #f8fafc;
+}
+
+.sh-mountain-viz__label[data-path-step="0"] {
+  fill: rgba(255, 255, 255, 0.95);
 }
 
 .sh-mountain-viz__runner {
@@ -1281,7 +1328,7 @@
 
 .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
   opacity: 1;
-  offset-path: path("M 48 398 C 92 358, 148 312, 198 268 C 248 224, 292 182, 332 142 C 358 112, 378 92, 398 78");
+  offset-path: path("M58 352 C 92 322, 138 288, 178 258 C 218 228, 252 205, 288 182 C 318 162, 348 138, 378 112 C 392 98, 404 88, 412 80");
   offset-distance: 0%;
   animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
 }
