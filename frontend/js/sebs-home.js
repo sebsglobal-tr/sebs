@@ -37,12 +37,15 @@
     if (!viz || !trail || !cards.length) return;
 
     var pathD = trail.getAttribute('d');
-    var pathSteps = [0.04, 0.48, 0.74];
-    var labelOffsets = [
-      { dx: 0, dy: 74, anchor: 'middle' },
-      { dx: 44, dy: 6, anchor: 'start' },
-      { dx: 44, dy: 6, anchor: 'start' }
+    var pathSteps = [0.02, 0.5, 0.74];
+    var labelLayout = [
+      { along: 2, perp: 44, anchor: 'middle' },
+      { along: 12, perp: -32, anchor: 'start' },
+      { along: 10, perp: -28, anchor: 'start' }
     ];
+    var animId = null;
+    var animStart = 0;
+    var animDuration = 6000;
 
     function syncPathAnchors() {
       var lenNow = trail.getTotalLength();
@@ -61,9 +64,16 @@
           markers[i].setAttribute('cy', pt.y);
         }
         if (labels[i]) {
-          labels[i].setAttribute('x', pt.x + labelOffsets[i].dx);
-          labels[i].setAttribute('y', pt.y + labelOffsets[i].dy);
-          labels[i].setAttribute('text-anchor', labelOffsets[i].anchor);
+          var ahead = trail.getPointAtLength(Math.min(lenNow - 1, lenNow * ratio + 18));
+          var dx = ahead.x - pt.x;
+          var dy = ahead.y - pt.y;
+          var mag = Math.hypot(dx, dy) || 1;
+          var nx = -dy / mag;
+          var ny = dx / mag;
+          var layout = labelLayout[i];
+          labels[i].setAttribute('x', pt.x + (dx / mag) * layout.along + nx * layout.perp);
+          labels[i].setAttribute('y', pt.y + (dy / mag) * layout.along + ny * layout.perp);
+          labels[i].setAttribute('text-anchor', layout.anchor);
         }
       });
 
@@ -124,26 +134,38 @@
       }
     }
 
+    function runProgressLoop(ts) {
+      if (!animStart) animStart = ts;
+      if (!paused) {
+        var p = ((ts - animStart) % animDuration) / animDuration;
+        setProgress(p);
+        var step = p < progresses[1] ? 0 : p < progresses[2] ? 1 : 2;
+        if (step !== activeStep) {
+          activeStep = step;
+          setMarkers(step);
+          cards.forEach(function (c) {
+            c.classList.toggle('is-active', parseInt(c.getAttribute('data-path-step'), 10) === step);
+          });
+        }
+      }
+      animId = requestAnimationFrame(runProgressLoop);
+    }
+
     function resumeAnimation() {
       paused = false;
       viz.classList.remove('is-paused');
-      if (trailPulse) {
-        trailPulse.style.strokeDashoffset = String(len);
-      }
-      if (runner) {
-        runner.style.offsetDistance = '';
-        runner.style.opacity = '';
-      }
     }
 
     if (autoPlay) {
       viz.classList.add('is-animated');
       activateStep(0, false);
+      animId = requestAnimationFrame(runProgressLoop);
     } else {
       viz.classList.remove('is-animated');
       if (trailPulse) {
         trailPulse.style.strokeDashoffset = '0';
       }
+      setProgress(1);
       activateStep(2, false);
     }
 
