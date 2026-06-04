@@ -83,14 +83,9 @@
 .sh-container {
   width: 100%;
   max-width: var(--sh-container);
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .sh-container {
-    padding: 0 1.5rem;
-  }
+  margin-inline: auto;
+  padding-inline: var(--sebs-gutter, 1.25rem);
+  min-width: 0;
 }
 
 .sh-eyebrow {
@@ -523,12 +518,7 @@
   align-items: center;
 }
 
-@media (min-width: 1024px) {
-  .sh-hero__grid {
-    grid-template-columns: 1fr 1.05fr;
-    gap: 3.5rem;
-  }
-}
+/* Hero grid: sebs-design-system.css (64rem+) */
 
 /* Hero — Adaface tarzı sonsuz akan performans kartları + merkez SEBS küpü */
 .sh-hero-flow {

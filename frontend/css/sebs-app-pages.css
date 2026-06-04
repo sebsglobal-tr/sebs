@@ -45,18 +45,10 @@
 /* Tailwind yoksa kutu sınırları (özellikle Hakkımızda) */
 body.sebs-app-page .max-w-6xl {
   width: 100%;
-  max-width: var(--sh-container);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  body.sebs-app-page .max-w-6xl {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+  max-width: var(--sebs-container, var(--sh-container));
+  margin-inline: auto;
+  padding-inline: var(--sebs-gutter, 1.25rem);
+  min-width: 0;
 }
 
 body.sebs-app-page .mx-auto {
@@ -1350,4 +1342,85 @@ body.sebs-app-page .simulation-card-detailed .card-image-top {
 html body.sebs-app-page.landing-site-body .simulation-card-detailed:hover,
 body.landing-site-body.sebs-app-page .simulation-card-detailed:hover {
   transform: translateY(-3px) !important;
+}
+
+/* =============================================================================
+   Responsive unify — legacy genişlikleri tek container’a (72rem)
+   ============================================================================= */
+body.sebs-app-page .modules-hero .hero-content,
+body.sebs-app-page .modules-grid,
+body.sebs-app-page .module-categories,
+body.sebs-app-page .sim-hero-wrap,
+body.sebs-app-page .simulations-grid,
+body.sebs-app-page #modulesCategoriesExplore .mx-auto,
+body.sebs-app-page #simulationsCategoriesExplore .mx-auto {
+  max-width: var(--sebs-container, 72rem) !important;
+  width: 100%;
+  margin-inline: auto !important;
+}
+
+body.sebs-app-page .modules-hero,
+body.sebs-app-page .hero-section.modules-hero {
+  padding-inline: var(--sebs-gutter, 1.25rem) !important;
+  min-height: clamp(16rem, 32vh, 22rem) !important;
+}
+
+body.sebs-app-page .modules-grid,
+body.sebs-app-page .simulations-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr)) !important;
+  gap: clamp(1rem, 2.5vw, 1.5rem) !important;
+  padding-inline: var(--sebs-gutter, 1.25rem);
+  box-sizing: border-box;
+}
+
+body.sebs-app-page .sim-hero-wrap {
+  max-width: var(--sebs-container, 72rem) !important;
+  padding-inline: var(--sebs-gutter, 1.25rem);
+  box-sizing: border-box;
+}
+
+@media (max-width: 63.9375rem) {
+  body.sebs-app-page .sim-hero-wrap {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  body.sebs-app-page .sim-hero-visual {
+    min-height: 12rem;
+  }
+
+  body.sebs-app-page .modules-hero {
+    padding-top: clamp(2.5rem, 8vw, 4rem) !important;
+    padding-bottom: clamp(2rem, 6vw, 3rem) !important;
+  }
+
+  body.sebs-app-page .sh-nav__links {
+    display: none;
+  }
+}
+
+@media (min-width: 64rem) and (max-width: 74.9375rem) {
+  body.sebs-app-page .modules-grid,
+  body.sebs-app-page .simulations-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 75rem) {
+  body.sebs-app-page .modules-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+body.sebs-app-page .simulation-card-detailed,
+body.sebs-app-page .module-card-detailed {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+body.sebs-app-page .simulation-info,
+body.sebs-app-page .simulation-content {
+  min-width: 0;
 }
