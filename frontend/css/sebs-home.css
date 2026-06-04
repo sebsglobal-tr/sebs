@@ -1378,7 +1378,8 @@
 
 @media (min-width: 960px) {
   .sh-bigfive__grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(22rem, 1fr);
+    align-items: center;
   }
 }
 
@@ -1402,26 +1403,27 @@
 }
 
 /* CodeSignal tarzı beceri hub (Big Five) */
-.sh-skillhub {
-  position: relative;
-  min-height: 22rem;
-  margin: 0 auto;
-  max-width: 28rem;
+.sh-bigfive__grid > .sh-skillhub {
+  justify-self: center;
+  width: min(100%, 26.25rem);
 }
 
-@media (min-width: 960px) {
-  .sh-skillhub {
-    min-height: 26rem;
-    max-width: none;
-  }
+.sh-skillhub {
+  position: relative;
+  width: 26.25rem;
+  max-width: 100%;
+  height: 25rem;
+  margin-inline: auto;
+  flex-shrink: 0;
+  overflow: visible;
 }
 
 .sh-skillhub__orbit {
   position: absolute;
   left: 50%;
-  top: 46%;
-  width: 16.5rem;
-  height: 16.5rem;
+  top: 50%;
+  width: 15rem;
+  height: 15rem;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -1442,10 +1444,10 @@
 .sh-skillhub__avatar {
   position: absolute;
   left: 50%;
-  top: 46%;
+  top: 50%;
   z-index: 2;
-  width: 6.5rem;
-  height: 6.5rem;
+  width: 6.25rem;
+  height: 6.25rem;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   padding: 4px;
@@ -1465,6 +1467,7 @@
 .sh-skillhub__card {
   position: absolute;
   z-index: 3;
+  box-sizing: border-box;
   padding: 0.85rem 1rem;
   border-radius: 12px;
   background: #fff;
@@ -1473,6 +1476,8 @@
     0 4px 6px -2px rgba(15, 23, 42, 0.06),
     0 18px 40px -16px rgba(15, 23, 42, 0.18);
   color: #0f172a;
+  white-space: normal;
+  word-break: normal;
 }
 
 .sh-skillhub__card-head {
@@ -1510,8 +1515,8 @@
 
 .sh-skillhub__card--profile {
   left: 0;
-  top: 18%;
-  width: min(11.5rem, 46%);
+  top: 3.5rem;
+  width: 11.25rem;
 }
 
 .sh-skillhub__score {
@@ -1605,8 +1610,8 @@
 
 .sh-skillhub__card--insight {
   right: 0;
-  top: 4%;
-  width: min(10.5rem, 42%);
+  top: 0;
+  width: 10.5rem;
 }
 
 .sh-skillhub__wave {
@@ -1695,8 +1700,8 @@
 
 .sh-skillhub__card--plan {
   right: 0;
-  bottom: 6%;
-  width: min(11.25rem, 48%);
+  bottom: 0;
+  width: 11.5rem;
 }
 
 .sh-skillhub__plan {
@@ -1713,6 +1718,8 @@
   position: relative;
   padding-left: 1.35rem;
   margin-bottom: 0.35rem;
+  white-space: normal;
+  line-height: 1.35;
 }
 
 .sh-skillhub__plan li::before {
@@ -1732,23 +1739,25 @@
   background: #2563eb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' d='M2 6l3 3 5-6'/%3E%3C/svg%3E") center / 0.55rem no-repeat;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 559px) {
   .sh-skillhub {
-    min-height: 24rem;
-    transform: scale(0.92);
+    height: 23rem;
+    max-width: 100%;
+    transform: scale(0.94);
     transform-origin: top center;
   }
 
   .sh-skillhub__card--profile {
-    width: 52%;
+    width: 10.25rem;
+    top: 3rem;
   }
 
   .sh-skillhub__card--insight {
-    width: 48%;
+    width: 9.5rem;
   }
 
   .sh-skillhub__card--plan {
-    width: 54%;
+    width: 10.5rem;
   }
 }
 
