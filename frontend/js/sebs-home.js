@@ -48,15 +48,17 @@
       reveals.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
-    var mock = document.querySelector('.sh-hero__mock');
-    if (mock) {
+    var flowCube = document.querySelector('.sh-hero-flow__cube');
+    var flowWrap = document.querySelector('.sh-hero-flow');
+    if (flowCube && flowWrap) {
       window.addEventListener(
         'mousemove',
         function (ev) {
-          var x = (ev.clientX / window.innerWidth - 0.5) * 6;
-          var y = (ev.clientY / window.innerHeight - 0.5) * 4;
-          mock.style.transform =
-            'perspective(1200px) rotateY(' + (-6 + x * 0.3) + 'deg) rotateX(' + (4 + y * 0.2) + 'deg)';
+          var rect = flowWrap.getBoundingClientRect();
+          var cx = (ev.clientX - rect.left) / rect.width - 0.5;
+          var cy = (ev.clientY - rect.top) / rect.height - 0.5;
+          flowCube.style.transform =
+            'perspective(900px) rotateY(' + (-14 + cx * 10) + 'deg) rotateX(' + (10 + cy * 6) + 'deg)';
         },
         { passive: true }
       );
