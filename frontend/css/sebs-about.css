@@ -312,43 +312,14 @@ body.about-page a:hover {
   color: var(--app-color-link-hover, #1d4ed8) !important;
 }
 
-/* —— Partnerler —— */
-.about-partners {
-  padding: 2rem 0 0;
+/* —— Partnerler (sh-partners-marquee — sebs-home.css) —— */
+body.about-page .sh-partners {
+  padding: 0 0 2.5rem;
+  margin-top: 0;
 }
 
-.about-partners__label {
-  margin: 0 0 1rem;
-  text-align: center;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--sh-text-subtle);
-}
-
-.about-partners__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1.5rem, 4vw, 2.5rem);
-}
-
-.about-partners__row img {
-  height: auto;
-  max-height: 2.5rem;
-  width: auto;
-  max-width: 10rem;
-  object-fit: contain;
-  opacity: 0.85;
-  filter: grayscale(0.15);
-  transition: opacity 0.2s ease;
-}
-
-.about-partners__row img:hover {
-  opacity: 1;
-  filter: none;
+body.about-page .sh-marquee {
+  padding: 1.75rem 0;
 }
 
 /* —— Hikâye 2 sütun —— */
@@ -418,6 +389,94 @@ body.about-page a:hover {
   box-shadow: var(--sh-shadow-card);
 }
 
+/* —— Görsel vitrin (bento) —— */
+.about-showcase {
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+}
+
+.about-showcase__grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 48rem) {
+  .about-showcase__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+  }
+
+  .about-showcase__tile--wide {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .about-showcase__tile--mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, rgba(99, 102, 241, 0.08), #fff);
+  }
+}
+
+.about-showcase__tile {
+  position: relative;
+  margin: 0;
+  border-radius: var(--sh-radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--sh-border-soft);
+  box-shadow: var(--sh-shadow-card);
+  min-height: 10rem;
+  background: var(--sh-bg-mid);
+}
+
+.about-showcase__tile img {
+  width: 100%;
+  height: 100%;
+  min-height: 10rem;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s var(--sh-ease);
+}
+
+.about-showcase__tile--mark img {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  max-width: 5rem;
+  max-height: 5rem;
+  object-fit: contain;
+  padding: 2rem 1rem 1rem;
+}
+
+.about-showcase__tile:hover img {
+  transform: scale(1.03);
+}
+
+.about-showcase__tile--mark:hover img {
+  transform: scale(1.06);
+}
+
+.about-showcase__tile figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--sh-text);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.75) 70%, transparent);
+}
+
+.about-showcase__tile--mark figcaption {
+  position: static;
+  text-align: center;
+  background: transparent;
+  padding-bottom: 1.25rem;
+}
+
 /* —— Pillar kartları —— */
 .about-pillars {
   display: grid;
@@ -471,7 +530,11 @@ body.about-page a:hover {
   border-radius: 0.75rem;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(37, 99, 235, 0.08));
   border: 1px solid rgba(99, 102, 241, 0.15);
-  font-size: 1.125rem;
+  color: var(--sh-violet);
+}
+
+.about-pillar__icon svg {
+  display: block;
 }
 
 .about-pillar strong {
@@ -562,17 +625,52 @@ body.about-page a:hover {
 .about-product-card {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 1.35rem;
   border-radius: var(--sh-radius-xl);
   border: 1px solid var(--sh-border-soft);
-  background: linear-gradient(165deg, #ffffff 0%, var(--sh-bg-mid) 100%);
+  background: #fff;
   box-shadow: var(--sh-shadow-card);
+  overflow: hidden;
   transition: transform 0.25s var(--sh-ease), box-shadow 0.25s ease;
 }
 
 .about-product-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--sh-shadow-glow);
+}
+
+.about-product-card__media {
+  position: relative;
+  height: 11rem;
+  overflow: hidden;
+  background: var(--sh-bg-mid);
+  border-bottom: 1px solid var(--sh-border-soft);
+}
+
+.about-product-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-product-card__media--sim {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.1), var(--sh-bg-deep));
+}
+
+.about-product-card__media--sim img {
+  width: auto;
+  height: auto;
+  max-width: 4.5rem;
+  max-height: 4.5rem;
+  object-fit: contain;
+}
+
+.about-product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem 1.2rem 1.35rem;
 }
 
 .about-product-card__tag {
@@ -917,7 +1015,8 @@ body.about-page a:hover {
   .about-pillar:hover,
   .about-team-card:hover,
   .about-product-card:hover,
-  .about-trust-card:hover {
+  .about-trust-card:hover,
+  .about-showcase__tile:hover img {
     transform: none;
   }
 }
