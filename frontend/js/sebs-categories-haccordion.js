@@ -1,27 +1,38 @@
 /**
- * Eğitim alanları keşif bölümü — yatay accordion (premium açık panel)
+ * Kategori keşif bölümü — yatay accordion (Eğitimler + Simülasyonlar)
  */
 (function () {
   'use strict';
+
+  function getExploreOpts(exploreRoot) {
+    var isSim = exploreRoot && exploreRoot.id === 'simulationsCategoriesExplore';
+    return {
+      badgeText: isSim ? 'SENARYO' : 'ALAN',
+      ctaLabel: isSim ? 'Simülasyonları keşfet' : 'Modülleri keşfet',
+      ctaAriaSuffix: isSim ? ' simülasyonlarına git' : ' modüllerine git'
+    };
+  }
 
   function getItemTitle(item) {
     var el = item.querySelector('.sebs-acc-btn .font-semibold');
     return el ? el.textContent.trim() : 'Alan';
   }
 
-  function buildPremiumBody(item, body) {
+  function buildPremiumBody(item, body, opts) {
     if (body.querySelector('.sebs-cat-hacc-premium')) return;
 
     var btn = body.querySelector('.sebs-acc-btn');
     var panel = body.querySelector('.sebs-acc-panel');
     if (!btn) return;
 
+    opts = opts || {};
     var title = getItemTitle(item);
     var summaryEl = btn.querySelector('[data-sebs-summary]');
     var summary = summaryEl ? summaryEl.textContent.trim() : '';
     var descEl = panel ? panel.querySelector('p') : null;
     var desc = descEl ? descEl.textContent.trim() : '';
     var cta = panel ? panel.querySelector('.sebs-acc-cta') : null;
+    var exampleEl = panel ? panel.querySelector('.sim-inline-example') : null;
     var icon = btn.querySelector('.sebs-acc-icon');
 
     btn.classList.add('sebs-cat-hacc-sr-btn');
@@ -63,21 +74,34 @@
       premium.appendChild(descP);
     }
 
+    if (exampleEl) {
+      var exampleWrap = document.createElement('div');
+      exampleWrap.className = 'sebs-cat-hacc-example';
+      exampleWrap.appendChild(exampleEl.cloneNode(true));
+      premium.appendChild(exampleWrap);
+    }
+
     var actions = document.createElement('div');
     actions.className = 'sebs-cat-hacc-actions';
     if (cta) {
       var link = document.createElement('a');
       link.className = 'sebs-cat-hacc-link';
       link.href = cta.getAttribute('href') || '#';
-      link.setAttribute('aria-label', cta.getAttribute('aria-label') || title + ' modüllerine git');
-      link.innerHTML = 'Modülleri keşfet <span class="sebs-cat-hacc-link-arrow" aria-hidden="true">→</span>';
+      link.setAttribute(
+        'aria-label',
+        cta.getAttribute('aria-label') || title + (opts.ctaAriaSuffix || ' modüllerine git')
+      );
+      link.innerHTML =
+        (opts.ctaLabel || 'Modülleri keşfet') +
+        ' <span class="sebs-cat-hacc-link-arrow" aria-hidden="true">→</span>';
       actions.appendChild(link);
     }
     premium.appendChild(actions);
 
     var footline = document.createElement('div');
     footline.className = 'sebs-cat-hacc-footline';
-    footline.innerHTML = '<span class="sebs-cat-hacc-footline-rule" aria-hidden="true"></span><em>' + title + '</em>';
+    footline.innerHTML =
+      '<span class="sebs-cat-hacc-footline-rule" aria-hidden="true"></span><em>' + title + '</em>';
     premium.appendChild(footline);
 
     inner.appendChild(premium);
@@ -101,13 +125,15 @@
   function transformExploreSection(exploreRoot, activateFn) {
     if (!exploreRoot || exploreRoot.dataset.sebsHaccReady === '1') return;
 
-    var stack = exploreRoot.querySelector('.modules-category-tabs');
+    var stack = exploreRoot.querySelector('.modules-category-tabs, .simulations-category-tabs');
     if (!stack) return;
+
+    var opts = getExploreOpts(exploreRoot);
 
     stack.classList.add('sebs-cat-haccordion');
     stack.classList.remove('sebs-accordion-stack');
 
-    var previewRoot = exploreRoot.querySelector('#modules-explore-preview');
+    var previewRoot = exploreRoot.querySelector('#modules-explore-preview, #simulations-explore-preview');
     if (previewRoot) previewRoot.remove();
 
     var items = stack.querySelectorAll('.sebs-accordion-item');
@@ -119,7 +145,7 @@
 
       var badge = document.createElement('span');
       badge.className = 'sebs-cat-hacc-badge';
-      badge.textContent = 'ALAN';
+      badge.textContent = opts.badgeText || 'ALAN';
 
       var strip = document.createElement('div');
       strip.className = 'sebs-cat-hacc-strip';
@@ -154,7 +180,7 @@
         body.className = 'sebs-cat-hacc-body';
         while (block.firstChild) body.appendChild(block.firstChild);
         block.replaceWith(body);
-        buildPremiumBody(item, body);
+        buildPremiumBody(item, body, opts);
       }
     });
 

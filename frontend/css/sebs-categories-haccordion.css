@@ -1,14 +1,14 @@
 /**
- * Eğitim alanları — yatay accordion (SEBS koyu tema)
+ * Kategori keşif — yatay accordion (Eğitimler + Simülasyonlar, SEBS koyu tema)
  */
-body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion-wrap {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion-wrap {
   margin-top: 2.5rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion {
   display: flex !important;
   flex-direction: row;
   align-items: stretch;
@@ -29,26 +29,26 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
   scrollbar-color: rgba(124, 58, 237, 0.45) transparent;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scrollbar {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion::-webkit-scrollbar {
   height: 5px;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scrollbar-thumb {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion::-webkit-scrollbar-thumb {
   background: rgba(124, 58, 237, 0.45);
   border-radius: 999px;
 }
 
 /* Yükleme: JS dönüşümü bitene kadar eski metin + yarım layout görünmesin */
-body.modules-page #modulesCategoriesExplore:not([data-sebs-hacc-ready="1"]) .sebs-cat-haccordion-wrap {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore):not([data-sebs-hacc-ready="1"]) .sebs-cat-haccordion-wrap {
   visibility: hidden;
 }
 
-body.modules-page #modulesCategoriesExplore[data-sebs-hacc-ready="1"] .sebs-cat-haccordion-wrap {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore)[data-sebs-hacc-ready="1"] .sebs-cat-haccordion-wrap {
   visibility: visible;
 }
 
 /* —— Kartlar —— */
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -76,13 +76,13 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
     z-index 0s step-end 0.45s;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover {
   z-index: 2;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(124, 58, 237, 0.06) 100%);
   border-color: rgba(124, 58, 237, 0.28);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open {
   flex: 1 1 28rem;
   width: auto;
   min-width: min(22rem, 68vw);
@@ -108,7 +108,7 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
 }
 
 /* Kapalı şerit içeriği */
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-strip {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-strip {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -121,11 +121,11 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-strip {
   box-sizing: border-box;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-strip {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open .sebs-cat-hacc-strip {
   display: none;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-num {
   display: block;
   font-family: var(--sh-font, Inter, system-ui, sans-serif);
   font-size: 1.0625rem;
@@ -137,11 +137,11 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
   flex-shrink: 0;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
   display: none;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-badge {
   display: none;
   position: absolute;
   top: 1rem;
@@ -158,11 +158,11 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
   pointer-events: none;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-badge {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open .sebs-cat-hacc-badge {
   display: inline-flex;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -174,7 +174,7 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
   pointer-events: none;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -187,12 +187,12 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon {
   flex-shrink: 0;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon svg {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-icon svg {
   width: 0.85rem;
   height: 0.85rem;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-label {
   display: block;
   max-width: 100%;
   font-size: 0.625rem;
@@ -208,22 +208,22 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
   white-space: nowrap;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-num {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-num {
   color: rgba(161, 161, 170, 0.85);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
   color: rgba(228, 228, 231, 0.88);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-icon {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-icon {
   color: rgba(196, 181, 253, 0.85);
   border-color: rgba(124, 58, 237, 0.25);
   background: rgba(124, 58, 237, 0.12);
 }
 
 /* Açık panel */
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-body {
   position: absolute;
   inset: 0;
   display: none;
@@ -235,12 +235,12 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
   z-index: 2;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-body {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open .sebs-cat-hacc-body {
   display: flex;
   pointer-events: auto;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-sr-btn {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-sr-btn {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
@@ -254,14 +254,14 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-sr-btn {
   pointer-events: none !important;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-inner {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-inner {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-premium {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-premium {
   flex: 1;
   min-height: 0;
   display: flex;
@@ -270,14 +270,14 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-premium {
   gap: 0.75rem;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
   min-width: 0;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-icon {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-icon {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -290,17 +290,17 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-icon {
   color: #c4b5fd;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-icon svg {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-icon svg {
   width: 1.15rem;
   height: 1.15rem;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-text {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-text {
   min-width: 0;
   flex: 1;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-text h3 {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-text h3 {
   margin: 0 0 0.3rem;
   font-size: 1.0625rem;
   font-weight: 700;
@@ -309,14 +309,14 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-text h3 {
   color: var(--app-color-heading, #fafafa);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-summary {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-summary {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.45;
   color: var(--app-color-muted, #71717a);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-desc {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-desc {
   margin: 0;
   font-size: 0.8125rem;
   line-height: 1.55;
@@ -324,11 +324,11 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-desc {
   max-width: 40ch;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-actions {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-actions {
   margin-top: auto;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -343,24 +343,24 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link {
   box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.5);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link:hover {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-link:hover {
   transform: translateY(-1px);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline {
   display: flex;
   align-items: center;
   gap: 0.55rem;
   padding-top: 0.5rem;
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline-rule {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline-rule {
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, rgba(103, 232, 249, 0.4), transparent);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline em {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline em {
   font-style: normal;
   font-size: 0.625rem;
   font-weight: 700;
@@ -370,7 +370,7 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline em {
 }
 
 /* Açık panelde üst numara */
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open::before {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open::before {
   content: attr(data-sebs-index);
   position: absolute;
   top: 1rem;
@@ -383,27 +383,57 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open::before 
   pointer-events: none;
 }
 
-body.modules-page #modulesCategoriesExplore #modules-explore-heading {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) #modules-explore-heading,
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) #simulations-explore-heading {
   color: var(--app-color-heading) !important;
 }
 
-body.modules-page #modulesCategoriesExplore .text-slate-600 {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .text-slate-600 {
   color: var(--app-color-body) !important;
 }
 
-body.modules-page #modulesCategoriesExplore .text-slate-900#modules-explore-heading {
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .text-slate-900:is(#modules-explore-heading, #simulations-explore-heading) {
   color: var(--app-color-heading) !important;
 }
 
+/* Simülasyon — örnek ekran kutusu (açık panel içi) */
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example {
+  margin: 0;
+}
+
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  background: rgba(124, 58, 237, 0.08);
+}
+
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example strong {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+
+body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example span {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: var(--app-color-body, #a1a1aa);
+}
+
 @media (max-width: 767px) {
-  body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion {
     flex-direction: column;
     height: auto;
     overflow: visible;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item,
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item,
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open {
     flex: none;
     width: 100%;
     min-width: 100%;
@@ -411,24 +441,24 @@ body.modules-page #modulesCategoriesExplore .text-slate-900#modules-explore-head
     min-height: 3.5rem;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open {
     min-height: 15rem;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-label {
     writing-mode: horizontal-tb;
     transform: none;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-desc {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-desc {
     max-width: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item,
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body,
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-strip {
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item,
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-body,
+  body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-strip {
     transition: none !important;
   }
 }
