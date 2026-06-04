@@ -518,6 +518,11 @@
   align-items: center;
 }
 
+.sh-hero__copy {
+  min-width: 0;
+  max-width: 36rem;
+}
+
 /* Hero grid: sebs-design-system.css (64rem+) */
 
 /* Hero — Adaface tarzı sonsuz akan performans kartları + merkez SEBS küpü */
@@ -789,21 +794,19 @@
 
 .sh-hero-flow__hub {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  inset: 0;
   z-index: 8;
-  width: 9.75rem;
-  height: 10.75rem;
-  margin: 0;
-  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
   pointer-events: none;
 }
 
 /* Kartların içeriğe "girdiği" opak kapı */
 .sh-hero-flow__gate {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   z-index: 1;
+  width: 9.75rem;
+  height: 10.75rem;
   border-radius: 1.35rem;
   background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
   box-shadow:
@@ -812,18 +815,14 @@
 }
 
 .sh-hero-flow__cube {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  grid-area: 1 / 1;
   z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.2rem;
   width: 7.25rem;
   height: 7.25rem;
-  padding: 0.75rem;
+  padding: 0.85rem;
   border-radius: 1.15rem;
   background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 55%, #e2e8f0 100%);
   border: 1px solid rgba(255, 255, 255, 0.9);
@@ -831,59 +830,20 @@
     0 28px 48px -16px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(124, 58, 237, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  transform: translate(-50%, -50%) perspective(900px) rotateY(-14deg) rotateX(10deg);
+  transform: perspective(900px) rotateY(-12deg) rotateX(8deg);
   transform-origin: center center;
   transition: transform 0.45s var(--sh-ease);
 }
 
-.sh-hero-flow__cube::before {
-  content: "";
-  position: absolute;
-  right: -0.35rem;
-  top: 12%;
-  bottom: 12%;
-  width: 0.45rem;
-  border-radius: 0 0.2rem 0.2rem 0;
-  background: linear-gradient(180deg, #cbd5e1, #94a3b8);
-  transform: translateZ(-1px);
-}
-
-.sh-hero-flow__cube::after {
-  content: "";
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: -0.3rem;
-  height: 0.4rem;
-  border-radius: 0 0 0.35rem 0.35rem;
-  background: linear-gradient(90deg, #94a3b8, #cbd5e1);
-}
-
 .sh-hero-flow:hover .sh-hero-flow__cube {
-  transform: translate(-50%, -52%) perspective(900px) rotateY(-8deg) rotateX(6deg);
+  transform: perspective(900px) rotateY(-8deg) rotateX(5deg) translateY(-2px);
 }
 
 .sh-hero-flow__logo {
   display: block;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.25rem;
+  height: 3.25rem;
   object-fit: contain;
-}
-
-.sh-hero-flow__brand {
-  font-size: 1.0625rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  color: #0f172a;
-  line-height: 1;
-}
-
-.sh-hero-flow__brand-sub {
-  font-size: 0.5625rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #64748b;
 }
 
 @keyframes sh-hero-flow-scroll {
@@ -1594,10 +1554,13 @@
   }
 
   .sh-hero-flow__cube {
-    transform: translate(-50%, -50%);
+    transform: none;
   }
 
-  .sh-hero-flow:hover .sh-hero-flow__cube,
+  .sh-hero-flow:hover .sh-hero-flow__cube {
+    transform: none;
+  }
+
   .sh-step:hover,
   .sh-path-card:hover,
   .sh-price-card:hover {

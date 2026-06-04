@@ -107,10 +107,10 @@
           var cx = (ev.clientX - rect.left) / rect.width - 0.5;
           var cy = (ev.clientY - rect.top) / rect.height - 0.5;
           flowCube.style.transform =
-            'translate(-50%, -50%) perspective(900px) rotateY(' +
-            (-14 + cx * 10) +
+            'perspective(900px) rotateY(' +
+            (-12 + cx * 8) +
             'deg) rotateX(' +
-            (10 + cy * 6) +
+            (8 + cy * 5) +
             'deg)';
         },
         { passive: true }
