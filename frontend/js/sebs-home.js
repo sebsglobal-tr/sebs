@@ -37,12 +37,12 @@
     if (!viz || !trail || !cards.length) return;
 
     var pathD = trail.getAttribute('d');
-    var pathSteps = [0.02, 0.52, 0.76];
-    var labelOffsets = [
-      { dx: 0, dy: 54, anchor: 'middle' },
-      { dx: 52, dy: 14, anchor: 'start' },
-      { dx: 48, dy: 10, anchor: 'start' }
+    var stepPoints = [
+      { x: 238, y: 972, label: { dx: 0, dy: 52, anchor: 'middle' } },
+      { x: 598, y: 498, label: { dx: 0, dy: 34, anchor: 'middle' } },
+      { x: 762, y: 192, label: { dx: 0, dy: 24, anchor: 'middle' } }
     ];
+    var progresses = [0.02, 0.5, 0.76];
     var animId = null;
     var animStart = 0;
     var animDuration = 6000;
@@ -57,18 +57,34 @@
         trailPulse.setAttribute('d', pathD);
       }
 
-      pathSteps.forEach(function (ratio, i) {
-        var pt = trail.getPointAtLength(lenNow * ratio);
+      function ratioNearPoint(x, y) {
+        var best = 0;
+        var bestDist = Infinity;
+        var samples = 120;
+        for (var s = 0; s <= samples; s++) {
+          var r = s / samples;
+          var p = trail.getPointAtLength(lenNow * r);
+          var d = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
+          if (d < bestDist) {
+            bestDist = d;
+            best = r;
+          }
+        }
+        return best;
+      }
+
+      progresses = [];
+      stepPoints.forEach(function (pt, i) {
         if (markers[i]) {
           markers[i].setAttribute('cx', pt.x);
           markers[i].setAttribute('cy', pt.y);
         }
         if (labels[i]) {
-          var off = labelOffsets[i];
-          labels[i].setAttribute('x', pt.x + off.dx);
-          labels[i].setAttribute('y', pt.y + off.dy);
-          labels[i].setAttribute('text-anchor', off.anchor);
+          labels[i].setAttribute('x', pt.x + pt.label.dx);
+          labels[i].setAttribute('y', pt.y + pt.label.dy);
+          labels[i].setAttribute('text-anchor', pt.label.anchor);
         }
+        progresses[i] = ratioNearPoint(pt.x, pt.y);
       });
 
       if (runner && pathD) {
@@ -79,7 +95,6 @@
     syncPathAnchors();
 
     var len = trail.getTotalLength();
-    var progresses = pathSteps.slice();
     if (trailPulse) {
       trailPulse.style.strokeDasharray = len;
       trailPulse.style.strokeDashoffset = String(len);
