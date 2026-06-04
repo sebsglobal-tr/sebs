@@ -25,18 +25,18 @@
   <meta name="theme-color" content="#f6f7fb" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="/css/sebs-design-system.css?v=1" />
-  <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=3" />
-  <link rel="stylesheet" href="/css/sebs-home.css?v=32" />
-  <link rel="stylesheet" href="/css/legal-document.css?v=6" />
-  <link rel="stylesheet" href="/css/sebs-app-pages.css?v=10" />
+  <link rel="stylesheet" href="/css/sebs-design-system.css?v=3" />
+  <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=4" />
+  <link rel="stylesheet" href="/css/sebs-home.css?v=39" />
+  <link rel="stylesheet" href="/css/sebs-app-pages.css?v=13" />
+  <link rel="stylesheet" href="/css/sebs-about.css?v=2" />
   <style id="sebs-app-critical">
     html, body.sebs-app-page { background: #f6f7fb !important; color: #475569 !important; }
     body.sebs-app-page main { background: transparent !important; }
   </style>
 </head>
 <body id="top" class="sebs-app-page landing-site-body about-page" data-theme="light">
-    <a href="#top" class="sh-skip">İçeriğe atla</a>
+  <a href="#top" class="sh-skip">İçeriğe atla</a>
 
   <header class="sh-nav" id="shNav">
     <div class="sh-container sh-nav__inner">
@@ -47,7 +47,6 @@
           <span class="sh-brand__sub">Global</span>
         </span>
       </a>
-
       <nav class="sh-nav__links" aria-label="Ana menü">
         <a href="/modules.html" class="sh-nav__link">Eğitimler</a>
         <a href="/simulations.html" class="sh-nav__link">Simülasyonlar</a>
@@ -55,7 +54,6 @@
         <a href="/isverenler.html" class="sh-nav__link">Kurumsal</a>
         <a href="/hakkimizda" class="sh-nav__link" aria-current="page">Hakkımızda</a>
       </nav>
-
       <div class="sh-nav__actions">
         <a href="/login.html" id="loginBtn" class="sh-nav__login">Giriş</a>
         <a href="/signup.html" id="signupBtn" class="sh-btn sh-btn--primary sh-nav__cta">Yolunu keşfet</a>
@@ -95,103 +93,295 @@
       <button type="button" class="sh-btn sh-btn--ghost btn-logout">Çıkış</button>
     </div>
   </div>
+
   <main class="sebs-app-main sebs-about-main">
-    <section class="about-hero hero-mesh" aria-labelledby="about-title">
+    <section class="about-hero sh-reveal" aria-labelledby="about-title">
       <div class="sh-container">
-        <div class="about-hero__inner">
-          <p class="about-hero__eyebrow">Software Education &amp; Business Solutions</p>
-          <h1 id="about-title">Hakkımızda</h1>
-          <p class="about-hero__lead">
-            Sivas Cumhuriyet Üniversitesi Teknokent bünyesinde faaliyet gösteren şirketimiz yerli ve yabancı nitelikli akademisyen kadrosuyla hizmet vermektedir.
-          </p>
-          <p class="about-hero__lead">
-            SEBS; modüler siber güvenlik eğitimleri, senaryo tabanlı simülasyonlar ve ölçülebilir ilerlemeyi tek platformda sunar. Yapay zeka destekli yönlendirme ile hedef rolün netleşir; rubrik ve kanıt tabanlı raporlarla gelişimin görünür olur.
-          </p>
-          <p class="about-hero__links">
-            <a href="#hikaye">Hikâyemiz</a>
-            <span class="about-hero__sep" aria-hidden="true">·</span>
-            <a href="#nasil-calisir">Nasıl çalışır</a>
-            <span class="about-hero__sep" aria-hidden="true">·</span>
-            <a href="#sirket-bilgileri">Şirket bilgileri</a>
-            <span class="about-hero__sep" aria-hidden="true">·</span>
-            <a href="#yasal-belgeler">Yasal belgeler</a>
-          </p>
+        <div class="about-hero__grid">
+          <div class="about-hero__copy">
+            <p class="about-hero__eyebrow"><span class="about-hero__eyebrow-dot" aria-hidden="true"></span> Software Education &amp; Business Solutions</p>
+            <h1 id="about-title">Kanıtla öğren, <em>ölçülebilir</em> geliş.</h1>
+            <p class="about-hero__hook">Sivas Cumhuriyet Üniversitesi Teknokent bünyesinde, deneyim tabanlı siber güvenlik eğitimi.</p>
+            <p class="about-hero__lead">
+              SEBS; modüler eğitimler, senaryo tabanlı simülasyonlar ve yapay zeka destekli yönlendirme ile kariyer yönünü netleştirir, becerini ölçülebilir hale getirir.
+            </p>
+            <div class="about-hero__actions">
+              <a href="/signup.html" class="sh-btn sh-btn--primary">Ücretsiz başla</a>
+              <a href="/simulations.html" class="sh-btn sh-btn--ghost">Simülasyonları keşfet</a>
+            </div>
+            <nav class="about-hero__nav" aria-label="Sayfa içi">
+              <a href="#hikaye">Hikâyemiz</a>
+              <a href="#neden-sebs">Neden SEBS</a>
+              <a href="#nasil-calisir">Nasıl çalışır</a>
+              <a href="#ekip">Ekip</a>
+              <a href="#yasal-belgeler">Yasal</a>
+            </nav>
+          </div>
+          <div class="about-hero__viz" role="img" aria-label="Platform metrikleri ve kariyer yolculuğu görseli">
+            <div class="about-hero__viz-bg">
+              <img src="/images/career-mountain-bg.jpg" alt="" width="640" height="480" loading="eager" decoding="async" />
+            </div>
+            <div class="about-hero__metrics">
+              <div class="about-metric-card about-metric-card--accent">
+                <strong>4</strong>
+                <span>Öğrenme aşaması · SEBS Yolu</span>
+              </div>
+              <div class="about-metric-card">
+                <strong>50+</strong>
+                <span>Modül ve simülasyon içeriği</span>
+              </div>
+              <div class="about-metric-card">
+                <strong>Big Five</strong>
+                <span>Kişisel öğrenme profili</span>
+              </div>
+              <div class="about-metric-card">
+                <strong>%100</strong>
+                <span>Ölçülebilir ilerleme raporu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-stats sh-reveal" aria-label="Platform özeti">
+      <div class="sh-container">
+        <div class="about-stats__grid">
+          <div class="about-stats__item">
+            <strong>Teknokent</strong>
+            <span>Sivas · AR-GE merkezi</span>
+          </div>
+          <div class="about-stats__item">
+            <strong>Simülasyon</strong>
+            <span>Gerçek senaryo pratiği</span>
+          </div>
+          <div class="about-stats__item">
+            <strong>Iyzico</strong>
+            <span>Güvenli ödeme altyapısı</span>
+          </div>
+          <div class="about-stats__item">
+            <strong>KVKK</strong>
+            <span>Şeffaf veri işleme</span>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="about-body">
       <div class="sh-container">
-        <section class="about-section" id="hikaye" aria-labelledby="about-story-title">
-          <h2 class="about-section__title" id="about-story-title">Hikâyemiz</h2>
-          <p class="about-section__intro">SEBS, «ezberle geç» modelinden «kanıtla öğren» modeline geçiş için kuruldu.</p>
-          <div class="about-story-panel">
-            <p>Siber güvenlik eğitiminde çoğu zaman video izlenir, sınav geçilir; sahada ne yapılacağı belirsiz kalır. SEBS Global ekibi; bulut, siber güvenlik ve ürün geliştirme sahasında gördüğü bu boşluğu kapatmak için modüler anlatımı, senaryo tabanlı simülasyonları ve ölçülebilir ilerlemeyi tek platformda birleştirdi.</p>
-            <p>Bugün <strong>SEBS Yolu</strong> ile bireyler hedef role göre yönlenir; kurumlar cohort ve raporlama ile yetkinliği aynı dilde takip eder. Platform sürekli büyüyen bir müfredatla gelişir; satın alınan paket, ödeme anında erişilebilir içerikle sınırlıdır — yol haritası şeffaftır.</p>
+        <section class="about-partners sh-reveal" aria-label="İş ortaklarımız">
+          <p class="about-partners__label">İş ortaklarımız</p>
+          <div class="about-partners__row">
+            <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="iyzico" width="148" height="24" loading="lazy" decoding="async" />
+            <img src="/images/partners/cumhuriyet-teknokent-logo.png" alt="Cumhuriyet Teknokent" width="200" height="42" loading="lazy" decoding="async" />
+            <img src="/images/partners/sertifikapp-logo.png" alt="SertifikApp" width="200" height="45" loading="lazy" decoding="async" />
+            <img src="/images/partners/uyumsoft-logo.png" alt="Uyumsoft" width="168" height="38" loading="lazy" decoding="async" />
           </div>
         </section>
 
-        <section class="about-section" id="neden-sebs" aria-labelledby="about-why-title">
-          <h2 class="about-section__title" id="about-why-title">Neden SEBS?</h2>
-          <ul class="about-pillars-grid about-pillars-grid--4">
-            <li class="about-pillar-card">
+        <section class="about-section sh-reveal" id="hikaye" aria-labelledby="about-story-title">
+          <header class="about-section-head">
+            <h2 class="about-section__title" id="about-story-title">Hikâyemiz</h2>
+            <p class="about-section__intro">«Ezberle geç» modelinden «kanıtla öğren» modeline geçiş için kurulduk.</p>
+          </header>
+          <div class="about-story__grid">
+            <div class="about-story-panel">
+              <p>Siber güvenlik eğitiminde çoğu zaman video izlenir, sınav geçilir; sahada ne yapılacağı belirsiz kalır. SEBS Global ekibi; bulut, siber güvenlik ve ürün geliştirme sahasında gördüğü bu boşluğu kapatmak için modüler anlatımı, senaryo tabanlı simülasyonları ve ölçülebilir ilerlemeyi tek platformda birleştirdi.</p>
+              <p>Bugün <strong>SEBS Yolu</strong> ile bireyler hedef role göre yönlenir; kurumlar cohort ve raporlama ile yetkinliği aynı dilde takip eder. Platform sürekli büyüyen bir müfredatla gelişir; satın alınan paket, ödeme anında erişilebilir içerikle sınırlıdır — yol haritası şeffaftır.</p>
+            </div>
+            <figure class="about-story-visual">
+              <img src="/images/sebs-atlas.png?v=6" alt="Atlas — SEBS öğrenme rehberi" width="480" height="400" loading="lazy" decoding="async" />
+              <span class="about-story-visual__badge">Atlas ile kişisel yol haritası</span>
+            </figure>
+          </div>
+        </section>
+
+        <section class="about-section sh-reveal" id="neden-sebs" aria-labelledby="about-why-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-why-title">Neden SEBS?</h2>
+            <p class="about-section__intro">Video izlemek yetmez; karar vermek, ölçmek ve kanıtlamak gerekir.</p>
+          </header>
+          <ul class="about-pillars about-pillars--4">
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">⚡</span>
               <strong>Uygulamalı öğrenme</strong>
               <span>Ders + simülasyon; kararlarınız kontrollü ortamda ölçülür.</span>
             </li>
-            <li class="about-pillar-card">
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">📊</span>
               <strong>Ölçülebilir ilerleme</strong>
               <span>Rubrik, süre ve tamamlama verisi; «bitti» değil «kanıtlandı».</span>
             </li>
-            <li class="about-pillar-card">
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">🛤</span>
               <strong>SEBS Yolu</strong>
               <span>İlk Adım → Yükseliş → Zirve; paketlerle aşamalar açılır.</span>
             </li>
-            <li class="about-pillar-card">
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">🏢</span>
               <strong>Kurumsal uyum</strong>
               <span>Cohort, özel içerik ve işveren tarafı raporlama (B2B).</span>
             </li>
           </ul>
         </section>
 
-        <section class="about-section" id="nasil-calisir" aria-labelledby="about-how-title">
-          <h2 class="about-section__title" id="about-how-title">Nasıl çalışır?</h2>
-          <p class="about-section__intro">Kayıttan paket erişimine kadar dört adım.</p>
-          <ol class="about-process-steps">
-            <li>
-              <span class="about-process-steps__num">1</span>
-              <div>
-                <strong>Keşif ve yön</strong>
-                <span>Ücretsiz kayıt; kariyer testi ve SEBS Yolu ile başlangıç noktanız netleşir.</span>
-              </div>
+        <section class="about-section sh-reveal" id="nasil-calisir" aria-labelledby="about-how-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-how-title">Nasıl çalışır?</h2>
+            <p class="about-section__intro">Kayıttan paket erişimine kadar dört adım.</p>
+          </header>
+          <ol class="about-steps">
+            <li class="about-step">
+              <span class="about-step__num">1</span>
+              <strong>Keşif ve yön</strong>
+              <span>Ücretsiz kayıt; kariyer testi ve SEBS Yolu ile başlangıç noktanız netleşir.</span>
             </li>
-            <li>
-              <span class="about-process-steps__num">2</span>
-              <div>
-                <strong>Paket seçimi</strong>
-                <span>Plan veya tekli modül; fiyat ve kapsam ödeme öncesi sayfada gösterilir.</span>
-              </div>
+            <li class="about-step">
+              <span class="about-step__num">2</span>
+              <strong>Paket seçimi</strong>
+              <span>Plan veya tekli modül; fiyat ve kapsam ödeme öncesi sayfada gösterilir.</span>
             </li>
-            <li>
-              <span class="about-process-steps__num">3</span>
-              <div>
-                <strong>Güvenli ödeme</strong>
-                <span>Iyzico ile SSL korumalı ödeme; kart bilgisi SEBS’te saklanmaz.</span>
-              </div>
+            <li class="about-step">
+              <span class="about-step__num">3</span>
+              <strong>Güvenli ödeme</strong>
+              <span>Iyzico ile SSL korumalı ödeme; kart bilgisi SEBS'te saklanmaz.</span>
             </li>
-            <li>
-              <span class="about-process-steps__num">4</span>
-              <div>
-                <strong>Erişim ve öğrenme</strong>
-                <span>Onay sonrası hesaba tanımlama; modül, quiz ve simülasyonlarla ilerleme.</span>
-              </div>
+            <li class="about-step">
+              <span class="about-step__num">4</span>
+              <strong>Erişim ve öğrenme</strong>
+              <span>Onay sonrası hesaba tanımlama; modül, quiz ve simülasyonlarla ilerleme.</span>
             </li>
           </ol>
-          <p class="about-section__cta-inline"><a href="/fiyatlandirma">Paketleri incele</a> · <a href="/signup.html">Ücretsiz başla</a></p>
+          <div class="sh-btn-row" style="justify-content: center; margin-top: 1.5rem;">
+            <a href="/pricing.html" class="sh-btn sh-btn--ghost">Paketleri incele</a>
+            <a href="/signup.html" class="sh-btn sh-btn--primary">Ücretsiz başla</a>
+          </div>
         </section>
 
-        <section class="about-section" id="sirket-bilgileri" aria-labelledby="about-company-title">
-          <h2 class="about-section__title" id="about-company-title">Şirket ve iletişim bilgileri</h2>
-          <p class="about-section__intro">6502 sayılı TKHK, Mesafeli Sözleşmeler Yönetmeliği ve KVKK kapsamında geçerli satıcı / veri sorumlusu bilgileri. Ön bilgilendirme ve sözleşme metinleri <a href="#yasal-belgeler">yasal belgeler</a> bölümündedir.</p>
+        <section class="about-section sh-reveal" aria-labelledby="about-product-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-product-title">Platformda neler var?</h2>
+            <p class="about-section__intro">Öğrenme, ölçüm ve kurumsal dağıtım birbirini tamamlar.</p>
+          </header>
+          <div class="about-product-grid">
+            <article class="about-product-card">
+              <span class="about-product-card__tag">Eğitim</span>
+              <h3>Modüler müfredat</h3>
+              <p>Siber güvenlikten buluta uzanan yapılandırılmış modüller; seviyeye göre ilerleme.</p>
+              <a href="/modules.html" class="sh-btn sh-btn--primary">Eğitimleri gör</a>
+            </article>
+            <article class="about-product-card">
+              <span class="about-product-card__tag">Simülasyon</span>
+              <h3>Gerçek senaryolar</h3>
+              <p>Karar noktaları, rubrik ve performans skoru; riski güvenli ortamda deneyimleyin.</p>
+              <a href="/simulations.html" class="sh-btn sh-btn--primary">Simülasyonları keşfet</a>
+            </article>
+            <article class="about-product-card">
+              <span class="about-product-card__tag">Kariyer</span>
+              <h3>Big Five &amp; SEBS Yolu</h3>
+              <p>Öğrenme profiliniz ve aşamalı kariyer paketleriyle kişisel yol haritası.</p>
+              <a href="/pricing.html" class="sh-btn sh-btn--ghost">Paketleri gör</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section sh-reveal" aria-labelledby="about-vm-title">
+          <header class="about-section-head">
+            <h2 class="about-section__title" id="about-vm-title">Vizyon ve misyon</h2>
+          </header>
+          <div class="about-vm-grid">
+            <article class="about-vm-card">
+              <h3>Vizyon</h3>
+              <p>Türkiye'de ve bölgede deneyim tabanlı yetkinlik ölçümünün güvenilir adresi olmak; bireyin kariyerini ve kurumun yetenek kararını aynı dilde konuşturmak.</p>
+            </article>
+            <article class="about-vm-card">
+              <h3>Misyon</h3>
+              <p>Eğitim, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt üretmek.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section sh-reveal" aria-labelledby="about-values-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-values-title">Değerlerimiz</h2>
+          </header>
+          <ul class="about-pillars about-pillars--3">
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">◇</span>
+              <strong>Şeffaflık</strong>
+              <span>Paket kapsamı, fiyat ve yol haritası açık; gizli taahhüt yok.</span>
+            </li>
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">🛡</span>
+              <strong>Güvenlik</strong>
+              <span>Veri koruma ve etik öğrenme; platform yalnızca yasal eğitim amaçlı kullanılır.</span>
+            </li>
+            <li class="about-pillar">
+              <span class="about-pillar__icon" aria-hidden="true">◎</span>
+              <strong>Erişilebilirlik</strong>
+              <span>Modüler ilerleme; kendi hızında, ölçülebilir adımlarla.</span>
+            </li>
+          </ul>
+        </section>
+
+        <section class="about-section sh-reveal" id="ekip" aria-labelledby="about-team-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-team-title">Kurucu ekip</h2>
+            <p class="about-section__intro">Yön, ürün ve deneyim; sahada çalışan çekirdek bir ekip.</p>
+          </header>
+          <div class="about-team-grid">
+            <article class="about-team-card">
+              <div class="about-team-photo">
+                <img src="/images/abidin-samet-cay.jpg?v=2" alt="Abidin Samet Çay" width="112" height="140" loading="lazy" decoding="async" />
+              </div>
+              <h3>Abidin Samet Çay</h3>
+              <p class="about-team-role">Kurucu ortak · CEO</p>
+              <p>Bulut ve siber güvenlik tarafında saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
+            </article>
+            <article class="about-team-card">
+              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
+              <h3>İbrahim Ethem Arı</h3>
+              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+              <p>Ürün ve mühendislik; platform mimarisi ve teknik kalite.</p>
+            </article>
+            <article class="about-team-card">
+              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
+              <h3>Emir Berat Kayalı</h3>
+              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
+              <p>Deneyim ve arayüz; kullanıcı akışları ve markanın dijital yüzü.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section sh-reveal" id="tuketici-guven" aria-labelledby="about-trust-title">
+          <header class="about-section-head about-section-head--center">
+            <h2 class="about-section__title" id="about-trust-title">Güven, gizlilik ve tüketici hakları</h2>
+          </header>
+          <div class="about-trust-grid">
+            <article class="about-trust-card">
+              <h3>KVKK ve gizlilik</h3>
+              <p>Kişisel veriler 6698 sayılı KVKK'ya uygun işlenir. <a href="/kvkk">Aydınlatma metni</a> ve <a href="/gizlilik">gizlilik politikası</a> yayında.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Mesafeli satış</h3>
+              <p>Dijital hizmet satışında 14 gün cayma hakkı ve dijital içerik onayı <a href="/mesafeli-satis">sözleşmede</a> açıklanır.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Teslimat ve iade</h3>
+              <p>Erişim ödeme onayından sonra hesaba tanımlanır. <a href="/teslimat-iade">Teslimat ve iade şartları</a>.</p>
+            </article>
+            <article class="about-trust-card">
+              <h3>Çerezler</h3>
+              <p>Zorunlu ve analitik çerez kullanımı <a href="/cerez">çerez politikasında</a> listelenir.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-section sh-reveal" id="sirket-bilgileri" aria-labelledby="about-company-title">
+          <header class="about-section-head">
+            <h2 class="about-section__title" id="about-company-title">Şirket ve iletişim bilgileri</h2>
+            <p class="about-section__intro">6502 sayılı TKHK, Mesafeli Sözleşmeler Yönetmeliği ve KVKK kapsamında geçerli satıcı / veri sorumlusu bilgileri. Ön bilgilendirme ve sözleşme metinleri <a href="#yasal-belgeler">yasal belgeler</a> bölümündedir.</p>
+          </header>
           <div class="about-company-panel">
             <dl>
               <div>
@@ -238,118 +428,11 @@
           </div>
         </section>
 
-        <section class="about-section" id="tuketici-guven" aria-labelledby="about-trust-title">
-          <h2 class="about-section__title" id="about-trust-title">Güven, gizlilik ve tüketici hakları</h2>
-          <div class="about-trust-grid">
-            <article class="about-trust-card">
-              <h3>KVKK ve gizlilik</h3>
-              <p>Kişisel veriler 6698 sayılı KVKK’ya uygun işlenir. <a href="/kvkk">Aydınlatma metni</a> ve <a href="/gizlilik">gizlilik politikası</a> yayında.</p>
-            </article>
-            <article class="about-trust-card">
-              <h3>Mesafeli satış</h3>
-              <p>Dijital hizmet satışında 14 gün cayma hakkı ve dijital içerik onayı <a href="/mesafeli-satis">sözleşmede</a> açıklanır.</p>
-            </article>
-            <article class="about-trust-card">
-              <h3>Teslimat ve iade</h3>
-              <p>Erişim ödeme onayından sonra hesaba tanımlanır. <a href="/teslimat-iade">Teslimat ve iade şartları</a>.</p>
-            </article>
-            <article class="about-trust-card">
-              <h3>Çerezler</h3>
-              <p>Zorunlu ve analitik çerez kullanımı <a href="/cerez">çerez politikasında</a> listelenir.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="about-section" aria-labelledby="about-product-title">
-          <h2 class="about-section__title" id="about-product-title">Ne yapıyoruz?</h2>
-          <p class="about-section__intro">Öğrenme, ölçüm ve kurumsal dağıtım birbirini tamamlar.</p>
-          <ul class="about-pillars-grid">
-            <li class="about-pillar-card">
-              <strong>Modül + simülasyon</strong>
-              <span>Konu anlatımı ile gerçek işe yakın senaryolar; riski kontrollü ortamda görürsünüz.</span>
-            </li>
-            <li class="about-pillar-card">
-              <strong>Davranış ve kanıt</strong>
-              <span>Karar izi, süre ve rubrik notları bir arada rapora dökülür.</span>
-            </li>
-            <li class="about-pillar-card">
-              <strong>Kurumsal cohort</strong>
-              <span>Markaya özel içerik ve teslim ritmi birlikte planlanır.</span>
-            </li>
-          </ul>
-        </section>
-
-        <section class="about-section" aria-labelledby="about-vm-title">
-          <h2 class="about-section__title" id="about-vm-title">Vizyon ve misyon</h2>
-          <div class="about-vm-grid">
-            <article class="about-vm-card">
-              <h3>Vizyon</h3>
-              <p>Türkiye’de ve bölgede deneyim tabanlı yetkinlik ölçümünün güvenilir adresi olmak; bireyin kariyerini ve kurumun yetenek kararını aynı dilde konuşturmak.</p>
-            </article>
-            <article class="about-vm-card">
-              <h3>Misyon</h3>
-              <p>Eğitim, simülasyon ve yapay zeka destekli yönlendirmeyi birleştirerek ölçülebilir gelişim sunmak; ezber yerine kanıt üretmek.</p>
-            </article>
-          </div>
-        </section>
-
-
-        <section class="about-section" aria-labelledby="about-values-title">
-          <h2 class="about-section__title" id="about-values-title">Değerlerimiz</h2>
-          <ul class="about-pillars-grid">
-            <li class="about-pillar-card">
-              <strong>Şeffaflık</strong>
-              <span>Paket kapsamı, fiyat ve yol haritası açık; gizli taahhüt yok.</span>
-            </li>
-            <li class="about-pillar-card">
-              <strong>Güvenlik</strong>
-              <span>Veri koruma ve etik öğrenme; platform yalnızca yasal eğitim amaçlı kullanılır.</span>
-            </li>
-            <li class="about-pillar-card">
-              <strong>Erişilebilirlik</strong>
-              <span>Modüler ilerleme; kendi hızında, ölçülebilir adımlarla.</span>
-            </li>
-          </ul>
-        </section>
-
-        <section class="about-section" aria-labelledby="about-team-title">
-          <h2 class="about-section__title" id="about-team-title">Kurucu ekip</h2>
-          <p class="about-section__intro">Yön, ürün ve deneyim; sahada çalışan çekirdek bir ekip.</p>
-          <div class="about-team-grid">
-            <article class="about-team-card">
-              <div class="about-team-photo">
-                <img
-                  src="/images/abidin-samet-cay.jpg?v=2"
-                  alt="Abidin Samet Çay — SEBS Global kurucu ortak"
-                  width="112"
-                  height="140"
-                  class="h-full w-full object-cover object-[center_15%]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <h3>Abidin Samet Çay</h3>
-              <p class="about-team-role">Kurucu ortak · CEO</p>
-              <p>Bulut ve siber güvenlik tarafında saha deneyimi; kurumsal yön ve ortaklık gelişimi.</p>
-            </article>
-            <article class="about-team-card">
-              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">İA</span></div>
-              <h3>İbrahim Ethem Arı</h3>
-              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
-              <p>Ürün ve mühendislik; platform mimarisi ve teknik kalite.</p>
-            </article>
-            <article class="about-team-card">
-              <div class="about-team-photo" aria-hidden="true"><span class="about-team-initials">EB</span></div>
-              <h3>Emir Berat Kayalı</h3>
-              <p class="about-team-role about-team-role--muted">Kurucu ortak</p>
-              <p>Deneyim ve arayüz; kullanıcı akışları ve markanın dijital yüzü.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="about-section" id="yasal-belgeler" aria-labelledby="about-legal-title">
-          <h2 class="about-section__title" id="about-legal-title">Yasal belgeler</h2>
-          <p class="about-section__intro">Dijital hizmet satışı, KVKK ve ödeme altyapısı (Iyzico) kapsamında güncel açıklama ve sözleşme metinleri. Metinler platform işleyişine göre düzenlenmiştir; özel durumlar için hukuk danışmanlığı önerilir.</p>
+        <section class="about-section sh-reveal" id="yasal-belgeler" aria-labelledby="about-legal-title">
+          <header class="about-section-head">
+            <h2 class="about-section__title" id="about-legal-title">Yasal belgeler</h2>
+            <p class="about-section__intro">Dijital hizmet satışı, KVKK ve ödeme altyapısı (Iyzico) kapsamında güncel açıklama ve sözleşme metinleri.</p>
+          </header>
           <ul class="about-legal-links">
             <li><a href="/gizlilik">Gizlilik politikası</a></li>
             <li><a href="/kvkk">KVKK aydınlatma</a></li>
@@ -357,35 +440,26 @@
             <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
             <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
             <li><a href="/mesafeli-satis">Mesafeli satış</a></li>
-            <li><a href="/fiyatlandirma">Paketler ve ödeme</a></li>
+            <li><a href="/pricing.html">Paketler ve ödeme</a></li>
           </ul>
-        </section>
-
-        <section class="about-section" aria-labelledby="about-payment-title">
-          <h2 class="about-section__title" id="about-payment-title">Güvenli ödeme</h2>
-          <p class="about-section__intro">Kart ödemeleri Iyzico altyapısı üzerinden, SSL ile korunan bağlantıda işlenir. Kart bilgileri SEBS tarafından saklanmaz.</p>
-          <div class="sebs-payment-trust sebs-payment-trust--about-inline" aria-label="Kabul edilen ödeme yöntemleri">
-            <p class="sebs-payment-trust__label">Güvenli ödeme</p>
-            <img
-              src="/images/payments/iyzico/logo-band-footer.svg"
-              alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
-              width="429"
-              height="32"
-              loading="lazy"
-              decoding="async"
-              class="sebs-payment-trust__band"
-            />
+          <div class="about-payment" style="margin-top: 1.5rem;">
+            <p class="about-payment__label">Güvenli ödeme</p>
+            <img src="/images/payments/iyzico/logo-band-footer.svg" alt="iyzico ile Öde — Visa, Mastercard" width="429" height="32" loading="lazy" decoding="async" />
           </div>
         </section>
 
-        <p class="about-cta-row">
-          <a href="/signup.html">Ücretsiz başla</a>
-          <span class="about-hero__sep" aria-hidden="true">·</span>
-          <a href="/contact.html">İletişim</a>
-        </p>
+        <section class="about-final-cta sh-reveal" aria-labelledby="about-cta-title">
+          <h2 id="about-cta-title">Kariyer yolculuğuna bugün başla</h2>
+          <p>Ücretsiz kayıt ol, Big Five profilini oluştur ve ilk simülasyonunu dene.</p>
+          <div class="sh-btn-row">
+            <a href="/signup.html" class="sh-btn sh-btn--primary">Ücretsiz başla</a>
+            <a href="/contact.html" class="sh-btn sh-btn--ghost">İletişim</a>
+          </div>
+        </section>
       </div>
     </div>
   </main>
+
   <footer class="sh-footer">
     <div class="sh-container">
       <div class="sh-footer__grid">
@@ -436,17 +510,17 @@
       </div>
     </div>
   </footer>
+
   <script>
     document.querySelectorAll('.landing-footer-year').forEach(function (el) {
       el.textContent = String(new Date().getFullYear());
     });
   </script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <script src="/js/supabase-env.js?v=2"></script>
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
-  <script src="/js/navigation.js?v=3.7" defer></script>
-  <script src="/js/sebs-home.js?v=1" defer></script>
+  <script src="/js/navigation.js?v=3.8" defer></script>
+  <script src="/js/sebs-home.js?v=23" defer></script>
 </body>
 </html>
