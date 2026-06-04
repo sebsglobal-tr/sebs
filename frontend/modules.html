@@ -76,8 +76,8 @@
     };
   </script>
   <link rel="stylesheet" href="/css/sebs-app-pages.css?v=7" />
-  <link rel="stylesheet" href="/css/sebs-categories-haccordion.css?v=4" />
-  <script src="/js/sebs-categories-haccordion.js?v=4" defer></script>
+  <link rel="stylesheet" href="/css/sebs-categories-haccordion.css?v=5" />
+  <script src="/js/sebs-categories-haccordion.js?v=5" defer></script>
   <style id="sebs-app-critical">
     html, body.sebs-app-page { background: #050510 !important; color: #a1a1aa !important; }
     body.sebs-app-page main { background: transparent !important; }
@@ -1630,7 +1630,11 @@
                         '.sebs-accordion-item[data-category="' + targetCategory + '"]'
                     );
                     if (accItem) {
-                        activateModulesAccordion(accItem);
+                        if (exploreRoot._sebsSetActiveHacc) {
+                            exploreRoot._sebsSetActiveHacc(accItem);
+                        } else {
+                            activateModulesAccordion(accItem);
+                        }
                     }
                 }
             }

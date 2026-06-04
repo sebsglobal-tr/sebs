@@ -87,6 +87,16 @@
     body.appendChild(inner);
   }
 
+  function setActiveItem(stack, activeItem, activateFn) {
+    if (!stack || !activeItem) return;
+    stack.classList.add('is-transitioning');
+    if (typeof activateFn === 'function') activateFn(activeItem);
+    window.clearTimeout(stack._sebsHaccT);
+    stack._sebsHaccT = window.setTimeout(function () {
+      stack.classList.remove('is-transitioning');
+    }, 480);
+  }
+
   function transformExploreSection(exploreRoot, activateFn) {
     if (!exploreRoot || exploreRoot.dataset.sebsHaccReady === '1') return;
     exploreRoot.dataset.sebsHaccReady = '1';
@@ -105,16 +115,20 @@
       if (item.dataset.sebsHaccItem === '1') return;
       item.dataset.sebsHaccItem = '1';
       item.classList.add('sebs-cat-hacc-item');
-
-      var num = document.createElement('span');
-      num.className = 'sebs-cat-hacc-num';
-      num.textContent = String(index + 1).padStart(2, '0');
-      item.insertBefore(num, item.firstChild);
+      item.setAttribute('data-sebs-index', String(index + 1).padStart(2, '0'));
 
       var badge = document.createElement('span');
       badge.className = 'sebs-cat-hacc-badge';
       badge.textContent = 'ALAN';
-      item.insertBefore(badge, num.nextSibling);
+
+      var strip = document.createElement('div');
+      strip.className = 'sebs-cat-hacc-strip';
+      strip.setAttribute('aria-hidden', 'true');
+
+      var num = document.createElement('span');
+      num.className = 'sebs-cat-hacc-num';
+      num.textContent = String(index + 1).padStart(2, '0');
+      strip.appendChild(num);
 
       var collapsed = document.createElement('div');
       collapsed.className = 'sebs-cat-hacc-collapsed';
@@ -129,7 +143,10 @@
       titleSpan.className = 'sebs-cat-hacc-collapsed-label';
       titleSpan.textContent = getItemTitle(item);
       collapsed.appendChild(titleSpan);
-      item.appendChild(collapsed);
+      strip.appendChild(collapsed);
+
+      item.insertBefore(badge, item.firstChild);
+      item.insertBefore(strip, badge.nextSibling);
 
       var block = item.querySelector('.sebs-acc-block');
       if (block) {
@@ -153,10 +170,14 @@
 
       if (canHover) {
         item.addEventListener('mouseenter', function () {
-          if (typeof activateFn === 'function') activateFn(item);
+          setActiveItem(stack, item, activateFn);
         });
       }
     });
+
+    exploreRoot._sebsSetActiveHacc = function (activeItem) {
+      setActiveItem(stack, activeItem, activateFn);
+    };
   }
 
   window.sebsEnhanceCategoryAccordion = function (exploreRoot, activateFn) {

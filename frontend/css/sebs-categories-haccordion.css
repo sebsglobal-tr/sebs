@@ -1,5 +1,5 @@
 /**
- * Eğitim alanları — yatay accordion (SEBS koyu tema, premium açık panel)
+ * Eğitim alanları — yatay accordion (SEBS koyu tema)
  */
 body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion-wrap {
   margin-top: 2.5rem;
@@ -24,7 +24,7 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
   box-shadow: none !important;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
+  isolation: isolate;
   scrollbar-width: thin;
   scrollbar-color: rgba(124, 58, 237, 0.45) transparent;
 }
@@ -38,82 +38,114 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scroll
   border-radius: 999px;
 }
 
-/* —— Kapalı şeritler —— */
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion.is-transitioning {
+  pointer-events: none;
+}
+
+/* —— Kartlar —— */
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
-  flex: 1 1 0;
-  min-width: 3.25rem;
-  max-width: none;
-  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 1.5rem;
+  flex: 0 0 3.85rem;
+  width: 3.85rem;
+  min-width: 3.85rem;
+  max-width: 3.85rem;
+  height: 100%;
+  border-radius: 1.35rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.02) 100%);
   overflow: hidden;
   cursor: pointer;
+  isolation: isolate;
+  contain: layout style paint;
+  z-index: 1;
   transition:
-    flex 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    min-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
-  scroll-snap-align: start;
+    flex 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    z-index 0s step-end 0.45s;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover {
+  z-index: 2;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(124, 58, 237, 0.06) 100%);
   border-color: rgba(124, 58, 237, 0.28);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-num {
-  color: rgba(161, 161, 170, 0.85);
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
-  color: rgba(228, 228, 231, 0.9);
-}
-
-/* —— Açık panel (premium) —— */
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
-  flex: 4 1 26rem;
-  min-width: min(26rem, 72vw);
-  max-width: min(34rem, 85vw);
+  flex: 1 1 28rem;
+  width: auto;
+  min-width: min(22rem, 68vw);
+  max-width: min(36rem, 82vw);
+  z-index: 10;
+  transition:
+    flex 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    z-index 0s step-start;
   border-color: rgba(124, 58, 237, 0.4);
   box-shadow:
-    0 24px 48px -20px rgba(0, 0, 0, 0.55),
+    0 20px 40px -18px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   background:
-    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(124, 58, 237, 0.18), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(6, 182, 212, 0.1), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(124, 58, 237, 0.16), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(6, 182, 212, 0.08), transparent 50%),
     linear-gradient(165deg, rgba(20, 20, 42, 0.98) 0%, rgba(8, 8, 22, 0.99) 100%);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
+/* Kapalı şerit içeriği */
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-strip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 0;
+  width: 100%;
+  padding: 1rem 0.4rem 1rem;
+  box-sizing: border-box;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-strip {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   position: absolute;
-  top: 1rem;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  padding: 0 1rem;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion.is-transitioning .sebs-cat-hacc-item:not(.is-open) .sebs-cat-hacc-strip {
+  opacity: 0;
+  visibility: hidden;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
+  display: block;
   font-family: var(--sh-font, Inter, system-ui, sans-serif);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: rgba(161, 161, 170, 0.45);
+  color: rgba(161, 161, 170, 0.5);
   pointer-events: none;
-  text-align: left;
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open) .sebs-cat-hacc-num {
-  text-align: center;
-  padding: 0;
+  flex-shrink: 0;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
-  color: #67e8f9;
-  font-size: 1.5rem;
+  display: none;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
@@ -121,8 +153,8 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 2;
-  padding: 0.25rem 0.6rem;
+  z-index: 3;
+  padding: 0.25rem 0.55rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 0.5625rem;
@@ -138,14 +170,14 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-ca
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.65rem;
-  padding: 2.75rem 0.35rem 1.1rem;
+  gap: 0.55rem;
+  flex: 1;
   min-height: 0;
+  width: 100%;
   pointer-events: none;
 }
 
@@ -153,9 +185,9 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 0.5rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 0.45rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(165, 180, 252, 0.55);
@@ -163,24 +195,32 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon {
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon svg {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.85rem;
+  height: 0.85rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
   display: block;
-  font-size: 0.6875rem;
+  max-width: 100%;
+  font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: rgba(161, 161, 170, 0.7);
+  color: rgba(161, 161, 170, 0.72);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color 0.25s ease;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-num {
+  color: rgba(161, 161, 170, 0.85);
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
+  color: rgba(228, 228, 231, 0.88);
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-icon {
@@ -189,34 +229,21 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):ho
   background: rgba(124, 58, 237, 0.12);
 }
 
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-collapsed {
-  display: none;
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open) .sebs-cat-hacc-body {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  padding: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
+/* Açık panel */
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  padding: 2.65rem 1.15rem 1rem;
+  box-sizing: border-box;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  padding: 2.75rem 1.25rem 1.15rem;
   overflow: hidden;
-  transition: opacity 0.35s ease 0.05s, visibility 0.35s;
+  z-index: 2;
+  transition: opacity 0.28s ease 0.12s, visibility 0.28s ease 0.12s;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-body {
@@ -225,7 +252,17 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-ca
   pointer-events: auto;
 }
 
-/* Gizli tab butonu — kategori geçişi için */
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion.is-transitioning .sebs-cat-hacc-body {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition-delay: 0s !important;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion:not(.is-transitioning) .sebs-cat-hacc-item.is-open .sebs-cat-hacc-body {
+  opacity: 1;
+  visibility: visible;
+}
+
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-sr-btn {
   position: absolute !important;
   width: 1px !important;
@@ -253,13 +290,13 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-premium {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline {
   display: flex;
   align-items: flex-start;
-  gap: 0.85rem;
+  gap: 0.75rem;
   min-width: 0;
 }
 
@@ -268,30 +305,27 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.7rem;
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(6, 182, 212, 0.2));
   border: 1px solid rgba(124, 58, 237, 0.35);
   color: #c4b5fd;
-  box-shadow: 0 8px 24px -8px rgba(124, 58, 237, 0.45);
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.15rem;
+  height: 1.15rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-text {
   min-width: 0;
   flex: 1;
-  padding-top: 0.15rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-headline-text h3 {
-  margin: 0 0 0.35rem;
-  font-family: var(--sh-font, Inter, system-ui, sans-serif);
-  font-size: 1.125rem;
+  margin: 0 0 0.3rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.25;
@@ -308,21 +342,20 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-summary {
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-desc {
   margin: 0;
   font-size: 0.8125rem;
-  line-height: 1.6;
+  line-height: 1.55;
   color: var(--app-color-body, #a1a1aa);
-  max-width: 36ch;
+  max-width: 40ch;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-actions {
   margin-top: auto;
-  padding-top: 0.25rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1.1rem;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(37, 99, 235, 0.85));
   border: 1px solid rgba(167, 139, 250, 0.4);
@@ -330,46 +363,51 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link {
   font-size: 0.75rem;
   font-weight: 600;
   text-decoration: none !important;
-  box-shadow: 0 4px 16px -4px rgba(124, 58, 237, 0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.5);
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.55);
-}
-
-body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link-arrow {
-  font-size: 0.9rem;
-  line-height: 1;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  margin-top: 0.35rem;
-  padding-top: 0.65rem;
+  gap: 0.55rem;
+  padding-top: 0.5rem;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline-rule {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(103, 232, 249, 0.45), transparent);
+  background: linear-gradient(90deg, rgba(103, 232, 249, 0.4), transparent);
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-footline em {
   font-style: normal;
   font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #67e8f9;
 }
 
+/* Açık panelde üst numara */
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open::before {
+  content: attr(data-sebs-index);
+  position: absolute;
+  top: 1rem;
+  left: 1.15rem;
+  z-index: 4;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #67e8f9;
+  pointer-events: none;
+}
+
 body.modules-page #modulesCategoriesExplore #modules-explore-heading {
   color: var(--app-color-heading) !important;
-  font-size: clamp(1.375rem, 2.5vw, 1.75rem) !important;
 }
 
 body.modules-page #modulesCategoriesExplore .text-slate-600 {
@@ -384,29 +422,25 @@ body.modules-page #modulesCategoriesExplore .text-slate-900#modules-explore-head
   body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion {
     flex-direction: column;
     height: auto;
-    overflow-x: hidden;
+    overflow: visible;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item,
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
     flex: none;
+    width: 100%;
     min-width: 100%;
     max-width: 100%;
-    height: auto;
     min-height: 3.5rem;
   }
 
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
-    min-width: 100%;
-    max-width: 100%;
-    min-height: 16rem;
+    min-height: 15rem;
   }
 
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
     writing-mode: horizontal-tb;
     transform: none;
-    justify-content: flex-start;
-    padding: 0 1rem 0.75rem;
-    text-align: left;
   }
 
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-desc {
@@ -417,7 +451,7 @@ body.modules-page #modulesCategoriesExplore .text-slate-900#modules-explore-head
 @media (prefers-reduced-motion: reduce) {
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item,
   body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body,
-  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-link {
-    transition: none;
+  body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-strip {
+    transition: none !important;
   }
 }
