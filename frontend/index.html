@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="/css/sebs-design-system.css?v=3" />
   <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=2" />
-  <link rel="stylesheet" href="/css/sebs-home.css?v=24" />
+  <link rel="stylesheet" href="/css/sebs-home.css?v=26" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <noscript><style>.sh-reveal,.sh-hero-flow.sh-reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -382,7 +382,7 @@
               <a href="/pricing.html" class="sh-btn sh-btn--ghost">Paketleri gör</a>
             </div>
           </div>
-          <div class="sh-skillhub" aria-hidden="true">
+          <div class="sh-skillhub" id="shSkillHub" aria-hidden="true">
             <div class="sh-skillhub__stage">
               <div class="sh-skillhub__center">
                 <div class="sh-skillhub__orbit" aria-hidden="true">
@@ -401,14 +401,14 @@
                   />
                 </div>
               </div>
-            <article class="sh-skillhub__card sh-skillhub__card--profile">
+            <article class="sh-skillhub__card sh-skillhub__card--profile" data-skillhub-card>
               <header class="sh-skillhub__card-head">
                 <strong>Öğrenme profili</strong>
                 <span class="sh-skillhub__badge sh-skillhub__badge--ok">Doğrulandı</span>
               </header>
-              <p class="sh-skillhub__score">847</p>
+              <p class="sh-skillhub__score" data-count-target="847">0</p>
               <div class="sh-skillhub__bar" role="presentation">
-                <span class="sh-skillhub__bar-fill" style="width: 84.7%"></span>
+                <span class="sh-skillhub__bar-fill" data-bar-target="84.7"></span>
               </div>
               <p class="sh-skillhub__bar-label"><span>0</span><span>1000</span></p>
               <a class="sh-skillhub__link" href="/tests/big-five" tabindex="-1">Profil özetini gör</a>
@@ -422,7 +422,7 @@
                 </ul>
               </footer>
             </article>
-            <article class="sh-skillhub__card sh-skillhub__card--insight">
+            <article class="sh-skillhub__card sh-skillhub__card--insight" data-skillhub-card>
               <header class="sh-skillhub__card-head">
                 <strong>Profil analizi</strong>
                 <span class="sh-skillhub__badge sh-skillhub__badge--warn">İncele</span>
@@ -437,7 +437,7 @@
                 <span>Özet hazır</span>
               </div>
             </article>
-            <article class="sh-skillhub__card sh-skillhub__card--plan">
+            <article class="sh-skillhub__card sh-skillhub__card--plan" data-skillhub-card>
               <header class="sh-skillhub__card-head">
                 <strong>Gelişim planı</strong>
               </header>
@@ -577,6 +577,6 @@
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
   <script src="/js/navigation.js?v=3.7" defer></script>
-  <script src="/js/sebs-home.js?v=19" defer></script>
+  <script src="/js/sebs-home.js?v=20" defer></script>
 </body>
 </html>

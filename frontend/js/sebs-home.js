@@ -242,6 +242,68 @@
     }
   }
 
+  function initSkillHub() {
+    var hub = document.getElementById('shSkillHub');
+    if (!hub) return;
+
+    var scoreEl = hub.querySelector('[data-count-target]');
+    var barEl = hub.querySelector('[data-bar-target]');
+    var targetScore = scoreEl
+      ? parseFloat(scoreEl.getAttribute('data-count-target'), 10)
+      : 0;
+    var targetBar = barEl ? parseFloat(barEl.getAttribute('data-bar-target'), 10) : 0;
+
+    function activate() {
+      if (hub.classList.contains('is-visible')) return;
+      hub.classList.add('is-visible');
+      if (barEl && targetBar) {
+        barEl.style.setProperty('--sh-bar-target', String(targetBar));
+      }
+      if (!scoreEl || !targetScore) return;
+      if (reduced) {
+        scoreEl.textContent = String(Math.round(targetScore));
+        return;
+      }
+      var start = performance.now();
+      var duration = 1100;
+      function frame(now) {
+        var t = Math.min(1, (now - start) / duration);
+        var eased = 1 - Math.pow(1 - t, 3);
+        scoreEl.textContent = String(Math.round(targetScore * eased));
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    if (reduced) {
+      if (barEl && targetBar) {
+        barEl.style.setProperty('--sh-bar-target', String(targetBar));
+      }
+      if (scoreEl && targetScore) {
+        scoreEl.textContent = String(Math.round(targetScore));
+      }
+      hub.classList.add('is-visible');
+      return;
+    }
+
+    if ('IntersectionObserver' in window) {
+      var hubIo = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              activate();
+              hubIo.unobserve(hub);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.15 }
+      );
+      hubIo.observe(hub);
+    } else {
+      activate();
+    }
+  }
+
   if (!reduced) {
     var reveals = document.querySelectorAll('.sh-reveal');
     if (reveals.length && 'IntersectionObserver' in window) {
@@ -263,6 +325,7 @@
 
     initHeroFlowEvaluation(true);
     initMountainPath();
+    initSkillHub();
 
     var heroFlow = document.querySelector('.sh-hero-flow.sh-reveal');
     if (heroFlow) {
@@ -274,6 +337,7 @@
     });
     initHeroFlowEvaluation(false);
     initMountainPath();
+    initSkillHub();
   }
 
   document.querySelectorAll('.landing-footer-year').forEach(function (el) {
