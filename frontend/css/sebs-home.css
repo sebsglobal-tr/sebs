@@ -1179,7 +1179,7 @@
   box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.2), 0 20px 40px -24px rgba(34, 211, 238, 0.3);
 }
 
-/* Dağ illüstrasyonu (yalnızca SVG — tam ekran görseli yok) */
+/* Dağ paneli: referans görsel + üstte animasyonlu yol */
 .sh-mountain-viz {
   position: relative;
   width: 100%;
@@ -1187,41 +1187,31 @@
   overflow: hidden;
   border: 1px solid var(--sh-border-soft);
   box-shadow: var(--sh-shadow-card), 0 0 48px -16px var(--sh-glow-violet);
-  aspect-ratio: 560 / 400;
+  aspect-ratio: 488 / 449;
   background: #080612;
 }
 
-.sh-mountain-viz__svg {
+.sh-mountain-viz__art {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-.sh-mountain-viz__range {
-  fill: url(#sh-mt-ridge);
-}
-
-.sh-mountain-viz__range--back {
-  opacity: 0.55;
-}
-
-.sh-mountain-viz__peak {
-  fill: url(#sh-mt-peak);
-}
-
-.sh-mountain-viz__peak-face {
-  fill: rgba(103, 232, 249, 0.08);
-}
-
-.sh-mountain-viz__flag {
-  opacity: 0.95;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+.sh-mountain-viz__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .sh-mountain-viz__trail-dim {
   fill: none;
-  stroke: rgba(103, 232, 249, 0.12);
-  stroke-width: 5;
+  stroke: rgba(103, 232, 249, 0.08);
+  stroke-width: 6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1229,10 +1219,17 @@
 .sh-mountain-viz__trail {
   fill: none;
   stroke: url(#sh-mt-trail-grad);
-  stroke-width: 4;
+  stroke-width: 5;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: url(#sh-mt-glow);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.sh-mountain-viz.is-animated .sh-mountain-viz__trail,
+.sh-mountain-viz.is-paused .sh-mountain-viz__trail {
+  opacity: 1;
 }
 
 .sh-mountain-viz:not(.is-animated) .sh-mountain-viz__trail {
@@ -1284,7 +1281,7 @@
 
 .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
   opacity: 1;
-  offset-path: path("M 88 338 C 118 308, 168 278, 208 248 C 248 218, 288 188, 318 158 C 348 128, 368 108, 382 88");
+  offset-path: path("M 48 398 C 92 358, 148 312, 198 268 C 248 224, 292 182, 332 142 C 358 112, 378 92, 398 78");
   offset-distance: 0%;
   animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
 }
