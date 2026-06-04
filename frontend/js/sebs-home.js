@@ -37,11 +37,11 @@
     if (!viz || !trail || !cards.length) return;
 
     var pathD = trail.getAttribute('d');
-    var pathSteps = [0.02, 0.5, 0.74];
-    var labelLayout = [
-      { along: 2, perp: 44, anchor: 'middle' },
-      { along: 12, perp: -32, anchor: 'start' },
-      { along: 10, perp: -28, anchor: 'start' }
+    var pathSteps = [0.02, 0.52, 0.76];
+    var labelOffsets = [
+      { dx: 0, dy: 54, anchor: 'middle' },
+      { dx: 52, dy: 14, anchor: 'start' },
+      { dx: 48, dy: 10, anchor: 'start' }
     ];
     var animId = null;
     var animStart = 0;
@@ -64,16 +64,10 @@
           markers[i].setAttribute('cy', pt.y);
         }
         if (labels[i]) {
-          var ahead = trail.getPointAtLength(Math.min(lenNow - 1, lenNow * ratio + 18));
-          var dx = ahead.x - pt.x;
-          var dy = ahead.y - pt.y;
-          var mag = Math.hypot(dx, dy) || 1;
-          var nx = -dy / mag;
-          var ny = dx / mag;
-          var layout = labelLayout[i];
-          labels[i].setAttribute('x', pt.x + (dx / mag) * layout.along + nx * layout.perp);
-          labels[i].setAttribute('y', pt.y + (dy / mag) * layout.along + ny * layout.perp);
-          labels[i].setAttribute('text-anchor', layout.anchor);
+          var off = labelOffsets[i];
+          labels[i].setAttribute('x', pt.x + off.dx);
+          labels[i].setAttribute('y', pt.y + off.dy);
+          labels[i].setAttribute('text-anchor', off.anchor);
         }
       });
 
