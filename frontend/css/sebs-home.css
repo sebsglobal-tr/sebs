@@ -1560,25 +1560,68 @@
 .sh-skillhub__avatar {
   position: relative;
   z-index: 2;
-  width: 5.35rem;
-  height: 5.35rem;
-  margin: 0.55rem auto 0;
+  width: 5.85rem;
+  height: 5.85rem;
+  margin: 0.45rem auto 0;
   display: grid;
   place-items: center;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Premium ışık halesi — kare kutu yok */
+.sh-skillhub__avatar::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  z-index: 0;
+  width: 82%;
+  height: 32%;
+  transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 68%);
-  box-shadow: 0 0 32px -8px rgba(56, 189, 248, 0.65);
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    rgba(56, 189, 248, 0.5) 0%,
+    rgba(124, 58, 237, 0.18) 42%,
+    transparent 72%
+  );
+  filter: blur(5px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.sh-skillhub__avatar::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(56, 189, 248, 0.22) 0%,
+    rgba(124, 58, 237, 0.08) 38%,
+    transparent 68%
+  );
+  pointer-events: none;
 }
 
 .sh-skillhub__avatar img,
 .sh-skillhub__atlas {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   border: none;
   border-radius: 0;
-  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
+  background: transparent;
+  filter:
+    drop-shadow(0 0 18px rgba(56, 189, 248, 0.55))
+    drop-shadow(0 0 36px rgba(124, 58, 237, 0.25))
+    drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
 }
 
 .sh-skillhub__card {
