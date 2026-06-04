@@ -30,29 +30,30 @@
   }
 
   function initHeroFlowEvaluation(continuous) {
-    var hub = document.querySelector('.sh-hero-flow__hub');
+    var gate = document.querySelector('.sh-hero-flow__gate');
     var cards = document.querySelectorAll('.sh-hero-flow .sh-flow-card');
-    if (!hub || !cards.length) return;
+    if (!gate || !cards.length) return;
 
     cards.forEach(function (card) {
       card.classList.add('is-pending');
     });
 
     function updateCards() {
-      var hubRect = hub.getBoundingClientRect();
-      var hubLeft = hubRect.left;
-      var hubRight = hubRect.right;
-      var edgePad = 6;
+      var gateRect = gate.getBoundingClientRect();
+      var gateLeft = gateRect.left;
+      var gateRight = gateRect.right;
+      var zonePad = 10;
 
       cards.forEach(function (card) {
         var rect = card.getBoundingClientRect();
+        var cardCx = rect.left + rect.width / 2;
         var result = card.getAttribute('data-result');
 
         card.classList.remove('is-pending', 'is-processing', 'is-positive', 'is-negative');
 
-        if (rect.left > hubRight - edgePad) {
+        if (cardCx > gateRight + zonePad) {
           card.classList.add('is-pending');
-        } else if (rect.right < hubLeft + edgePad) {
+        } else if (cardCx < gateLeft - zonePad) {
           if (result === 'negative') {
             card.classList.add('is-negative');
           } else {

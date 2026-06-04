@@ -531,8 +531,17 @@
 }
 
 .sh-hero__copy .sh-h1 {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+  font-size: clamp(1.75rem, 2.8vw + 0.65rem, 3rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+}
+
+.sh-hero__copy .sh-h1-line {
+  display: block;
+}
+
+.sh-hero__copy .sh-h1-gradient {
+  white-space: nowrap;
 }
 
 .sh-hero__copy .sh-lead {
@@ -641,8 +650,9 @@
 }
 
 .sh-flow-card.is-pending .sh-flow-card__badge {
-  opacity: 0;
-  transform: scale(0.4);
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: scale(0) !important;
 }
 
 .sh-flow-card.is-pending .sh-flow-card__score strong {
@@ -823,25 +833,29 @@
 
 .sh-hero-flow__hub {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  inset: 0;
   z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sh-hero-flow__hub-inner {
+  position: relative;
   width: 9.75rem;
   height: 10.75rem;
-  margin: 0;
-  transform: translate(-50%, -50%);
   display: grid;
   grid-template: 1fr / 1fr;
   place-items: center;
-  pointer-events: none;
 }
 
 /* Kartların içeriğe "girdiği" opak kapı */
 .sh-hero-flow__gate {
   grid-area: 1 / 1;
   z-index: 1;
-  width: 9.75rem;
-  height: 10.75rem;
+  width: 100%;
+  height: 100%;
   border-radius: 1.35rem;
   background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
   box-shadow:
