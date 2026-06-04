@@ -35,8 +35,52 @@
     var cards = document.querySelectorAll('.sh-path-card[data-path-step]');
     if (!viz || !trail || !cards.length) return;
 
+    var pathD = trail.getAttribute('d');
+    var pathSteps = [0.02, 0.46, 0.72];
+    var labelOffsets = [
+      { dx: 0, dy: 74, anchor: 'middle' },
+      { dx: 46, dy: 6, anchor: 'start' },
+      { dx: 46, dy: 6, anchor: 'start' }
+    ];
+
+    function syncPathAnchors() {
+      var lenNow = trail.getTotalLength();
+      var markers = viz.querySelectorAll('.sh-mountain-viz__marker');
+      var labels = viz.querySelectorAll('.sh-mountain-viz__label');
+      var flag = viz.querySelector('.sh-mountain-viz__flag');
+      var startAura = viz.querySelector('.sh-mountain-viz__start-aura');
+      var runner = viz.querySelector('.sh-mountain-viz__runner');
+
+      pathSteps.forEach(function (ratio, i) {
+        var pt = trail.getPointAtLength(lenNow * ratio);
+        if (markers[i]) {
+          markers[i].setAttribute('cx', pt.x);
+          markers[i].setAttribute('cy', pt.y);
+        }
+        if (labels[i]) {
+          labels[i].setAttribute('x', pt.x + labelOffsets[i].dx);
+          labels[i].setAttribute('y', pt.y + labelOffsets[i].dy);
+          labels[i].setAttribute('text-anchor', labelOffsets[i].anchor);
+        }
+      });
+
+      var summit = trail.getPointAtLength(lenNow * 0.992);
+      if (flag) {
+        flag.setAttribute('transform', 'translate(' + (summit.x - 2) + ',' + (summit.y - 6) + ')');
+      }
+      if (startAura && markers[0]) {
+        startAura.setAttribute('cx', markers[0].getAttribute('cx'));
+        startAura.setAttribute('cy', markers[0].getAttribute('cy'));
+      }
+      if (runner && pathD) {
+        runner.style.offsetPath = "path('" + pathD + "')";
+      }
+    }
+
+    syncPathAnchors();
+
     var len = trail.getTotalLength();
-    var progresses = [0.05, 0.56, 0.8];
+    var progresses = pathSteps.slice();
     trail.style.strokeDasharray = len;
     trail.style.strokeDashoffset = len;
     viz.style.setProperty('--sh-mt-len', String(len));

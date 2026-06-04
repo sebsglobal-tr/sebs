@@ -1179,7 +1179,7 @@
   box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.2), 0 20px 40px -24px rgba(34, 211, 238, 0.3);
 }
 
-/* Dağ paneli — fotogerçekçi arka plan + SVG yol katmanı */
+/* Dağ paneli — görsel + yol aynı SVG koordinat sisteminde */
 .sh-mountain-viz {
   position: relative;
   width: 100%;
@@ -1200,49 +1200,39 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 85% 70% at 50% 45%, transparent 35%, rgba(3, 7, 18, 0.55) 100%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, transparent 28%, rgba(3, 7, 18, 0.35) 100%);
+    radial-gradient(ellipse 80% 65% at 52% 48%, transparent 42%, rgba(3, 7, 18, 0.42) 100%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.12) 0%, transparent 30%, rgba(3, 7, 18, 0.28) 100%);
   z-index: 2;
 }
 
-.sh-mountain-viz__photo-wrap,
-.sh-mountain-viz__photo {
+.sh-mountain-viz__stage {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.sh-mountain-viz__photo-wrap {
-  position: absolute;
-  inset: 0;
+.sh-mountain-viz__route {
+  mix-blend-mode: screen;
 }
 
-.sh-mountain-viz__photo {
-  object-fit: cover;
-  object-position: 58% 42%;
-  transform: scale(1.02);
+.sh-mountain-viz__start-aura {
+  opacity: 0.85;
 }
 
-.sh-mountain-viz__overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.sh-mountain-viz__trail-halo {
+.sh-mountain-viz__trail-outer {
   fill: none;
-  stroke: rgba(103, 232, 249, 0.14);
-  stroke-width: 10;
+  stroke: rgba(103, 232, 249, 0.22);
+  stroke-width: 28;
   stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#sh-mt-trail-blur);
+  opacity: 0.7;
 }
 
 .sh-mountain-viz__trail-base {
   fill: none;
-  stroke: rgba(34, 211, 238, 0.38);
-  stroke-width: 5;
+  stroke: rgba(34, 211, 238, 0.32);
+  stroke-width: 14;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1250,10 +1240,10 @@
 .sh-mountain-viz__trail {
   fill: none;
   stroke: url(#sh-mt-trail-grad);
-  stroke-width: 4;
+  stroke-width: 7;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: url(#sh-mt-glow);
+  filter: url(#sh-mt-trail-glow);
 }
 
 .sh-mountain-viz:not(.is-animated) .sh-mountain-viz__trail {
@@ -1282,36 +1272,43 @@
 }
 
 .sh-mountain-viz__marker {
-  fill: rgba(148, 163, 184, 0.28);
-  stroke: rgba(255, 255, 255, 0.2);
-  stroke-width: 2;
-  opacity: 0.85;
-  transition: fill 0.35s ease, stroke 0.35s ease, filter 0.35s ease;
+  fill: rgba(148, 163, 184, 0.22);
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 3;
+  opacity: 0.75;
+  transition: fill 0.35s ease, stroke 0.35s ease, opacity 0.35s ease, filter 0.35s ease;
 }
 
 .sh-mountain-viz__marker.is-start,
 .sh-mountain-viz__marker.is-active {
-  fill: rgba(224, 242, 254, 0.95);
-  stroke: #e0f2fe;
+  fill: url(#sh-mt-marker-core);
+  stroke: rgba(255, 255, 255, 0.85);
   opacity: 1;
-  filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.95));
+  filter: drop-shadow(0 0 18px rgba(103, 232, 249, 0.85));
 }
 
 .sh-mountain-viz__marker.is-start {
-  fill: #f0f9ff;
+  stroke-width: 4;
 }
 
 .sh-mountain-viz__marker.is-active:not(.is-start) {
-  fill: rgba(103, 232, 249, 0.65);
+  fill: url(#sh-mt-marker-core);
+}
+
+.sh-mountain-viz__labels {
+  mix-blend-mode: normal;
 }
 
 .sh-mountain-viz__label {
-  fill: rgba(255, 255, 255, 0.72);
+  fill: rgba(255, 255, 255, 0.78);
   font-family: var(--sh-font, "Inter", system-ui, sans-serif);
-  font-size: 13px;
+  font-size: 34px;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: fill 0.35s ease;
+  letter-spacing: 0.02em;
+  paint-order: stroke fill;
+  stroke: rgba(2, 6, 23, 0.55);
+  stroke-width: 6;
+  transition: fill 0.35s ease, stroke 0.35s ease;
 }
 
 .sh-mountain-viz__label.is-active {
@@ -1330,7 +1327,6 @@
 
 .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
   opacity: 1;
-  offset-path: path("M 38 372 C 72 348, 118 312, 162 278 C 200 248, 242 218, 278 188 C 312 160, 348 130, 382 102 C 396 90, 406 80, 412 74");
   offset-distance: 0%;
   animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
 }
