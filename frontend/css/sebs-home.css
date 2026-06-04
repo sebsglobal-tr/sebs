@@ -560,12 +560,39 @@
   isolation: isolate;
 }
 
-.sh-hero-flow.sh-reveal {
-  transform: translateY(12px);
+.sh-reveal--hero-flow {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
-.sh-hero-flow.sh-reveal.is-visible {
-  transform: translateY(0);
+.sh-reveal--hero-flow .sh-hero-flow__track {
+  opacity: 0;
+  transition: opacity 0.7s ease 0.4s;
+}
+
+.sh-reveal--hero-flow.is-visible .sh-hero-flow__track {
+  opacity: 1;
+}
+
+.sh-reveal--hero-flow .sh-hero-flow__hub-inner {
+  opacity: 0;
+  transform: scale(0.88);
+}
+
+.sh-reveal--hero-flow.is-visible .sh-hero-flow__hub-inner {
+  animation: sh-hero-hub-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.sh-reveal--hero-flow:not(.is-visible) .sh-hero-flow__track {
+  animation-play-state: paused;
+}
+
+@keyframes sh-hero-hub-in {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .sh-hero-flow__viewport {
@@ -621,8 +648,8 @@
 .sh-hero-flow__group {
   display: flex;
   align-items: center;
-  gap: 1.15rem;
-  padding-inline: 0.75rem;
+  gap: 1.5rem;
+  padding-inline: 1rem;
 }
 
 .sh-flow-card {
@@ -637,8 +664,9 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition:
-    transform 0.35s ease,
-    opacity 0.35s ease,
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.32s ease,
+    visibility 0.32s ease,
     filter 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
@@ -646,7 +674,7 @@
 
 /* Sağdan gelir — henüz değerlendirilmedi */
 .sh-flow-card.is-pending {
-  opacity: 0.92;
+  opacity: 1;
 }
 
 .sh-flow-card.is-pending .sh-flow-card__badge {
@@ -656,29 +684,53 @@
 }
 
 .sh-flow-card.is-pending .sh-flow-card__score strong {
-  opacity: 0.45;
+  opacity: 0.55;
+  color: var(--sh-text-muted);
 }
 
-/* SEBS kutusunun içinde — taranıyor */
+/* Kutuya yaklaşıyor */
+.sh-flow-card.is-entering {
+  opacity: 1;
+  transform: scale(0.94);
+  filter: none;
+  border-color: rgba(124, 58, 237, 0.22);
+}
+
+.sh-flow-card.is-entering .sh-flow-card__score strong {
+  opacity: 0.4;
+}
+
+/* Kutunun içinde — tamamen gizli (altından geçme yok) */
 .sh-flow-card.is-processing {
-  opacity: 0.25;
-  transform: scale(0.88);
-  filter: blur(1px);
-  border-color: rgba(124, 58, 237, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.72);
+  filter: none;
+  border-color: transparent;
   box-shadow: none;
 }
 
 .sh-flow-card.is-processing .sh-flow-card__scan {
-  opacity: 1;
-}
-
-.sh-flow-card.is-processing .sh-flow-card__badge {
   opacity: 0;
-  transform: scale(0);
 }
 
-.sh-flow-card.is-processing .sh-flow-card__score strong {
-  opacity: 0.35;
+/* Kutudan çıkıyor */
+.sh-flow-card.is-exiting {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(0.96);
+  animation: sh-flow-card-emerge 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sh-flow-card-emerge {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Kutudan çıktı — olumlu */
@@ -843,58 +895,103 @@
 
 .sh-hero-flow__hub-inner {
   position: relative;
-  width: 9.75rem;
-  height: 10.75rem;
+  width: 11.5rem;
+  height: 11.75rem;
   display: grid;
   grid-template: 1fr / 1fr;
   place-items: center;
 }
 
-/* Kartların içeriğe "girdiği" opak kapı */
+/* Kartların içine girdiği opak kapı — track'in üstünde */
 .sh-hero-flow__gate {
   grid-area: 1 / 1;
   z-index: 1;
+  position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 1.35rem;
-  background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+  overflow: hidden;
+  border-radius: 1.45rem;
+  background: linear-gradient(155deg, #f8fafc 0%, #e2e8f0 48%, #cbd5e1 100%);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 20px 40px -12px rgba(0, 0, 0, 0.5);
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 24px 48px -14px rgba(0, 0, 0, 0.55);
+}
+
+.sh-hero-flow__gate-scan {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(124, 58, 237, 0.12) 42%,
+    rgba(56, 189, 248, 0.35) 50%,
+    rgba(124, 58, 237, 0.12) 58%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+}
+
+.sh-hero-flow__hub-inner.is-scanning .sh-hero-flow__gate-scan {
+  opacity: 1;
+  animation: sh-flow-scan 0.85s linear infinite;
 }
 
 .sh-hero-flow__cube {
   grid-area: 1 / 1;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 7.25rem;
-  height: 7.25rem;
-  padding: 0.85rem;
-  border-radius: 1.15rem;
+  width: 8.5rem;
+  height: 8.5rem;
+  padding: 1rem;
+  border-radius: 1.25rem;
   background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 55%, #e2e8f0 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
-    0 28px 48px -16px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(124, 58, 237, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    0 32px 56px -18px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(124, 58, 237, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
   transform: none;
   transition: box-shadow 0.35s var(--sh-ease);
 }
 
+.sh-hero-flow__hub-inner.is-scanning .sh-hero-flow__cube {
+  box-shadow:
+    0 32px 56px -18px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(124, 58, 237, 0.35),
+    0 0 28px -4px rgba(56, 189, 248, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
 .sh-hero-flow:hover .sh-hero-flow__cube {
   box-shadow:
-    0 32px 52px -14px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(124, 58, 237, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    0 36px 58px -16px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(124, 58, 237, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 .sh-hero-flow__logo {
   display: block;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 4rem;
+  height: 4rem;
   object-fit: contain;
+}
+
+.sh-hero-flow__label {
+  position: absolute;
+  left: 50%;
+  bottom: -1.35rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.85);
+  text-align: center;
+  white-space: nowrap;
 }
 
 @keyframes sh-hero-flow-scroll {
@@ -2144,12 +2241,16 @@
   }
 
   .sh-flow-card.is-pending,
+  .sh-flow-card.is-entering,
   .sh-flow-card.is-processing,
+  .sh-flow-card.is-exiting,
   .sh-flow-card.is-positive,
   .sh-flow-card.is-negative {
     opacity: 1;
+    visibility: visible;
     transform: none;
     filter: none;
+    animation: none;
   }
 
   .sh-flow-card .sh-flow-card__scan {
@@ -2162,6 +2263,13 @@
 
   .sh-hero-flow:hover .sh-hero-flow__cube {
     transform: none;
+  }
+
+  .sh-reveal--hero-flow .sh-hero-flow__track,
+  .sh-reveal--hero-flow .sh-hero-flow__hub-inner {
+    opacity: 1;
+    animation: none;
+    transition: none;
   }
 
   .sh-mountain-viz.is-animated .sh-mountain-viz__trail-pulse {

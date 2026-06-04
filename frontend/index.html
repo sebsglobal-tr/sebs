@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="/css/sebs-design-system.css?v=3" />
   <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=2" />
-  <link rel="stylesheet" href="/css/sebs-home.css?v=27" />
+  <link rel="stylesheet" href="/css/sebs-home.css?v=28" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <noscript><style>.sh-reveal,.sh-hero-flow.sh-reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -116,7 +116,7 @@
             <p class="sh-trust-line">Kredi kartı gerekmez <span>·</span> Öğrenci odaklı <span>·</span> Simülasyon tabanlı gelişim</p>
           </div>
 
-          <div class="sh-hero-flow sh-reveal" role="img" aria-label="Simülasyon performans kartları SEBS merkezinde sonsuz akış">
+          <div class="sh-hero-flow sh-reveal sh-reveal--hero-flow" role="img" aria-label="Simülasyon performans kartları SEBS merkezinde değerlendirilir ve çıkar">
             <div class="sh-hero-flow__viewport">
               <div class="sh-hero-flow__track">
                 <div class="sh-hero-flow__group">
@@ -198,10 +198,13 @@
               </div>
               <div class="sh-hero-flow__hub" aria-hidden="true">
                 <div class="sh-hero-flow__hub-inner">
-                  <div class="sh-hero-flow__gate"></div>
-                  <div class="sh-hero-flow__cube">
-                    <img src="/images/sebs-navbar-mark.png?v=1" alt="SEBS Global" width="44" height="44" class="sh-hero-flow__logo" decoding="async" />
+                  <div class="sh-hero-flow__gate">
+                    <span class="sh-hero-flow__gate-scan" aria-hidden="true"></span>
                   </div>
+                  <div class="sh-hero-flow__cube">
+                    <img src="/images/sebs-navbar-mark.png?v=1" alt="SEBS Global" width="52" height="52" class="sh-hero-flow__logo" decoding="async" />
+                  </div>
+                  <p class="sh-hero-flow__label">SEBS değerlendiriyor</p>
                 </div>
               </div>
             </div>
@@ -577,6 +580,6 @@
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
   <script src="/js/navigation.js?v=3.7" defer></script>
-  <script src="/js/sebs-home.js?v=21" defer></script>
+  <script src="/js/sebs-home.js?v=22" defer></script>
 </body>
 </html>

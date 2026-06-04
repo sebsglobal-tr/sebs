@@ -194,40 +194,103 @@
     }
   }
 
+  function animateFlowScore(card) {
+    var strong = card.querySelector('.sh-flow-card__score strong');
+    if (!strong) return;
+    var target = parseInt(strong.getAttribute('data-score-final'), 10);
+    if (!target || isNaN(target)) return;
+    if (reduced) {
+      strong.textContent = String(target);
+      return;
+    }
+    strong.textContent = '0';
+    var start = performance.now();
+    var duration = 680;
+    function frame(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      strong.textContent = String(Math.round(target * eased));
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
   function initHeroFlowEvaluation(continuous) {
     var gate = document.querySelector('.sh-hero-flow__gate');
+    var hubInner = document.querySelector('.sh-hero-flow__hub-inner');
     var cards = document.querySelectorAll('.sh-hero-flow .sh-flow-card');
     if (!gate || !cards.length) return;
 
     cards.forEach(function (card) {
       card.classList.add('is-pending');
+      var strong = card.querySelector('.sh-flow-card__score strong');
+      if (strong && !strong.getAttribute('data-score-final')) {
+        strong.setAttribute('data-score-final', strong.textContent);
+        strong.textContent = '—';
+      }
     });
 
     function updateCards() {
       var gateRect = gate.getBoundingClientRect();
       var gateLeft = gateRect.left;
       var gateRight = gateRect.right;
-      var zonePad = 10;
+      var enterBand = 28;
+      var exitBand = 32;
+      var scanning = false;
 
       cards.forEach(function (card) {
         var rect = card.getBoundingClientRect();
         var cardCx = rect.left + rect.width / 2;
         var result = card.getAttribute('data-result');
+        var wasScored = card.getAttribute('data-scored') === '1';
+        var strong = card.querySelector('.sh-flow-card__score strong');
+        var finalScore = strong ? strong.getAttribute('data-score-final') : null;
 
-        card.classList.remove('is-pending', 'is-processing', 'is-positive', 'is-negative');
+        card.classList.remove(
+          'is-pending',
+          'is-entering',
+          'is-processing',
+          'is-exiting',
+          'is-positive',
+          'is-negative'
+        );
 
-        if (cardCx > gateRight + zonePad) {
+        if (cardCx > gateRight + enterBand) {
           card.classList.add('is-pending');
-        } else if (cardCx < gateLeft - zonePad) {
+          card.removeAttribute('data-scored');
+          if (strong && finalScore) strong.textContent = '—';
+        } else if (cardCx > gateRight - 6) {
+          card.classList.add('is-entering');
+        } else if (cardCx >= gateLeft && cardCx <= gateRight) {
+          card.classList.add('is-processing');
+          scanning = true;
+        } else if (cardCx > gateLeft - exitBand) {
+          card.classList.add('is-exiting');
           if (result === 'negative') {
             card.classList.add('is-negative');
           } else {
             card.classList.add('is-positive');
           }
-        } else {
-          card.classList.add('is-processing');
+          if (!wasScored) {
+            card.setAttribute('data-scored', '1');
+            animateFlowScore(card);
+          }
+        } else if (cardCx < gateLeft - exitBand) {
+          if (result === 'negative') {
+            card.classList.add('is-negative');
+          } else {
+            card.classList.add('is-positive');
+          }
+          if (!wasScored) {
+            card.setAttribute('data-scored', '1');
+            if (strong && finalScore) strong.textContent = finalScore;
+          }
         }
       });
+
+      if (hubInner) {
+        hubInner.classList.toggle('is-scanning', scanning);
+      }
     }
 
     if (continuous) {
@@ -330,10 +393,6 @@
     initMountainPath();
     initSkillHub();
 
-    var heroFlow = document.querySelector('.sh-hero-flow.sh-reveal');
-    if (heroFlow) {
-      heroFlow.classList.add('is-visible');
-    }
   } else {
     document.querySelectorAll('.sh-reveal').forEach(function (el) {
       el.classList.add('is-visible');
