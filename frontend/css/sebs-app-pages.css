@@ -632,9 +632,13 @@ body.sebs-app-page .sebs-visual-strip-grid {
   }
 }
 
-/* Hakkımızda — legal-document.css açık tema override (dosya sırası: legal → app-pages) */
+/* Hakkımızda — ana sayfa premium koyu tema (legal-document.css override) */
 body.sebs-app-page.about-page {
   padding-top: 0 !important;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(124, 58, 237, 0.14), transparent 58%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(34, 211, 238, 0.06), transparent 50%),
+    var(--sh-bg-deep);
 }
 
 body.sebs-app-page.about-page .sebs-about-main {
@@ -644,27 +648,92 @@ body.sebs-app-page.about-page .sebs-about-main {
 
 body.sebs-app-page.about-page .about-hero,
 body.sebs-app-page.about-page .about-hero.hero-mesh {
-  background: linear-gradient(165deg, rgba(124, 58, 237, 0.14) 0%, var(--sh-bg-elevated) 50%, var(--sh-bg-deep) 100%) !important;
+  position: relative;
+  overflow: hidden;
+  background: transparent !important;
   border-bottom: 1px solid var(--sh-border-soft);
-  padding-top: calc(var(--sh-nav-h) + 2rem);
-  padding-bottom: 2.5rem;
+  padding-top: calc(var(--sh-nav-h) + 2.25rem);
+  padding-bottom: 3rem;
+}
+
+body.sebs-app-page.about-page .about-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 90% at 18% 0%, rgba(124, 58, 237, 0.22), transparent 55%),
+    radial-gradient(ellipse 55% 70% at 88% 30%, rgba(34, 211, 238, 0.1), transparent 52%),
+    linear-gradient(180deg, var(--sh-bg-elevated) 0%, var(--sh-bg-deep) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.sebs-app-page.about-page .about-hero .sh-container {
+  position: relative;
+  z-index: 1;
 }
 
 body.sebs-app-page.about-page .about-hero__inner {
-  max-width: 42rem;
+  max-width: 44rem;
+}
+
+body.sebs-app-page.about-page .about-hero__eyebrow,
+body.sebs-app-page.about-page .legal-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--sh-radius-pill);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  background: rgba(124, 58, 237, 0.12);
+  font-size: var(--app-text-xs) !important;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #c4b5fd !important;
+}
+
+body.sebs-app-page.about-page .about-hero__eyebrow::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--sh-cyan);
+  box-shadow: 0 0 10px var(--sh-glow-cyan);
 }
 
 body.sebs-app-page.about-page .about-hero h1 {
-  font-size: var(--app-text-hero) !important;
-  line-height: 1.2 !important;
-  font-weight: 700 !important;
-  color: var(--app-color-heading) !important;
+  font-size: clamp(1.875rem, 4vw, 2.5rem) !important;
+  line-height: 1.12 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+  color: var(--sh-text) !important;
+  background: var(--sh-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 body.sebs-app-page.about-page .about-section__title {
-  font-size: var(--app-text-lg) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+  font-size: var(--app-text-xl) !important;
   font-weight: 700 !important;
-  color: var(--app-color-heading) !important;
+  letter-spacing: -0.02em;
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.about-page .about-section__title::before {
+  content: "";
+  flex-shrink: 0;
+  width: 3px;
+  height: 1.15em;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--sh-violet-light), var(--sh-cyan));
+  box-shadow: 0 0 12px var(--sh-glow-violet);
 }
 
 body.sebs-app-page.about-page .about-hero__lead {
@@ -689,10 +758,6 @@ body.sebs-app-page.about-page .about-process-steps li span {
   color: var(--app-color-body) !important;
 }
 
-body.sebs-app-page.about-page .about-pillar-card strong {
-  font-size: var(--app-text-sm) !important;
-}
-
 body.sebs-app-page.about-page .about-hero__links {
   display: flex;
   flex-wrap: wrap;
@@ -702,13 +767,28 @@ body.sebs-app-page.about-page .about-hero__links {
 }
 
 body.sebs-app-page.about-page .about-hero__links a {
-  color: #c4b5fd !important;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--sh-radius-pill);
+  border: 1px solid var(--sh-border);
+  background: var(--sh-glass);
+  color: var(--sh-text-muted) !important;
+  font-size: var(--app-text-sm) !important;
   font-weight: 600;
   white-space: nowrap;
+  transition:
+    color 0.25s var(--sh-ease),
+    border-color 0.25s var(--sh-ease),
+    background 0.25s var(--sh-ease),
+    box-shadow 0.25s var(--sh-ease);
 }
 
 body.sebs-app-page.about-page .about-hero__links a:hover {
-  color: var(--sh-cyan) !important;
+  color: var(--sh-text) !important;
+  border-color: rgba(124, 58, 237, 0.45);
+  background: var(--sh-glass-hover);
+  box-shadow: 0 0 24px -10px var(--sh-glow-violet);
 }
 
 body.sebs-app-page.about-page .about-hero__sep {
@@ -717,13 +797,33 @@ body.sebs-app-page.about-page .about-hero__sep {
 }
 
 body.sebs-app-page.about-page .about-body {
+  position: relative;
   background: transparent;
-  padding-top: 2.5rem;
-  padding-bottom: 3rem;
+  padding-top: 2.75rem;
+  padding-bottom: 4rem;
+}
+
+body.sebs-app-page.about-page .about-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(124, 58, 237, 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+body.sebs-app-page.about-page .about-body > .sh-container {
+  position: relative;
+  z-index: 1;
 }
 
 body.sebs-app-page.about-page .about-section {
-  margin-top: 2.75rem;
+  margin-top: 3rem;
+  padding-top: 0.25rem;
+}
+
+body.sebs-app-page.about-page .about-section + .about-section {
+  border-top: 1px solid var(--sh-border-soft);
+  padding-top: 3rem;
 }
 
 body.sebs-app-page.about-page .about-section:first-child {
@@ -739,8 +839,70 @@ body.sebs-app-page.about-page .about-company-panel,
 body.sebs-app-page.about-page .about-process-steps li {
   background: var(--sh-glass) !important;
   border: 1px solid var(--sh-border) !important;
+  border-radius: var(--sh-radius-lg) !important;
   box-shadow: var(--sh-shadow-card) !important;
   color: var(--sh-text-muted);
+  transition:
+    transform 0.3s var(--sh-ease),
+    border-color 0.3s var(--sh-ease),
+    box-shadow 0.3s var(--sh-ease);
+}
+
+body.sebs-app-page.about-page .about-pillar-card:hover,
+body.sebs-app-page.about-page .about-trust-card:hover,
+body.sebs-app-page.about-page .about-vm-card:hover,
+body.sebs-app-page.about-page .about-team-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124, 58, 237, 0.35) !important;
+  box-shadow:
+    var(--sh-shadow-card),
+    0 0 32px -14px var(--sh-glow-violet) !important;
+}
+
+body.sebs-app-page.about-page .about-story-panel {
+  position: relative;
+  padding: 1.5rem 1.35rem 1.35rem 1.65rem !important;
+  background:
+    linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, transparent 42%),
+    var(--sh-glass) !important;
+}
+
+body.sebs-app-page.about-page .about-story-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  bottom: 1rem;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--sh-violet-light), var(--sh-cyan));
+  box-shadow: 0 0 14px var(--sh-glow-violet);
+}
+
+body.sebs-app-page.about-page .about-story-panel strong {
+  color: #c4b5fd !important;
+  font-weight: 700;
+}
+
+body.sebs-app-page.about-page .about-pillar-card {
+  padding: 1.25rem 1.15rem !important;
+}
+
+body.sebs-app-page.about-page .about-pillar-card strong {
+  color: var(--sh-text) !important;
+  font-size: var(--app-text-base) !important;
+  margin-bottom: 0.15rem;
+}
+
+body.sebs-app-page.about-page .about-pillar-card strong::before {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  margin-bottom: 0.65rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sh-violet), var(--sh-cyan));
+  opacity: 0.85;
 }
 
 body.sebs-app-page.about-page .about-pillar-card strong,
@@ -853,24 +1015,94 @@ body.sebs-app-page.about-page .about-section__cta-inline {
   margin-top: 1.25rem;
 }
 
+body.sebs-app-page.about-page .about-process-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1.15rem 1.1rem !important;
+}
+
 body.sebs-app-page.about-page .about-process-steps__num {
-  background: rgba(124, 58, 237, 0.2) !important;
-  color: #c4b5fd !important;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--sh-gradient-btn) !important;
+  color: #fff !important;
+  font-size: 0.8125rem !important;
+  font-weight: 800;
+  box-shadow: 0 0 20px -6px var(--sh-glow-violet);
+}
+
+body.sebs-app-page.about-page .about-trust-card h3,
+body.sebs-app-page.about-page .about-vm-card h3 {
+  font-size: var(--app-text-base) !important;
+}
+
+body.sebs-app-page.about-page .about-vm-card {
+  background:
+    linear-gradient(145deg, rgba(124, 58, 237, 0.1) 0%, transparent 55%),
+    var(--sh-glass) !important;
+}
+
+body.sebs-app-page.about-page .about-company-panel {
+  padding: 1.35rem 1.25rem !important;
+}
+
+body.sebs-app-page.about-page .about-company-panel dl > div {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--sh-border-soft);
+}
+
+body.sebs-app-page.about-page .about-company-panel dl > div:last-child {
+  border-bottom: none;
 }
 
 body.sebs-app-page.about-page .about-cta-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem 0.5rem;
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--sh-border-soft);
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin-top: 3rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: var(--sh-radius-xl);
+  border: 1px solid var(--sh-border);
+  background:
+    linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(34, 211, 238, 0.06) 100%),
+    var(--sh-glass);
+  box-shadow: var(--sh-shadow-glow);
 }
 
 body.sebs-app-page.about-page .about-cta-row a {
-  color: #c4b5fd !important;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--sh-radius-pill);
+  background: var(--sh-gradient-btn);
+  color: #fff !important;
   font-weight: 600;
+  box-shadow: 0 12px 28px -14px rgba(124, 58, 237, 0.55);
+  transition: transform 0.25s var(--sh-ease), box-shadow 0.25s var(--sh-ease);
+}
+
+body.sebs-app-page.about-page .about-cta-row a:hover {
+  transform: translateY(-2px);
+  color: #fff !important;
+  box-shadow: 0 16px 32px -12px rgba(124, 58, 237, 0.6);
+}
+
+body.sebs-app-page.about-page .about-cta-row .about-hero__sep {
+  display: none;
+}
+
+body.sebs-app-page.about-page .sebs-payment-trust--about-inline {
+  padding: 1.25rem;
+  border-radius: var(--sh-radius-lg);
+  border: 1px solid var(--sh-border);
+  background: var(--sh-glass);
 }
 
 body.sebs-app-page.about-page .sebs-payment-trust__label {
@@ -878,8 +1110,26 @@ body.sebs-app-page.about-page .sebs-payment-trust__label {
 }
 
 body.sebs-app-page.about-page .about-team-photo {
-  border-color: var(--sh-border) !important;
-  background: var(--sh-bg-elevated) !important;
+  border: 2px solid rgba(124, 58, 237, 0.35) !important;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.25), transparent 55%),
+    var(--sh-bg-elevated) !important;
+  box-shadow: 0 0 24px -10px var(--sh-glow-violet);
+}
+
+body.sebs-app-page.about-page .about-team-initials {
+  color: #c4b5fd !important;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.sebs-app-page.about-page .about-pillar-card:hover,
+  body.sebs-app-page.about-page .about-trust-card:hover,
+  body.sebs-app-page.about-page .about-vm-card:hover,
+  body.sebs-app-page.about-page .about-team-card:hover,
+  body.sebs-app-page.about-page .about-cta-row a:hover {
+    transform: none;
+  }
 }
 
 /* Loading overlay */
@@ -1070,17 +1320,15 @@ body.sebs-app-page main a[href]:not(.sh-btn):not(.sh-nav__link):not(.sh-brand):h
   color: var(--app-color-link-hover);
 }
 
-body.sebs-app-page.about-page .about-hero__links a,
 body.sebs-app-page.about-page .about-section__intro a,
 body.sebs-app-page.about-page .about-trust-card a,
 body.sebs-app-page.about-page .about-section__cta-inline a,
-body.sebs-app-page.about-page .about-cta-row a,
 body.sebs-app-page.about-page .about-company-panel dd a {
   color: var(--app-color-link) !important;
 }
 
-body.sebs-app-page.about-page .about-hero__links a:hover,
-body.sebs-app-page.about-page .about-trust-card a:hover {
+body.sebs-app-page.about-page .about-trust-card a:hover,
+body.sebs-app-page.about-page .about-section__intro a:hover {
   color: var(--app-color-link-hover) !important;
 }
 
