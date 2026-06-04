@@ -14,8 +14,8 @@
   --app-color-heading: var(--sh-text);
   --app-color-body: var(--sh-text-muted);
   --app-color-muted: var(--sh-text-subtle);
-  --app-color-link: #c4b5fd;
-  --app-color-link-hover: #67e8f9;
+  --app-color-link: #2563eb;
+  --app-color-link-hover: #1d4ed8;
 
   margin: 0;
   font-family: var(--sh-font);
@@ -119,17 +119,17 @@ body.sebs-app-page .sebs-app-main {
 /* styles.css body::before (açık gradient) — app sayfalarında kapat */
 body.sebs-app-page::before {
   background:
-    radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
-    linear-gradient(180deg, #050510 0%, #070716 50%, #050510 100%) !important;
+    radial-gradient(ellipse 55% 45% at 8% 8%, rgba(99, 102, 241, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 20%, rgba(37, 99, 235, 0.06), transparent 52%),
+    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%) !important;
   opacity: 1 !important;
 }
 
 body.sebs-app-page::after {
   background:
-    radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(5, 5, 16, 0.4) 0%, rgba(5, 5, 16, 0.85) 100%) !important;
-  opacity: 1 !important;
+    radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, transparent 0%, rgba(246, 247, 251, 0.6) 100%) !important;
+  opacity: 0.5 !important;
 }
 
 .sebs-app-main,
@@ -636,8 +636,7 @@ body.sebs-app-page .sebs-visual-strip-grid {
 body.sebs-app-page.about-page {
   padding-top: 0 !important;
   background:
-    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(124, 58, 237, 0.14), transparent 58%),
-    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(34, 211, 238, 0.06), transparent 50%),
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(99, 102, 241, 0.06), transparent 58%),
     var(--sh-bg-deep);
 }
 
@@ -685,13 +684,13 @@ body.sebs-app-page.about-page .legal-updated {
   margin: 0 0 1rem;
   padding: 0.35rem 0.85rem;
   border-radius: var(--sh-radius-pill);
-  border: 1px solid rgba(124, 58, 237, 0.35);
-  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  background: rgba(37, 99, 235, 0.06);
   font-size: var(--app-text-xs) !important;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #c4b5fd !important;
+  color: var(--sh-blue) !important;
 }
 
 body.sebs-app-page.about-page .about-hero__eyebrow::before {
@@ -699,8 +698,8 @@ body.sebs-app-page.about-page .about-hero__eyebrow::before {
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: var(--sh-cyan);
-  box-shadow: 0 0 10px var(--sh-glow-cyan);
+  background: var(--sh-blue);
+  box-shadow: none;
 }
 
 body.sebs-app-page.about-page .about-hero h1 {
@@ -709,10 +708,8 @@ body.sebs-app-page.about-page .about-hero h1 {
   font-weight: 800 !important;
   letter-spacing: -0.03em;
   color: var(--sh-text) !important;
-  background: var(--sh-gradient-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: none;
+  -webkit-text-fill-color: unset;
 }
 
 body.sebs-app-page.about-page .about-section__title {

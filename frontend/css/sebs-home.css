@@ -51,7 +51,7 @@
   top: 1rem;
 }
 
-/* Ambient background */
+/* Ambient background — açık, sakin */
 .sebs-home-page::before {
   content: "";
   position: fixed;
@@ -59,9 +59,9 @@
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
-    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%);
+    radial-gradient(ellipse 55% 45% at 8% 8%, rgba(99, 102, 241, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 20%, rgba(37, 99, 235, 0.06), transparent 52%),
+    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 48%, var(--sh-bg-deep) 100%);
 }
 
 .sebs-home-page::after {
@@ -70,10 +70,10 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.35;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
-  mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+  mask-image: linear-gradient(180deg, black 0%, transparent 90%);
 }
 
 .sebs-home-main {
@@ -238,11 +238,11 @@
 }
 
 .sh-nav.is-scrolled {
-  background: rgba(5, 5, 16, 0.72);
-  border-bottom: 1px solid var(--sh-border-soft);
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid var(--sh-border);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  box-shadow: 0 8px 32px -16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px -12px rgba(15, 23, 42, 0.08);
 }
 
 .sh-nav__inner {
@@ -477,7 +477,7 @@
   display: flex;
   flex-direction: column;
   padding: calc(var(--sh-nav-h) + 1.5rem) 1.5rem 2rem;
-  background: rgba(5, 5, 16, 0.96);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   opacity: 0;
@@ -677,11 +677,11 @@
   min-height: 16rem;
   padding: 2rem 0;
   border-radius: var(--sh-radius-xl);
-  border: 1px solid var(--sh-border-soft);
+  border: 1px solid var(--sh-border);
   background:
-    radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124, 58, 237, 0.14), transparent 65%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.15) 100%);
-  box-shadow: var(--sh-shadow-card), 0 0 60px -20px var(--sh-glow-violet);
+    radial-gradient(ellipse 70% 80% at 50% 50%, rgba(99, 102, 241, 0.06), transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: var(--sh-shadow-card);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -699,12 +699,12 @@
 
 .sh-hero-flow__viewport::before {
   left: 0;
-  background: linear-gradient(90deg, var(--sh-bg, #050510) 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--sh-bg-deep) 0%, transparent 100%);
 }
 
 .sh-hero-flow__viewport::after {
   right: 0;
-  background: linear-gradient(270deg, var(--sh-bg, #050510) 0%, transparent 100%);
+  background: linear-gradient(270deg, var(--sh-bg-deep) 0%, transparent 100%);
 }
 
 .sh-hero-flow__track {
@@ -733,11 +733,9 @@
   width: 8.5rem;
   padding: 1rem 0.85rem 0.75rem;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
-  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--sh-border);
+  background: #ffffff;
+  box-shadow: 0 4px 16px -8px rgba(15, 23, 42, 0.12);
   transition:
     transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.32s ease,
@@ -949,13 +947,13 @@
 .sh-flow-card__score strong {
   font-size: 1.125rem;
   font-weight: 800;
-  color: var(--sh-text);
+  color: #0f172a;
   letter-spacing: -0.03em;
 }
 
 .sh-flow-card__score span {
   font-size: 0.75rem;
-  opacity: 0.75;
+  color: #64748b;
 }
 
 .sh-hero-flow__hub {
@@ -1574,70 +1572,13 @@
   color: var(--sh-text-muted);
 }
 
-/* Big Five — CodeSignal benzeri açık zemin (yalnızca renk, görseller aynı) */
-#big-five {
-  --cs-bg: #f6f7fb;
-  --cs-bg-alt: #eef1f8;
-  --cs-surface: #ffffff;
-  --cs-border: #e2e8f0;
-  --cs-border-soft: #edf0f5;
-  --cs-text: #0f172a;
-  --cs-text-secondary: #334155;
-  --cs-text-muted: #64748b;
-  --cs-accent: #2563eb;
-  --cs-accent-hover: #1d4ed8;
-  --cs-indigo: #6366f1;
-
-  background: linear-gradient(180deg, var(--cs-bg) 0%, var(--cs-bg-alt) 100%);
-  border-block: 1px solid var(--cs-border-soft);
-}
-
-#big-five .sh-h2 {
-  color: var(--cs-text);
-}
-
-#big-five .sh-lead {
-  color: var(--cs-text-secondary);
-}
-
-#big-five .sh-bigfive__list li {
-  background: var(--cs-surface);
-  border-color: var(--cs-border);
-  color: var(--cs-text-secondary);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-}
-
-#big-five .sh-btn--primary {
-  background: var(--cs-accent);
-  color: #fff;
-  box-shadow: 0 4px 14px -4px rgba(37, 99, 235, 0.4);
-}
-
-#big-five .sh-btn--primary:hover {
-  background: var(--cs-accent-hover);
-  box-shadow: 0 6px 18px -6px rgba(37, 99, 235, 0.45);
-}
-
-#big-five .sh-btn--ghost {
-  background: var(--cs-surface);
-  border-color: var(--cs-border);
-  color: var(--cs-text-secondary);
-}
-
-#big-five .sh-btn--ghost:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: var(--cs-text);
-}
-
+/* Big Five — skillhub panel (site tokenları ile uyumlu) */
 #big-five .sh-skillhub__stage {
   padding: 1.35rem 1.15rem;
   border-radius: 1.15rem;
-  background: var(--cs-surface);
-  border: 1px solid var(--cs-border);
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 12px 40px -16px rgba(15, 23, 42, 0.1);
+  background: var(--sh-bg-elevated);
+  border: 1px solid var(--sh-border);
+  box-shadow: var(--sh-shadow-card);
 }
 
 #big-five .sh-skillhub__ring {
@@ -1648,88 +1589,10 @@
   border-color: rgba(37, 99, 235, 0.22);
 }
 
-#big-five .sh-skillhub__avatar::before {
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 50%,
-    rgba(37, 99, 235, 0.28) 0%,
-    rgba(99, 102, 241, 0.12) 45%,
-    transparent 72%
-  );
-  opacity: 0.75;
-}
-
-#big-five .sh-skillhub__avatar::after {
-  background: radial-gradient(
-    circle at 50% 42%,
-    rgba(99, 102, 241, 0.14) 0%,
-    rgba(37, 99, 235, 0.06) 40%,
-    transparent 68%
-  );
-}
-
 #big-five .sh-skillhub__atlas {
   filter:
     drop-shadow(0 10px 18px rgba(15, 23, 42, 0.12))
     drop-shadow(0 0 22px rgba(99, 102, 241, 0.18));
-}
-
-#big-five .sh-skillhub__card {
-  background: var(--cs-surface);
-  border-color: var(--cs-border);
-  color: var(--cs-text);
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
-}
-
-#big-five .sh-skillhub__card-head strong,
-#big-five .sh-skillhub__score {
-  color: var(--cs-text);
-}
-
-#big-five .sh-skillhub__bar-label,
-#big-five .sh-skillhub__skills > span,
-#big-five .sh-skillhub__plan {
-  color: var(--cs-text-muted);
-}
-
-#big-five .sh-skillhub__bar {
-  background: #e8ecf3;
-}
-
-#big-five .sh-skillhub__bar-fill {
-  background: linear-gradient(90deg, var(--cs-accent), #60a5fa);
-}
-
-#big-five .sh-skillhub__link {
-  color: var(--cs-accent);
-}
-
-#big-five .sh-skillhub__link:hover {
-  color: var(--cs-accent-hover);
-}
-
-#big-five .sh-skillhub__skills {
-  border-top-color: var(--cs-border-soft);
-}
-
-#big-five .sh-skillhub__wave span {
-  background: linear-gradient(180deg, #60a5fa, var(--cs-indigo));
-}
-
-#big-five .sh-skillhub__play {
-  color: var(--cs-text-secondary);
-}
-
-#big-five .sh-skillhub__play-btn {
-  background: var(--cs-accent);
-}
-
-#big-five .sh-skillhub__plan li::before {
-  border-color: #cbd5e1;
-}
-
-#big-five .sh-skillhub__plan li.is-done::before {
-  border-color: var(--cs-accent);
-  background: var(--cs-accent);
 }
 
 /* CodeSignal tarzı beceri hub — CSS Grid, çakışma yok */
@@ -2251,8 +2114,8 @@
 }
 
 .sh-price-card--featured {
-  border-color: rgba(168, 85, 247, 0.45);
-  background: linear-gradient(165deg, rgba(124, 58, 237, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(99, 102, 241, 0.35);
+  background: linear-gradient(165deg, rgba(99, 102, 241, 0.08) 0%, #ffffff 100%);
 }
 
 .sh-price-card__badge {
@@ -2353,8 +2216,8 @@
   padding: clamp(3.5rem, 8vw, 5rem) 2rem;
   border-radius: var(--sh-radius-xl);
   border: 1px solid var(--sh-border);
-  background: linear-gradient(145deg, rgba(124, 58, 237, 0.12) 0%, rgba(37, 99, 235, 0.08) 50%, rgba(5, 5, 16, 0.6) 100%);
-  box-shadow: var(--sh-shadow-glow);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.08) 0%, rgba(37, 99, 235, 0.06) 50%, #ffffff 100%);
+  box-shadow: var(--sh-shadow-card);
 }
 
 .sh-final-cta .sh-btn-row {
