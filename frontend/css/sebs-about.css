@@ -416,11 +416,11 @@ body.about-page .sh-marquee {
   }
 }
 
-/* Görsel kompozisyon */
+/* Görsel kompozisyon — üst üste binme yok, dikey grid */
 .about-story__composition {
-  position: relative;
-  min-height: 22rem;
-  padding: 0.5rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .about-story__frame {
@@ -440,12 +440,7 @@ body.about-page .sh-marquee {
 .about-story__frame--mountain {
   position: relative;
   border-radius: var(--sh-radius-xl);
-  aspect-ratio: 4 / 3;
-  max-height: 20rem;
-}
-
-.about-story__frame--mountain img {
-  min-height: 14rem;
+  aspect-ratio: 16 / 10;
 }
 
 .about-story__path {
@@ -457,8 +452,8 @@ body.about-page .sh-marquee {
   justify-content: space-between;
   gap: 0.35rem;
   margin: 0;
-  padding: 2.5rem 0.85rem 0.75rem;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.55) 55%, transparent);
+  padding: 2rem 0.85rem 0.7rem;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.5) 55%, transparent);
 }
 
 .about-story__path span {
@@ -471,57 +466,33 @@ body.about-page .sh-marquee {
   color: var(--sh-text);
 }
 
-.about-story__frame--atlas {
-  position: absolute;
-  right: -0.35rem;
-  bottom: 2.5rem;
-  width: min(52%, 13.5rem);
-  border-radius: var(--sh-radius-lg);
-  background: #fff;
-  box-shadow: var(--sh-shadow-glow);
-  z-index: 2;
-}
-
-.about-story__frame--atlas img {
-  aspect-ratio: 14 / 15;
-  object-fit: contain;
-  object-position: center bottom;
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-}
-
-.about-story__frame--atlas figcaption {
-  padding: 0.35rem 0.65rem 0.5rem;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--sh-text-subtle);
-  border-top: 1px solid var(--sh-border-soft);
+.about-story__composition-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: stretch;
 }
 
 .about-story__teknokent {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.35rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--sh-radius-md);
-  background: rgba(255, 255, 255, 0.96);
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 100%;
+  padding: 1rem 1rem;
+  border-radius: var(--sh-radius-lg);
   border: 1px solid var(--sh-border-soft);
+  background: var(--sh-glass);
   box-shadow: var(--sh-shadow-card);
 }
 
 .about-story__teknokent img {
   display: block;
   width: auto;
-  max-width: 9.5rem;
+  max-width: 100%;
   height: auto;
-  max-height: 1.75rem;
+  max-height: 2rem;
   object-fit: contain;
 }
 
@@ -531,27 +502,40 @@ body.about-page .sh-marquee {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--sh-text-muted);
+  line-height: 1.4;
 }
 
-.about-story__mark {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 0.85rem;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid var(--sh-border-soft);
-  box-shadow: var(--sh-shadow-card);
+.about-story__frame--atlas {
+  border-radius: var(--sh-radius-lg);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
-.about-story__mark img {
-  width: 2rem;
-  height: 2rem;
+.about-story__frame--atlas img {
+  flex: 1;
+  min-height: 7.5rem;
+  max-height: 9.5rem;
   object-fit: contain;
+  object-position: center bottom;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+.about-story__frame--atlas figcaption {
+  padding: 0.4rem 0.65rem 0.55rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--sh-text-subtle);
+  border-top: 1px solid var(--sh-border-soft);
+}
+
+@media (max-width: 30rem) {
+  .about-story__composition-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Zaman çizelgesi */
@@ -652,21 +636,6 @@ body.about-page .sh-marquee {
 @media (max-width: 30rem) {
   .about-story__facts {
     grid-template-columns: 1fr;
-  }
-
-  .about-story__frame--atlas {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: 100%;
-    margin-top: -3.5rem;
-    margin-left: auto;
-    max-width: 14rem;
-  }
-
-  .about-story__composition {
-    min-height: 0;
-    padding-bottom: 0;
   }
 }
 
