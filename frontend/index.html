@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="/css/sebs-design-system.css?v=3" />
   <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=2" />
-  <link rel="stylesheet" href="/css/sebs-home.css?v=17" />
+  <link rel="stylesheet" href="/css/sebs-home.css?v=18" />
   <link rel="icon" type="image/png" href="/images/SEBS.png" />
   <noscript><style>.sh-reveal,.sh-hero-flow.sh-reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -320,36 +320,13 @@
           <div class="sh-mountain-viz" id="shMountainViz" role="img" aria-label="Kariyer yolculuğu: dağ zirvesine uzanan animasyonlu yol">
             <svg class="sh-mountain-viz__stage" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
               <defs>
-                <linearGradient id="sh-mt-trail-grad" gradientUnits="userSpaceOnUse" x1="468" y1="972" x2="1138" y2="174">
-                  <stop offset="0%" stop-color="#0891b2" />
-                  <stop offset="40%" stop-color="#22d3ee" />
-                  <stop offset="100%" stop-color="#f0f9ff" />
-                </linearGradient>
                 <radialGradient id="sh-mt-marker-core" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#f8fafc" />
-                  <stop offset="55%" stop-color="#a5f3fc" />
-                  <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.35" />
+                  <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.95" />
+                  <stop offset="70%" stop-color="#67e8f9" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#0891b2" stop-opacity="0" />
                 </radialGradient>
-                <radialGradient id="sh-mt-start-glow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.55" />
-                  <stop offset="100%" stop-color="#22d3ee" stop-opacity="0" />
-                </radialGradient>
-                <filter id="sh-mt-trail-blur" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="14" />
-                </filter>
-                <filter id="sh-mt-trail-glow" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="5" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <filter id="sh-mt-flag-glow" x="-100%" y="-100%" width="300%" height="300%">
-                  <feGaussianBlur stdDeviation="4" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
+                <filter id="sh-mt-marker-depth">
+                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#020617" flood-opacity="0.75" />
                 </filter>
                 <filter id="sh-mt-text-shadow">
                   <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#020617" flood-opacity="0.9" />
@@ -363,33 +340,21 @@
                 preserveAspectRatio="xMidYMid slice"
               />
               <g class="sh-mountain-viz__route">
-                <ellipse class="sh-mountain-viz__start-aura" cx="468" cy="972" rx="200" ry="120" fill="url(#sh-mt-start-glow)" />
                 <path
-                  class="sh-mountain-viz__trail-outer"
-                  d="M 468 972 C 518 902, 578 812, 638 732 C 698 652, 752 576, 808 502 C 862 430, 916 358, 972 286 C 1022 232, 1078 196, 1138 174"
-                />
-                <path
-                  class="sh-mountain-viz__trail-base"
-                  d="M 468 972 C 518 902, 578 812, 638 732 C 698 652, 752 576, 808 502 C 862 430, 916 358, 972 286 C 1022 232, 1078 196, 1138 174"
-                />
-                <path
-                  class="sh-mountain-viz__trail"
                   id="shMountainTrail"
-                  d="M 468 972 C 518 902, 578 812, 638 732 C 698 652, 752 576, 808 502 C 862 430, 916 358, 972 286 C 1022 232, 1078 196, 1138 174"
+                  class="sh-mountain-viz__trail-guide"
+                  d="M 252 968 L 362 878 L 302 798 L 442 698 L 382 618 L 522 518 L 462 438 L 602 348 L 542 268 L 682 208 L 622 178 L 762 158 L 852 142"
                 />
-                <g class="sh-mountain-viz__flag" transform="translate(1136, 168)">
-                  <line x1="0" y1="0" x2="0" y2="34" stroke="rgba(255,255,255,0.92)" stroke-width="2.5" stroke-linecap="round" />
-                  <path d="M0 0 L20 7 L0 14 Z" fill="#f8fafc" />
-                </g>
-                <circle class="sh-mountain-viz__marker is-start" data-path-step="0" cx="468" cy="972" r="28" />
-                <circle class="sh-mountain-viz__marker" data-path-step="1" cx="752" cy="576" r="17" />
-                <circle class="sh-mountain-viz__marker" data-path-step="2" cx="916" cy="358" r="17" />
-                <circle class="sh-mountain-viz__runner" r="11" />
+                <path class="sh-mountain-viz__trail-pulse" d="M 252 968 L 362 878 L 302 798 L 442 698 L 382 618 L 522 518 L 462 438 L 602 348 L 542 268 L 682 208 L 622 178 L 762 158 L 852 142" />
+                <circle class="sh-mountain-viz__marker is-start" data-path-step="0" cx="252" cy="968" r="22" />
+                <circle class="sh-mountain-viz__marker" data-path-step="1" cx="522" cy="518" r="14" />
+                <circle class="sh-mountain-viz__marker" data-path-step="2" cx="682" cy="208" r="14" />
+                <circle class="sh-mountain-viz__runner" r="8" />
               </g>
               <g class="sh-mountain-viz__labels" filter="url(#sh-mt-text-shadow)">
-                <text class="sh-mountain-viz__label" data-path-step="0" x="468" y="1046" text-anchor="middle">İlk Adım</text>
-                <text class="sh-mountain-viz__label" data-path-step="1" x="798" y="582">Yükseliş</text>
-                <text class="sh-mountain-viz__label" data-path-step="2" x="962" y="364">Zirve</text>
+                <text class="sh-mountain-viz__label" data-path-step="0" x="252" y="1042" text-anchor="middle">İlk Adım</text>
+                <text class="sh-mountain-viz__label" data-path-step="1" x="568" y="524">Yükseliş</text>
+                <text class="sh-mountain-viz__label" data-path-step="2" x="728" y="214">Zirve</text>
               </g>
             </svg>
           </div>
@@ -559,6 +524,6 @@
   <script src="/js/supabase-client.js"></script>
   <script src="/js/supabase-auth.js?v=2.2"></script>
   <script src="/js/navigation.js?v=3.7" defer></script>
-  <script src="/js/sebs-home.js?v=15" defer></script>
+  <script src="/js/sebs-home.js?v=16" defer></script>
 </body>
 </html>

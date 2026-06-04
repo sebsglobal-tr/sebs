@@ -32,24 +32,27 @@
   function initMountainPath() {
     var viz = document.getElementById('shMountainViz');
     var trail = document.getElementById('shMountainTrail');
+    var trailPulse = viz ? viz.querySelector('.sh-mountain-viz__trail-pulse') : null;
     var cards = document.querySelectorAll('.sh-path-card[data-path-step]');
     if (!viz || !trail || !cards.length) return;
 
     var pathD = trail.getAttribute('d');
-    var pathSteps = [0.02, 0.46, 0.72];
+    var pathSteps = [0.04, 0.48, 0.74];
     var labelOffsets = [
       { dx: 0, dy: 74, anchor: 'middle' },
-      { dx: 46, dy: 6, anchor: 'start' },
-      { dx: 46, dy: 6, anchor: 'start' }
+      { dx: 44, dy: 6, anchor: 'start' },
+      { dx: 44, dy: 6, anchor: 'start' }
     ];
 
     function syncPathAnchors() {
       var lenNow = trail.getTotalLength();
       var markers = viz.querySelectorAll('.sh-mountain-viz__marker');
       var labels = viz.querySelectorAll('.sh-mountain-viz__label');
-      var flag = viz.querySelector('.sh-mountain-viz__flag');
-      var startAura = viz.querySelector('.sh-mountain-viz__start-aura');
       var runner = viz.querySelector('.sh-mountain-viz__runner');
+
+      if (trailPulse && pathD) {
+        trailPulse.setAttribute('d', pathD);
+      }
 
       pathSteps.forEach(function (ratio, i) {
         var pt = trail.getPointAtLength(lenNow * ratio);
@@ -64,14 +67,6 @@
         }
       });
 
-      var summit = trail.getPointAtLength(lenNow * 0.992);
-      if (flag) {
-        flag.setAttribute('transform', 'translate(' + (summit.x - 2) + ',' + (summit.y - 6) + ')');
-      }
-      if (startAura && markers[0]) {
-        startAura.setAttribute('cx', markers[0].getAttribute('cx'));
-        startAura.setAttribute('cy', markers[0].getAttribute('cy'));
-      }
       if (runner && pathD) {
         runner.style.offsetPath = "path('" + pathD + "')";
       }
@@ -81,8 +76,10 @@
 
     var len = trail.getTotalLength();
     var progresses = pathSteps.slice();
-    trail.style.strokeDasharray = len;
-    trail.style.strokeDashoffset = len;
+    if (trailPulse) {
+      trailPulse.style.strokeDasharray = len;
+      trailPulse.style.strokeDashoffset = String(len);
+    }
     viz.style.setProperty('--sh-mt-len', String(len));
 
     var markers = viz.querySelectorAll('.sh-mountain-viz__marker');
@@ -105,7 +102,9 @@
 
     function setProgress(p) {
       var offset = len * (1 - Math.min(1, Math.max(0, p)));
-      trail.style.strokeDashoffset = String(offset);
+      if (trailPulse) {
+        trailPulse.style.strokeDashoffset = String(offset);
+      }
       if (runner) {
         runner.style.offsetDistance = Math.round(p * 100) + '%';
         runner.style.opacity = '1';
@@ -128,7 +127,9 @@
     function resumeAnimation() {
       paused = false;
       viz.classList.remove('is-paused');
-      trail.style.strokeDashoffset = '';
+      if (trailPulse) {
+        trailPulse.style.strokeDashoffset = String(len);
+      }
       if (runner) {
         runner.style.offsetDistance = '';
         runner.style.opacity = '';
@@ -140,9 +141,10 @@
       activateStep(0, false);
     } else {
       viz.classList.remove('is-animated');
-      setProgress(1);
-      activateStep(2, true);
-      viz.classList.remove('is-paused');
+      if (trailPulse) {
+        trailPulse.style.strokeDashoffset = '0';
+      }
+      activateStep(2, false);
     }
 
     cards.forEach(function (card) {

@@ -1200,8 +1200,8 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 65% at 52% 48%, transparent 42%, rgba(3, 7, 18, 0.42) 100%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.12) 0%, transparent 30%, rgba(3, 7, 18, 0.28) 100%);
+    radial-gradient(ellipse 75% 60% at 50% 50%, transparent 50%, rgba(3, 7, 18, 0.32) 100%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.08) 0%, transparent 35%, rgba(3, 7, 18, 0.22) 100%);
   z-index: 2;
 }
 
@@ -1211,88 +1211,58 @@
   height: 100%;
 }
 
-.sh-mountain-viz__route {
-  mix-blend-mode: screen;
+/* Yol fotoğrafta gömülü; SVG yalnızca rehber + etkileşim */
+.sh-mountain-viz__trail-guide {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1;
+  pointer-events: none;
 }
 
-.sh-mountain-viz__start-aura {
+.sh-mountain-viz__trail-pulse {
+  fill: none;
+  stroke: rgba(186, 230, 253, 0.65);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  filter: blur(1px);
+  transition: opacity 0.4s ease;
+}
+
+.sh-mountain-viz.is-paused .sh-mountain-viz__trail-pulse {
   opacity: 0.85;
 }
 
-.sh-mountain-viz__trail-outer {
-  fill: none;
-  stroke: rgba(103, 232, 249, 0.22);
-  stroke-width: 28;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: url(#sh-mt-trail-blur);
-  opacity: 0.7;
-}
-
-.sh-mountain-viz__trail-base {
-  fill: none;
-  stroke: rgba(34, 211, 238, 0.32);
-  stroke-width: 14;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.sh-mountain-viz__trail {
-  fill: none;
-  stroke: url(#sh-mt-trail-grad);
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: url(#sh-mt-trail-glow);
-}
-
-.sh-mountain-viz:not(.is-animated) .sh-mountain-viz__trail {
-  stroke-dashoffset: 0;
-}
-
-.sh-mountain-viz.is-animated .sh-mountain-viz__trail {
-  animation: sh-mountain-draw 5.5s var(--sh-ease) infinite;
-}
-
-.sh-mountain-viz.is-paused .sh-mountain-viz__trail {
-  animation: none;
-}
-
-@keyframes sh-mountain-draw {
-  0% {
-    stroke-dashoffset: var(--sh-mt-len, 1000);
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-.sh-mountain-viz__flag {
-  filter: url(#sh-mt-flag-glow);
-}
-
 .sh-mountain-viz__marker {
-  fill: rgba(148, 163, 184, 0.22);
-  stroke: rgba(255, 255, 255, 0.35);
-  stroke-width: 3;
-  opacity: 0.75;
-  transition: fill 0.35s ease, stroke 0.35s ease, opacity 0.35s ease, filter 0.35s ease;
+  fill: rgba(15, 23, 42, 0.4);
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 2.5;
+  opacity: 0.32;
+  filter: url(#sh-mt-marker-depth);
+  transition: fill 0.35s ease, stroke 0.35s ease, opacity 0.35s ease, r 0.35s ease;
 }
 
 .sh-mountain-viz__marker.is-start,
 .sh-mountain-viz__marker.is-active {
   fill: url(#sh-mt-marker-core);
-  stroke: rgba(255, 255, 255, 0.85);
+  stroke: rgba(255, 255, 255, 0.9);
   opacity: 1;
-  filter: drop-shadow(0 0 18px rgba(103, 232, 249, 0.85));
 }
 
-.sh-mountain-viz__marker.is-start {
-  stroke-width: 4;
+.sh-mountain-viz.is-animated .sh-mountain-viz__marker.is-start {
+  animation: sh-mt-marker-pulse 2.6s ease-in-out infinite;
 }
 
-.sh-mountain-viz__marker.is-active:not(.is-start) {
-  fill: url(#sh-mt-marker-core);
+@keyframes sh-mt-marker-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .sh-mountain-viz__labels {
@@ -1322,26 +1292,11 @@
 .sh-mountain-viz__runner {
   fill: #f0f9ff;
   opacity: 0;
-  filter: drop-shadow(0 0 8px rgba(103, 232, 249, 1));
-}
-
-.sh-mountain-viz.is-animated .sh-mountain-viz__runner {
-  opacity: 1;
-  offset-distance: 0%;
-  animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
+  filter: drop-shadow(0 0 6px rgba(103, 232, 249, 0.8));
 }
 
 .sh-mountain-viz.is-paused .sh-mountain-viz__runner {
-  animation: none;
-}
-
-@keyframes sh-mountain-runner {
-  0% {
-    offset-distance: 0%;
-  }
-  100% {
-    offset-distance: 100%;
-  }
+  opacity: 0.9;
 }
 
 .sh-path-card h3 {
@@ -1803,15 +1758,12 @@
     transform: none;
   }
 
-  .sh-mountain-viz.is-animated .sh-mountain-viz__trail,
-  .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
+  .sh-mountain-viz.is-animated .sh-mountain-viz__marker.is-start {
     animation: none;
+    opacity: 1;
   }
 
-  .sh-mountain-viz.is-animated .sh-mountain-viz__trail {
-    stroke-dashoffset: 0;
-  }
-
+  .sh-mountain-viz__trail-pulse,
   .sh-mountain-viz__runner {
     opacity: 0;
   }
