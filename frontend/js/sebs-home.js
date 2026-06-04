@@ -36,7 +36,7 @@
     if (!viz || !trail || !cards.length) return;
 
     var len = trail.getTotalLength();
-    var progresses = [0.06, 0.58, 0.82];
+    var progresses = [0.05, 0.56, 0.8];
     trail.style.strokeDasharray = len;
     trail.style.strokeDashoffset = len;
     viz.style.setProperty('--sh-mt-len', String(len));
