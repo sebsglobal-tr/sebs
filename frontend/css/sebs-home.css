@@ -1179,7 +1179,7 @@
   box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.2), 0 20px 40px -24px rgba(34, 211, 238, 0.3);
 }
 
-/* Dağ + animasyonlu kariyer yolu */
+/* Dağ illüstrasyonu (yalnızca SVG — tam ekran görseli yok) */
 .sh-mountain-viz {
   position: relative;
   width: 100%;
@@ -1187,24 +1187,35 @@
   overflow: hidden;
   border: 1px solid var(--sh-border-soft);
   box-shadow: var(--sh-shadow-card), 0 0 48px -16px var(--sh-glow-violet);
-  aspect-ratio: 1024 / 576;
-  background: #0a0a18;
+  aspect-ratio: 560 / 400;
+  background: #080612;
 }
 
-.sh-mountain-viz__bg {
+.sh-mountain-viz__svg {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
-.sh-mountain-viz__overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+.sh-mountain-viz__range {
+  fill: url(#sh-mt-ridge);
+}
+
+.sh-mountain-viz__range--back {
+  opacity: 0.55;
+}
+
+.sh-mountain-viz__peak {
+  fill: url(#sh-mt-peak);
+}
+
+.sh-mountain-viz__peak-face {
+  fill: rgba(103, 232, 249, 0.08);
+}
+
+.sh-mountain-viz__flag {
+  opacity: 0.95;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
 }
 
 .sh-mountain-viz__trail-dim {
@@ -1273,7 +1284,7 @@
 
 .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
   opacity: 1;
-  offset-path: path("M 178 472 C 210 438, 268 392, 318 358 C 368 324, 418 288, 468 252 C 508 224, 532 188, 548 148 C 558 118, 552 98, 548 82");
+  offset-path: path("M 88 338 C 118 308, 168 278, 208 248 C 248 218, 288 188, 318 158 C 348 128, 368 108, 382 88");
   offset-distance: 0%;
   animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
 }
