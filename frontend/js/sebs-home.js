@@ -29,6 +29,91 @@
     });
   }
 
+  function initMountainPath() {
+    var viz = document.getElementById('shMountainViz');
+    var trail = document.getElementById('shMountainTrail');
+    var cards = document.querySelectorAll('.sh-path-card[data-path-step]');
+    if (!viz || !trail || !cards.length) return;
+
+    var len = trail.getTotalLength();
+    var progresses = [0.22, 0.58, 1];
+    trail.style.strokeDasharray = len;
+    trail.style.strokeDashoffset = len;
+    viz.style.setProperty('--sh-mt-len', String(len));
+
+    var markers = viz.querySelectorAll('.sh-mountain-viz__marker');
+    var runner = viz.querySelector('.sh-mountain-viz__runner');
+    var autoPlay = !reduced;
+    var paused = false;
+    var activeStep = 0;
+
+    function setMarkers(step) {
+      markers.forEach(function (m) {
+        var s = parseInt(m.getAttribute('data-path-step'), 10);
+        m.classList.toggle('is-active', s === step);
+      });
+    }
+
+    function setProgress(p) {
+      var offset = len * (1 - Math.min(1, Math.max(0, p)));
+      trail.style.strokeDashoffset = String(offset);
+      if (runner) {
+        runner.style.offsetDistance = Math.round(p * 100) + '%';
+        runner.style.opacity = '1';
+      }
+    }
+
+    function activateStep(step, freeze) {
+      activeStep = step;
+      cards.forEach(function (c) {
+        c.classList.toggle('is-active', parseInt(c.getAttribute('data-path-step'), 10) === step);
+      });
+      setMarkers(step);
+      if (freeze) {
+        viz.classList.add('is-paused');
+        paused = true;
+        setProgress(progresses[step] !== undefined ? progresses[step] : 1);
+      }
+    }
+
+    function resumeAnimation() {
+      paused = false;
+      viz.classList.remove('is-paused');
+      trail.style.strokeDashoffset = '';
+      if (runner) {
+        runner.style.offsetDistance = '';
+        runner.style.opacity = '';
+      }
+    }
+
+    if (autoPlay) {
+      viz.classList.add('is-animated');
+      activateStep(0, false);
+    } else {
+      viz.classList.remove('is-animated');
+      setProgress(1);
+      activateStep(2, false);
+      markers.forEach(function (m, i) {
+        m.classList.toggle('is-active', i === 2);
+      });
+    }
+
+    cards.forEach(function (card) {
+      card.setAttribute('tabindex', '0');
+      function onFocus() {
+        var step = parseInt(card.getAttribute('data-path-step'), 10);
+        activateStep(step, true);
+      }
+      card.addEventListener('mouseenter', onFocus);
+      card.addEventListener('focus', onFocus);
+    });
+
+    var pathCards = document.querySelector('.sh-path-cards');
+    if (pathCards && autoPlay) {
+      pathCards.addEventListener('mouseleave', resumeAnimation);
+    }
+  }
+
   function initHeroFlowEvaluation(continuous) {
     var gate = document.querySelector('.sh-hero-flow__gate');
     var cards = document.querySelectorAll('.sh-hero-flow .sh-flow-card');
@@ -97,6 +182,7 @@
     }
 
     initHeroFlowEvaluation(true);
+    initMountainPath();
 
     var heroFlow = document.querySelector('.sh-hero-flow.sh-reveal');
     if (heroFlow) {
@@ -107,6 +193,7 @@
       el.classList.add('is-visible');
     });
     initHeroFlowEvaluation(false);
+    initMountainPath();
   }
 
   document.querySelectorAll('.landing-footer-year').forEach(function (el) {

@@ -1122,15 +1122,29 @@
 /* —— Experience —— */
 .sh-experience__grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
-  align-items: start;
+  align-items: center;
 }
 
-@media (min-width: 1024px) {
+.sh-experience__grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
   .sh-experience__grid {
-    grid-template-columns: 1fr 1.1fr;
-    gap: 3rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 4vw, 3rem);
   }
+}
+
+.sh-experience__copy .sh-h2 {
+  margin: 0 0 1rem;
+}
+
+.sh-experience__copy .sh-lead {
+  margin: 0 0 1.75rem;
+  max-width: 34rem;
 }
 
 .sh-path-cards {
@@ -1139,18 +1153,142 @@
   gap: 0.85rem;
 }
 
+.sh-path-cards__cta {
+  margin-top: 0.5rem;
+  align-self: flex-start;
+}
+
 .sh-path-card {
   padding: 1.25rem 1.35rem;
   border-radius: var(--sh-radius-lg);
   border: 1px solid var(--sh-border-soft);
   background: var(--sh-glass);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s var(--sh-ease);
+  cursor: default;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s var(--sh-ease), background 0.25s ease;
 }
 
-.sh-path-card:hover {
-  border-color: var(--sh-border);
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px -24px var(--sh-glow-violet);
+.sh-path-card:hover,
+.sh-path-card.is-active {
+  border-color: rgba(103, 232, 249, 0.35);
+  background: rgba(124, 58, 237, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -24px rgba(34, 211, 238, 0.25);
+}
+
+.sh-path-card.is-active {
+  box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.2), 0 20px 40px -24px rgba(34, 211, 238, 0.3);
+}
+
+/* Dağ + animasyonlu kariyer yolu */
+.sh-mountain-viz {
+  position: relative;
+  width: 100%;
+  border-radius: var(--sh-radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--sh-border-soft);
+  box-shadow: var(--sh-shadow-card), 0 0 48px -16px var(--sh-glow-violet);
+  aspect-ratio: 1024 / 576;
+  background: #0a0a18;
+}
+
+.sh-mountain-viz__bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sh-mountain-viz__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sh-mountain-viz__trail-dim {
+  fill: none;
+  stroke: rgba(103, 232, 249, 0.12);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sh-mountain-viz__trail {
+  fill: none;
+  stroke: url(#sh-mt-trail-grad);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#sh-mt-glow);
+}
+
+.sh-mountain-viz:not(.is-animated) .sh-mountain-viz__trail {
+  stroke-dashoffset: 0;
+}
+
+.sh-mountain-viz.is-animated .sh-mountain-viz__trail {
+  animation: sh-mountain-draw 5.5s var(--sh-ease) infinite;
+}
+
+.sh-mountain-viz.is-paused .sh-mountain-viz__trail {
+  animation: none;
+}
+
+@keyframes sh-mountain-draw {
+  0% {
+    stroke-dashoffset: var(--sh-mt-len, 1000);
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.sh-mountain-viz__marker {
+  fill: rgba(148, 163, 184, 0.35);
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity 0.35s ease, fill 0.35s ease, r 0.35s ease;
+}
+
+.sh-mountain-viz__marker.is-active {
+  opacity: 1;
+  fill: rgba(103, 232, 249, 0.55);
+  stroke: #e0f2fe;
+  filter: drop-shadow(0 0 10px rgba(103, 232, 249, 0.9));
+}
+
+.sh-mountain-viz__marker[data-path-step="0"].is-active {
+  r: 16;
+  fill: rgba(224, 242, 254, 0.95);
+}
+
+.sh-mountain-viz__runner {
+  fill: #f0f9ff;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(103, 232, 249, 1));
+}
+
+.sh-mountain-viz.is-animated .sh-mountain-viz__runner {
+  opacity: 1;
+  offset-path: path("M 178 472 C 210 438, 268 392, 318 358 C 368 324, 418 288, 468 252 C 508 224, 532 188, 548 148 C 558 118, 552 98, 548 82");
+  offset-distance: 0%;
+  animation: sh-mountain-runner 5.5s var(--sh-ease) infinite;
+}
+
+.sh-mountain-viz.is-paused .sh-mountain-viz__runner {
+  animation: none;
+}
+
+@keyframes sh-mountain-runner {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
 }
 
 .sh-path-card h3 {
@@ -1610,6 +1748,19 @@
 
   .sh-hero-flow:hover .sh-hero-flow__cube {
     transform: none;
+  }
+
+  .sh-mountain-viz.is-animated .sh-mountain-viz__trail,
+  .sh-mountain-viz.is-animated .sh-mountain-viz__runner {
+    animation: none;
+  }
+
+  .sh-mountain-viz.is-animated .sh-mountain-viz__trail {
+    stroke-dashoffset: 0;
+  }
+
+  .sh-mountain-viz__runner {
+    opacity: 0;
   }
 
   .sh-step:hover,
