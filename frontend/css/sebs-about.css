@@ -108,6 +108,18 @@ body.about-page a:hover {
   color: var(--sh-text-muted);
 }
 
+.about-hero__institution {
+  margin: 1rem 0 0;
+  max-width: 36rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--sh-radius-md);
+  border: 1px solid var(--sh-border-soft);
+  background: var(--sh-glass);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--sh-text-muted);
+}
+
 .about-hero__actions {
   display: flex;
   flex-wrap: wrap;
@@ -353,6 +365,35 @@ body.about-page .sh-marquee {
 .about-story__lead {
   margin: 0.85rem 0 0;
   font-size: 1rem;
+  line-height: 1.65;
+  color: var(--sh-text-muted);
+}
+
+.about-story__institution {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  margin-top: 1.25rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--sh-radius-lg);
+  border: 1px solid var(--sh-border-soft);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.05) 0%, var(--sh-glass) 100%);
+  box-shadow: var(--sh-shadow-card);
+}
+
+.about-story__institution img {
+  width: auto;
+  max-width: 9.5rem;
+  max-height: 2rem;
+  object-fit: contain;
+}
+
+.about-story__institution p {
+  margin: 0;
+  flex: 1;
+  min-width: min(100%, 14rem);
+  font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--sh-text-muted);
 }
