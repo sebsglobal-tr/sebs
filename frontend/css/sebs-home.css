@@ -1576,11 +1576,11 @@
   color: #64748b;
 }
 
-/* Atlas merkezli skillhub — kartlar yüzer */
+/* Atlas ortada — kartlar etrafında (grid, eski yerleşim) */
 .sh-bigfive__grid > .sh-skillhub {
   justify-self: center;
   width: 100%;
-  max-width: 26rem;
+  max-width: 32rem;
 }
 
 .sh-skillhub {
@@ -1589,10 +1589,15 @@
 }
 
 .sh-skillhub__stage {
-  position: relative;
-  width: 100%;
-  max-width: 26rem;
-  min-height: 21rem;
+  display: grid;
+  grid-template-columns: 10.5rem minmax(5.75rem, 7.25rem) 10.5rem;
+  grid-template-rows: auto minmax(7.25rem, auto) auto;
+  column-gap: 2.85rem;
+  row-gap: 1.25rem;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
   margin-inline: auto;
   padding: 0;
   background: transparent;
@@ -1600,16 +1605,18 @@
   box-shadow: none;
 }
 
-.sh-skillhub__hub {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+.sh-skillhub__center {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
   z-index: 2;
-  transform: translate(-50%, -52%) scale(0.9);
+  justify-self: center;
+  align-self: center;
   opacity: 0;
+  transform: scale(0.88);
 }
 
-.sh-skillhub.is-visible .sh-skillhub__hub {
+.sh-skillhub.is-visible .sh-skillhub__center {
   animation: sh-skillhub-center-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
 }
 
@@ -1619,14 +1626,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .sh-skillhub__atlas {
   display: block;
   width: auto;
-  height: clamp(6.5rem, 18vw, 8.25rem);
-  max-width: 7.5rem;
+  height: clamp(6.25rem, 16vw, 7.75rem);
+  max-width: 100%;
   object-fit: contain;
   object-position: center bottom;
   background: transparent !important;
@@ -1644,72 +1651,58 @@
 }
 
 .sh-skillhub__card--float {
-  position: absolute;
-  width: 10.25rem;
-  z-index: 3;
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 .sh-skillhub__card--profile {
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%) translateY(12px) scale(0.94);
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: end;
 }
 
 .sh-skillhub__card--insight {
-  right: 0;
-  top: 0.75rem;
-  transform: translateY(12px) scale(0.94);
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  justify-self: start;
 }
 
 .sh-skillhub__card--plan {
-  right: 0;
-  bottom: 0.75rem;
-  transform: translateY(12px) scale(0.94);
+  grid-column: 3;
+  grid-row: 3;
+  align-self: start;
+  justify-self: start;
 }
 
 @keyframes sh-skillhub-float {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-7px);
+    transform: translateY(-6px) scale(1);
   }
 }
 
-@keyframes sh-skillhub-float-profile {
-  0%,
-  100% {
-    transform: translateY(-50%) translateY(0);
-  }
-  50% {
-    transform: translateY(-50%) translateY(-7px);
-  }
-}
-
-@keyframes sh-skillhub-card-in-left {
-  to {
-    opacity: 1;
-    transform: translateY(-50%) translateY(0) scale(1);
-  }
+.sh-skillhub.is-visible .sh-skillhub__card--float {
+  animation:
+    sh-skillhub-card-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    sh-skillhub-float 4.5s ease-in-out infinite;
 }
 
 .sh-skillhub.is-visible .sh-skillhub__card--profile {
-  animation:
-    sh-skillhub-card-in-left 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards,
-    sh-skillhub-float-profile 4.5s ease-in-out 1.1s infinite;
+  animation-delay: 0.12s, 1.1s;
 }
 
 .sh-skillhub.is-visible .sh-skillhub__card--insight {
-  animation:
-    sh-skillhub-card-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards,
-    sh-skillhub-float 4.5s ease-in-out 1.3s infinite;
+  animation-delay: 0.35s, 1.3s;
 }
 
 .sh-skillhub.is-visible .sh-skillhub__card--plan {
-  animation:
-    sh-skillhub-card-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards,
-    sh-skillhub-float 4.5s ease-in-out 1.7s infinite;
+  animation-delay: 0.55s, 1.7s;
 }
 
 .sh-skillhub__card {
@@ -1738,7 +1731,7 @@
 @keyframes sh-skillhub-center-in {
   to {
     opacity: 1;
-    transform: translate(-50%, -52%) scale(1);
+    transform: scale(1);
   }
 }
 
@@ -2007,30 +2000,30 @@
 
 @media (max-width: 640px) {
   .sh-skillhub__stage {
-    min-height: 24rem;
-    max-width: 17.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 18rem;
   }
 
-  .sh-skillhub__card--float {
-    width: 9.25rem;
+  .sh-skillhub__center {
+    order: -1;
+    align-self: center;
   }
 
-  .sh-skillhub__card--profile {
-    left: -0.15rem;
-  }
-
-  .sh-skillhub__card--insight {
-    right: -0.15rem;
-    top: 0.5rem;
-  }
-
+  .sh-skillhub__card--profile,
+  .sh-skillhub__card--insight,
   .sh-skillhub__card--plan {
-    right: -0.15rem;
-    bottom: 0.5rem;
+    grid-column: unset;
+    grid-row: unset;
+    justify-self: stretch;
+    align-self: stretch;
   }
 
   .sh-skillhub__atlas {
-    height: 6rem;
+    height: 6.25rem;
   }
 }
 
@@ -2276,14 +2269,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sh-skillhub__card,
-  .sh-skillhub__hub {
+  .sh-skillhub__center {
     opacity: 1;
     transform: none;
     animation: none;
-  }
-
-  .sh-skillhub__card--profile {
-    transform: translateY(-50%);
   }
 
   .sh-skillhub__bar-fill {
