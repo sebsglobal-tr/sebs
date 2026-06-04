@@ -82,24 +82,24 @@
 
     inner.appendChild(premium);
 
-    body.textContent = '';
-    body.appendChild(btn);
-    body.appendChild(inner);
+    if (typeof body.replaceChildren === 'function') {
+      body.replaceChildren(btn, inner);
+    } else {
+      while (body.firstChild) body.removeChild(body.firstChild);
+      body.appendChild(btn);
+      body.appendChild(inner);
+    }
   }
 
   function setActiveItem(stack, activeItem, activateFn) {
     if (!stack || !activeItem) return;
-    stack.classList.add('is-transitioning');
+    if (stack._sebsHaccCurrent === activeItem) return;
+    stack._sebsHaccCurrent = activeItem;
     if (typeof activateFn === 'function') activateFn(activeItem);
-    window.clearTimeout(stack._sebsHaccT);
-    stack._sebsHaccT = window.setTimeout(function () {
-      stack.classList.remove('is-transitioning');
-    }, 480);
   }
 
   function transformExploreSection(exploreRoot, activateFn) {
     if (!exploreRoot || exploreRoot.dataset.sebsHaccReady === '1') return;
-    exploreRoot.dataset.sebsHaccReady = '1';
 
     var stack = exploreRoot.querySelector('.modules-category-tabs');
     if (!stack) return;
@@ -174,6 +174,13 @@
         });
       }
     });
+
+    var initialOpen = stack.querySelector('.sebs-cat-hacc-item.is-open') || items[0];
+    if (initialOpen) {
+      stack._sebsHaccCurrent = initialOpen;
+    }
+
+    exploreRoot.dataset.sebsHaccReady = '1';
 
     exploreRoot._sebsSetActiveHacc = function (activeItem) {
       setActiveItem(stack, activeItem, activateFn);
