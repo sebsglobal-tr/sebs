@@ -1,5 +1,5 @@
 /**
- * SEBS Global — Eğitimler, Simülasyonlar, Hakkımızda (ana sayfa ile uyumlu koyu shell)
+ * SEBS Global — Eğitimler, Simülasyonlar, Hakkımızda (ana sayfa ile uyumlu açık shell)
  */
 .sebs-app-page {
   /* Tipografi ölçeği — tüm alt sayfalarda aynı */
@@ -32,9 +32,15 @@
   height: auto;
 }
 
+body.sebs-app-page a,
+body.sebs-app-page a:hover,
+body.sebs-app-page a:focus,
+body.sebs-app-page a:active {
+  text-decoration: none !important;
+}
+
 .sebs-app-page a:not(.sh-btn):not(.sh-brand):not(.sh-nav__link):not(.sh-nav__login):not(.sebs-acc-cta):not(.btn-simulation):not(.btn-primary):not(.btn-secondary) {
   color: inherit;
-  text-decoration: none;
 }
 
 /* Buton metinleri — inherit / gradient text-fill çakışmasını kapat */
@@ -132,9 +138,9 @@ body.sebs-app-page .sebs-app-main {
   z-index: -3;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 55% 45% at 8% 12%, var(--sh-glow-violet), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 92% 88%, var(--sh-glow-cyan), transparent 52%),
-    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 50%, var(--sh-bg-deep) 100%) !important;
+    radial-gradient(ellipse 55% 45% at 8% 8%, rgba(99, 102, 241, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 20%, rgba(37, 99, 235, 0.06), transparent 52%),
+    linear-gradient(180deg, var(--sh-bg-deep) 0%, var(--sh-bg-mid) 48%, var(--sh-bg-deep) 100%) !important;
 }
 
 .sebs-app-page::after {
@@ -143,10 +149,10 @@ body.sebs-app-page .sebs-app-main {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  opacity: 0.35;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
-  mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+  mask-image: linear-gradient(180deg, black 0%, transparent 90%);
 }
 
 /* styles.css body::before (açık gradient) — app sayfalarında kapat */
@@ -200,8 +206,9 @@ body.sebs-app-page .text-slate-400 {
   color: var(--sh-text-subtle) !important;
 }
 
-body.sebs-app-page .text-blue-700 {
-  color: #a5b4fc !important;
+body.sebs-app-page .text-blue-700,
+body.sebs-app-page .text-blue-600 {
+  color: var(--app-color-link) !important;
 }
 
 body.sebs-app-page .hover\:text-slate-900:hover {
@@ -304,7 +311,7 @@ body.sebs-app-page .module-card-detailed .module-title {
 body.sebs-app-page .tab-btn {
   color: var(--sh-text-muted);
   border-color: var(--sh-border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--sh-glass);
 }
 
 body.sebs-app-page .tab-btn.active,
@@ -423,14 +430,14 @@ body.sebs-app-page .sebs-accordion-item.is-open [data-sebs-summary] {
 }
 
 body.sebs-app-page .sebs-acc-icon {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: #a5b4fc !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: var(--sh-violet) !important;
 }
 
 body.sebs-app-page .sebs-accordion-item.is-open .sebs-acc-btn,
 body.sebs-app-page .modules-category-tabs .sebs-acc-btn.tab-btn.active,
 body.sebs-app-page .simulations-category-tabs .sebs-acc-btn.tab-btn.active {
-  background: linear-gradient(90deg, rgba(124, 58, 237, 0.22), rgba(37, 99, 235, 0.08)) !important;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(37, 99, 235, 0.05)) !important;
   color: var(--sh-text) !important;
   box-shadow: inset 3px 0 0 0 var(--sh-violet) !important;
 }
@@ -443,8 +450,8 @@ body.sebs-app-page .simulations-category-tabs .sebs-accordion-item:not(.is-open)
 
 body.sebs-app-page .sebs-acc-panel,
 body.sebs-app-page .sebs-accordion-item.is-open .sebs-acc-panel {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border-top-color: var(--sh-border) !important;
+  background: var(--sh-glass-hover) !important;
+  border-top-color: var(--sh-border-soft) !important;
   color: var(--sh-text-muted) !important;
 }
 
@@ -497,9 +504,9 @@ body.sebs-app-page #modulesCategoriesExplore .text-slate-500 {
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-icon,
 body.sebs-app-page #modulesCategoriesExplore .sebs-acc-icon {
-  background: rgba(124, 58, 237, 0.14) !important;
-  border-color: var(--sh-border) !important;
-  color: #a5b4fc !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  border-color: var(--sh-border-soft) !important;
+  color: var(--sh-violet) !important;
   box-shadow: none !important;
 }
 
@@ -508,8 +515,8 @@ body.sebs-app-page #simulationsCategoriesExplore .sebs-accordion-item.is-open .s
 body.sebs-app-page #simulationsCategoriesExplore .simulations-category-tabs.sebs-accordion-stack .sebs-accordion-item.is-open .sebs-acc-panel,
 body.sebs-app-page #modulesCategoriesExplore .sebs-acc-panel,
 body.sebs-app-page #modulesCategoriesExplore .sebs-accordion-item.is-open .sebs-acc-panel {
-  background: rgba(11, 11, 31, 0.55) !important;
-  border-top-color: var(--sh-border) !important;
+  background: #f8fafc !important;
+  border-top-color: var(--sh-border-soft) !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-panel p,
@@ -532,13 +539,15 @@ body.sebs-app-page #modulesCategoriesExplore .sebs-acc-btn .block.font-semibold 
   color: var(--app-color-heading) !important;
 }
 
-body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: var(--sh-border) !important;
+body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example,
+body.sebs-app-page #modulesCategoriesExplore .sim-inline-example {
+  background: rgba(99, 102, 241, 0.06) !important;
+  border-color: var(--sh-border-soft) !important;
 }
 
-body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example strong {
-  color: #c4b5fd !important;
+body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example strong,
+body.sebs-app-page #modulesCategoriesExplore .sim-inline-example strong {
+  color: var(--sh-violet) !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example span {
@@ -547,18 +556,18 @@ body.sebs-app-page #simulationsCategoriesExplore .sim-inline-example span {
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta,
 body.sebs-app-page #modulesCategoriesExplore .sebs-acc-cta {
-  background: rgba(124, 58, 237, 0.12) !important;
+  background: var(--sh-glass) !important;
   border-color: var(--sh-border) !important;
-  color: #c4b5fd !important;
-  -webkit-text-fill-color: #c4b5fd !important;
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-cta:hover,
 body.sebs-app-page #modulesCategoriesExplore .sebs-acc-cta:hover {
-  background: var(--sh-violet) !important;
-  border-color: var(--sh-violet) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
+  background: var(--sh-glass-hover) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
 }
 
 body.sebs-app-page #simulationsCategoriesExplore .sebs-acc-chevron {
@@ -576,7 +585,7 @@ body.sebs-app-page #simulations-explore-preview .bg-slate-100,
 body.sebs-app-page #simulations-explore-preview .bg-slate-50,
 body.sebs-app-page #simulations-explore-preview .bg-slate-50\/90,
 body.sebs-app-page #simulations-explore-preview .bg-white\/80 {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: var(--sh-glass-hover) !important;
   border-color: var(--sh-border) !important;
 }
 
@@ -1405,10 +1414,12 @@ body.sebs-app-page .text-violet-700 {
 body.sebs-app-page main a[href]:not(.sh-btn):not(.sh-nav__link):not(.sh-brand):not(.sebs-acc-cta):not(.btn-simulation):not(.btn-primary):not(.btn-secondary) {
   color: var(--app-color-link);
   font-weight: 500;
+  text-decoration: none !important;
 }
 
 body.sebs-app-page main a[href]:not(.sh-btn):not(.sh-nav__link):not(.sh-brand):hover {
   color: var(--app-color-link-hover);
+  text-decoration: none !important;
 }
 
 body.sebs-app-page.about-page .about-section__intro a,
@@ -1449,8 +1460,8 @@ body.sebs-app-page .rounded-full.bg-emerald-100,
 body.sebs-app-page .rounded-full.bg-orange-100,
 body.sebs-app-page .rounded-full.bg-sky-100,
 body.sebs-app-page .rounded-full.bg-violet-100 {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid var(--sh-border);
+  background: var(--sh-glass-hover) !important;
+  border: 1px solid var(--sh-border-soft);
 }
 
 body.sebs-app-page .text-emerald-800,
@@ -1483,7 +1494,7 @@ body.sebs-app-page .status-badge {
 }
 
 /* =============================================================================
-   Koyu tema kilidi — landing-chrome / remote-inspired açık sızıntılarını kapat
+   Açık tema — landing-chrome / styles.css koyu sızıntılarını kapat (ana sayfa gibi)
    ============================================================================= */
 html body.sebs-app-page,
 html body.sebs-app-page.landing-site-body {
@@ -1500,50 +1511,49 @@ html body.sebs-app-page section {
 
 html body.sebs-app-page section.bg-white,
 html body.sebs-app-page .bg-white {
-  background: transparent !important;
+  background: var(--sh-glass) !important;
 }
 
-/* landing-chrome: .simulations-grid-section { background: #f8fafc } */
 html body.sebs-app-page.landing-site-body .simulations-grid-section,
-body.landing-site-body.sebs-app-page .simulations-grid-section,
-html.sebs-sim-list body.sebs-app-page .simulations-grid-section {
+body.landing-site-body.sebs-app-page .simulations-grid-section {
   background: transparent !important;
   padding-top: 2rem !important;
   padding-bottom: 3rem !important;
 }
 
 html body.sebs-app-page.landing-site-body .simulations-grid-section .section-title,
-html.sebs-sim-list body.sebs-app-page .section-title,
 body.landing-site-body.sebs-app-page .simulations-grid-section .section-title {
   color: var(--app-color-heading) !important;
   text-shadow: none !important;
 }
 
 html body.sebs-app-page.landing-site-body .simulations-grid-section .section-subtitle,
-html.sebs-sim-list body.sebs-app-page .section-subtitle,
 body.landing-site-body.sebs-app-page .simulations-grid-section .section-subtitle {
   color: var(--app-color-body) !important;
   text-shadow: none !important;
 }
 
-/* landing-chrome: kartlar #ffffff — opak koyu yüzey */
+/* Beyaz kartlar — ana sayfa ile aynı */
 html body.sebs-app-page.landing-site-body .simulation-card-detailed,
 body.landing-site-body.sebs-app-page .simulation-card-detailed,
-html.sebs-sim-list body.sebs-app-page .simulation-card-detailed,
+html body.sebs-app-page .simulation-card-detailed,
 html body.sebs-app-page .module-card-detailed,
 body.landing-site-body.sebs-app-page .module-card-detailed {
-  background: linear-gradient(165deg, rgba(22, 22, 42, 0.97), rgba(11, 11, 31, 0.99)) !important;
-  border: 1px solid var(--sh-border) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
+  background: var(--sh-glass) !important;
+  border: 1px solid var(--sh-border-soft) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   box-shadow: var(--sh-shadow-card) !important;
   color: var(--app-color-body) !important;
 }
 
 html body.sebs-app-page.landing-site-body .simulation-card-detailed:hover,
-body.landing-site-body.sebs-app-page .simulation-card-detailed:hover {
-  background: linear-gradient(165deg, rgba(30, 27, 55, 0.98), rgba(15, 15, 35, 1)) !important;
-  border-color: rgba(124, 58, 237, 0.45) !important;
+body.landing-site-body.sebs-app-page .simulation-card-detailed:hover,
+html body.sebs-app-page .simulation-card-detailed:hover,
+html body.sebs-app-page .module-card-detailed:hover {
+  background: #ffffff !important;
+  border-color: var(--sh-border) !important;
+  box-shadow: var(--sh-shadow-glow) !important;
   transform: translateY(-4px) !important;
 }
 
@@ -1572,9 +1582,9 @@ body.landing-site-body.sebs-app-page .simulation-content p strong {
 
 html body.sebs-app-page .simulation-card-detailed .simulation-icon,
 body.landing-site-body.sebs-app-page .simulation-card-detailed .simulation-icon {
-  background: rgba(124, 58, 237, 0.22) !important;
-  color: #c4b5fd !important;
-  border: 1px solid var(--sh-border) !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: var(--sh-violet) !important;
+  border: 1px solid var(--sh-border-soft) !important;
   box-shadow: none !important;
 }
 

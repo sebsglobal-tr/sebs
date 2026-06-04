@@ -122,8 +122,14 @@
     }
 
     function initTheme() {
-        /* Eğitimler / Simülasyonlar / Hakkımızda — her zaman koyu shell */
-        if (isAppShellPage() || isListingShellPage()) {
+        /* Eğitimler / Simülasyonlar — ana sayfa ile aynı açık tema */
+        if (isListingShellPage()) {
+            applyTheme('light');
+            injectThemeToggle();
+            return;
+        }
+        /* Uygulama shell (modül içi vb.) — koyu */
+        if (isAppShellPage()) {
             document.body.classList.add('sebs-sim-theme-lock');
             applyTheme('dark');
             injectThemeToggle();

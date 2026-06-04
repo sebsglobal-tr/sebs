@@ -1,5 +1,5 @@
 /**
- * Kategori keşif — yatay accordion (Eğitimler + Simülasyonlar, SEBS koyu tema)
+ * Kategori keşif — yatay accordion (Eğitimler + Simülasyonlar)
  */
 body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-haccordion-wrap {
   margin-top: 2.5rem;
@@ -461,4 +461,106 @@ body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore)
   body.sebs-app-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-strip {
     transition: none !important;
   }
+}
+
+/* —— Açık tema (ana sayfa ile uyumlu beyaz kartlar) —— */
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item {
+  border: 1px solid var(--sh-border-soft) !important;
+  background: var(--sh-glass) !important;
+  box-shadow: var(--sh-shadow-card) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover {
+  background: var(--sh-glass-hover) !important;
+  border-color: var(--sh-border) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open {
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: var(--sh-shadow-glow) !important;
+  background:
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(99, 102, 241, 0.08), transparent 55%),
+    linear-gradient(165deg, #ffffff 0%, var(--sh-glass-hover) 100%) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-num,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-num {
+  color: var(--sh-text-subtle) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-icon,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-icon {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border-color: var(--sh-border-soft) !important;
+  color: var(--sh-violet) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-label,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-collapsed-label {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-badge,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-badge {
+  border-color: var(--sh-border) !important;
+  color: var(--sh-text-muted) !important;
+  background: var(--sh-glass-hover) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-icon,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-icon {
+  background: rgba(99, 102, 241, 0.1) !important;
+  border-color: var(--sh-border-soft) !important;
+  color: var(--sh-violet) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-text h3,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-headline-text h3 {
+  color: var(--sh-text) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-summary,
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-desc,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-summary,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-desc {
+  color: var(--sh-text-muted) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open::before,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-item.is-open::before {
+  color: var(--sh-blue) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline em,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline em {
+  color: var(--sh-blue) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline-rule,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-footline-rule {
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.25), transparent) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example {
+  background: rgba(99, 102, 241, 0.06) !important;
+  border-color: var(--sh-border-soft) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example strong,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example strong {
+  color: var(--sh-violet) !important;
+}
+
+body.sebs-app-page.modules-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example span,
+body.sebs-app-page.simulations-page :is(#modulesCategoriesExplore, #simulationsCategoriesExplore) .sebs-cat-hacc-example .sim-inline-example span {
+  color: var(--sh-text-muted) !important;
 }
