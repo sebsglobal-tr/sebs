@@ -39,32 +39,44 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-haccordion::-webkit-scroll
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item {
-  flex: 1 0 4rem;
-  min-width: 4rem;
-  max-width: 4rem;
+  flex: 1 1 0;
+  min-width: 3.25rem;
+  max-width: none;
   height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 1.25rem;
-  border: 1px solid var(--sh-border, rgba(255, 255, 255, 0.1));
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.02) 100%);
   overflow: hidden;
   cursor: pointer;
   transition:
     flex 0.5s cubic-bezier(0.4, 0, 0.2, 1),
     min-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
     background 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
   scroll-snap-align: start;
 }
 
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(124, 58, 237, 0.06) 100%);
+  border-color: rgba(124, 58, 237, 0.28);
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-num {
+  color: rgba(161, 161, 170, 0.85);
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-label {
+  color: rgba(228, 228, 231, 0.9);
+}
+
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
-  flex: 10 1 36rem;
-  min-width: min(36rem, 88vw);
-  max-width: min(48rem, 92vw);
+  flex: 5 1 34rem;
+  min-width: min(34rem, 78vw);
+  max-width: min(46rem, 90vw);
   background: linear-gradient(165deg, rgba(18, 18, 38, 0.98), rgba(8, 8, 22, 0.99));
   border-color: rgba(124, 58, 237, 0.35);
   box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.55);
@@ -72,16 +84,24 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open {
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-num {
   position: absolute;
-  top: 0.9rem;
-  left: 0.75rem;
+  top: 1rem;
+  left: 0;
+  right: 0;
   z-index: 2;
+  padding: 0 0.65rem;
   font-family: var(--sh-font, Inter, system-ui, sans-serif);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: rgba(161, 161, 170, 0.55);
+  color: rgba(161, 161, 170, 0.45);
   pointer-events: none;
+  text-align: left;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open) .sebs-cat-hacc-num {
+  text-align: center;
+  padding: 0;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-num {
@@ -112,21 +132,72 @@ body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-ca
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed {
   flex: 1;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  padding: 2.75rem 0.35rem 1.1rem;
+  min-height: 0;
+  pointer-events: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2.25rem 0.25rem 0.85rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: rgba(161, 161, 170, 0.75);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(165, 180, 252, 0.55);
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-collapsed-label {
+  display: block;
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(161, 161, 170, 0.7);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   text-align: center;
-  line-height: 1.25;
-  pointer-events: none;
+  line-height: 1.3;
+  max-height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open):hover .sebs-cat-hacc-collapsed-icon {
+  color: rgba(196, 181, 253, 0.85);
+  border-color: rgba(124, 58, 237, 0.25);
+  background: rgba(124, 58, 237, 0.12);
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item.is-open .sebs-cat-hacc-collapsed {
   display: none;
+}
+
+body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-item:not(.is-open) .sebs-cat-hacc-body {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 body.modules-page #modulesCategoriesExplore .sebs-cat-hacc-body {

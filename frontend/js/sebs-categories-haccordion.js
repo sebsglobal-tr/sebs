@@ -66,7 +66,17 @@
 
       var collapsed = document.createElement('div');
       collapsed.className = 'sebs-cat-hacc-collapsed';
-      collapsed.textContent = getItemTitle(item);
+      var iconSrc = item.querySelector('.sebs-acc-icon');
+      if (iconSrc) {
+        var iconClone = iconSrc.cloneNode(true);
+        iconClone.className = 'sebs-cat-hacc-collapsed-icon';
+        iconClone.setAttribute('aria-hidden', 'true');
+        collapsed.appendChild(iconClone);
+      }
+      var titleSpan = document.createElement('span');
+      titleSpan.className = 'sebs-cat-hacc-collapsed-label';
+      titleSpan.textContent = getItemTitle(item);
+      collapsed.appendChild(titleSpan);
       item.appendChild(collapsed);
 
       var block = item.querySelector('.sebs-acc-block');
