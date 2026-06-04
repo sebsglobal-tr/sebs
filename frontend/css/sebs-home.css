@@ -1239,7 +1239,13 @@
   padding: 1.35rem 1.5rem;
   border-radius: var(--sh-radius-lg);
   border: 1px solid transparent;
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s var(--sh-ease);
+  opacity: 0.55;
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s var(--sh-ease),
+    opacity 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 @media (min-width: 768px) {
@@ -1249,10 +1255,13 @@
   }
 }
 
+.sh-step.is-active,
 .sh-step:hover {
-  background: var(--sh-glass);
-  border-color: var(--sh-border-soft);
+  opacity: 1;
+  background: var(--sh-bg-elevated);
+  border-color: var(--sh-border);
   transform: translateX(4px);
+  box-shadow: var(--sh-shadow-card);
 }
 
 .sh-step__num {
@@ -1260,12 +1269,13 @@
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.12);
-  transition: color 0.3s ease;
+  color: rgba(15, 23, 42, 0.12);
+  transition: color 0.35s ease;
 }
 
+.sh-step.is-active .sh-step__num,
 .sh-step:hover .sh-step__num {
-  color: rgba(168, 85, 247, 0.55);
+  color: var(--sh-blue);
 }
 
 .sh-step__title {
@@ -2361,6 +2371,12 @@
 
   .sh-mountain-viz__runner {
     opacity: 0;
+  }
+
+  .sh-step,
+  .sh-step.is-active {
+    opacity: 1;
+    transform: none;
   }
 
   .sh-step:hover,

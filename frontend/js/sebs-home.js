@@ -370,6 +370,86 @@
     }
   }
 
+  function initStepsCycle() {
+    var container = document.getElementById('shSteps');
+    if (!container) return;
+
+    var steps = container.querySelectorAll('.sh-step');
+    if (!steps.length) return;
+
+    var index = 0;
+    var intervalMs = 3800;
+    var timer = null;
+    var paused = false;
+
+    function setActive(i) {
+      steps.forEach(function (step, j) {
+        var on = j === i;
+        step.classList.toggle('is-active', on);
+        if (on) {
+          step.setAttribute('aria-current', 'step');
+        } else {
+          step.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function next() {
+      index = (index + 1) % steps.length;
+      setActive(index);
+    }
+
+    function start() {
+      if (timer || paused) return;
+      setActive(index);
+      timer = window.setInterval(next, intervalMs);
+    }
+
+    function stop() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    if (reduced) {
+      setActive(0);
+      return;
+    }
+
+    steps.forEach(function (step, j) {
+      step.addEventListener('mouseenter', function () {
+        paused = true;
+        stop();
+        index = j;
+        setActive(j);
+      });
+      step.addEventListener('mouseleave', function () {
+        paused = false;
+        stop();
+        start();
+      });
+    });
+
+    if ('IntersectionObserver' in window) {
+      var stepsIo = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              start();
+            } else {
+              stop();
+            }
+          });
+        },
+        { rootMargin: '0px 0px -10% 0px', threshold: 0.15 }
+      );
+      stepsIo.observe(container);
+    } else {
+      start();
+    }
+  }
+
   if (!reduced) {
     var reveals = document.querySelectorAll('.sh-reveal');
     if (reveals.length && 'IntersectionObserver' in window) {
@@ -392,6 +472,7 @@
     initHeroFlowEvaluation(true);
     initMountainPath();
     initSkillHub();
+    initStepsCycle();
 
   } else {
     document.querySelectorAll('.sh-reveal').forEach(function (el) {
@@ -400,6 +481,7 @@
     initHeroFlowEvaluation(false);
     initMountainPath();
     initSkillHub();
+    initStepsCycle();
   }
 
   document.querySelectorAll('.landing-footer-year').forEach(function (el) {
