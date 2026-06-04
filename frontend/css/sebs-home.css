@@ -1416,8 +1416,8 @@
 
 .sh-skillhub__stage {
   display: grid;
-  grid-template-columns: 11rem 6.75rem 10.75rem;
-  grid-template-rows: auto 6.75rem auto;
+  grid-template-columns: 11rem 7.25rem 10.75rem;
+  grid-template-rows: auto 7.25rem auto;
   column-gap: 1rem;
   row-gap: 0.75rem;
   justify-content: center;
@@ -1430,8 +1430,8 @@
   grid-column: 2;
   grid-row: 2;
   position: relative;
-  width: 6.75rem;
-  height: 6.75rem;
+  width: 7.25rem;
+  height: 7.25rem;
   justify-self: center;
   align-self: center;
 }
@@ -1458,22 +1458,25 @@
 .sh-skillhub__avatar {
   position: relative;
   z-index: 2;
-  width: 5.5rem;
-  height: 5.5rem;
-  margin: 0.625rem auto 0;
+  width: 6.25rem;
+  height: 6.25rem;
+  margin: 0.35rem auto 0;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
-  padding: 3px;
-  background: linear-gradient(135deg, #38bdf8, #a78bfa);
-  box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.55);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 68%);
+  box-shadow: 0 0 32px -8px rgba(56, 189, 248, 0.65);
 }
 
-.sh-skillhub__avatar img {
+.sh-skillhub__avatar img,
+.sh-skillhub__atlas {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #fff;
+  object-fit: contain;
+  border: none;
+  border-radius: 0;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
 }
 
 .sh-skillhub__card {
