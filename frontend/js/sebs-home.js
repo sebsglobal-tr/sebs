@@ -264,15 +264,18 @@
         scoreEl.textContent = String(Math.round(targetScore));
         return;
       }
-      var start = performance.now();
-      var duration = 1100;
-      function frame(now) {
-        var t = Math.min(1, (now - start) / duration);
-        var eased = 1 - Math.pow(1 - t, 3);
-        scoreEl.textContent = String(Math.round(targetScore * eased));
-        if (t < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
+      var countDelay = 520;
+      var duration = 2400;
+      window.setTimeout(function () {
+        var start = performance.now();
+        function frame(now) {
+          var t = Math.min(1, (now - start) / duration);
+          var eased = 1 - Math.pow(1 - t, 4);
+          scoreEl.textContent = String(Math.round(targetScore * eased));
+          if (t < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }, countDelay);
     }
 
     if (reduced) {
