@@ -718,6 +718,123 @@
   100% { transform: translateX(0); }
 }
 
+/* —— Partner şeridi —— */
+.sh-partners {
+  padding: 0 0 3rem;
+  margin-top: -0.5rem;
+}
+
+.sh-partners__label {
+  margin: 0 auto 1.25rem;
+  max-width: var(--sh-container, 72rem);
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sh-text-subtle, #71717a);
+}
+
+.sh-partners-marquee {
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid var(--sh-border-soft);
+  padding-block: 1.15rem;
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+
+.sh-partners-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: sh-partners-marquee 32s linear infinite;
+}
+
+.sh-partners-marquee:hover .sh-partners-marquee__track {
+  animation-play-state: paused;
+}
+
+.sh-partners-marquee__group {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.sh-partners__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sh-partners__logo {
+  display: block;
+  width: auto;
+  max-height: 2rem;
+  object-fit: contain;
+  opacity: 0.82;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.sh-partners__logo--iyzico {
+  max-height: 1.65rem;
+  filter: brightness(1.08);
+}
+
+.sh-partners__item--uyumsoft {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.sh-partners__logo--uyumsoft {
+  max-height: 1.75rem;
+  opacity: 1;
+}
+
+.sh-partners__item:hover .sh-partners__logo {
+  opacity: 1;
+}
+
+.sh-partners__wordmark {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--sh-text-muted);
+  transition: color 0.25s ease;
+}
+
+.sh-partners__wordmark--teknokent {
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, #a78bfa, #67e8f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sh-partners__wordmark--sertifikapp {
+  font-family: var(--sh-font, Inter, system-ui, sans-serif);
+  letter-spacing: -0.02em;
+}
+
+.sh-partners__item:hover .sh-partners__wordmark {
+  color: var(--sh-text);
+}
+
+.sh-partners__item:hover .sh-partners__wordmark--teknokent {
+  filter: brightness(1.15);
+}
+
+@keyframes sh-partners-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 /* —— How it works —— */
 .sh-steps {
   display: flex;
@@ -1217,8 +1334,28 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sh-marquee__row--a,
-  .sh-marquee__row--b {
+  .sh-marquee__row--b,
+  .sh-partners-marquee__track {
     animation: none;
+  }
+
+  .sh-partners-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .sh-partners-marquee__track {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: var(--sh-container, 72rem);
+    margin-inline: auto;
+    padding-inline: 1rem;
+    gap: 1.5rem;
+  }
+
+  .sh-partners-marquee__group[aria-hidden="true"] {
+    display: none;
   }
 
   .sh-hero__mock {
