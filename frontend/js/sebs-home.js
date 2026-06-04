@@ -29,6 +29,43 @@
     });
   }
 
+  function initHeroFlowEvaluation() {
+    var viewport = document.querySelector('.sh-hero-flow__viewport');
+    var hub = document.querySelector('.sh-hero-flow__hub');
+    var cards = document.querySelectorAll('.sh-hero-flow .sh-flow-card');
+    if (!viewport || !hub || !cards.length) return;
+
+    function updateCards() {
+      var hubRect = hub.getBoundingClientRect();
+      var hubCenter = hubRect.left + hubRect.width / 2;
+      var gateIn = Math.max(hubRect.width * 0.48, 52);
+
+      cards.forEach(function (card) {
+        var rect = card.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var result = card.getAttribute('data-result');
+
+        card.classList.remove('is-pending', 'is-processing', 'is-positive', 'is-negative');
+
+        if (cx > hubCenter + gateIn) {
+          card.classList.add('is-pending');
+        } else if (cx < hubCenter - gateIn) {
+          if (result === 'negative') {
+            card.classList.add('is-negative');
+          } else {
+            card.classList.add('is-positive');
+          }
+        } else {
+          card.classList.add('is-processing');
+        }
+      });
+
+      requestAnimationFrame(updateCards);
+    }
+
+    requestAnimationFrame(updateCards);
+  }
+
   if (!reduced) {
     var reveals = document.querySelectorAll('.sh-reveal');
     if (reveals.length && 'IntersectionObserver' in window) {
@@ -48,6 +85,8 @@
       reveals.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
+    initHeroFlowEvaluation();
+
     var flowCube = document.querySelector('.sh-hero-flow__cube');
     var flowWrap = document.querySelector('.sh-hero-flow');
     if (flowCube && flowWrap) {
@@ -58,7 +97,7 @@
           var cx = (ev.clientX - rect.left) / rect.width - 0.5;
           var cy = (ev.clientY - rect.top) / rect.height - 0.5;
           flowCube.style.transform =
-            'perspective(900px) rotateY(' + (-14 + cx * 10) + 'deg) rotateX(' + (10 + cy * 6) + 'deg)';
+            'perspective(900px) rotateY(' + (-14 + cx * 10) + 'deg) rotateX(' + (10 + cy * 6) + 'deg) translateZ(0)';
         },
         { passive: true }
       );
@@ -66,6 +105,14 @@
   } else {
     document.querySelectorAll('.sh-reveal').forEach(function (el) {
       el.classList.add('is-visible');
+    });
+    document.querySelectorAll('.sh-flow-card').forEach(function (card) {
+      var result = card.getAttribute('data-result');
+      if (result === 'negative') {
+        card.classList.add('is-negative');
+      } else {
+        card.classList.add('is-positive');
+      }
     });
   }
 
