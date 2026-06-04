@@ -1,0 +1,46 @@
+# www.sebsglobal.com — statik frontend (frontend/ → Vercel)
+# Gerekli GitHub Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Kurulum: docs/DEPLOY.md
+
+name: Deploy frontend (Vercel)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Vercel secrets
+        id: secrets
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "missing=1" >> "$GITHUB_OUTPUT"
+            echo "::warning::VERCEL_TOKEN tanımlı değil — otomatik deploy atlandı. docs/DEPLOY.md"
+            exit 0
+          fi
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ] || [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "missing=1" >> "$GITHUB_OUTPUT"
+            echo "::warning::VERCEL_ORG_ID veya VERCEL_PROJECT_ID eksik — docs/DEPLOY.md"
+            exit 0
+          fi
+          echo "missing=0" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Vercel (production)
+        if: steps.secrets.outputs.missing == '0'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
