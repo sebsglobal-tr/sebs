@@ -1572,35 +1572,6 @@
   color: var(--sh-text-muted);
 }
 
-/* Big Five — skillhub panel (site tokenları ile uyumlu) */
-#big-five .sh-skillhub__stage {
-  padding: 1.35rem 1.15rem;
-  border-radius: 1.15rem;
-  background: var(--sh-bg-elevated);
-  border: 1px solid var(--sh-border);
-  box-shadow: var(--sh-shadow-card);
-}
-
-#big-five .sh-skillhub__ring {
-  border-color: rgba(99, 102, 241, 0.3);
-}
-
-#big-five .sh-skillhub__ring--inner {
-  border-color: rgba(37, 99, 235, 0.22);
-}
-
-#big-five .sh-skillhub__avatar::before {
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 50%,
-    rgba(37, 99, 235, 0.18) 0%,
-    transparent 72%
-  );
-}
-
-#big-five .sh-skillhub__atlas {
-  filter: drop-shadow(0 8px 16px rgba(37, 99, 235, 0.18));
-}
-
 #big-five .sh-skillhub__atlas-label {
   color: #64748b;
 }
@@ -1627,7 +1598,10 @@
   width: max-content;
   max-width: 100%;
   margin-inline: auto;
-  padding: 0.5rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .sh-skillhub__center {
@@ -1664,20 +1638,20 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 2px dashed rgba(56, 189, 248, 0.35);
+  border: 1px dashed rgba(99, 102, 241, 0.22);
 }
 
 .sh-skillhub__ring--inner {
   inset: 0.85rem;
   border-style: dotted;
-  border-color: rgba(250, 204, 21, 0.35);
+  border-color: rgba(37, 99, 235, 0.18);
 }
 
 .sh-skillhub__avatar {
   position: relative;
   z-index: 2;
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 6rem;
+  height: 6rem;
   margin: 0;
   display: grid;
   place-items: center;
@@ -1685,29 +1659,10 @@
   box-shadow: none;
 }
 
-/* Atlas — yalnızca hafif zemin parıltısı, kare kutu yok */
-.sh-skillhub__avatar::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  z-index: 0;
-  width: 70%;
-  height: 28%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 50%,
-    rgba(37, 99, 235, 0.22) 0%,
-    transparent 72%
-  );
-  filter: blur(6px);
-  opacity: 0.85;
-  pointer-events: none;
-}
-
+.sh-skillhub__avatar::before,
 .sh-skillhub__avatar::after {
   display: none;
+  content: none;
 }
 
 .sh-skillhub__avatar img,
@@ -1721,8 +1676,8 @@
   border: none;
   border-radius: 0;
   background: transparent !important;
-  mix-blend-mode: normal;
-  filter: drop-shadow(0 6px 14px rgba(37, 99, 235, 0.2));
+  opacity: 1;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.12));
 }
 
 .sh-skillhub__atlas-label {
