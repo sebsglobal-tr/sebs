@@ -25,12 +25,17 @@
   display: block;
 }
 
-.sebs-home-page a:not(.sh-btn):not(.sh-brand):not(.sh-nav__link):not(.sh-nav__login):not(.sh-skillhub__link) {
-  color: inherit;
+.sebs-home-page a,
+.sebs-home-page a:hover,
+.sebs-home-page a:focus,
+.sebs-home-page a:active {
   text-decoration: none !important;
 }
 
-.sebs-home-page a:not(.sh-btn):not(.sh-brand):hover,
+.sebs-home-page a:not(.sh-btn):not(.sh-brand):not(.sh-nav__link):not(.sh-nav__login):not(.sh-skillhub__link) {
+  color: inherit;
+}
+
 .sebs-home-page em {
   text-decoration: none !important;
 }
@@ -195,6 +200,7 @@
   font-size: 0.9375rem;
   font-weight: 600;
   border: 1px solid transparent;
+  text-decoration: none !important;
   transition: transform 0.2s var(--sh-ease), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
@@ -285,6 +291,16 @@
   justify-content: space-between;
   gap: 1rem;
   height: 100%;
+}
+
+.sh-brand,
+.sh-nav__link,
+.sh-nav__login,
+.sh-nav__cta,
+.sh-nav a,
+.sh-footer a,
+.sh-mobile-menu a {
+  text-decoration: none !important;
 }
 
 .sh-brand {
