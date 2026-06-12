@@ -3590,7 +3590,7 @@ module.exports = { app, pool, getPool, authResolver };
  * Bu mekanizma sunucunun kendi kendini her ~9 dakikada bir pingleyerek
  * uyanık kalmasını sağlar. DISABLE_KEEP_ALIVE=1 ile devre dışı bırakılabilir.
  */
-function startKeepAlive(port, host) {
+function startKeepAlive(port, host, server) {
     if (process.env.DISABLE_KEEP_ALIVE === '1') {
         logger.info('Keep-alive disabled via DISABLE_KEEP_ALIVE=1');
         return;
@@ -3631,7 +3631,7 @@ if (require.main === module) {
     const host = process.env.HOST || '0.0.0.0';
     const server = app.listen(port, host, () => {
         console.log(`Server running on http://${host}:${port}`);
-        startKeepAlive(port, host);
+        startKeepAlive(port, host, server);
     });
     server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
