@@ -3382,7 +3382,7 @@ try {
     logger.warn('Module access API not registered:', moduleAccessApiErr.message);
 }
 
-app.get('*', (req, res, next) => {
+app.get(/.*/, (req, res, next) => {
     if (req.path.startsWith('/api/')) {
         return next();
     }
