@@ -251,16 +251,16 @@
                     <p>Ağ yönetimi, analizi veya güvenliği çalışmaları; teknik beceri kadar yasal ve etik sınırları ciddiye almayı gerektirir. Bu ders, açık ve tartışmasız yetkinin neden ilk kural olduğunu işler.</p>
                     <p class="section-intro">İster kurum içi bir bağlantı sorununu teşhis ediyor olun, ister izinli bir güvenlik testi yürütün — yapacağınız her adımın bir “yetki çerçevesi” içinde kalması gerekir. Bu çerçeve yoksa, iyi niyetli bile olsanız teknik faaliyetler hukuki ve etik risklere dönüşebilir. Aşağıdaki başlıklar, bu çerçeveyi nasıl kuracağınızı ve günlük kararlarda nasıl kullanacağınızı adım adım açıklar.</p>
                 </div>
-                <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Ağ çalışması yetki kartları">
-                    <div class="kr-inline-breakout__head"><i class="fas fa-gavel" aria-hidden="true"></i><span>Yetkili ağ çalışması</span></div>
-                    <p class="kr-inline-breakout__hint">Paket yakalama veya tarama öncesi bu üç kutuyu işaretleyin.</p>
-                    <div class="kr-cia-grid">
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-file-signature"></i></span><span class="kr-exp-goal__title">Yazılı izin</span></summary><div class="kr-exp-goal__body">Sistem sahibi ve <strong>zaman penceresi</strong> belgesinde yoksa trafik üretmeyin.</div></details>
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-ban"></i></span><span class="kr-exp-goal__title">Kapsam dışı</span></summary><div class="kr-exp-goal__body">Komşu VLAN veya misafir ağ “görünüyor” diye <strong>analiz konusu değildir</strong>.</div></details>
-                        <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-heart-pulse"></i></span><span class="kr-exp-goal__title">Do not harm</span></summary><div class="kr-exp-goal__body">Yoğunluk ve geri alma; <strong>üretim saati</strong> ve değişiklik penceresiyle hizalayın.</div></details>
+                <div class="section-inner">
+                    <div class="kr-inline-breakout kr-mid-cards" role="region" aria-label="Ağ çalışması yetki kartları">
+                        <div class="kr-inline-breakout__head"><i class="fas fa-gavel" aria-hidden="true"></i><span>Yetkili ağ çalışması</span></div>
+                        <p class="kr-inline-breakout__hint">Paket yakalama veya tarama öncesi bu üç kutuyu işaretleyin.</p>
+                        <div class="kr-cia-grid">
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-file-signature"></i></span><span class="kr-exp-goal__title">Yazılı izin</span></summary><div class="kr-exp-goal__body">Sistem sahibi ve <strong>zaman penceresi</strong> belgesinde yoksa trafik üretmeyin.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-ban"></i></span><span class="kr-exp-goal__title">Kapsam dışı</span></summary><div class="kr-exp-goal__body">Komşu VLAN veya misafir ağ “görünüyor” diye <strong>analiz konusu değildir</strong>.</div></details>
+                            <details class="kr-exp-goal"><summary><span class="kr-exp-goal__icon" aria-hidden="true"><i class="fas fa-heart-pulse"></i></span><span class="kr-exp-goal__title">Do not harm</span></summary><div class="kr-exp-goal__body">Yoğunluk ve geri alma; <strong>üretim saati</strong> ve değişiklik penceresiyle hizalayın.</div></details>
+                        </div>
                     </div>
-                </div>
-                <div class="content-card">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/ders-0-etik.svg" alt="Etik ve yasal çerçeve: Yazılı izin, RoE ve kapsam ilişkisi" class="lesson-image content-image" loading="lazy" width="560" height="224">
@@ -390,7 +390,7 @@
                     <p>Risk yönetimi, “teknik olarak mümkün olanı” değil, güvenli ve kontrollü olanı seçmektir. Ağ ortamında risk; performans, süreklilik, gizlilik, uyumluluk ve itibar boyutlarıyla gelir.</p>
                     <p class="section-intro">Bir ağ üzerinde yapılan her işlem — ister basit bir ping, ister trafik yakalama — sistemlere belirli bir yük bindirir. Bu yük kontrollü değilse hizmet yavaşlayabilir, loglar taşabilir veya beklenmeyen kesintiler oluşabilir. Bu ders, “hız ve yoğunluk sınırları”, “önce zarar verme” ilkesi ve “acil durdurma” planıyla riski nasıl yöneteceğinizi adım adım anlatır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Risk boyutu</th><th>Ne anlama gelir?</th><th>Pratik örnek</th></tr>
@@ -468,7 +468,7 @@
                     <p>Ağ trafiği ve loglar; kişisel veri, kimlik bilgisi, ticari sır gibi hassas içerikler taşıyabilir. Bu nedenle iki denge aynı anda korunur: veri gizliliği + veri minimizasyonu; kanıt bütünlüğü (denetlenebilirlik).</p>
                     <p class="section-intro">Teşhis veya test sırasında yakalanan paketler ve loglar bazen sadece teknik bilgi değil, gerçek kişilere ait veriler de içerir. Bu verileri toplarken “ne kadarını, neden?” sorusunu sormak ve saklarken “değişmedi, aynen duruyor” diyebilmek hem etik hem hukuki hem de raporlama açısından kritiktir. Bu ders, veri minimizasyonu, log saklama disiplini ve kanıt bütünlüğü (hash, zincir) kavramlarını net örneklerle açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-compress-arrows-alt"></i></div>
                         <h4 class="content-section-title">Veri gizliliği ve veri minimizasyonu</h4>
@@ -542,7 +542,7 @@
                     <p>Teknik bilgi, doğru aktarılmadığında değersizleşir. Profesyonel rapor; yalnızca “ne oldu”yu değil, “ne anlama geliyor”u da anlatır.</p>
                     <p class="section-intro">Yaptığınız teşhis veya testin değeri, sonuçları doğru okuyana ve karar verene iletmenize bağlıdır. “Bir şey bozuk” yerine “şu bulgu, şu etki, şu öneri ve şu kanıt” diyebilmek hem yönetici hem teknik ekip için zaman kazandırır. Bu ders, standart rapor formatını (Bulgu → Etki → Öneri → Kanıt), yönetici özeti ile teknik ek ayrımını ve etik uyarıları nasıl yorumlayacağınızı örnek senaryolarla açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Bölüm</th><th>Ne içerir?</th><th>Kime hitap eder?</th></tr>
@@ -607,7 +607,7 @@
                     <p>Network (bilgisayar ağı), iki veya daha fazla cihazın kablolu veya kablosuz bağlanarak veri paylaşması ve kaynakları ortak kullanmasıdır. Bu ders, ağın mantığını ve temel ihtiyaçları işler.</p>
                     <p class="section-intro">Günlük hayatta e-postayı göndermek, bir dosyayı paylaşmak veya internete çıkmak hep “ağ” sayesinde gerçekleşir. Ağ olmasaydı her cihaz tek başına kalır; veri aktarmak için fiziksel taşıma (USB, disk) gerekirdi. Aşağıda ağın neden var olduğunu üç temel ihtiyaçla (veri paylaşımı, kaynak erişimi, iletişim) ve günlük senaryolarla nasıl karşıladığını net bir şekilde göreceksiniz.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-road"></i></div>
                         <h4 class="content-section-title">Network: Dijital Trafiğin Yolu</h4>
@@ -657,7 +657,7 @@
                     <p>Ağlar hem coğrafi ölçeğe (PAN, LAN, MAN, WAN) hem de erişim politikasına (internet, intranet, extranet) göre sınıflandırılır. Bu ayrımlar, sorun giderme sırasında “sorun nerede?” sorusunu doğru yere yöneltmene yardım eder.</p>
                     <p class="section-intro">Günlük hayatta “ağ” dediğimizde aslında farklı ölçek ve erişim kurallarına sahip yapılar vardır: evinizdeki Wi‑Fi bir ağdır, şirketin tüm şubelerini birbirine bağlayan altyapı da. Hangi tür ağda olduğunuzu bilmek, hem beklentiyi (örneğin gecikme, hız) hem de sorun giderme adımlarını netleştirir. Aşağıdaki şekil ve tablolar bu sınıflandırmayı görsel ve pratik biçimde özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/network-turleri.svg" alt="Ağ türleri: PAN, LAN, MAN, WAN ölçekleri" class="lesson-image content-image" loading="lazy" width="560" height="301">
@@ -736,7 +736,7 @@
                     <p>Bir ağın şekli (topoloji) ve verinin o şekil üzerinde nasıl aktığı, sorun giderme refleksinin en erken kurulduğu yerdir. Bus, Star, Ring, Mesh ve Hybrid topolojiler; tek nokta arızası ve yedeklilik kavramları.</p>
                     <p class="section-intro">Cihazlar bir ağda fiziksel veya mantıksal olarak nasıl bağlanıyor? Bu bağlantı şekli (topoloji), hem veri akışını hem de “bir kablo veya cihaz arızalanırsa kim etkilenir?” sorusunun yanıtını belirler. Örneğin yıldız topolojide merkez cihaz (switch) tek nokta arızası oluşturur; mesh yapıda ise alternatif yollar vardır. Aşağıdaki açıklamalar ve tablolar, her topolojiyi örneklerle netleştirir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/star-topology.svg" alt="Yıldız topolojisi: merkez switch, uç cihazlar" class="lesson-image content-image" loading="lazy" width="560" height="303">
@@ -907,7 +907,7 @@
                     <p>Topoloji “yolu” kurar; veri iletimi ise o yoldaki “trafik”tir. “Hızlı/yavaş” gibi belirsiz ifadeler, troubleshooting’de zayıftır; hedef, sorunu teknik ama anlaşılır metriklere dönüştürmektir.</p>
                     <p class="section-intro">Kullanıcı “internet yavaş” veya “ses kesiliyor” dediğinde aslında farklı metrikler söz konusu olabilir: bant genişliği (ne kadar veri taşınabilir), gecikme (yanıt süresi), jitter (gecikmenin oynaklığı) veya paket kaybı. Bu ders, bit/byte ayrımından başlayıp bandwidth, throughput, latency, jitter ve packet loss kavramlarını örneklerle netleştirir; “belirti → hangi metrik?” eşlemesini tablo ve ipuçlarıyla verir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-binary"></i></div>
                         <h4 class="content-section-title">2.2.1 Temel birimler: Bit vs Byte</h4>
@@ -1075,7 +1075,7 @@
                     <p>SOHO’nun en belirgin özelliği, tek cihazın aynı anda birden fazla rol oynamasıdır. “Modem” kutusu aslında modem + router + switch + access point işlevlerini birlikte yürütür.</p>
                     <p class="section-intro">Ev veya küçük ofis ağında (SOHO) tek bir kutu hem internete çıkışı sağlar hem kablolu portları dağıtır hem Wi‑Fi yayar. Sorun gidermede “modem mi router mı bozuk?” diye sormak yerine, “hangi rol etkileniyor?” diye düşünmek daha doğru sonuç verir: Örneğin Wi‑Fi çalışıyor ama internet yoksa sorun büyük olasılıkla gateway veya ISP tarafındadır. Aşağıda roller, tipik akış ve mesh/repeater seçenekleri örneklerle anlatılır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/soho-flow.svg" alt="SOHO ağ akışı: ISP, modem, router, switch, AP, istemciler" class="lesson-image content-image" loading="lazy" width="560" height="220">
@@ -1150,7 +1150,7 @@
                     <p>SOHO’da sorunların büyük kısmı “donanım bozuldu”dan çok yanlış bağlantı, yanlış yerleşim veya yapı kaynaklıdır. Belirti örüntüsünden hipotez kurulır.</p>
                     <p class="section-intro">“İnternet yok”, “sadece bu cihaz bağlanamıyor” veya “akşamları kesiliyor” gibi ifadeler tek başına yeterli değildir; hangi cihazların etkilendiği, kablo mu Wi‑Fi mi, sürekli mi aralıklı mı gibi desenler teşhisi yönlendirir. Bu ders, SOHO’da sık görülen hata türlerini (yanlış port, yanlış SSID, güç/konum, tek nokta arızası) belirti örnekleriyle eşleştirir; böylece “bu belirti hangi hipoteze işaret ediyor?” sorusuna daha hızlı yanıt verebilirsiniz.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Kapsam sorusu:</strong> Tek cihaz mı etkileniyor? → uç cihaz/bağlantı/yanlış ağ. Herkes mi? → ortak nokta (gateway, ISP, güç). Sadece Wi-Fi mı / sadece kablo mu? → dağıtım katmanını daraltırsın.</p>
                     <div class="key-concept-card">
                         <h4><i class="fas fa-plug"></i> Yanlış Port / WAN vs LAN Karışması</h4>
@@ -1186,7 +1186,7 @@
                     <h2><i class="fas fa-terminal"></i> 3.3 Komut ve Araç Okuryazarlığı</h2>
                     <p>Komutlar “hacking” veya keşif için değil, kanıt üretmek içindir: “Bence sorun var” yerine “Şu çıktı şunu gösteriyor” diyebilmek. Zihniyet: Böl ve Yönet — önce Cihaz (bağlı mı?), sonra Gateway (IP/gateway var mı?), sonra İnternet çıkışı (IP ile ulaşılabilirlik), en sonda DNS (isim çözülüyor mu?). Bu sırayı bozmak, yanlış yerde zaman harcamanı getirir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-wifi"></i></div>
                         <h4 class="content-section-title">Bağlı mıyım, Hangi Ağa? (Windows / Linux / macOS)</h4>
@@ -1304,18 +1304,18 @@
                 </div>
             </section>
             <section class="content-section" id="ders-4-1">
+                <div class="section-header">
+                    <h2><i class="fas fa-server"></i> 4.1 Ağ Cihazları ve Rolleri</h2>
+                    <p>Giriş seviyesinde en çok karışan konu şudur: Aynı kutu farklı rolleri aynı anda oynayabilir. Bu yüzden sorun giderme, “cihaz adı” ezberiyle değil rol üzerinden yapılır.</p>
+                    <p class="section-intro">Evde veya ofiste gördüğünüz “router” aslında çoğu zaman hem router hem switch hem erişim noktası (AP) hem de basit bir firewall içerir. Bu nedenle “router bozuk” demek yerine “internet çıkışı (gateway) mi, yerel dağıtım (switch) mı, yoksa Wi‑Fi (AP) mi?” diye düşünmek teşhisi hızlandırır. Aşağıdaki tablo ve kartlar, her rolü net tanımlar ve gerçek hayattaki belirtilerle eşleştirir.</p>
+                </div>
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/devices-roles.svg" alt="Ağ cihazları ve rolleri: NIC, Switch, Router, AP, Modem" class="lesson-image content-image" loading="lazy" width="560" height="215">
                         </div>
                         <figcaption class="figure-caption"><span class="figure-number">Şekil 4.1.</span> Cihaz rolleri — aynı kutu router + switch + AP; teşhis rol üzerinden yapılır.</figcaption>
                     </figure>
-                <div class="section-header">
-                    <h2><i class="fas fa-server"></i> 4.1 Ağ Cihazları ve Rolleri</h2>
-                    <p>Giriş seviyesinde en çok karışan konu şudur: Aynı kutu farklı rolleri aynı anda oynayabilir. Bu yüzden sorun giderme, “cihaz adı” ezberiyle değil rol üzerinden yapılır.</p>
-                    <p class="section-intro">Evde veya ofiste gördüğünüz “router” aslında çoğu zaman hem router hem switch hem erişim noktası (AP) hem de basit bir firewall içerir. Bu nedenle “router bozuk” demek yerine “internet çıkışı (gateway) mi, yerel dağıtım (switch) mı, yoksa Wi‑Fi (AP) mi?” diye düşünmek teşhisi hızlandırır. Aşağıdaki tablo ve kartlar, her rolü net tanımlar ve gerçek hayattaki belirtilerle eşleştirir.</p>
-                </div>
-                <div class="content-card">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Cihaz / Rol</th><th>Ana görevi</th><th>Teşhiste ipucu</th></tr>
@@ -1381,7 +1381,7 @@
                     <p>Veri bir “yol” ister. Yolun türü ve kalitesi; hız, stabilite ve sorun desenini belirler. Aynı “bağlı görünüyor” hissinin altında farklı gerçekler olabilir: gevşek konnektör, kırık tel çifti, yanlış kablo tipi, fiber uç kirliliği, parazit etkisi vb.</p>
                     <p class="section-intro">Fiziksel katmanda sorun varsa üst katmanlardaki ayarlar tek başına çözüm getirmez. Kablo türü (bakır twisted pair, fiber), uzunluk, konnektör kalitesi ve ortam (parazit, bükülme) hem hızı hem bağlantı kararlılığını etkiler. Bu ders, temel kablo ailelerini, “bağlı görünüyor ama veri gitmiyor” gibi belirtilerin olası nedenlerini ve güvenli doğrulama adımlarını örneklerle açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/cable-types.svg" alt="Kablo türleri: Twisted Pair, Fiber, Koaksiyel" class="lesson-image content-image" loading="lazy" width="560" height="233">
@@ -1445,7 +1445,7 @@
                     <p>RJ45, twisted pair Ethernet’te sık kullanılan konnektör ailesidir. Kablonun içindeki 8 telin sıralaması rastgele değildir; tel çiftleri doğru sırada taşınmalıdır.</p>
                     <p class="section-intro">Ethernet kablosu sonlandırılırken T568A ve T568B gibi standart renk sıraları kullanılır; iki uç aynı standarda uygun olmalıdır (düz kablo). Yanlış sıra veya kopuk tel çifti “link yok” veya “aralıklı bağlantı” belirtisine yol açabilir. Bu ders, RJ45 pin sıralarının neden önemli olduğunu, düz ve cross kablo farkını (giriş düzeyi) ve teşhiste nelere bakılacağını kısa ve net biçimde anlatır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Kablo tipi</th><th>Açıklama</th><th>Ne zaman kullanılır?</th></tr>
@@ -1497,7 +1497,7 @@
                     <p>Ethernet’i bu modülde “konfigürasyon” olarak değil, fiziksel katmanla birleşen davranışlar olarak ele alırız.</p>
                     <p class="section-intro">Ethernet, yerel ağda (LAN) verinin nasıl çerçevelendiğini, adreslendiğini (MAC) ve taşındığını tanımlar. Bu derste switch’in “hangi porta kime ileteceğim?” mantığı, duplex (yarı/tam çift yönlü) ve hız pazarlığı gibi kavramlar fiziksel bağlantı ve link ışıklarıyla ilişkilendirilir; böylece “kablo takılı, link yanıyor mu?” sorusunun teşhisteki yerini netleştirirsiniz.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong></p>
                     <ul>
                         <li><strong>Link:</strong> İki uç arasında fiziksel bağlantının kurulduğuna dair sinyal.</li>
@@ -1532,7 +1532,7 @@
                     <p>PoE (Power over Ethernet), Ethernet kablosu üzerinden veri + güç taşımaya yarar. Sahada en çok tavana/duvara konulan AP, IP kamera ve IP telefon gibi cihazlara tek kablo ile güç sağlama problemlerini çözer.</p>
                     <p class="section-intro">PoE sayesinde cihaza ayrı bir güç kablosu çekmek gerekmez; tek Ethernet kablosu hem veriyi hem elektriği taşır. “Cihaz açılmıyor” veya “aralıklı çalışıyor” şikâyetinde PoE beslemesi (switch/injector tarafı) ve kablo kalitesi/uzunluğu kontrol edilir. Bu ders, PoE’nin sahadaki mantığını, güç sınıflarını (giriş düzeyi) ve teşhis adımlarını özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Rol</th><th>Taraf</th><th>Örnek</th></tr>
@@ -1650,7 +1650,7 @@
                     <p>802.11, Wi-Fi’nin standart ailesidir. “Wi-Fi 5/6/6E/7” gibi isimler kullanıcı dostu nesil etiketleridir; asıl okuma şu soruyla yapılır: Bu nesil sahada neyi iyileştirdi?</p>
                     <p class="section-intro">Wi-Fi nesilleri bant (2.4 / 5 / 6 GHz), kanal genişliği ve verimlilik iyileştirmeleriyle birbirinden ayrılır. Hangi bantta bağlı olduğunuz, ortam kalabalığı ve cihazın desteklediği nesil performansı doğrudan etkiler. Bu ders, 802.11 evrimini ezbersiz bir çerçevede sunar; “hız mı, kapsama mı, kararlılık mı?” sorusuna göre doğru okumayı örneklerle anlatır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/wifi-bands.svg" alt="Wi-Fi bantları: 2.4, 5, 6 GHz" class="lesson-image content-image" loading="lazy" width="560" height="247">
@@ -1694,7 +1694,7 @@
                     <p>Wi-Fi 7 (802.11be) pratikte iki hedefe odaklanır: daha yüksek kapasite ve daha düşük gecikme (özellikle yoğun kullanımda) + uygun koşullarda daha yüksek tepe performans.</p>
                     <p class="section-intro">Wi-Fi 7 ile MLO (çoklu bağlantı) ve daha geniş kanal seçenekleri gündeme gelir; ancak gerçek performans hem erişim noktası hem istemci hem de ortam (mesafe, duvar, parazit) ile belirlenir. Bu ders, Wi-Fi 7’yi “ufuk notu” olarak konumlandırır; beklenti yönetimi ve “cihaz zinciri + ortam” odaklı teşhis mantığını vurgular.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Koşul</th><th>Soru</th><th>Teşhiste</th></tr>
@@ -1741,7 +1741,7 @@
                     <p>PAN (Personal Area Network / Kişisel Alan Ağı), çok kısa menzilde cihazların birbirine bağlanması yaklaşımıdır. Troubleshooting’te kritiktir; çünkü bazı şikâyetler Wi-Fi değil Bluetooth/NFC gibi PAN katmanındadır.</p>
                     <p class="section-intro">Kulaklık kopuyor, akıllı saat senkronize olmuyor veya “cihaz bulunamadı” uyarısı alıyorsanız sorun çoğu zaman Wi-Fi değil Bluetooth veya benzeri PAN teknolojisindedir. Bu ders, PAN türlerini (Bluetooth/BLE, NFC, Zigbee/Thread), gerçek hayat belirtilerini ve “bu bağlantı Wi-Fi mi PAN mı?” sorusunu nasıl yanıtlayacağınızı kısa ve net biçimde anlatır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong> Giriş seviyesinde en sık karşılaşılanlar:</p>
                     <ul>
                         <li><strong>Bluetooth / BLE:</strong> kulaklık, saat, sensör, bazı IoT kurulumları</li>
@@ -1777,7 +1777,7 @@
                     <p>Kablosuzda “görünmeyen” şeyler performansı belirler: sinyal seviyesi, gürültü, kanal/bant, aynı SSID altında hangi AP’ye bağlandığın (BSSID), ortam kalabalığı ve link pazarlığı.</p>
                     <p class="section-intro">Wi-Fi’de “çekiyor” demek bazen yanıltıcıdır; asıl önemli olan RSSI (sinyal gücü), gürültü ve SNR (sinyal-gürültü oranı), bağlı olduğunuz bant/kanal ve link hızıdır. Bu ders, Windows/Linux/macOS’ta bu bilgilere nasıl güvenle bakacağınızı, 2.4 GHz kanal seçiminin (1, 6, 11) neden önemli olduğunu ve teşhis için mini kayıt (zaman, konum, RSSI, kanal) disiplinini özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Gösterge</th><th>Anlamı</th><th>Örnek / yorum</th></tr>
@@ -1886,7 +1886,7 @@
                     <p>Bir web sayfasına tıkladığında arka planda gerçekleşen süreç, büyük bir lojistik operasyon gibidir: veri, her aşamada farklı kurallarla taşınır. Bu modül, o karmaşayı katmanlı bir düşünme modeli ile yönetilebilir hale getirir: “Bu sorun hangi katmanda?” sorusunu refleksle sorup kanıt toplayarak doğru katmana inmeyi öğretir.</p>
                     <p class="section-intro">Ağ iletişimi aynı anda fiziksel sinyal, adresleme, taşıma ve uygulama protokollerini içerir. Bu karmaşayı “katmanlar” halinde bölmek, hem standartlaşmayı hem de teşhisi kolaylaştırır: Sorun kablo mı, IP mi, port mu, DNS mi? Bu ders, katmanlı mimarinin neden kullanıldığını (standartlaşma, değiştirilebilirlik, troubleshooting) ve “aşağıdan yukarıya” kontrol etme mantığını örneklerle açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong> Ağ iletişimi aynı anda çok fazla bileşen içerir: kablolar/elektrik sinyalleri veya radyo dalgaları, MAC ve IP adresleri, portlar, veri formatları ve uygulamalar… Bu kaosu yönetmek için mühendislikte “Böl ve Yönet (Divide and Conquer)” yaklaşımı kullanılır: Her katman kendi işini iyi yapar, üst katmana standart bir hizmet sunar.</p>
                     <p><strong>Katmanlı düşünmenin temel kazanımları:</strong></p>
                     <ul>
@@ -1915,7 +1915,7 @@
                     <p>OSI (Open Systems Interconnection), iletişimi 7 mantıksal kata ayıran referans modeldir. Giriş seviyesinde hedef; katmanların standardını ezberlemek değil, her katmanın rolünü, sahadaki belirtisini ve tipik kanıtını bilmektir. Troubleshooting’te çoğu zaman aşağıdan yukarıya (1’den 7’ye) kontrol etmek verimlidir.</p>
                     <p class="section-intro">Bir web sayfası açmak veya bir yazıcıya bağlanmak gibi günlük işlemlerin arkasında, veri fiziksel ortamdan (kablo veya Wi‑Fi) uygulama katmanına (tarayıcı, yazıcı sürücüsü) kadar bir dizi katmandan geçer. OSI modeli bu geçişi yedi net sorumluluk alanına böler; böylece “sorun nerede?” sorusuna “fiziksel mi, IP mi, port mu, uygulama mı?” diye sistematik yanıt verebilirsiniz. Aşağıdaki şekil yedi katmanı yukarıdan aşağıya görselleştirir; tablolar ise her katmanda hangi kanıtı toplayacağınızı özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/osi-7-katman.svg" alt="OSI 7 katman: Application'dan Physical'a" class="lesson-image content-image" loading="lazy" width="560" height="504">
@@ -1965,7 +1965,7 @@
                     <p>OSI’yi “teorik referans”, TCP/IP’yi “pratikte çalışan model” olarak konumlandırırız; ikisini eşleştirerek gerçek hayattaki teşhisi hızlandırırız. Amaç ezber değil, belirtiyi doğru katmana taşımaktır.</p>
                     <p class="section-intro">İnternet gerçekte TCP/IP (Link, Internet, Transport, Application) ile çalışır; OSI ise yedi katmanlı bir referans sunar. Teşhis yaparken “bu sorun fiziksel mi, IP mi, port mu, uygulama mı?” sorusunu TCP/IP katmanlarıyla yanıtlarız; OSI ile eşleştirmek eğitim ve iletişimde işe yarar. Bu ders, iki modeli karşılaştırır ve “IP var ama site açılmıyor”, “Wi‑Fi bağlı ama IP yok” gibi belirtileri hangi katmana taşıyacağınızı tablo ve örneklerle netleştirir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Neden iki model?</strong> OSI yedi katmanlı bir referans modeli sunar; eğitim ve “hangi iş nerede?” tartışmalarında kullanılır. TCP/IP ise internetin gerçekte çalıştığı protokol yığınını dört katmanda toplar. Teşhis yaparken çoğu araç ve belirti TCP/IP katmanlarıyla ifade edilir; OSI ile eşleştirmek, “bu sorun fiziksel mi, veri bağlantısı mı, yönlendirme mi, taşıma mı, uygulama mı?” sorusunu netleştirir.</p>
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-layer-group"></i></div>
@@ -2019,7 +2019,7 @@
                     <p>Veri gönderilirken her katman bir “zarf” ekleyerek paketi hazırlar; alıcıda bu zarflar sırayla açılır. Bu ders, Data → Segment → Packet → Frame → Bit dönüşümünü ve Wireshark’ta bu katmanların nasıl okunacağını detaylandırır.</p>
                     <p class="section-intro">İnternette veya yerel ağda iletilen her veri, gönderen tarafta “kat kat sarılarak” fiziksel ortama bırakılır; alıcı tarafta ise aynı katmanlar sırayla “zarfı açarak” veriyi uygulamaya ulaştırır. Bu sürece encapsulation (kapsülleme) ve decapsulation (açma) denir. Aşağıdaki şekil, her katmanda eklenen başlıklarla verinin nasıl büyüdüğünü gösterir; metin ise Wireshark’ta bu yapıyı nasıl okuyacağınızı açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/encapsulation.svg" alt="Encapsulation: Data, Segment, Packet, Frame, Bits" class="lesson-image content-image" loading="lazy" width="560" height="294">
@@ -2074,7 +2074,7 @@
                     <p>VLAN (Virtual LAN), aynı fiziksel altyapı üzerinde trafiği mantıksal gruplara ayırır. Bu ders, VLAN etiketine (802.1Q) yalnızca okuryazarlık seviyesinde giriş yapar; konfigürasyon anlatılmaz.</p>
                     <p class="section-intro">Aynı switch’e bağlı iki cihaz farklı VLAN’lardaysa birbirine “görünmez”; kablo ve link sağlam olsa bile trafik mantıksal olarak ayrılmıştır. Bu ders, VLAN’ı L2 okuryazarlığı çerçevesinde tanıtır; 802.1Q tag kavramını, access/trunk farkını (kavramsal) ve “bağlı görünüyor ama ağa çıkamıyorum” gibi belirtilerde VLAN hipotezini nasıl düşüneceğinizi özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/vlan-access-trunk.svg" alt="VLAN Access ve Trunk port mantığı" class="lesson-image content-image" loading="lazy" width="560" height="233">
@@ -2128,7 +2128,7 @@
                     <p>Wireshark’ı yalnızca kendi/izinli ortamında; arayüz seçimi, temel filtre mantığı ve kanıt üretimi için başlangıç seviyesinde kullanmayı hedefleriz. Amaç “her paketi analiz etmek” değil; teşhis sırasında encapsulation’ı somut görmek ve “bu trafikte ne var?” sorusuna kanıta dayalı yanıt verebilmektir.</p>
                     <p class="section-intro">Wireshark ile ağ trafiğini paket düzeyinde görebilirsiniz: hangi kaynak/hedef, hangi port, hangi protokol. Bu derste doğru arayüzü seçmek, basit filtreler (icmp, arp, ip.addr, dns) kullanmak ve Packet Details’te Frame → Ethernet → IP → TCP/UDP → HTTP/DNS katmanlarını okumak anlatılır. İlk adım olarak kendi cihazınızda kısa bir ping veya tarayıcı isteği atıp paketleri inceleyerek encapsulation’ı somutlaştırmanız önerilir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Adım</th><th>Ne yapılır?</th><th>Dikkat</th></tr>
@@ -2254,7 +2254,7 @@
                     <p>MAC (Media Access Control) adresi, bir ağ arayüzünün (NIC / Wi-Fi adaptörü) yerel ağ (Layer 2) kimliğidir. Ethernet veya Wi-Fi gibi L2 teknolojilerinde veri, bir frame (çerçeve) içinde taşınır ve frame üzerinde Kaynak MAC ile Hedef MAC bulunur.</p>
                     <p class="section-intro">IP adresi “paketi nihai hedefe götürecek adres” iken, MAC adresi “bu yerel segmentte paketi hangi komşuya teslim edeceğim?” sorusunun yanıtıdır. Aynı LAN içindeki iki cihaz birbirine ulaşırken switch, frame’deki hedef MAC’e bakarak paketi doğru porta iletir. Bu ders, MAC’in yapısını, yerel iletişimdeki rolünü ve teşhiste nasıl kullanılacağını örneklerle açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/ip-mac-arp.svg" alt="IP vs MAC ve ARP ilişkisi" class="lesson-image content-image" loading="lazy" width="560" height="247">
@@ -2307,7 +2307,7 @@
                     <p>ARP (Address Resolution Protocol), IPv4 dünyasında yerel ağda “Bu IP’nin MAC’i ne?” sorusuna cevap bulur. Cihaz, IP ile “hedefi” bilse bile, frame’i kabloya/ortama koymak için L2’de bir MAC adresine teslim etmek zorundadır.</p>
                     <p class="section-intro">Yerel ağda bir cihaza (örneğin aynı ofisteki yazıcıya) ulaşmak için hem hedefin IP’si hem de o IP’nin hangi MAC adresine ait olduğu gerekir. ARP, “bu IP kimde?” diye yayın yapar; ilgili cihaz “benim, MAC’im şu” diye yanıt verir ve bu eşleme bir süre ARP önbelleğinde tutulur. Bu ders, ARP istek/yanıt akışını, ARP tablosunu okumayı ve “aynı ağdaki cihaza erişemiyorum” şikâyetinde ARP’yi nasıl kontrol edeceğinizi özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong></p>
                     <p><strong>Temel akış:</strong></p>
                     <ul>
@@ -2402,7 +2402,7 @@
                     <p>IPv4, 32 bitlik bir adresleme sistemidir. Cihazlar bunu bitler olarak “görür”; insanlar için okunabilir olsun diye çoğunlukla dört parçalı onluk gösterim (dotted decimal notation) kullanılır.</p>
                     <p class="section-intro">Teşhiste tek başına “IP’m var” yeterli değildir; IP ile birlikte subnet mask/prefix (“hangi ağdayım?”) ve default gateway (“subnet dışına çıkış kapım neresi?”) birlikte düşünülmelidir. Bu ders, IPv4 adres yapısını, network/host ayrımını, public/private adres kavramını ve “Wi‑Fi bağlı ama sayfa açılmıyor” gibi belirtilerde IP/prefix/gateway kanıtını nasıl toplayacağınızı örneklerle açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Bileşen</th><th>Anlamı</th><th>Eksikse belirti</th></tr>
@@ -2442,7 +2442,7 @@
                     <h2><i class="fas fa-divide"></i> 8.2 Subnetting (Ezbersiz Giriş)</h2>
                     <p>Subnetting, bir IP ağını daha küçük mantıksal ağlara bölme fikridir. Giriş seviyesinde subnetting’in amacı “hesap yarışması” değil; adres yönetimi ve mantıksal düzen ihtiyacını anlamaktır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/subnet-prefix.svg" alt="Subnetting: prefix ve host sayısı özeti" class="lesson-image content-image" loading="lazy" width="560" height="233">
@@ -2483,7 +2483,7 @@
                     <h2><i class="fas fa-ip-address"></i> 8.3 IPv6 Temelleri (Minimum Okuryazarlık)</h2>
                     <p>IPv6, 128 bitlik adresleme sistemidir. Giriş seviyesinde amaç IPv6’yı “konfigüre etmek” değil; günlük teşhiste IPv6’yı tanıyıp okuyabilmek ve “bu cihazda IPv6 da var mı? Aynı prefix’te miyiz?” gibi sorulara yanıt verebilmektir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong> IPv6, IPv4’ün adres tükenmesine yanıt olarak geliştirilmiş, çok daha büyük adres alanı sunan bir protokoldür. Teşhiste üç pratik soru öne çıkar: Bu adres IPv6 mı, nasıl yazılmış? Prefix (örn. /64) neyi ifade ediyor? Aynı cihazda IPv4 ve IPv6 birlikte görülebilir mi? Evet; bu geçiş yaklaşımına <strong>dual-stack</strong> denir — aynı anda hem IPv4 hem IPv6 adresi atanabilir ve uygulamalar birini veya diğerini kullanabilir.</p>
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fas fa-pen-fancy"></i></div>
@@ -2530,7 +2530,7 @@
                     <h2><i class="fas fa-code"></i> 8.4 Komutlar (Okuma/Denetim)</h2>
                     <p>Aşağıdaki komutlar yalnızca yerel/izinli ortamda, yalnızca okuma ve denetim amaçlıdır. Amaç “keşif” veya “tarama” değil; cihazın kendini nerede sandığını (hangi IP, hangi prefix, hangi gateway) netleştirmek ve L3 adresleme kanıtını raporlayabilmektir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <div class="content-section-header">
                         <div class="content-section-icon"><i class="fab fa-windows"></i></div>
                         <h4 class="content-section-title">Windows</h4>
@@ -2635,7 +2635,7 @@
                     <p>Taşıma katmanı (Layer 4), verinin uygulamalar arasında nasıl taşınacağını belirler. İki temel yaklaşım vardır.</p>
                     <p class="section-intro">TCP bağlantı kurar, sıralar ve kayıp paketleri yeniden gönderir; UDP ise bağlantı kurmadan hızlı gönderir ama garanti vermez. Web ve e-posta çoğunlukla TCP; canlı yayın ve DNS (çoğu sorgu) UDP kullanır. Bu ders, iki protokolün farkını “garantili teslimat” vs “hızlı teslimat” ekseninde anlatır; teşhiste “timeout” ve “refused” sonuçlarını nasıl yorumlayacağınızı özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/tcp-udp.svg" alt="TCP vs UDP: güvenilir vs hızlı teslimat" class="lesson-image content-image" loading="lazy" width="560" height="247">
@@ -2676,7 +2676,7 @@
                     <p>IP adresi veriyi doğru “binaya” getirir. Ancak aynı binada yüzlerce “daire” (uygulama) olabilir. Port numarası, gelen verinin hangi uygulamaya ait olduğunu ayıran “daire numarası” gibidir.</p>
                     <p class="section-intro">Bir iletişimi tanımlayan üçlü: IP + protokol (TCP/UDP) + port. Örneğin HTTPS, 443/TCP üzerinden çalışır; SSH 22/TCP. “Site açılmıyor” dediğinizde bazen sadece ilgili port (ör. 443) kapalı veya engelli olabilir. Bu ders, port aralıklarını (well-known, registered, dynamic), yaygın port örneklerini ve teşhiste “doğru portu mu test ediyorum?” sorusunu nasıl kullanacağınızı özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Aralık</th><th>Ad</th><th>Örnek</th></tr>
@@ -2705,7 +2705,7 @@
                     <h2><i class="fas fa-vial"></i> 9.3 Servis Erişimini “Güvenli Test Etme” Mantığı</h2>
                     <p>Servise erişim testi, keşif veya tarama değildir. Bu modülde test şu ilkeye dayanır: Sadece izinli hedef; tek hedef – tek port – tek protokol; düşük risk; kanıt odaklı. Amaç “erişemiyorum” cümlesini somut kanıta çevirmektir.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong> Kullanıcı “site açılmıyor” veya “servise erişemiyorum” dediğinde, gerçekte ne olduğunu bilmek gerekir: Bağlantı hiç kurulmuyor mu (timeout)? Kuruluyor ama red mi ediliyor (refused)? Yoksa bağlantı var ama uygulama yanıt vermiyor mu? Güvenli test mantığı, bu üçünü ayırt etmene ve “L4 seviyesinde ne biliyoruz?” sorusuna net yanıt vermene yardım eder.</p>
                     <p>Bu sayede belirsiz “erişemiyorum” cümlesi şu tür somut ifadelere dönüşür: “TCP 443 denemesi timeout oldu.” / “TCP 443 denemesi refused döndü.” / “Yerelde dinliyor; uzaktan erişimde sorun var.” Her biri farklı bir hipotez ve sonraki adım üretir: Timeout → arada engel veya hedef ulaşılamıyor; refused → hedef ulaşılıyor ama portta servis yok veya reddediyor; yerelde dinliyor uzaktan yok → firewall veya ağ kuralı ihtimali.</p>
                     <div class="content-section-header">
@@ -2754,7 +2754,7 @@
                     <p>Aşağıdaki komutlar yalnızca yerel/izinli ortamda, okuma/denetim ve tek servis doğrulaması içindir. Amaç “bulmak” değil; mevcut şikâyeti kanıtlamak ve çıktıyı okumaktır.</p>
                     <p class="section-intro">Dinleyen portları görmek (netstat, ss, lsof), tek hedef–tek port erişimini test etmek (Test-NetConnection, nc) ve HTTP yanıtını kontrol etmek (curl) günlük teşhiste sık kullanılır. Bu ders, Windows/Linux/macOS’ta bu komutların tipik çıktılarını ve “sunucuda LISTEN var mı? İstemciden timeout mı refused mı?” sorusuna nasıl yanıt vereceğinizi mini senaryolarla açıklar.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Platform</th><th>Dinleyen portlar</th><th>Tek port testi</th></tr>
@@ -2852,7 +2852,7 @@
                     <p>Bilgisayarlar IP adresleriyle, insanlar alan adlarıyla konuşur. DNS (Domain Name System), alan adını (ör. www.example.com) uygun IP’ye çeviren, internetin “telefon rehberi” gibi çalışan dağıtık sistemidir.</p>
                     <p class="section-intro">Tarayıcıya “www.example.com” yazdığınızda, önce bu ismin hangi IP adresine karşılık geldiği çözülmelidir; bu işi DNS yapar. Çözümleme başarısız olursa “site bulunamadı” veya “DNS hatası” görürsünüz; bu nedenle “site açılmıyor” şikâyetinde DNS’i kontrol etmek sık kullanılan bir adımdır. Aşağıda DNS’in çalışma akışı (önbellek, resolver, hiyerarşi), kayıt türleri ve güvenli doğrulama yöntemleri örneklerle anlatılır.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <figure class="figure-block figure-block--wide" aria-hidden="false">
                         <div class="lesson-image-wrap">
                             <img src="/assets/modules/network/lessons/dns-dhcp.svg" alt="DNS ve DHCP: isim çözümleme ve IP atama" class="lesson-image content-image" loading="lazy" width="560" height="215">
@@ -2895,7 +2895,7 @@
                     <p>DHCP (Dynamic Host Configuration Protocol), cihaz ağa bağlanır bağlanmaz IP adresini ve temel ağ ayarlarını otomatik almasını sağlar.</p>
                     <p class="section-intro">Ev ve ofis ağlarında çoğu cihaz IP’yi DHCP ile alır: cihaz “IP istiyorum” der, sunucu (genelde router) IP, gateway ve DNS bilgisini verir. DHCP çalışmıyorsa “Wi‑Fi bağlı ama internet yok” veya 169.254.x.x (APIPA) adresi görülür. Bu ders, DORA akışını (Discover, Offer, Request, Ack), lease kavramını ve teşhiste DHCP’yi nasıl doğrulayacağınızı özetler.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <p><strong>Ne anlama gelir?</strong></p>
                     <p>DHCP çoğunlukla şunları dağıtır: IP adresi + prefix/mask; Default gateway; DNS sunucuları; Lease/kira süresi.</p>
                     <table class="comparison-table">
@@ -2924,7 +2924,7 @@
                     <h2><i class="fas fa-random"></i> 10.3 NAT ve Ev Router'ı</h2>
                     <p>Ev router’ı çoğu zaman tek kutuda birden fazla rol taşır: Router (yönlendirici), NAT/PAT (çeviri ve eşleştirme), DHCP sunucusu, DNS forwarder/relay, durum bilgili güvenlik filtresi (stateful firewall davranışı).</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Kavram</th><th>Açıklama</th><th>Teşhiste</th></tr>
@@ -2953,7 +2953,7 @@
                     <p>Aşağıdaki komutlar yalnızca kendi/izinli ortamında ve troubleshooting amaçlıdır. Her komutta hedef: kanıt üretmek ve çıktıdan kritik satırı seçmek.</p>
                     <p class="section-intro">“Wi‑Fi’ye bağlandım ama siteler açılmıyor” şikâyetinde sırayla IP/gateway/DNS kanıtı toplanır: ipconfig/ip a ile adres ve gateway, nslookup/dig ile DNS çözümlemesi. Bu ders, Windows/Linux/macOS’ta bu komutların tipik kullanımını ve “DNS çözülmüyor mu, yoksa çözülüyor ama servis mi yanıt vermiyor?” ayrımını mini senaryoyla özetler; kanıt notu (zaman, arayüz, hedef, sonuç) disiplinini vurgular.</p>
                 </div>
-                <div class="content-card">
+                <div class="section-inner">
                     <table class="comparison-table">
                         <thead>
                             <tr><th>Platform</th><th>IP / Gateway</th><th>DNS testi</th></tr>
