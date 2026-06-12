@@ -1,0 +1,54 @@
+# Render Blueprint — repo kökü
+# Dashboard: New → Blueprint → Bu dosyayı bağlayın
+# Gizli değişkenleri (DATABASE_URL, JWT_SECRET, …) panelden ekleyin (sync: false)
+#
+# Docker runtime kullanılır — Dockerfile içindeki CMD çalışır.
+# Repo yapısı:
+#   /index.html, css/, js/   → statik frontend
+#   /backend/server.js        → Express API
+#   /backend/db/              → SQL migrasyonları
+#
+# 📌 PLAN YÜKSELTME (Free → Paid):
+#    Bu dosyadaki plan değerini güncelledikten sonra Render Dashboard'dan:
+#    sebs-staging → Settings → Plan → "Upgrade Plan" butonu ile onaylayın.
+#    Yeni plan hemen active olur; deploy tekrarı gerekmez.
+#    Seçenekler: starter (7$/ay), starter_plus (19$/ay), professional (25$/ay)
+
+# ── Render Keep-Alive / Uyku Engelleme ──────────────────────────────────
+# Starter plan (7$/ay) 15dk hareketsizlikten sonra servisi uyutur.
+#   → Çözüm 1 (çalışıyor): plan: starter_plus (19$/ay) veya professional (25$/ay)
+#   → Çözüm 2 (ücretsiz): .github/workflows/keep-alive.yml harici ping atar
+#   → Çözüm 3 (destek): backend/server.js içindeki self-keep-alive (içten ping)
+# Üretim için "starter_plus" veya "professional" önerilir.
+# ────────────────────────────────────────────────────────────────────────
+
+services:
+  - type: web
+    name: sebs-staging
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: frankfurt
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Aşağıdakileri Render panelinde Secret olarak girin:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      # Reverse proxy arkasında doğru IP / rate limit için (çoğu barındırıcıda önerilir)
+      - key: TRUST_PROXY
+        value: "1"

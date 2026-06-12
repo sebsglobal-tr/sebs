@@ -1,0 +1,1670 @@
+@import url('/css/module-content-theme.css');
+@import url('/css/module-isletim-standard.css');
+@import url('/css/module-sidebar-premium.css');
+
+body.landing-site-body {
+  --primary-gradient: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%);
+  --primary-gradient-hover: linear-gradient(135deg, #6b3030 0%, #991b1b 100%);
+  --primary: #7f1d1d;
+  --primary-light: #dc2626;
+  --glow-primary: 0 0 0 1px rgba(127, 29, 29, 0.15);
+  --info-color: #64748b;
+  --info-gradient: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+body.landing-site-body::before,
+body.landing-site-body::after {
+  display: none !important;
+  content: none !important;
+}
+
+body.landing-site-body .module-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(248, 250, 252, 0.25) !important;
+}
+
+body.landing-site-body .module-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 250, 252, 0.38) !important;
+}
+
+body.landing-site-body .module-sidebar {
+  scrollbar-color: rgba(248, 250, 252, 0.3) transparent !important;
+  top: 4rem !important;
+  height: calc(100vh - 4rem) !important;
+}
+
+body.landing-site-body .module-sidebar .sidebar-header h1,
+body.landing-site-body .module-sidebar .sidebar-header p,
+body.landing-site-body .module-sidebar .sidebar-header .progress-text {
+  color: #ffffff !important;
+}
+
+body.landing-site-body .module-sidebar .sidebar-header p {
+  opacity: 0.94;
+  font-weight: 500;
+  line-height: 1.45;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+body.landing-site-body .module-layout {
+  margin-top: 0 !important;
+  min-height: calc(100vh - 4rem) !important;
+}
+
+/* Sabit sidebar (320px) — main / module-content gövdesi */
+body.landing-site-body .module-layout > main,
+body.landing-site-body .module-layout .module-content {
+  margin-left: 320px !important;
+  width: calc(100% - 320px) !important;
+  max-width: calc(100vw - 320px) !important;
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-sizing: border-box;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  body.landing-site-body .module-layout > main,
+  body.landing-site-body .module-layout .module-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+}
+
+body.landing-site-body .mobile-menu-toggle {
+  top: calc(4rem + 0.5rem) !important;
+  z-index: 60;
+}
+
+body.landing-site-body main {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body.landing-site-body .content-section {
+  background: #ffffff !important;
+}
+
+body.landing-site-body main .section-header {
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .section-header h2 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .section-header p,
+body.landing-site-body main .lesson-status {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .docx-content h1,
+body.landing-site-body main .docx-content h2 {
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .docx-content h1 strong,
+body.landing-site-body main .docx-content h2 strong,
+body.landing-site-body main .docx-content h3 strong,
+body.landing-site-body main .docx-content h4 strong {
+  color: inherit !important;
+}
+
+body.landing-site-body main .docx-content h3,
+body.landing-site-body main .docx-content h4 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .docx-content p,
+body.landing-site-body main .docx-content ul,
+body.landing-site-body main .docx-content ol,
+body.landing-site-body main .docx-content li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .docx-content strong {
+  color: #0f172a !important;
+}
+
+/*
+ * Okunabilirlik: modül gövdesi açık tema; sayfa içi stillerdeki koyu tema --text* /
+ * açık gri (#cbd5e1 vb.) ve düşük kontrastlı kartlar düzeltilir.
+ */
+body.landing-site-body main .docx-content,
+body.landing-site-body main .content-card.docx-content {
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-light: #64748b;
+  --text-muted: #64748b;
+  --bg-card: #f8fafc;
+  --border-color: rgba(15, 23, 42, 0.12);
+}
+
+body.landing-site-body main .docx-content .section-inner > h2,
+body.landing-site-body main .content-card.docx-content .section-inner > h2 {
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+  border-left-color: rgba(30, 64, 175, 0.5) !important;
+}
+
+body.landing-site-body main .docx-content .section-inner > h3,
+body.landing-site-body main .content-card.docx-content .section-inner > h3 {
+  color: #1e293b !important;
+}
+
+body.landing-site-body main .docx-content .section-inner p,
+body.landing-site-body main .docx-content .section-inner li,
+body.landing-site-body main .content-card.docx-content .section-inner p,
+body.landing-site-body main .content-card.docx-content .section-inner li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .docx-content .section-inner p.bullet-line,
+body.landing-site-body main .content-card.docx-content .section-inner p.bullet-line {
+  color: #475569 !important;
+}
+
+body.landing-site-body main .docx-content .section-mini-heading,
+body.landing-site-body main .docx-content .runbook-phase-heading,
+body.landing-site-body main .content-card.docx-content .section-mini-heading,
+body.landing-site-body main .content-card.docx-content .runbook-phase-heading {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .docx-content .runbook-step-line,
+body.landing-site-body main .content-card.docx-content .runbook-step-line {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .risk-visual-card,
+body.landing-site-body main .risk-visual-card p,
+body.landing-site-body main .risk-visual-card li,
+body.landing-site-body main .risk-visual-card .section-mini-heading {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .risk-visual-card .risk-meter-label {
+  color: #334155 !important;
+}
+
+body.landing-site-body .main-content,
+body.landing-site-body section.module-content {
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-light: #64748b;
+  --text-muted: #64748b;
+  --bg-card: #f8fafc;
+  --border-color: rgba(15, 23, 42, 0.12);
+}
+
+body.landing-site-body main .docx-content thead th {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+  color: #fff !important;
+}
+
+body.landing-site-body main .lesson-image-wrap {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.landing-site-body main .figure-block .lesson-image-wrap,
+body.landing-site-body main .figure-block--wide .lesson-image-wrap {
+  align-items: center !important;
+}
+
+body.landing-site-body main .lesson-image-caption,
+body.landing-site-body main .figure-caption {
+  color: #64748b !important;
+  max-width: min(42rem, 100%) !important;
+}
+
+body.landing-site-body main .lesson-image {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+  max-width: min(100%, 720px) !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.landing-site-body main .figure-block .lesson-image,
+body.landing-site-body main .figure-block--wide .lesson-image {
+  max-width: min(100%, 720px) !important;
+}
+
+body.landing-site-body main .docx-content img:not(.lesson-image),
+body.landing-site-body main .content-card img.content-image {
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+body.landing-site-body aside .module-hero-image {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover,
+body.landing-site-body main .comparison-table tbody tr:nth-child(even):hover {
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .feature-table thead {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .learning-objectives {
+  background: rgba(127, 29, 29, 0.06) !important;
+  border-left-color: #991b1b !important;
+}
+
+body.landing-site-body main .learning-objectives h3 i {
+  color: #991b1b !important;
+}
+
+body.landing-site-body main .learning-objectives h3 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .learning-objectives li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .highlight-box {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-left-color: #64748b !important;
+}
+
+body.landing-site-body main .glossary-table {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .glossary-table td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .glossary-table tr:hover {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .glossary-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .glossary-table tbody tr:nth-child(even):hover {
+  background: #e2e8f0 !important;
+}
+
+body.landing-site-body main .glossary-table tr:hover td {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .docx-content tbody td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .feature-table td {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .feature-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .quiz-container {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.landing-site-body main .quiz-question h3 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .quiz-option {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .quiz-option::before {
+  background: linear-gradient(180deg, #94a3b8, #64748b) !important;
+}
+
+body.landing-site-body main .quiz-option:hover {
+  border-color: #cbd5e1 !important;
+  background: #f1f5f9 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .quiz-option.selected {
+  border-color: #7f1d1d !important;
+  background: rgba(127, 29, 29, 0.07) !important;
+  box-shadow: 0 0 0 2px rgba(127, 29, 29, 0.12) !important;
+}
+
+body.landing-site-body main .quiz-explanation {
+  background: #f8fafc !important;
+  border-left-color: #64748b !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .eval-question-block {
+  margin: 1.25rem 0 !important;
+  padding: 1rem 1.1rem !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+}
+
+body.landing-site-body main .eval-question-text {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .eval-option {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .eval-option:hover {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .eval-submit-btn {
+  margin-top: 1.25rem !important;
+  padding: 0.7rem 1.35rem !important;
+  background: #7f1d1d !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+body.landing-site-body main .eval-submit-btn:hover {
+  background: #991b1b !important;
+}
+
+body.landing-site-body main .eval-result {
+  color: #14532d !important;
+  background: #ecfdf5 !important;
+  border: 1px solid #86efac !important;
+}
+
+body.landing-site-body main .eval-result--warn {
+  background: #fffbeb !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
+}
+
+body.landing-site-body main .eval-question-block--correct {
+  border-color: #86efac !important;
+  background: #f0fdf4 !important;
+}
+
+body.landing-site-body main .eval-question-block--wrong {
+  border-color: #fca5a5 !important;
+  background: #fef2f2 !important;
+}
+
+body.landing-site-body main .eval-option--correct {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  font-weight: 600 !important;
+}
+
+body.landing-site-body main .eval-option--wrong {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+}
+
+body.landing-site-body main .eval-question-feedback {
+  border-radius: 8px !important;
+}
+
+body.landing-site-body main .eval-question-block--correct .eval-question-feedback {
+  background: #ecfdf5 !important;
+  color: #166534 !important;
+}
+
+body.landing-site-body main .eval-question-block--wrong .eval-question-feedback {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+body.landing-site-body main .info-box {
+  background: #f8fafc !important;
+  border-left-color: #64748b !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-box p,
+body.landing-site-body main .info-box li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-box i {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .key-concept-card,
+body.landing-site-body main .key-concept-card p {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .key-concept-card h4 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .callout-box.info {
+  background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(148, 163, 184, 0.04)) !important;
+  border-color: #94a3b8 !important;
+}
+
+body.landing-site-body main .callout-box.info .callout-icon {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .callout-box .callout-body p,
+body.landing-site-body main .callout-box .callout-body ul,
+body.landing-site-body main .callout-box .callout-body li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .callout-box .callout-body h5 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .terimler-block {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .terimler-block,
+body.landing-site-body main .terimler-block p {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .key-point-card {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .key-point-card i {
+  color: #7f1d1d !important;
+}
+
+body.landing-site-body main .key-point-card strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .key-point-card span {
+  color: #64748b !important;
+}
+
+body.landing-site-body main .topology-diagram {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .info-table-compact tbody tr:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+}
+
+body.landing-site-body main .content-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  backdrop-filter: none !important;
+}
+
+body.landing-site-body main .content-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.landing-site-body main .content-card h2 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-card h2 i {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .content-card:hover h2 i {
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .content-card h3,
+body.landing-site-body main .content-card h4 {
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .content-card p,
+body.landing-site-body main .content-card li,
+body.landing-site-body main .content-card ul,
+body.landing-site-body main .content-card ol {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .content-card strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .comparison-table {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Div tabanlı karşılaştırma ızgarası — shell display:table ile bozulmasın */
+body.landing-site-body div.comparison-table {
+  display: block !important;
+  table-layout: unset !important;
+  border-collapse: separate !important;
+}
+
+body.landing-site-body div.comparison-table .comparison-header,
+body.landing-site-body div.comparison-table .comparison-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+body.landing-site-body div.comparison-table .comparison-cell {
+  display: flex !important;
+  align-items: center;
+}
+
+body.landing-site-body main .comparison-table thead {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .comparison-table thead th {
+  color: #ffffff !important;
+}
+
+body.landing-site-body main .comparison-table td,
+body.landing-site-body main .comparison-table tbody th {
+  color: #334155 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover {
+  transform: none !important;
+}
+
+body.landing-site-body main .comparison-table tbody tr:hover td {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-section-title {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-section-header {
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .content-card .callout-box.warning {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+}
+
+body.landing-site-body main .content-card .callout-box.tip {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body p,
+body.landing-site-body main .content-card .callout-box .callout-body li,
+body.landing-site-body main .content-card .callout-box .callout-body ul {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body h5 {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .content-card .callout-box .callout-body strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .gercek-hayat-ornegi {
+  background: #f8fafc !important;
+  border-left-color: #7f1d1d !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .gercek-hayat-ornegi strong,
+body.landing-site-body main .gercek-hayat-ornegi .ornek-baslik {
+  color: #0f172a !important;
+}
+
+body.landing-site-body header #userAvatar {
+  background: rgba(127, 29, 29, 0.12) !important;
+  color: #7f1d1d !important;
+}
+
+body.landing-site-body header #userProfile:not(.hidden) {
+  border-color: rgba(127, 29, 29, 0.28) !important;
+}
+
+body.landing-site-body main .cia-item.confidentiality {
+  border-color: #991b1b !important;
+}
+
+body.landing-site-body main .cia-item.confidentiality h4 {
+  color: #991b1b !important;
+}
+
+body.landing-site-body main .info-table-compact {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+body.landing-site-body main .info-table-compact th {
+  background: linear-gradient(135deg, #5c2a2a 0%, #7f1d1d 100%) !important;
+}
+
+body.landing-site-body main .info-table-compact td {
+  border-bottom-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .info-table-compact tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .concept-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .concept-card:hover {
+  border-color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .concept-card p,
+body.landing-site-body main .concept-card li {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .concept-card.advantage-card {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+}
+
+body.landing-site-body main .concept-card.disadvantage-card {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+}
+
+body.landing-site-body main .scenario-block {
+  background: #fffbeb !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #334155 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .scenario-block p,
+body.landing-site-body main .scenario-block li {
+  color: #334155 !important;
+}
+
+
+body.landing-site-body main .docx-content pre:not(.term-body),
+body.landing-site-body main .lesson-content pre:not(.term-body),
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body) {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 2.65rem 1.2rem 1.15rem 1.2rem !important;
+  background: linear-gradient(180deg, #2b2b2b 0, #2b2b2b 42px, #0c0c0c 42px) !important;
+  border: 1px solid #1e293b !important;
+  border-left: 3px solid #7f1d1d !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 14px 40px rgba(15, 23, 42, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: #c8cdd3 !important;
+  overflow-x: auto;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body)::before,
+body.landing-site-body main .lesson-content pre:not(.term-body)::before,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body)::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+  z-index: 1;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body)::after,
+body.landing-site-body main .lesson-content pre:not(.term-body)::after,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body)::after {
+  content: "Örnek çıktı — Komut satırı";
+  position: absolute;
+  top: 11px;
+  left: 56px;
+  right: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+body.landing-site-body main .docx-content pre:not(.term-body) code,
+body.landing-site-body main .lesson-content pre:not(.term-body) code,
+body.landing-site-body main .lesson-cmd-window pre:not(.term-body) code {
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+body.landing-site-body main .code-block {
+  background: linear-gradient(180deg, #2b2b2b 0, #2b2b2b 48px, #0c0c0c 48px) !important;
+  border: 1px solid #1e293b !important;
+  border-left: 3px solid #7f1d1d !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  margin: 1.5rem 0 !important;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.2) !important;
+}
+
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4)) {
+  position: relative;
+  padding: 2.65rem 1.2rem 1.15rem 1.2rem !important;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: #c8cdd3 !important;
+}
+
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4))::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+  z-index: 1;
+}
+
+body.landing-site-body main .code-block:not(:has(pre)):not(:has(> h4))::after {
+  content: "Örnek çıktı — Komut satırı";
+  position: absolute;
+  top: 11px;
+  left: 56px;
+  right: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+body.landing-site-body main .code-block h4 {
+  margin: 0 !important;
+  padding: 0.75rem 1rem 0.75rem 3rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #d1d5db !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+body.landing-site-body main .code-block h4::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 14px 0 0 #febc2e, 28px 0 0 #28c840;
+}
+
+body.landing-site-body main .docx-content .code-block pre,
+body.landing-site-body main .lesson-content .code-block pre {
+  margin: 0 !important;
+  padding: 1rem 1.2rem !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #c8cdd3 !important;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, Monaco, "Ubuntu Mono", monospace !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+body.landing-site-body main .docx-content .code-block pre::before,
+body.landing-site-body main .docx-content .code-block pre::after,
+body.landing-site-body main .lesson-content .code-block pre::before,
+body.landing-site-body main .lesson-content .code-block pre::after {
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+}
+
+body.landing-site-body main .code-block pre code {
+  color: inherit !important;
+  background: transparent !important;
+}
+
+body.landing-site-body main .linux-terminal {
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  box-shadow:
+    0 16px 48px rgba(15, 23, 42, 0.2),
+    0 0 0 1px rgba(127, 29, 29, 0.12) !important;
+}
+
+body.landing-site-body main .linux-terminal .term-header {
+  background: linear-gradient(90deg, #3f1d1d 0%, #2d2a32 55%, #252530 100%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.landing-site-body main .linux-terminal .term-title {
+  color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-body {
+  background: #0f0f12 !important;
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-prompt {
+  color: #86efac !important;
+}
+
+body.landing-site-body main .linux-terminal .term-cmd {
+  color: #f5d78e !important;
+}
+
+body.landing-site-body main .linux-terminal .term-output {
+  color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-comment {
+  color: #787b84 !important;
+}
+
+body.landing-site-body main .linux-terminal .term-highlight {
+  color: #fca5a5 !important;
+}
+
+body.landing-site-body main .docx-content p code,
+body.landing-site-body main .docx-content li code,
+body.landing-site-body main .docx-content td code,
+body.landing-site-body main .lesson-content p code,
+body.landing-site-body main .lesson-content li code,
+body.landing-site-body main .lesson-content td code {
+  font-family: "Cascadia Mono", Consolas, Monaco, monospace !important;
+  font-size: 0.88em;
+  color: #7f1d1d !important;
+  background: rgba(127, 29, 29, 0.08) !important;
+  padding: 0.12em 0.4em !important;
+  border-radius: 6px;
+  border: 1px solid rgba(127, 29, 29, 0.12);
+}
+
+body.landing-site-body main .docx-content > h2,
+body.landing-site-body main .section-inner > h2 {
+  padding-left: 0.85rem !important;
+  border-left: 4px solid #7f1d1d !important;
+  margin-left: 0 !important;
+}
+
+body.landing-site-body main .docx-content > h3 {
+  position: relative;
+  padding-left: 0.65rem !important;
+  margin-top: 1.75rem !important;
+}
+
+body.landing-site-body main .docx-content > h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #d4a853, #7f1d1d);
+}
+
+body.landing-site-body main .visual-card {
+  background: linear-gradient(145deg, #fffbeb 0%, #ffffff 55%, #f8fafc 100%) !important;
+  border: 1px solid rgba(212, 168, 83, 0.35) !important;
+  border-left-width: 4px !important;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.07) !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .visual-card:hover {
+  border-left-width: 4px !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1) !important;
+}
+
+body.landing-site-body main .sorular-block {
+  background: rgba(127, 29, 29, 0.05) !important;
+  border-color: rgba(127, 29, 29, 0.18) !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .accordion-block {
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+body.landing-site-body main .accordion-trigger {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.08), rgba(248, 250, 252, 0.95)) !important;
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .accordion-trigger:hover {
+  background: rgba(127, 29, 29, 0.1) !important;
+}
+
+body.landing-site-body main .accordion-content-inner {
+  border-top-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .tabs-container {
+  border-color: #e2e8f0 !important;
+}
+
+body.landing-site-body main .tabs-nav {
+  background: #f1f5f9 !important;
+}
+
+body.landing-site-body main .tabs-nav button:hover {
+  color: #0f172a !important;
+  background: rgba(127, 29, 29, 0.06) !important;
+}
+
+body.landing-site-body main .tabs-nav button.active {
+  color: #7f1d1d !important;
+  background: #ffffff !important;
+}
+
+body.landing-site-body main .tab-panel {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .flip-card-front {
+  background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .flip-card-front strong {
+  color: #0f172a !important;
+}
+
+body.landing-site-body main .flip-card-back {
+  background: linear-gradient(145deg, #fffbeb, #fef3c7) !important;
+  border: 1px solid rgba(212, 168, 83, 0.4) !important;
+}
+
+body.landing-site-body main .flip-card-back span {
+  color: #334155 !important;
+}
+
+body.landing-site-body main .flip-card:hover .flip-card-front {
+  border-color: #cbd5e1 !important;
+}
+
+body.landing-site-body main .quick-check-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+body.landing-site-body main .quick-check-card:hover {
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  background: rgba(127, 29, 29, 0.04) !important;
+}
+
+body.landing-site-body main .process-flow {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+body.landing-site-body main .process-step {
+  background: #ffffff !important;
+  border-color: rgba(127, 29, 29, 0.35) !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.landing-site-body main .module-hero-image,
+body.landing-site-body main .lesson-hero-image {
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Premium modül kabuğu (sidebar + ana gövde + ders kartları)                  */
+/* Temel Kriptografi: body.module-page--temel-kriptografi — ayrı premium CSS */
+/* -------------------------------------------------------------------------- */
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main {
+  background:
+    linear-gradient(168deg, #e4eaf2 0%, #eef2f8 22%, #f8fafc 58%, #ffffff 100%) !important;
+  padding-top: 1rem !important;
+  padding-bottom: 2.5rem !important;
+  padding-left: clamp(0.65rem, 2.2vw, 1.35rem) !important;
+  padding-right: clamp(0.65rem, 2.2vw, 1.35rem) !important;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content {
+  background: transparent !important;
+  margin-bottom: 1.35rem !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:has(> .section-inner)
+  > .section-inner {
+  position: relative;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.98) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 14px 44px rgba(15, 23, 42, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset !important;
+  padding: 1.45rem 1.6rem 1.85rem !important;
+  overflow: hidden;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:has(> .section-inner)
+  > .section-inner::before {
+  content: '';
+  display: block;
+  height: 3px;
+  width: calc(100% + 0.1px);
+  margin: -1.45rem -1.6rem 1.1rem -1.6rem;
+  max-width: none;
+  background: linear-gradient(90deg, #7f1d1d 0%, #c4a035 42%, #1e40af 100%);
+  opacity: 0.9;
+  border-radius: 20px 20px 0 0;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:not(:has(> .section-inner)) {
+  position: relative;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.98) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 14px 44px rgba(15, 23, 42, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset !important;
+  padding: 1.45rem 1.6rem 1.85rem !important;
+  overflow: hidden;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:not(:has(> .section-inner))::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7f1d1d 0%, #c4a035 42%, #1e40af 100%);
+  opacity: 0.9;
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section
+  > .section-header {
+  position: relative;
+  border-radius: 16px !important;
+  margin-bottom: 1.15rem !important;
+  padding: 1.15rem 1.35rem 1.15rem 1.1rem !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  border-bottom: none !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99) 0%, rgba(248, 250, 252, 0.96) 48%, rgba(254, 252, 232, 0.28) 100%),
+    radial-gradient(circle at 10% 18%, rgba(127, 29, 29, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 92% 82%, rgba(30, 64, 175, 0.06) 0%, transparent 42%) !important;
+  box-shadow: 0 6px 28px rgba(15, 23, 42, 0.07) !important;
+  overflow: hidden;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section
+  > .section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 16px 0 0 16px;
+  background: linear-gradient(180deg, #7f1d1d 0%, #b45309 52%, #1e40af 100%);
+  pointer-events: none;
+}
+
+/* Tek panel modüller (SOC vb.): section docx-content değil, yalnızca biri .active */
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section:not(.docx-content).active {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow:
+    0 14px 44px rgba(15, 23, 42, 0.07),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset !important;
+  padding: 1.25rem 1.45rem 1.65rem !important;
+  margin-bottom: 0 !important;
+}
+
+body.landing-site-body:has(.module-layout) .module-sidebar {
+  box-shadow: 10px 0 36px rgba(2, 6, 23, 0.14) !important;
+}
+
+/* === module-visual-enrichment (görsel ritim) === */
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main {
+  position: relative;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(30, 64, 175, 0.07) 0%, transparent 42%),
+    radial-gradient(circle at 88% 18%, rgba(127, 29, 29, 0.06) 0%, transparent 38%),
+    radial-gradient(circle at 40% 92%, rgba(212, 168, 83, 0.06) 0%, transparent 36%),
+    radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    auto,
+    22px 22px;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Bölümler arası renk varyasyonu (konu yazmadan çeşitlilik) */
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n + 1)
+  .section-inner {
+  --sebs-strip-a: #7f1d1d;
+  --sebs-strip-b: #d4a853;
+  --sebs-strip-c: #1e40af;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n + 2)
+  .section-inner {
+  --sebs-strip-a: #0f766e;
+  --sebs-strip-b: #2dd4bf;
+  --sebs-strip-c: #1e3a8a;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n)
+  .section-inner {
+  --sebs-strip-a: #9a3412;
+  --sebs-strip-b: #f59e0b;
+  --sebs-strip-c: #7c3aed;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:has(> .section-inner)
+  > .section-inner::before {
+  background: linear-gradient(
+    90deg,
+    var(--sebs-strip-a, #7f1d1d) 0%,
+    var(--sebs-strip-b, #c4a035) 42%,
+    var(--sebs-strip-c, #1e40af) 100%
+  ) !important;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:not(:has(> .section-inner))::before {
+  background: linear-gradient(
+    90deg,
+    var(--sebs-strip-a, #7f1d1d) 0%,
+    var(--sebs-strip-b, #c4a035) 42%,
+    var(--sebs-strip-c, #1e40af) 100%
+  ) !important;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n + 1) {
+  --sebs-strip-a: #7f1d1d;
+  --sebs-strip-b: #d4a853;
+  --sebs-strip-c: #1e40af;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n + 2) {
+  --sebs-strip-a: #0f766e;
+  --sebs-strip-b: #2dd4bf;
+  --sebs-strip-c: #1e3a8a;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  > .content-section.docx-content:nth-child(3n) {
+  --sebs-strip-a: #9a3412;
+  --sebs-strip-b: #f59e0b;
+  --sebs-strip-c: #7c3aed;
+}
+
+/* İç kart: hafif desen + hover */
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:has(> .section-inner)
+  > .section-inner {
+  background-image:
+    linear-gradient(165deg, #ffffff 0%, #fafbfc 55%, #f8fafc 100%),
+    radial-gradient(ellipse 120% 80% at 100% 0%, rgba(30, 64, 175, 0.04), transparent 50%),
+    radial-gradient(ellipse 90% 60% at 0% 100%, rgba(127, 29, 29, 0.035), transparent 45%) !important;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s ease,
+    border-color 0.25s ease;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+  main
+  .content-section.docx-content:has(> .section-inner)
+  > .section-inner:hover {
+  box-shadow:
+    0 18px 52px rgba(15, 23, 42, 0.1),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset !important;
+  transform: translateY(-2px);
+  border-color: rgba(148, 163, 184, 0.55) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi)
+    main
+    .content-section.docx-content:has(> .section-inner)
+    > .section-inner:hover {
+    transform: none;
+  }
+}
+
+/* Başlık hiyerarşisi — ikon şeridi (JS .sebs-visual-heading işaretli) */
+body.landing-site-body main .docx-content .section-inner > h1.sebs-visual-heading,
+body.landing-site-body main .content-card.docx-content .section-inner > h1.sebs-visual-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  padding-bottom: 0.65rem;
+  margin-bottom: 1rem !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95) !important;
+}
+
+body.landing-site-body main .docx-content .section-inner > h1.sebs-visual-heading .sebs-visual-heading__icon,
+body.landing-site-body main .content-card.docx-content .section-inner > h1.sebs-visual-heading .sebs-visual-heading__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(30, 64, 175, 0.12), rgba(127, 29, 29, 0.08));
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  font-size: 1.15rem;
+  color: #1e40af;
+}
+
+body.landing-site-body main .docx-content .section-inner > h2.sebs-visual-heading,
+body.landing-site-body main .content-card.docx-content .section-inner > h2.sebs-visual-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.45rem 0.65rem;
+  padding-left: 0.15rem;
+  margin-top: 1.85rem !important;
+}
+
+body.landing-site-body main .docx-content .section-inner > h2.sebs-visual-heading .sebs-visual-heading__icon,
+body.landing-site-body main .content-card.docx-content .section-inner > h2.sebs-visual-heading .sebs-visual-heading__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.12rem;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(212, 168, 83, 0.2), rgba(30, 64, 175, 0.1));
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  font-size: 0.95rem;
+  color: #92400e;
+}
+
+body.landing-site-body main .docx-content .section-inner > h2.sebs-visual-heading::after,
+body.landing-site-body main .content-card.docx-content .section-inner > h2.sebs-visual-heading::after {
+  content: '';
+  flex: 1 0 100%;
+  order: 3;
+  height: 3px;
+  max-width: 8rem;
+  margin-top: 0.35rem;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--sebs-strip-a, #7f1d1d),
+    var(--sebs-strip-b, #d4a853),
+    var(--sebs-strip-c, #1e40af)
+  );
+  opacity: 0.85;
+}
+
+body.landing-site-body main .docx-content .section-inner > h3.sebs-visual-heading,
+body.landing-site-body main .content-card.docx-content .section-inner > h3.sebs-visual-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+body.landing-site-body main .docx-content .section-inner > h3.sebs-visual-heading .sebs-visual-heading__icon,
+body.landing-site-body main .content-card.docx-content .section-inner > h3.sebs-visual-heading .sebs-visual-heading__icon {
+  display: inline-flex;
+  width: 1.65rem;
+  height: 1.65rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(30, 64, 175, 0.08);
+  font-size: 0.82rem;
+  color: #1d4ed8;
+  flex-shrink: 0;
+}
+
+/* Görsel bloklar */
+body.landing-site-body main .lesson-image-wrap {
+  position: relative;
+  border-radius: 16px !important;
+  overflow: hidden;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+body.landing-site-body main .lesson-image-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  z-index: 1;
+}
+
+body.landing-site-body main .lesson-image-wrap:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.12),
+    0 0 0 1px rgba(212, 168, 83, 0.25) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.landing-site-body main .lesson-image-wrap:hover {
+    transform: none;
+  }
+}
+
+body.landing-site-body main .figure-block,
+body.landing-site-body main .figure-block--wide {
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: linear-gradient(165deg, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.5));
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 10px 36px rgba(15, 23, 42, 0.06);
+  margin: 1.5rem 0;
+}
+
+body.landing-site-body main .learning-objectives {
+  position: relative;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(127, 29, 29, 0.08) !important;
+}
+
+body.landing-site-body main .learning-objectives::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(45%, 200px);
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at 100% 0%, rgba(212, 168, 83, 0.12), transparent 62%);
+}
+
+body.landing-site-body main .key-concepts {
+  gap: 1.25rem !important;
+}
+
+body.landing-site-body main .key-concept-card {
+  border-radius: 14px !important;
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06) !important;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.25s ease;
+}
+
+body.landing-site-body main .key-concept-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+body.landing-site-body main .info-box {
+  border-radius: 14px !important;
+  background: linear-gradient(125deg, rgba(219, 234, 254, 0.65), rgba(239, 246, 255, 0.95)) !important;
+  border: 1px solid rgba(59, 130, 246, 0.28) !important;
+  border-left-width: 4px !important;
+  box-shadow: 0 10px 32px rgba(30, 64, 175, 0.08) !important;
+}
+
+body.landing-site-body main .linux-terminal {
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow:
+    0 12px 40px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+}
+
+/* SOC / tek panel: program şeridi + kartlar */
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main .program-intro {
+  border-radius: 18px !important;
+  box-shadow: 0 14px 44px rgba(15, 23, 42, 0.15) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+body.landing-site-body:has(.module-layout):not(.module-page--temel-kriptografi) main .program-intro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.14), transparent 45%);
+}
+
+body.landing-site-body main .aspect-card {
+  border-radius: 12px !important;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12) !important;
+}
+
+body.landing-site-body main .aspect-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.landing-site-body main .aspect-card:hover,
+  body.landing-site-body main .key-concept-card:hover {
+    transform: none;
+  }
+}
+
+/* AWS / .main-content ders blokları */
+body.landing-site-body .main-content .lesson-content.active {
+  animation: sebsLessonFade 0.45s ease-out both;
+}
+
+@keyframes sebsLessonFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.landing-site-body .main-content .lesson-content.active {
+    animation: none;
+  }
+}
+
+body.landing-site-body .main-content .lesson-content h2:first-of-type,
+body.landing-site-body .main-content .lesson-content h3 {
+  position: relative;
+  padding-left: 0.6rem;
+}
+
+body.landing-site-body .main-content .lesson-content h2:first-of-type::before,
+body.landing-site-body .main-content .lesson-content h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #7f1d1d, #d4a853, #1e40af);
+}
+
+/* Görünürlük animasyonu (JS .sebs-in-view ekler) */
+body.landing-site-body main .lesson-image-wrap.sebs-in-view,
+body.landing-site-body main .kr-inline-breakout.sebs-in-view,
+body.landing-site-body main .key-concept-card.sebs-in-view {
+  animation: sebsPopIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sebsPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.landing-site-body main .lesson-image-wrap.sebs-in-view,
+  body.landing-site-body main .kr-inline-breakout.sebs-in-view,
+  body.landing-site-body main .key-concept-card.sebs-in-view {
+    animation: none;
+  }
+}

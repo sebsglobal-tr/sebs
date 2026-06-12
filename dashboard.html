@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <base href="/">
+    <title>Kullanıcı Paneli - SEBS Global</title>
+    <meta name="description" content="SEBS Global kullanıcı paneli — eğitim ve simülasyon ilerlemenizi yönetin.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1e3a5f">
+    <link rel="canonical" href="https://sebsglobal.com/dashboard.html">
+    
+    <link rel="icon" type="image/png" href="/images/SEBS.png">
+    <link rel="apple-touch-icon" href="/images/SEBS.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/enhancements.css">
+    
+    
+    
+        <style>
+        /* Minimal inline styles - only for critical loading overlay */
+        /* Main styles are in /css/styles.css */
+        
+        /* Loading overlay - minimal inline style for immediate display */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0c1222',
+            surface: '#f4f6fa',
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+            'glow': '0 0 0 1px rgb(15 23 42 / 0.06)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/css/saas-landing.css?v=3" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=9" />
+  <link rel="stylesheet" href="/css/sebs-premium-theme.css?v=3" />
+  <link rel="stylesheet" href="/css/dashboard-study-plan.css?v=1" />
+
+</head>
+<body class="sebs-premium-site landing-site-body font-sans text-slate-800 antialiased bg-white">
+<header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+    <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
+      <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+      <span class="landing-brand-wordmark">SEBS</span>
+    </a>
+    <nav class="landing-nav--compact hidden flex items-center gap-5 xl:flex" aria-label="Ana menü">
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
+      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
+      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+    </nav>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
+      <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+      <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+      </div>
+      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
+      <details class="relative xl:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          Menü
+        </summary>
+        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <hr class="my-1 border-slate-100" />
+          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <hr class="my-1 border-slate-100" />
+          <div id="mobileGuestLinks">
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+          </div>
+          <div id="mobileUserLinks" style="display: none;">
+                        <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+          </div>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+    
+
+    <div class="loading-overlay" id="loadingOverlay" style="display: flex; background: rgba(248, 250, 252, 0.92); backdrop-filter: blur(12px);">
+        <div style="text-align: center;">
+            <div class="loading-spinner" style="
+                width: 56px;
+                height: 56px;
+                border: 3px solid #e2e8f0;
+                border-top-color: #2563eb;
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+                margin: 0 auto 1.25rem;
+            "></div>
+            <p style="color: #64748b; font-size: 0.95rem; font-weight: 500;">Panel yükleniyor…</p>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <main class="dashboard-main">
+        <section class="hero-mesh relative overflow-hidden pt-28 pb-6 sm:pb-8" aria-labelledby="welcomeTitle">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div class="hero-remote-shell p-1 sm:p-1.5">
+                    <div class="hero-remote-inner px-6 py-10 text-center sm:px-8 sm:py-12">
+                        <p class="mb-3 inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            <span class="h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true"></span>
+                            Kullanıcı paneli
+                        </p>
+                        <div class="welcome-title text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.5rem]" id="welcomeTitle">Kullanıcı</div>
+                        <p class="welcome-subtitle mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                            Simülasyon ve modül performansınızın özeti; yetkinlik izinizi ve ilerlemenizi tek ekranda takip edin.
+                        </p>
+                        <p id="adminPanelLinkWrap" class="mt-5 hidden">
+                            <a href="/admin.html" class="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-800 transition hover:bg-violet-100 focus-ring">
+                                <i class="fas fa-shield-halved" aria-hidden="true"></i> Yönetim paneli
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="onboardingCard" class="mx-auto mb-8 max-w-6xl px-4 sm:px-6 lg:px-8" style="display: none;">
+            <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-card sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl" aria-hidden="true">👋</span>
+                    <div>
+                        <strong class="block text-slate-900">İlk adım: bir modül veya simülasyon seçin</strong>
+                        <p class="mt-1 text-sm text-slate-600">Tamamladıkça ilerleme ve sertifika kayıtlarınız burada görünür.</p>
+                    </div>
+                </div>
+                <div class="flex shrink-0 flex-wrap gap-2 sm:ml-auto">
+                    <a href="/modules.html" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">
+                        Eğitim modülleri
+                    </a>
+                    <a href="/simulations.html" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring">
+                        Simülasyonlar
+                    </a>
+                    <a href="#simulationHistorySection" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus-ring">
+                        Simülasyon geçmişi
+                    </a>
+                    <a href="/tests/kariyer-degerlendirme" class="inline-flex items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 focus-ring">
+                        Kariyer değerlendirme
+                    </a>
+                    <a href="/tests/big-five" class="inline-flex items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-semibold text-indigo-900 transition hover:bg-indigo-100 focus-ring">
+                        Big Five testi
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mx-auto -mt-2 max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/[0.09] blur-2xl transition-opacity group-hover:opacity-100" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                    <i class="fas fa-book-open" aria-hidden="true"></i>
+                </div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Tamamlanan modül</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="completedModules">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-emerald-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
+                    <i class="fas fa-certificate" aria-hidden="true"></i>
+                </div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Sertifika</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="totalCertificates">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sky-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-sky-50 text-sky-600 ring-1 ring-sky-100">
+                    <i class="fas fa-clock" aria-hidden="true"></i>
+                </div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Çalışma saati</h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="studyHours">0</p>
+            </article>
+            <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" title="Ardışık günlerde giriş yaparak veya modül tamamlayarak artar.">
+                <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-amber-500/[0.1] blur-2xl" aria-hidden="true"></div>
+                <div class="contact-channel-icon-wrap bg-amber-50 text-amber-600 ring-1 ring-amber-100">
+                    <i class="fas fa-fire" aria-hidden="true"></i>
+                </div>
+                <h3 class="mt-4 text-sm font-semibold text-slate-900">Günlük seri <i class="fas fa-info-circle ml-1 text-xs font-normal text-slate-400" title="Ardışık günlerde giriş veya modül tamamlama ile artar"></i></h3>
+                <p class="stat-number mt-2 text-4xl font-extrabold tracking-tight text-slate-900 tabular-nums" id="currentStreak">0</p>
+            </article>
+            </div>
+        </div>
+
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16" id="moduleProgressSection">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Eğitim ilerlemesi</h2>
+                    <p class="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">Son çalıştığınız modüller; varsayılan olarak son 5 kayıt gösterilir.</p>
+                </div>
+                <button type="button" id="moduleProgressToggleAll" class="hidden shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring" aria-expanded="false">
+                    <i class="fas fa-layer-group text-xs text-blue-600" aria-hidden="true"></i>
+                    <span id="moduleProgressToggleLabel">Tümünü gör</span>
+                </button>
+            </div>
+            <p id="moduleProgressCountHint" class="mt-3 hidden text-xs font-medium text-slate-500"></p>
+            <div class="progress-list mt-6 flex flex-col gap-3" id="progressList">
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-book-reader text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>
+                    <p class="dashboard-cross-device-hint mt-4 max-w-lg border-t border-slate-200 pt-4 text-left text-sm leading-relaxed text-slate-600">
+                        <strong class="text-slate-800">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code class="rounded bg-slate-100 px-1 text-xs">www</code> ile <code class="rounded bg-slate-100 px-1 text-xs">www’siz</code> farklı depolama demektir).
+                    </p>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="border-t border-slate-100 bg-slate-50/80 py-12 sm:py-16" id="simulationHistorySection">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"><i class="fas fa-flask mr-2 text-blue-600" aria-hidden="true"></i>Simülasyon geçmişi</h2>
+                    <p class="mt-2 text-sm text-slate-600 sm:text-base">Son aktiviteleriniz alanlara göre gruplanır; varsayılan olarak son 5 kayıt gösterilir.</p>
+                </div>
+                <button type="button" id="simulationHistoryToggleAll" class="hidden shrink-0 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring" aria-expanded="false">
+                    <i class="fas fa-layer-group text-xs text-blue-600" aria-hidden="true"></i>
+                    <span id="simulationHistoryToggleLabel">Tümünü gör</span>
+                </button>
+            </div>
+            <p id="simulationHistoryCountHint" class="mt-3 hidden text-xs font-medium text-slate-500"></p>
+            <div class="progress-list mt-6 flex flex-col gap-6" id="simulationHistoryList">
+                <div class="no-data w-full rounded-2xl border border-dashed border-slate-200 bg-white px-8 py-12 text-center shadow-sm" id="simulationHistoryEmpty">
+                    <i class="fas fa-flask text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz simülasyon kaydı yok</h3>
+                    <p class="mt-2 text-sm text-slate-600">Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p>
+                    <a href="/simulations.html" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Simülasyonlara git</a>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Satın alınan paketler</h2>
+            <p class="mt-2 text-sm text-slate-600 sm:text-base">Erişim haklarınızın özeti.</p>
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="purchasesGrid">
+                <div class="loading col-span-full rounded-2xl border border-slate-200 bg-slate-50 py-10 text-center text-slate-600">
+                    <i class="fas fa-spinner fa-spin"></i> Paketler yükleniyor...
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Sertifikalarım</h2>
+            <div class="certificate-howto mb-6 mt-6 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <strong class="text-slate-800">Sertifika nasıl kazanılır?</strong> İlgili kategoride (örn. Siber Güvenlik) en az bir modülü <strong>tamamlayın</strong>: tüm derslere girin ve modül sonundaki quiz’i bitirin. Sistem otomatik olarak sertifikanızı oluşturur.
+            </div>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="certificatesGrid">
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-certificate text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz sertifika kazanmadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="border-t border-slate-100 bg-indigo-50/40 py-12 sm:py-16" id="bigFiveDashSection" aria-labelledby="bigFiveDashTitle">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 id="bigFiveDashTitle" class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"><i class="fas fa-brain mr-2 text-indigo-600" aria-hidden="true"></i>Big Five öğrenme profili</h2>
+                        <p class="mt-1 text-sm text-slate-600">Tarayıcında saklanan son test özetin. Sonuç klinik tanı değildir.</p>
+                    </div>
+                    <a href="/tests/big-five" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus-ring">Teste git</a>
+                </div>
+                <div id="bigFiveDashboardMount" class="mt-6 rounded-2xl border border-indigo-100 bg-white p-6 text-slate-700 shadow-card"></div>
+            </div>
+        </section>
+
+        <section class="evaluation-section border-t border-slate-100 bg-slate-50/80 py-12 sm:py-16">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"><i class="fas fa-chart-line mr-2 text-blue-600" aria-hidden="true"></i>Değerlendirme raporum</h2>
+                    <p class="mt-1 text-sm text-slate-600">Modül, quiz ve simülasyon bazlı ayrıntılı AI destekli kişisel rapor.</p>
+                </div>
+                <a href="/degerlendirme-raporu.html" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" id="openEvaluationReportBtn">
+                    <i class="fas fa-file-alt" aria-hidden="true"></i> Detaylı raporu aç
+                </a>
+            </div>
+            <div id="evaluationReportPlaceholder" class="evaluation-placeholder mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center text-slate-600">
+                <i class="fas fa-file-alt mb-3 text-3xl text-slate-400"></i>
+                <p class="text-slate-700">Hangi derste nerede eksik olduğunuz, yanlışlarınız ve kişisel çalışma planınız ayrı sayfada.</p>
+                <p class="mt-2 text-sm text-slate-500">&quot;Detaylı raporu aç&quot; ile modül modül analiz, AI profili ve haftalık tavsiyeleri görün.</p>
+            </div>
+
+            <div class="mt-10 rounded-2xl border border-violet-200/80 bg-white p-6 shadow-card sm:p-8" id="dashboardStudyPlanSection">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                            <i class="fas fa-calendar-check mr-2 text-violet-600" aria-hidden="true"></i>Raporuna göre çalışma programın
+                        </h3>
+                        <p class="mt-1 max-w-2xl text-sm text-slate-600">
+                            Değerlendirme raporundaki modül, quiz ve simülasyon verilerine göre haftalık ne yapmanız ve nasıl çalışmanız gerektiğini özetler.
+                        </p>
+                    </div>
+                    <a href="/degerlendirme-raporu.html#report-plan" class="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-violet-700 hover:text-violet-900 focus-ring rounded-lg">
+                        Tam plan <i class="fas fa-arrow-right text-xs" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div id="dashboardStudyPlanMount" class="dashboard-study-plan-mount" aria-live="polite"></div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="aiReportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sertifika Özeti</h2>
+                <button class="modal-close" onclick="closeReportModal()">&times;</button>
+            </div>
+            <p class="report-subtitle" style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--text-secondary);">Bu özet sertifika verilerinizden otomatik oluşturulmuştur.</p>
+            <div id="aiReportContent">
+                <div class="loading">Rapor yükleniyor...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/utils/legacy-progress-storage-migrate.js"></script>
+    <script src="/js/api-base.js"></script>
+    <script src="/utils/access-control.js"></script>
+    <script src="/utils/module-progress.js"></script>
+    <script src="/js/dashboard-simulation-history.js?v=1"></script>
+    <script src="/js/dashboard-module-progress.js?v=1"></script>
+    <script src="/js/dashboard-study-plan.js?v=1"></script>
+    <script>
+        // Boş ilerleme kartında gösterilen kısa açıklama (cihazlar arası localStorage / API)
+        var dashboardCrossDeviceHintHtml =
+            '<p class="dashboard-cross-device-hint mt-4 max-w-lg border-t border-slate-200 pt-4 text-left text-sm leading-relaxed text-slate-600">' +
+            '<strong class="text-slate-800">Mobilde ilerleme görünmüyorsa:</strong> Aynı hesap, cihazlar arası <em>tarayıcı hafızasını</em> paylaşmaz. Panel verisini sunucudan alır; ilerleme yalnızca başka cihazda tarayıcıya yazıldıysa veya sunucuya hiç gitmediyse burada boş kalır. Mümkünse hep aynı site adresiyle giriş yapın (ör. <code class="rounded bg-slate-100 px-1 text-xs">www</code> ile <code class="rounded bg-slate-100 px-1 text-xs">www’siz</code> farklı depolama demektir).' +
+            '</p>';
+
+        // Canlı ortam uyumu: API adresi ve token (Supabase veya JWT)
+        function getApiBaseUrl() {
+            if (typeof window.getSebsApiBase === 'function') {
+                return window.getSebsApiBase();
+            }
+            return (typeof window !== 'undefined' && window.location && window.location.origin)
+                ? window.location.origin + '/api'
+                : '';
+        }
+        async function getAuthToken() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var gr = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (gr && gr.data && gr.data.session && gr.data.session.access_token) {
+                        var at = gr.data.session.access_token;
+                        try {
+                            localStorage.setItem('authToken', at);
+                        } catch (e) {}
+                        return at;
+                    }
+                }
+            } catch (e) {}
+            var legacy = localStorage.getItem('authToken');
+            if (legacy) return legacy;
+            return typeof getSupabaseAccessTokenFromStorage === 'function'
+                ? getSupabaseAccessTokenFromStorage()
+                : null;
+        }
+
+        // SEBS - Abidin Samet Çay
+        function animateCounter(element, start, end, duration = 1500) {
+            if (!element) return;
+            const startValue = Number(start) || 0;
+            const endValue = Number(end) || 0;
+
+            if (startValue === endValue) {
+                element.textContent = endValue;
+                element.classList.add('animated');
+                return;
+            }
+
+            const range = endValue - startValue;
+            const startTime = performance.now();
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = startValue + (range * progress);
+                element.textContent = Math.round(current);
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = endValue;
+                    element.classList.add('animated');
+                }
+            };
+
+            requestAnimationFrame(step);
+        }
+
+        // SEBS - Abidin Samet Çay - Yüzde dairenin altında, taşma yok
+        function createCircleProgress(percent, elementId, size = 88, strokeWidth = 6) {
+            percent = Math.max(0, Math.min(100, percent || 0));
+            const radius = (size - strokeWidth) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const safeId = elementId.replace(/[^a-zA-Z0-9]/g, '-');
+            return `
+                <div class="progress-circle-wrap">
+                    <svg class="progress-circle-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+                        <circle cx="${size/2}" cy="${size/2}" r="${radius}" stroke="rgba(255,255,255,0.12)" stroke-width="${strokeWidth}" fill="none"/>
+                        <circle id="circle-${safeId}" class="progress-circle-circle" cx="${size/2}" cy="${size/2}" r="${radius}" stroke="url(#gradient-${safeId})" stroke-width="${strokeWidth}" fill="none" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" stroke-linecap="round" style="transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)"/>
+                        <defs>
+                            <linearGradient id="gradient-${safeId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="progress-circle-text">${Math.round(percent)}%</div>
+                </div>
+            `;
+        }
+        
+        // SEBS - Abidin Samet Çay
+        function animateCircleProgress(percent, elementId) {
+            const safeId = elementId.replace(/[^a-zA-Z0-9]/g, '-');
+            const radius = (100 - 8) / 2;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (Math.max(0, Math.min(100, percent || 0)) / 100) * circumference;
+            
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    const circle = document.querySelector(`#circle-${safeId}`);
+                    if (circle) {
+                        circle.style.strokeDashoffset = `${offset}`;
+                    }
+                });
+            }, 300);
+        }
+
+        // SEBS - Abidin Samet Çay
+        let userMePromise = null;
+
+        async function getUserMe() {
+            if (userMePromise) {
+                return userMePromise;
+            }
+
+            userMePromise = (async function fetchUserMeOnce() {
+            // Önce Supabase'den kullanıcı bilgilerini al
+            try {
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    await window.initSupabase();
+                    if (!window.supabaseAuthSystem) {
+                        window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    }
+                }
+                
+                const { data: { session } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (!session || !session.user) {
+                    return null;
+                }
+                
+                // public.profiles tablosu bu projede yok (kullanıcılar public.users + backend API)
+                const md = session.user.user_metadata || {};
+                const metaFull =
+                    md.full_name ||
+                    md.name ||
+                    (md.first_name || md.last_name
+                        ? [md.first_name, md.last_name].filter(Boolean).join(' ')
+                        : '') ||
+                    '';
+                // Kullanıcı bilgilerini birleştir
+                const userData = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    firstName: metaFull ? metaFull.split(' ')[0] : session.user.email.split('@')[0] || 'Kullanıcı',
+                    lastName: metaFull ? metaFull.split(' ').slice(1).join(' ') : '',
+                    fullName: metaFull || session.user.email,
+                    role: 'user',
+                    accessLevel: 'beginner',
+                    isVerified: !!session.user.email_confirmed_at,
+                    purchases: [] // Purchases ayrı yüklenecek
+                };
+                
+                // Backend API'den purchases bilgilerini al (opsiyonel)
+                try {
+                    // Supabase session token'ı kullanarak backend'e istek at
+                    const { data: { session: currentSession } } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (currentSession) {
+                        const purchasesResponse = await fetch(getApiBaseUrl() + '/users/me', {
+                            headers: {
+                                'Authorization': 'Bearer ' + currentSession.access_token
+                            }
+                        });
+                        
+                        if (purchasesResponse.ok) {
+                            const purchasesData = await purchasesResponse.json();
+                            if (purchasesData.success && purchasesData.data) {
+                                const d = purchasesData.data;
+                                if (d.purchases) userData.purchases = d.purchases;
+                                if (d.role) userData.role = d.role;
+                                if (d.accessLevel != null) userData.accessLevel = d.accessLevel;
+                                if (d.firstName || d.lastName) {
+                                    userData.firstName = d.firstName || userData.firstName;
+                                    userData.lastName = d.lastName || userData.lastName;
+                                    userData.fullName = [d.firstName, d.lastName].filter(Boolean).join(' ') || userData.fullName;
+                                }
+                            }
+                        } else if (purchasesResponse.status === 401) {
+                            console.warn(
+                                'Backend /api/users/me 401 — backend .env içinde SUPABASE_JWT_SECRET (Supabase Dashboard → Settings → API → JWT Secret) tanımlı ve doğru olmalı.'
+                            );
+                        }
+                    }
+                } catch (apiError) {
+                    console.warn('Backend API error (non-critical):', apiError);
+                    // Backend hatası kritik değil, Supabase'den gelen verilerle devam et
+                }
+                
+                return userData;
+                
+            } catch (error) {
+                console.error('getUserMe error:', error);
+                return null;
+            }
+            })();
+
+            try {
+                return await userMePromise;
+            } finally {
+                userMePromise = null;
+            }
+        }
+
+        async function initDashboard() {
+            console.log('🔍 Dashboard başlatılıyor...');
+            
+            // Supabase Auth kontrolü
+            try {
+                // Supabase client'ı başlat
+                if (typeof window.initSupabase === 'undefined') {
+                    console.error('❌ initSupabase fonksiyonu bulunamadı!');
+                    showLoadingError('Supabase yüklenemedi. Lütfen sayfayı yenileyin.');
+                    return;
+                }
+                
+                await window.initSupabase();
+                
+                if (!window.supabaseAuthSystem) {
+                    if (typeof SupabaseAuthSystem === 'undefined') {
+                        console.error('❌ SupabaseAuthSystem class bulunamadı!');
+                        showLoadingError('Supabase Auth System yüklenemedi. Lütfen sayfayı yenileyin.');
+                        return;
+                    }
+                    window.supabaseAuthSystem = new SupabaseAuthSystem();
+                    // Init'in tamamlanmasını bekle
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                if (!window.supabaseAuthSystem || !window.supabaseAuthSystem.supabase) {
+                    console.error('❌ Supabase client oluşturulamadı!');
+                    showLoadingError('Supabase bağlantı hatası. Lütfen sayfayı yenileyin.');
+                    return;
+                }
+                
+                // Session kontrolü
+                const { data: { session }, error: sessionError } = await window.supabaseAuthSystem.supabase.auth.getSession();
+                
+                if (sessionError) {
+                    console.error('Session check error:', sessionError);
+                    window.location.href = 'login.html?message=' + encodeURIComponent('Oturum kontrolü başarısız. Lütfen tekrar giriş yapın.');
+                    return;
+                }
+                
+                if (!session || !session.user) {
+                    console.log('❌ Kullanıcı giriş yapmamış, login sayfasına yönlendiriliyor...');
+                    window.location.href = 'login.html?message=' + encodeURIComponent('Dashboard\'a erişmek için giriş yapmanız gerekiyor.');
+                    return;
+                }
+                
+                // Email doğrulama (OAuth / eski oturumlarda alan farklı olabilir)
+                var emailVerified =
+                    session.user.email_confirmed_at ||
+                    session.user.confirmed_at ||
+                    (session.user.user_metadata && session.user.user_metadata.email_verified);
+                if (!emailVerified) {
+                    console.log('⚠️ Email doğrulanmamış');
+                    window.location.href = 'login.html?message=' + encodeURIComponent('E-posta adresinizi doğrulamanız gerekiyor. E-posta kutunuzu kontrol edin.');
+                    return;
+                }
+                
+                console.log('✅ Kullanıcı giriş yapmış, dashboard yükleniyor...');
+                console.log('   User:', session.user.email);
+                try {
+                    sessionStorage.removeItem('sebs_dash_401_reload_once');
+                } catch (e) {}
+
+                var progressOwnerInit = session.user.id || session.user.email;
+                if (progressOwnerInit && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+                    window.ensureSebsProgressOwnerForUser(progressOwnerInit);
+                }
+
+                if (typeof window.runSebsLegacyProgressStorageMigrationOnce === 'function') {
+                    window.runSebsLegacyProgressStorageMigrationOnce();
+                }
+
+                // Loading overlay'i gizle
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
+                await loadUserInfo();
+                // Paketler ve ilerleme birbirini beklemesin; /users/me yavaşsa simülasyon listesi gecikmesin
+                await Promise.all([loadPurchases(), loadProgress()]);
+                renderBigFiveDashboardCard();
+                if (typeof window.loadDashboardStudyPlan === 'function') {
+                    window.loadDashboardStudyPlan().catch(function (e) {
+                        console.warn('loadDashboardStudyPlan:', e);
+                    });
+                }
+
+                document.addEventListener('visibilitychange', function onVis() {
+                    if (document.visibilityState !== 'visible') return;
+                    loadProgress().catch(function (e) { console.warn('loadProgress on visibility:', e); });
+                    renderBigFiveDashboardCard();
+                    if (typeof window.loadDashboardStudyPlan === 'function') {
+                        window.loadDashboardStudyPlan(true).catch(function (e) {
+                            console.warn('loadDashboardStudyPlan on visibility:', e);
+                        });
+                    }
+                });
+                
+            } catch (error) {
+                console.error('❌ Dashboard init error:', error);
+                showLoadingError('Dashboard yüklenirken bir hata oluştu: ' + (error.message || 'Bilinmeyen hata'));
+            }
+        }
+        
+        function showLoadingError(message) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h2>Yükleme Hatası</h2>
+                        <p>${message}</p>
+                        <button onclick="window.location.reload()" style="
+                            margin-top: 1rem;
+                            padding: 0.75rem 1.5rem;
+                            background: #ffffff;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 1rem;
+                        ">Sayfayı Yenile</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Load user info from database
+        async function loadUserInfo() {
+            try {
+                const user = await getUserMe();
+                if (user) {
+                    const firstName = user.firstName || user.fullName?.split(' ')[0] || 'Kullanıcı';
+                    const userNameEl = document.getElementById('userName');
+                    const welcomeTitleEl = document.getElementById('welcomeTitle');
+                    
+                    if (userNameEl) {
+                        userNameEl.textContent = firstName;
+                    }
+                    if (welcomeTitleEl) {
+                        welcomeTitleEl.textContent = user.fullName || firstName;
+                    }
+                    
+                    var adminWrap = document.getElementById('adminPanelLinkWrap');
+                    if (adminWrap) {
+                        adminWrap.classList.toggle('hidden', user.role !== 'admin');
+                    }
+
+                    console.log('✅ User info loaded:', {
+                        email: user.email,
+                        name: firstName,
+                        role: user.role,
+                        accessLevel: user.accessLevel
+                    });
+                } else {
+                    console.warn('⚠️ User data not available');
+                    // Fallback
+                    const userNameEl = document.getElementById('userName');
+                    const welcomeTitleEl = document.getElementById('welcomeTitle');
+                    if (userNameEl) userNameEl.textContent = 'Kullanıcı';
+                    if (welcomeTitleEl) welcomeTitleEl.textContent = 'Kullanıcı';
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                // Fallback
+                const userNameEl = document.getElementById('userName');
+                const welcomeTitleEl = document.getElementById('welcomeTitle');
+                if (userNameEl) userNameEl.textContent = 'Kullanıcı';
+                if (welcomeTitleEl) welcomeTitleEl.textContent = 'Kullanıcı';
+            }
+        }
+
+        // Load purchases from database
+        async function loadPurchases() {
+            try {
+                const user = await getUserMe();
+                if (user && Array.isArray(user.purchases)) {
+                    displayPurchases(user.purchases);
+                } else {
+                    displayNoPurchases();
+                }
+            } catch (error) {
+                console.error('Error loading purchases:', error);
+                displayNoPurchases();
+            }
+        }
+
+        // Display purchases
+        function displayPurchases(purchases) {
+            const purchasesGrid = document.getElementById('purchasesGrid');
+            if (!purchasesGrid) return;
+
+            if (purchases.length === 0) {
+                displayNoPurchases();
+                return;
+            }
+
+            const categoryNames = {
+                cybersecurity: 'Siber Güvenlik',
+                cloud: 'Bulut Bilişim',
+                'data-science': 'Veri Bilimleri'
+            };
+
+            const levelNames = {
+                beginner: 'Temel Paket',
+                intermediate: 'Orta Paket',
+                advanced: 'Final Paketi'
+            };
+
+            const levelIconWrap = {
+                beginner: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
+                intermediate: 'bg-blue-50 text-blue-600 ring-blue-100',
+                advanced: 'bg-violet-50 text-violet-600 ring-violet-100'
+            };
+            const levelBlob = {
+                beginner: 'bg-emerald-500/[0.09]',
+                intermediate: 'bg-blue-500/[0.09]',
+                advanced: 'bg-violet-500/[0.09]'
+            };
+
+            const categoryIcons = {
+                cybersecurity: 'fas fa-shield-alt',
+                cloud: 'fas fa-cloud',
+                'data-science': 'fas fa-chart-line'
+            };
+
+            purchasesGrid.innerHTML = purchases.map((purchase, index) => {
+                const purchaseDate = new Date(purchase.purchasedAt).toLocaleDateString('tr-TR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                var lw = levelIconWrap[purchase.level] || levelIconWrap.beginner;
+                var lb = levelBlob[purchase.level] || levelBlob.beginner;
+                return `
+                    <article class="contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;">
+                        <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full ${lb} blur-2xl" aria-hidden="true"></div>
+                        <div class="relative flex items-start gap-4">
+                            <div class="contact-channel-icon-wrap shrink-0 ring-1 ${lw}">
+                                <i class="${categoryIcons[purchase.category] || 'fas fa-shopping-bag'}" aria-hidden="true"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h3 class="text-lg font-semibold text-slate-900">${levelNames[purchase.level] || purchase.level}</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                                    <strong class="text-slate-800">${categoryNames[purchase.category] || purchase.category}</strong> alanında ${levelNames[purchase.level] || purchase.level} satın alındı.
+                                </p>
+                                <div class="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                                    <span class="inline-flex items-center gap-2"><i class="fas fa-tag text-slate-400" aria-hidden="true"></i> ₺${purchase.price.toFixed(2)}</span>
+                                    <span class="inline-flex items-center gap-2"><i class="fas fa-calendar text-slate-400" aria-hidden="true"></i> ${purchaseDate}</span>
+                                </div>
+                                <div class="mt-6">
+                                    <button type="button" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring sm:w-auto" onclick="window.location.href='/modules.html'">
+                                        <i class="fas fa-book" aria-hidden="true"></i> Modüllere git
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // Display no purchases message
+        function displayNoPurchases() {
+            const purchasesGrid = document.getElementById('purchasesGrid');
+            if (!purchasesGrid) return;
+
+            purchasesGrid.innerHTML = `
+                <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                    <i class="fas fa-shopping-bag text-slate-300"></i>
+                    <h3 class="text-lg font-semibold text-slate-900">Henüz paket satın almadınız</h3>
+                    <p class="mt-2 text-sm text-slate-600">Eğitim paketlerini satın alarak modüllere erişebilirsiniz!</p>
+                    <button type="button" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring" onclick="window.location.href='pricing.html'">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i> Paketleri görüntüle
+                    </button>
+                </div>
+            `;
+        }
+
+        function normModuleTitle(s) {
+            return String(s || '')
+                .trim()
+                .toLowerCase();
+        }
+
+        /** Modül başlığı (normalize) → /modules/*.html (modules.html ile aynı hedefler) */
+        var MODULE_PAGE_BY_NORMALIZED_TITLE = {
+            'siber güvenliğe giriş': '/modules/guncel-siber-guvenlige-giris.html',
+            'temel network eğitimi': '/modules/temel-network-egitimi.html',
+            'temel kriptografi': '/modules/temel-kriptografi.html',
+            'temel siber güvenlik': '/modules/temel-siber-guvenlik.html',
+            'soc eğitimi (güncel)': '/modules/soc.html',
+            'sosyal mühendisliğe giriş (güncel)': '/modules/sosyal-muhendislik.html',
+            'sosyal mühendisliğe giriş': '/modules/sosyal-muhendislik.html',
+            'malware analizi (orta seviye)': '/modules/malware-analizi.html',
+            'red team ve pentest (ileri)': '/modules/penetration-testing.html',
+            'olay müdahalesi ve dijital adli bilişim (ileri)': '/modules/incident-response.html',
+            'olay müdahalesi & digital forensics': '/modules/incident-response.html',
+            'network güvenliği': '/modules/network-guvenligi.html',
+            'işletim sistemi güvenliği': '/modules/isletim-sistemi-guvenligi.html?track=temel',
+            'işletim sistemleri güvenliği (temel)': '/modules/isletim-sistemi-guvenligi.html?track=temel',
+            'işletim sistemi güvenliği (ileri temel)': '/modules/isletim-sistemi-guvenligi.html?track=ileri',
+            'web uygulama güvenliği': '/modules/web-uygulama-guvenligi.html',
+            'ileri malware analizi & reverse engineering': '/modules/ileri-malware-analizi.html',
+            'ileri kriptografi': '/modules/ileri-kriptografi.html',
+            'threat hunting': '/modules/threat-hunting.html',
+            'threat intelligence': '/modules/threat-hunting.html',
+            'soc (security operations center) eğitimi': '/modules/soc.html',
+            'soc': '/modules/soc.html',
+            'aws temelleri': '/modules/aws-temelleri.html',
+            'azure temelleri': '/modules/azure-cloud.html',
+            'microsoft azure': '/modules/azure-cloud.html',
+            'google cloud platform': '/modules/gcp.html',
+            'ağ güvenliği': '/modules/ag-guvenligi.html'
+        };
+
+        function resolveModuleContinueHref(displayTitle, module) {
+            if (
+                module &&
+                String(module.courseTitle || '').trim() === 'Siber Güvenliğe Giriş' &&
+                normModuleTitle(module.title) === 'giriş'
+            ) {
+                return '/modules/guncel-siber-guvenlige-giris.html';
+            }
+            var candidates = [];
+            if (displayTitle) candidates.push(displayTitle);
+            if (module && module.moduleTitle) candidates.push(module.moduleTitle);
+            if (module && module.title) candidates.push(module.title);
+            if (module && module.courseTitle) candidates.push(module.courseTitle);
+            var i;
+            for (i = 0; i < candidates.length; i++) {
+                var key = normModuleTitle(candidates[i]);
+                if (key && MODULE_PAGE_BY_NORMALIZED_TITLE[key]) {
+                    return MODULE_PAGE_BY_NORMALIZED_TITLE[key];
+                }
+            }
+            for (i = 0; i < candidates.length; i++) {
+                var t = normModuleTitle(candidates[i]);
+                if (!t) continue;
+                var k;
+                for (k in MODULE_PAGE_BY_NORMALIZED_TITLE) {
+                    if (Object.prototype.hasOwnProperty.call(MODULE_PAGE_BY_NORMALIZED_TITLE, k)) {
+                        if (t.indexOf(k) !== -1 || k.indexOf(t) !== -1) {
+                            return MODULE_PAGE_BY_NORMALIZED_TITLE[k];
+                        }
+                    }
+                }
+            }
+            var fallback = displayTitle || (module && (module.moduleTitle || module.title)) || '';
+            return '/modules.html?module=' + encodeURIComponent(String(fallback));
+        }
+
+        /**
+         * API'de satır yokken (veya overview boşken) localStorage ilerlemesini kartlara ekler.
+         * API verisi her zaman önceliklidir; local veri yalnızca fallback olarak kullanılır.
+         */
+        function mergeDashboardLocalModuleProgress(modules, allowLocalMerge) {
+            if (allowLocalMerge === false) {
+                return Array.isArray(modules) ? modules.slice() : [];
+            }
+            var out = Array.isArray(modules) ? modules.slice() : [];
+            var seen = {};
+            out.forEach(function (m) {
+                var t = m.moduleTitle || m.title;
+                if (t) seen[normModuleTitle(t)] = true;
+            });
+
+            function pushLocalModule(title, pctMaybe, totalMaybe, completedMaybe) {
+                var safeTitle = String(title || '').trim();
+                if (!safeTitle) return;
+
+                var total = Math.max(1, parseInt(String(totalMaybe), 10) || 1);
+                var completed = Math.max(0, parseInt(String(completedMaybe), 10) || 0);
+                var pct = parseInt(String(pctMaybe), 10);
+                if (!Number.isFinite(pct)) {
+                    pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+                }
+                pct = Math.max(0, Math.min(100, pct));
+                if (pct <= 0 && completed <= 0) return;
+
+                var norm = normModuleTitle(safeTitle);
+                if (seen[norm]) {
+                    for (var j = 0; j < out.length; j++) {
+                        if (normModuleTitle(out[j].title || out[j].moduleTitle) !== norm) continue;
+                        if (pct > (parseInt(out[j].percentComplete, 10) || 0)) {
+                            out[j].percentComplete = pct;
+                            out[j].isCompleted = pct >= 100;
+                        }
+                        return;
+                    }
+                    return;
+                }
+
+                out.push({
+                    title: safeTitle,
+                    moduleTitle: safeTitle,
+                    percentComplete: pct,
+                    isCompleted: pct >= 100,
+                    timeSpentMinutes: 0,
+                    lastStep: null
+                });
+                seen[norm] = true;
+            }
+
+            // 1) Çoğu modül sayfasının kullandığı userProgress formatı
+            try {
+                var up = JSON.parse(localStorage.getItem('userProgress') || '{}');
+                Object.keys(up || {}).forEach(function (title) {
+                    var p = up[title] || {};
+                    pushLocalModule(title, p.progress, p.totalSections, p.completedSections);
+                });
+            } catch (e) {
+                /* ignore */
+            }
+
+            // 2) Tüm premium modül module_progress_* kayıtları (SEBS_MODULE_PROGRESS_REGISTRY)
+            if (typeof window.getLocalModuleProgressSnapshots === 'function') {
+                window.getLocalModuleProgressSnapshots().forEach(function (snap) {
+                    pushLocalModule(
+                        snap.moduleTitle,
+                        snap.percentComplete,
+                        snap.totalLessons,
+                        (snap.completedLessons && snap.completedLessons.length) || 0
+                    );
+                });
+            }
+            return out;
+        }
+
+        /** localStorage → POST /api/progress (modül listesinden id bulunur) */
+        async function syncLocalModuleProgressToApi(token, storageKey, moduleTitle) {
+            try {
+                var local = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                var completed = local.completedLessons || [];
+                var total = Math.max(1, parseInt(String(local.totalLessons), 10) || completed.length || 1);
+                if (completed.length === 0 || !token) return;
+                if (typeof window.syncModuleProgressBulk === 'function') {
+                    await window.syncModuleProgressBulk(moduleTitle, completed, total);
+                    return;
+                }
+                var pct = Math.min(100, Math.round((completed.length / total) * 100));
+                var modRes = await fetch(getApiBaseUrl() + '/modules', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (!modRes.ok) return;
+                var modData = await modRes.json();
+                if (!modData.success || !Array.isArray(modData.data)) return;
+                var want = normModuleTitle(moduleTitle);
+                var moduleId = null;
+                var i;
+                for (i = 0; i < modData.data.length; i++) {
+                    if (normModuleTitle(modData.data[i].title || '') === want) {
+                        moduleId = modData.data[i].id;
+                        break;
+                    }
+                }
+                if (!moduleId) {
+                    var cand = [];
+                    for (i = 0; i < modData.data.length; i++) {
+                        var m = modData.data[i];
+                        var t = normModuleTitle(m.title || '');
+                        if (!t) continue;
+                        if (t.indexOf(want) !== -1 || want.indexOf(t) !== -1) cand.push(m);
+                    }
+                    if (cand.length === 1) moduleId = cand[0].id;
+                    else if (cand.length > 1) {
+                        cand.sort(function (a, b) {
+                            return normModuleTitle(b.title || '').length - normModuleTitle(a.title || '').length;
+                        });
+                        moduleId = cand[0].id;
+                    }
+                }
+                if (!moduleId) return;
+                await fetch(getApiBaseUrl() + '/progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify({
+                        moduleId: moduleId,
+                        percentComplete: pct,
+                        lastStep: JSON.stringify({
+                            completedLessons: completed,
+                            totalLessons: total
+                        }),
+                        isCompleted: pct >= 100
+                    })
+                });
+            } catch (e) {
+                console.warn('syncLocalModuleProgressToApi:', e);
+            }
+        }
+
+        /** Simülasyon sayfalarıyla aynı: Supabase session, authToken veya sb-*-auth-token */
+        function getSupabaseAccessTokenFromStorage() {
+            try {
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    if (!key || !/^sb-.*-auth-token$/.test(key)) continue;
+                    var raw = localStorage.getItem(key);
+                    if (!raw) continue;
+                    var data = JSON.parse(raw);
+                    var at = (data && (data.access_token || (data.session && data.session.access_token) || (data.currentSession && data.currentSession.access_token))) || null;
+                    if (at && typeof at === 'string' && at.length > 40) return at;
+                }
+            } catch (e) { /* ignore */ }
+            return null;
+        }
+
+        async function getApiAuthToken() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var sess = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (sess && sess.data && sess.data.session && sess.data.session.access_token) {
+                        return sess.data.session.access_token;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            var legacy = localStorage.getItem('authToken');
+            if (legacy) return legacy;
+            return getSupabaseAccessTokenFromStorage();
+        }
+
+        /** progress/overview ile aynı kaynak; modül sorgusu hata verse bile simülasyon listesi için ayrı uç */
+        async function fetchSimulationRunsFromApi(token) {
+            if (!token) return null;
+            try {
+                var epRes = await fetch(getApiBaseUrl() + '/simulations/runs', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                if (!epRes.ok) {
+                    console.warn('[SEBS] GET /simulations/runs HTTP', epRes.status, '(backend deploy veya oturum kontrolü)');
+                    return null;
+                }
+                var epJson = await epRes.json().catch(function () {
+                    return null;
+                });
+                if (epJson && epJson.success && epJson.data && Array.isArray(epJson.data.simulationRuns)) {
+                    return epJson.data.simulationRuns;
+                }
+                console.warn('[SEBS] /simulations/runs beklenmeyen gövde');
+            } catch (epErr) {
+                console.warn('[SEBS] simulations/runs ağı:', epErr);
+            }
+            return null;
+        }
+
+        async function getDashboardProgressOwnerId() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.user) {
+                    var u = window.supabaseAuthSystem.user;
+                    return u.id || u.email || '';
+                }
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    var gr = await window.supabaseAuthSystem.supabase.auth.getSession();
+                    if (gr && gr.data && gr.data.session && gr.data.session.user) {
+                        var su = gr.data.session.user;
+                        return su.id || su.email || '';
+                    }
+                }
+            } catch (e) {
+                /* ignore */
+            }
+            try {
+                var ud = JSON.parse(localStorage.getItem('userData') || '{}');
+                if (ud.id || ud.email) return ud.id || ud.email;
+            } catch (e2) {
+                /* ignore */
+            }
+            return '';
+        }
+
+        // SEBS - Abidin Samet Çay
+        async function loadProgress() {
+            /** Giriş yapılmışken catch/legacy yolunda userProgress_* kullanılmaması için */
+            var sessionHadApiToken = false;
+            var sessionOverviewOk = false;
+            try {
+                var token = await getApiAuthToken();
+                sessionHadApiToken = !!token;
+                var progressOwner = await getDashboardProgressOwnerId();
+                if (progressOwner && typeof window.ensureSebsProgressOwnerForUser === 'function') {
+                    window.ensureSebsProgressOwnerForUser(progressOwner);
+                }
+                var allowLocalMerge =
+                    typeof window.sebsShouldMergeLocalDashboardProgress === 'function'
+                        ? window.sebsShouldMergeLocalDashboardProgress(progressOwner, !!token)
+                        : !token;
+                var progressData = null;
+                var overviewOk = false;
+
+                if (token) {
+                    try {
+                        if (typeof window.flushPendingProgressQueue === 'function') {
+                            await window.flushPendingProgressQueue();
+                        }
+                        if (typeof window.syncAllLocalModuleProgressToApi === 'function') {
+                            await window.syncAllLocalModuleProgressToApi({ progressOwner: progressOwner });
+                        }
+                    } catch (preSyncErr) {
+                        console.warn('[SEBS] Yerel ilerleme ön senkron:', preSyncErr);
+                    }
+                    try {
+                        var progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
+                            headers: { Authorization: 'Bearer ' + token }
+                        });
+                        if (!progressResponse.ok && progressResponse.status >= 500) {
+                            await new Promise(function (r) {
+                                setTimeout(r, 400);
+                            });
+                            progressResponse = await fetch(getApiBaseUrl() + '/progress/overview', {
+                                headers: { Authorization: 'Bearer ' + token }
+                            });
+                        }
+                        if (progressResponse.ok) {
+                            progressData = await progressResponse.json();
+                            overviewOk = !!(progressData && progressData.success && progressData.data);
+                        } else if (progressResponse.status === 401) {
+                            console.warn(
+                                '[SEBS] progress/overview 401 — oturum yenilenemiyorsa yeniden giriş yapın; giriş yapılmış hesapta yalnızca sunucu verisi gösterilir.'
+                            );
+                            if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                                window.supabaseAuthSystem.supabase.auth
+                                    .refreshSession()
+                                    .then(function (ref) {
+                                        if (ref && ref.data && ref.data.session && ref.data.session.access_token) {
+                                            try {
+                                                localStorage.setItem('authToken', ref.data.session.access_token);
+                                            } catch (e) {}
+                                        }
+                                    })
+                                    .catch(function () {});
+                            }
+                        } else {
+                            console.warn('[SEBS] GET /progress/overview HTTP', progressResponse.status);
+                            var errorData = await progressResponse.json().catch(function () {
+                                return {};
+                            });
+                            var msg = errorData.message
+                                ? errorData.message
+                                : 'İlerleme verisi alınamadı (' + progressResponse.status + ')';
+                            showToast(msg, 'error');
+                        }
+                    } catch (fetchErr) {
+                        console.warn('progress/overview fetch:', fetchErr);
+                    }
+                    sessionOverviewOk = overviewOk;
+                } else {
+                    console.warn('API token yok — yalnızca yerel ilerleme gösterilecek');
+                }
+
+                var modules = [];
+                var simulationRuns = [];
+                var completedModules = 0;
+                var totalStudyTime = 0;
+
+                if (overviewOk && progressData && progressData.data) {
+                    modules = progressData.data.modules || [];
+                    simulationRuns = progressData.data.simulationRuns || [];
+                    completedModules =
+                        progressData.data.completedModules != null
+                            ? progressData.data.completedModules
+                            : modules.filter(function (m) {
+                                  return m.isCompleted;
+                              }).length;
+                    totalStudyTime =
+                        progressData.data.totalStudyTime != null
+                            ? progressData.data.totalStudyTime
+                            : modules.reduce(function (total, m) {
+                                  if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                                      return total + m.lastStep.timeSpentMinutes;
+                                  }
+                                  return total;
+                              }, 0);
+                }
+
+                if (token && overviewOk) {
+                    try {
+                        var progressResponse2 = await fetch(getApiBaseUrl() + '/progress/overview', {
+                            headers: { Authorization: 'Bearer ' + token }
+                        });
+                        if (progressResponse2.ok) {
+                            var progressData2 = await progressResponse2.json();
+                            if (progressData2 && progressData2.success && progressData2.data) {
+                                progressData = progressData2;
+                                modules = progressData.data.modules || [];
+                                simulationRuns = progressData.data.simulationRuns || [];
+                                completedModules =
+                                    progressData.data.completedModules != null
+                                        ? progressData.data.completedModules
+                                        : modules.filter(function (m) {
+                                              return m.isCompleted;
+                                          }).length;
+                                totalStudyTime =
+                                    progressData.data.totalStudyTime != null
+                                        ? progressData.data.totalStudyTime
+                                        : modules.reduce(function (total, m) {
+                                              if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                                                  return total + m.lastStep.timeSpentMinutes;
+                                              }
+                                              return total;
+                                          }, 0);
+                            }
+                        }
+                    } catch (reSyncErr) {
+                        console.warn('İlerleme yeniden yükleme:', reSyncErr);
+                    }
+                }
+
+                if (token) {
+                    var fromEp = await fetchSimulationRunsFromApi(token);
+                    if (fromEp != null) {
+                        simulationRuns = fromEp;
+                    }
+                }
+
+                console.info('[SEBS] İlerleme yüklendi', {
+                    api: getApiBaseUrl(),
+                    overviewOk: overviewOk,
+                    modülSayısı: modules.length,
+                    simülasyonKaydı: simulationRuns.length,
+                    ipucu:
+                        token && overviewOk && modules.length === 0 && simulationRuns.length === 0
+                            ? 'Sunucu bu hesap için kayıt döndürmedi; simülasyonu giriş yapılmış sekmede bitirip kaydetmeyi deneyin veya Ağ sekmesinde simulations/start ve complete yanıtlarına bakın.'
+                            : ''
+                });
+
+                // Yerel ilerleme yalnızca aynı oturum kullanıcısına aitse birleştirilir.
+                var beforeMerge = modules.length;
+                modules = mergeDashboardLocalModuleProgress(modules, allowLocalMerge);
+                if (modules.length > beforeMerge && token && overviewOk && allowLocalMerge) {
+                    console.info('[SEBS] Yerel ilerleme ile birleştirildi', {
+                        eklenen: modules.length - beforeMerge
+                    });
+                } else if (modules.length > beforeMerge && !token) {
+                    showToast(
+                        'Sunucu oturumu yok; bu cihazdaki yerel ilerleme gösteriliyor.',
+                        'warning'
+                    );
+                }
+
+                if (!overviewOk && modules.length > 0) {
+                    completedModules = modules.filter(function (m) {
+                        return m.isCompleted;
+                    }).length;
+                    totalStudyTime = modules.reduce(function (total, m) {
+                        if (m.lastStep && m.lastStep.timeSpentMinutes) {
+                            return total + m.lastStep.timeSpentMinutes;
+                        }
+                        return total;
+                    }, 0);
+                }
+
+                if (modules.length > 0) {
+                    var completedEl = document.getElementById('completedModules');
+                    var hoursEl = document.getElementById('studyHours');
+                    if (completedEl) {
+                        animateCounter(completedEl, 0, completedModules, 1500);
+                        completedEl.classList.add('gradient');
+                    }
+                    if (hoursEl) {
+                        animateCounter(hoursEl, 0, Math.round(totalStudyTime / 60), 1500);
+                        hoursEl.classList.add('gradient');
+                    }
+                    try {
+                        displayModulesFromBackend(modules);
+                    } catch (dispErr) {
+                        console.error('Modül kartları çizilirken hata:', dispErr);
+                    }
+                    displaySimulationRuns(simulationRuns);
+                    var ob = document.getElementById('onboardingCard');
+                    if (ob) ob.style.display = completedModules === 0 ? 'block' : 'none';
+                    await loadCertificates();
+                    return;
+                }
+
+                // Giriş var ama hem sunucu hem yerel fallback boş.
+                if (token) {
+                    var zCompleted = document.getElementById('completedModules');
+                    var zHours = document.getElementById('studyHours');
+                    if (zCompleted) {
+                        animateCounter(zCompleted, 0, 0, 500);
+                        zCompleted.classList.add('gradient');
+                    }
+                    if (zHours) {
+                        animateCounter(zHours, 0, 0, 500);
+                        zHours.classList.add('gradient');
+                    }
+                    try {
+                        displayModulesFromBackend([]);
+                    } catch (dispErr2) {
+                        console.error('Modül kartları (boş):', dispErr2);
+                    }
+                    displaySimulationRuns(simulationRuns);
+                    var obZ = document.getElementById('onboardingCard');
+                    if (obZ) obZ.style.display = 'block';
+                    if (!overviewOk) {
+                        showToast(
+                            'İlerleme sunucudan alınamadı; farklı tarayıcılar arasında yalnızca sunucu verisi eşleşir. Bağlantıyı veya oturumu kontrol edip sayfayı yenileyin.',
+                            'error'
+                        );
+                    }
+                    await loadCertificates();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error getting session for progress:', error);
+            }
+
+            if (sessionHadApiToken) {
+                var zc = document.getElementById('completedModules');
+                var zh = document.getElementById('studyHours');
+                if (zc) animateCounter(zc, 0, 0, 500);
+                if (zh) animateCounter(zh, 0, 0, 500);
+                try {
+                    displayModulesFromBackend([]);
+                } catch (dispE) {
+                    console.error('Modül kartları (hata sonrası):', dispE);
+                }
+                var obE = document.getElementById('onboardingCard');
+                if (obE) obE.style.display = 'block';
+                if (!sessionOverviewOk) {
+                    showToast('İlerleme yüklenirken hata oluştu; sayfayı yenileyin.', 'error');
+                }
+                try {
+                    await loadCertificates();
+                } catch (eCert) {}
+                return;
+            }
+
+            // API + yerel birleşim boş — eski userProgress_ formatına düş (ayrı blok: üstteki var modules ile const çakışmasın)
+            {
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // If userData is empty, try to get from API
+            if (!userData || !userData.email) {
+                try {
+                    const user = await getUserMe();
+                    if (user) {
+                        userData = user;
+                    }
+                } catch (err) {
+                    console.warn('Could not fetch user data for fallback:', err);
+                }
+            }
+            
+            const userId = userData.email || userData.id || 'guest';
+            const storageKey = 'userProgress_' + userId;
+            
+            // Get saved progress
+            const savedProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            
+            // Get modules
+            const modules = savedProgress.modules || {};
+            
+            // Calculate stats
+            const completedModules = Object.values(modules).filter(p => p.status === 'Tamamlandı').length;
+            const studyHours = Object.values(modules).reduce((total, p) => total + (p.timeSpentMinutes || p.time_spent || 0), 0);
+            const streak = parseInt(localStorage.getItem('currentStreak') || '0');
+            
+            // Update stats with animation
+            const completedEl = document.getElementById('completedModules');
+            const hoursEl = document.getElementById('studyHours');
+            const streakEl = document.getElementById('currentStreak');
+            
+            if (completedEl) {
+                animateCounter(completedEl, 0, completedModules, 1500);
+                completedEl.classList.add('gradient');
+            }
+            
+            if (hoursEl) {
+                animateCounter(hoursEl, 0, Math.round(studyHours / 60), 1500);
+                hoursEl.classList.add('gradient');
+            }
+            
+            if (streakEl) {
+                animateCounter(streakEl, 0, streak, 1500);
+                streakEl.classList.add('gradient');
+            }
+
+            // Display modules
+            displayModules(modules);
+            var ob = document.getElementById('onboardingCard');
+            if (ob) ob.style.display = (completedModules === 0) ? 'block' : 'none';
+
+            // Load certificates
+            await loadCertificates();
+            }
+        }
+
+        function formatSimulationDate(iso) {
+            if (!iso) return '—';
+            try {
+                return new Date(iso).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
+            } catch (e) {
+                return '—';
+            }
+        }
+
+        function displaySimulationRuns(runs) {
+            if (window.SebDashboardSimulationHistory && typeof window.SebDashboardSimulationHistory.display === 'function') {
+                window.SebDashboardSimulationHistory.display(runs, escapeHtml, formatSimulationDate);
+                return;
+            }
+            var list = document.getElementById('simulationHistoryList');
+            if (!list) return;
+            var SIM_LABELS = {
+                'temel-siber-guvenlik-lab': 'Temel Siber Güvenlik Lab',
+                'linux-forensik-lab': 'Linux Sunucu Forensik Lab',
+                'semptom-etki-zinciri': 'Semptom–Etki Zinciri',
+                'kayit-haftasi-krizi': 'Kayıt Haftası Krizi',
+                'bir-seyler-yanlis-ama-ne': 'Bir Şeyler Yanlış Ama Ne?'
+            };
+            if (!runs || runs.length === 0) {
+                list.innerHTML = '<div class="no-data w-full rounded-2xl border border-dashed border-slate-200 bg-white px-8 py-12 text-center shadow-sm" id="simulationHistoryEmpty"><i class="fas fa-flask text-slate-300"></i><h3 class="text-lg font-semibold text-slate-900">Henüz simülasyon kaydı yok</h3><p class="mt-2 text-sm text-slate-600">Simülasyon başlattığınızda ve tamamladığınızda burada görünecektir.</p><a href="/simulations.html" class="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">Simülasyonlara git</a></div>';
+                return;
+            }
+            list.innerHTML = runs.map(function (r, index) {
+                var sid = r.simulationId || '';
+                var title = SIM_LABELS[sid] || sid;
+                var statusBadge = '';
+                if (r.status === 'started' || r.completedAt == null) {
+                    statusBadge = '<span class="inline-flex rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-600/15">Başlatıldı</span>';
+                } else if (r.status === 'success' || r.statusLabel === 'Başarılı') {
+                    statusBadge = '<span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/15">Başarılı</span>';
+                } else {
+                    statusBadge = '<span class="inline-flex rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-600/15">Başarısız</span>';
+                }
+                var scoreStr = '—';
+                if (r.completedAt != null && r.score != null) {
+                    if (r.maxScore != null && Number(r.maxScore) > 0) {
+                        scoreStr = r.score + '/' + r.maxScore;
+                    } else {
+                        scoreStr = r.score + '%';
+                    }
+                }
+                var cr = (r.correctCount != null) ? r.correctCount : 0;
+                var wr = (r.wrongCount != null) ? r.wrongCount : 0;
+                var showDy = (r.completedAt != null);
+                var metaParts = [];
+                if (showDy) metaParts.push('Doğru: ' + cr + ' · Yanlış: ' + wr);
+                if (r.finalGradeLabel) metaParts.push('Seviye: ' + escapeHtml(String(r.finalGradeLabel)));
+                if (r.successRate != null && r.successRate !== '') metaParts.push('Başarı %: ' + Number(r.successRate).toFixed(1));
+                if (r.hintUsedCount != null && Number(r.hintUsedCount) > 0) metaParts.push('İpucu: ' + r.hintUsedCount);
+                if (r.timeSpentSeconds != null && Number(r.timeSpentSeconds) > 0) {
+                    var ts = Number(r.timeSpentSeconds);
+                    metaParts.push('Süre: ' + Math.floor(ts / 60) + ' dk ' + (ts % 60) + ' sn');
+                } else if (r.timeSpent != null && Number(r.timeSpent) > 0) {
+                    var ts2 = Number(r.timeSpent);
+                    metaParts.push('Süre: ' + Math.floor(ts2 / 60) + ' dk ' + (ts2 % 60) + ' sn');
+                }
+                var metaLine = metaParts.length ? '<div class="mt-1 text-xs text-slate-500">' + metaParts.join(' · ') + '</div>' : '';
+                return '<article class="contact-channel-card group relative w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">' +
+                    '<div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-indigo-500/[0.07] blur-2xl" aria-hidden="true"></div>' +
+                    '<div class="relative flex flex-wrap items-start justify-between gap-4">' +
+                    '<div class="min-w-0 flex-1"><div class="text-base font-semibold text-slate-900">' + escapeHtml(title) + '</div>' +
+                    '<div class="mt-1 text-sm text-slate-500">Başlangıç: ' + escapeHtml(formatSimulationDate(r.startedAt)) + '</div>' +
+                    (r.completedAt ? '<div class="text-sm text-slate-500">Tamamlanma: ' + escapeHtml(formatSimulationDate(r.completedAt)) + '</div>' : '') +
+                    '</div>' +
+                    '<div class="shrink-0 text-right">' + statusBadge + '<div class="mt-2 text-sm font-medium text-slate-800">Skor: ' + escapeHtml(String(scoreStr)) + '</div>' +
+                    metaLine +
+                    '</div></div></article>';
+            }).join('');
+        }
+        
+        function displayModulesFromBackend(modules) {
+            if (
+                window.SebDashboardModuleProgress &&
+                typeof window.SebDashboardModuleProgress.display === 'function'
+            ) {
+                window.SebDashboardModuleProgress.display(modules, {
+                    resolveHref: resolveModuleContinueHref,
+                    escapeHtml: escapeHtml,
+                    emptyExtraHtml:
+                        typeof dashboardCrossDeviceHintHtml !== 'undefined'
+                            ? dashboardCrossDeviceHintHtml
+                            : '',
+                });
+                return;
+            }
+            const progressList = document.getElementById('progressList');
+            if (!progressList) return;
+            
+            if (modules.length === 0) {
+                progressList.innerHTML =
+                    '<div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">' +
+                    '<i class="fas fa-book-open text-slate-300"></i>' +
+                    '<h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3>' +
+                    '<p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>' +
+                    dashboardCrossDeviceHintHtml +
+                    '</div>';
+                return;
+            }
+            
+            const timestamp = Date.now();
+            progressList.innerHTML = modules.map((module, index) => {
+                const percent = module.percentComplete || 0;
+                const moduleId = `module-${index}-${timestamp}`;
+                const displayTitle =
+                    (module.courseTitle === 'Siber Güvenliğe Giriş' && module.title === 'Giriş')
+                        ? 'Siber Güvenliğe Giriş'
+                        : module.moduleTitle || module.title || module.module?.title || 'Modül';
+                
+                return `
+                <article class="progress-item group relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover" style="animation: fadeInUp 0.6s ease ${index * 0.1}s both; flex: 1 1 min(100%, 300px); max-width: 420px;">
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-500/[0.07] blur-2xl" aria-hidden="true"></div>
+                    <div class="progress-item-header relative flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                            <i class="fas fa-book" aria-hidden="true"></i>
+                        </div>
+                        <div class="progress-info min-w-0 flex-1">
+                            <div class="progress-name text-lg font-semibold text-slate-900">${displayTitle}</div>
+                            <div class="progress-detail mt-1 text-sm text-slate-600">
+                                ${module.isCompleted ? 'Tamamlandı' : ((module.percentComplete || 0) > 0 ? module.percentComplete + '% tamamlandı • Devam ediyor' : (module.timeSpentMinutes || 0) + ' dakika • Devam ediyor')}
+                            </div>
+                            <div class="progress-bar-container mt-4">
+                                <div class="progress-bar h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                    <div class="progress-fill h-full rounded-full bg-gradient-to-r from-blue-700 to-blue-500 transition-all duration-1000" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-circle relative shrink-0 self-center sm:self-auto">
+                            ${createCircleProgress(percent, moduleId)}
+                        </div>
+                    </div>
+                    ${module.isCompleted ? `
+                        <div class="relative mt-5 text-center">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-600/15">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> Tamamlandı
+                            </span>
+                        </div>
+                    ` : `
+                        <div class="relative mt-5 text-center">
+                            <a href="${resolveModuleContinueHref(displayTitle, module)}" class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">
+                                <i class="fas fa-play" aria-hidden="true"></i> Devam et
+                            </a>
+                        </div>
+                    `}
+                </article>
+            `;
+            }).join('');
+            
+            // Animate circle progress and progress bars after DOM insertion
+            const animationTimestamp = timestamp || Date.now();
+            modules.forEach((module, index) => {
+                const percent = module.percentComplete || 0;
+                const moduleId = `module-${index}-${animationTimestamp}`;
+                
+                setTimeout(() => {
+                    // Animate circle progress
+                    animateCircleProgress(percent, moduleId);
+                    
+                    // Animate progress bar
+                    const progressFill = document.querySelector(`.progress-item:nth-child(${index + 1}) .progress-fill`);
+                    if (progressFill) {
+                        progressFill.style.width = `${percent}%`;
+                    }
+                }, index * 100 + 500);
+            });
+        }
+        
+        // Load certificates from API
+        async function loadCertificates() {
+            try {
+                const token = await getAuthToken();
+                if (!token) return;
+
+                // Sertifika kazanma kontrolü: kategorileri kontrol et, kazanılmışsa listeye eklenir
+                var categories = ['cybersecurity', 'siber-guvenlik', 'cloud', 'data-science'];
+                for (var i = 0; i < categories.length; i++) {
+                    try {
+                        var checkRes = await fetch(getApiBaseUrl() + '/certificates/check/' + categories[i], {
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        if (handle401Response(checkRes)) return;
+                        if (checkRes.ok) {
+                            var checkData = await checkRes.json();
+                            if (checkData.success && checkData.earned === true) {
+                                break;
+                            }
+                        }
+                    } catch (e) { /* ignore */ }
+                }
+
+                const response = await fetch(getApiBaseUrl() + '/certificates', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                if (handle401Response(response)) return;
+                const data = await response.json();
+                
+                if (data.success && data.data.certificates) {
+                    displayCertificates(data.data.certificates);
+                    
+                    // Update certificate count with animation
+                    const certCountEl = document.getElementById('totalCertificates');
+                    if (certCountEl) {
+                        animateCounter(certCountEl, 0, data.data.certificates.length, 1500);
+                        certCountEl.classList.add('gradient');
+                    }
+                } else if (!response.ok) {
+                    const errMsg = (data && data.message) ? data.message : 'Sertifikalar yüklenemedi.';
+                    showToast(errMsg, 'error');
+                }
+            } catch (error) {
+                showToast(error.message || 'Sertifikalar yüklenirken bir hata oluştu.', 'error');
+            }
+        }
+
+        async function renderBigFiveDashboardCard() {
+            var mount = document.getElementById('bigFiveDashboardMount');
+            if (!mount) return;
+
+            if (window.AccessControl && window.AccessControl.checkAssessmentAccess) {
+                var assessment = await window.AccessControl.checkAssessmentAccess();
+                if (!assessment.hasAccess) {
+                    mount.innerHTML =
+                        '<div class="text-center text-sm text-slate-600">' +
+                        '<p><i class="fas fa-lock text-amber-600" aria-hidden="true"></i> ' +
+                        escapeHtml(assessment.message || 'Testler paket satın alındıktan sonra açılır.') +
+                        '</p>' +
+                        '<a href="/fiyatlandirma" class="mt-4 inline-flex items-center justify-center rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus-ring">Planları gör</a>' +
+                        '</div>';
+                    return;
+                }
+            }
+
+            var BF_LABELS = {
+                openness: 'Açıklık / Yeniliğe Açıklık',
+                conscientiousness: 'Planlılık / Sorumluluk',
+                extraversion: 'Dışadönüklük',
+                agreeableness: 'Uyumluluk / İşbirliği',
+                emotional_sensitivity: 'Duygusal Hassasiyet'
+            };
+            try {
+                var raw = localStorage.getItem('sebs_big_five_result');
+                if (!raw) {
+                    mount.innerHTML =
+                        '<div class="text-center text-sm text-slate-600">' +
+                        '<p>Henüz kayıtlı bir Big Five sonucun yok. Kariyer değerlendirme paketini tamamladığında özet burada görünür.</p>' +
+                        '<a href="/tests/kariyer-degerlendirme" class="mt-4 inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus-ring">Testi başlat</a>' +
+                        '</div>';
+                    return;
+                }
+                var data = JSON.parse(raw);
+                if (!data || data.test_type !== 'big_five_learning') {
+                    mount.innerHTML = '<p class="text-sm text-slate-600">Kayıtlı veri okunamadı.</p>';
+                    return;
+                }
+                var cs = data.classical_scores || {};
+                var order = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'emotional_sensitivity'];
+                var rows = order.map(function (k) {
+                    var p = cs[k] && cs[k].percentage != null ? cs[k].percentage : '—';
+                    return '<div class="flex items-center justify-between gap-3 border-b border-slate-100 py-2 text-sm last:border-0">' +
+                        '<span class="text-slate-700">' + escapeHtml(BF_LABELS[k] || k) + '</span>' +
+                        '<span class="font-bold tabular-nums text-indigo-700">' + escapeHtml(String(p)) + (p !== '—' ? '%' : '') + '</span></div>';
+                }).join('');
+                var lm = data.learning_mode ? '<p class="mt-4 text-sm text-slate-600"><strong>Önerilen mod:</strong> ' + escapeHtml(data.learning_mode) + '</p>' : '';
+                var dt = data.created_at ? '<p class="text-xs text-slate-500">Son güncelleme: ' + escapeHtml(data.created_at.slice(0, 10)) + '</p>' : '';
+                mount.innerHTML =
+                    '<div class="grid gap-6 lg:grid-cols-2">' +
+                    '<div><h3 class="text-sm font-bold uppercase tracking-wide text-slate-500">Boyut özeti</h3><div class="mt-2">' + rows + '</div>' + lm + '</div>' +
+                    '<div class="rounded-xl border border-slate-100 bg-slate-50/80 p-4 text-sm leading-relaxed text-slate-700">' +
+                    '<h3 class="text-sm font-bold text-slate-800">Kısa özet</h3>' +
+                    '<p class="mt-2 whitespace-pre-line">' + escapeHtml((data.generated_report || '').slice(0, 420)) + ((data.generated_report || '').length > 420 ? '…' : '') + '</p>' +
+                    dt +
+                    '<a href="/tests/big-five" class="mt-4 inline-flex text-sm font-semibold text-indigo-700 hover:text-indigo-900">Tam raporu gör / testi tekrarla →</a>' +
+                    '</div></div>';
+            } catch (e) {
+                mount.innerHTML = '<p class="text-sm text-red-600">Özet yüklenemedi.</p>';
+            }
+        }
+
+        function buildBigFiveReportAppendixHtml() {
+            try {
+                var raw = localStorage.getItem('sebs_big_five_result');
+                if (!raw) return '';
+                var data = JSON.parse(raw);
+                if (!data || data.test_type !== 'big_five_learning' || !data.classical_scores) return '';
+                var BF_LABELS = {
+                    openness: 'Açıklık',
+                    conscientiousness: 'Planlılık',
+                    extraversion: 'Dışadönüklük',
+                    agreeableness: 'Uyumluluk',
+                    emotional_sensitivity: 'Duygusal hassasiyet'
+                };
+                var order = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'emotional_sensitivity'];
+                var chips = order.map(function (k) {
+                    var p = data.classical_scores[k] && data.classical_scores[k].percentage != null ? data.classical_scores[k].percentage : '—';
+                    return '<span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-900">' +
+                        escapeHtml(BF_LABELS[k]) + ': ' + escapeHtml(String(p)) + (p !== '—' ? '%' : '') + '</span>';
+                }).join(' ');
+                return '<div class="report-section" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">' +
+                    '<h3 style="margin-bottom:0.5rem;font-size:1.1rem;">Big Five öğrenme özeti (tarayıcı)</h3>' +
+                    '<p style="font-size:0.9rem;color:#64748b;">Bu blok cihazında saklanan son testine dayanır; klinik tanı değildir.</p>' +
+                    '<div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">' + chips + '</div>' +
+                    (data.learning_mode ? '<p style="margin-top:0.75rem;font-size:0.9rem;"><strong>Önerilen mod:</strong> ' + escapeHtml(data.learning_mode) + '</p>' : '') +
+                    '<p style="margin-top:0.5rem;"><a href="/tests/big-five" style="color:#4f46e5;font-weight:600;">Detaylı raporu aç →</a></p>' +
+                    '</div>';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // Değerlendirme raporunu yükle ve göster (JWT authToken ile)
+        async function loadEvaluationReport() {
+            const box = document.getElementById('evaluationReportBox');
+            const content = document.getElementById('evaluationReportContent');
+            const placeholder = document.getElementById('evaluationReportPlaceholder');
+            const btn = document.getElementById('loadEvaluationReportBtn');
+
+            const token = await getAuthToken();
+            if (!token) {
+                showToast('Raporu görmek için lütfen giriş yapın.', 'warning');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
+            }
+            if (placeholder) placeholder.classList.add('hidden');
+            if (box) {
+                box.classList.remove('hidden');
+                content.innerHTML = '<p class="text-slate-600"><i class="fas fa-spinner fa-spin"></i> Rapor hazırlanıyor...</p>';
+            }
+
+            try {
+                const response = await fetch(getApiBaseUrl() + '/evaluation/report', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (handle401Response(response)) return;
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Rapor alınamadı');
+                }
+
+                if (!data.success || !data.data) {
+                    throw new Error(data.message || 'Rapor verisi yok');
+                }
+
+                const report = data.data;
+                const s = report.scores || {};
+                const i = report.interpretation || {};
+                const ml = report.ml || {};
+
+                let html = '';
+                if (ml.available && ml.profile) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 12px; background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%); border: 1px solid #bfdbfe;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;"><i class="fas fa-robot" style="color: #2563eb;"></i> Yapay Zeka Öğrenme Profili</h3>';
+                    html += '<p style="margin: 0 0 0.5rem; font-size: 1.05rem;"><strong>' + escapeHtml(ml.profile) + '</strong>';
+                    if (ml.confidencePercent != null) {
+                        html += ' <span style="color: #64748b; font-size: 0.9rem;">(güven: %' + escapeHtml(String(ml.confidencePercent)) + ')</span>';
+                    }
+                    html += '</p>';
+                    if (i.mlProfile) {
+                        html += '<p style="margin: 0; color: #334155;">' + escapeHtml(i.mlProfile) + '</p>';
+                    }
+                    if (ml.probabilities && typeof ml.probabilities === 'object') {
+                        var probs = Object.keys(ml.probabilities).map(function (k) {
+                            return { label: k, pct: Math.round(ml.probabilities[k] * 1000) / 10 };
+                        }).sort(function (a, b) { return b.pct - a.pct; });
+                        if (probs.length) {
+                            html += '<ul style="margin: 0.75rem 0 0; padding: 0; list-style: none;">';
+                            probs.forEach(function (p) {
+                                html += '<li style="margin-bottom: 0.35rem; font-size: 0.85rem; color: #475569;">';
+                                html += '<span style="display: inline-block; min-width: 12rem;">' + escapeHtml(p.label) + '</span> %' + p.pct;
+                                html += '</li>';
+                            });
+                            html += '</ul>';
+                        }
+                    }
+                    html += '</div>';
+                } else if (ml.available === false) {
+                    html += '<p class="text-slate-500" style="font-size: 0.9rem; margin-bottom: 1rem;">Yapay zeka profili şu an hesaplanamadı; skor özeti gösteriliyor.</p>';
+                }
+
+                html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Skor Özeti</h3>';
+                html += '<p><strong>Genel skor:</strong> ' + (s.overall != null ? s.overall + '%' : '-') + '</p>';
+                html += '<p><strong>Quiz ortalaması:</strong> ' + (s.quizAverage != null ? s.quizAverage + '%' : '-') + ' (' + (s.quizCount || 0) + ' quiz)</p>';
+                html += '<p><strong>Simülasyon ortalaması:</strong> ' + (s.simulationAverage != null ? s.simulationAverage + '%' : '-') + ' (' + (s.simulationCount || 0) + ' simülasyon)</p>';
+                html += '<p><strong>Toplam süre:</strong> ' + (s.totalTimeMinutes != null ? Math.round(s.totalTimeMinutes / 60) + ' saat' : '-') + '</p>';
+                html += '</div>';
+
+                if (i.overall) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Genel Değerlendirme</h3>';
+                    html += '<p>' + escapeHtml(i.overall) + '</p>';
+                    html += '</div>';
+                }
+
+                if (i.strengths && i.strengths.length > 0) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Güçlü Yönler</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.strengths.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (i.weaknesses && i.weaknesses.length > 0) {
+                    html += '<div class="report-section" style="margin-bottom: 1.5rem;">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Geliştirme Alanları</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.weaknesses.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (i.recommendations && i.recommendations.length > 0) {
+                    html += '<div class="report-section">';
+                    html += '<h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Öneriler</h3><ul style="margin: 0; padding-left: 1.25rem;">';
+                    i.recommendations.forEach(function (x) { html += '<li>' + escapeHtml(x) + '</li>'; });
+                    html += '</ul></div>';
+                }
+
+                content.innerHTML = html;
+                try {
+                    var bfAppend = typeof buildBigFiveReportAppendixHtml === 'function' ? buildBigFiveReportAppendixHtml() : '';
+                    if (bfAppend) content.innerHTML += bfAppend;
+                } catch (bfErr) {
+                    console.warn('Big Five rapor eki:', bfErr);
+                }
+                showToast('Rapor yüklendi.', 'success');
+            } catch (err) {
+                content.innerHTML = '<p class="error-message" style="color: var(--error-color, #ef4444);">' + escapeHtml(err.message || 'Rapor yüklenirken hata oluştu.') + '</p>';
+                showToast(err.message || 'Rapor yüklenemedi.', 'error');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Raporu yükle';
+                }
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        function escapeAttr(text) {
+            if (!text) return '';
+            return String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        var dashboard401RedirectScheduled = false;
+
+        function handle401Response(response) {
+            if (!response || response.status !== 401) return false;
+            (function tryRefreshThenMaybeLogin() {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    window.supabaseAuthSystem.supabase.auth
+                        .refreshSession()
+                        .then(function (ref) {
+                            if (ref && ref.data && ref.data.session && ref.data.session.access_token) {
+                                try {
+                                    localStorage.setItem('authToken', ref.data.session.access_token);
+                                } catch (e) {}
+                                if (!sessionStorage.getItem('sebs_dash_401_reload_once')) {
+                                    sessionStorage.setItem('sebs_dash_401_reload_once', '1');
+                                    showToast('Oturum yenilendi, sayfa yenileniyor…', 'success');
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 600);
+                                    return;
+                                }
+                            }
+                            scheduleLoginRedirect();
+                        })
+                        .catch(function () {
+                            scheduleLoginRedirect();
+                        });
+                } else {
+                    scheduleLoginRedirect();
+                }
+            })();
+            return true;
+        }
+
+        function scheduleLoginRedirect() {
+            if (dashboard401RedirectScheduled) return;
+            dashboard401RedirectScheduled = true;
+            showToast('Oturum doğrulanamadı. Giriş sayfasına yönlendiriliyorsunuz.', 'error');
+            setTimeout(function () {
+                window.location.href =
+                    'login.html?redirect=dashboard.html&message=' +
+                    encodeURIComponent('Lütfen tekrar giriş yapın.');
+            }, 1800);
+        }
+
+        function showToast(message, type) {
+            try {
+                var existing = document.getElementById('toast-message');
+                if (existing) existing.remove();
+                var toast = document.createElement('div');
+                toast.id = 'toast-message';
+                toast.setAttribute('role', 'alert');
+                toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:8px;background:var(--card-bg,#1a1d24);color:var(--text-primary,#fff);border:1px solid var(--border-color,rgba(255,255,255,0.08));z-index:10000;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+                if (type === 'error') toast.style.borderColor = '#ef4444';
+                if (type === 'success') toast.style.borderColor = '#22c55e';
+                if (type === 'warning') toast.style.borderColor = '#f59e0b';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(function () { toast.remove(); }, 4000);
+            } catch (e) {}
+        }
+        
+        // Display certificates
+        function displayCertificates(certificates) {
+            const certificatesGrid = document.getElementById('certificatesGrid');
+            certificatesGrid.innerHTML = '';
+            
+            if (certificates.length === 0) {
+                certificatesGrid.innerHTML = `
+                    <div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center">
+                        <i class="fas fa-certificate text-slate-300"></i>
+                        <h3 class="text-lg font-semibold text-slate-900">Henüz sertifika kazanmadınız</h3>
+                        <p class="mt-2 text-sm text-slate-600">Modülleri tamamlayarak sertifika kazanabilirsiniz!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            certificates.forEach((cert, index) => {
+                const card = document.createElement('article');
+                card.className = 'contact-channel-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover';
+                card.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.15}s both; opacity: 0;`;
+                
+                const categoryIcons = {
+                    'siber-guvenlik': 'fas fa-shield-alt',
+                    'bulut-bilisim': 'fas fa-cloud',
+                    'veri-bilimi': 'fas fa-chart-line'
+                };
+                
+                const iconWrapClass = {
+                    'siber-guvenlik': 'bg-blue-50 text-blue-600 ring-blue-100',
+                    'bulut-bilisim': 'bg-sky-50 text-sky-600 ring-sky-100',
+                    'veri-bilimi': 'bg-emerald-50 text-emerald-600 ring-emerald-100'
+                };
+                const blobClass = {
+                    'siber-guvenlik': 'bg-blue-500/[0.09]',
+                    'bulut-bilisim': 'bg-sky-500/[0.1]',
+                    'veri-bilimi': 'bg-emerald-500/[0.09]'
+                };
+                var cat = cert.category || 'siber-guvenlik';
+                var iw = iconWrapClass[cat] || iconWrapClass['siber-guvenlik'];
+                var bl = blobClass[cat] || blobClass['siber-guvenlik'];
+                
+                var safeUrl = escapeAttr(cert.certificateUrl || '');
+                card.innerHTML = `
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full ${bl} blur-2xl" aria-hidden="true"></div>
+                    <div class="relative flex flex-col gap-4 sm:flex-row sm:items-start">
+                        <div class="contact-channel-icon-wrap shrink-0 ring-1 ${iw}">
+                            <i class="${categoryIcons[cat] || 'fas fa-certificate'}" aria-hidden="true"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-lg font-semibold text-slate-900">${escapeHtml(cert.title)}</h3>
+                            <p class="mt-2 text-sm leading-relaxed text-slate-600">${escapeHtml(cert.description || '')}</p>
+                            <div class="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                                <span class="inline-flex items-center gap-2"><i class="fas fa-clock text-slate-400" aria-hidden="true"></i> ${Math.round((cert.completionTime || 0) / 60)} saat</span>
+                                <span class="inline-flex items-center gap-2"><i class="fas fa-calendar text-slate-400" aria-hidden="true"></i> ${cert.earnedAt ? new Date(cert.earnedAt).toLocaleDateString('tr-TR') : '-'}</span>
+                            </div>
+                            <div class="mt-6 flex flex-wrap gap-2">
+                                <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring min-w-[8rem]" onclick="viewCertificate(this.getAttribute('data-url'))" data-url="${safeUrl}">
+                                    <i class="fas fa-eye" aria-hidden="true"></i> Görüntüle
+                                </button>
+                                <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus-ring min-w-[8rem]" onclick="viewAIReport('${escapeAttr(cert.id)}')">
+                                    <i class="fas fa-file-alt" aria-hidden="true"></i> Sertifika özeti
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                certificatesGrid.appendChild(card);
+            });
+        }
+        
+        // View certificate
+        function viewCertificate(url) {
+            if (url && url.trim()) {
+                window.open(url, '_blank');
+            } else {
+                showToast('Sertifika belgesi (PDF) henüz oluşturulmadı. Kazandığınız sertifikalar burada listelenir.', 'warning');
+            }
+        }
+        
+        // View AI report
+        async function viewAIReport(certificateId) {
+            
+            const modal = document.getElementById('aiReportModal');
+            const content = document.getElementById('aiReportContent');
+            
+            modal.classList.add('active');
+            content.innerHTML = '<div class="loading">Rapor yükleniyor...</div>';
+            
+            try {
+                const token = await getAuthToken();
+                if (!token) {
+                    throw new Error('Giriş yapmanız gerekiyor');
+                }
+                const response = await fetch(getApiBaseUrl() + '/certificates/' + certificateId + '/report', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                
+                if (!response.ok) {
+                    const errBody = await response.json().catch(() => ({}));
+                    throw new Error((errBody && errBody.message) ? errBody.message : ('Rapor alınamadı (' + response.status + ')'));
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.report) {
+                    const report = data.data.report;
+                    
+                    // Build detailed report HTML
+                    let reportHTML = `
+                        <div class="ai-report-section">
+                            <h3 class="report-section-title">📊 Özet</h3>
+                            <div class="report-item">${report.summary}</div>
+                        </div>
+                    `;
+                    
+                    // Performance Analysis
+                    if (report.performanceAnalysis && report.performanceAnalysis.overall) {
+                        const perf = report.performanceAnalysis.overall;
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🎯 Performans Analizi</h3>
+                                <div class="report-item">
+                                    <strong>Genel Seviye:</strong> ${perf.level || 'Değerlendiriliyor'}<br>
+                                    ${perf.description || ''}<br>
+                                    ${perf.trend ? `<strong>Trend:</strong> ${perf.trend} - ${perf.trendDescription || ''}` : ''}<br>
+                                    ${perf.consistency ? `<strong>Tutarlılık:</strong> ${perf.consistency} - ${perf.consistencyDescription || ''}` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Learning Pattern
+                    if (report.learningPattern) {
+                        const lp = report.learningPattern;
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🧠 Öğrenme Paterni</h3>
+                                <div class="report-item">
+                                    <strong>Öğrenme Hızı:</strong> ${lp.pace || ''} - ${lp.paceDescription || ''}<br>
+                                    <strong>Odak Noktası:</strong> ${lp.focus || ''} - ${lp.focusDescription || ''}<br>
+                                    <strong>Öğrenme Stili:</strong> ${lp.learningStyle || ''} - ${lp.learningStyleDescription || ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Strengths
+                    if (report.strengths && report.strengths.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">✅ Güçlü Yönler</h3>
+                                ${report.strengths.map(s => {
+                                    if (typeof s === 'object') {
+                                        return `<div class="report-item strength">
+                                            <strong>${s.title || s}</strong><br>
+                                            ${s.description || ''}
+                                            ${s.impact ? `<br><small>Etki: ${s.impact}</small>` : ''}
+                                        </div>`;
+                                    }
+                                    return `<div class="report-item strength">${s}</div>`;
+                                }).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Areas for Improvement
+                    if (report.areasForImprovement && report.areasForImprovement.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">📈 Geliştirilmesi Gereken Alanlar</h3>
+                                ${report.areasForImprovement.map(a => {
+                                    if (typeof a === 'object') {
+                                        let html = `<div class="report-item improvement">
+                                            <strong>${a.title || a}</strong><br>
+                                            ${a.description || ''}
+                                            ${a.priority ? `<br><small>Öncelik: ${a.priority}</small>` : ''}`;
+                                        
+                                        if (a.specificTopics && a.specificTopics.length > 0) {
+                                            html += `<br><strong>Konular:</strong> ${a.specificTopics.join(', ')}`;
+                                        }
+                                        
+                                        if (a.actionPlan && a.actionPlan.length > 0) {
+                                            html += `<br><strong>Aksiyon Planı:</strong><ul style="margin-left: 1.5rem; margin-top: 0.5rem;">`;
+                                            a.actionPlan.forEach(plan => {
+                                                html += `<li>${plan}</li>`;
+                                            });
+                                            html += `</ul>`;
+                                        }
+                                        
+                                        html += `</div>`;
+                                        return html;
+                                    }
+                                    return `<div class="report-item improvement">${a}</div>`;
+                                }).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Detailed Recommendations
+                    if (report.detailedRecommendations && report.detailedRecommendations.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">💡 Detaylı Öneriler</h3>
+                                ${report.detailedRecommendations.map(category => `
+                                    <div class="report-item" style="margin-bottom: 1.5rem;">
+                                        <strong style="color: var(--primary-color);">${category.category}</strong>
+                                        ${category.items.map(item => `
+                                            <div style="margin-top: 1rem; padding-left: 1rem; border-left: 3px solid var(--primary-color);">
+                                                <strong>${item.title}</strong><br>
+                                                <small>${item.description}</small>
+                                                ${item.priority ? `<br><small>Öncelik: ${item.priority}</small>` : ''}
+                                                ${item.resources && item.resources.length > 0 ? `
+                                                    <br><strong>Kaynaklar:</strong>
+                                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                                        ${item.resources.map(r => `<li>${r}</li>`).join('')}
+                                                    </ul>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Next Steps
+                    if (report.nextSteps && report.nextSteps.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">🎯 Sonraki Adımlar</h3>
+                                ${report.nextSteps.map(step => `
+                                    <div class="report-item" style="margin-bottom: 1rem;">
+                                        <strong>Adım ${step.step}: ${step.title}</strong><br>
+                                        ${step.description}<br>
+                                        <small>⏱️ Tahmini Süre: ${step.estimatedTime || ''}</small>
+                                        ${step.deadline ? `<br><small>📅 Hedef: ${step.deadline}</small>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // Resources
+                    if (report.resources && report.resources.length > 0) {
+                        reportHTML += `
+                            <div class="ai-report-section">
+                                <h3 class="report-section-title">📚 Önerilen Kaynaklar</h3>
+                                ${report.resources.map(resource => `
+                                    <div class="report-item" style="margin-bottom: 0.75rem;">
+                                        <strong>${resource.title}</strong>
+                                        <br><small>${resource.type} • ${resource.difficulty} Seviye</small>
+                                        ${resource.description ? `<br>${resource.description}` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    content.innerHTML = reportHTML;
+                } else {
+                    const apiMsg = (data && data.message) ? data.message : 'Rapor bulunamadı.';
+                    content.innerHTML = `
+                        <div class="report-item error-message">
+                            <strong>Rapor alınamadı.</strong><br>
+                            <small>${escapeHtml(apiMsg)}</small>
+                        </div>
+                    `;
+                    showToast(apiMsg, 'error');
+                }
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="report-item error-message">
+                        <strong>Rapor yüklenirken hata oluştu.</strong><br>
+                        <small>${escapeHtml(error.message || 'Bilinmeyen hata')}</small>
+                    </div>
+                `;
+                showToast(error.message || 'Rapor yüklenemedi.', 'error');
+            }
+        }
+        
+        // Close report modal
+        function closeReportModal() {
+            document.getElementById('aiReportModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('aiReportModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReportModal();
+            }
+        });
+
+        // Display modules
+        function displayModules(modules) {
+            const progressList = document.getElementById('progressList');
+            progressList.innerHTML = '';
+
+            const moduleIcons = {
+                'Temel Siber Güvenlik': 'fas fa-shield-alt',
+                'Temel Network Eğitimi': 'fas fa-network-wired',
+                'Network Güvenliği': 'fas fa-network-wired',
+                'Malware Analizi': 'fas fa-bug',
+                'Threat Hunting': 'fas fa-search',
+                'AWS Temelleri': 'fas fa-cloud',
+                'Azure Temelleri': 'fas fa-cloud',
+                'Google Cloud Platform': 'fas fa-cloud'
+            };
+
+            if (Object.keys(modules).length === 0) {
+                progressList.innerHTML =
+                    '<div class="no-data col-span-full w-full rounded-2xl border border-dashed border-slate-200 bg-slate-50/90 px-8 py-12 text-center"><i class="fas fa-book-reader text-slate-300"></i><h3 class="text-lg font-semibold text-slate-900">Henüz modül başlatmadınız</h3><p class="mt-2 text-sm text-slate-600">Eğitim modüllerine göz atarak başlayın!</p>' +
+                    dashboardCrossDeviceHintHtml +
+                    '</div>';
+                return;
+            }
+
+            const timestamp = Date.now();
+            const moduleArray = Object.entries(modules).map(([moduleName, progress], index) => ({
+                name: moduleName,
+                progress: progress,
+                index: index
+            }));
+            
+            moduleArray.forEach(({ name: moduleName, progress, index }) => {
+                // Skip duplicates and wrong formats
+                if (moduleName.includes('-') || (moduleName.toLowerCase() !== moduleName && moduleName !== 'Temel Siber Güvenlik' && moduleName !== 'Temel Network Eğitimi' && moduleName !== 'Network Güvenliği')) {
+                    return;
+                }
+
+                const status = progress.status || 'Başlanmadı';
+                const percentage = Math.min(progress.percentage || 0, 100);
+                const completedLessons = progress.completedLessons?.length || progress.completedSections || 0;
+                const totalLessons = progress.totalLessons || progress.totalSections || 0;
+                const timeSpent = progress.timeSpentMinutes || progress.time_spent || 0;
+                const moduleId = `local-module-${index}-${timestamp}`;
+
+                const item = document.createElement('article');
+                item.className = 'progress-item group relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-card transition hover:border-slate-300 hover:shadow-card-hover';
+                item.style.cssText = `animation: fadeInUp 0.6s ease ${index * 0.1}s both; opacity: 0; flex: 1 1 min(100%, 300px); max-width: 420px;`;
+                
+                let iconClass = moduleIcons[moduleName] || 'fas fa-book';
+                let iconWrap = 'bg-blue-50 text-blue-600 ring-blue-100';
+                let blobTint = 'bg-blue-500/[0.07]';
+                let barFrom = 'from-blue-700';
+                let barTo = 'to-blue-500';
+                if (status === 'Tamamlandı') {
+                    iconClass = 'fas fa-trophy';
+                    iconWrap = 'bg-emerald-50 text-emerald-600 ring-emerald-100';
+                    blobTint = 'bg-emerald-500/[0.08]';
+                    barFrom = 'from-emerald-700';
+                    barTo = 'to-emerald-500';
+                } else if (percentage > 0) {
+                    iconWrap = 'bg-sky-50 text-sky-600 ring-sky-100';
+                    blobTint = 'bg-sky-500/[0.08]';
+                    barFrom = 'from-sky-700';
+                    barTo = 'to-sky-500';
+                }
+
+                item.innerHTML = `
+                    <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full ${blobTint} blur-2xl" aria-hidden="true"></div>
+                    <div class="progress-item-header relative flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ${iconWrap}">
+                            <i class="${iconClass}" aria-hidden="true"></i>
+                        </div>
+                        <div class="progress-info min-w-0 flex-1">
+                            <div class="progress-name text-lg font-semibold text-slate-900">${moduleName}</div>
+                            <div class="progress-detail mt-1 text-sm text-slate-600">
+                                ${timeSpent > 0 ? Math.round(timeSpent) + ' dakika' : completedLessons + '/' + totalLessons + ' ders'} • 
+                                ${status}
+                            </div>
+                            <div class="progress-bar-container mt-4">
+                                <div class="progress-bar h-2.5 overflow-hidden rounded-full bg-slate-200">
+                                    <div class="progress-fill h-full rounded-full bg-gradient-to-r ${barFrom} ${barTo} transition-all duration-1000" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-circle relative shrink-0 self-center sm:self-auto">
+                            ${createCircleProgress(percentage, moduleId)}
+                        </div>
+                    </div>
+                    ${status === 'Tamamlandı' ? `
+                        <div class="relative mt-5 text-center">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-600/15">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i> Tamamlandı
+                            </span>
+                        </div>
+                    ` : `
+                        <div class="relative mt-5 text-center">
+                            <a href="${resolveModuleContinueHref(moduleName, { moduleTitle: moduleName })}" class="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring">
+                                <i class="fas fa-play" aria-hidden="true"></i> Devam et
+                            </a>
+                        </div>
+                    `}
+                `;
+                
+                progressList.appendChild(item);
+                
+                // Animate circle progress and progress bar
+                setTimeout(() => {
+                    animateCircleProgress(percentage, moduleId);
+                    
+                    // Animate progress bar
+                    const progressFill = item.querySelector('.progress-fill');
+                    if (progressFill) {
+                        progressFill.style.width = `${percentage}%`;
+                    }
+                }, index * 100 + 500);
+            });
+
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.logout) {
+                    await window.supabaseAuthSystem.logout();
+                    return;
+                }
+                if (window.supabaseAuthSystem && window.supabaseAuthSystem.supabase) {
+                    await window.supabaseAuthSystem.supabase.auth.signOut();
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('isVerified');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userProgress');
+            localStorage.removeItem('recentActivities');
+            localStorage.removeItem('achievements');
+            if (typeof window.clearSebsLocalProgressStorage === 'function') {
+                window.clearSebsLocalProgressStorage();
+            }
+
+            setTimeout(function () {
+                try {
+                    window.location.reload();
+                } catch (e) {
+                    window.location.href = window.location.href;
+                }
+            }, 0);
+        }
+
+        // Dark Mode Toggle
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const darkModeIcon = document.getElementById('darkModeIcon');
+            const html = document.documentElement;
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+            }
+            
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function() {
+                    const currentTheme = html.getAttribute('data-theme');
+                    if (currentTheme === 'dark') {
+                        html.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                        if (darkModeIcon) darkModeIcon.className = 'fas fa-moon';
+                    } else {
+                        html.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                        if (darkModeIcon) darkModeIcon.className = 'fas fa-sun';
+                    }
+                });
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', async function() {
+            console.log('✅ Dashboard page loaded');
+            
+            // Loading overlay'i göster
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+            
+            initDarkMode();
+            
+            // Supabase yüklenmesini bekle
+            if (typeof window.initSupabase !== 'undefined') {
+                try {
+                    await window.initSupabase();
+                    // SupabaseAuthSystem'in yüklenmesini bekle
+                    let attempts = 0;
+                    while ((!window.supabaseAuthSystem || typeof SupabaseAuthSystem === 'undefined') && attempts < 50) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                    await initDashboard();
+                } catch (error) {
+                    console.error('Dashboard initialization error:', error);
+                    showLoadingError('Dashboard başlatılamadı: ' + (error.message || 'Bilinmeyen hata'));
+                }
+            } else {
+                // initSupabase henüz yüklenmedi, biraz bekle
+                setTimeout(async () => {
+                    if (typeof window.initSupabase !== 'undefined') {
+                        await initDashboard();
+                    } else {
+                        showLoadingError('Supabase yüklenemedi. Lütfen sayfayı yenileyin.');
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Also initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            
+            // Logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+        });
+    </script>
+  <footer class="border-t border-slate-200 bg-white py-14">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
+            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
+          </div>
+          <p class="mt-4 max-w-xs text-sm text-slate-500">
+            Simülasyon tabanlı siber güvenlik eğitimi ve mentor desteği—yapmacık ilerleme yerine ölçülebilir sonuç.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
+              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
+              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="/teslimat-iade" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Teslimat ve iade</a></li>
+              <li><a href="/mesafeli-satis" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Mesafeli satış</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sebs-payment-trust" aria-label="Ödeme yöntemleri">
+        <p class="sebs-payment-trust__label">Güvenli ödeme</p>
+        <img
+          src="/images/payments/iyzico/logo-band-footer.svg"
+          alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
+          width="429"
+          height="32"
+          loading="lazy"
+          class="sebs-payment-trust__band"
+        />
+      </div>
+      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
+        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p class="text-xs text-slate-400">Sivas · Türkiye</p>
+      </div>
+    </div>
+  </footer>
+<script>
+    (function () {
+      document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+        el.textContent = '2025';
+      });
+    })();
+  </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"
+            onerror="this.src='https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js';"></script>
+    <script src="/js/network-utils.js?v=1.0"></script>
+    <script src="/js/supabase-env.js"></script>
+    <script src="/js/supabase-client.js"></script>
+    <script src="/js/supabase-auth.js?v=2.2"></script>
+    <script src="js/navigation.js?v=2.3" defer></script>
+</body>
+</html>

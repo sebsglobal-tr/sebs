@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <base href="/" />
+  <title>SEBS Network Lab 2 - Misafir Ağını Ayır</title>
+  <meta name="description" content="SEBS Network Lab 2: çalışan ve misafir ağını ayır, misafirden sunucu erişimini engelle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .top { height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #334155; background: #111827; }
+    .title { font-size: 18px; font-weight: 700; color: #fff; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .badge { border: 1px solid #475569; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #bfdbfe; }
+    .btn { border: 1px solid #475569; border-radius: 8px; background: #1e293b; color: #fff; padding: 8px 12px; font-weight: 600; cursor: pointer; }
+    .btn.primary { background: #2563eb; border-color: #2563eb; }
+    .layout { display: grid; grid-template-columns: 280px 1fr 340px; height: calc(100vh - 68px); }
+    .panel { background: #111827; border-right: 1px solid #334155; padding: 12px; overflow: auto; }
+    .right { border-right: none; border-left: 1px solid #334155; }
+    .group { color: #93c5fd; font-size: 12px; text-transform: uppercase; margin: 8px 0; }
+    .device { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-bottom: 8px; cursor: grab; }
+    .device:hover { border-color: #3b82f6; }
+    .workspace { position: relative; overflow: hidden; background: radial-gradient(circle at 20% 0%, #172554, #0f172a 55%); }
+    .zone { position: absolute; left: 0; right: 0; height: 50%; pointer-events: none; }
+    .zone.emp { top: 0; background: rgba(16,185,129,.08); border-bottom: 1px dashed rgba(16,185,129,.4); }
+    .zone.guest { bottom: 0; background: rgba(245,158,11,.08); }
+    .zone span { position: absolute; left: 10px; top: 8px; font-size: 12px; font-weight: 700; color: #a7f3d0; }
+    .zone.guest span { color: #fde68a; top: auto; bottom: 8px; }
+    #links { position: absolute; inset: 0; pointer-events: none; }
+    .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(148,163,184,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.12) 1px, transparent 1px); background-size: 36px 36px; pointer-events: none; }
+    .node { position: absolute; min-width: 96px; text-align: center; border-radius: 12px; border: 2px solid #3b82f6; background: #1e293b; padding: 8px; cursor: move; }
+    .node.emp { border-color: #10b981; }
+    .node.guest { border-color: #f59e0b; }
+    .node.sel { box-shadow: 0 0 0 3px rgba(59,130,246,.28); }
+    .ico { font-size: 22px; }
+    .nt { font-size: 12px; font-weight: 700; color: #fff; }
+    .ip { font-size: 11px; color: #86efac; margin-top: 4px; }
+    .task { border: 1px solid #334155; border-radius: 10px; padding: 9px; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
+    .task.ok { border-color: #16a34a; background: rgba(22,163,74,.15); color: #dcfce7; }
+    .msg { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 30; min-width: 380px; max-width: 80vw; border-radius: 10px; padding: 10px 12px; border: 1px solid #334155; background: #0b1220; opacity: 0; transition: opacity .2s; pointer-events: none; }
+    .msg.show { opacity: 1; }
+    .msg.ok { border-color: #16a34a; color: #dcfce7; }
+    .msg.warn { border-color: #f59e0b; color: #fef3c7; }
+    .intro { position: fixed; inset: 0; z-index: 40; background: rgba(2,6,23,.88); display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .intro-card { max-width: 860px; width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 20px; }
+    .intro-card h1 { margin: 0 0 10px; color: #fff; font-size: 28px; }
+    .intro-card p { color: #94a3b8; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="title">SEBS Network Lab 2 · Misafir Ağını Ayır ve Sunucuyu Koru</div>
+    <div class="actions">
+      <span class="badge" id="stageBadge">Aşama 1/2 · Ağları Kur</span>
+      <button class="btn" id="connectBtn">Bağlantı Modu</button>
+      <button class="btn" id="trafficBtn">Trafik: Kapalı</button>
+      <button class="btn primary" id="ruleBtn">Kural: Kapalı</button>
+      <button class="btn" id="testBtn">Test Et</button>
+      <button class="btn" id="resetBtn">Sıfırla</button>
+    </div>
+  </div>
+  <div class="layout">
+    <aside class="panel">
+      <div class="group">Cihaz Havuzu</div>
+      <div class="device" draggable="true" data-type="switch">🧩 Switch</div>
+      <div class="device" draggable="true" data-type="router">📡 Router</div>
+      <div class="device" draggable="true" data-type="pc">💻 PC</div>
+      <div class="device" draggable="true" data-type="laptop">🧳 Laptop</div>
+      <div class="device" draggable="true" data-type="server">🗄️ Yerel Server</div>
+      <div class="device" draggable="true" data-type="ap">📶 Access Point</div>
+    </aside>
+    <main class="workspace" id="workspace">
+      <svg id="links"></svg>
+      <div class="zone emp"><span>Çalışan Ağı</span></div>
+      <div class="zone guest"><span>Misafir Ağı</span></div>
+      <div class="grid"></div>
+    </main>
+    <aside class="panel right">
+      <div class="group">Görevler</div>
+      <div class="task" data-task="1">1) Çalışan ağına 1 switch, 2 PC, 1 server ekle</div>
+      <div class="task" data-task="2">2) Misafir ağına 1 AP ve 1 laptop ekle</div>
+      <div class="task" data-task="3">3) Çalışan cihazlarını switch'e bağla</div>
+      <div class="task" data-task="4">4) Misafir laptopu AP'ye bağla</div>
+      <div class="task" data-task="5">5) Switch ve AP'yi router'a bağla</div>
+      <div class="task" data-task="6">6) IP planı doğru (10.x çalışan, 20.x misafir)</div>
+      <div class="task" data-task="7">7) Misafir -> Local-Server engel kuralını aç</div>
+      <div class="task" data-task="8">8) Testi başarıyla geç</div>
+      <div class="group" style="margin-top: 12px;">Kural Paneli</div>
+      <div style="font-size:13px;color:#94a3b8;line-height:1.5;">
+        Kaynak: <strong>192.168.20.0/24</strong><br />
+        Hedef: <strong>192.168.10.100</strong><br />
+        Aksiyon: <strong>Deny</strong>
+      </div>
+      <div style="font-size:12px;color:#64748b;margin-top:8px;">Kuralı üstteki "Kural: Kapalı/Açık" butonu ile etkinleştir.</div>
+    </aside>
+  </div>
+  <div class="msg" id="msg"></div>
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <h1>SEBS Network Lab 2: Misafir Ağını Ayır ve Sunucuyu Koru</h1>
+      <p>SEBS Academy ofisine ziyaretçiler gelmeye başladı. Çalışanlar şirket içi kaynağa erişebilmeli, misafir kullanıcılar ise yalnızca dış ağa çıkabilmeli. Bu simülasyonda çalışan ağı ile misafir ağını ayıracak, ardından misafir ağının Local-Server erişimini engelleyeceksin.</p>
+      <p><strong style="color:#bfdbfe;">Aşama 1:</strong> İki ağı kur, router ile topolojiyi tamamla. <br />
+      <strong style="color:#bfdbfe;">Aşama 2:</strong> Misafir ağından Local-Server erişimini Deny kuralıyla engelle.</p>
+      <button class="btn primary" id="startBtn">Simülasyonu Başlat</button>
+      <a href="/simulations.html" class="btn" style="text-decoration:none;margin-left:6px;display:inline-block;">Simülasyonlara Dön</a>
+    </div>
+  </div>
+  <script>
+    const workspace = document.getElementById("workspace");
+    const linksSvg = document.getElementById("links");
+    const msgEl = document.getElementById("msg");
+    const stageBadge = document.getElementById("stageBadge");
+    const connectBtn = document.getElementById("connectBtn");
+    const trafficBtn = document.getElementById("trafficBtn");
+    const ruleBtn = document.getElementById("ruleBtn");
+    const testBtn = document.getElementById("testBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const intro = document.getElementById("intro");
+    let devices = [], links = [], moving = null, dragType = null, src = null, id = 1;
+    let connectMode = false, ruleEnabled = false, stage = 1;
+    let trafficOn = false, trafficTimer = null, packets = [], blockedPacket = null;
+    let autoTrafficStarted = false;
+    const c = { switch:0, router:0, pc:0, laptop:0, server:0, ap:0 };
+    const icon = { switch:"🧩", router:"📡", pc:"💻", laptop:"🧳", server:"🗄️", ap:"📶" };
+    const label = { switch:"Switch", router:"Router", pc:"PC", laptop:"Guest-Laptop", server:"Local-Server", ap:"Access Point" };
+    const zone = (y) => y < workspace.clientHeight/2 ? "employee" : "guest";
+    function say(t, m="warn"){ msgEl.textContent=t; msgEl.className=`msg show ${m}`; clearTimeout(say.t); say.t=setTimeout(()=>msgEl.className="msg",2200); }
+    function ip(type, z){ c[type]++; if(type==="router") return z==="employee"?"192.168.10.1":"192.168.20.1"; if(type==="pc") return `192.168.10.${10+c[type]}`; if(type==="server") return "192.168.10.100"; if(type==="switch") return "192.168.10.2"; if(type==="ap") return "192.168.20.2"; if(type==="laptop") return "192.168.20.10"; return "0.0.0.0"; }
+    function connected(a,b){ return links.some(l=>(l.a===a&&l.b===b)||(l.a===b&&l.b===a)); }
+    function handleConnectPick(id){
+      if (!src) {
+        src = id;
+        say("İlk cihaz seçildi. Şimdi hedef cihaza tıkla.", "ok");
+        render();
+        return;
+      }
+      if (src !== id && !connected(src, id)) {
+        links.push({ a: src, b: id });
+        say("Bağlantı eklendi.", "ok");
+      } else if (src === id) {
+        say("Aynı cihaz seçildi, farklı bir hedef seç.", "warn");
+      } else {
+        say("Bu iki cihaz zaten bağlı.", "warn");
+      }
+      src = null;
+      update();
+    }
+    function mark(n,ok){ const t=document.querySelector(`[data-task="${n}"]`); if(ok)t.classList.add("ok"); else t.classList.remove("ok"); }
+    function render(){
+      workspace.querySelectorAll(".node").forEach(n=>n.remove());
+      linksSvg.innerHTML=""; linksSvg.setAttribute("width", workspace.clientWidth); linksSvg.setAttribute("height", workspace.clientHeight);
+      devices.forEach(d=>{
+        const e=document.createElement("div"); e.className=`node ${d.zone==="employee"?"emp":"guest"}`; if(src===d.id)e.classList.add("sel");
+        e.style.left=`${d.x}px`; e.style.top=`${d.y}px`; e.dataset.id=d.id;
+        e.innerHTML=`<div class="ico">${icon[d.type]}</div><div class="nt">${label[d.type]}</div><div class="ip">${d.ip}</div>`;
+        e.addEventListener("mousedown",(ev)=>{ if(connectMode){ handleConnectPick(d.id); return; } moving={id:d.id,ox:ev.offsetX,oy:ev.offsetY}; });
+        workspace.appendChild(e);
+      });
+      links.forEach(l=>{ const a=devices.find(d=>d.id===l.a), b=devices.find(d=>d.id===l.b); if(!a||!b)return; const line=document.createElementNS("http://www.w3.org/2000/svg","line"); line.setAttribute("x1",a.x+44); line.setAttribute("y1",a.y+24); line.setAttribute("x2",b.x+44); line.setAttribute("y2",b.y+24); line.setAttribute("stroke","#22c55e"); line.setAttribute("stroke-width","3"); linksSvg.appendChild(line);});
+      if (trafficOn) {
+        packets.forEach(p => {
+          const a = devices.find(d => d.id === p.a), b = devices.find(d => d.id === p.b);
+          if (!a || !b) return;
+          const cx = (a.x + 44) + ((b.x + 44) - (a.x + 44)) * p.t;
+          const cy = (a.y + 24) + ((b.y + 24) - (a.y + 24)) * p.t;
+          const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", "4.5");
+          dot.setAttribute("fill", p.color);
+          linksSvg.appendChild(dot);
+        });
+      }
+      if (blockedPacket) {
+        const guest = devices.find(d => d.type === "laptop");
+        const server = devices.find(d => d.type === "server");
+        if (guest && server) {
+          const cx = (guest.x + 44) + ((server.x + 44) - (guest.x + 44)) * blockedPacket.t;
+          const cy = (guest.y + 24) + ((server.y + 24) - (guest.y + 24)) * blockedPacket.t;
+          const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", "6");
+          dot.setAttribute("fill", "#ef4444");
+          linksSvg.appendChild(dot);
+          const x = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          x.setAttribute("x", cx + 8); x.setAttribute("y", cy - 8);
+          x.setAttribute("fill", "#fca5a5"); x.setAttribute("font-size", "12");
+          x.textContent = "BLOCKED";
+          linksSvg.appendChild(x);
+        }
+      }
+    }
+    function startTraffic(auto = false) {
+      if (!links.length) { say("Trafik için önce bağlantı kur.", "warn"); return; }
+      trafficOn = true;
+      trafficBtn.textContent = "Trafik: Açık";
+      trafficBtn.style.background = "#16a34a";
+      packets = links.map((l, i) => ({ a: l.a, b: l.b, t: Math.random(), s: 0.01 + (i % 3) * 0.004, color: ["#60a5fa","#fbbf24","#34d399"][i % 3] }));
+      clearInterval(trafficTimer);
+      trafficTimer = setInterval(() => {
+        packets.forEach(p => { p.t += p.s; if (p.t > 1) p.t = 0; });
+        if (blockedPacket) { blockedPacket.t += 0.03; if (blockedPacket.t > 1) blockedPacket = null; }
+        render();
+      }, 35);
+      if (!auto) say("Trafik simülasyonu başlatıldı.", "ok");
+    }
+    function stopTraffic(silent=false) {
+      trafficOn = false; packets = []; blockedPacket = null;
+      clearInterval(trafficTimer); trafficTimer = null;
+      trafficBtn.textContent = "Trafik: Kapalı";
+      trafficBtn.style.background = "#1e293b";
+      render();
+      if (!silent) say("Trafik simülasyonu durduruldu.");
+    }
+    function update(){
+      const emp=(t)=>devices.filter(d=>d.zone==="employee"&&d.type===t).length;
+      const guest=(t)=>devices.filter(d=>d.zone==="guest"&&d.type===t).length;
+      mark(1, emp("switch")>=1 && emp("pc")>=2 && emp("server")>=1);
+      mark(2, guest("ap")>=1 && guest("laptop")>=1);
+      const sw=devices.find(d=>d.zone==="employee"&&d.type==="switch"); const pcs=devices.filter(d=>d.zone==="employee"&&["pc","server"].includes(d.type));
+      mark(3, !!(sw && pcs.length===3 && pcs.every(d=>connected(sw.id,d.id))));
+      const ap=devices.find(d=>d.zone==="guest"&&d.type==="ap"); const gl=devices.find(d=>d.zone==="guest"&&d.type==="laptop");
+      mark(4, !!(ap&&gl&&connected(ap.id,gl.id)));
+      const re=devices.find(d=>d.type==="router"&&d.zone==="employee"); const rg=devices.find(d=>d.type==="router"&&d.zone==="guest");
+      mark(5, !!(re&&rg&&sw&&ap&&connected(sw.id,re.id)&&connected(ap.id,rg.id)));
+      const ipsOk=devices.every(d=>d.zone==="employee" ? d.ip.startsWith("192.168.10.") : d.ip.startsWith("192.168.20."));
+      mark(6, ipsOk);
+      mark(7, ruleEnabled);
+      blockedPacket = ruleEnabled ? (blockedPacket || { t: 0 }) : null;
+      if ([1,2,3,4,5,6].every(n=>document.querySelector(`[data-task="${n}"]`).classList.contains("ok")) && stage===1) {
+        stage=2;
+        stageBadge.textContent="Aşama 2/2 · Erişimi Kısıtla";
+        say("Aşama 2 aktif: Misafir -> Local-Server deny kuralını aç.", "ok");
+        if (!trafficOn && !autoTrafficStarted) {
+          autoTrafficStarted = true;
+          startTraffic(true);
+          say("Aşama 1 tamamlandı. Trafik otomatik başlatıldı.", "ok");
+        }
+      }
+      render();
+    }
+    document.querySelectorAll(".device").forEach(d=>d.addEventListener("dragstart",()=>dragType=d.dataset.type));
+    workspace.addEventListener("dragover",(e)=>e.preventDefault());
+    workspace.addEventListener("drop",(e)=>{
+      e.preventDefault(); const r=workspace.getBoundingClientRect(); const y=e.clientY-r.top-24; const z=zone(y);
+      if (dragType==="router" && ((z==="employee"&&devices.some(d=>d.type==="router"&&d.zone==="employee"))||(z==="guest"&&devices.some(d=>d.type==="router"&&d.zone==="guest")))) { say("Her ağ için tek router arayüzü ekle.", "warn"); return; }
+      if (dragType!=="router" && stage===2 && (dragType==="switch"||dragType==="pc"||dragType==="server"||dragType==="ap"||dragType==="laptop")) { say("Aşama 2'de yeni uç cihaz değil, kural yapılandırması bekleniyor."); }
+      const d={ id:id++, type:dragType, x:e.clientX-r.left-44, y, zone:z, ip:ip(dragType,z) }; devices.push(d); update(); say(`${label[d.type]} ${z==="employee"?"Çalışan":"Misafir"} ağına eklendi.`, "ok");
+    });
+    window.addEventListener("mousemove",(e)=>{ if(!moving)return; const r=workspace.getBoundingClientRect(); const d=devices.find(x=>x.id===moving.id); if(!d)return; d.x=Math.max(0,Math.min(r.width-100,e.clientX-r.left-moving.ox)); d.y=Math.max(0,Math.min(r.height-60,e.clientY-r.top-moving.oy)); d.zone=zone(d.y); if(d.type==="router") d.ip=ip("router",d.zone); update(); });
+    window.addEventListener("mouseup",()=>moving=null);
+    connectBtn.addEventListener("click",()=>{ connectMode=!connectMode; src=null; connectBtn.style.background=connectMode?"#16a34a":"#1e293b"; connectBtn.textContent=connectMode?"Bağlantı: Aktif":"Bağlantı Modu"; say(connectMode?"Bağlantı modu açıldı.":"Bağlantı modu kapatıldı.",connectMode?"ok":"warn"); render(); });
+    trafficBtn.addEventListener("click",()=>{ if (trafficOn) stopTraffic(); else startTraffic(); });
+    ruleBtn.addEventListener("click",()=>{ if(stage<2){ say("Önce Aşama 1 kurulumunu tamamla."); return; } ruleEnabled=!ruleEnabled; ruleBtn.textContent=`Kural: ${ruleEnabled?"Açık":"Kapalı"}`; ruleBtn.style.background=ruleEnabled?"#16a34a":"#2563eb"; mark(7,ruleEnabled); say(ruleEnabled?"Misafir -> Local-Server engeli aktif.":"Engel kuralı kapatıldı.",ruleEnabled?"ok":"warn"); });
+    testBtn.addEventListener("click",()=>{
+      const ready=[1,2,3,4,5,6,7].every(n=>document.querySelector(`[data-task="${n}"]`).classList.contains("ok"));
+      if(!ready){ say("Test başarısız: topoloji/IP/kural adımlarında eksik var."); return; }
+      blockedPacket = { t: 0 };
+      mark(8,true); say("Test başarılı: Çalışan erişimi var, misafir server erişimi engelli.", "ok");
+    });
+    resetBtn.addEventListener("click",()=>{ stopTraffic(true); devices=[]; links=[]; moving=null; dragType=null; src=null; connectMode=false; ruleEnabled=false; stage=1; autoTrafficStarted=false; stageBadge.textContent="Aşama 1/2 · Ağları Kur"; id=1; Object.keys(c).forEach(k=>c[k]=0); document.querySelectorAll(".task").forEach(t=>t.classList.remove("ok")); connectBtn.style.background="#1e293b"; connectBtn.textContent="Bağlantı Modu"; ruleBtn.style.background="#2563eb"; ruleBtn.textContent="Kural: Kapalı"; render(); say("Simülasyon sıfırlandı."); });
+    document.getElementById("startBtn").addEventListener("click",()=>intro.style.display="none");
+    window.addEventListener("resize",render);
+  </script>
+<script src="/simulation/simulation-access-check.js"></script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+{
+  "performance": {
+    "queryTimes": [
+      {
+        "name": "User Lookup by Email",
+        "description": "Email ile kullanıcı arama - index kullanımı testi (optimized)",
+        "executionTime": 115,
+        "rowCount": 0,
+        "status": "WARNING"
+      },
+      {
+        "name": "User Progress Query",
+        "description": "Kullanıcı ilerleme sorgusu - JOIN performansı (optimized - SELECT *)",
+        "executionTime": 117,
+        "rowCount": 0,
+        "status": "WARNING"
+      },
+      {
+        "name": "Enrollments Count",
+        "description": "Aktif kayıt sayısı - aggregate performansı (partial index kullanıyor)",
+        "executionTime": 114,
+        "rowCount": 1,
+        "status": "WARNING"
+      },
+      {
+        "name": "Module Completion Stats",
+        "description": "Modül tamamlama istatistikleri - GROUP BY performansı (optimized)",
+        "executionTime": 132,
+        "rowCount": 20,
+        "status": "WARNING"
+      },
+      {
+        "name": "Recent Activity Query",
+        "description": "Son aktiviteler - sıralama ve JOIN performansı (optimized - SELECT *)",
+        "executionTime": 116,
+        "rowCount": 0,
+        "status": "WARNING"
+      }
+    ],
+    "indexUsage": [
+      {
+        "table": "modules",
+        "index": "idx_modules_course_id",
+        "size": "32 kB",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "entitlements",
+        "index": "idx_entitlements_user_id",
+        "size": "16 kB",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "user_package_purchases",
+        "index": "idx_user_package_purchases_user_id",
+        "size": "16 kB",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "refresh_tokens",
+        "index": "idx_refresh_tokens_user_id",
+        "size": "16 kB",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "user_package_purchases",
+        "index": "idx_user_package_purchases_package_id",
+        "size": "16 kB",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "subscriptions",
+        "index": "idx_subscriptions_user_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "payments",
+        "index": "idx_payments_subscription_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "enrollments",
+        "index": "idx_enrollments_is_active",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "job_applications",
+        "index": "idx_job_applications_user_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "company_recommendations",
+        "index": "idx_company_recommendations_company_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "job_applications",
+        "index": "idx_job_applications_job_posting_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "module_progress",
+        "index": "idx_module_progress_user_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "module_progress",
+        "index": "idx_module_progress_module_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "module_progress",
+        "index": "idx_module_progress_user_last_accessed",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "notifications",
+        "index": "idx_notifications_user_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "simulation_runs",
+        "index": "idx_simulation_runs_module_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "bootcamp_applications",
+        "index": "idx_bootcamp_applications_bootcamp_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "company_recommendations",
+        "index": "idx_company_recommendations_bootcamp_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "simulation_runs",
+        "index": "idx_simulation_runs_user_created",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "bootcamp_applications",
+        "index": "idx_bootcamp_applications_user_id",
+        "size": "8192 bytes",
+        "usageCount": 0,
+        "status": "UNUSED",
+        "recommendation": "Bu index güvenle kaldırılabilir - performans iyileştirmesi sağlar"
+      },
+      {
+        "table": "modules",
+        "index": "modules_pkey",
+        "size": "48 kB",
+        "usageCount": "11",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      },
+      {
+        "table": "job_applications",
+        "index": "job_applications_user_id_job_posting_id_key",
+        "size": "8192 bytes",
+        "usageCount": "3",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      },
+      {
+        "table": "bootcamp_applications",
+        "index": "bootcamp_applications_user_id_bootcamp_id_key",
+        "size": "8192 bytes",
+        "usageCount": "3",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      },
+      {
+        "table": "simulation_runs",
+        "index": "idx_simulation_runs_user_id",
+        "size": "8192 bytes",
+        "usageCount": "3",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      },
+      {
+        "table": "intern_pool",
+        "index": "intern_pool_user_id_key",
+        "size": "8192 bytes",
+        "usageCount": "3",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      },
+      {
+        "table": "user_package_purchases",
+        "index": "user_package_purchases_user_id_package_id_key",
+        "size": "16 kB",
+        "usageCount": "3",
+        "status": "USED",
+        "recommendation": "Bu index aktif kullanılıyor - korunmalı"
+      }
+    ],
+    "tableStats": [
+      {
+        "table": "modules",
+        "totalSize": "200 kB",
+        "tableSize": "80 kB",
+        "indexesSize": "120 kB",
+        "rowCount": 396,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.104Z",
+        "lastAnalyze": "2026-01-10T15:12:13.107Z"
+      },
+      {
+        "table": "user_package_purchases",
+        "totalSize": "112 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "104 kB",
+        "rowCount": 1,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.497Z",
+        "lastAnalyze": "2026-01-10T15:12:13.498Z"
+      },
+      {
+        "table": "refresh_tokens",
+        "totalSize": "96 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "88 kB",
+        "rowCount": 4,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.460Z",
+        "lastAnalyze": "2026-01-10T15:12:13.461Z"
+      },
+      {
+        "table": "entitlements",
+        "totalSize": "96 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "88 kB",
+        "rowCount": 1,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.509Z",
+        "lastAnalyze": "2026-01-10T15:12:13.510Z"
+      },
+      {
+        "table": "users",
+        "totalSize": "96 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "88 kB",
+        "rowCount": 4,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.489Z",
+        "lastAnalyze": "2026-01-10T15:12:13.490Z"
+      },
+      {
+        "table": "courses",
+        "totalSize": "80 kB",
+        "tableSize": "24 kB",
+        "indexesSize": "56 kB",
+        "rowCount": 110,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.102Z",
+        "lastAnalyze": "2026-01-10T15:12:13.103Z"
+      },
+      {
+        "table": "packages",
+        "totalSize": "80 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "72 kB",
+        "rowCount": 3,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.487Z",
+        "lastAnalyze": "2026-01-10T15:12:13.488Z"
+      },
+      {
+        "table": "_prisma_migrations",
+        "totalSize": "64 kB",
+        "tableSize": "8192 bytes",
+        "indexesSize": "56 kB",
+        "rowCount": 4,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.468Z",
+        "lastAnalyze": "2026-01-10T15:12:13.468Z"
+      },
+      {
+        "table": "module_progress",
+        "totalSize": "56 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "56 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.438Z",
+        "lastAnalyze": "2026-01-10T15:12:13.439Z"
+      },
+      {
+        "table": "security_logs",
+        "totalSize": "48 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "48 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.506Z",
+        "lastAnalyze": "2026-01-10T15:12:13.507Z"
+      },
+      {
+        "table": "enrollments",
+        "totalSize": "48 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "48 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.101Z",
+        "lastAnalyze": "2026-01-10T15:12:13.102Z"
+      },
+      {
+        "table": "bootcamp_applications",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.449Z",
+        "lastAnalyze": "2026-01-10T15:12:13.450Z"
+      },
+      {
+        "table": "company_recommendations",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.397Z",
+        "lastAnalyze": "2026-01-10T15:12:13.398Z"
+      },
+      {
+        "table": "job_applications",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.401Z",
+        "lastAnalyze": "2026-01-10T15:12:13.401Z"
+      },
+      {
+        "table": "ai_analysis",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.502Z",
+        "lastAnalyze": "2026-01-10T15:12:13.503Z"
+      },
+      {
+        "table": "skill_scores",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.493Z",
+        "lastAnalyze": "2026-01-10T15:12:13.494Z"
+      },
+      {
+        "table": "simulation_runs",
+        "totalSize": "40 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "40 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.454Z",
+        "lastAnalyze": "2026-01-10T15:12:13.455Z"
+      },
+      {
+        "table": "intern_pool",
+        "totalSize": "32 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "32 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.457Z",
+        "lastAnalyze": "2026-01-10T15:12:13.457Z"
+      },
+      {
+        "table": "payments",
+        "totalSize": "32 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "32 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.120Z",
+        "lastAnalyze": "2026-01-10T15:12:13.121Z"
+      },
+      {
+        "table": "purchases",
+        "totalSize": "32 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "32 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.513Z",
+        "lastAnalyze": "2026-01-10T15:12:13.514Z"
+      },
+      {
+        "table": "behavior_data",
+        "totalSize": "32 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "32 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.482Z",
+        "lastAnalyze": "2026-01-10T15:12:13.483Z"
+      },
+      {
+        "table": "subscriptions",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.123Z",
+        "lastAnalyze": "2026-01-10T15:12:13.124Z"
+      },
+      {
+        "table": "certificates",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.459Z",
+        "lastAnalyze": "2026-01-10T15:12:13.460Z"
+      },
+      {
+        "table": "ai_cache",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.451Z",
+        "lastAnalyze": "2026-01-10T15:12:13.452Z"
+      },
+      {
+        "table": "companies",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.484Z",
+        "lastAnalyze": "2026-01-10T15:12:13.485Z"
+      },
+      {
+        "table": "job_postings",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.479Z",
+        "lastAnalyze": "2026-01-10T15:12:13.480Z"
+      },
+      {
+        "table": "notifications",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.117Z",
+        "lastAnalyze": "2026-01-10T15:12:13.118Z"
+      },
+      {
+        "table": "rate_limits",
+        "totalSize": "24 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "24 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.518Z",
+        "lastAnalyze": "2026-01-10T15:12:13.518Z"
+      },
+      {
+        "table": "bootcamps",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.453Z",
+        "lastAnalyze": "2026-01-10T15:12:13.454Z"
+      },
+      {
+        "table": "maintenance_log",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.521Z",
+        "lastAnalyze": "2026-01-10T15:12:13.522Z"
+      },
+      {
+        "table": "backup_metadata",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.515Z",
+        "lastAnalyze": "2026-01-10T15:12:13.516Z"
+      },
+      {
+        "table": "connection_monitor",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.519Z",
+        "lastAnalyze": "2026-01-10T15:12:13.520Z"
+      },
+      {
+        "table": "slow_queries",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.522Z",
+        "lastAnalyze": "2026-01-10T15:12:13.523Z"
+      },
+      {
+        "table": "analytics",
+        "totalSize": "16 kB",
+        "tableSize": "0 bytes",
+        "indexesSize": "16 kB",
+        "rowCount": 0,
+        "deadRows": 0,
+        "deadRatio": 0,
+        "lastVacuum": "2026-01-10T15:12:13.473Z",
+        "lastAnalyze": "2026-01-10T15:12:13.474Z"
+      }
+    ],
+    "issues": [
+      {
+        "severity": "LOW",
+        "issue": "20 kullanılmayan normal index var",
+        "recommendation": "Bu index'ler kaldırılarak yazma performansı artırılabilir"
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "MEDIUM",
+        "recommendation": "20 kullanılmayan index var - kaldırarak yazma performansını artırabilirsiniz"
+      }
+    ]
+  },
+  "security": {
+    "rlsPolicies": [
+      {
+        "table": "users",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "purchases",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "module_progress",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "enrollments",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "certificates",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "entitlements",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "simulation_runs",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "behavior_data",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "skill_scores",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "ai_analysis",
+        "enabled": true,
+        "status": "PASS"
+      },
+      {
+        "table": "security_logs",
+        "enabled": true,
+        "status": "PASS"
+      }
+    ],
+    "passwordSecurity": [
+      {
+        "check": "Password Hashing",
+        "status": "PASS",
+        "details": "All passwords are bcrypt hashed"
+      }
+    ],
+    "sqlInjection": [
+      {
+        "check": "Database Functions",
+        "status": "PASS",
+        "details": "0 potansiyel riskli fonksiyon"
+      }
+    ],
+    "accessControl": [
+      {
+        "check": "RLS Policies",
+        "totalPolicies": 34,
+        "permissivePolicies": 0,
+        "status": "PASS"
+      }
+    ],
+    "issues": [],
+    "recommendations": []
+  },
+  "summary": {
+    "totalTests": 79,
+    "passed": 19,
+    "failed": 0,
+    "warnings": 5,
+    "startTime": "2026-01-10T15:12:43.836Z",
+    "endTime": "2026-01-10T15:12:47.679Z",
+    "duration": 3843
+  }
+}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+    <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+    <base href="/">
+    <title>PDF Oluşturucu - SEBS Global</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #667eea;
+        }
+        h2 {
+            color: #764ba2;
+            margin-top: 30px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+    
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0c1222',
+            surface: '#f4f6fa',
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+            'glow': '0 0 0 1px rgb(15 23 42 / 0.06)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/css/saas-landing.css" />
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=9" />
+  <link rel="stylesheet" href="/css/sebs-premium-theme.css?v=3" />
+
+</head>
+<body class="sebs-premium-site landing-site-body font-sans text-slate-800 antialiased bg-white">
+<header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+    <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
+      <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+      <span class="landing-brand-wordmark">SEBS</span>
+    </a>
+    <nav class="landing-nav--compact hidden flex items-center gap-5 xl:flex" aria-label="Ana menü">
+      <a href="/modules.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Eğitim modülleri</a>
+      <a href="/simulations.html" class="text-sm font-semibold text-blue-700 transition hover:text-blue-900 focus-ring rounded">Simülasyonlar</a>
+      <a href="/#features" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Özellikler</a>
+      <a href="/#how" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Nasıl çalışır</a>
+      <a href="/#audience" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kimler için</a>
+    </nav>
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <a href="/contact.html" class="landing-nav-contact hidden rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-ring lg:inline xl:px-4 xl:text-sm">Bize ulaşın</a>
+      <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+      <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+      <div id="userProfile" class="hidden max-w-[10rem] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 transition hover:border-slate-300 hover:bg-slate-100 focus-ring sm:max-w-[12rem]" style="display: none;" role="link" tabindex="0" title="Panele git">
+        <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+        <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+      </div>
+      <button type="button" id="logoutBtn" class="hidden rounded-full border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-ring sm:px-3 sm:text-sm" style="display: none;">Çıkış</button>
+      <details class="relative xl:hidden">
+        <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+          Menü
+        </summary>
+        <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+          <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+          <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+          <hr class="my-1 border-slate-100" />
+          <a href="/#features" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Özellikler</a>
+          <a href="/#how" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Nasıl çalışır</a>
+          <a href="/#audience" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Kimler için</a>
+          <hr class="my-1 border-slate-100" />
+          <div id="mobileGuestLinks">
+            <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+            <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+          </div>
+          <div id="mobileUserLinks" style="display: none;">
+                        <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+          </div>
+          <a href="/contact.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Bize ulaşın</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<h1>📥 SEBS Global - Dosya İndirme Merkezi</h1>
+    
+    <div class="section">
+        <h2>📊 Proje Özeti</h2>
+        <p><strong>Dosya:</strong> PROJE_OZETI.md</p>
+        <p>Projenin gün gün geliştirme özeti, teknik detaylar ve istatistikler.</p>
+        <a href="PROJE_OZETI.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>🎤 Sunum İçeriği</h2>
+        <p><strong>Dosya:</strong> SUNUM_İÇERİĞİ.md</p>
+        <p>Sunum için hazırlanmış içerik ve notlar.</p>
+        <a href="SUNUM_İÇERİĞİ.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>🖥️ Sunum Slaytları</h2>
+        <p><strong>Dosya:</strong> SEBS_Global_Sunum.html</p>
+        <p>8 slaytlık interaktif sunum. PDF'e çevirmek için:</p>
+        <ol>
+            <li>Dosyayı tarayıcıda açın</li>
+            <li><code>Ctrl+P</code> (Windows) veya <code>Cmd+P</code> (Mac) basın</li>
+            <li>"Hedef: PDF olarak kaydet" seçin</li>
+            <li>"Sayfa yönlendirme: Yatay" seçin</li>
+            <li>Kaydet</li>
+        </ol>
+        <a href="SEBS_Global_Sunum.html" class="download-btn" target="_blank">🖼️ Sunumu Aç</a>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Sistem Kontrol Raporu</h2>
+        <p><strong>Dosya:</strong> SYSTEM_AUDIT_REPORT.md</p>
+        <p>Production hazırlık kontrolü ve gereksiz dosya raporu.</p>
+        <a href="SYSTEM_AUDIT_REPORT.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>📋 Yorum Satırları Raporu</h2>
+        <p><strong>Dosya:</strong> YORUM_SATIRLARI_RAPORU.md</p>
+        <p>Tüm kod dosyalarındaki yorum ve console.log analizi.</p>
+        <a href="YORUM_SATIRLARI_RAPORU.md" class="download-btn" download>📄 İndir (Markdown)</a>
+    </div>
+
+    <div class="section">
+        <h2>💡 PDF Oluşturma Notları</h2>
+        <p><strong>Sunum için PDF:</strong></p>
+        <ol>
+            <li><code>SEBS_Global_Sunum.html</code> dosyasını Chrome/Edge'de açın</li>
+            <li><code>Ctrl+P</code> veya <code>Cmd+P</code> ile print dialog'u açın</li>
+            <li><strong>Hedef:</strong> "PDF olarak kaydet" seçin</li>
+            <li><strong>Sayfa:</strong> "Tümü" seçin</li>
+            <li><strong>Yönlendirme:</strong> "Yatay" seçin</li>
+            <li><strong>Kenar Boşlukları:</strong> "Yok" seçin</li>
+            <li>"Seçenekler" bölümünde "Arka plan grafikleri" işaretleyin</li>
+            <li>"Kaydet" butonuna tıklayın</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📂 Tüm Dosyalar</h2>
+        <p>Aşağıdaki komutla tüm raporları tek seferde indirebilirsiniz:</p>
+        <code style="display: block; padding: 10px; background: #1e293b; color: #fff; border-radius: 5px;">
+            # Terminal'de çalıştırın:<br>
+            wget https://your-domain.com/PROJE_OZETI.md<br>
+            wget https://your-domain.com/SUNUM_İÇERİĞİ.md<br>
+            wget https://your-domain.com/SEBS_Global_Sunum.html
+        </code>
+    </div>
+  <footer class="border-t border-slate-200 bg-white py-14">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" class="rounded-lg" />
+            <span class="text-lg font-bold text-slate-900">SEBS Global</span>
+          </div>
+          <p class="mt-4 max-w-xs text-sm text-slate-500">
+            Simülasyon tabanlı siber güvenlik eğitimi ve mentor desteği—yapmacık ilerleme yerine ölçülebilir sonuç.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ürün</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/modules.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Eğitim modülleri</a></li>
+              <li><a href="/simulations.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Simülasyonlar</a></li>
+              <li><a href="/pricing.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Paketler</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kurumsal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/about.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Hakkımızda</a></li>
+              <li><a href="/contact.html" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">İletişim</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Yasal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="/gizlilik" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Gizlilik</a></li>
+              <li><a href="/kullanim-sartlari" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Kullanım şartları</a></li>
+              <li><a href="/teslimat-iade" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Teslimat ve iade</a></li>
+              <li><a href="/mesafeli-satis" class="text-slate-600 transition hover:text-slate-900 focus-ring rounded">Mesafeli satış</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sebs-payment-trust" aria-label="Ödeme yöntemleri">
+        <p class="sebs-payment-trust__label">Güvenli ödeme</p>
+        <img
+          src="/images/payments/iyzico/logo-band-footer.svg"
+          alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar"
+          width="429"
+          height="32"
+          loading="lazy"
+          class="sebs-payment-trust__band"
+        />
+      </div>
+      <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-slate-100 pt-8 sm:flex-row sm:items-center">
+        <p class="text-xs text-slate-400">© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p class="text-xs text-slate-400">Sivas · Türkiye</p>
+      </div>
+    </div>
+  </footer>
+<script>
+    (function () {
+      document.querySelectorAll('.landing-footer-year').forEach(function (el) {
+        el.textContent = '2025';
+      });
+    })();
+  </script>
+    <script src="/js/saas-shell.js"></script>
+</body>
+</html>
+

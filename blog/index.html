@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/blog-theme-boot.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Blog | SEBS — siber güvenlik rehberleri ve kariyer notları</title>
+  <meta name="description" content="Kısa teknik rehberler (SOC, bulut, web güvenliği, CTF) ile eğitim ve iş geçişine dair okunabilir notlar.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://sebsglobal.com/blog">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sebsglobal.com/blog">
+  <meta property="og:title" content="Blog | SEBS">
+  <meta property="og:description" content="Siber güvenlik kılavuzları ve kariyer notları — modüllerle uyumlu, doğrudan yazılar.">
+  <meta property="og:image" content="https://sebsglobal.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog | SEBS">
+  <meta name="twitter:description" content="Rehber yazılar ve kariyer notları.">
+  <meta name="twitter:image" content="https://sebsglobal.com/og-image.jpg">
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://sebsglobal.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://sebsglobal.com/blog"}]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#0c1222',
+            surface: '#f4f6fa',
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04)',
+            'card-hover': '0 20px 40px -12px rgb(15 23 42 / 0.12), 0 8px 16px -8px rgb(15 23 42 / 0.08)',
+            'glow': '0 0 0 1px rgb(15 23 42 / 0.06)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/saas-landing.css">
+  <link rel="stylesheet" href="/css/landing-chrome.css?v=9">
+  <link rel="stylesheet" href="/css/blog-premium.css?v=6">
+  <link rel="stylesheet" href="/css/sebs-premium-theme.css?v=3" />
+</head>
+<body class="sebs-premium-site landing-site-body blog-premium-page font-sans text-slate-800 antialiased bg-white">
+    <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+      <a href="/" class="landing-brand-link flex shrink-0 items-center gap-2 focus-ring rounded-lg">
+        <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+        <span class="landing-brand-wordmark">SEBS</span>
+      </a>
+      <nav class="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex" aria-label="Ana menü">
+        <a href="/" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Ana sayfa</a>
+        <div class="relative z-[55]" id="navPlatformWrap">
+          <button type="button" id="navPlatformTrigger" class="landing-nav-pill-link landing-nav-pill-link--platform nav-platform-trigger inline-flex items-center gap-0.5 border-0 bg-transparent focus-ring" aria-expanded="false" aria-haspopup="menu" aria-controls="navPlatformPanel" aria-label="Platform menüsü">Platform<span class="nav-platform-chevron text-[0.7rem] leading-none opacity-75" aria-hidden="true">▾</span></button>
+          <div id="navPlatformPanel" class="nav-platform-dropdown absolute left-1/2 top-full z-[60] mt-2 hidden w-56 -translate-x-1/2 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
+            <a href="/modules.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Eğitim modülleri</a>
+            <a href="/simulations.html" class="block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Simülasyonlar</a>
+          </div>
+        </div>
+        <a href="/pricing.html" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring">Paketler</a>
+        <a href="/isverenler.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İşverenler İçin</a>
+        <a href="/blog" class="landing-nav-pill-link landing-nav-pill-link--accent focus-ring" aria-current="page">Blog</a>
+        <a href="/hakkimizda" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">Hakkımızda</a>
+        <a href="/contact.html" class="landing-nav-pill-link landing-nav-pill-link--muted focus-ring">İletişim</a>
+      </nav>
+      <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <a href="/login.html" id="loginBtn" class="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 md:inline focus-ring rounded px-2 py-1">Giriş</a>
+        <a href="/signup.html" id="signupBtn" class="rounded-full bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-ring sm:px-4 sm:text-sm">Ücretsiz başla</a>
+        <div id="userProfile" class="relative hidden max-w-[10rem] sm:max-w-[12rem]" style="display: none;">
+          <button type="button" id="userProfileTrigger" class="flex w-full max-w-full cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1 pr-2.5 text-left transition hover:border-slate-300 hover:bg-slate-100 focus-ring outline-none sm:max-w-[12rem]" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
+            <span id="userAvatar" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800" aria-hidden="true">K</span>
+            <span id="userName" class="truncate text-xs font-semibold text-slate-800 sm:text-sm">Kullanıcı</span>
+          </button>
+          <div id="userAccountPanel" class="user-account-dropdown absolute right-0 top-full z-[60] mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg" role="menu" hidden>
+            <a href="/dashboard.html" class="user-dashboard-link block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring" role="menuitem">Profilim</a>
+            <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-2.5" role="none">
+              <span class="text-sm text-slate-600">Gece modu</span>
+              <div id="userMenuThemeMount" class="flex shrink-0 items-center justify-end"></div>
+            </div>
+            <button type="button" id="logoutBtn" class="hidden w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-ring" style="display: none;" role="menuitem">Çıkış yap</button>
+          </div>
+        </div>
+        <details class="relative xl:hidden">
+          <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-700 shadow-sm sm:px-3 sm:text-sm [&::-webkit-details-marker]:hidden">
+            Menü
+          </summary>
+          <div class="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+            <a href="/" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Ana sayfa</a>
+            <div class="landing-nav-drawer-heading px-4 pb-1 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Platform</div>
+            <a href="/modules.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Eğitim modülleri</a>
+            <a href="/simulations.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Simülasyonlar</a>
+            <hr class="my-1 border-slate-100" />
+            <a href="/pricing.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50">Paketler</a>
+            <a href="/isverenler.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İşverenler İçin</a>
+            <a href="/blog" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50" aria-current="page">Blog</a>
+            <a href="/hakkimizda" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Hakkımızda</a>
+            <a href="/contact.html" class="landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">İletişim</a>
+            <hr class="my-1 border-slate-100" />
+            <div id="mobileGuestLinks">
+              <a href="/login.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Giriş</a>
+              <a href="/signup.html" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">Ücretsiz başla</a>
+            </div>
+            <div id="mobileUserLinks" style="display: none;">
+              <button type="button" class="btn-logout block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">Çıkış</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </header>
+
+<main class="blog-shell blog-shell--listing">
+    <section class="blog-hero blog-hero--editorial" aria-labelledby="blog-index-title">
+      <div class="blog-hero-copy">
+        <p class="blog-hero-eyebrow blog-hero-eyebrow--muted">SEBS blog</p>
+        <h1 id="blog-index-title" class="blog-index-headline">Okuma listesi</h1>
+        <p class="blog-hero-lead blog-hero-lead--on-light">Burada iki tür yazı var: siber güvenliğe dair kısa rehberler ve eğitim ile iş hayatı arasındaki geçişlere dair notlar. Uzun tanıtım metni yok; modüllerde gördüğünüz kavramların yanına koyabileceğiniz referans metinler.</p>
+        <nav class="blog-index-skip" aria-label="Bölümlere git">
+          <a href="#rehberler">Teknik rehberler</a>
+          <a href="#kariyer">Kariyer notları</a>
+          <a href="/modules.html">Eğitim modülleri</a>
+        </nav>
+      </div>
+      <p class="blog-index-note" role="note">Kariyer bölümündeki yazılar tek bir kişinin birebir öyküsü değil; eğitim ve mentorlukta sık duyduğumuz sorulardan türetilmiş, anonimleştirilmiş örneklerdir. Yine de içlerindeki ritim ve hazırlık adımları gerçek mülakat ve işe giriş süreçlerine paralel.</p>
+    </section>
+
+    <h2 id="rehberler" class="blog-section-title blog-section-title--anchor"><span class="blog-section-title-text">Siber güvenlik — kısa rehberler</span></h2>
+    <p class="blog-section-lead">SOC, bulut, web güvenliği ve CTF gibi konularda tek seferde okunup kenara not alınabilecek yazılar.</p>
+    <ul class="blog-index-list" aria-label="Teknik rehber yazıları">
+      <li>
+        <a href="/blog/siber-guvenlige-nereden-baslanir" class="blog-index-list-hit"><span class="blog-index-list-title">Siber güvenliğe nereden başlanır?</span><span class="blog-index-list-meta">~8 dk</span></a>
+        <p class="blog-index-list-dek">Alan seçimi, ilk araçlar ve “her şeyi aynı anda” tuzağından kaçınmak.</p>
+      </li>
+      <li>
+        <a href="/blog/yeni-baslayanlar-icin-siber-guvenlik-yol-haritasi" class="blog-index-list-hit"><span class="blog-index-list-title">Yeni başlayanlar için yol haritası</span><span class="blog-index-list-meta">~10 dk</span></a>
+        <p class="blog-index-list-dek">Sıfırdan SOC veya ofansif güvenlik tarafına giderken haftalık tempoya dair iskelet plan.</p>
+      </li>
+      <li>
+        <a href="/blog/siber-guvenlik-ogrenmek-icin-temel-kavramlar" class="blog-index-list-hit"><span class="blog-index-list-title">Öğrenmek için temel kavramlar</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">CIA üçlüsü, tehdit modeli ve erişim katmanları — sonrasında her şey buna bağlanıyor.</p>
+      </li>
+      <li>
+        <a href="/blog/soc-analisti-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">SOC analisti nedir?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Günlük iş, SIEM ve playbook tarafı; role hazırlanırken nelere bakılır.</p>
+      </li>
+      <li>
+        <a href="/blog/blue-team-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Blue team nedir?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Savunma hattı, olay müdahalesi ve iz sürmeyi kimin yürüttüğü.</p>
+      </li>
+      <li>
+        <a href="/blog/red-team-ve-blue-team-farki" class="blog-index-list-hit"><span class="blog-index-list-title">Red team ve blue team farkı</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">İki tarafın hedefi; purple team ile birlikte pratik yapmanın anlamı.</p>
+      </li>
+      <li>
+        <a href="/blog/web-uygulama-guvenligi-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Web uygulama güvenliği nedir?</span><span class="blog-index-list-meta">~8 dk</span></a>
+        <p class="blog-index-list-dek">Geliştirici ve güvenlik tarafı için OWASP çerçevesinde kısa özet.</p>
+      </li>
+      <li>
+        <a href="/blog/cloud-security-nedir" class="blog-index-list-hit"><span class="blog-index-list-title">Cloud security nedir?</span><span class="blog-index-list-meta">~7 dk</span></a>
+        <p class="blog-index-list-dek">Paylaşılan sorumluluk modeli ve yapılandırma hatalarının gerçek dünyadaki yeri.</p>
+      </li>
+      <li>
+        <a href="/blog/ctf-nedir-ve-nasil-baslanir" class="blog-index-list-hit"><span class="blog-index-list-title">CTF nedir, nasıl başlanır?</span><span class="blog-index-list-meta">~6 dk</span></a>
+        <p class="blog-index-list-dek">Yarışma formatı ve pratik beceriyi birlikte götürmenin yolu.</p>
+      </li>
+      <li>
+        <a href="/blog/uygulamali-siber-guvenlik-egitimi-neden-onemlidir" class="blog-index-list-hit"><span class="blog-index-list-title">Uygulamalı eğitim neden önemli?</span><span class="blog-index-list-meta">~5 dk</span></a>
+        <p class="blog-index-list-dek">Teori ile laboratuvar / simülasyon arasında kopukluk kalmaması.</p>
+      </li>
+    </ul>
+
+    <h2 id="kariyer" class="blog-section-title blog-section-title--anchor"><span class="blog-section-title-text">Kariyer notları</span></h2>
+    <p class="blog-section-lead">Stajdan tam zamanlı işe, bootcamp sonrası yerleşmeye veya rol değişimine dair senaryolar — her birinde mülakat ve hazırlık ritmi ön planda.</p>
+    <section class="blog-card-grid blog-card-grid--career" aria-label="Kariyer yazıları">
+      <a href="/blog/basari-staj-veri-analisti" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Staj</span>
+        <h3 class="blog-card-title">Stajdan veri analisti rolüne</h3>
+        <p class="blog-card-excerpt">Stajda ürettiğin çıktıları tek bir “kanıt paketi” gibi sunmanın tam zamanlı teklifle nasıl bağlandığına dair örnek bir akış.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+      <a href="/blog/basari-gecis-urun-yonetimi" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Geçiş</span>
+        <h3 class="blog-card-title">İK'dan ürün koordinasyonuna</h3>
+        <p class="blog-card-excerpt">İç iletişim ve paydaş yönetimini ürün ekibinin diline çevirmek; hangi projelerin CV’de işe yaradığı.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+      <a href="/blog/basari-bootcamp-is-yerlesimi" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Yerleşme</span>
+        <h3 class="blog-card-title">Bootcamp sonrası 90 gün</h3>
+        <p class="blog-card-excerpt">Portfolyo, hedefli başvuru ve haftalık mülakat provası için sıkı ama sürdürülebilir bir tempo.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+      <a href="/blog/basari-yurtdisi-donus" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Deneyim</span>
+        <h3 class="blog-card-title">Yurtdışı stajından Türkiye'de ilk iş</h3>
+        <p class="blog-card-excerpt">Global projeyi yerel işverenin anlayacağı dilde özetlemek; referans ve zaman çizelgesi.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 3 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+      <a href="/blog/basari-mba-denge" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">Denge</span>
+        <h3 class="blog-card-title">MBA ile tam zamanlı iş</h3>
+        <p class="blog-card-excerpt">Haftayı bloklamak, okuma yükünü gerçekçi parçalara bölmek ve yöneticiye ne zaman haber vermek.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+      <a href="/blog/basari-mentorluk-ilk-yil" class="blog-card blog-card--plain">
+        <span class="blog-card-tag">İlk yıl</span>
+        <h3 class="blog-card-title">Mentorlük ve on iki ay planı</h3>
+        <p class="blog-card-excerpt">Çeyrek çeyrek hedef, düzenli geri bildirim ve “ne öğrendim” günlüğünün mülakatta karşılığı.</p>
+        <div class="blog-card-footer">
+          <span class="blog-card-meta">Yaklaşık 4 dk</span>
+          <span class="blog-card-cta" aria-hidden="true">Oku <span class="blog-card-cta-arrow">→</span></span>
+        </div>
+      </a>
+    </section>
+
+    <aside class="blog-index-closing" aria-label="Devam">
+      <p>Yapılandırılmış eğitim ve simülasyonlarla bu yazıların arkasındaki konuları derinleştirmek için <a href="/modules.html">modül kataloğuna</a> veya <a href="/pricing.html">kariyer yolları</a> sayfasına geçebilirsiniz.</p>
+    </aside>
+  </main>
+
+  <footer class="blog-footer">
+    <div class="blog-footer-inner">
+      <div class="blog-footer-brand">
+        <strong>SEBS blog</strong>
+        <p>Teknik rehberler ve kariyer notları; modüllerle uyumlu, gereksiz süsleme olmadan.</p>
+      </div>
+      <nav class="blog-footer-links" aria-label="Hızlı bağlantılar">
+        <a href="/modules.html">Eğitim modülleri</a>
+        <a href="/simulations.html">Simülasyonlar</a>
+        <a href="/contact.html">İletişim</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+  <script src="/js/supabase-env.js?v=2"></script>
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/supabase-auth.js?v=2.1"></script>
+  <script src="/js/navigation.js?v=3.7" defer></script>
+
+</body>
+</html>

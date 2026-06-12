@@ -1,0 +1,3472 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <base href="/" />
+  <title>Operation Silent Drop — Banka Sosyal Mühendislik Simülasyonu · SEBS</title>
+  <meta name="description" content="Yetkili pentest eğitimi: USB test objesi konumu, çalışan/müşteri kapsamı, çöp alanı belge imhası ve raporlama. Gerçek saldırı veya müşteri hedefi değildir." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    :root {
+      --panel: rgba(12, 18, 32, 0.92);
+      --accent: #34d399;
+      --warn: #fbbf24;
+      --bad: #f87171;
+      --glass: rgba(11, 17, 30, 0.78);
+      --glass-b: rgba(148, 163, 184, 0.12);
+      --brand: #38bdf8;
+      --ui-font: "DM Sans", Inter, system-ui, sans-serif;
+      --body-font: Inter, system-ui, sans-serif;
+      --surface-0: #050a14;
+      --surface-1: rgba(17, 26, 46, 0.96);
+      --surface-2: rgba(8, 12, 24, 0.94);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(100, 116, 139, 0.22);
+      --border-default: rgba(71, 85, 105, 0.38);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --shadow-overlay: 0 0 0 1px rgba(255, 255, 255, 0.04) inset, 0 32px 80px rgba(0, 0, 0, 0.55);
+      --shadow-float: 0 20px 48px rgba(0, 0, 0, 0.42);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --focus-ring: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 4px rgba(56, 189, 248, 0.42);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--body-font); background: var(--surface-0); color: #e8eef7; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    /* Tam ekran canvas üstte kalmaması için sabit katman + düşük z-index (modal tıklanabilir olsun) */
+    #gameCanvas {
+      position: fixed;
+      inset: 0;
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      touch-action: none;
+    }
+    #hud {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      padding: var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(180deg, transparent 0%, rgba(3,7,18,0.45) 40%, rgba(3,7,18,0.88) 100%);
+      pointer-events: none;
+    }
+    #hud .hud-inner {
+      max-width: 42.5rem; margin: 0 auto; pointer-events: auto;
+      background: linear-gradient(165deg, rgba(17,26,46,0.94) 0%, rgba(8,12,24,0.9) 100%);
+      backdrop-filter: blur(22px) saturate(165%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3) var(--space-4) var(--space-3);
+      box-shadow: 0 -16px 48px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    #hud p { margin: 0; font-size: 0.78rem; line-height: 1.55; color: #a8b8d0; letter-spacing: 0.01em; }
+    #hud strong { color: #f1f5f9; font-weight: 600; }
+    #controlGuide {
+      position: fixed; left: max(0.45rem, env(safe-area-inset-left, 0px)); bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); z-index: 88; max-width: 13.75rem;
+      font-family: var(--ui-font); font-size: 0.6rem; line-height: 1.5; color: var(--text-muted);
+      background: linear-gradient(155deg, rgba(10,16,30,0.94) 0%, rgba(6,10,20,0.9) 100%);
+      border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);
+      box-shadow: var(--shadow-float), inset 0 1px 0 rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    #controlGuide.hidden { display: none !important; }
+    #controlGuide kbd {
+      display: inline-block; padding: 0.06rem 0.22rem; border-radius: 0.18rem;
+      background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(100,116,139,0.35);
+      color: #e2e8f0; font-size: 0.56rem; font-weight: 700; margin-right: 0.12rem;
+    }
+    #controlGuide .cg-line { margin: 0.08rem 0; }
+    #controlGuide .cg-muted { color: #64748b; font-size: 0.52rem; margin-top: 0.28rem; line-height: 1.35; }
+    .meter { height: 4px; border-radius: var(--radius-full); background: rgba(15, 23, 42, 0.9); margin-top: var(--space-3); overflow: hidden; border: 1px solid rgba(51, 65, 85, 0.45); }
+    .meter > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #5eead4); transition: width 0.2s ease, background 0.25s; }
+    .overlay {
+      position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+      padding: var(--space-4) max(var(--space-4), env(safe-area-inset-right)) max(var(--space-4), env(safe-area-inset-bottom)) max(var(--space-4), env(safe-area-inset-left));
+      background: linear-gradient(165deg, rgba(2, 6, 23, 0.78) 0%, rgba(2, 8, 24, 0.88) 100%);
+      backdrop-filter: blur(14px) saturate(140%);
+      pointer-events: auto;
+    }
+    .overlay.hidden { display: none !important; }
+    #officeMailOverlay,
+    #prepOverlay {
+      z-index: 150;
+    }
+    .card {
+      max-width: 28rem; width: 100%; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(168deg, rgba(20,30,52,0.98) 0%, rgba(10,15,28,0.97) 55%, rgba(8,12,22,0.96) 100%);
+      box-shadow: var(--shadow-overlay);
+      padding: var(--space-5) var(--space-6);
+    }
+    .card--sm { max-width: 24rem; }
+    .card--md { max-width: 28rem; }
+    .card--lg { max-width: 30rem; }
+    .card--xl { max-width: 32rem; }
+    .card--26 { max-width: 26rem; }
+    .card h2 { margin: 0 0 var(--space-2); font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; color: var(--text-primary); }
+    .card h2.card-title--compact { font-size: 1rem; line-height: 1.35; }
+    .card .sub { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin: 0 0 var(--space-3); font-weight: 600; font-family: var(--ui-font); }
+    .mail {
+      font-size: 0.8125rem; line-height: 1.6; color: var(--text-secondary);
+      border-left: 3px solid #3b82f6; padding-left: 0.85rem; margin: var(--space-4) 0;
+      background: rgba(15, 23, 42, 0.55); padding: 0.85rem 0.85rem 0.85rem 0.95rem; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+      margin-top: var(--space-4); min-height: 2.5rem; padding: 0.5rem 1.125rem; border-radius: var(--radius-md);
+      border: 1px solid transparent; cursor: pointer; font-family: var(--ui-font);
+      font-weight: 600; font-size: 0.875rem; line-height: 1.2;
+      background: linear-gradient(180deg, #34d399 0%, #22c55e 100%); color: #052e16;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 8px 20px rgba(34, 197, 94, 0.22);
+      transition: filter 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out), transform 0.12s var(--ease-out);
+    }
+    .btn.secondary {
+      background: linear-gradient(180deg, #475569 0%, #334155 100%); color: #f1f5f9;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 16px rgba(0,0,0,0.25);
+    }
+    a.btn { text-decoration: none; }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: none; box-shadow: var(--focus-ring), 0 8px 20px rgba(34, 197, 94, 0.22); }
+    .btn.secondary:focus-visible { box-shadow: var(--focus-ring), 0 6px 16px rgba(0,0,0,0.25); }
+    .btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+    .btn-row .btn { margin-top: 0; }
+    .hint { font-size: 0.75rem; line-height: 1.5; color: var(--text-muted); margin-top: var(--space-3); }
+    .hint--warn { color: #fcd34d; margin-top: var(--space-3); }
+    .card-body { font-size: 0.875rem; line-height: 1.55; color: var(--text-secondary); margin: 0 0 var(--space-3); }
+    .card-body--tight { font-size: 0.8125rem; margin: var(--space-2) 0 0; }
+    #sceneCurtain {
+      position: fixed; inset: 0; z-index: 15; pointer-events: none; opacity: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% 45%, rgba(5,10,22,0.55) 0%, rgba(5,10,22,0.88) 100%);
+      transition: opacity 0.08s linear;
+    }
+    #topBar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 95;
+      display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+      align-items: center; gap: var(--space-2);
+      min-height: 2.5rem;
+      padding: calc(0.35rem + env(safe-area-inset-top, 0px)) max(0.65rem, env(safe-area-inset-right, 0px)) 0.35rem max(0.65rem, env(safe-area-inset-left, 0px));
+      font-family: var(--ui-font);
+      background: linear-gradient(180deg, rgba(6,10,20,0.97) 0%, rgba(6,10,20,0.82) 100%);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      font-size: 0.6875rem;
+    }
+    #topBar .top-left { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+    #topBar .top-brand {
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #94a3b8; white-space: nowrap;
+    }
+    #topBar .top-back {
+      color: #93c5fd; text-decoration: none; font-weight: 600; letter-spacing: 0.01em; font-size: 0.6875rem; flex-shrink: 0;
+      padding: var(--space-1) var(--space-2); margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)); border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+    #topBar .top-back:hover { color: #e0f2fe; background: rgba(56, 189, 248, 0.08); }
+    #topBar .top-back:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    #topBar .top-meta { display: flex; align-items: center; justify-content: center; gap: 0.35rem; flex-wrap: wrap; }
+    .phase-chip {
+      font-variant-numeric: tabular-nums; color: #e2e8f0; font-weight: 600; font-size: 0.6875rem;
+      padding: 0.28rem 0.6rem; border-radius: var(--radius-sm);
+      background: rgba(22, 32, 52, 0.92); border: 1px solid var(--border-default);
+      letter-spacing: 0.02em;
+    }
+    .cam-chip {
+      display: none;
+      align-items: center;
+      font-size: 0.625rem; color: #fcd34d; font-weight: 700; letter-spacing: 0.06em;
+      padding: 0.22rem 0.5rem; border-radius: var(--radius-sm); background: rgba(69, 26, 3, 0.5); border: 1px solid rgba(251, 191, 36, 0.32);
+    }
+    .cam-chip.is-visible { display: inline-flex; }
+    #topBar .top-right { display: flex; justify-content: flex-end; align-items: center; }
+    .score-chip {
+      display: flex; align-items: baseline; gap: 0.35rem;
+      padding: 0.24rem 0.55rem 0.26rem 0.6rem; border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(22,32,52,0.94), rgba(12,18,32,0.9));
+      border: 1px solid var(--border-default);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      min-width: 4.75rem; justify-content: flex-end;
+    }
+    .score-chip .score-n { font-size: 0.9rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #f8fafc; }
+    .score-chip .score-lbl { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.14em; color: #7c8ca3; font-weight: 700; }
+    .mission-panel {
+      position: fixed; top: calc(2.65rem + env(safe-area-inset-top, 0px)); left: max(0.5rem, env(safe-area-inset-left, 0px)); z-index: 85; width: min(18.75rem, calc(100vw - 1rem));
+      background: linear-gradient(145deg, rgba(14,22,38,0.95) 0%, rgba(8,13,26,0.92) 100%);
+      backdrop-filter: blur(22px) saturate(170%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      box-shadow: var(--shadow-float), inset 0 1px 0 rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .mission-panel-h {
+      font-family: var(--ui-font);
+      font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.16em; color: #8b9cb8; font-weight: 700;
+      display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.32rem;
+    }
+    .mission-dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--brand); box-shadow: 0 0 10px rgba(56,189,248,0.45); }
+    .mission-panel-body { font-size: 0.7rem; line-height: 1.5; color: #b4c2d9; }
+    .mission-panel-body strong { color: #f8fafc; font-weight: 600; }
+    .mission-panel-foot { margin-top: 0.38rem; font-size: 0.52rem; color: #5c6b84; letter-spacing: 0.06em; font-weight: 500; }
+    .trash-grid { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+    .trash-grid button {
+      text-align: left; padding: 0.7rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-default);
+      background: linear-gradient(165deg, #1e293b 0%, #0f172a 100%); color: #e2e8f0; font-size: 0.8125rem; cursor: pointer; font-family: inherit;
+      transition: border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out), background 0.18s;
+    }
+    .trash-grid button:hover { border-color: rgba(56, 189, 248, 0.5); box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.15); background: #243147; }
+    .trash-grid button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .scroll-mail {
+      max-height: min(52vh, 22rem); overflow-y: auto; padding-right: var(--space-3); margin: var(--space-3) 0;
+      scrollbar-width: thin; scrollbar-color: rgba(100,116,139,0.5) transparent;
+    }
+    .scroll-mail::-webkit-scrollbar { width: 6px; }
+    .scroll-mail::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.45); border-radius: var(--radius-full); }
+    .scroll-mail::-webkit-scrollbar-track { background: rgba(15,23,42,0.35); border-radius: var(--radius-full); }
+    .equip-list { font-size: 0.8125rem; line-height: 1.55; color: #cbd5e1; margin: 0.5rem 0 0; padding-left: 1.1rem; }
+    .equip-list li { margin: 0.25rem 0; }
+    .warn-box {
+      font-size: 0.75rem; line-height: 1.55; color: #fecaca; background: rgba(127, 29, 29, 0.22);
+      border: 1px solid rgba(248, 113, 113, 0.38); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); margin-top: var(--space-4);
+    }
+    .report-form label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; margin: 0.65rem 0 0.25rem; }
+    .report-form input[type="text"], .report-form select, .report-form textarea {
+      width: 100%; padding: 0.5rem 0.65rem; border-radius: var(--radius-md); border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 0.8125rem; font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .report-form input:focus-visible, .report-form select:focus-visible, .report-form textarea:focus-visible {
+      outline: none; border-color: rgba(56, 189, 248, 0.55); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    }
+    .report-form .btn { width: 100%; margin-top: var(--space-5); }
+    .chk-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.35rem; font-size: 0.78rem; color: #cbd5e1; }
+    .chk-row label { display: flex; align-items: center; gap: 0.35rem; text-transform: none; margin: 0; cursor: pointer; }
+    .interact-card {
+      position: fixed; left: 50%; bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 90; max-width: 21.5rem; width: calc(100% - 2rem);
+      font-family: var(--ui-font);
+      background: linear-gradient(162deg, rgba(16,24,42,0.97) 0%, rgba(8,12,24,0.95) 100%);
+      backdrop-filter: blur(24px) saturate(175%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3) var(--space-4);
+      box-shadow: var(--shadow-float), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    #usbInteract { display: none; pointer-events: auto; }
+    #usbInteract.visible { display: block; }
+    #streetEnterHud { display: none; pointer-events: none; }
+    #streetEnterHud.visible { display: block; }
+    #alleyInteract { display: none; pointer-events: none; }
+    #alleyInteract.visible { display: block; }
+    #streetEnterHud .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #93c5fd; margin-bottom: 0.3rem; font-weight: 700; }
+    #streetEnterHud .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
+    #streetEnterHud .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(30,58,95,0.85); border: 1px solid rgba(56,189,248,0.25); font-weight: 700; font-size: 0.7rem; color: #e0f2fe; }
+    #usbInteract .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; margin-bottom: 0.3rem; font-weight: 700; }
+    #usbInteract .body { font-size: 0.76rem; line-height: 1.48; color: #b8c5d9; }
+    #usbInteract .usb-title { font-size: 0.72rem; color: #e8eef7; font-weight: 600; line-height: 1.35; margin-bottom: 0.45rem; }
+    #usbInteract .usb-metrics {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 0.65rem; margin-top: 0.4rem;
+      padding: 0.45rem 0.5rem; border-radius: 0.3rem;
+      background: rgba(8,12,24,0.55); border: 1px solid rgba(71,85,105,0.35);
+    }
+    #usbInteract .usb-metrics span { font-size: 0.62rem; color: #8b9cb0; letter-spacing: 0.02em; }
+    #usbInteract .usb-metrics strong { display: block; font-size: 0.68rem; color: #e2e8f0; font-weight: 600; margin-top: 0.08rem; }
+    #usbInteract .usb-hint {
+      margin-top: 0.38rem; font-size: 0.6rem; line-height: 1.42; color: #fdba74;
+      padding: 0.35rem 0.4rem; border-radius: 0.28rem; border: 1px solid rgba(251, 146, 60, 0.28);
+      background: rgba(124, 45, 18, 0.18);
+    }
+    #usbInteract .kbd { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.48rem; border-radius: 0.22rem; background: rgba(30,41,59,0.95); border: 1px solid rgba(100,116,139,0.3); font-weight: 700; font-size: 0.68rem; color: #f1f5f9; }
+    #alleyInteract .t { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: #a5b4fc; margin-bottom: 0.3rem; font-weight: 700; }
+    #alleyInteract .body { font-size: 0.78rem; line-height: 1.5; color: #cbd5e1; }
+    #alleyInteract .kbd { display: inline-block; margin-top: 0.45rem; padding: 0.18rem 0.42rem; border-radius: 0.2rem; background: rgba(49,46,129,0.5); border: 1px solid rgba(165,180,252,0.25); font-weight: 700; font-size: 0.7rem; color: #e0e7ff; }
+    #docInspectOverlay { z-index: 110; }
+    .doc-3d {
+      perspective: 900px; margin: 0.75rem auto; max-width: 14rem; min-height: 11rem; display: flex; align-items: center; justify-content: center;
+    }
+    .doc-3d-inner {
+      position: relative;
+      overflow: hidden;
+      width: 11rem; height: 14rem;
+      background:
+        linear-gradient(165deg, rgba(255,255,255,0.97) 0%, #f8fafc 38%, #e8eef5 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(148,163,184,0.06) 23px, rgba(148,163,184,0.06) 24px);
+      border: 1px solid #94a3b8; border-radius: 0.12rem;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.85); padding: 0.65rem 0.62rem 0.7rem;
+      font-size: 0.58rem; line-height: 1.42; color: #0f172a;
+      transform: rotateX(4deg) rotateY(-12deg);
+      animation: docTilt 6s ease-in-out infinite;
+    }
+    .doc-3d-inner::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .doc-3d-inner .doc-watermark {
+      position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%) rotate(-18deg);
+      font-size: 1.35rem; font-weight: 800; letter-spacing: 0.22em; color: rgba(15, 23, 42, 0.06); white-space: nowrap; pointer-events: none;
+    }
+    .doc-3d-inner .doc-doc-header { position: relative; z-index: 1; margin-bottom: 0.45rem; padding-right: 3.2rem; }
+    .doc-3d-inner .doc-doc-kicker {
+      display: block; font-size: 0.48rem; text-transform: uppercase; letter-spacing: 0.14em; color: #64748b; font-weight: 700; margin-bottom: 0.2rem;
+    }
+    .doc-3d-inner .doc-doc-title { display: block; font-size: 0.72rem; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; line-height: 1.2; }
+    .doc-3d-inner .doc-doc-meta {
+      position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.28rem 0.45rem;
+      margin: 0.45rem 0 0.5rem; padding: 0.38rem 0.4rem; border-radius: 0.12rem;
+      border: 1px solid rgba(100,116,139,0.35); background: rgba(241,245,249,0.85);
+    }
+    .doc-3d-inner .doc-doc-meta > div span { display: block; font-size: 0.48rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; font-weight: 600; }
+    .doc-3d-inner .doc-doc-meta > div strong { display: block; font-size: 0.58rem; color: #1e293b; font-weight: 600; margin-top: 0.06rem; }
+    .doc-3d-inner .doc-doc-body { position: relative; z-index: 1; margin: 0.35rem 0 0; color: #1e293b; }
+    .doc-3d-inner .doc-doc-foot { position: relative; z-index: 1; margin: 0.55rem 0 0; padding-top: 0.45rem; border-top: 1px dashed rgba(100,116,139,0.45); color: #475569; font-size: 0.55rem; }
+    .doc-3d-inner .doc-stamp {
+      position: absolute; top: 0.5rem; right: 0.45rem; z-index: 2; font-size: 0.5rem; font-weight: 800; letter-spacing: 0.08em;
+      color: #b91c1c; border: 2px solid #b91c1c; padding: 0.12rem 0.28rem; border-radius: 0.15rem; transform: rotate(-8deg); opacity: 0.92;
+    }
+    @keyframes docTilt {
+      0%, 100% { transform: rotateX(4deg) rotateY(-12deg); }
+      50% { transform: rotateX(2deg) rotateY(8deg); }
+    }
+    .trash-layout { display: grid; gap: 0.75rem; }
+    @media (min-width: 640px) {
+      .trash-layout { grid-template-columns: 1fr 11rem; align-items: start; }
+    }
+    .trash-bag-stage {
+      perspective: 640px; min-height: 10rem; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 70%, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.15) 70%);
+      border-radius: var(--radius-lg); border: 1px solid var(--border-default);
+    }
+    .trash-bag-3d {
+      width: 5.5rem; height: 6.5rem; position: relative;
+      transform-style: preserve-3d; transform: rotateX(8deg) rotateY(-18deg);
+      animation: bagFloat 5s ease-in-out infinite;
+    }
+    .trash-bag-3d .bag-body {
+      position: absolute; inset: 0.4rem 0.35rem 0.5rem;
+      background: linear-gradient(165deg, #3f3f46 0%, #27272a 45%, #18181b 100%);
+      border-radius: 0.35rem 0.35rem 0.2rem 0.2rem;
+      box-shadow: inset 0 -6px 12px rgba(0,0,0,0.35), 0 12px 28px rgba(0,0,0,0.45);
+      border: 1px solid rgba(82,82,91,0.6);
+    }
+    .trash-bag-3d .bag-tie {
+      position: absolute; top: 0.15rem; left: 50%; transform: translateX(-50%);
+      width: 2.2rem; height: 0.55rem; background: #52525b; border-radius: 0.15rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    @keyframes bagFloat {
+      0%, 100% { transform: rotateX(8deg) rotateY(-18deg) translateY(0); }
+      50% { transform: rotateX(6deg) rotateY(12deg) translateY(-4px); }
+    }
+    .trash-panel-main { min-width: 0; }
+    .trash-intro { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.55; margin: 0 0 var(--space-2); }
+  </style>
+</head>
+<body>
+  <div id="sceneCurtain" aria-hidden="true"></div>
+  <header id="topBar">
+    <div class="top-left">
+      <a class="top-back" href="/simulations.html">← Simülasyonlar</a>
+      <span class="top-brand">SEBS · Silent Drop</span>
+    </div>
+    <div class="top-meta">
+      <span class="phase-chip" id="phaseLabel">Ofis</span>
+      <span class="cam-chip" id="cameraHud">İzleme alanı</span>
+    </div>
+    <div class="top-right">
+      <div class="score-chip" id="scoreWrap"><span class="score-n" id="scoreValue">0</span><span class="score-lbl">puan</span></div>
+    </div>
+  </header>
+
+  <canvas id="gameCanvas" tabindex="0" role="application" aria-label="3D banka lobisi görünümü"></canvas>
+
+  <div id="controlGuide" class="control-guide hidden" aria-hidden="true">
+    <div class="cg-line"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Hareket</div>
+    <div class="cg-line">Fare sürükle · Kamera · <kbd>[</kbd> <kbd>]</kbd> hassasiyet</div>
+    <div class="cg-line"><kbd>E</kbd> Etkileşim · <kbd>Shift</kbd> Hızlı yürüme</div>
+    <div class="cg-line"><kbd>Esc</kbd> İmleç kilidini bırak</div>
+    <div class="cg-muted">İki kez tıklayarak imleci kilitleyebilirsiniz (isteğe bağlı).</div>
+  </div>
+
+  <aside id="missionPanel" class="mission-panel" aria-live="polite">
+    <div class="mission-panel-h"><span class="mission-dot"></span> Görev</div>
+    <div id="missionPanelBody" class="mission-panel-body">Görev postasını okuyun.</div>
+    <div class="mission-panel-foot">SEBS · yetkili test simülasyonu</div>
+  </aside>
+
+  <div id="usbInteract" class="interact-card">
+    <div class="t">Etkileşim · USB test objesi</div>
+    <div class="body" id="usbInteractBody"></div>
+    <span class="kbd" id="usbInteractKey">E — Bırak</span>
+  </div>
+
+  <div id="streetEnterHud" class="interact-card" aria-live="polite">
+    <div class="t">Şube girişi</div>
+    <div class="body" id="streetEnterHudBody"></div>
+    <span class="kbd" id="streetEnterHudKey">E — İçeri gir</span>
+  </div>
+
+  <div id="alleyInteract" class="interact-card" aria-live="polite">
+    <div class="t">Servis alanı</div>
+    <div class="body" id="alleyInteractBody"></div>
+    <span class="kbd" id="alleyInteractKey">E — Konteyner incelemesi</span>
+  </div>
+
+  <div id="hud">
+    <div class="hud-inner">
+      <p id="hudText">Görev postasını okuyun; 3D aşamada sokaktan şubeye, ardından servis alanına ilerleyeceksiniz.</p>
+      <div class="meter" aria-hidden="true"><span id="suspicionFill"></span></div>
+    </div>
+  </div>
+
+  <div id="officeMailOverlay" class="overlay">
+    <div class="card card--xl">
+      <p class="sub">Operation Silent Drop · Şirket ofisi (kurgusal)</p>
+      <h2 class="card-title--compact">Bankada Fiziksel Sosyal Mühendislik Testi: USB Drop &amp; Dumpster Review</h2>
+      <div class="mail scroll-mail">
+        <strong>Konu:</strong> Yetkili Sosyal Mühendislik Testi — Banka Şubesi Fiziksel Güvenlik Değerlendirmesi<br /><br />
+        Merhaba,<br /><br />
+        Bugün senin için yetkili bir sosyal mühendislik testi görevi oluşturduk. Müşterimiz olan banka, fiziksel güvenlik farkındalığını, çalışanların bilinmeyen USB cihazlara karşı davranışını ve hassas belge imha süreçlerini ölçmemizi istedi.<br /><br />
+        <strong>Görevin şu adımlardan oluşuyor:</strong><br /><br />
+        Öncelikle banka şubesine girecek ve ortamı gözlemleyeceksin. Güvenlik görevlileri, çalışanlar ve müşteriler şube içinde aktif şekilde hareket edecek. Amacın dikkat çekmeden, kapsam içinde uygun bir noktaya <strong>eğitim amaçlı sahte USB belleği</strong> bırakmak.<br /><br />
+        USB belleğin rastgele bir <strong>müşteri</strong> tarafından değil, <strong>banka çalışanlarından biri</strong> tarafından fark edilmesi hedefleniyor. Bu yüzden bırakacağın konum kritik: çok görünür yer müşteri dikkatini çeker; çok gizli yer çalışanın fark etmesini zorlaştırır.<br /><br />
+        Ardından bankadan çıkıp şubenin <strong>dışındaki çöp alanını</strong> kontrol edeceksin. Poşetlerde banka veya süreçlerle ilgili hassas belge olup olmadığına bakacaksın. Bulduğun belgeyi kanıt olarak güvenli torbayla alacak, şirkete dönüp <strong>rapor ekranında</strong> teslim edeceksin.<br /><br />
+        Unutma: Bu görev yetkili ve kontrollü bir güvenlik testidir. Gerçek kişilere zarar vermek, müşteri verisi toplamak veya kapsam dışı alanlara girmek kesinlikle yasaktır.<br /><br />
+        Başarılar,<br />
+        Operasyon Yöneticisi
+      </div>
+      <button type="button" class="btn" id="btnMailNext">Hazırlığa geç</button>
+    </div>
+  </div>
+
+  <div id="prepOverlay" class="overlay hidden">
+    <div class="card card--md">
+      <p class="sub">Görev alma ve hazırlık</p>
+      <h2>Ekipman ve uyarı</h2>
+      <ul class="equip-list">
+        <li><strong>Eğitim amaçlı sahte USB</strong> — gerçek zararlı yazılım içermez; yalnızca test objesi.</li>
+        <li><strong>Görev kimliği / yetki özeti</strong> — normalde gösterilmez; yakalanırsan prosedür gereği kullanılır.</li>
+        <li><strong>Not alma tableti</strong> — gözlem, konum, çöp bulguları ve rapor notları.</li>
+        <li><strong>Kanıt poşeti</strong> — çöpten alınan belgeyi güvenli taşıma (simülasyon).</li>
+      </ul>
+      <div class="warn-box">
+        Bu simülasyon yalnızca <strong>yetkili pentest ve farkındalık eğitimi</strong> içindir. Amaç saldırı tekniği öğretmek değil; kurumların bu risklere karşı nasıl test edildiğini, raporlandığını ve nasıl korunacağını anlamaktır.
+        <strong>Müşteri hedef değildir</strong> — USB’yi müşteri alırsa kapsam ve etik açısından başarısızlık sayılır.
+      </div>
+      <p id="prep3dWaitHint" class="hint hint--warn" style="display: none;"></p>
+      <button type="button" class="btn" id="btnPrepBank">Şubeye git (3D)</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      function mailToPrep() {
+        var mail = document.getElementById('officeMailOverlay');
+        var prep = document.getElementById('prepOverlay');
+        if (mail) mail.classList.add('hidden');
+        if (prep) prep.classList.remove('hidden');
+        var pl = document.getElementById('phaseLabel');
+        var mb = document.getElementById('missionPanelBody');
+        if (pl) pl.textContent = 'Ofis · Hazırlık';
+        if (mb)
+          mb.innerHTML =
+            'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.';
+        var cg = document.getElementById('controlGuide');
+        if (cg) {
+          cg.classList.add('hidden');
+          cg.setAttribute('aria-hidden', 'true');
+        }
+      }
+      window.__sebsSilentDropMailToPrep = mailToPrep;
+      var btn = document.getElementById('btnMailNext');
+      if (btn) btn.addEventListener('click', mailToPrep);
+
+      function prepToStreet() {
+        var hint = document.getElementById('prep3dWaitHint');
+        if (typeof window.__sebsSilentDropStartStreet === 'function') {
+          if (hint) hint.style.display = 'none';
+          window.__sebsSilentDropStartStreet();
+          return;
+        }
+        window.__sebsSilentDropStreetQueued = true;
+        if (hint) {
+          hint.style.display = 'block';
+          var glOk = false;
+          try {
+            var test = document.createElement('canvas');
+            glOk = !!(test.getContext('webgl') || test.getContext('experimental-webgl'));
+          } catch (e) {}
+          hint.textContent = glOk
+            ? '3D ortamı yükleniyor… Birkaç saniye bekleyip tekrar tıklayın. Bitmezse sayfayı önbelleksiz yenileyin (Cmd/Ctrl+Shift+R).'
+            : 'WebGL (donanım hızlandırması) bu tarayıcıda kapalı veya desteklenmiyor. Tarayıcı ayarlarından etkinleştirip sayfayı yenileyin.';
+        }
+      }
+      window.__sebsSilentDropPrepToStreet = prepToStreet;
+      var prepBtn = document.getElementById('btnPrepBank');
+      if (prepBtn) prepBtn.addEventListener('click', prepToStreet);
+    })();
+  </script>
+
+  <div id="observeUsbOverlay" class="overlay hidden">
+    <div class="card card--26">
+      <p class="sub">Gözlem · USB sonucu (simülasyon)</p>
+      <h2 id="observeTitle">Gözlem</h2>
+      <p id="observeBody" class="card-body card-body--tight"></p>
+      <p class="hint" id="observeHint"></p>
+      <button type="button" class="btn" id="btnObserveContinue">Şubeden çıkışa geç</button>
+    </div>
+  </div>
+
+  <div id="docInspectOverlay" class="overlay hidden">
+    <div class="card card--sm">
+      <p class="sub">Kanıt · Maskeli eğitim belgesi</p>
+      <h2>Şube operasyon notu (sahte)</h2>
+      <div class="doc-3d"><div class="doc-3d-inner" id="docInspectText"></div></div>
+      <p class="hint">Gerçek müşteri verisi yoktur. Sadece eğitim ve raporlama alıştırması.</p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="btnDocBag">E — Belgeyi kanıt poşetine ekle</button>
+        <button type="button" class="btn secondary" id="btnDocClose">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="guardDialogOverlay" class="overlay hidden">
+    <div class="card card--26">
+      <p class="sub">Güvenlik teması</p>
+      <h2>Güvenlik görevlisi</h2>
+      <p class="card-body">
+        Merhaba, yardımcı olabilir miyim? Bir süredir şube içinde dolaştığınızı fark ettim.
+      </p>
+      <div class="trash-grid" id="guardDialogButtons"></div>
+      <p class="hint" id="guardDialogHint"></p>
+    </div>
+  </div>
+
+  <div id="trashOverlay" class="overlay hidden">
+    <div class="card card--2xl">
+      <p class="sub">Şube dışı · Belge imha kontrolü (RoE)</p>
+      <h2>Atık konteynerleri</h2>
+      <div class="trash-layout">
+        <div class="trash-panel-main">
+          <div id="trashPanel"></div>
+          <p class="hint" id="trashHint"></p>
+        </div>
+        <div class="trash-bag-stage" aria-hidden="true">
+          <div class="trash-bag-3d">
+            <div class="bag-tie"></div>
+            <div class="bag-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="reportOverlay" class="overlay hidden">
+    <div class="card card--lg">
+      <p class="sub">Şirket ofisi · Pentest raporu</p>
+      <h2>Bulguları kaydet</h2>
+      <form class="report-form" id="reportForm">
+        <label for="rfUsbLoc">USB bırakılan konum (özet)</label>
+        <input type="text" id="rfUsbLoc" name="usbLoc" placeholder="Örn: Temsilci hattı yakını ortak zemin" />
+        <label for="rfWho">USB’yi kim aldı? (gözlem)</label>
+        <select id="rfWho" name="who">
+          <option value="">Seçin</option>
+          <option value="employee">Banka çalışanı</option>
+          <option value="customer">Müşteri (kapsam dışı)</option>
+          <option value="security">Güvenlik</option>
+          <option value="none">Henüz net değil / kimse almadı</option>
+        </select>
+        <label for="rfBehav">Çalışan davranışı (varsa)</label>
+        <select id="rfBehav" name="behav">
+          <option value="">Seçin</option>
+          <option value="security">Güvenliğe teslim</option>
+          <option value="usb_pc">Bilgisayara takma girişimi (yüksek risk)</option>
+          <option value="drawer">Çekmeceye koydu</option>
+          <option value="ignore">Görmezden gelindi</option>
+        </select>
+        <label for="rfDoc">Çöp alanında hassas belge?</label>
+        <select id="rfDoc" name="doc">
+          <option value="">Seçin</option>
+          <option value="yes">Evet</option>
+          <option value="no">Hayır</option>
+        </select>
+        <label for="rfSens">Belge hassasiyeti (tahmini)</label>
+        <select id="rfSens" name="sens">
+          <option value="">Seçin</option>
+          <option value="low">Düşük</option>
+          <option value="mid">Orta</option>
+          <option value="high">Yüksek</option>
+          <option value="crit">Kritik (eğitim senaryosu)</option>
+        </select>
+        <label>Önerilen önlemler (işaretleyin)</label>
+        <div class="chk-row">
+          <label><input type="checkbox" name="rec_usb" /> USB prosedürü</label>
+          <label><input type="checkbox" name="rec_train" /> Farkındalık eğitimi</label>
+          <label><input type="checkbox" name="rec_shred" /> Öğütücü / imha politikası</label>
+          <label><input type="checkbox" name="rec_bin" /> Kilitli atık kutusu</label>
+          <label><input type="checkbox" name="rec_patrol" /> Devriye / fiziksel kontrol</label>
+        </div>
+        <label for="rfNotes">Ek not</label>
+        <textarea id="rfNotes" name="notes" placeholder="Kısa operasyonel not…"></textarea>
+        <button type="submit" class="btn">Raporu tamamla</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="endOverlay" class="overlay hidden">
+    <div class="card card--lg">
+      <p class="sub">Değerlendirme</p>
+      <h2 id="endTitle">Görev tamamlandı</h2>
+      <p id="endBody" class="card-body card-body--tight"></p>
+      <p class="hint" id="endLearning"></p>
+      <div class="btn-row">
+        <button type="button" class="btn secondary" id="btnReplay">Yeniden oyna</button>
+        <a class="btn" href="/simulations.html">Simülasyon listesi</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "/js/vendor/three/pkg/three.module.js",
+        "three/addons/": "/js/vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const SIM_ID = 'sosyal-muhendislik-banka-fiziksel';
+    const SIM_NAME = 'Operation Silent Drop: Banka Sosyal Mühendislik Simülasyonu';
+    const MODULE_NAME = 'Sosyal Mühendisliğe Giriş';
+
+    const canvas = document.getElementById('gameCanvas');
+    const hudText = document.getElementById('hudText');
+    const suspicionFill = document.getElementById('suspicionFill');
+    const phaseLabel = document.getElementById('phaseLabel');
+    const scoreValue = document.getElementById('scoreValue');
+    const cameraHud = document.getElementById('cameraHud');
+    const officeMailOverlay = document.getElementById('officeMailOverlay');
+    const prepOverlay = document.getElementById('prepOverlay');
+    const observeUsbOverlay = document.getElementById('observeUsbOverlay');
+    const guardDialogOverlay = document.getElementById('guardDialogOverlay');
+    const guardDialogButtons = document.getElementById('guardDialogButtons');
+    const guardDialogHint = document.getElementById('guardDialogHint');
+    const trashOverlay = document.getElementById('trashOverlay');
+    const trashPanel = document.getElementById('trashPanel');
+    const trashHint = document.getElementById('trashHint');
+    const reportOverlay = document.getElementById('reportOverlay');
+    const reportForm = document.getElementById('reportForm');
+    const endOverlay = document.getElementById('endOverlay');
+    const missionPanelBody = document.getElementById('missionPanelBody');
+    const usbInteract = document.getElementById('usbInteract');
+    const usbInteractBody = document.getElementById('usbInteractBody');
+    const usbInteractKey = document.getElementById('usbInteractKey');
+    const streetEnterHud = document.getElementById('streetEnterHud');
+    const streetEnterHudBody = document.getElementById('streetEnterHudBody');
+    const streetEnterHudKey = document.getElementById('streetEnterHudKey');
+    const alleyInteract = document.getElementById('alleyInteract');
+    const alleyInteractBody = document.getElementById('alleyInteractBody');
+    const alleyInteractKey = document.getElementById('alleyInteractKey');
+    const docInspectOverlay = document.getElementById('docInspectOverlay');
+    const docInspectText = document.getElementById('docInspectText');
+    const controlGuide = document.getElementById('controlGuide');
+
+    let score = 0;
+    let phase = 'OFFICE_MAIL';
+    let suspicion = 0;
+    let runEnded = false;
+    let trackerPushed = false;
+    let dropped = false;
+    let dropQuality = null;
+    let lastDropSpot = null;
+    let usbPickedByCustomer = false;
+    let employeeUsbBehavior = null;
+    let ethicalChoiceBonus = 0;
+    let guardDialogShown = false;
+    let trashDwellSec = 0;
+    let documentFoundLevel = null;
+    let keys = {};
+
+    function setPhase(p) {
+      phase = p;
+      const map = {
+        OFFICE_MAIL: 'Ofis · Görev postası',
+        OFFICE_PREP: 'Ofis · Hazırlık',
+        STREET: 'Dışarı · Şube önü',
+        DROP: 'Şube · USB',
+        OBSERVE_USB: 'Şube · Gözlem',
+        GUARD_DIALOG: 'Şube · Güvenlik',
+        LEAVE_BANK: 'Şube · Çıkış',
+        ALLEY: 'Servis alanı · Konteyner',
+        TRASH_UI: 'Atık · İnceleme',
+        REPORT: 'Ofis · Rapor',
+        END: 'Özet'
+      };
+      phaseLabel.textContent = map[p] || p;
+      const strip = {
+        OFFICE_MAIL: 'Görev postasını okuyun — ardından <strong>Hazırlığa geç</strong>.',
+        OFFICE_PREP: 'Ekipmanı doğrulayın — <strong>Şubeye git (3D)</strong> ile sokak aşamasına geçin.',
+        STREET:
+          '1/5 Banka cephesi · <strong>Cephe ortası — cam otomatik giriş</strong> önüne gelin — <strong>E</strong> ile içeri girin.',
+        DROP: '2/5 Lobide · Uygun zemine yaklaşın; etkileşim kutusu açıldığında <strong>E</strong> ile USB bırakın.',
+        OBSERVE_USB: '3/5 Gözlem sonucu — ardından şubeden çıkış.',
+        LEAVE_BANK: '4/5 Cam kapıya gidin — <strong>E</strong> ile dış servis alanına çıkın.',
+        ALLEY: '5/5 Konteynerlere yaklaşın — <strong>E</strong> ile poşet incelemesi (RoE).',
+        TRASH_UI: 'Poşet / belge incelemesi — tamamlayınca rapor.',
+        REPORT: 'Şirket ofisi — raporu gönderin.',
+        END: 'Özet ekranı — yeniden oynayabilir veya listeye dönebilirsiniz.',
+        GUARD_DIALOG: 'Güvenlik diyaloğu — profesyonel bir seçenek işaretleyin.'
+      };
+      if (missionPanelBody) missionPanelBody.innerHTML = strip[p] || '';
+      if (controlGuide) {
+        if (p === 'STREET' || p === 'ALLEY' || p === 'DROP' || p === 'LEAVE_BANK') {
+          controlGuide.classList.remove('hidden');
+          controlGuide.setAttribute('aria-hidden', 'false');
+        } else {
+          controlGuide.classList.add('hidden');
+          controlGuide.setAttribute('aria-hidden', 'true');
+        }
+      }
+    }
+
+    let cameraYaw = 0;
+    let velX = 0;
+    let velZ = 0;
+    let camMouseSens = 0.00205;
+    try {
+      const ls = localStorage.getItem('sebs_bank_mSens');
+      const v = ls != null ? parseFloat(ls) : NaN;
+      if (!isNaN(v)) camMouseSens = THREE.MathUtils.clamp(v, 0.0011, 0.0038);
+    } catch (e) {}
+    let mouseLookDrag = false;
+    let lastMouseClientX = 0;
+
+    function readMoveXZ() {
+      let mx = 0,
+        mz = 0;
+      if (keys['KeyW'] || keys['ArrowUp']) mz -= 1;
+      if (keys['KeyS'] || keys['ArrowDown']) mz += 1;
+      if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
+      if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
+      return { mx, mz };
+    }
+
+    /** updateCamera ile aynı yatay orbit mesafesi (XZ); iç/dış için ayrı rig. */
+    function readMoveXZCameraRelative() {
+      const raw = readMoveXZ();
+      if (raw.mx === 0 && raw.mz === 0) return raw;
+
+      const yaw = cameraYaw;
+      const off = getCamOrbitOffset().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const f = new THREE.Vector3(off.x, 0, off.z);
+      if (f.lengthSq() < 1e-8) f.set(0, 0, -1);
+      f.normalize().multiplyScalar(-1);
+
+      const up = new THREE.Vector3(0, 1, 0);
+      const r = new THREE.Vector3().crossVectors(up, f).normalize();
+
+      const mx = -raw.mz * f.x - raw.mx * r.x;
+      const mz = -raw.mz * f.z - raw.mx * r.z;
+      return { mx, mz };
+    }
+
+    /** Cephe ortası cam kapı önü — eski tetik (15.5, 14.4) kaldırımdan gelen oyuncuyla hizasızdı. */
+    const STREET_ENTRANCE = { x: 0, z: 14.1, r: 5.9 };
+    function isNearStreetBankEntrance() {
+      const px = player.position.x;
+      const pz = player.position.z;
+      const ring = Math.hypot(px - STREET_ENTRANCE.x, pz - STREET_ENTRANCE.z) <= STREET_ENTRANCE.r;
+      const wideBand = Math.abs(px) <= 8 && pz >= 11.2 && pz <= 17.2;
+      return ring || wideBand;
+    }
+    let clock = new THREE.Clock();
+    let lastMoveAt = 0;
+    let staffWarnCooldown = 0;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x9eb8d8);
+    scene.fog = new THREE.Fog(0xc5d6ea, 38, 165);
+
+    function applyWorldAtmosphere() {
+      if (worldMode === 'INTERIOR') {
+        scene.background.setHex(0x121a28);
+        scene.fog.color.setHex(0x1a2436);
+        scene.fog.near = 14;
+        scene.fog.far = 78;
+      } else {
+        scene.background.setHex(0x9eb8d8);
+        scene.fog.color.setHex(0xc8dae8);
+        scene.fog.near = 32;
+        scene.fog.far = 155;
+      }
+      renderer.toneMappingExposure = worldMode === 'INTERIOR' ? 1.02 : 1.14;
+      hemi.intensity = worldMode === 'INTERIOR' ? 0.44 : 0.5;
+      dir.intensity = worldMode === 'INTERIOR' ? 1.06 : 1.3;
+      fill.intensity = worldMode === 'INTERIOR' ? 0.34 : 0.42;
+      rim.intensity = worldMode === 'INTERIOR' ? 0.14 : 0.2;
+      ambientFill.intensity = worldMode === 'INTERIOR' ? 0.055 : 0.078;
+    }
+
+    let ambCtx = null;
+    function startLobbyAmbience() {
+      if (ambCtx) {
+        ambCtx.resume().catch(function () {});
+        return;
+      }
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      ambCtx = new Ctx();
+      const mix = ambCtx.createGain();
+      mix.gain.value = 0.028;
+      const len = 3 * ambCtx.sampleRate;
+      const buf = ambCtx.createBuffer(1, len, ambCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        last = (last + 0.015 * w) * 0.992;
+        data[i] = last * 0.4;
+      }
+      const src = ambCtx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      const bp = ambCtx.createBiquadFilter();
+      bp.type = 'lowpass';
+      bp.frequency.value = 380;
+      const hp = ambCtx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 90;
+      src.connect(hp).connect(bp).connect(mix).connect(ambCtx.destination);
+      src.start(0);
+      ambCtx.resume().catch(function () {});
+    }
+
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 220);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+
+    try {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const envTex = pmrem.fromScene(new RoomEnvironment(), 0.032).texture;
+      scene.environment = envTex;
+      pmrem.dispose();
+    } catch (e) {
+      /* env fallback ok */
+    }
+
+    const hemi = new THREE.HemisphereLight(0xf2f6ff, 0x3d4a5c, 0.48);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xfff7ef, 1.25);
+    dir.position.set(14, 28, 16);
+    dir.castShadow = true;
+    dir.shadow.mapSize.set(3072, 3072);
+    dir.shadow.camera.near = 1.2;
+    dir.shadow.camera.far = 62;
+    dir.shadow.camera.left = -36;
+    dir.shadow.camera.right = 36;
+    dir.shadow.camera.top = 28;
+    dir.shadow.camera.bottom = -32;
+    dir.shadow.bias = -0.00018;
+    dir.shadow.normalBias = 0.032;
+    scene.add(dir);
+    const fill = new THREE.DirectionalLight(0xc5d4f5, 0.36);
+    fill.position.set(-18, 14, -6);
+    scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffecd4, 0.18);
+    rim.position.set(4, 8, -22);
+    scene.add(rim);
+
+    const ambientFill = new THREE.AmbientLight(0xb8c5db, 0.065);
+    scene.add(ambientFill);
+
+    const interiorGroup = new THREE.Group();
+    const exteriorGroup = new THREE.Group();
+    const collisionMeshes = [];
+    const cameraFadeMeshes = [];
+    const raycaster = new THREE.Raycaster();
+    scene.add(interiorGroup);
+    scene.add(exteriorGroup);
+    let worldMode = 'INTERIOR';
+    let moveTransition = null;
+    const interiorCamOrbit = new THREE.Vector3(0, 2.04, -5.68);
+    const exteriorCamOrbit = new THREE.Vector3(0, 2.36, -8.02);
+    function getCamOrbitOffset() {
+      return (worldMode === 'INTERIOR' ? interiorCamOrbit : exteriorCamOrbit).clone();
+    }
+
+    function matStd(color, rough, metal) {
+      return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal });
+    }
+
+    function addShadow(mesh) {
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      return mesh;
+    }
+
+    function registerCameraFade(mesh, opacityLow) {
+      if (!mesh || !mesh.material) return;
+      mesh.userData.fadeLevel = opacityLow == null ? 0.32 : opacityLow;
+      mesh.userData.cameraFade = true;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      mats.forEach((mat) => {
+        mat.transparent = true;
+        mat.opacity = 1;
+        mat.depthWrite = true;
+      });
+      cameraFadeMeshes.push(mesh);
+    }
+
+    function applyCameraOcclusionFade() {
+      if (worldMode !== 'INTERIOR' || !interiorGroup.visible || cameraFadeMeshes.length === 0) return;
+      const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
+      const toCam = new THREE.Vector3().subVectors(camera.position, eye);
+      const len = toCam.length();
+      if (len < 0.25) return;
+      const dir = toCam.clone().multiplyScalar(1 / len);
+      cameraFadeMeshes.forEach((mesh) => {
+        if (!mesh.visible) return;
+        const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        mats.forEach((mat) => {
+          mat.opacity = 1;
+          mat.depthWrite = true;
+        });
+      });
+      raycaster.set(eye, dir);
+      raycaster.far = len - 0.12;
+      const hits = raycaster.intersectObjects(cameraFadeMeshes, false);
+      for (let i = 0; i < Math.min(3, hits.length); i++) {
+        const o = hits[i].object;
+        if (!o.userData.cameraFade) continue;
+        const low = o.userData.fadeLevel != null ? o.userData.fadeLevel : 0.3;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((mat) => {
+          mat.opacity = Math.min(mat.opacity, low);
+          mat.depthWrite = mat.opacity > 0.55;
+        });
+      }
+    }
+
+    /** Prosedürel insan (ayaklar y=0); opts.role: 'security' | 'staff' | undefined — semi-realistic oranlar */
+    function createHumanoid(opts) {
+      const s = opts.scale || 1;
+      const role = opts.role || 'civilian';
+      const skin = opts.skin ?? 0xdcb8a0;
+      const shirt = opts.shirt ?? 0x3b82f6;
+      const pants = opts.pants ?? 0x1e293b;
+      const shoes = opts.shoes ?? 0x171717;
+      const vest = opts.vest;
+      const cap = opts.cap === true;
+      const tie = opts.tie === true;
+      const blazer = opts.blazer ?? null;
+
+      const root = new THREE.Group();
+      root.userData.isHuman = true;
+      root.userData.idlePhase = Math.random() * Math.PI * 2;
+      root.userData.pose = opts.pose || 'idle';
+
+      const skinM = matStd(skin, 0.68, 0.02);
+      const shirtM = matStd(shirt, 0.58, 0.04);
+      const pantsM = matStd(pants, 0.72, 0.06);
+      const shoeM = matStd(shoes, 0.86, 0.08);
+
+      const head = addShadow(new THREE.Mesh(new THREE.SphereGeometry(0.092 * s, 32, 24), skinM));
+      head.position.set(0, 1.54 * s, 0);
+      head.scale.set(0.94, 1.02, 0.96);
+      root.add(head);
+      root.userData.head = head;
+
+      const hair = new THREE.Mesh(
+        new THREE.SphereGeometry(0.098 * s, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.48),
+        matStd(opts.hair ?? 0x2c1810, 0.88, 0)
+      );
+      hair.position.set(0, 1.59 * s, -0.012 * s);
+      hair.castShadow = true;
+      root.add(hair);
+
+      const neck = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.055 * s, 0.062 * s, 0.1 * s, 12), skinM));
+      neck.position.set(0, 1.42 * s, 0);
+      root.add(neck);
+
+      const torso = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.38 * s, 0.52 * s, 0.2 * s), shirtM));
+      torso.position.set(0, 1.12 * s, 0);
+      root.add(torso);
+      root.userData.torso = torso;
+
+      if (blazer != null) {
+        const bz = addShadow(
+          new THREE.Mesh(new THREE.BoxGeometry(0.405 * s, 0.54 * s, 0.215 * s), matStd(blazer, 0.45, 0.12))
+        );
+        bz.position.set(0, 1.12 * s, 0.012 * s);
+        root.add(bz);
+      }
+
+      if (tie) {
+        const tMat = matStd(0x1e3a5f, 0.42, 0.15);
+        const knot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.06 * s, 0.05 * s, 0.04 * s), tMat));
+        knot.position.set(0, 1.28 * s, 0.11 * s);
+        root.add(knot);
+        const strip = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.055 * s, 0.22 * s, 0.015 * s), tMat));
+        strip.position.set(0, 1.15 * s, 0.11 * s);
+        root.add(strip);
+      }
+
+      if (vest != null || role === 'security') {
+        const vestCol = role === 'security' ? 0x1e293b : vest;
+        const vestMesh = addShadow(
+          new THREE.Mesh(new THREE.BoxGeometry(0.4 * s, 0.34 * s, 0.23 * s), matStd(vestCol, 0.42, 0.18))
+        );
+        vestMesh.position.set(0, 1.18 * s, 0.035 * s);
+        root.add(vestMesh);
+        if (role === 'security') {
+          const stripe = addShadow(
+            new THREE.Mesh(new THREE.BoxGeometry(0.41 * s, 0.035 * s, 0.24 * s), matStd(0x0ea5e9, 0.32, 0.28))
+          );
+          stripe.position.set(0, 1.26 * s, 0.045 * s);
+          root.add(stripe);
+          const badge = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.07 * s, 0.09 * s),
+            new THREE.MeshStandardMaterial({ color: 0xc7d2fe, roughness: 0.28, metalness: 0.62, emissive: 0x1e3a8a, emissiveIntensity: 0.12 })
+          );
+          badge.position.set(0.11 * s, 1.22 * s, 0.14 * s);
+          root.add(badge);
+          const radio = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.09 * s, 0.14 * s, 0.05 * s), matStd(0x0f172a, 0.35, 0.45)));
+          radio.position.set(-0.16 * s, 1.15 * s, 0.08 * s);
+          root.add(radio);
+        }
+      }
+
+      const hip = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.33 * s, 0.17 * s, 0.19 * s), pantsM));
+      hip.position.set(0, 0.86 * s, 0);
+      root.add(hip);
+
+      function limbLeg(side) {
+        const g = new THREE.Group();
+        const x = side * 0.1 * s;
+        const thigh = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.062 * s, 0.052 * s, 0.4 * s, 14), pantsM));
+        thigh.position.set(x, 0.62 * s, 0);
+        thigh.rotation.z = side * 0.05;
+        g.add(thigh);
+        const calf = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.048 * s, 0.042 * s, 0.37 * s, 12), pantsM));
+        calf.position.set(x, 0.27 * s, 0.02 * s);
+        g.add(calf);
+        const foot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.095 * s, 0.055 * s, 0.24 * s), shoeM));
+        foot.position.set(x, 0.028 * s, 0.045 * s);
+        g.add(foot);
+        return g;
+      }
+      root.add(limbLeg(-1));
+      root.add(limbLeg(1));
+
+      function limbArm(side) {
+        const x = side * 0.24 * s;
+        const upper = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.042 * s, 0.038 * s, 0.3 * s, 12), shirtM));
+        upper.position.set(x, 1.22 * s, 0);
+        upper.rotation.z = side * 0.22;
+        root.add(upper);
+        const lower = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.035 * s, 0.032 * s, 0.27 * s, 10), skinM));
+        lower.position.set(x * 1.06, 0.96 * s, 0.05 * s);
+        lower.rotation.z = side * 0.12;
+        root.add(lower);
+        if (side < 0) root.userData.armLL = lower;
+        else root.userData.armLR = lower;
+      }
+      limbArm(-1);
+      limbArm(1);
+
+      if (cap) {
+        const capMesh = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.095 * s, 0.1 * s, 0.055 * s, 20), matStd(0x172554, 0.55, 0.15)));
+        capMesh.position.set(0, 1.64 * s, 0);
+        root.add(capMesh);
+        const visor = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.13 * s, 0.028 * s, 0.09 * s), matStd(0x020617, 0.45, 0.15)));
+        visor.position.set(0, 1.61 * s, 0.09 * s);
+        root.add(visor);
+      }
+
+      if (opts.pose === 'phone') {
+        const ph = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.095 * s, 0.016 * s), matStd(0x0f172a, 0.28, 0.5)));
+        ph.position.set(-0.2 * s, 1.04 * s, 0.11 * s);
+        ph.rotation.x = 0.42;
+        root.add(ph);
+      }
+
+      root.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+        }
+      });
+      return root;
+    }
+
+    function buildBankInterior() {
+      const floorCanvas = document.createElement('canvas');
+      floorCanvas.width = 512;
+      floorCanvas.height = 512;
+      const fctx = floorCanvas.getContext('2d');
+      fctx.fillStyle = '#f4f6fa';
+      fctx.fillRect(0, 0, 512, 512);
+      for (let i = 0; i < 180; i++) {
+        fctx.strokeStyle = 'rgba(148,163,184,' + (0.04 + Math.random() * 0.05) + ')';
+        fctx.lineWidth = 0.4 + Math.random() * 0.8;
+        fctx.beginPath();
+        fctx.moveTo(Math.random() * 512, Math.random() * 512);
+        fctx.bezierCurveTo(Math.random() * 512, Math.random() * 512, Math.random() * 512, Math.random() * 512, Math.random() * 512, Math.random() * 512);
+        fctx.stroke();
+      }
+      for (let i = 0; i < 140; i++) {
+        fctx.fillStyle = 'rgba(148,163,184,' + (0.018 + Math.random() * 0.035) + ')';
+        fctx.fillRect(Math.random() * 508, Math.random() * 508, 1 + Math.random() * 40, 0.6 + Math.random());
+      }
+      fctx.strokeStyle = 'rgba(100,116,139,0.14)';
+      fctx.lineWidth = 1;
+      for (let g = 0; g <= 32; g++) {
+        fctx.beginPath();
+        fctx.moveTo(g * 16, 0);
+        fctx.lineTo(g * 16, 512);
+        fctx.stroke();
+        fctx.beginPath();
+        fctx.moveTo(0, g * 16);
+        fctx.lineTo(512, g * 16);
+        fctx.stroke();
+      }
+      const floorTex = new THREE.CanvasTexture(floorCanvas);
+      floorTex.colorSpace = THREE.SRGBColorSpace;
+      floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
+      floorTex.repeat.set(5, 3.2);
+      floorTex.anisotropy = 4;
+      const marble = new THREE.MeshPhysicalMaterial({
+        map: floorTex,
+        color: 0xffffff,
+        roughness: 0.11,
+        metalness: 0.12,
+        clearcoat: 0.55,
+        clearcoatRoughness: 0.22,
+        envMapIntensity: 1.05
+      });
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(42, 26), marble);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      floor.castShadow = false;
+      interiorGroup.add(floor);
+
+      const border = matStd(0xc4b8a8, 0.55, 0.12);
+      const sk = 0.15;
+      [
+        [42, sk, 0.8, 0, sk / 2, -13],
+        [42, sk, 0.8, 0, sk / 2, 13],
+        [sk, sk, 26, -21 + sk / 2, sk / 2, 0],
+        [sk, sk, 26, 21 - sk / 2, sk / 2, 0]
+      ].forEach(([w, h, d, x, y, z]) => {
+        const b = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), border));
+        b.position.set(x, y, z);
+        interiorGroup.add(b);
+        collisionMeshes.push(b);
+      });
+
+      const plaster = new THREE.MeshPhysicalMaterial({
+        color: 0xf2efe8,
+        roughness: 0.78,
+        metalness: 0.04,
+        clearcoat: 0.12,
+        clearcoatRoughness: 0.55,
+        envMapIntensity: 0.65
+      });
+      const woodLow = matStd(0x4a3728, 0.78, 0);
+      const wallH = 4.9;
+      function wallPanel(w, h, d, x, z, ry, mat, y0, registerFade) {
+        const m = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat));
+        m.position.set(x, y0 + h / 2, z);
+        m.rotation.y = ry || 0;
+        interiorGroup.add(m);
+        collisionMeshes.push(m);
+        if (registerFade) registerCameraFade(m, 0.3);
+        return m;
+      }
+      wallPanel(42, 1.15, 0.45, 0, -12.75, 0, woodLow, 0, false);
+      wallPanel(42, wallH - 1.15, 0.45, 0, -12.78, 0, plaster, 1.15, true);
+      wallPanel(42, 1.15, 0.45, 0, 12.75, 0, woodLow, 0, false);
+      wallPanel(42, wallH - 1.15, 0.45, 0, 12.78, Math.PI, plaster, 1.15, true);
+      wallPanel(0.45, 1.15, 26, -20.78, 0, 0, woodLow, 0, false);
+      wallPanel(0.45, wallH - 1.15, 26, -20.82, 0, 0, plaster, 1.15, true);
+      wallPanel(0.45, 1.15, 26, 20.78, 0, Math.PI, woodLow, 0, false);
+      wallPanel(0.45, wallH - 1.15, 26, 20.82, 0, Math.PI, plaster, 1.15, true);
+
+      const colMat = new THREE.MeshPhysicalMaterial({
+        color: 0xeae2d6,
+        roughness: 0.36,
+        metalness: 0.12,
+        clearcoat: 0.15,
+        clearcoatRoughness: 0.45,
+        envMapIntensity: 0.85
+      });
+      for (let i = 0; i < 4; i++) {
+        const x = -12 + (i % 2) * 24;
+        const z = -2 + Math.floor(i / 2) * 8;
+        const col = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.46, wallH - 0.3, 28), colMat));
+        col.position.set(x, (wallH - 0.3) / 2, z);
+        interiorGroup.add(col);
+        collisionMeshes.push(col);
+        registerCameraFade(col, 0.34);
+        const capRing = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.42, 0.1, 24), matStd(0xd4c4b0, 0.38, 0.35)));
+        capRing.position.set(x, wallH - 0.18, z);
+        interiorGroup.add(capRing);
+      }
+
+      const ceil = new THREE.Mesh(
+        new THREE.PlaneGeometry(42, 26),
+        new THREE.MeshStandardMaterial({
+          color: 0x252d3a,
+          roughness: 0.9,
+          metalness: 0.08,
+          emissive: 0x151c28,
+          emissiveIntensity: 0.15
+        })
+      );
+      ceil.rotation.x = Math.PI / 2;
+      ceil.position.y = wallH;
+      ceil.receiveShadow = true;
+      interiorGroup.add(ceil);
+
+      for (let i = -15; i <= 15; i += 10) {
+        const pan = new THREE.Mesh(
+          new THREE.PlaneGeometry(3.4, 1.55),
+          new THREE.MeshStandardMaterial({
+            color: 0xfffff8,
+            emissive: 0xfff5e0,
+            emissiveIntensity: 0.42,
+            roughness: 0.32,
+            side: THREE.DoubleSide
+          })
+        );
+        pan.rotation.x = Math.PI / 2;
+        pan.position.set(i, wallH - 0.04, 0);
+        interiorGroup.add(pan);
+      }
+
+      const deskWood = matStd(0x5c3d2e, 0.65, 0);
+      const deskFront = matStd(0x2d3748, 0.55, 0.15);
+      const tellerIsland = new THREE.Group();
+      const deskTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 0.12, 2.4), deskWood));
+      deskTop.position.set(0, 1.12, -9.2);
+      tellerIsland.add(deskTop);
+      const deskBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 1.05, 2.15), deskFront));
+      deskBody.position.set(0, 0.52, -9.35);
+      tellerIsland.add(deskBody);
+      const kick = addShadow(new THREE.Mesh(new THREE.BoxGeometry(26, 0.22, 0.08), matStd(0x1e293b, 0.4, 0.4)));
+      kick.position.set(0, 0.11, -8.45);
+      tellerIsland.add(kick);
+      interiorGroup.add(tellerIsland);
+      collisionMeshes.push(deskBody, deskTop);
+      registerCameraFade(deskBody, 0.26);
+
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.02,
+        roughness: 0.045,
+        transmission: 0.92,
+        thickness: 0.14,
+        ior: 1.48,
+        transparent: true,
+        envMapIntensity: 1.15
+      });
+      const glass = new THREE.Mesh(new THREE.BoxGeometry(25.5, 1.35, 0.06), glassMat);
+      glass.position.set(0, 1.95, -8.35);
+      glass.castShadow = true;
+      interiorGroup.add(glass);
+      collisionMeshes.push(glass);
+
+      const queueBoard = new THREE.Group();
+      const qbBack = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.15, 0.12), matStd(0x1e293b, 0.45, 0.2)));
+      qbBack.position.set(-11, 1.55, 3.5);
+      queueBoard.add(qbBack);
+      const qbScr = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.55, 0.85),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0x1d4ed8, emissiveIntensity: 0.35, roughness: 0.35 })
+      );
+      qbScr.position.set(-11, 1.55, 3.58);
+      queueBoard.add(qbScr);
+      const qCanvas = document.createElement('canvas');
+      qCanvas.width = 256;
+      qCanvas.height = 128;
+      const qctx = qCanvas.getContext('2d');
+      qctx.fillStyle = '#0f172a';
+      qctx.fillRect(0, 0, 256, 128);
+      qctx.fillStyle = '#e2e8f0';
+      qctx.font = 'bold 28px Inter,sans-serif';
+      qctx.fillText('SIRA: A-042', 24, 52);
+      qctx.font = '16px Inter,sans-serif';
+      qctx.fillStyle = '#94a3b8';
+      qctx.fillText('Atlas Şubesi', 24, 88);
+      const qTex = new THREE.CanvasTexture(qCanvas);
+       qTex.colorSpace = THREE.SRGBColorSpace;
+      const qPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.75), new THREE.MeshBasicMaterial({ map: qTex }));
+      qPlane.position.set(-11, 1.52, 3.59);
+      queueBoard.add(qPlane);
+      interiorGroup.add(queueBoard);
+
+      const reception = new THREE.Group();
+      const recDesk = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.95, 1.1), matStd(0x334155, 0.5, 0.15)));
+      recDesk.position.set(14.5, 0.48, 4.5);
+      reception.add(recDesk);
+      const recTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.25, 0.08, 1.15), matStd(0x475569, 0.35, 0.25)));
+      recTop.position.set(14.5, 0.99, 4.5);
+      reception.add(recTop);
+      interiorGroup.add(reception);
+      collisionMeshes.push(recDesk);
+      registerCameraFade(recDesk, 0.28);
+
+      for (let pi = 0; pi < 3; pi++) {
+        const pcv = document.createElement('canvas');
+        pcv.width = 256;
+        pcv.height = 160;
+        const px = pcv.getContext('2d');
+        const hues = ['#1e3a8a', '#0f766e', '#713f12'];
+        px.fillStyle = hues[pi];
+        px.fillRect(0, 0, 256, 160);
+        px.fillStyle = 'rgba(255,255,255,0.12)';
+        px.fillRect(0, 0, 256, 36);
+        px.fillStyle = '#f8fafc';
+        px.font = 'bold 22px Inter,sans-serif';
+        const titles = ['Güvenli bankacılık', 'Sürdürülebilirlik', 'Yatırım ilkeleri'];
+        px.fillText(titles[pi], 14, 26);
+        px.fillStyle = 'rgba(248,250,252,0.85)';
+        px.font = '13px Inter,sans-serif';
+        px.fillText('Atlas A.Ş. · Şube bilgilendirme', 14, 58);
+        px.fillText('KVKK ve müşteri hakları için danışma.', 14, 82);
+        const pTex = new THREE.CanvasTexture(pcv);
+        pTex.colorSpace = THREE.SRGBColorSpace;
+        const poster = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.2, 1.38),
+          new THREE.MeshStandardMaterial({ map: pTex, roughness: 0.5, metalness: 0.06, emissive: 0x111827, emissiveIntensity: 0.04 })
+        );
+        poster.position.set(-19.56, 2.2 + pi * 0.08, -4 + pi * 3.5);
+        poster.rotation.y = Math.PI / 2;
+        interiorGroup.add(poster);
+      }
+
+      function deskPropSet(cx, cz, ry) {
+        const g = new THREE.Group();
+        const mon = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.05), matStd(0x111827, 0.25, 0.5)));
+        mon.position.set(0, 1.18, -0.12);
+        g.add(mon);
+        const kb = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.02, 0.18), matStd(0x1e293b, 0.55, 0.1)));
+        kb.position.set(0, 1.02, 0.08);
+        g.add(kb);
+        const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 8), new THREE.MeshStandardMaterial({ color: 0xfef9c3, emissive: 0xfde68a, emissiveIntensity: 0.4 }));
+        lamp.position.set(0.35, 1.35, 0);
+        g.add(lamp);
+        const paper = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.02, 0.28), matStd(0xf8fafc, 0.75, 0)));
+        paper.position.set(-0.25, 1.05, 0.05);
+        paper.rotation.y = 0.2;
+        g.add(paper);
+        const mouse = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.03, 0.1), matStd(0x1e293b, 0.4, 0.2)));
+        mouse.position.set(0.18, 1.035, 0.12);
+        g.add(mouse);
+        const pen = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.012, 0.08, 8), matStd(0x1e3a8a, 0.35, 0.15)));
+        pen.position.set(-0.32, 1.06, -0.05);
+        pen.rotation.z = 0.4;
+        g.add(pen);
+        g.position.set(cx, 0, cz);
+        g.rotation.y = ry;
+        interiorGroup.add(g);
+      }
+      deskPropSet(7.5, -6.8, -0.4);
+      deskPropSet(-9, -6.5, 0.35);
+
+      const staff1 = createHumanoid({
+        shirt: 0xf1f5f9,
+        pants: 0x0f172a,
+        vest: null,
+        skin: 0xc99e8b,
+        hair: 0x1a1208,
+        cap: false,
+        scale: 0.99,
+        tie: true,
+        blazer: 0x1e3a5f
+      });
+      staff1.position.set(-6, 0, -10.15);
+      staff1.rotation.y = Math.PI * 0.08;
+      interiorGroup.add(staff1);
+
+      const staff2 = createHumanoid({
+        shirt: 0xe2e8f0,
+        pants: 0x0f172a,
+        skin: 0xb8956c,
+        hair: 0x0f0f0f,
+        cap: false,
+        scale: 0.97,
+        tie: true,
+        blazer: 0x0f172a
+      });
+      staff2.position.set(5, 0, -10.1);
+      staff2.rotation.y = -Math.PI * 0.12;
+      interiorGroup.add(staff2);
+      staff1.userData.pose = 'typing';
+      staff2.userData.pose = 'typing';
+
+      function addArmchair(cx, cz, ry, leather) {
+        const g = new THREE.Group();
+        const seat = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.22, 0.7), matStd(leather || 0x3f3428, 0.52, 0.08)));
+        seat.position.set(0, 0.48, 0);
+        g.add(seat);
+        const back = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.55, 0.12), matStd(leather || 0x352a22, 0.55, 0.06)));
+        back.position.set(0, 0.82, -0.32);
+        g.add(back);
+        const armL = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.25, 0.55), matStd(0x44403c, 0.6, 0.12)));
+        armL.position.set(-0.38, 0.58, 0.05);
+        g.add(armL);
+        const armR = armL.clone();
+        armR.position.x = 0.38;
+        g.add(armR);
+        const leg = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.12, 8), matStd(0x1c1917, 0.45, 0.35)));
+        leg.position.set(-0.26, 0.06, 0.22);
+        g.add(leg);
+        const leg2 = leg.clone();
+        leg2.position.set(0.26, 0.06, 0.22);
+        g.add(leg2);
+        const leg3 = leg.clone();
+        leg3.position.set(-0.26, 0.06, -0.22);
+        g.add(leg3);
+        const leg4 = leg.clone();
+        leg4.position.set(0.26, 0.06, -0.22);
+        g.add(leg4);
+        g.position.set(cx, 0, cz);
+        g.rotation.y = ry;
+        interiorGroup.add(g);
+      }
+      addArmchair(9.2, 5.4, -0.15, 0x422006);
+      addArmchair(10.5, 5.1, 0.2, 0x3f2d24);
+      addArmchair(-7.8, 6.8, 0.85, 0x334155);
+      addArmchair(-9.2, 6.2, 0.55, 0x292524);
+      addArmchair(0.5, 6.5, -0.9, 0x451a03);
+      addArmchair(-3.5, 8.2, 2.5, 0x1e3a5f);
+
+      const wTrim = matStd(0x5c534c, 0.62, 0.1);
+      [
+        [40, 0.38, 0.12, 0, 0.75, -12.42, 0],
+        [40, 0.38, 0.12, 0, 0.75, 12.42, Math.PI],
+        [0.12, 0.38, 24, -20.42, 0.75, 0, 0],
+        [0.12, 0.38, 24, 20.42, 0.75, 0, Math.PI]
+      ].forEach(([w, h, d, x, y, z, ry]) => {
+        const tr = addShadow(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wTrim));
+        tr.position.set(x, y, z);
+        tr.rotation.y = ry;
+        interiorGroup.add(tr);
+      });
+
+      for (let gx = -18; gx <= 18; gx += 6) {
+        for (let gz = -10; gz <= 10; gz += 5) {
+          const led = new THREE.Mesh(
+            new THREE.PlaneGeometry(1.8, 0.55),
+            new THREE.MeshStandardMaterial({
+              color: 0xfffff5,
+              emissive: 0xfff2d6,
+              emissiveIntensity: 0.55,
+              roughness: 0.38,
+              side: THREE.DoubleSide
+            })
+          );
+          led.rotation.x = Math.PI / 2;
+          led.position.set(gx, wallH - 0.08, gz);
+          interiorGroup.add(led);
+        }
+      }
+
+      function addCeilingCam(px, pz) {
+        const dome = new THREE.Mesh(
+          new THREE.SphereGeometry(0.11, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5),
+          matStd(0xf8fafc, 0.25, 0.15)
+        );
+        dome.position.set(px, wallH - 0.02, pz);
+        interiorGroup.add(dome);
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.18), matStd(0x1e293b, 0.4, 0.35)));
+        body.position.set(px, wallH - 0.12, pz);
+        interiorGroup.add(body);
+      }
+      addCeilingCam(-18.5, -10.5);
+      addCeilingCam(18.5, -10.2);
+      addCeilingCam(-18.2, 9.5);
+      addCeilingCam(17.8, 9.8);
+
+      const cooler = new THREE.Group();
+      const cBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.45, 0.52), matStd(0xe2e8f0, 0.38, 0.15)));
+      cBody.position.set(12.2, 0.72, -1.8);
+      cooler.add(cBody);
+      const cTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.12, 0.48), matStd(0x1e293b, 0.35, 0.25)));
+      cTop.position.set(12.2, 1.52, -1.8);
+      cooler.add(cTop);
+      interiorGroup.add(cooler);
+
+      const persC = document.createElement('canvas');
+      persC.width = 280;
+      persC.height = 96;
+      const pctx = persC.getContext('2d');
+      pctx.fillStyle = '#1e293b';
+      pctx.fillRect(0, 0, 280, 96);
+      pctx.strokeStyle = '#64748b';
+      pctx.strokeRect(2, 2, 276, 92);
+      pctx.fillStyle = '#f8fafc';
+      pctx.font = 'bold 22px Inter,sans-serif';
+      pctx.fillText('PERSONEL ALANI', 14, 38);
+      pctx.fillStyle = '#94a3b8';
+      pctx.font = '14px Inter,sans-serif';
+      pctx.fillText('Yetkisiz giriş yasaktır', 14, 68);
+      const persTex = new THREE.CanvasTexture(persC);
+      persTex.colorSpace = THREE.SRGBColorSpace;
+      const persPl = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.4, 0.82),
+        new THREE.MeshStandardMaterial({ map: persTex, roughness: 0.45, metalness: 0.05 })
+      );
+      persPl.position.set(-19.56, 2.35, -8.5);
+      persPl.rotation.y = Math.PI / 2;
+      interiorGroup.add(persPl);
+
+      const csDesk = new THREE.Group();
+      const csTop = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.09, 1.05), matStd(0x5c4d3d, 0.48, 0.08)));
+      csTop.position.set(-11.5, 1.02, -4.5);
+      csDesk.add(csTop);
+      const csLeg = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.95, 0.95), matStd(0x334155, 0.5, 0.12)));
+      csLeg.position.set(-11.5, 0.48, -4.5);
+      csDesk.add(csLeg);
+      interiorGroup.add(csDesk);
+      collisionMeshes.push(csLeg);
+      deskPropSet(-11.5, -4.5, Math.PI * 0.85);
+
+      const custPhone = createHumanoid({
+        shirt: 0x64748b,
+        pants: 0x1e293b,
+        skin: 0xd4a896,
+        hair: 0x1c1917,
+        cap: false,
+        scale: 0.97,
+        pose: 'phone'
+      });
+      custPhone.position.set(9.85, 0, 5.25);
+      custPhone.rotation.y = Math.PI + 0.35;
+      interiorGroup.add(custPhone);
+
+      const custWait = createHumanoid({
+        shirt: 0xa16207,
+        pants: 0x292524,
+        skin: 0xc4a574,
+        hair: 0x292524,
+        cap: false,
+        scale: 1.02
+      });
+      custWait.position.set(-8.1, 0, 6.9);
+      custWait.rotation.y = 0.55;
+      custWait.userData.pose = 'waiting';
+      interiorGroup.add(custWait);
+
+      const atmBody = matStd(0x1a1f2e, 0.45, 0.35);
+      for (let ax of [-17, 17]) {
+        const atm = new THREE.Group();
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.35, 2.05, 0.65), atmBody));
+        body.position.set(0, 1.025, 0);
+        atm.add(body);
+        const scr = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.85, 0.55),
+          new THREE.MeshStandardMaterial({ color: 0x0d1b2a, emissive: 0x1e3a8a, emissiveIntensity: 0.5, roughness: 0.3 })
+        );
+        scr.position.set(0, 1.35, ax < 0 ? 0.33 : -0.33);
+        scr.rotation.y = ax < 0 ? 0 : Math.PI;
+        atm.add(scr);
+        atm.position.set(ax, 0, 11.2);
+        atm.rotation.y = ax < 0 ? 0 : Math.PI;
+        interiorGroup.add(atm);
+        collisionMeshes.push(body);
+      }
+
+      const bench = new THREE.Group();
+      const slat = deskWood;
+      for (let i = 0; i < 4; i++) {
+        const sl = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.06, 0.45), slat));
+        sl.position.set(12, 0.45 + i * 0.09, 8);
+        bench.add(sl);
+      }
+      const legL = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.42, 0.12), matStd(0x334155, 0.6, 0.2)));
+      legL.position.set(11.15, 0.21, 7.55);
+      bench.add(legL);
+      const legR = legL.clone();
+      legR.position.set(12.85, 0.21, 7.55);
+      bench.add(legR);
+      interiorGroup.add(bench);
+
+      const planter = new THREE.Group();
+      const pot = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.45, 1.1), matStd(0x78716c, 0.75, 0.05)));
+      pot.position.set(-14, 0.225, 6);
+      planter.add(pot);
+      for (let j = 0; j < 5; j++) {
+        const leaf = addShadow(
+          new THREE.Mesh(new THREE.SphereGeometry(0.22 + (j % 2) * 0.06, 14, 10), matStd(0x166534 + j * 0x020202, 0.88, 0))
+        );
+        leaf.position.set(-14 + (j - 2) * 0.18, 0.65 + (j % 3) * 0.12, 6 + ((j * 7) % 5) * 0.08 - 0.15);
+        leaf.scale.set(1, 1.2, 0.85);
+        planter.add(leaf);
+      }
+      interiorGroup.add(planter);
+
+      const brochure = new THREE.Group();
+      const stand = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.85, 8), matStd(0x64748b, 0.5, 0.25)));
+      stand.position.set(-6, 0.425, -9);
+      brochure.add(stand);
+      for (let k = 0; k < 3; k++) {
+        const shelf = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.04, 0.35), matStd(0xf1f5f9, 0.8, 0)));
+        shelf.position.set(-6, 0.55 + k * 0.22, -9.12 - k * 0.04);
+        shelf.rotation.x = -0.35 - k * 0.08;
+        brochure.add(shelf);
+      }
+      interiorGroup.add(brochure);
+
+      const warmL1 = new THREE.PointLight(0xffecd8, 0.58, 28, 1.82);
+      warmL1.position.set(-5, 3.45, -2.5);
+      interiorGroup.add(warmL1);
+      const warmL2 = new THREE.PointLight(0xffe9d6, 0.44, 22, 1.8);
+      warmL2.position.set(10, 3.2, 5);
+      interiorGroup.add(warmL2);
+      const coolFill = new THREE.PointLight(0xdbeafe, 0.22, 16, 2);
+      coolFill.position.set(-14, 2.9, 7);
+      interiorGroup.add(coolFill);
+
+      const stanchMat = matStd(0x8b9aad, 0.38, 0.72);
+      for (let si = 0; si < 4; si++) {
+        const zx = -9.2 + si * 1.15;
+        const post = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.95, 10), stanchMat));
+        post.position.set(zx, 0.48, 0.8);
+        interiorGroup.add(post);
+        if (si < 3) {
+          const rope = new THREE.Mesh(
+            new THREE.TorusGeometry(0.52, 0.018, 6, 16, Math.PI * 0.42),
+            matStd(0x7f1d1d, 0.55, 0.08)
+          );
+          rope.rotation.x = Math.PI / 2;
+          rope.position.set(zx + 0.575, 0.78, 0.8);
+          interiorGroup.add(rope);
+        }
+      }
+
+      const bench2 = bench.clone();
+      bench2.position.set(-14, 0, 7.2);
+      interiorGroup.add(bench2);
+
+      const printerCab = new THREE.Group();
+      const pcBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.05, 0.55), matStd(0xe2e8f0, 0.42, 0.12)));
+      pcBody.position.set(-2.8, 0.52, -8.35);
+      printerCab.add(pcBody);
+      const pcTray = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.06, 0.38), matStd(0x334155, 0.45, 0.2)));
+      pcTray.position.set(-2.8, 1.08, -8.35);
+      printerCab.add(pcTray);
+      interiorGroup.add(printerCab);
+
+      const partitionMat = glassMat.clone();
+      partitionMat.transmission = 0.72;
+      partitionMat.roughness = 0.1;
+      for (let pi = 0; pi < 5; pi++) {
+        const part = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1.22, 0.04), partitionMat);
+        part.position.set(4.25, 1.66, -10.15 + pi * 0.82);
+        interiorGroup.add(part);
+        registerCameraFade(part, 0.5);
+      }
+
+      const dirCanvas = document.createElement('canvas');
+      dirCanvas.width = 256;
+      dirCanvas.height = 128;
+      const dctx = dirCanvas.getContext('2d');
+      dctx.fillStyle = '#f8fafc';
+      dctx.fillRect(0, 0, 256, 128);
+      dctx.fillStyle = '#0f172a';
+      dctx.font = 'bold 22px Inter,sans-serif';
+      dctx.fillText('ATM →', 20, 52);
+      dctx.font = '15px Inter,sans-serif';
+      dctx.fillStyle = '#475569';
+      dctx.fillText('Danışma 14', 20, 86);
+      const dirTex = new THREE.CanvasTexture(dirCanvas);
+      dirTex.colorSpace = THREE.SRGBColorSpace;
+      const dirBoard = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.8, 0.95),
+        new THREE.MeshStandardMaterial({ map: dirTex, roughness: 0.45, metalness: 0.05 })
+      );
+      dirBoard.position.set(19.58, 2.15, 2);
+      dirBoard.rotation.y = -Math.PI / 2;
+      interiorGroup.add(dirBoard);
+
+      const totemCv = document.createElement('canvas');
+      totemCv.width = 160;
+      totemCv.height = 320;
+      const totx = totemCv.getContext('2d');
+      const totGrad = totx.createLinearGradient(0, 0, 0, 320);
+      totGrad.addColorStop(0, '#1e293b');
+      totGrad.addColorStop(1, '#0f172a');
+      totx.fillStyle = totGrad;
+      totx.fillRect(0, 0, 160, 320);
+      totx.fillStyle = '#38bdf8';
+      totx.font = 'bold 28px Inter,sans-serif';
+      totx.fillText('ATM', 42, 120);
+      totx.fillStyle = '#94a3b8';
+      totx.font = '14px Inter,sans-serif';
+      totx.fillText('7x24', 58, 155);
+      totx.fillStyle = '#e2e8f0';
+      totx.font = '12px Inter,sans-serif';
+      totx.fillText('Güvenli işlem', 28, 220);
+      const totemTex = new THREE.CanvasTexture(totemCv);
+      totemTex.colorSpace = THREE.SRGBColorSpace;
+      const totem = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.55, 1.75),
+        new THREE.MeshStandardMaterial({ map: totemTex, roughness: 0.42, metalness: 0.12, emissive: 0x0c4a6e, emissiveIntensity: 0.08 })
+      );
+      totem.position.set(16.35, 1.55, 9.95);
+      totem.rotation.y = -0.75;
+      interiorGroup.add(totem);
+      const totemPole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 1.55, 10), matStd(0x475569, 0.45, 0.55)));
+      totemPole.position.set(16.35, 0.78, 9.95);
+      interiorGroup.add(totemPole);
+
+      return [staff1, staff2, custPhone, custWait];
+    }
+
+    function buildExteriorWorld() {
+      const aspC = document.createElement('canvas');
+      aspC.width = 256;
+      aspC.height = 256;
+      const ax = aspC.getContext('2d');
+      ax.fillStyle = '#2d3a4d';
+      ax.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 400; i++) {
+        ax.fillStyle = 'rgba(15,23,42,' + (0.04 + Math.random() * 0.06) + ')';
+        ax.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+      }
+      const aspTex = new THREE.CanvasTexture(aspC);
+      aspTex.wrapS = aspTex.wrapT = THREE.RepeatWrapping;
+      aspTex.repeat.set(10, 8);
+      aspTex.colorSpace = THREE.SRGBColorSpace;
+      const asphalt = new THREE.Mesh(
+        new THREE.PlaneGeometry(55, 42),
+        new THREE.MeshStandardMaterial({ map: aspTex, color: 0xffffff, roughness: 0.82, metalness: 0.06 })
+      );
+      asphalt.rotation.x = -Math.PI / 2;
+      asphalt.position.set(0, -0.02, 32);
+      asphalt.receiveShadow = true;
+      exteriorGroup.add(asphalt);
+
+      const swC = document.createElement('canvas');
+      swC.width = 128;
+      swC.height = 128;
+      const sx = swC.getContext('2d');
+      sx.fillStyle = '#cbd5e1';
+      sx.fillRect(0, 0, 128, 128);
+      sx.strokeStyle = 'rgba(100,116,139,0.25)';
+      for (let g = 0; g <= 8; g++) {
+        sx.beginPath();
+        sx.moveTo(g * 16, 0);
+        sx.lineTo(g * 16, 128);
+        sx.stroke();
+      }
+      const swTex = new THREE.CanvasTexture(swC);
+      swTex.wrapS = swTex.wrapT = THREE.RepeatWrapping;
+      swTex.repeat.set(4, 9);
+      swTex.colorSpace = THREE.SRGBColorSpace;
+      const sidewalk = new THREE.Mesh(
+        new THREE.PlaneGeometry(16, 34),
+        new THREE.MeshStandardMaterial({ map: swTex, color: 0xffffff, roughness: 0.58, metalness: 0.04 })
+      );
+      sidewalk.rotation.x = -Math.PI / 2;
+      sidewalk.position.set(-10, 0.01, 30);
+      sidewalk.receiveShadow = true;
+      exteriorGroup.add(sidewalk);
+
+      const curbL = addShadow(new THREE.Mesh(new THREE.BoxGeometry(20, 0.12, 0.42), matStd(0x9ca3af, 0.48, 0.35)));
+      curbL.position.set(-2, 0.06, 13.15);
+      exteriorGroup.add(curbL);
+      const leftBld = addShadow(new THREE.Mesh(new THREE.BoxGeometry(13, 10, 16), matStd(0x3a4f63, 0.72, 0.12)));
+      leftBld.position.set(-27, 5, 27);
+      exteriorGroup.add(leftBld);
+      const rightBld = addShadow(new THREE.Mesh(new THREE.BoxGeometry(11, 8.5, 14), matStd(0x2f3f52, 0.7, 0.1)));
+      rightBld.position.set(25, 4.25, 29);
+      exteriorGroup.add(rightBld);
+
+      const facade = new THREE.Group();
+      const baseWall = addShadow(new THREE.Mesh(new THREE.BoxGeometry(32, 5.2, 0.45), matStd(0x1e293b, 0.55, 0.12)));
+      baseWall.position.set(0, 2.6, 13.2);
+      facade.add(baseWall);
+      collisionMeshes.push(baseWall);
+      const glassCurtain = new THREE.Mesh(
+        new THREE.PlaneGeometry(26, 4.2),
+        new THREE.MeshPhysicalMaterial({
+          color: 0xb8e4ff,
+          metalness: 0.08,
+          roughness: 0.06,
+          transmission: 0.68,
+          thickness: 0.28,
+          transparent: true,
+          envMapIntensity: 1.12,
+          ior: 1.45
+        })
+      );
+      glassCurtain.position.set(0, 2.5, 12.96);
+      glassCurtain.receiveShadow = true;
+      facade.add(glassCurtain);
+      for (let mx = -11.5; mx <= 11.5; mx += 2.3) {
+        const mull = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.35, 0.14), matStd(0x1e293b, 0.32, 0.62)));
+        mull.position.set(mx, 2.48, 13.02);
+        facade.add(mull);
+      }
+
+      const logoC = document.createElement('canvas');
+      logoC.width = 512;
+      logoC.height = 128;
+      const lctx = logoC.getContext('2d');
+      lctx.fillStyle = '#0f172a';
+      lctx.fillRect(0, 0, 512, 128);
+      lctx.fillStyle = '#38bdf8';
+      lctx.font = 'bold 52px Inter,sans-serif';
+      lctx.fillText('ATLAS BANK', 40, 82);
+      const logoTex = new THREE.CanvasTexture(logoC);
+      logoTex.colorSpace = THREE.SRGBColorSpace;
+      const logoPlane = new THREE.Mesh(new THREE.PlaneGeometry(9, 2.2), new THREE.MeshStandardMaterial({ map: logoTex, roughness: 0.45 }));
+      logoPlane.position.set(0, 4.1, 12.92);
+      facade.add(logoPlane);
+
+      const hoursC = document.createElement('canvas');
+      hoursC.width = 256;
+      hoursC.height = 64;
+      const hctx = hoursC.getContext('2d');
+      hctx.fillStyle = '#f1f5f9';
+      hctx.fillRect(0, 0, 256, 64);
+      hctx.fillStyle = '#0f172a';
+      hctx.font = '22px Inter,sans-serif';
+      hctx.fillText('Hafta içi 09:00 – 17:30', 12, 40);
+      const hoursTex = new THREE.CanvasTexture(hoursC);
+      hoursTex.colorSpace = THREE.SRGBColorSpace;
+      const hoursPl = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 0.95), new THREE.MeshStandardMaterial({ map: hoursTex, roughness: 0.5 }));
+      hoursPl.position.set(10, 1.35, 12.92);
+      facade.add(hoursPl);
+
+      const extDoorFrame = new THREE.Group();
+      extDoorFrame.position.set(0, 0, 12.68);
+      const pilG = new THREE.BoxGeometry(0.4, 3.05, 0.36);
+      const amber = matStd(0xb45309, 0.48, 0.38);
+      const pilL = addShadow(new THREE.Mesh(pilG, amber));
+      pilL.position.set(-1.28, 1.525, 0.14);
+      const pilR = pilL.clone();
+      pilR.position.x = 1.28;
+      const lintel = addShadow(new THREE.Mesh(new THREE.BoxGeometry(3.15, 0.34, 0.3), matStd(0x9a3412, 0.42, 0.45)));
+      lintel.position.set(0, 3.06, 0.12);
+      const extDoorGlass = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.15, 2.75),
+        new THREE.MeshPhysicalMaterial({
+          color: 0xc7e8ff,
+          metalness: 0,
+          roughness: 0.06,
+          transmission: 0.7,
+          thickness: 0.1,
+          transparent: true
+        })
+      );
+      extDoorGlass.position.set(0, 1.52, 0.2);
+      extDoorFrame.add(pilL, pilR, lintel, extDoorGlass);
+      facade.add(extDoorFrame);
+
+      const entrySignC = document.createElement('canvas');
+      entrySignC.width = 320;
+      entrySignC.height = 88;
+      const esx = entrySignC.getContext('2d');
+      esx.fillStyle = 'rgba(15,23,42,0.94)';
+      esx.fillRect(0, 0, 320, 88);
+      esx.strokeStyle = '#38bdf8';
+      esx.lineWidth = 3;
+      esx.strokeRect(3, 3, 314, 82);
+      esx.fillStyle = '#f0f9ff';
+      esx.font = 'bold 26px Inter,sans-serif';
+      esx.fillText('OTOMATİK GİRİŞ', 16, 38);
+      esx.fillStyle = '#94a3b8';
+      esx.font = '16px Inter,sans-serif';
+      esx.fillText('Şubeye buradan — E', 16, 64);
+      const entryTex = new THREE.CanvasTexture(entrySignC);
+      entryTex.colorSpace = THREE.SRGBColorSpace;
+      const entrySignPl = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.1, 0.86),
+        new THREE.MeshStandardMaterial({ map: entryTex, roughness: 0.45, transparent: true })
+      );
+      entrySignPl.position.set(-4.35, 2.25, 12.9);
+      facade.add(entrySignPl);
+
+      for (let bx = -2.2; bx <= 2.2; bx += 2.2) {
+        const bol = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.72, 14), matStd(0x78716c, 0.42, 0.55)));
+        bol.position.set(bx, 0.36, 13.55);
+        facade.add(bol);
+      }
+
+      exteriorGroup.add(facade);
+
+      for (let i = 0; i < 3; i++) {
+        const pole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 5.5, 8), matStd(0x334155, 0.45, 0.35)));
+        pole.position.set(-16 + i * 14, 2.75, 22 + i * 2);
+        exteriorGroup.add(pole);
+        const bulb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.28, 10, 8),
+          new THREE.MeshStandardMaterial({ color: 0xfef3c7, emissive: 0xfde68a, emissiveIntensity: 0.5 })
+        );
+        bulb.position.copy(pole.position).add(new THREE.Vector3(0, 2.85, 0));
+        exteriorGroup.add(bulb);
+      }
+
+      for (let c = 0; c < 4; c++) {
+        const car = new THREE.Group();
+        const body = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.75, 4.2), matStd(0x1e293b + c * 0x050505, 0.4, 0.45)));
+        body.position.set(0, 0.55, 0);
+        car.add(body);
+        const roof = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.45, 2.2), matStd(0x0f172a, 0.35, 0.5)));
+        roof.position.set(0, 1.05, -0.2);
+        car.add(roof);
+        car.position.set(12 + (c % 2) * 3.5, 0, 26 + Math.floor(c / 2) * 5.5);
+        car.rotation.y = (c % 2) * 0.08;
+        exteriorGroup.add(car);
+      }
+
+      const camPole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 3.2, 8), matStd(0x475569, 0.5, 0.3)));
+      camPole.position.set(18.5, 1.6, 12.8);
+      exteriorGroup.add(camPole);
+      const camBox = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, 0.25), matStd(0x111827, 0.35, 0.2)));
+      camBox.position.set(18.5, 3.05, 12.8);
+      exteriorGroup.add(camBox);
+
+      const extAtm = new THREE.Group();
+      const extAtmBody = matStd(0x151a28, 0.4, 0.42);
+      const extBody = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.95, 0.58), extAtmBody));
+      extBody.position.set(0, 0.975, 0);
+      extAtm.add(extBody);
+      const extScr = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.72, 0.48),
+        new THREE.MeshStandardMaterial({ color: 0x0a1628, emissive: 0x1d4ed8, emissiveIntensity: 0.55, roughness: 0.28 })
+      );
+      extScr.position.set(0, 1.28, 0.3);
+      extAtm.add(extScr);
+      extAtm.position.set(-6.2, 0, 13.95);
+      exteriorGroup.add(extAtm);
+
+      const alley = new THREE.Group();
+      const agC = document.createElement('canvas');
+      agC.width = 128;
+      agC.height = 128;
+      const agx = agC.getContext('2d');
+      agx.fillStyle = '#4b5563';
+      agx.fillRect(0, 0, 128, 128);
+      for (let i = 0; i < 80; i++) {
+        agx.fillStyle = 'rgba(15,23,42,' + (0.05 + Math.random() * 0.08) + ')';
+        agx.fillRect(Math.random() * 128, Math.random() * 128, 3, 3);
+      }
+      const agTex = new THREE.CanvasTexture(agC);
+      agTex.wrapS = agTex.wrapT = THREE.RepeatWrapping;
+      agTex.repeat.set(4, 3.5);
+      agTex.colorSpace = THREE.SRGBColorSpace;
+      const alleyGround = new THREE.Mesh(
+        new THREE.PlaneGeometry(14, 12),
+        new THREE.MeshStandardMaterial({ map: agTex, color: 0xffffff, roughness: 0.88, metalness: 0.04 })
+      );
+      alleyGround.rotation.x = -Math.PI / 2;
+      alleyGround.position.set(26, 0.015, 20);
+      alleyGround.receiveShadow = true;
+      alley.add(alleyGround);
+      const backWall = addShadow(new THREE.Mesh(new THREE.BoxGeometry(14, 4.2, 0.25), matStd(0x44403c, 0.75, 0.06)));
+      backWall.position.set(26, 2.1, 25.85);
+      alley.add(backWall);
+      const rollup = addShadow(new THREE.Mesh(new THREE.BoxGeometry(5.2, 2.8, 0.14), matStd(0x57534e, 0.55, 0.45)));
+      rollup.position.set(26, 1.45, 25.05);
+      alley.add(rollup);
+      const rollSlats = matStd(0x3f3f46, 0.48, 0.5);
+      for (let rs = 0; rs < 9; rs++) {
+        const sl = addShadow(new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.08, 0.06), rollSlats));
+        sl.position.set(26, 0.45 + rs * 0.28, 25.02);
+        alley.add(sl);
+      }
+      const alleyCamPole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 2.6, 8), matStd(0x475569, 0.48, 0.35)));
+      alleyCamPole.position.set(20.2, 1.3, 17.2);
+      alley.add(alleyCamPole);
+      const alleyCamBox = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.18, 0.2), matStd(0x111827, 0.35, 0.25)));
+      alleyCamBox.position.set(20.2, 2.55, 17.2);
+      alley.add(alleyCamBox);
+      const binLbls = ['GENEL', 'KAĞIT', 'ORGANİK', 'TEHLİKELİ'];
+      const binCols = [0x57534e, 0x2563eb, 0x365314, 0xb91c1c];
+      for (let b = 0; b < 4; b++) {
+        const bin = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.45, 2.05, 1.05), matStd(binCols[b], 0.48, 0.22)));
+        bin.position.set(23 + b * 1.85, 1.025, 19.5);
+        alley.add(bin);
+        collisionMeshes.push(bin);
+        const lid = addShadow(new THREE.Mesh(new THREE.BoxGeometry(1.47, 0.1, 1.07), matStd(0x171717, 0.35, 0.45)));
+        lid.position.set(23 + b * 1.85, 2.08, 19.5);
+        alley.add(lid);
+        const lc = document.createElement('canvas');
+        lc.width = 128;
+        lc.height = 48;
+        const lx = lc.getContext('2d');
+        lx.fillStyle = '#f8fafc';
+        lx.fillRect(0, 0, 128, 48);
+        lx.fillStyle = '#0f172a';
+        lx.font = 'bold 18px Inter,sans-serif';
+        lx.fillText(binLbls[b], 10, 32);
+        const lTex = new THREE.CanvasTexture(lc);
+        lTex.colorSpace = THREE.SRGBColorSpace;
+        const lbl = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.32), new THREE.MeshStandardMaterial({ map: lTex, roughness: 0.5 }));
+        lbl.position.set(23 + b * 1.85, 1.55, 19.5 + 0.53);
+        alley.add(lbl);
+      }
+      for (let f = 0; f < 9; f++) {
+        const pole = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.4, 6), matStd(0x64748b, 0.45, 0.35)));
+        pole.position.set(18.2 + f * 0.85, 1.2, 22.6);
+        alley.add(pole);
+      }
+      const chain = new THREE.Mesh(
+        new THREE.TorusGeometry(3.2, 0.025, 6, 36, Math.PI * 0.88),
+        matStd(0x475569, 0.35, 0.55)
+      );
+      chain.rotation.x = Math.PI / 2;
+      chain.position.set(21.5, 1.35, 22.5);
+      alley.add(chain);
+      const svcSignC = document.createElement('canvas');
+      svcSignC.width = 280;
+      svcSignC.height = 72;
+      const svx = svcSignC.getContext('2d');
+      svx.fillStyle = '#1c1917';
+      svx.fillRect(0, 0, 280, 72);
+      svx.strokeStyle = '#a8a29e';
+      svx.strokeRect(2, 2, 276, 68);
+      svx.fillStyle = '#fafaf9';
+      svx.font = 'bold 20px Inter,sans-serif';
+      svx.fillText('PERSONEL · SERVİS ALANI', 12, 32);
+      svx.fillStyle = '#a8a29e';
+      svx.font = '13px Inter,sans-serif';
+      svx.fillText('Yetkisiz giriş yasaktır', 12, 54);
+      const svcTex = new THREE.CanvasTexture(svcSignC);
+      svcTex.colorSpace = THREE.SRGBColorSpace;
+      const svcSign = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.6, 0.68),
+        new THREE.MeshStandardMaterial({ map: svcTex, roughness: 0.45, metalness: 0.08, emissive: 0x292524, emissiveIntensity: 0.06 })
+      );
+      svcSign.position.set(26, 2.2, 14.5);
+      svcSign.rotation.x = -0.35;
+      alley.add(svcSign);
+      for (let g = 0; g < 7; g++) {
+        const bag = addShadow(new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.16, 0.42), matStd(0x292524, 0.82, 0.02)));
+        bag.position.set(21.2 + (g % 5) * 0.95, 0.08, 20.4 + (g % 3) * 0.35);
+        bag.rotation.y = g * 0.7;
+        alley.add(bag);
+      }
+      exteriorGroup.add(alley);
+    }
+
+    const bankStaffMeshes = buildBankInterior();
+    buildExteriorWorld();
+    interiorGroup.visible = false;
+    exteriorGroup.visible = false;
+
+    const player = createHumanoid({
+      shirt: 0x3b5bdb,
+      pants: 0x172554,
+      skin: 0xd4a574,
+      hair: 0x292524,
+      cap: false,
+      scale: 1.01,
+      blazer: 0x1e293b,
+      tie: false
+    });
+    player.position.set(0, 0, 10);
+    scene.add(player);
+
+    const guards = [];
+    function addGuard(x, z) {
+      const g = createHumanoid({
+        shirt: 0x1e3a5f,
+        pants: 0x0f172a,
+        role: 'security',
+        skin: 0xc99e8b,
+        hair: 0x1c1917,
+        cap: true,
+        scale: 1.02 + Math.random() * 0.04
+      });
+      g.position.set(x, 0, z);
+      g.userData.base = new THREE.Vector3(x, 0, z);
+      g.userData.t = Math.random() * 6;
+      interiorGroup.add(g);
+      guards.push(g);
+      return g;
+    }
+    addGuard(-8, -4);
+    addGuard(10, 2);
+    (function addEntranceGuard() {
+      const g = createHumanoid({
+        shirt: 0x1e3a5f,
+        pants: 0x0f172a,
+        role: 'security',
+        skin: 0xa8907c,
+        hair: 0x111827,
+        cap: true,
+        scale: 1.03
+      });
+      g.position.set(16.2, 0, 9.4);
+      g.rotation.y = -0.85;
+      g.userData.base = new THREE.Vector3(16.2, 0, 9.4);
+      g.userData.t = 0;
+      g.userData.staticGuard = true;
+      interiorGroup.add(g);
+      guards.push(g);
+    })();
+
+    const npcs = [];
+    function addWanderingNpc(x, z, path, preset) {
+      const h = createHumanoid(preset);
+      h.position.set(x, 0, z);
+      interiorGroup.add(h);
+      npcs.push({ mesh: h, path, wp: 0, speed: 0.65 + Math.random() * 0.35 });
+      return h;
+    }
+    addWanderingNpc(2, 4, [
+      { x: 2, z: 4 },
+      { x: -4, z: 2 },
+      { x: -2, z: -2 },
+      { x: 4, z: 0 }
+    ], { shirt: 0x475569, pants: 0x1e293b, skin: 0xe0bc9a, hair: 0x3f2e22, cap: false, scale: 0.96 });
+    addWanderingNpc(-3, 7, [
+      { x: -3, z: 7 },
+      { x: -10, z: 5 },
+      { x: -8, z: 1 }
+    ], { shirt: 0x3730a3, pants: 0x172554, skin: 0x8d5524, hair: 0x0c0a09, cap: false, scale: 1.03 });
+    addWanderingNpc(8, -1, [
+      { x: 8, z: -1 },
+      { x: 14, z: 3 },
+      { x: 10, z: 6 }
+    ], { shirt: 0x9a3412, pants: 0x292524, skin: 0xf3cba8, hair: 0x451a03, cap: false, scale: 0.94 });
+    addWanderingNpc(-12, -2, [
+      { x: -12, z: -2 },
+      { x: -5, z: 0 },
+      { x: -8, z: 4 }
+    ], { shirt: 0x365314, pants: 0x1c2e0a, skin: 0xd4a574, hair: 0x292524, cap: false, scale: 1.05 });
+    addWanderingNpc(14, 0.5, [
+      { x: 14, z: 0.5 },
+      { x: 11, z: -1.5 },
+      { x: 7, z: 1.8 }
+    ], { shirt: 0xf8fafc, pants: 0x1e293b, skin: 0xc4a484, hair: 0x451a03, cap: false, scale: 0.98, blazer: 0x1e3a5f, tie: true });
+
+    const door = new THREE.Group();
+    door.position.set(18, 0, 11);
+    const frame = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.95, 0.22), matStd(0xb45309, 0.45, 0.35)));
+    frame.position.set(0, 1.475, 0);
+    door.add(frame);
+    const doorGlass = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.85, 2.45),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xc8e6ff,
+        metalness: 0,
+        roughness: 0.06,
+        transmission: 0.75,
+        thickness: 0.08,
+        transparent: true
+      })
+    );
+    doorGlass.position.set(0, 1.45, 0.12);
+    door.add(doorGlass);
+    const bar = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.12, 0.15), matStd(0xd97706, 0.4, 0.5)));
+    bar.position.set(0, 2.78, 0.08);
+    door.add(bar);
+    door.userData.isDoor = true;
+    interiorGroup.add(door);
+    collisionMeshes.push(frame);
+    registerCameraFade(frame, 0.26);
+
+    function canInteractExitDoor() {
+      const d = Math.hypot(door.position.x - player.position.x, door.position.z - player.position.z);
+      if (d > 2.72) return false;
+      const f = facingDotToPoint(door.position.x, door.position.z);
+      return f > -0.42 || d < 1.45;
+    }
+
+    function updateDoorProximityVisual(dt) {
+      if (!interiorGroup.visible) return;
+      const d = Math.hypot(player.position.x - door.position.x, player.position.z - door.position.z);
+      const wantOpen = (phase === 'DROP' || phase === 'LEAVE_BANK') && d < 2.95 ? Math.min(1, 1.05 - d / 2.95) : 0;
+      const tgt = -0.62 * wantOpen;
+      doorGlass.rotation.y += (tgt - doorGlass.rotation.y) * (1 - Math.exp(-7 * dt));
+    }
+
+    const spots = [
+      {
+        x: 3,
+        z: -7.1,
+        q: 'ideal',
+        label: 'Müşteri temsilcisi hattına yakın ortak zemin (kapsam içi)',
+        pts: 78,
+        risk: 'Orta',
+        emp: 'Yüksek',
+        cust: 'Düşük'
+      },
+      {
+        x: -6,
+        z: -9,
+        q: 'good',
+        label: 'Broşür standı ve yazıcı dolabı yakını (çalışan/müşteri dengesi)',
+        pts: 52,
+        risk: 'Orta',
+        emp: 'Orta',
+        cust: 'Orta'
+      },
+      { x: -2, z: 2.2, q: 'risk', label: 'Sıra numarası / bekleme köşesi', pts: 38, risk: 'Orta-yüksek', emp: 'Orta', cust: 'Yüksek' },
+      {
+        x: 12,
+        z: 8,
+        q: 'fail_customer',
+        label: 'Müşteri koltuğu / bank yanı (yüksek müşteri riski)',
+        pts: 12,
+        risk: 'Kötü (kapsam)',
+        emp: 'Düşük',
+        cust: 'Çok yüksek'
+      },
+      { x: 16.2, z: 9.5, q: 'fail_entrance', label: 'Giriş güvenlik hattı önü', pts: 10, risk: 'Yüksek', emp: 'Düşük', cust: 'Orta' },
+      { x: 17.2, z: 8.8, q: 'fail_atm', label: 'ATM çevresi (yoğun müşteri trafiği)', pts: 14, risk: 'Yüksek', emp: 'Orta', cust: 'Çok yüksek' }
+    ];
+
+    function pickFacingUsbSpot(maxDist) {
+      const px = player.position.x;
+      const pz = player.position.z;
+      const fx = Math.sin(cameraYaw);
+      const fz = Math.cos(cameraYaw);
+      let best = null;
+      let bestScore = -1e9;
+      let bestD = maxDist + 1;
+      spots.forEach((s) => {
+        const dx = s.x - px;
+        const dz = s.z - pz;
+        const d = Math.hypot(dx, dz);
+        if (d > maxDist) return;
+        const dot = (fx * dx + fz * dz) / (d + 1e-6);
+        const score = dot * 1.55 - d * 0.22;
+        if (score > bestScore) {
+          bestScore = score;
+          best = s;
+          bestD = d;
+        }
+      });
+      if (!best) {
+        let bd = maxDist + 1;
+        spots.forEach((s) => {
+          const d = Math.hypot(s.x - px, s.z - pz);
+          if (d < bd) {
+            bd = d;
+            best = s;
+          }
+        });
+        if (!best || bd > maxDist) return { spot: null, dist: bd };
+        return { spot: best, dist: bd };
+      }
+      return { spot: best, dist: bestD };
+    }
+
+    function facingDotToPoint(tx, tz) {
+      const dx = tx - player.position.x;
+      const dz = tz - player.position.z;
+      const d = Math.hypot(dx, dz);
+      if (d < 1e-5) return 1;
+      const fx = Math.sin(cameraYaw);
+      const fz = Math.cos(cameraYaw);
+      return (fx * dx + fz * dz) / d;
+    }
+
+    function canInteractStreetBank() {
+      if (!isNearStreetBankEntrance()) return false;
+      const d = Math.hypot(player.position.x - STREET_ENTRANCE.x, player.position.z - STREET_ENTRANCE.z);
+      const f = facingDotToPoint(STREET_ENTRANCE.x, STREET_ENTRANCE.z);
+      return f > -0.28 || d < 4.4;
+    }
+
+    function canInteractAlleyDumpster() {
+      const cx = 24;
+      const cz = 19.5;
+      const d = Math.hypot(player.position.x - cx, player.position.z - cz);
+      if (d > 4.35) return false;
+      const f = facingDotToPoint(cx, cz);
+      return f > -0.38 || d < 2.45;
+    }
+
+    const cameraZones = [
+      { x: 6, z: -4, r: 2.75 },
+      { x: -10, z: 4, r: 2.55 },
+      { x: 14, z: 6, r: 2.35 }
+    ];
+
+    function inStaffOnlyCorridor(px, pz) {
+      return px >= -19.6 && px <= -13.5 && pz <= -9.05 && pz >= -11.35;
+    }
+
+    function inCameraZone(px, pz) {
+      for (let i = 0; i < cameraZones.length; i++) {
+        const c = cameraZones[i];
+        if (Math.hypot(px - c.x, pz - c.z) < c.r) return true;
+      }
+      return false;
+    }
+
+    function distToNearestTellerStaff(px, pz) {
+      const pts = [
+        { x: -6, z: -10.15 },
+        { x: 5, z: -10.1 }
+      ];
+      let m = 99;
+      pts.forEach((p) => {
+        m = Math.min(m, Math.hypot(px - p.x, pz - p.z));
+      });
+      return m;
+    }
+
+    let usbMesh = null;
+
+    function startStreetFromPrep() {
+      prepOverlay.classList.add('hidden');
+      interiorGroup.visible = false;
+      exteriorGroup.visible = true;
+      worldMode = 'EXTERIOR';
+      player.position.set(-4.5, 0, 31.6);
+      player.rotation.y = Math.PI * 1.02;
+      cameraYaw = player.rotation.y;
+      velX = 0;
+      velZ = 0;
+      setPhase('STREET');
+      applyWorldAtmosphere();
+      resetCameraSmooth();
+      lastMoveAt = clock.getElapsedTime();
+      canvas.focus({ preventScroll: true });
+      startLobbyAmbience();
+      hudText.innerHTML =
+        '<strong>W A S D</strong> hareket; <strong>fare</strong> ile kamera (sürükle veya çift tık ile imleç kilidi). Cephedeki <strong>cam girişe</strong> yaklaşıp <strong>E — Şubeye gir</strong>. İçeride USB paneli + <strong>E — USB’yi bırak</strong>. Hassasiyet: <strong>[</strong> <strong>]</strong>.';
+      if (window.SimulationTracker && typeof window.SimulationTracker.recordStart === 'function') {
+        window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+      }
+    }
+
+    function pushTrackerCompletion(passed) {
+      if (trackerPushed) return;
+      trackerPushed = true;
+      if (!window.SimulationTracker || typeof window.SimulationTracker.saveCompletion !== 'function') return;
+      const norm = Math.max(0, Math.min(100, Math.round((score / 220) * 100)));
+      window.SimulationTracker
+        .saveCompletion(SIM_ID, SIM_NAME, {
+          score: norm,
+          maxScore: 100,
+          timeSpentSeconds: Math.floor(clock.getElapsedTime()),
+          correctCount: usbPickedByCustomer ? 0 : dropQuality === 'ideal' || dropQuality === 'good' || dropQuality === 'risk' ? 1 : 0,
+          wrongCount: usbPickedByCustomer || dropQuality === 'fail_customer' || dropQuality === 'fail_atm' ? 1 : 0,
+          passed,
+          moduleName: MODULE_NAME,
+          redirectToDashboard: false,
+          resetCount: 0,
+          hintUsedCount: 0
+        })
+        .catch(function () {});
+    }
+
+    function resize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function is3dLocomotionPhase() {
+      return phase === 'STREET' || phase === 'ALLEY' || phase === 'DROP' || phase === 'LEAVE_BANK';
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      if (e.button !== 0 || e.target !== canvas) return;
+      if (!is3dLocomotionPhase() || moveTransition) return;
+      mouseLookDrag = true;
+      lastMouseClientX = e.clientX;
+      canvas.focus({ preventScroll: true });
+    });
+    window.addEventListener('mouseup', () => {
+      mouseLookDrag = false;
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (document.pointerLockElement === canvas) {
+        cameraYaw -= e.movementX * camMouseSens;
+      } else if (mouseLookDrag) {
+        const dx = e.clientX - lastMouseClientX;
+        lastMouseClientX = e.clientX;
+        cameraYaw -= dx * camMouseSens;
+      }
+    });
+    canvas.addEventListener('dblclick', (e) => {
+      if (e.target !== canvas) return;
+      if (!is3dLocomotionPhase() || moveTransition) return;
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock?.();
+      }
+    });
+
+    const camSmoothPos = new THREE.Vector3(0, 6, 14);
+    let camSmoothInit = false;
+
+    function resetCameraSmooth() {
+      camSmoothInit = false;
+    }
+
+    function updateCamera(dt) {
+      const eye = new THREE.Vector3(player.position.x, player.position.y + 1.38, player.position.z);
+      const yaw = cameraYaw;
+      const off = getCamOrbitOffset().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const targetCam = eye.clone().add(off);
+      const dir = new THREE.Vector3().subVectors(targetCam, eye);
+      const fullDist = dir.length();
+      let desired;
+      if (fullDist < 0.01) {
+        desired = targetCam.clone();
+      } else {
+        dir.normalize();
+        raycaster.set(eye, dir);
+        raycaster.far = fullDist;
+        const hits = raycaster.intersectObjects(visibleCollisionMeshes(), true);
+        let dist = fullDist;
+        if (hits.length) {
+          dist = Math.max(worldMode === 'INTERIOR' ? 0.95 : 1.05, Math.min(fullDist, hits[0].distance - 0.52));
+        }
+        desired = eye.clone().add(dir.clone().multiplyScalar(dist));
+      }
+      if (!camSmoothInit) {
+        camSmoothPos.copy(desired);
+        camSmoothInit = true;
+      } else {
+        const a = 1 - Math.exp(-10.2 * Math.min(0.08, dt || 0.016));
+        camSmoothPos.lerp(desired, Math.min(1, a));
+      }
+      camera.position.copy(camSmoothPos);
+      const lookLift = 1.04 + Math.sin(clock.getElapsedTime() * 0.18) * 0.006;
+      camera.lookAt(player.position.x, player.position.y + lookLift, player.position.z);
+      applyCameraOcclusionFade();
+    }
+
+    function updateNearestUsbHud() {
+      if (phase !== 'DROP' || dropped || worldMode !== 'INTERIOR') {
+        usbInteract.classList.remove('visible');
+        return;
+      }
+      const pick = pickFacingUsbSpot(2.28);
+      const best = pick.spot;
+      const bestD = pick.dist;
+      if (best && bestD < 2.28) {
+        usbInteract.classList.add('visible');
+        let hint = '';
+        if (best.q === 'fail_customer') {
+          hint =
+            '<div class="usb-hint">Bu alan <strong>müşteri etkileşim riski</strong> taşır; eğitim senaryosunda kapsam dışı sonuç doğurabilir.</div>';
+        } else if (best.q === 'fail_atm') {
+          hint =
+            '<div class="usb-hint">ATM çevresi <strong>yoğun müşteri trafiği</strong> nedeniyle yüksek görünürlük ve etik risk taşır.</div>';
+        }
+        usbInteractBody.innerHTML =
+          '<div class="usb-title">' +
+          best.label +
+          '</div>' +
+          '<div class="usb-metrics">' +
+          '<span>Risk seviyesi<strong>' +
+          best.risk +
+          '</strong></span>' +
+          '<span>Çalışan fark ihtimali<strong>' +
+          best.emp +
+          '</strong></span>' +
+          '<span>Müşteri etkileşim riski<strong>' +
+          best.cust +
+          '</strong></span>' +
+          '<span>Konum türü<strong>USB bırakma (eğitim)</strong></span>' +
+          '</div>' +
+          hint;
+        usbInteractKey.textContent = 'E — USB’yi bırak';
+      } else {
+        usbInteract.classList.remove('visible');
+      }
+    }
+
+    function updateStreetEnterHud() {
+      if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) {
+        streetEnterHud.classList.remove('visible');
+        return;
+      }
+      streetEnterHud.classList.add('visible');
+      if (isNearStreetBankEntrance()) {
+        streetEnterHudBody.innerHTML =
+          '<strong>Giriş hazır.</strong> Cephe ortasındaki <strong>cam otomatik kapı</strong> şube girişidir. <strong>E</strong> ile içeri geçin.';
+        if (streetEnterHudKey) streetEnterHudKey.textContent = 'E — Şubeye gir';
+      } else {
+        streetEnterHudBody.innerHTML =
+          '<strong>Cepheye ilerleyin.</strong> Kaldırımdan bankaya doğru yürüyün; <strong>Atlas Bank</strong> logosu ve giriş camı görünür. Kapı önüne gelince <strong>E</strong> ile şubeye girilir.';
+        if (streetEnterHudKey) streetEnterHudKey.textContent = 'E — Etkileşime geç';
+      }
+    }
+
+    function updateAlleyInteractHud() {
+      if (phase !== 'ALLEY' || worldMode !== 'EXTERIOR' || moveTransition) {
+        alleyInteract.classList.remove('visible');
+        return;
+      }
+      alleyInteract.classList.add('visible');
+      const d = Math.hypot(player.position.x - 24, player.position.z - 19.5);
+      if (d < 3.75) {
+        alleyInteractBody.innerHTML =
+          '<strong>Atık kontrol noktası.</strong> RoE kapsamında konteyner incelemesi için <strong>E</strong> ile müdehale ekranını açın.';
+        if (alleyInteractKey) alleyInteractKey.textContent = 'E — Poşeti incele';
+      } else {
+        alleyInteractBody.innerHTML =
+          '<strong>Servis yolu.</strong> Etiketli konteyner sırasına yaklaşın; panelde talimat göründüğünde <strong>E</strong> ile devam edin.';
+        if (alleyInteractKey) alleyInteractKey.textContent = 'E — Etkileşime geç';
+      }
+    }
+
+    function animHumanIdle(group, time) {
+      if (!group || !group.userData.torso) return;
+      const ph = group.userData.idlePhase;
+      const pose = group.userData.pose || 'idle';
+      const ar = group.userData.armLR;
+      const al = group.userData.armLL;
+      const torso = group.userData.torso;
+      const h = group.userData.head;
+
+      if (pose === 'typing' && ar) {
+        ar.rotation.x = -0.58 + Math.sin(time * 6.2 + ph) * 0.12;
+        ar.rotation.z = -0.05 + Math.sin(time * 5.4 + ph * 0.8) * 0.07;
+        if (al) {
+          al.rotation.x = -0.32 + Math.sin(time * 4.1 + ph) * 0.05;
+          al.rotation.z = 0.08;
+        }
+        torso.rotation.z = Math.sin(time * 1.4 + ph) * 0.018;
+        torso.rotation.x = Math.sin(time * 1.1 + ph * 0.5) * 0.015;
+      } else if (pose === 'waiting' && ar && al) {
+        ar.rotation.x = -0.22;
+        al.rotation.x = -0.22;
+        ar.rotation.z = -0.42 + Math.sin(time * 1.1 + ph) * 0.04;
+        al.rotation.z = 0.42 - Math.sin(time * 1.1 + ph) * 0.04;
+        torso.rotation.z = Math.sin(time * 0.9 + ph) * 0.022;
+        torso.rotation.x = Math.sin(time * 0.55 + ph) * 0.012;
+      } else if (pose === 'phone' && ar) {
+        ar.rotation.x = -1.05 + Math.sin(time * 1.1 + ph) * 0.04;
+        ar.rotation.y = 0.15 + Math.sin(time * 0.9 + ph) * 0.06;
+        if (al) al.rotation.x = -0.2;
+        torso.rotation.z = Math.sin(time * 0.9 + ph) * 0.02;
+        torso.rotation.x = Math.sin(time * 0.7 + ph) * 0.018;
+      } else {
+        const wb = group.userData.walkBlend || 0;
+        const sway = Math.sin(time * 1.8 + ph) * 0.035 * (1 - wb * 0.72);
+        torso.rotation.z = sway;
+        torso.rotation.x = Math.sin(time * 0.9 + ph * 0.5) * 0.02 * (1 - wb * 0.55);
+      }
+      if (h) {
+        h.rotation.y = Math.sin(time * 0.65 + ph) * (pose === 'phone' ? 0.18 : 0.11);
+        h.rotation.x = Math.sin(time * 0.5 + ph * 0.7) * 0.05;
+      }
+    }
+
+    function animNpcs(dt, time) {
+      npcs.forEach((n) => {
+        const tgt = n.path[n.wp];
+        const dx = tgt.x - n.mesh.position.x;
+        const dz = tgt.z - n.mesh.position.z;
+        const d = Math.hypot(dx, dz) || 1;
+        if (d < 0.45) {
+          n.wp = (n.wp + 1) % n.path.length;
+          n.mesh.position.y = 0;
+        } else {
+          const sp = n.speed * dt;
+          n.mesh.position.x += (dx / d) * sp;
+          n.mesh.position.z += (dz / d) * sp;
+          n.mesh.rotation.y = Math.atan2(dx, dz);
+          n.mesh.position.y = Math.abs(Math.sin(time * 9.5 + n.mesh.userData.idlePhase)) * 0.03;
+        }
+        animHumanIdle(n.mesh, time);
+      });
+    }
+
+    function clampPlayer() {
+      if (worldMode === 'INTERIOR') {
+        player.position.x = THREE.MathUtils.clamp(player.position.x, -19, 19);
+        player.position.z = THREE.MathUtils.clamp(player.position.z, -11.5, 11.5);
+      } else {
+        player.position.x = THREE.MathUtils.clamp(player.position.x, -24, 34);
+        player.position.z = THREE.MathUtils.clamp(player.position.z, 11.5, 42);
+      }
+    }
+
+    function visibleCollisionMeshes() {
+      return collisionMeshes.filter((m) => {
+        let p = m;
+        while (p) {
+          if (p === interiorGroup && !interiorGroup.visible) return false;
+          if (p === exteriorGroup && !exteriorGroup.visible) return false;
+          p = p.parent;
+        }
+        return m.visible !== false;
+      });
+    }
+
+    const PLAYER_MOVE_R = 0.38;
+    const PLAYER_RAY_Y = 0.74;
+
+    function tryMoveDeltaPlayer(px, pz, dx, dz) {
+      let x = px;
+      let z = pz;
+      function axis(ax, az) {
+        const len = Math.hypot(ax, az);
+        if (len < 1e-7) return;
+        const dir = new THREE.Vector3(ax / len, 0, az / len);
+        const origin = new THREE.Vector3(x, PLAYER_RAY_Y, z);
+        raycaster.set(origin, dir);
+        raycaster.far = len + PLAYER_MOVE_R + 0.05;
+        const hits = raycaster.intersectObjects(visibleCollisionMeshes(), true);
+        let travel = len;
+        if (hits.length > 0) {
+          const d0 = hits[0].distance;
+          travel = Math.min(len, Math.max(0, d0 - PLAYER_MOVE_R - 0.055));
+        }
+        x += dir.x * travel;
+        z += dir.z * travel;
+      }
+      axis(dx, 0);
+      axis(0, dz);
+      return { x, z };
+    }
+
+    function applyCrowdSeparation(dt) {
+      const pts = [];
+      if (interiorGroup.visible && worldMode === 'INTERIOR') {
+        guards.forEach((g) => pts.push(g.position));
+        npcs.forEach((n) => pts.push(n.mesh.position));
+      }
+      const px = player.position.x;
+      const pz = player.position.z;
+      pts.forEach((p) => {
+        const dx = px - p.x;
+        const dz = pz - p.z;
+        const d = Math.hypot(dx, dz);
+        if (d < 0.92 && d > 1e-5) {
+          const push = ((0.92 - d) / 0.92) * 3.2;
+          velX += (dx / d) * push * dt;
+          velZ += (dz / d) * push * dt;
+        }
+      });
+    }
+
+    function updatePlayerFacingModel(dt, inLen) {
+      const speed = Math.hypot(velX, velZ);
+      let targetYaw;
+      if (speed > 0.28 || inLen > 0.04) {
+        targetYaw = Math.atan2(velX, velZ);
+      } else {
+        targetYaw = cameraYaw;
+      }
+      let dy = targetYaw - player.rotation.y;
+      while (dy > Math.PI) dy -= Math.PI * 2;
+      while (dy < -Math.PI) dy += Math.PI * 2;
+      const ar = 1 - Math.exp(-11.2 * Math.min(dt, 0.08));
+      player.rotation.y += dy * Math.min(1, ar);
+    }
+
+    function isMovementBlockedByUi() {
+      return (
+        !trashOverlay.classList.contains('hidden') ||
+        !docInspectOverlay.classList.contains('hidden') ||
+        !observeUsbOverlay.classList.contains('hidden') ||
+        !reportOverlay.classList.contains('hidden') ||
+        !officeMailOverlay.classList.contains('hidden') ||
+        !prepOverlay.classList.contains('hidden') ||
+        !guardDialogOverlay.classList.contains('hidden')
+      );
+    }
+
+    function integratePlayerLocomotion(dt, elapsed, leaveQuick) {
+      if (isMovementBlockedByUi()) {
+        velX *= Math.pow(1e-6, Math.min(1, dt * 12));
+        velZ *= Math.pow(1e-6, Math.min(1, dt * 12));
+        player.userData.walkBlend = THREE.MathUtils.lerp(player.userData.walkBlend || 0, 0, 1 - Math.exp(-10 * dt));
+        return;
+      }
+      const interiorLike = worldMode === 'INTERIOR';
+      const shift = keys['ShiftLeft'] || keys['ShiftRight'];
+      let base = interiorLike ? 3.18 : 3.66;
+      let boosted = interiorLike ? 3.88 : 4.48;
+      if (leaveQuick) {
+        base = 3.38;
+        boosted = 4.18;
+      }
+      const maxSp = shift ? boosted : base;
+      const input = readMoveXZCameraRelative();
+      let ix = input.mx;
+      let iz = input.mz;
+      const inLen = Math.hypot(ix, iz);
+      if (inLen > 1e-6) {
+        ix /= inLen;
+        iz /= inLen;
+      }
+      const wishX = ix * maxSp;
+      const wishZ = iz * maxSp;
+      const accel = 20;
+      const friction = 12.5;
+      if (inLen < 1e-6) {
+        velX += (-velX) * Math.min(1, friction * dt);
+        velZ += (-velZ) * Math.min(1, friction * dt);
+      } else {
+        velX += (wishX - velX) * Math.min(1, accel * dt);
+        velZ += (wishZ - velZ) * Math.min(1, accel * dt);
+      }
+      const vmax = maxSp * 1.03;
+      const vlen = Math.hypot(velX, velZ);
+      if (vlen > vmax) {
+        const s = vmax / (vlen || 1);
+        velX *= s;
+        velZ *= s;
+      }
+      applyCrowdSeparation(dt);
+      const px = player.position.x;
+      const pz = player.position.z;
+      const mdx = velX * dt;
+      const mdz = velZ * dt;
+      const moved = tryMoveDeltaPlayer(px, pz, mdx, mdz);
+      player.position.x = moved.x;
+      player.position.z = moved.z;
+      clampPlayer();
+      const mAct = Math.hypot(moved.x - px, moved.z - pz);
+      const mWish = Math.hypot(mdx, mdz);
+      if (mWish > 1e-4 && mAct < mWish * 0.32) {
+        const nx = mdx / mWish;
+        const nz = mdz / mWish;
+        const vn = nx * velX + nz * velZ;
+        if (vn > 0) {
+          velX -= nx * vn * 0.72;
+          velZ -= nz * vn * 0.72;
+        }
+      }
+      updatePlayerFacingModel(dt, inLen);
+      const sp = Math.hypot(velX, velZ);
+      player.userData.walkBlend = Math.min(1, sp / (maxSp * 0.9 + 1e-6));
+      if (inLen > 1e-6) lastMoveAt = elapsed;
+    }
+
+    function tickMoveTransition(dt) {
+      if (!moveTransition) return false;
+      moveTransition.elapsed += dt;
+      const k = Math.min(1, moveTransition.elapsed / moveTransition.dur);
+      const sm = k * k * (3 - 2 * k);
+      const curtainEl = document.getElementById('sceneCurtain');
+
+      if (moveTransition.bankEnter) {
+        const t1 = 0.43;
+        const doorEx = moveTransition.doorEx;
+        const doorIn = moveTransition.doorIn;
+        const fin = moveTransition.to;
+        if (sm < t1) {
+          player.position.lerpVectors(moveTransition.from, doorEx, sm / t1);
+        } else {
+          if (!moveTransition.switched) {
+            moveTransition.switched = true;
+            interiorGroup.visible = true;
+            exteriorGroup.visible = false;
+            worldMode = 'INTERIOR';
+            applyWorldAtmosphere();
+            resetCameraSmooth();
+          }
+          const u = Math.min(1, (sm - t1) / (1 - t1));
+          player.position.lerpVectors(doorIn, fin, u);
+        }
+      } else if (moveTransition.bankExit) {
+        const t1 = 0.4;
+        const doorIn = moveTransition.doorIn;
+        const doorEx = moveTransition.doorEx;
+        const fin = moveTransition.to;
+        if (sm < t1) {
+          player.position.lerpVectors(moveTransition.from, doorIn, sm / t1);
+        } else {
+          if (!moveTransition.switched) {
+            moveTransition.switched = true;
+            interiorGroup.visible = false;
+            exteriorGroup.visible = true;
+            worldMode = 'EXTERIOR';
+            applyWorldAtmosphere();
+            resetCameraSmooth();
+          }
+          const u = Math.min(1, (sm - t1) / (1 - t1));
+          player.position.lerpVectors(doorEx, fin, u);
+        }
+      } else {
+        player.position.lerpVectors(moveTransition.from, moveTransition.to, sm);
+      }
+
+      if (curtainEl && moveTransition.curtain) {
+        const peak = moveTransition.bankEnter ? 0.44 : 0.41;
+        const w = 0.14;
+        let c = 0;
+        if (sm > peak - w && sm < peak + w) {
+          c = Math.sin(((sm - (peak - w)) / (2 * w)) * Math.PI);
+        }
+        curtainEl.style.opacity = String(c * 0.44);
+      }
+
+      if (k >= 1) {
+        player.position.copy(moveTransition.to);
+        if (curtainEl) curtainEl.style.opacity = '0';
+        const cb = moveTransition.onDone;
+        moveTransition = null;
+        if (cb) cb();
+        return true;
+      }
+      return false;
+    }
+
+    function tryEnterBankFromStreet() {
+      if (phase !== 'STREET' || worldMode !== 'EXTERIOR' || moveTransition) return;
+      if (!isNearStreetBankEntrance() || !canInteractStreetBank()) return;
+      moveTransition = {
+        bankEnter: true,
+        switched: false,
+        curtain: true,
+        from: player.position.clone(),
+        doorEx: new THREE.Vector3(0.12, 0, 14.38),
+        doorIn: new THREE.Vector3(15.42, 0, 10.52),
+        to: new THREE.Vector3(15.2, 0, 10.2),
+        elapsed: 0,
+        dur: 1.38,
+        onDone: () => {
+          velX = 0;
+          velZ = 0;
+          cameraYaw = player.rotation.y;
+          setPhase('DROP');
+          lastMoveAt = clock.getElapsedTime();
+        }
+      };
+    }
+
+    function tryExitBankDoor() {
+      if (phase !== 'LEAVE_BANK' || worldMode !== 'INTERIOR' || moveTransition) return;
+      if (!canInteractExitDoor()) return;
+      moveTransition = {
+        bankExit: true,
+        switched: false,
+        curtain: true,
+        from: player.position.clone(),
+        doorIn: new THREE.Vector3(17.0, 0, 10.72),
+        doorEx: new THREE.Vector3(14.28, 0, 16.58),
+        to: new THREE.Vector3(14.5, 0, 17.18),
+        elapsed: 0,
+        dur: 1.28,
+        onDone: () => {
+          velX = 0;
+          velZ = 0;
+          cameraYaw = player.rotation.y;
+          setPhase('ALLEY');
+          lastMoveAt = clock.getElapsedTime();
+        }
+      };
+    }
+
+    function tryOpenDumpsterTrash() {
+      if (phase !== 'ALLEY' || worldMode !== 'EXTERIOR' || moveTransition) return;
+      if (!canInteractAlleyDumpster()) return;
+      trashOverlay.classList.remove('hidden');
+      buildTrashFlow();
+    }
+
+    function animGuards(dt, time) {
+      guards.forEach((g) => {
+        if (g.userData.staticGuard) {
+          animHumanIdle(g, time);
+          return;
+        }
+        g.userData.t += dt;
+        const r = 3.5;
+        g.position.x = g.userData.base.x + Math.sin(g.userData.t * 0.55) * r;
+        g.position.z = g.userData.base.z + Math.cos(g.userData.t * 0.45) * r * 0.6;
+        const dx = Math.cos(g.userData.t * 0.55) * r * 0.55;
+        const dz = -Math.sin(g.userData.t * 0.45) * r * 0.45 * 0.6;
+        const yaw = Math.atan2(dx, dz);
+        g.rotation.y = yaw;
+        animHumanIdle(g, time);
+      });
+    }
+
+    function guardProximity() {
+      let dMin = 99;
+      guards.forEach((g) => {
+        const dx = g.position.x - player.position.x;
+        const dz = g.position.z - player.position.z;
+        dMin = Math.min(dMin, Math.hypot(dx, dz));
+      });
+      return dMin;
+    }
+
+    function rollEmployeeUsbBehavior(q) {
+      const r = Math.random();
+      if (q === 'ideal') {
+        if (r < 0.4) return 'security';
+        if (r < 0.52) return 'usb_pc';
+        if (r < 0.78) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'good') {
+        if (r < 0.3) return 'security';
+        if (r < 0.4) return 'usb_pc';
+        if (r < 0.72) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'risk') {
+        if (r < 0.18) return 'security';
+        if (r < 0.42) return 'usb_pc';
+        if (r < 0.7) return 'drawer';
+        return 'ignore';
+      }
+      if (q === 'fail_entrance') {
+        return r < 0.5 ? 'security' : 'ignore';
+      }
+      return 'security';
+    }
+
+    function showUsbObserveAfterDrop(best) {
+      lastDropSpot = best;
+      dropQuality = best.q;
+      setPhase('OBSERVE_USB');
+      observeUsbOverlay.classList.remove('hidden');
+      const titleEl = document.getElementById('observeTitle');
+      const bodyEl = document.getElementById('observeBody');
+      const hintEl = document.getElementById('observeHint');
+
+      if (best.q === 'fail_customer' || best.q === 'fail_atm') {
+        usbPickedByCustomer = true;
+        employeeUsbBehavior = 'customer';
+        titleEl.textContent = 'Kapsam dışı sonuç';
+        bodyEl.innerHTML =
+          'USB, <strong>banka çalışanı yerine müşteri trafiğinin yüksek olduğu bölgede</strong> öne çıktı. Pentest hedefi çalışan farkındalığı ve süreçti; müşteri etkileşimi <strong>etik ve operasyonel risk</strong> oluşturur.';
+        hintEl.textContent =
+          'Öğrenme notu: Başarı yalnızca hedefe ulaşmak değil; kapsam, etik sınır ve zarar vermeme ilkesi de başarının parçasıdır.';
+        score = Math.max(0, score - 52);
+      } else if (best.q === 'fail_entrance') {
+        usbPickedByCustomer = false;
+        employeeUsbBehavior = rollEmployeeUsbBehavior(best.q);
+        titleEl.textContent = 'Yüksek görünürlük (giriş hattı)';
+        bodyEl.innerHTML =
+          'Güvenlik hattına çok yakın konumda test objesi <strong>yoğun gözetim</strong> altında kaldı. Çalışan gözlemi sınırlı kalabilir; güvenlik sürecine düşme ihtimali yüksek.';
+        hintEl.textContent = 'Gözlem notu oluşturuldu. Çöp alanı kontrolüne geçebilirsin.';
+        score = Math.max(0, score - 24);
+      } else {
+        usbPickedByCustomer = false;
+        employeeUsbBehavior = rollEmployeeUsbBehavior(best.q);
+        const lines = {
+          security:
+            'Bir banka çalışanı USB’yi fark etti ve <strong>güvenlik birimine teslim etti</strong>. Olumlu güvenlik davranışı — raporda başarılı çalışan farkındalığı olarak not edilir.',
+          usb_pc:
+            'Çalışan, cihazı <strong>iş istasyonuna takma girişimi</strong> gösterdi (kurgusal yüksek risk bulgusu). Rapor: kritik farkındalık zafiyeti — bilinmeyen USB prosedürü ihlali.',
+          drawer:
+            'Çalışan USB’yi <strong>çekmeceye</strong> koydu; tanımlı güvenli sürece hemen dahil edilmedi. Orta-yüksek risk — prosedür ve farkındalık güçlendirilmeli.',
+          ignore: 'USB bir süre <strong>fark edilmeden</strong> kaldı. Düşük farkındalık sinyali; gözlem notuna eklenir.'
+        };
+        titleEl.textContent = 'Test objesi çalışan tarafından fark edildi (simülasyon örneklemi)';
+        bodyEl.innerHTML = lines[employeeUsbBehavior] || lines.ignore;
+        hintEl.textContent =
+          'Senaryo sonucu örneklemidir; gerçek pentestte uzun süreli gözlem, kanıt zinciri ve RoE kaydı gerekir.';
+      }
+      if (scoreValue) scoreValue.textContent = String(score);
+    }
+
+    function tryDropUsb() {
+      if (dropped || phase !== 'DROP') return;
+      const pick = pickFacingUsbSpot(2.42);
+      const best = pick.spot;
+      const bestD = pick.dist;
+      if (!best || bestD > 2.42) {
+        hudText.innerHTML =
+          '<strong>USB bırakma noktası görünmüyor.</strong> Hedef zemine yaklaşın; panel açıldığında <strong>E — USB’yi bırak</strong>. İpucu: bakışınızı (fare) hedefe çevirmek en yakın alanı seçer.';
+        return;
+      }
+      dropped = true;
+      score += best.pts;
+      if (scoreValue) scoreValue.textContent = String(score);
+      usbMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.25, 0.08, 0.55),
+        new THREE.MeshPhysicalMaterial({
+          color: 0x1a1f2e,
+          roughness: 0.35,
+          metalness: 0.25,
+          clearcoat: 0.4,
+          clearcoatRoughness: 0.35
+        })
+      );
+      usbMesh.position.set(best.x, 0.05, best.z);
+      usbMesh.rotation.y = Math.random();
+      interiorGroup.add(usbMesh);
+      usbInteract.classList.remove('visible');
+      hudText.innerHTML =
+        'USB <strong>' +
+        best.label +
+        '</strong> konumuna bırakıldı. Gözlem sonucunu oku; ardından şube <strong>dışı çöp alanı</strong> aşamasına geçeceksin.';
+      showUsbObserveAfterDrop(best);
+    }
+
+    function buildTrashFlow() {
+      trashHint.textContent =
+        'Konteyner seç: yanlış seçim zaman ve dikkat maliyeti ekler. Şube içinde kamera kapsamındaysanız üst barda uyarı görünür.';
+      const containers = [
+        { correct: true, label: 'Genel karışık poşet (yanlış imha / kâğıt karışık) — inceleme için uygun' },
+        { correct: false, label: 'Mavi kapaklı kağıt kutusu (çoğunlukla parça / düşük anlam)' },
+        { correct: false, label: 'Parçalanmış evrak torbası (anlamlı veri beklenmez)' },
+        { correct: false, label: 'Islak genel atık (kahve, ambalaj)' }
+      ];
+      trashPanel.innerHTML =
+        '<p class="trash-intro">Şube dışı atık alanı. Uzun süre kalıp gürültü yapmak riski artırır; hızlı ve kontrollü inceleme yapın.</p><div class="trash-grid" id="trashCtnGrid"></div>';
+      const grid = document.getElementById('trashCtnGrid');
+      containers
+        .sort(() => Math.random() - 0.5)
+        .forEach((c) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = c.label;
+          b.addEventListener('click', () => {
+            if (!c.correct) {
+              score = Math.max(0, score - 8);
+              suspicion += 14;
+              trashHint.textContent = 'Yanlış konteyner — zaman kaybı ve dikkat maliyeti. Başka konteyneri deneyin.';
+              if (scoreValue) scoreValue.textContent = String(score);
+              return;
+            }
+            openTrashExamineStep();
+          });
+          grid.appendChild(b);
+        });
+    }
+
+    function openTrashExamineStep() {
+      trashPanel.innerHTML =
+        '<p class="trash-intro">Poşet açıldı. Maskeli eğitim belgelerinden <strong>hassas görüneni</strong> seçin.</p><div class="trash-grid" id="docPick"></div>';
+      const grid = document.getElementById('docPick');
+      const docs = [
+        { ok: false, t: 'Genel duyuru: “Şube temizlik listesi — hafta 12” (düşük değer)' },
+        {
+          ok: true,
+          t: 'Zarf etiketi: Akış Teklif Özeti — Ad A*** Y****, Müşteri No 45****, IBAN TR12 **** **** ****, Geçici: Temp-**** (maskeli eğitim çıktısı)'
+        },
+        { ok: false, t: 'Boş formlar ve ATM fişleri' }
+      ];
+      docs.sort(() => Math.random() - 0.5).forEach((d) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = d.t;
+        b.addEventListener('click', () => {
+          if (d.ok) {
+            documentFoundLevel = 'mid';
+            score += 36;
+            trashHint.textContent = 'Belge güvenli torbaya alınmadan önce maskeli önizleme.';
+            trashOverlay.classList.add('hidden');
+            docInspectText.innerHTML =
+              '<span class="doc-watermark">DAHİLİ</span>' +
+              '<span class="doc-stamp">HASSAS</span>' +
+              '<div class="doc-doc-header">' +
+              '<span class="doc-doc-kicker">Maskeli eğitim çıktısı</span>' +
+              '<strong class="doc-doc-title">Şube Operasyon Notu</strong>' +
+              '</div>' +
+              '<div class="doc-doc-meta">' +
+              '<div><span>Sistem</span><strong>CRM-SUBE-01</strong></div>' +
+              '<div><span>Yazıcı</span><strong>FIN-PRN-03</strong></div>' +
+              '<div><span>Personel listesi</span><strong>Maskeli / örnek</strong></div>' +
+              '<div><span>Erişim</span><strong>Geçici · onay bekliyor</strong></div>' +
+              '</div>' +
+              '<p class="doc-doc-body">Müşteri özetleri ve hesap hareketleri bu notta yalnızca eğitim amaçlı maskelenmiş örnekler olarak yer alır. Gerçek müşteri verisi içermez.</p>' +
+              '<p class="doc-doc-foot"><em>Bu kağıt yanlış imha ile karışmış poşette bulunmuştur — zincir-of-custody ve raporlama alıştırması.</em></p>';
+            docInspectOverlay.classList.remove('hidden');
+            if (scoreValue) scoreValue.textContent = String(score);
+          } else {
+            score = Math.max(0, score - 10);
+            suspicion += 16;
+            trashHint.textContent = 'Bu kâğıt önemsiz veya düşük riskli görünüyor; başka kalemi seçin.';
+            if (scoreValue) scoreValue.textContent = String(score);
+          }
+        });
+        grid.appendChild(b);
+      });
+    }
+
+    function openGuardDialog() {
+      guardDialogShown = true;
+      setPhase('GUARD_DIALOG');
+      guardDialogOverlay.classList.remove('hidden');
+      guardDialogHint.textContent = 'Profesyonel pentestte yakalanma anında yalan yerine yetki ve RoE şeffaflığı tercih edilir.';
+      guardDialogButtons.innerHTML = '';
+      const opts = [
+        { t: 'Sıra bekliyordum, işlem yapmadan çıkacağım.', sus: 16, sc: -5 },
+        { t: 'Yanlış şubeye gelmişim, çıkıyorum.', sus: 10, sc: -3 },
+        { t: 'Yetkili test ekibindenim; görev ve RoE özeti bende.', sus: -34, sc: 14, pro: true },
+        { t: 'Bir şey yok.', sus: 42, sc: -22 }
+      ];
+      opts.forEach((o) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = o.t;
+        b.addEventListener('click', () => {
+          suspicion = Math.min(100, Math.max(0, suspicion + o.sus));
+          score = Math.max(0, score + o.sc);
+          if (o.pro) ethicalChoiceBonus += 10;
+          guardDialogOverlay.classList.add('hidden');
+          setPhase('DROP');
+          if (scoreValue) scoreValue.textContent = String(score);
+          suspicionFill.style.width = suspicion + '%';
+          if (suspicion >= 96 && !runEnded) {
+            runEnded = true;
+            setPhase('END');
+            endOverlay.classList.remove('hidden');
+            document.getElementById('endTitle').textContent = 'Güvenlik müdahalesi (simülasyon)';
+            document.getElementById('endBody').textContent =
+              'Yanıtınız güvenlik prosedürünü tetikledi veya şüphe kritik seviyede kaldı. Yakalanma anında yetki belgesi ve şeffaflık en güvenli profesyonel yoldur.';
+            document.getElementById('endLearning').textContent = '';
+            pushTrackerCompletion(false);
+          }
+        });
+        guardDialogButtons.appendChild(b);
+      });
+    }
+
+    function openReportFormPrefilled() {
+      setPhase('REPORT');
+      reportOverlay.classList.remove('hidden');
+      const loc = document.getElementById('rfUsbLoc');
+      const who = document.getElementById('rfWho');
+      const beh = document.getElementById('rfBehav');
+      const doc = document.getElementById('rfDoc');
+      const sens = document.getElementById('rfSens');
+      if (loc) loc.value = lastDropSpot ? lastDropSpot.label : '';
+      if (who) {
+        if (usbPickedByCustomer) who.value = 'customer';
+        else if (employeeUsbBehavior === 'security') who.value = 'security';
+        else who.value = 'employee';
+      }
+      if (beh && employeeUsbBehavior && employeeUsbBehavior !== 'customer') {
+        const map = { security: 'security', usb_pc: 'usb_pc', drawer: 'drawer', ignore: 'ignore' };
+        beh.value = map[employeeUsbBehavior] || '';
+      }
+      if (doc) doc.value = documentFoundLevel ? 'yes' : 'no';
+      if (sens) sens.value = documentFoundLevel === 'mid' ? 'mid' : documentFoundLevel ? 'mid' : 'low';
+    }
+
+    function finishRun() {
+      if (runEnded) return;
+      runEnded = true;
+      setPhase('END');
+      let extra = 0;
+      if (dropQuality === 'ideal') extra += 18;
+      else if (dropQuality === 'good') extra += 10;
+      else if (dropQuality === 'risk') extra += 4;
+      if (suspicion < 38) extra += 18;
+      if (!usbPickedByCustomer && documentFoundLevel) extra += 8;
+      score += extra + ethicalChoiceBonus;
+      if (scoreValue) scoreValue.textContent = String(score);
+      const norm = Math.max(0, Math.min(100, Math.round((score / 220) * 100)));
+      const usbOk = !usbPickedByCustomer && (dropQuality === 'ideal' || dropQuality === 'good' || dropQuality === 'risk');
+      const docLine = documentFoundLevel
+        ? 'Belge imha kontrolü: orta riskli maskeli bulgu tespit edildi.'
+        : 'Belge imha kontrolü: hedef belge seçilemedi veya düşük öncelik.';
+      const ethicalLine = usbPickedByCustomer ? 'Etik uyum: Müşteri etkileşimi — geliştirilmeli.' : 'Etik uyum: Kapsam içi hedefleme — kabul edilebilir.';
+      endOverlay.classList.remove('hidden');
+      document.getElementById('endTitle').textContent = norm >= 52 ? 'Operasyon özeti' : 'Operasyon tamamlandı — geliştirme alanları';
+      document.getElementById('endBody').innerHTML =
+        '<strong>Genel skor (iç puan):</strong> ' +
+        score +
+        ' · <strong>Yüzde (yaklaşık):</strong> %' +
+        norm +
+        '<br/><strong>USB testi:</strong> ' +
+        (usbPickedByCustomer ? 'Kapsam dışı müşteri riski' : usbOk ? 'Tamamlandı (çalışan gözlemi senaryosu)' : 'Konum / görünürlük zayıf') +
+        '<br/><strong>' +
+        docLine +
+        '</strong><br/><strong>' +
+        ethicalLine +
+        '</strong><br/><strong>Çalışan davranışı (örneklem):</strong> ' +
+        (employeeUsbBehavior || '-') +
+        '<br/><strong>Şüphe birikimi:</strong> ' +
+        Math.round(suspicion) +
+        '<br/><br/>Bu simülasyon saldırı uygulamayı değil; <strong>yetkili test, raporlama ve önlem</strong> çerçevesini öğretir. Gerçek ortamda izinsiz eylem yasadışıdır.';
+      document.getElementById('endLearning').innerHTML =
+        '<strong>Öğrenme notu:</strong> Bilinmeyen USB cihazları ciddi risktir; çalışanların güvenlik ekibine teslim etmesi gerekir. Kurum içi belgelerin çöpe uygun şekilde imha edilmemesi fiziksel bilgi sızıntısı riskidir; öğütücü, kilitli atık ve politika önemlidir.';
+      pushTrackerCompletion(norm >= 48);
+    }
+
+    document.getElementById('btnObserveContinue').addEventListener('click', () => {
+      observeUsbOverlay.classList.add('hidden');
+      setPhase('LEAVE_BANK');
+      hudText.innerHTML =
+        'Cam kapıya gidin — <strong>fare</strong> ile kapı hizasına dönün. Yakında <strong>E — Dış servis alanına çık</strong>; ardından servis yolundaki konteynerlere <strong>E — Poşeti incele</strong>.';
+    });
+
+    document.getElementById('btnDocBag').addEventListener('click', () => {
+      docInspectOverlay.classList.add('hidden');
+      openReportFormPrefilled();
+    });
+    document.getElementById('btnDocClose').addEventListener('click', () => {
+      docInspectOverlay.classList.add('hidden');
+      openReportFormPrefilled();
+    });
+
+    reportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let rp = 0;
+      const fd = new FormData(reportForm);
+      if ((fd.get('usbLoc') || '').toString().trim().length > 14) rp += 10;
+      if (fd.get('who')) rp += 8;
+      if (fd.get('behav')) rp += 8;
+      if (fd.get('doc')) rp += 6;
+      if (fd.get('sens')) rp += 6;
+      let chk = 0;
+      ['rec_usb', 'rec_train', 'rec_shred', 'rec_bin', 'rec_patrol'].forEach((n) => {
+        const el = reportForm.querySelector('input[type="checkbox"][name="' + n + '"]');
+        if (el && el.checked) chk++;
+      });
+      rp += Math.min(14, chk * 3);
+      if ((fd.get('notes') || '').toString().trim().length > 20) rp += 6;
+      score += rp;
+      reportOverlay.classList.add('hidden');
+      finishRun();
+    });
+
+    document.getElementById('btnReplay').addEventListener('click', () => {
+      location.reload();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      keys[e.code] = true;
+      const move3d =
+        phase === 'STREET' ||
+        phase === 'ALLEY' ||
+        phase === 'DROP' ||
+        phase === 'LEAVE_BANK';
+      if (
+        move3d &&
+        (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'ArrowLeft' || e.code === 'ArrowRight')
+      ) {
+        e.preventDefault();
+      }
+      if (e.code === 'Escape') {
+        if (document.pointerLockElement === canvas) {
+          document.exitPointerLock?.();
+          e.preventDefault();
+        }
+      }
+      if (move3d && (e.code === 'BracketLeft' || e.code === 'BracketRight')) {
+        if (e.code === 'BracketRight') camMouseSens = Math.min(0.0038, camMouseSens * 1.09);
+        else camMouseSens = Math.max(0.0011, camMouseSens / 1.09);
+        try {
+          localStorage.setItem('sebs_bank_mSens', String(camMouseSens));
+        } catch (err) {}
+        hudText.innerHTML =
+          '<strong>Kamera hassasiyeti:</strong> ' +
+          camMouseSens.toFixed(4) +
+          ' — <strong>[</strong> azaltır, <strong>]</strong> artırır.';
+        e.preventDefault();
+      }
+      if (e.code === 'KeyE') {
+        if (phase === 'STREET') {
+          if (!isNearStreetBankEntrance()) {
+            hudText.innerHTML =
+              '<strong>Şube girişi uzak.</strong> Cephe ve cam kapı hattına yaklaşın; hazır olduğunuzda <strong>E — Şubeye gir</strong>.';
+            return;
+          }
+          if (!canInteractStreetBank()) {
+            hudText.innerHTML =
+              '<strong>Giriş açısı uygun değil.</strong> Cepheye ve giriş hizasına dönün (fare ile kamera); ardından <strong>E — Etkileşime geç</strong>.';
+            return;
+          }
+          tryEnterBankFromStreet();
+        } else if (phase === 'LEAVE_BANK') {
+          if (!canInteractExitDoor()) {
+            hudText.innerHTML =
+              '<strong>Cam kapı uzak veya yan açıda.</strong> Kapı hizasına yaklaşıp girişe dönerken <strong>E — Dış servis alanına çık</strong>.';
+            return;
+          }
+          tryExitBankDoor();
+        } else if (phase === 'ALLEY') {
+          const dDump = Math.hypot(player.position.x - 24, player.position.z - 19.5);
+          if (dDump > 4.35) {
+            hudText.innerHTML =
+              '<strong>Konteyner alanı uzak.</strong> Servis yolundaki konteyner sırasına ilerleyin; <strong>E — Poşeti incele</strong>.';
+            return;
+          }
+          if (!canInteractAlleyDumpster()) {
+            hudText.innerHTML =
+              '<strong>Konteynerlere dönük değilsiniz.</strong> Atık hattına bakarak yaklaşın; <strong>E — Etkileşime geç</strong>.';
+            return;
+          }
+          tryOpenDumpsterTrash();
+        } else if (
+          phase === 'DROP' &&
+          usbInteract.classList.contains('visible') &&
+          observeUsbOverlay.classList.contains('hidden') &&
+          guardDialogOverlay.classList.contains('hidden')
+        ) {
+          tryDropUsb();
+        } else if (phase === 'DROP' && observeUsbOverlay.classList.contains('hidden') && guardDialogOverlay.classList.contains('hidden')) {
+          hudText.innerHTML =
+            '<strong>USB bırakma paneli kapalı.</strong> Zemindeki hedefe yaklaşın; panel açılınca <strong>E — USB’yi bırak</strong>.';
+        }
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      keys[e.code] = false;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.1);
+      const elapsed = clock.elapsedTime;
+      updateStreetEnterHud();
+      updateAlleyInteractHud();
+
+      if (phase === 'GUARD_DIALOG') {
+        animHumanIdle(player, elapsed);
+        animGuards(dt, elapsed);
+        animNpcs(dt, elapsed);
+        bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        updateCamera(dt);
+        if (interiorGroup.visible) updateDoorProximityVisual(dt);
+        renderer.render(scene, camera);
+        return;
+      }
+
+      if (!trashOverlay.classList.contains('hidden')) {
+        trashDwellSec += dt;
+        if (trashDwellSec > 24) suspicion += dt * 3.2;
+      }
+
+      if (moveTransition) {
+        tickMoveTransition(dt);
+        animHumanIdle(player, elapsed);
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
+        updateNearestUsbHud();
+        updateCamera(dt);
+        if (interiorGroup.visible) updateDoorProximityVisual(dt);
+        renderer.render(scene, camera);
+        return;
+      }
+
+      if (phase === 'DROP' || phase === 'LEAVE_BANK') {
+        integratePlayerLocomotion(dt, elapsed, phase === 'LEAVE_BANK');
+        const r = readMoveXZCameraRelative();
+        const moving = r.mx !== 0 || r.mz !== 0 || Math.hypot(velX, velZ) > 0.16;
+        animHumanIdle(player, elapsed);
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
+
+        const px = player.position.x;
+        const pz = player.position.z;
+        if (phase === 'DROP' && interiorGroup.visible) {
+          const gd = guardProximity();
+          if (gd < 2.8) suspicion += dt * 22;
+          if (gd < 1.4) suspicion += dt * 35;
+          if (inCameraZone(px, pz)) {
+            suspicion += dt * 8.8;
+            cameraHud.classList.add('is-visible');
+          } else {
+            cameraHud.classList.remove('is-visible');
+          }
+          if (inStaffOnlyCorridor(px, pz)) {
+            suspicion += dt * 38;
+            player.position.z += dt * 0.85;
+            player.position.x += (px < -16.5 ? dt * 0.4 : -dt * 0.4);
+            clampPlayer();
+          }
+          const td = distToNearestTellerStaff(px, pz);
+          if (td < 2.38) suspicion += dt * 13;
+          if (!moving && elapsed - lastMoveAt > 5.5) suspicion += dt * 2.8;
+          if (!guardDialogShown && suspicion >= 87 && suspicion < 95) {
+            openGuardDialog();
+          }
+        } else {
+          cameraHud.classList.remove('is-visible');
+        }
+
+        suspicion = Math.min(100, suspicion);
+        suspicion -= dt * 1.15;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+
+        updateNearestUsbHud();
+
+        if (suspicion >= 95 && phase === 'DROP' && interiorGroup.visible && !runEnded) {
+          runEnded = true;
+          setPhase('END');
+          endOverlay.classList.remove('hidden');
+          document.getElementById('endTitle').textContent = 'Yakalandınız (simülasyon)';
+          document.getElementById('endBody').textContent =
+            'Güvenlik görevlileri sizi uzaklaştırdı. Kamera altında gereksiz bekleme, personel alanı veya güvenlik çizgisine aşırı yakınlık şüpheyi hızlandırır.';
+          document.getElementById('endLearning').textContent =
+            'Yüksek şüphe anında profesyonel seçenek: yetki / RoE şeffaflığı ve testi kontrollü şekilde sonlandırmak.';
+          pushTrackerCompletion(false);
+        }
+        updateCamera(dt);
+      } else if (phase === 'STREET' || phase === 'ALLEY') {
+        cameraHud.classList.remove('is-visible');
+        integratePlayerLocomotion(dt, elapsed, false);
+        animHumanIdle(player, elapsed);
+        suspicion -= dt * 0.35;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+        updateCamera(dt);
+      } else {
+        cameraHud.classList.remove('is-visible');
+        suspicion -= dt * 0.4;
+        if (suspicion < 0) suspicion = 0;
+        suspicionFill.style.width = suspicion + '%';
+        suspicionFill.style.backgroundColor = suspicion > 70 ? '#ef4444' : suspicion > 40 ? '#f59e0b' : '#22c55e';
+        animHumanIdle(player, elapsed);
+        if (interiorGroup.visible) {
+          animGuards(dt, elapsed);
+          animNpcs(dt, elapsed);
+          bankStaffMeshes.forEach((s) => animHumanIdle(s, elapsed));
+        }
+        updateCamera(dt);
+      }
+      if (interiorGroup.visible) updateDoorProximityVisual(dt);
+      renderer.render(scene, camera);
+    }
+
+    applyWorldAtmosphere();
+    window.__sebsSilentDropStartStreet = startStreetFromPrep;
+    const prep3dHint = document.getElementById('prep3dWaitHint');
+    if (prep3dHint) prep3dHint.style.display = 'none';
+    if (window.__sebsSilentDropStreetQueued) {
+      window.__sebsSilentDropStreetQueued = false;
+      startStreetFromPrep();
+    } else if (prepOverlay && !prepOverlay.classList.contains('hidden')) {
+      setPhase('OFFICE_PREP');
+    } else {
+      setPhase('OFFICE_MAIL');
+    }
+    animate();
+  </script>
+<script src="/simulation/simulation-access-check.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+/**
+ * SEBS Global — Birleşik tasarım sistemi (tüm cihazlar)
+ * Breakpoints: sm 640 | md 768 | lg 1024 | xl 1280
+ * Container: 72rem (1152px) + fluid gutter
+ */
+:root,
+.sebs-home-page,
+.sebs-app-page {
+  --sebs-container: 72rem;
+  --sebs-container-wide: 87.5rem;
+  --sebs-gutter: clamp(1rem, 3.2vw, 1.5rem);
+  --sebs-gutter-lg: clamp(1.25rem, 4vw, 2rem);
+  --sebs-section-y: clamp(3rem, 8vw, 5rem);
+  --sebs-nav-h: 4.25rem;
+  --sebs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sebs-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sebs-bp-sm: 40rem;
+  --sebs-bp-md: 48rem;
+  --sebs-bp-lg: 64rem;
+  --sebs-bp-xl: 80rem;
+}
+
+.sebs-home-page,
+.sebs-app-page {
+  --sh-container: var(--sebs-container);
+  --sh-nav-h: var(--sebs-nav-h);
+  --sh-font: var(--sebs-font-sans);
+  --sh-ease: var(--sebs-ease);
+}
+
+/* —— Global baseline (kaydırma / metin / taşma) —— */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html:has(.sebs-home-page),
+html:has(.sebs-app-page),
+html:has(body.landing-site-body) {
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.sebs-home-page),
+  html:has(.sebs-app-page) {
+    scroll-behavior: smooth;
+  }
+}
+
+.sebs-home-page,
+.sebs-app-page,
+body.landing-site-body.sebs-stripe-site {
+  overflow-x: clip;
+  min-width: 0;
+}
+
+.sebs-home-page *,
+.sebs-app-page *,
+body.landing-site-body * {
+  box-sizing: border-box;
+}
+
+.sebs-home-page img,
+.sebs-app-page img,
+.sebs-home-page video,
+.sebs-app-page video,
+body.landing-site-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+.sebs-home-page svg,
+.sebs-app-page svg {
+  flex-shrink: 0;
+}
+
+/* —— Ortak container (Figma frame genişliği) —— */
+.sebs-container,
+.sh-container {
+  width: 100%;
+  max-width: var(--sebs-container);
+  margin-inline: auto;
+  padding-inline: var(--sebs-gutter);
+  min-width: 0;
+}
+
+body.landing-site-body .max-w-6xl,
+body.landing-site-body .max-w-7xl {
+  width: 100% !important;
+  max-width: var(--sebs-container) !important;
+  margin-inline: auto !important;
+  padding-inline: var(--sebs-gutter) !important;
+}
+
+body.landing-site-body .px-4 {
+  padding-left: var(--sebs-gutter) !important;
+  padding-right: var(--sebs-gutter) !important;
+}
+
+@media (min-width: 40rem) {
+  body.landing-site-body .sm\:px-6 {
+    padding-left: var(--sebs-gutter) !important;
+    padding-right: var(--sebs-gutter) !important;
+  }
+}
+
+/* —— Grid / flex taşma koruması —— */
+.sebs-home-page main,
+.sebs-app-page main,
+.sebs-app-page .main-content,
+.sebs-home-main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.sh-hero__grid,
+.sh-experience__grid,
+.sh-pricing__grid,
+.modules-grid,
+.simulations-grid,
+.sim-hero-wrap,
+.sebs-cat-haccordion-wrap {
+  min-width: 0;
+}
+
+/* —— Tipografi: uygulama sayfaları (ana sayfa hero ayrı — sebs-home.css) —— */
+.sebs-app-page .modules-hero .hero-title,
+.sebs-app-page .modules-hero .hero-content h1,
+.sebs-app-page .sim-hero-content .hero-title,
+.sebs-app-page .sim-hero-content h1 {
+  font-size: clamp(1.625rem, 4.2vw + 0.5rem, 2.5rem) !important;
+  line-height: 1.15 !important;
+}
+
+.sebs-app-page .sh-h2,
+.sebs-app-page .section-title {
+  font-size: clamp(1.25rem, 2.5vw + 0.65rem, 1.75rem) !important;
+}
+
+.sebs-app-page .section-subtitle,
+.sebs-app-page .hero-subtitle {
+  font-size: clamp(0.9375rem, 1.2vw + 0.8rem, 1.125rem) !important;
+  max-width: 42rem;
+}
+
+/* —— Global API Loading Indicator (api-integration.js) —— */
+#sebs-global-loader { display: block; }
+#sebs-global-loader[hidden] { display: none; }
+
+/* —— Dokunma hedefleri (mobil) —— */
+@media (max-width: 47.9375rem) {
+  .sh-btn,
+  .sh-nav__link,
+  body.sebs-app-page .tab-btn,
+  body.sebs-app-page .sebs-acc-btn {
+    min-height: 2.75rem;
+  }
+
+  .sh-nav__burger {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+/* —— Tablet: hero iki sütun kırılımı —— */
+@media (max-width: 63.9375rem) {
+  .sebs-home-page .sh-hero__grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .sebs-home-page .sh-hero-flow {
+    min-height: 14rem;
+  }
+
+  .sebs-home-page .sh-hero-flow__viewport {
+    min-height: 14rem;
+    padding: 1.5rem 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .sebs-home-page .sh-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+}

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <base href="/" />
+  <title>SEBS Global | Simülasyon Tabanlı Kariyer ve Öğrenme Platformu</title>
+  <meta name="description" content="SEBS; öğrencilerin kariyer yönünü keşfetmesini, Big Five öğrenme profiliyle yol haritası oluşturmasını ve gerçekçi simülasyonlarda performansını ölçmesini sağlar." />
+  <meta name="theme-color" content="#f6f7fb" />
+  <link rel="canonical" href="https://sebsglobal.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sebsglobal.com/" />
+  <meta property="og:title" content="SEBS Global — Deneyimleyerek öğren, performansını kanıtla" />
+  <meta property="og:description" content="Big Five öğrenme profili, kişisel kariyer yolu ve gerçekçi simülasyonlarla ölçülebilir gelişim." />
+  <meta property="og:image" content="https://sebsglobal.com/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SEBS Global — Simülasyon tabanlı kariyer platformu" />
+  <meta name="twitter:description" content="Kariyer yönünü keşfet, simülasyonlarda becerini ölç." />
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"SEBS Global","url":"https://sebsglobal.com/","logo":"https://sebsglobal.com/images/SEBS.png","sameAs":[]}
+  </script>
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"SEBS Global","url":"https://sebsglobal.com/","potentialAction":{"@type":"SearchAction","target":"https://sebsglobal.com/blog?q={search_term_string}","query-input":"required name=search_term_string"}}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="/css/sebs-design-system.css?v=3" />
+  <link rel="stylesheet" href="/css/sebs-home-tokens.css?v=4" />
+  <link rel="stylesheet" href="/css/sebs-home.css?v=41" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <noscript><style>.sh-reveal,.sh-hero-flow.sh-reveal{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body class="sebs-home-page landing-site-body" data-theme="light">
+
+  <a href="#top" class="sh-skip">İçeriğe atla</a>
+
+  <header class="sh-nav" id="shNav">
+    <div class="sh-container sh-nav__inner">
+      <a href="/" class="sh-brand" aria-label="SEBS Global ana sayfa">
+        <img src="/images/sebs-navbar-mark.png?v=1" alt="" width="36" height="36" />
+        <span class="sh-brand__text">
+          <span class="sh-brand__name">SEBS</span>
+          <span class="sh-brand__sub">Global</span>
+        </span>
+      </a>
+
+      <nav class="sh-nav__links" aria-label="Ana menü">
+        <a href="/modules.html" class="sh-nav__link">Eğitimler</a>
+        <a href="/simulations.html" class="sh-nav__link">Simülasyonlar</a>
+        <a href="/#experience" class="sh-nav__link">Kariyer Yolları</a>
+        <a href="/isverenler.html" class="sh-nav__link">Kurumsal</a>
+        <a href="/hakkimizda" class="sh-nav__link">Hakkımızda</a>
+      </nav>
+
+      <div class="sh-nav__actions">
+        <a href="/login.html" id="loginBtn" class="sh-nav__login">Giriş</a>
+        <a href="/signup.html" id="signupBtn" class="sh-btn sh-btn--primary sh-nav__cta">Yolunu keşfet</a>
+        <div id="userProfile" class="relative hidden" style="display: none;">
+          <button type="button" id="userProfileTrigger" aria-expanded="false" aria-haspopup="menu" aria-controls="userAccountPanel" aria-label="Hesap menüsü">
+            <span id="userAvatar" aria-hidden="true">K</span>
+            <span id="userName">Kullanıcı</span>
+          </button>
+          <div id="userAccountPanel" class="hidden" role="menu" hidden>
+            <a href="/dashboard.html" class="user-dashboard-link" role="menuitem">Profilim</a>
+            <div class="sh-account-theme" role="none">
+              <span>Gece modu</span>
+              <div id="userMenuThemeMount"></div>
+            </div>
+            <button type="button" id="logoutBtn" style="display: none;" role="menuitem">Çıkış yap</button>
+          </div>
+        </div>
+        <button type="button" class="sh-nav__burger" id="shNavBurger" aria-expanded="false" aria-controls="shMobileMenu" aria-label="Menüyü aç">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sh-mobile-menu" id="shMobileMenu" aria-hidden="true">
+    <a href="/modules.html">Eğitimler</a>
+    <a href="/simulations.html">Simülasyonlar</a>
+    <a href="/#experience">Kariyer Yolları</a>
+    <a href="/isverenler.html">Kurumsal</a>
+    <a href="/hakkimizda">Hakkımızda</a>
+    <div class="sh-btn-row" id="mobileGuestLinks">
+      <a href="/login.html" class="sh-btn sh-btn--ghost">Giriş</a>
+      <a href="/signup.html" class="sh-btn sh-btn--primary">Ücretsiz başla</a>
+    </div>
+    <div id="mobileUserLinks" style="display: none;">
+      <a href="/dashboard.html" class="sh-btn sh-btn--ghost user-dashboard-link">Profilim</a>
+      <button type="button" class="sh-btn sh-btn--ghost btn-logout">Çıkış</button>
+    </div>
+  </div>
+
+  <main class="sebs-home-main" id="top">
+
+    <!-- 1. Hero -->
+    <section class="sh-hero" aria-labelledby="hero-title">
+      <div class="sh-container">
+        <div class="sh-hero__grid">
+          <div class="sh-hero__copy">
+            <p class="sh-hero-kicker">SEBS Global — simülasyon tabanlı kariyer eğitimi</p>
+            <h1 id="hero-title" class="sh-h1 sh-h1--hero">
+              İzleyerek değil, <em>deneyimleyerek</em> öğren.
+            </h1>
+            <p class="sh-hero-hook">CV'ye yazmadan önce becerini kanıtla.</p>
+            <p class="sh-lead sh-lead--hero">
+              Kariyer yönünü netleştir, Big Five profilinle kendini tanı ve gerçek senaryolarda aldığın kararlarla ilerlemeni ölç.
+            </p>
+            <div class="sh-btn-row sh-btn-row--hero">
+              <a href="/signup.html" data-sebs-primary-cta class="sh-btn sh-btn--primary sh-btn--hero-primary">Ücretsiz başla</a>
+              <a href="/simulations.html" class="sh-btn sh-btn--ghost sh-btn--hero-secondary">Simülasyonları keşfet</a>
+            </div>
+            <p class="sh-hero-note">Ücretsiz başlangıç · Öğrenci odaklı · Ölçülebilir ilerleme</p>
+          </div>
+
+          <div class="sh-hero-flow sh-reveal sh-reveal--hero-flow" role="img" aria-label="Simülasyon performans kartları SEBS merkezinde değerlendirilir ve çıkar">
+            <div class="sh-hero-flow__viewport">
+              <div class="sh-hero-flow__track">
+                <div class="sh-hero-flow__group">
+                  <article class="sh-flow-card" data-tone="violet" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>84</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="cyan" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>73</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="amber" data-result="negative">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>18</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="rose" data-result="negative">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>35</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="emerald" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>91</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="blue" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>62</strong><span>/100</span></p>
+                  </article>
+                </div>
+                <div class="sh-hero-flow__group" aria-hidden="true">
+                  <article class="sh-flow-card" data-tone="violet" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>84</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="cyan" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>73</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="amber" data-result="negative">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>18</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="rose" data-result="negative">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>35</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="emerald" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>91</strong><span>/100</span></p>
+                  </article>
+                  <article class="sh-flow-card" data-tone="blue" data-result="positive">
+                    <span class="sh-flow-card__scan" aria-hidden="true"></span>
+                    <span class="sh-flow-card__badge" aria-hidden="true"></span>
+                    <div class="sh-flow-card__avatar" aria-hidden="true"></div>
+                    <p class="sh-flow-card__score"><strong>62</strong><span>/100</span></p>
+                  </article>
+                </div>
+              </div>
+              <div class="sh-hero-flow__hub" aria-hidden="true">
+                <div class="sh-hero-flow__hub-inner">
+                  <div class="sh-hero-flow__gate">
+                    <span class="sh-hero-flow__gate-scan" aria-hidden="true"></span>
+                  </div>
+                  <div class="sh-hero-flow__cube">
+                    <img src="/images/sebs-navbar-mark.png?v=1" alt="SEBS Global" width="52" height="52" class="sh-hero-flow__logo" decoding="async" />
+                  </div>
+                  <p class="sh-hero-flow__label">SEBS değerlendiriyor</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Marquee -->
+    <section class="sh-marquee sh-reveal" id="marquee" aria-label="Platform alanları">
+      <div class="sh-marquee__row sh-marquee__row--a">
+        <div class="sh-marquee__track">
+          <span class="sh-marquee__chip">Siber Güvenlik</span><span class="sh-marquee__chip">Bulut Güvenliği</span><span class="sh-marquee__chip">SOC</span><span class="sh-marquee__chip">Web Güvenliği</span><span class="sh-marquee__chip">Dijital Pazarlama</span><span class="sh-marquee__chip">E-Ticaret</span><span class="sh-marquee__chip">İnsan Kaynakları</span><span class="sh-marquee__chip">Simülasyon</span>
+          <span class="sh-marquee__chip" aria-hidden="true">Siber Güvenlik</span><span class="sh-marquee__chip" aria-hidden="true">Bulut Güvenliği</span><span class="sh-marquee__chip" aria-hidden="true">SOC</span><span class="sh-marquee__chip" aria-hidden="true">Web Güvenliği</span><span class="sh-marquee__chip" aria-hidden="true">Dijital Pazarlama</span><span class="sh-marquee__chip" aria-hidden="true">E-Ticaret</span><span class="sh-marquee__chip" aria-hidden="true">İnsan Kaynakları</span><span class="sh-marquee__chip" aria-hidden="true">Simülasyon</span>
+        </div>
+      </div>
+      <div class="sh-marquee__row sh-marquee__row--b">
+        <div class="sh-marquee__track">
+          <span class="sh-marquee__chip">Big Five</span><span class="sh-marquee__chip">Kariyer Yolu</span><span class="sh-marquee__chip">Performans Profili</span><span class="sh-marquee__chip">Yetkinlik Raporu</span><span class="sh-marquee__chip">Gerçek Senaryo</span><span class="sh-marquee__chip">Öğrenci Dostu Eğitim</span><span class="sh-marquee__chip">AI Yönlendirme</span><span class="sh-marquee__chip">Ölçülebilir Gelişim</span>
+          <span class="sh-marquee__chip" aria-hidden="true">Big Five</span><span class="sh-marquee__chip" aria-hidden="true">Kariyer Yolu</span><span class="sh-marquee__chip" aria-hidden="true">Performans Profili</span><span class="sh-marquee__chip" aria-hidden="true">Yetkinlik Raporu</span><span class="sh-marquee__chip" aria-hidden="true">Gerçek Senaryo</span><span class="sh-marquee__chip" aria-hidden="true">Öğrenci Dostu Eğitim</span><span class="sh-marquee__chip" aria-hidden="true">AI Yönlendirme</span><span class="sh-marquee__chip" aria-hidden="true">Ölçülebilir Gelişim</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Nasıl çalışır -->
+    <section class="sh-section sh-reveal" id="how" aria-labelledby="how-title">
+      <div class="sh-container">
+        <header class="sh-section-head">
+          <h2 id="how-title" class="sh-h2">SEBS öğrenme sürecini dört adıma indirir.</h2>
+        </header>
+        <div class="sh-steps" id="shSteps">
+          <article class="sh-step">
+            <span class="sh-step__num" aria-hidden="true">01</span>
+            <h3 class="sh-step__title">Kendini Tanı</h3>
+            <p class="sh-step__desc">Big Five öğrenme profili ve hedef soruları ile başlangıç noktan netleşir.</p>
+          </article>
+          <article class="sh-step">
+            <span class="sh-step__num" aria-hidden="true">02</span>
+            <h3 class="sh-step__title">Yolunu Gör</h3>
+            <p class="sh-step__desc">İlk Adım, Yükseliş ve Zirve aşamalarından oluşan kişisel kariyer yolun açılır.</p>
+          </article>
+          <article class="sh-step">
+            <span class="sh-step__num" aria-hidden="true">03</span>
+            <h3 class="sh-step__title">Simülasyonda Uygula</h3>
+            <p class="sh-step__desc">Gerçekçi senaryolarda karar verir, hata yapar, tekrar dener ve gelişimini ölçersin.</p>
+          </article>
+          <article class="sh-step">
+            <span class="sh-step__num" aria-hidden="true">04</span>
+            <h3 class="sh-step__title">Performansını Kanıtla</h3>
+            <p class="sh-step__desc">Skor, süre, karar kalitesi ve raporlarla gelişimini görünür hale getirirsin.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partnerler -->
+    <section class="sh-partners sh-reveal" aria-label="İş ortaklarımız">
+      <p class="sh-partners__label">İş ortaklarımız</p>
+      <div class="sh-partners-marquee">
+        <div class="sh-partners-marquee__track">
+          <div class="sh-partners-marquee__group">
+            <span class="sh-partners__item">
+              <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="iyzico" class="sh-partners__logo sh-partners__logo--iyzico" width="148" height="24" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item">
+              <img src="/images/partners/cumhuriyet-teknokent-logo.png" alt="Cumhuriyet Teknokent" class="sh-partners__logo sh-partners__logo--teknokent" width="200" height="42" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item">
+              <img src="/images/partners/sertifikapp-logo.png" alt="SertifikApp" class="sh-partners__logo sh-partners__logo--sertifikapp" width="200" height="45" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item sh-partners__item--uyumsoft">
+              <img src="/images/partners/uyumsoft-logo.png" alt="Uyumsoft — Kurumsal İş Sistemleri" class="sh-partners__logo sh-partners__logo--uyumsoft" width="168" height="38" loading="lazy" decoding="async" />
+            </span>
+          </div>
+          <div class="sh-partners-marquee__group" aria-hidden="true">
+            <span class="sh-partners__item">
+              <img src="/images/payments/iyzico/iyzico-ile-ode-checkout.svg" alt="" class="sh-partners__logo sh-partners__logo--iyzico" width="148" height="24" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item">
+              <img src="/images/partners/cumhuriyet-teknokent-logo.png" alt="" class="sh-partners__logo sh-partners__logo--teknokent" width="200" height="42" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item">
+              <img src="/images/partners/sertifikapp-logo.png" alt="" class="sh-partners__logo sh-partners__logo--sertifikapp" width="200" height="45" loading="lazy" decoding="async" />
+            </span>
+            <span class="sh-partners__item sh-partners__item--uyumsoft">
+              <img src="/images/partners/uyumsoft-logo.png" alt="" class="sh-partners__logo sh-partners__logo--uyumsoft" width="168" height="38" loading="lazy" decoding="async" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sh-teknokent-note sh-reveal" aria-label="Kurumsal kimlik">
+      <div class="sh-container">
+        <div class="sh-teknokent-note__inner">
+          <img src="/images/partners/cumhuriyet-teknokent-logo.png" alt="Cumhuriyet Teknokent" class="sh-teknokent-note__logo" width="200" height="42" loading="lazy" decoding="async" />
+          <p class="sh-teknokent-note__text">Sivas Cumhuriyet Üniversitesi Teknokent bünyesinde faaliyet gösteren şirketimiz yerli ve yabancı nitelikli akademisyen kadrosuyla hizmet vermektedir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Kariyer yolu -->
+    <section class="sh-section sh-reveal" id="experience" aria-labelledby="exp-title">
+      <div class="sh-container">
+        <div class="sh-experience__grid">
+          <div class="sh-experience__copy">
+            <h2 id="exp-title" class="sh-h2">Eğitim değil, karar verdiğin bir kariyer deneyimi.</h2>
+            <p class="sh-lead">SEBS, öğrenciyi rastgele içerikler arasında kaybetmez. Aşamalı kariyer yolu ve gerçekçi simülasyonlarla neyi öğrendiğini, nerede zorlandığını ve nasıl geliştiğini gösterir.</p>
+            <div class="sh-path-cards">
+              <article class="sh-path-card is-active" data-path-step="0">
+                <h3>İlk Adım</h3>
+                <p>Yönünü bul ve temel becerileri kazan.</p>
+              </article>
+              <article class="sh-path-card" data-path-step="1">
+                <h3>Yükseliş</h3>
+                <p>Daha fazla senaryo, daha net performans.</p>
+              </article>
+              <article class="sh-path-card" data-path-step="2">
+                <h3>Zirve</h3>
+                <p>Tüm yol erişimi ve ileri seviye görevlerle portföyünü güçlendir.</p>
+              </article>
+              <a href="/modules.html" class="sh-btn sh-btn--ghost sh-path-cards__cta">Eğitimleri gör</a>
+            </div>
+          </div>
+          <div class="sh-mountain-viz" id="shMountainViz" role="img" aria-label="Kariyer yolculuğu: dağ zirvesine uzanan animasyonlu yol">
+            <svg class="sh-mountain-viz__stage" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+              <defs>
+                <radialGradient id="sh-mt-marker-core" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.95" />
+                  <stop offset="70%" stop-color="#67e8f9" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#0891b2" stop-opacity="0" />
+                </radialGradient>
+                <filter id="sh-mt-marker-depth">
+                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#020617" flood-opacity="0.75" />
+                </filter>
+                <filter id="sh-mt-text-shadow">
+                  <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#020617" flood-opacity="0.9" />
+                </filter>
+              </defs>
+              <image
+                class="sh-mountain-viz__photo"
+                href="/images/career-mountain-bg.jpg"
+                width="1536"
+                height="1024"
+                preserveAspectRatio="xMidYMid slice"
+              />
+              <g class="sh-mountain-viz__route">
+                <path
+                  id="shMountainTrail"
+                  class="sh-mountain-viz__trail-guide"
+                  d="M 238 972 L 348 882 L 288 802 L 428 702 L 368 622 L 598 498 L 538 418 L 678 328 L 618 248 L 758 188 L 698 158 L 838 138 L 928 122"
+                />
+                <path class="sh-mountain-viz__trail-pulse" d="M 238 972 L 348 882 L 288 802 L 428 702 L 368 622 L 598 498 L 538 418 L 678 328 L 618 248 L 758 188 L 698 158 L 838 138 L 928 122" />
+                <circle class="sh-mountain-viz__marker is-start" data-path-step="0" cx="238" cy="972" r="18" />
+                <circle class="sh-mountain-viz__marker" data-path-step="1" cx="598" cy="498" r="12" />
+                <circle class="sh-mountain-viz__marker" data-path-step="2" cx="762" cy="192" r="12" />
+                <circle class="sh-mountain-viz__runner" r="7" />
+              </g>
+              <g class="sh-mountain-viz__labels">
+                <text class="sh-mountain-viz__label" data-path-step="0" x="238" y="1028" text-anchor="middle">İlk Adım</text>
+                <text class="sh-mountain-viz__label" data-path-step="1" x="598" y="532">Yükseliş</text>
+                <text class="sh-mountain-viz__label" data-path-step="2" x="762" y="216">Zirve</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Big Five -->
+    <section class="sh-section sh-reveal" id="big-five" aria-labelledby="bf-title">
+      <div class="sh-container">
+        <div class="sh-bigfive__grid">
+          <div>
+            <h2 id="bf-title" class="sh-h2">Önce kendini tanı, sonra doğru yola başla.</h2>
+            <p class="sh-lead">Big Five öğrenme profili kişilik tanısı değildir. Öğrencinin çalışma eğilimini, odak alanlarını ve öğrenme temposunu anlamasına yardımcı olan farkındalık raporudur.</p>
+            <ul class="sh-bigfive__list">
+              <li>Öğrenme eğilimi</li>
+              <li>Odak ve çalışma tarzı</li>
+              <li>Güçlü yönler</li>
+              <li>Gelişim alanları</li>
+              <li>Kişisel yol önerisi</li>
+              <li>PDF rapor</li>
+            </ul>
+            <div class="sh-btn-row">
+              <a href="/tests/big-five" class="sh-btn sh-btn--primary">Teste başla</a>
+              <a href="/pricing.html" class="sh-btn sh-btn--ghost">Paketleri gör</a>
+            </div>
+          </div>
+          <div class="sh-skillhub" id="shSkillHub" role="img" aria-label="Atlas merkezli öğrenme profili kartları">
+            <div class="sh-skillhub__stage">
+              <div class="sh-skillhub__center">
+                <figure class="sh-skillhub__atlas-wrap">
+                  <img
+                    class="sh-skillhub__atlas"
+                    src="/images/sebs-atlas.png?v=6"
+                    alt=""
+                    width="196"
+                    height="208"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption class="sh-skillhub__atlas-label">Atlas</figcaption>
+                </figure>
+              </div>
+            <article class="sh-skillhub__card sh-skillhub__card--profile sh-skillhub__card--float" data-skillhub-card>
+              <header class="sh-skillhub__card-head">
+                <strong>Öğrenme profili</strong>
+                <span class="sh-skillhub__badge sh-skillhub__badge--ok">Doğrulandı</span>
+              </header>
+              <p class="sh-skillhub__score" data-count-target="847">0</p>
+              <div class="sh-skillhub__bar" role="presentation">
+                <span class="sh-skillhub__bar-fill" data-bar-target="84.7"></span>
+              </div>
+              <p class="sh-skillhub__bar-label"><span>0</span><span>1000</span></p>
+              <a class="sh-skillhub__link" href="/tests/big-five" tabindex="-1">Profil özetini gör</a>
+              <footer class="sh-skillhub__skills">
+                <span>Ölçülen boyutlar</span>
+                <ul>
+                  <li title="Açıklık"><i>A</i></li>
+                  <li title="Sorumluluk"><i>S</i></li>
+                  <li title="Dışadönüklük"><i>D</i></li>
+                  <li title="Uyumluluk"><i>U</i></li>
+                </ul>
+              </footer>
+            </article>
+            <article class="sh-skillhub__card sh-skillhub__card--insight sh-skillhub__card--float" data-skillhub-card>
+              <header class="sh-skillhub__card-head">
+                <strong>Profil analizi</strong>
+                <span class="sh-skillhub__badge sh-skillhub__badge--warn">İncele</span>
+              </header>
+              <div class="sh-skillhub__wave" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="sh-skillhub__play">
+                <span class="sh-skillhub__play-btn" aria-hidden="true"></span>
+                <span>Özet hazır</span>
+              </div>
+            </article>
+            <article class="sh-skillhub__card sh-skillhub__card--plan sh-skillhub__card--float" data-skillhub-card>
+              <header class="sh-skillhub__card-head">
+                <strong>Gelişim planı</strong>
+              </header>
+              <ol class="sh-skillhub__plan">
+                <li class="is-done">Hafta 1 — Öğrenme eğilimi</li>
+                <li class="is-done">Hafta 2 — Odak alanları</li>
+                <li class="is-done">Hafta 3 — Güçlü yönler</li>
+                <li>Hafta 4 — Yol önerisi</li>
+              </ol>
+            </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Paketler -->
+    <section class="sh-section sh-reveal" id="pricing" aria-labelledby="price-title">
+      <div class="sh-container">
+        <header class="sh-section-head sh-section-head--center">
+          <h2 id="price-title" class="sh-h2">Sana uygun paketi seç</h2>
+          <p class="sh-lead">Aşamalı yol erişimi. İstediğin zaman yükselt.</p>
+        </header>
+        <div class="sh-pricing__grid">
+          <article class="sh-price-card">
+            <h3>İlk Adım</h3>
+            <p class="sh-price-card__desc">Yönünü bul, temel duraklarla başla.</p>
+            <p class="sh-price-card__price">199 TL <small>/ ay</small></p>
+            <ul>
+              <li>İlk Adım aşaması açık</li>
+              <li>Başlangıç simülasyonları</li>
+              <li>Big Five profil özeti</li>
+            </ul>
+            <a href="/pricing.html?category=sebs-road" class="sh-btn sh-btn--ghost">Planı incele</a>
+          </article>
+          <article class="sh-price-card sh-price-card--featured">
+            <span class="sh-price-card__badge">En çok tercih edilen</span>
+            <h3>Yükseliş</h3>
+            <p class="sh-price-card__desc">Düzenli pratik ve ölçülebilir ilerleme.</p>
+            <p class="sh-price-card__price">349 TL <small>/ ay</small></p>
+            <ul>
+              <li>İlk Adım + Yükseliş açık</li>
+              <li>Daha fazla durak ve simülasyon</li>
+              <li>İlerleme raporları</li>
+            </ul>
+            <a href="/pricing.html?category=sebs-road" class="sh-btn sh-btn--primary">Yükselişe başla</a>
+          </article>
+          <article class="sh-price-card">
+            <h3>Zirve</h3>
+            <p class="sh-price-card__desc">Tam yol erişimi ve ileri görevler.</p>
+            <p class="sh-price-card__price">799 TL <small>/ ay</small></p>
+            <ul>
+              <li>Tüm aşamalar açık</li>
+              <li>Tüm simülasyonlar</li>
+              <li>Tam yol takibi</li>
+            </ul>
+            <a href="/pricing.html?category=sebs-road" class="sh-btn sh-btn--ghost">Zirveyi keşfet</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kurumsal strip + Final CTA -->
+    <section class="sh-section" id="cta" aria-labelledby="cta-title">
+      <div class="sh-container">
+        <div class="sh-b2b-strip sh-reveal">
+          <p>Kurumlar için simülasyon tabanlı aday ve yetkinlik değerlendirme çözümleri geliştiriyoruz.</p>
+          <a href="/isverenler.html" class="sh-btn sh-btn--ghost">Kurumsal çözümleri incele</a>
+        </div>
+        <div class="sh-final-cta sh-reveal">
+          <h2 id="cta-title" class="sh-h2">Bugün sadece izleme. İlk simülasyonunu dene.</h2>
+          <p class="sh-lead" style="margin-left: auto; margin-right: auto;">SEBS ile kariyer yönünü keşfet, öğrenme profilini oluştur ve gelişimini ölçülebilir hale getir.</p>
+          <div class="sh-btn-row">
+            <a href="/signup.html" data-sebs-primary-cta class="sh-btn sh-btn--primary">Ücretsiz başla</a>
+            <a href="/simulations.html" class="sh-btn sh-btn--ghost">Simülasyonları keşfet</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 7. Footer -->
+  <footer class="sh-footer">
+    <div class="sh-container">
+      <div class="sh-footer__grid">
+        <div class="sh-footer__brand">
+          <a href="/" class="sh-brand">
+            <img src="/images/SEBS.png" alt="SEBS" width="32" height="32" />
+            <span class="sh-brand__text">
+              <span class="sh-brand__name">SEBS Global</span>
+            </span>
+          </a>
+          <p>Simülasyonlar ve ölçülebilir performans profiliyle öğrencilerin kariyer yönünü keşfetmesini sağlayan eğitim platformu.</p>
+        </div>
+        <div class="sh-footer__col">
+          <h4>Ürün</h4>
+          <ul>
+            <li><a href="/modules.html">Eğitim modülleri</a></li>
+            <li><a href="/simulations.html">Simülasyonlar</a></li>
+            <li><a href="/pricing.html">Paketler</a></li>
+            <li><a href="/tests/big-five">Big Five testi</a></li>
+          </ul>
+        </div>
+        <div class="sh-footer__col">
+          <h4>Kurumsal</h4>
+          <ul>
+            <li><a href="/isverenler.html">Kurumsal çözümler</a></li>
+            <li><a href="/hakkimizda">Hakkımızda</a></li>
+            <li><a href="/contact.html">İletişim</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </div>
+        <div class="sh-footer__col">
+          <h4>Yasal</h4>
+          <ul>
+            <li><a href="/gizlilik">Gizlilik</a></li>
+            <li><a href="/kullanim-sartlari">Kullanım şartları</a></li>
+            <li><a href="/teslimat-iade">Teslimat ve iade</a></li>
+            <li><a href="/mesafeli-satis">Mesafeli satış</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sh-footer__pay" aria-label="Ödeme yöntemleri">
+        <p>Güvenli ödeme</p>
+        <img src="/images/payments/iyzico/logo-band-footer.svg" alt="iyzico ile Öde — Visa, Mastercard ve diğer kartlar" width="429" height="32" loading="lazy" decoding="async" />
+      </div>
+      <div class="sh-footer__bottom">
+        <p>© <span class="landing-footer-year"></span> SEBS Global. Tüm hakları saklıdır.</p>
+        <p>Sivas · Türkiye</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+  <script src="/js/network-utils.js?v=1.0"></script>
+  <script src="/js/supabase-env.js?v=2"></script>
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/supabase-auth.js?v=2.2"></script>
+  <script src="/js/navigation.js?v=3.8" defer></script>
+  <script src="/js/sebs-home.js?v=23" defer></script>
+</body>
+</html>

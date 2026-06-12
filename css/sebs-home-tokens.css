@@ -1,0 +1,65 @@
+/**
+ * SEBS Global — Site geneli tokenlar (CodeSignal tarzı açık zemin, okunur metin)
+ */
+.sebs-home-page,
+.sebs-app-page {
+  --sh-bg-deep: #f6f7fb;
+  --sh-bg-mid: #f0f2f8;
+  --sh-bg-elevated: #ffffff;
+
+  --sh-violet: #6366f1;
+  --sh-violet-light: #818cf8;
+  --sh-blue: #2563eb;
+  --sh-cyan: #0ea5e9;
+
+  --sh-text: #0f172a;
+  --sh-text-muted: #475569;
+  --sh-text-subtle: #64748b;
+
+  --sh-border: #e2e8f0;
+  --sh-border-soft: #edf0f5;
+  --sh-glass: #ffffff;
+  --sh-glass-hover: #f8fafc;
+
+  --sh-glow-violet: rgba(99, 102, 241, 0.18);
+  --sh-glow-cyan: rgba(37, 99, 235, 0.12);
+
+  --sh-radius-sm: 0.75rem;
+  --sh-radius-md: 1rem;
+  --sh-radius-lg: 1.25rem;
+  --sh-radius-xl: 1.75rem;
+  --sh-radius-pill: 9999px;
+
+  --sh-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sh-container: var(--sebs-container, 72rem);
+  --sh-nav-h: var(--sebs-nav-h, 4.25rem);
+
+  --sh-gradient-text: linear-gradient(135deg, #4338ca 0%, #2563eb 50%, #0284c7 100%);
+  --sh-gradient-btn: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  --sh-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 24px -8px rgba(15, 23, 42, 0.08);
+  --sh-shadow-glow: 0 8px 32px -12px rgba(37, 99, 235, 0.2);
+}
+
+/* Koyu tema — ana sayfa + eğitim / simülasyon listeleri */
+html[data-theme="dark"] .sebs-home-page,
+html[data-theme="dark"] .sebs-app-page {
+  --sh-bg-deep: #0b1220;
+  --sh-bg-mid: #0f172a;
+  --sh-bg-elevated: #1e293b;
+
+  --sh-text: #f8fafc;
+  --sh-text-muted: #cbd5e1;
+  --sh-text-subtle: #94a3b8;
+
+  --sh-border: #334155;
+  --sh-border-soft: #1e293b;
+  --sh-glass: #1e293b;
+  --sh-glass-hover: #334155;
+
+  --sh-glow-violet: rgba(99, 102, 241, 0.28);
+  --sh-glow-cyan: rgba(37, 99, 235, 0.22);
+
+  --sh-shadow-card: 0 1px 2px rgba(2, 6, 23, 0.35), 0 8px 24px -8px rgba(2, 6, 23, 0.45);
+  --sh-shadow-glow: 0 8px 32px -12px rgba(37, 99, 235, 0.35);
+}
