@@ -762,6 +762,7 @@
                 });
             });
         }
+    }
 
     function initHamburgerMenu() {
         const hamburger = document.querySelector('.hamburger');
