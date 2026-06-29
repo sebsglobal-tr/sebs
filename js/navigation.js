@@ -577,8 +577,41 @@
             panel.setAttribute('role', 'menu');
             panel.hidden = true;
 
-            panel.appendChild(makeLink('/modules.html', 'Eğitim modülleri', ''));
-            panel.appendChild(makeLink('/simulations.html', 'Simülasyonlar', ''));
+            var items = [
+                { href: '/modules.html', icon: '🖥', title: 'Eğitim Modülleri', desc: 'Simülasyon tabanlı öğrenme' },
+                { href: '/simulations.html', icon: '🤖', title: 'Simülasyonlar', desc: 'Gerçek senaryo pratikleri' },
+                { href: '/pricing.html', icon: '📊', title: 'Paketler', desc: 'Sana uygun planı seç' },
+                { href: '/isverenler.html', icon: '🏢', title: 'Kurumsal', desc: 'İşveren çözümleri' }
+            ];
+
+            items.forEach(function (item) {
+                var card = document.createElement('a');
+                card.href = item.href;
+                card.setAttribute('role', 'menuitem');
+
+                var icon = document.createElement('span');
+                icon.className = 'platform-icon';
+                icon.textContent = item.icon;
+
+                var textWrap = document.createElement('span');
+                textWrap.className = 'platform-text';
+
+                var title = document.createElement('span');
+                title.style.fontWeight = '600';
+                title.style.fontSize = '.875rem';
+                title.textContent = item.title;
+
+                var desc = document.createElement('span');
+                desc.className = 'platform-label';
+                desc.textContent = item.desc;
+
+                textWrap.appendChild(title);
+                textWrap.appendChild(desc);
+                card.appendChild(icon);
+                card.appendChild(textWrap);
+                panel.appendChild(card);
+            });
+
             wrap.appendChild(trig);
             wrap.appendChild(panel);
             return wrap;
