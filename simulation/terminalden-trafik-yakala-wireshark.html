@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <base href="/" />
+  <title>SEBS Network Lab 3 - Trafik Yakala ve Wireshark ile İncele</title>
+  <meta name="description" content="SEBS Network Lab 3: terminalde tcpdump ile pcap kaydet, Wireshark filtreleriyle analiz et." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .top { height: 58px; background: #0b1322; border-bottom: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+    .title { font-size: 15px; font-weight: 700; color: #c7d2fe; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .badge { border: 1px solid #334155; border-radius: 999px; padding: 5px 10px; font-size: 11px; color: #93c5fd; }
+    .btn { border: 1px solid #334155; border-radius: 8px; background: #162033; color: #e2e8f0; padding: 7px 11px; font-weight: 600; cursor: pointer; font-size: 12px; }
+    .shell-wrap { position: relative; height: calc(100vh - 58px); padding: 14px; }
+    .terminal-shell {
+      position: absolute; inset: 14px;
+      background: linear-gradient(180deg, #030712 0%, #020617 100%);
+      border: 1px solid #1e293b; border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(148,163,184,.05);
+      padding: 0; overflow: hidden;
+    }
+    .shell-head {
+      height: 44px; border-bottom: 1px solid #1e293b; background: #0b1220;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; color: #94a3b8;
+    }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ef4444; } .dot.y { background: #f59e0b; } .dot.g { background: #22c55e; }
+    .terminal { border: none; border-radius: 0; padding: 12px; height: calc(100% - 52px); overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.55; background: transparent; }
+    .line { color: #cbd5e1; white-space: pre-wrap; }
+    .line.cmd { color: #67e8f9; }
+    .terminal-line { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 2px; }
+    .terminal-prompt { color: #22d3ee; font-weight: 600; flex-shrink: 0; }
+    .terminal-input {
+      min-width: 260px;
+      outline: none;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1;
+    }
+    .terminal-input:empty::before { content: ""; }
+    .input { flex: 1; background: #020617; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; padding: 10px; font-family: "JetBrains Mono", monospace; }
+    .hint { color: #64748b; font-size: 11px; padding: 0 12px 8px; line-height: 1.4; }
+    .task-float {
+      position: absolute; top: 18px; right: 18px; width: 330px;
+      background: rgba(8, 15, 28, 0.92); border: 1px solid #334155; border-radius: 12px;
+      box-shadow: 0 14px 32px rgba(0,0,0,.45); overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .task-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 12px; color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.9);
+    }
+    .task-body { max-height: 62vh; overflow: auto; padding: 10px; }
+    .wbox { background: #0b1220; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-top: 8px; }
+    .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .chip { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 12px; color: #cbd5e1; }
+    .task { border: 1px solid #334155; border-radius: 10px; padding: 9px; margin-bottom: 8px; font-size: 13px; color: #cbd5e1; }
+    .task.ok { border-color: #16a34a; background: rgba(22,163,74,.15); color: #dcfce7; }
+    .msg { position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px; z-index: 30; min-width: 420px; max-width: 84vw; border-radius: 10px; border: 1px solid #334155; padding: 10px 12px; background: #0b1220; opacity: 0; transition: opacity .2s; pointer-events: none; }
+    .msg.show { opacity: 1; }
+    .msg.ok { border-color: #16a34a; color: #dcfce7; }
+    .msg.warn { border-color: #f59e0b; color: #fef3c7; }
+    .hidden { display: none; }
+    .intro { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,23,.9); display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .intro-card { max-width: 900px; width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 20px; }
+    .intro-card h1 { margin: 0 0 10px; font-size: 28px; color: #fff; }
+    .intro-card p { color: #94a3b8; line-height: 1.6; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="title">SEBS Network Lab 3 · Terminal Capture</div>
+    <div class="actions">
+      <span class="badge" id="stageBadge">Aşama 1/3 · Kurulum</span>
+      <button class="btn" id="testBtn">Test Et</button>
+      <button class="btn" id="resetBtn">Sıfırla</button>
+    </div>
+  </div>
+
+  <div class="shell-wrap">
+    <div class="terminal-shell">
+      <div class="shell-head">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <div>SSH — analyst@sebs-lab3-terminal:/bin/bash</div>
+        <div></div>
+      </div>
+      <div class="terminal" id="terminalOut">
+        <div class="terminal-line" id="activeLine">
+          <span class="terminal-prompt" id="currentPrompt">analyst@sebs-lab3:~$</span>
+          <span class="terminal-input" id="terminalInput" contenteditable="true"></span>
+        </div>
+      </div>
+      <div class="hint">
+        Örnek akış: <code>sudo apt update</code> → <code>sudo apt install -y wireshark tcpdump</code> → <code>ip addr</code> →
+        <code>sudo tcpdump -i eth0 -w sebs_lab3_capture.pcap</code> → ping/nslookup/curl → <code>CTRL + C</code>
+      </div>
+    </div>
+
+    <aside class="task-float">
+      <div class="task-head">
+        <span>Görevler</span>
+        <span id="progressText">0/10</span>
+      </div>
+      <div class="task-body">
+        <div class="group">Lab Adımları</div>
+        <div class="task" data-task="1">1) Paket listesini güncelle (`apt update`)</div>
+        <div class="task" data-task="2">2) Wireshark + tcpdump kur</div>
+        <div class="task" data-task="3">3) Sürüm kontrollerini yap</div>
+        <div class="task" data-task="4">4) Ağ arayüzlerini görüntüle</div>
+        <div class="task" data-task="5">5) eth0 üzerinde tcpdump başlat (pcap adını sen belirleyebilirsin)</div>
+        <div class="task" data-task="6">6) ping / nslookup / curl trafiği üret</div>
+        <div class="task" data-task="7">7) Yakalamayı CTRL + C ile durdur</div>
+        <div class="task" data-task="8">8) pcap dosyasını doğrula</div>
+        <div class="task" data-task="9">9) Wireshark filtrelerini uygula (icmp,dns,http,ip.addr)</div>
+        <div class="task" data-task="10">10) Testi başarıyla geç</div>
+
+        <div class="group" style="margin-top:10px;">Wireshark Analizi</div>
+        <div id="wiresharkLocked" style="font-size:12px;color:#64748b;">`wireshark sebs_lab3_capture.pcap` komutunu çalıştırınca analiz paneli açılır.</div>
+        <div class="wbox hidden" id="wiresharkPanel">
+          <div style="font-weight:700;color:#fff;">PCAP Dosyası</div>
+          <div id="pcapState" style="font-size:13px;color:#94a3b8;margin-top:4px;">Henüz dosya yok.</div>
+          <div class="kpi">
+            <div class="chip">ICMP: <strong id="icmpCount">0</strong></div>
+            <div class="chip">DNS: <strong id="dnsCount">0</strong></div>
+            <div class="chip">HTTP: <strong id="httpCount">0</strong></div>
+            <div class="chip">TCP: <strong id="tcpCount">0</strong></div>
+          </div>
+          <div style="margin-top:10px;">
+            <input id="filterInput" class="input" placeholder="icmp / dns / http / ip.addr == 192.168.10.100" />
+            <button class="btn" id="applyFilterBtn" style="margin-top:8px;">Filtreyi Uygula</button>
+          </div>
+          <div id="filterResult" style="margin-top:8px;font-size:12px;color:#94a3b8;">Filtre sonucu burada görünür.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="msg" id="msg"></div>
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <h1>SEBS Network Lab 3: Terminalden Trafik Yakala ve Wireshark ile İncele</h1>
+      <p>Bu labda kendi eğitim ortamındaki trafiği terminalde `tcpdump` ile yakalayacak, `.pcap` dosyasına kaydedecek ve Wireshark filtreleriyle analiz edeceksin.</p>
+      <p><strong style="color:#bfdbfe;">Aşama 1:</strong> Kurulum ve arayüz keşfi. <strong style="color:#bfdbfe;">Aşama 2:</strong> Trafik yakalama + test trafiği üretme. <strong style="color:#bfdbfe;">Aşama 3:</strong> PCAP dosyasını filtrelerle analiz etme.</p>
+      <button class="btn" id="startBtn" style="background:#2563eb;border-color:#2563eb;">Simülasyonu Başlat</button>
+      <a href="/simulations.html" class="btn" style="text-decoration:none;margin-left:6px;display:inline-block;">Simülasyonlara Dön</a>
+    </div>
+  </div>
+
+  <script>
+    const out = document.getElementById("terminalOut");
+    const stageBadge = document.getElementById("stageBadge");
+    const pcapState = document.getElementById("pcapState");
+    const wiresharkPanel = document.getElementById("wiresharkPanel");
+    const wiresharkLocked = document.getElementById("wiresharkLocked");
+    const msg = document.getElementById("msg");
+    const intro = document.getElementById("intro");
+    const filterInput = document.getElementById("filterInput");
+    const filterResult = document.getElementById("filterResult");
+    const applyFilterBtn = document.getElementById("applyFilterBtn");
+    const testBtn = document.getElementById("testBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const progressText = document.getElementById("progressText");
+    let history = [];
+    let historyIndex = -1;
+    let commandRunning = false;
+    const counts = {
+      icmp: document.getElementById("icmpCount"),
+      dns: document.getElementById("dnsCount"),
+      http: document.getElementById("httpCount"),
+      tcp: document.getElementById("tcpCount")
+    };
+
+    const state = {
+      updated: false, installed: false, wsVer: false, tdVer: false, iface: false,
+      captureStarted: false, captureStopped: false, pcapCreated: false,
+      captureIface: "", wrongIface: false,
+      pcapFileName: "sebs_lab3_capture.pcap",
+      ping: false, dns: false, http: false, lsPcap: false, filePcap: false,
+      filters: { icmp: false, dns: false, http: false, ip: false },
+      wiresharkOpened: false,
+      packets: { icmp: 0, dns: 0, http: 0, tcp: 0 },
+      stage: 1
+    };
+    const shell = {
+      user: "analyst",
+      host: "sebs-lab3",
+      cwd: "/home/analyst",
+      fs: {
+        "/home/analyst": { type: "dir", children: ["notes.txt"] },
+        "/home/analyst/notes.txt": { type: "file", content: "SEBS Lab 3 notlari\n" }
+      }
+    };
+
+    function say(text, mode = "warn") {
+      msg.textContent = text;
+      msg.className = `msg show ${mode}`;
+      clearTimeout(say.t);
+      say.t = setTimeout(() => msg.className = "msg", 2200);
+    }
+    function line(text, cls = "") {
+      const d = document.createElement("div");
+      d.className = `line ${cls}`;
+      d.textContent = text;
+      const active = document.getElementById("activeLine");
+      if (active) out.insertBefore(d, active);
+      else out.appendChild(d);
+      out.scrollTop = out.scrollHeight;
+    }
+    function commandLine(prompt, command) {
+      const d = document.createElement("div");
+      d.className = "terminal-line";
+      d.innerHTML = `<span class="terminal-prompt">${prompt}</span><span class="line cmd">${command}</span>`;
+      const active = document.getElementById("activeLine");
+      if (active) out.insertBefore(d, active);
+      else out.appendChild(d);
+      out.scrollTop = out.scrollHeight;
+    }
+    function getPrompt() {
+      const short = shell.cwd.replace("/home/analyst", "~");
+      return `${shell.user}@${shell.host}:${short}$`;
+    }
+    function normalizePath(inputPath) {
+      if (!inputPath || inputPath === ".") return shell.cwd;
+      if (inputPath.startsWith("/")) return inputPath.replace(/\/+/g, "/");
+      const base = shell.cwd.endsWith("/") ? shell.cwd.slice(0, -1) : shell.cwd;
+      const joined = `${base}/${inputPath}`.replace(/\/+/g, "/");
+      const parts = [];
+      joined.split("/").forEach(p => {
+        if (!p || p === ".") return;
+        if (p === "..") parts.pop();
+        else parts.push(p);
+      });
+      return "/" + parts.join("/");
+    }
+    function parentDir(path) {
+      if (path === "/") return "/";
+      const idx = path.lastIndexOf("/");
+      return idx <= 0 ? "/" : path.slice(0, idx);
+    }
+    function baseName(path) {
+      if (path === "/") return "/";
+      const idx = path.lastIndexOf("/");
+      return path.slice(idx + 1);
+    }
+    function pathExists(path) { return !!shell.fs[path]; }
+    function isDir(path) { return shell.fs[path]?.type === "dir"; }
+    function ensureDir(path) {
+      if (!pathExists(path)) return false;
+      return isDir(path);
+    }
+    function listDir(path) {
+      if (!ensureDir(path)) return null;
+      return shell.fs[path].children.slice();
+    }
+    function addDir(path) {
+      if (pathExists(path)) return false;
+      const p = parentDir(path);
+      if (!ensureDir(p)) return false;
+      shell.fs[path] = { type: "dir", children: [] };
+      shell.fs[p].children.push(baseName(path));
+      return true;
+    }
+    function addFile(path, content = "") {
+      const p = parentDir(path);
+      if (!ensureDir(p)) return false;
+      if (!pathExists(path)) shell.fs[p].children.push(baseName(path));
+      shell.fs[path] = { type: "file", content };
+      return true;
+    }
+    function removePath(path) {
+      if (!pathExists(path)) return false;
+      if (path === "/" || path === "/home" || path === "/home/analyst") return false;
+      if (isDir(path) && shell.fs[path].children.length) return false;
+      const p = parentDir(path);
+      if (shell.fs[p]?.children) shell.fs[p].children = shell.fs[p].children.filter(n => n !== baseName(path));
+      delete shell.fs[path];
+      return true;
+    }
+    function runCommandWithAnimation(cmd) {
+      if (commandRunning) {
+        say("Önceki komut halen çalışıyor.", "warn");
+        return;
+      }
+      commandRunning = true;
+      const terminalInput = document.getElementById("terminalInput");
+      terminalInput.contentEditable = "false";
+
+      if (cmd.includes("apt update")) {
+        line("Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease");
+        line("Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]");
+        line("Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]");
+        line("Reading package lists... Done");
+      }
+      if (cmd.includes("apt install") && cmd.includes("wireshark") && cmd.includes("tcpdump")) {
+        line("Reading package lists... Done");
+        line("Building dependency tree... Done");
+        line("Reading state information... Done");
+        line("The following NEW packages will be installed:");
+        line("  tcpdump wireshark wireshark-common libwireshark16");
+        line("0 upgraded, 4 newly installed, 0 to remove and 12 not upgraded.");
+        line("Need to get 14.2 MB of archives.");
+        line("After this operation, 58.1 MB of additional disk space will be used.");
+        line("Get:1 http://archive.ubuntu.com/ubuntu jammy/main tcpdump amd64 4.99.1-1 [467 kB]");
+        line("Get:2 http://archive.ubuntu.com/ubuntu jammy/universe wireshark amd64 4.0.6 [13.6 MB]");
+        line("Fetched 14.2 MB in 2s (7,610 kB/s)");
+        line("Selecting previously unselected package tcpdump...");
+        line("Selecting previously unselected package wireshark...");
+        line("Unpacking tcpdump...");
+        line("Unpacking wireshark...");
+        line("Setting up tcpdump...");
+        line("Setting up wireshark...");
+        line("Processing triggers for man-db...");
+      }
+
+      const delay = cmd.includes("apt install") ? 500 : cmd.includes("apt update") ? 350 : 220;
+      window.setTimeout(() => {
+        runCommand(cmd, false);
+        commandRunning = false;
+        terminalInput.contentEditable = "true";
+        focusInput();
+      }, delay);
+    }
+    function focusInput() {
+      const el = document.getElementById("terminalInput");
+      if (!el) return;
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    function markTask(n, ok) {
+      const t = document.querySelector(`[data-task="${n}"]`);
+      if (ok) t.classList.add("ok");
+      else t.classList.remove("ok");
+    }
+    function refreshTasks() {
+      markTask(1, state.updated);
+      markTask(2, state.installed);
+      markTask(3, state.wsVer && state.tdVer);
+      markTask(4, state.iface);
+      markTask(5, state.captureStarted);
+      markTask(6, state.ping && state.dns && state.http);
+      markTask(7, state.captureStopped);
+      markTask(8, state.pcapCreated && state.lsPcap);
+      markTask(9, state.filters.icmp && state.filters.dns && state.filters.http && state.filters.ip);
+      const completed = document.querySelectorAll(".task.ok").length;
+      progressText.textContent = `${completed}/10`;
+      counts.icmp.textContent = String(state.packets.icmp);
+      counts.dns.textContent = String(state.packets.dns);
+      counts.http.textContent = String(state.packets.http);
+      counts.tcp.textContent = String(state.packets.tcp);
+      if ([1,2,3,4].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"))) {
+        state.stage = Math.max(state.stage, 2);
+        stageBadge.textContent = "Aşama 2/3 · Trafik Yakalama";
+      }
+      if ([5,6,7,8].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"))) {
+        state.stage = Math.max(state.stage, 3);
+        stageBadge.textContent = "Aşama 3/3 · Wireshark Analizi";
+      }
+    }
+    function runCommand(raw, echo = true) {
+      const cmd = raw.trim();
+      if (!cmd) return;
+      if (echo) line(`$ ${cmd}`, "cmd");
+      const parts = cmd.split(/\s+/);
+      const bin = parts[0];
+
+      // Generic shell-like commands for realism
+      if (bin === "help") {
+        line("Desteklenen komutlar: pwd, whoami, hostname, date, ls, cd, mkdir, touch, cat, echo, cp, mv, rm, clear, history");
+        line("Ek komutlar: grep, head, tail, chmod, sudo -l");
+        line("Lab komutlari: apt update, apt install, wireshark --version, tcpdump --version, ip addr, sudo tcpdump -i ... -w ...");
+        refreshTasks();
+        return;
+      }
+      if (bin === "pwd") { line(shell.cwd); refreshTasks(); return; }
+      if (bin === "whoami") { line(shell.user); refreshTasks(); return; }
+      if (bin === "hostname") { line(shell.host); refreshTasks(); return; }
+      if (bin === "date") { line(new Date().toString()); refreshTasks(); return; }
+      if (bin === "clear") {
+        out.querySelectorAll(".line, .terminal-line:not(#activeLine)").forEach(n => n.remove());
+        refreshTasks();
+        return;
+      }
+      if (bin === "history") {
+        history.forEach((h, i) => line(`${i + 1}  ${h}`));
+        refreshTasks();
+        return;
+      }
+      if (bin === "cd") {
+        const target = normalizePath(parts[1] || "/home/analyst");
+        if (ensureDir(target)) {
+          shell.cwd = target;
+          const promptEl = document.getElementById("currentPrompt");
+          if (promptEl) promptEl.textContent = getPrompt();
+        } else {
+          line(`cd: no such file or directory: ${parts[1] || ""}`);
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "ls") {
+        const arg = parts.find(p => !p.startsWith("-") && p !== "ls");
+        const target = normalizePath(arg || ".");
+        const listing = listDir(target);
+        if (!listing) line(`ls: cannot access '${arg || target}': No such file or directory`);
+        else line(listing.join("  ") || ".");
+        refreshTasks();
+        return;
+      }
+      if (bin === "mkdir") {
+        const p = parts[1];
+        if (!p) line("mkdir: missing operand");
+        else if (addDir(normalizePath(p))) line("");
+        else line(`mkdir: cannot create directory '${p}'`);
+        refreshTasks();
+        return;
+      }
+      if (bin === "touch") {
+        const p = parts[1];
+        if (!p) line("touch: missing file operand");
+        else if (!addFile(normalizePath(p), shell.fs[normalizePath(p)]?.content || "")) line(`touch: cannot touch '${p}'`);
+        refreshTasks();
+        return;
+      }
+      if (bin === "cat") {
+        const p = normalizePath(parts[1] || "");
+        if (!pathExists(p)) line(`cat: ${parts[1] || ""}: No such file or directory`);
+        else if (isDir(p)) line(`cat: ${parts[1]}: Is a directory`);
+        else line(shell.fs[p].content || "");
+        refreshTasks();
+        return;
+      }
+      if (bin === "head" || bin === "tail") {
+        const fileArg = parts.find((p, i) => i > 0 && !p.startsWith("-"));
+        const nArg = parts.find((p) => p.startsWith("-n"));
+        const n = nArg ? Number(nArg.replace("-n", "") || "10") : 10;
+        const p = normalizePath(fileArg || "");
+        if (!fileArg) {
+          line(`${bin}: missing file operand`);
+          refreshTasks();
+          return;
+        }
+        if (!pathExists(p)) line(`${bin}: cannot open '${fileArg}'`);
+        else if (isDir(p)) line(`${bin}: error reading '${fileArg}': Is a directory`);
+        else {
+          const rows = (shell.fs[p].content || "").split("\n");
+          const chunk = bin === "head" ? rows.slice(0, n) : rows.slice(Math.max(0, rows.length - n));
+          line(chunk.join("\n"));
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "grep") {
+        if (parts.length < 3) {
+          line("grep: usage: grep PATTERN FILE");
+          refreshTasks();
+          return;
+        }
+        const pattern = parts[1];
+        const p = normalizePath(parts[2]);
+        if (!pathExists(p)) line(`grep: ${parts[2]}: No such file or directory`);
+        else if (isDir(p)) line(`grep: ${parts[2]}: Is a directory`);
+        else {
+          const rows = (shell.fs[p].content || "").split("\n");
+          const hits = rows.filter(r => r.includes(pattern));
+          if (hits.length) line(hits.join("\n"));
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "chmod") {
+        if (parts.length < 3) {
+          line("chmod: missing operand");
+          refreshTasks();
+          return;
+        }
+        const p = normalizePath(parts[2]);
+        if (!pathExists(p)) line(`chmod: cannot access '${parts[2]}'`);
+        else line("");
+        refreshTasks();
+        return;
+      }
+      if (bin === "sudo" && parts[1] === "-l") {
+        line("Matching Defaults entries for analyst on sebs-lab3:");
+        line("    env_reset, mail_badpass, secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+        line("User analyst may run the following commands on sebs-lab3:");
+        line("    (ALL : ALL) ALL");
+        refreshTasks();
+        return;
+      }
+      if (bin === "echo" && cmd.includes(">")) {
+        const m = cmd.match(/^echo\s+(.+?)\s*>\s*(.+)$/);
+        if (!m) line("echo: syntax error");
+        else {
+          const content = m[1].replace(/^["']|["']$/g, "");
+          const p = normalizePath(m[2].trim());
+          if (!addFile(p, content + "\n")) line(`echo: cannot write '${m[2].trim()}'`);
+        }
+        refreshTasks();
+        return;
+      }
+      if (bin === "cp" || bin === "mv") {
+        const src = normalizePath(parts[1] || "");
+        const dst = normalizePath(parts[2] || "");
+        if (!parts[1] || !parts[2]) {
+          line(`${bin}: missing file operand`);
+          refreshTasks();
+          return;
+        }
+        if (!pathExists(src) || isDir(src)) {
+          line(`${bin}: cannot stat '${parts[1]}'`);
+          refreshTasks();
+          return;
+        }
+        if (!addFile(dst, shell.fs[src].content || "")) {
+          line(`${bin}: cannot create '${parts[2]}'`);
+          refreshTasks();
+          return;
+        }
+        if (bin === "mv") removePath(src);
+        refreshTasks();
+        return;
+      }
+      if (bin === "rm") {
+        const p = normalizePath(parts[1] || "");
+        if (!parts[1]) line("rm: missing operand");
+        else if (!removePath(p)) line(`rm: cannot remove '${parts[1]}'`);
+        refreshTasks();
+        return;
+      }
+
+      if (cmd === "CTRL + C" || cmd.toLowerCase() === "ctrl+c" || cmd === "^C") {
+        handleInterrupt();
+        return;
+      }
+
+      if (cmd.includes("apt update")) {
+        state.updated = true;
+        line("Get:1 sebs-lab package index updated");
+      } else if (cmd.includes("apt install") && cmd.includes("wireshark") && cmd.includes("tcpdump")) {
+        state.installed = true;
+        line("wireshark and tcpdump installed successfully.");
+      } else if (cmd === "wireshark --version") {
+        state.wsVer = true;
+        line("Wireshark 4.0.2");
+      } else if (cmd === "tcpdump --version") {
+        state.tdVer = true;
+        line("tcpdump version 4.99.3");
+      } else if (cmd === "ip addr" || cmd === "ip link show") {
+        state.iface = true;
+        line("1: lo: ...");
+        line("2: eth0: inet 192.168.10.15/24");
+      } else if (cmd.startsWith("sudo tcpdump -i") && cmd.includes("-w")) {
+        if (!state.installed) {
+          line("tcpdump: command not found");
+        } else {
+          const m = cmd.match(/-i\s+([a-zA-Z0-9._-]+)/);
+          const outFile = cmd.match(/-w\s+([^\s]+)/);
+          state.captureIface = m ? m[1] : "";
+          state.pcapFileName = outFile ? outFile[1] : "sebs_lab3_capture.pcap";
+          state.wrongIface = state.captureIface !== "eth0";
+          state.captureStarted = true;
+          state.captureStopped = false;
+          line(`tcpdump: listening on ${state.captureIface || "unknown"}, link-type EN10MB...`);
+          line(`output file: ${state.pcapFileName}`);
+          if (state.wrongIface) {
+            line("UYARI: Bu lab için beklenen arayüz eth0.");
+            say("Yanlış arayüz seçildi. eth0 dinlemen gerekiyor.", "warn");
+          }
+        }
+      } else if (cmd.startsWith("ping -c 4")) {
+        state.ping = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.icmp += 8; state.packets.tcp += 0; }
+        line("4 packets transmitted, 4 received");
+      } else if (cmd.startsWith("nslookup")) {
+        state.dns = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.dns += 2; state.packets.tcp += 1; }
+        line("Name: sebs.local");
+        line("Address: 192.168.10.100");
+      } else if (cmd.startsWith("curl ")) {
+        state.http = true;
+        if (state.captureStarted && !state.wrongIface) { state.packets.http += 2; state.packets.tcp += 6; }
+        line("HTTP/1.1 200 OK");
+      } else if (cmd.startsWith("ls -lh ")) {
+        const target = cmd.replace("ls -lh ", "").trim();
+        state.lsPcap = state.pcapCreated && target === state.pcapFileName;
+        line(state.lsPcap ? `-rw-r--r-- 1 student student 28K ${target}` : `ls: cannot access '${target}': No such file`);
+      } else if (cmd.startsWith("file ")) {
+        const target = cmd.replace("file ", "").trim();
+        state.filePcap = state.pcapCreated && target === state.pcapFileName;
+        line(state.filePcap ? `${target}: tcpdump capture file` : "cannot open");
+      } else if (cmd.startsWith("wireshark ")) {
+        const target = cmd.replace("wireshark ", "").trim();
+        if (state.pcapCreated) {
+          if (target !== state.pcapFileName) {
+            line("File not found.");
+            say(`PCAP adı farklı. Beklenen dosya: ${state.pcapFileName}`, "warn");
+            refreshTasks();
+            return;
+          }
+          state.wiresharkOpened = true;
+          wiresharkPanel.classList.remove("hidden");
+          wiresharkLocked.classList.add("hidden");
+          line(`Wireshark GUI opened with ${state.pcapFileName}`);
+          say("Wireshark analiz ekranı açıldı.", "ok");
+        } else {
+          line("File not found.");
+          say("Önce pcap dosyasını üretmelisin.", "warn");
+        }
+      } else {
+        line("Komut tanınmadı veya bu lab için beklenen akış dışında.");
+      }
+
+      if (state.pcapCreated) {
+        pcapState.textContent = state.wrongIface
+          ? `${state.pcapFileName} oluştu fakat ${state.captureIface} arayüzünde trafik yetersiz.`
+          : `${state.pcapFileName} hazır. Wireshark ile analiz edebilirsin.`;
+      }
+      refreshTasks();
+    }
+    function handleInterrupt() {
+      line("^C");
+      if (!state.captureStarted) {
+        line("İptal edildi.");
+      } else {
+        state.captureStarted = false;
+        state.captureStopped = true;
+        state.pcapCreated = (state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp) > 0;
+        line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets captured`);
+        line(`${state.packets.icmp + state.packets.dns + state.packets.http + state.packets.tcp} packets received by filter`);
+        pcapState.textContent = state.pcapCreated ? "sebs_lab3_capture.pcap oluşturuldu." : "Dosya oluştu ancak paket yok.";
+        say("Yakalama Ctrl+C ile durduruldu.", "ok");
+      }
+      refreshTasks();
+    }
+    function applyFilter() {
+      if (!state.wiresharkOpened) {
+        filterResult.textContent = "Önce Wireshark komutunu terminalden çalıştır.";
+        say("Wireshark arayüzünü terminal komutuyla açmalısın.", "warn");
+        return;
+      }
+      const f = filterInput.value.trim();
+      if (!state.pcapCreated) {
+        filterResult.textContent = "Önce pcap dosyası oluşturulmalı.";
+        say("Önce tcpdump ile pcap dosyası üret.", "warn");
+        return;
+      }
+      if (f === "icmp") {
+        state.filters.icmp = state.packets.icmp > 0;
+        filterResult.textContent = `icmp filtre sonucu: ${state.packets.icmp} paket`;
+      } else if (f === "dns") {
+        state.filters.dns = state.packets.dns > 0;
+        filterResult.textContent = `dns filtre sonucu: ${state.packets.dns} paket`;
+      } else if (f === "http") {
+        state.filters.http = state.packets.http > 0;
+        filterResult.textContent = `http filtre sonucu: ${state.packets.http} paket`;
+      } else if (f === "ip.addr == 192.168.10.100") {
+        state.filters.ip = (state.packets.http + state.packets.icmp + state.packets.tcp) > 0;
+        filterResult.textContent = "Sunucuya ait trafik filtrelendi.";
+      } else {
+        filterResult.textContent = "Bu filter bu labda değerlendirme dışı.";
+      }
+      refreshTasks();
+    }
+
+    const terminalInput = document.getElementById("terminalInput");
+    terminalInput.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && (e.key === "c" || e.key === "C")) {
+        e.preventDefault();
+        if (commandRunning) {
+          say("Komut çıktısı yazılırken kısa süre bekle.", "warn");
+          return;
+        }
+        handleInterrupt();
+        terminalInput.textContent = "";
+        focusInput();
+        return;
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (commandRunning) return;
+        const cmd = terminalInput.textContent.trim();
+        if (!cmd) return;
+        history.push(cmd);
+        historyIndex = history.length;
+        commandLine(getPrompt(), cmd);
+        terminalInput.textContent = "";
+        runCommandWithAnimation(cmd);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (commandRunning) return;
+        if (!history.length) return;
+        historyIndex = Math.max(0, historyIndex - 1);
+        terminalInput.textContent = history[historyIndex] || "";
+        focusInput();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (commandRunning) return;
+        if (!history.length) return;
+        historyIndex = Math.min(history.length, historyIndex + 1);
+        terminalInput.textContent = history[historyIndex] || "";
+        focusInput();
+      }
+    });
+    applyFilterBtn.addEventListener("click", applyFilter);
+    testBtn.addEventListener("click", () => {
+      if (state.wrongIface) {
+        say("Test başarısız: yanlış arayüz dinlenmiş. eth0 ile tekrar yakala.", "warn");
+        return;
+      }
+      const ok = [1,2,3,4,5,6,7,8,9].every(n => document.querySelector(`[data-task="${n}"]`).classList.contains("ok"));
+      if (!ok) {
+        say("Test başarısız: görevlerde eksik var.");
+        return;
+      }
+      markTask(10, true);
+      say("Lab 3 başarıyla tamamlandı.", "ok");
+    });
+    resetBtn.addEventListener("click", () => location.reload());
+    document.getElementById("startBtn").addEventListener("click", () => {
+      intro.style.display = "none";
+      line("SEBS Lab 3 ortamına hoş geldiniz.");
+      line("İlk adım: sudo apt update");
+      const promptEl = document.getElementById("currentPrompt");
+      if (promptEl) promptEl.textContent = getPrompt();
+      focusInput();
+    });
+  </script>
+<script src="/simulation/simulation-access-check.js"></script>
+</body>
+</html>

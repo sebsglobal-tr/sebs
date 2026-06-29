@@ -1,0 +1,74 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Render Keep-Alive + UptimeRobot Çifte Koruma
+# ─────────────────────────────────────────────────────────────────────────────
+# Render starter plan (ücretsiz): 15dk hareketsizlik → uyku.
+# Bu workflow her ~8 dakikada bir health endpoint'i pingleyerek uyanık tutar.
+# UptimeRobot (ayrı bir harici servis) da her 5 dakikada bir ping atar.
+# İkisi birlikte çalışarak tek nokta hatasını önler.
+#
+# 🔧 YAPILANDIRMA:
+#   1. GitHub Secret: KEEP_ALIVE_URL → https://your-app.onrender.com/api/health
+#      (Belirtilmezse varsayılan: https://sebs-z9tr.onrender.com/api/health)
+#   2. Devre dışı bırakmak: GitHub Secret KEEP_ALIVE_DISABLED=true
+#   3. UptimeRobot: https://uptimerobot.com → Add HTTP Monitor
+#      → URL: https://sebs-z9tr.onrender.com/api/health
+#      → Interval: 5 minutes → Monitor
+#
+# ⚠ ÖNEMLİ: GitHub Actions free plan'da scheduled workflow'lar
+#    60 gün inaktiflikten sonra otomatik devre dışı kalır.
+#    Bu nedenle UptimeRobot ikincil koruma olarak ŞARTTIR.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Render Keep-Alive
+
+on:
+  schedule:
+    # Her 8 dakikada bir — :00/:30 yığılmasını önlemek için scattered
+    - cron: '5,13,21,29,37,45,53 * * * *'
+  workflow_dispatch: # manuel tetikleme
+
+concurrency:
+  group: keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    name: 🏓 Health ping
+    runs-on: ubuntu-latest
+    if: ${{ vars.KEEP_ALIVE_DISABLED != 'true' && secrets.KEEP_ALIVE_DISABLED != 'true' }}
+    strategy:
+      matrix:
+        # Birden fazla endpoint eklenebilir (ör: hem staging hem production)
+        target: [primary]
+    steps:
+      - name: 🌐 Ping health endpoint
+        id: health
+        run: |
+          START_TIME=$(date +%s%N)
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            --connect-timeout 15 \
+            --max-time 30 \
+            --retry 2 \
+            --retry-delay 5 \
+            "${TARGET_URL}")
+          END_TIME=$(date +%s%N)
+          ELAPSED_MS=$(( (END_TIME - START_TIME) / 1000000 ))
+          echo "http_code=${HTTP_CODE}" >> "$GITHUB_OUTPUT"
+          echo "elapsed_ms=${ELAPSED_MS}" >> "$GITHUB_OUTPUT"
+
+          if [ "${HTTP_CODE}" -ge 200 ] && [ "${HTTP_CODE}" -lt 500 ]; then
+            echo "✅ Health check OK — HTTP ${HTTP_CODE} (${ELAPSED_MS}ms)"
+          else
+            echo "❌ Health check FAILED — HTTP ${HTTP_CODE} (${ELAPSED_MS}ms)"
+            exit 1
+          fi
+        env:
+          TARGET_URL: ${{ secrets.KEEP_ALIVE_URL || 'https://sebs-z9tr.onrender.com/api/health' }}
+
+      - name: ⚠️ Uyarı — ping başarısız
+        if: failure()
+        run: |
+          echo "::warning::Keep-alive ping başarısız! Render servisi uyumuş olabilir."
+          echo "::warning→ 1) Render Dashboard'dan servisi manuel restart edin."
+          echo "::warning→ 2) UptimeRobot durumunu kontrol edin."
+          echo "::warning→ 3) Kalıcı çözüm: render.yaml'daki 'plan: starter'ı 'starter_plus' yapın."

@@ -1,0 +1,2164 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <script src="/js/gtag.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/png" href="/images/SEBS.png" />
+  <meta name="theme-color" content="#0f172a" />
+  <base href="/" />
+  <title>Sessiz Bırakılan Dosya — Yanlış İzinli Paylaşım Krizi | SEBS</title>
+  <meta name="description" content="Windows benzeri arayüzde dosya izinleri, kanıt toplama ve güvenli müdahale sırası eğitim simülasyonu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <script src="/utils/simulation-tracker.js"></script>
+  <style>
+    :root {
+      --sb-bg: #0b1220;
+      --sb-panel: #111827;
+      --sb-border: rgba(148, 163, 184, 0.2);
+      --sb-accent: #38bdf8;
+      --sb-warn: #f97316;
+      --sb-danger: #ef4444;
+      --sb-ok: #34d399;
+      --sb-win-bg: #0078d4;
+    }
+    * { box-sizing: border-box; }
+    body.sb-body {
+      margin: 0; min-height: 100vh;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--sb-bg); color: #e2e8f0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-sg { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    .font-jb { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .hidden { display: none !important; }
+
+    .sb-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem; background: rgba(6, 10, 20, 0.92); backdrop-filter: blur(8px);
+    }
+    .sb-modal-card {
+      max-width: 34rem; width: 100%; padding: 1.5rem;
+      background: linear-gradient(155deg, #1e293b, #0f172a);
+      border: 1px solid var(--sb-border); border-radius: 14px;
+    }
+    .sb-modal-card h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; margin: 0 0 0.5rem; }
+    .sb-modal-card p, .sb-modal-card li { font-size: 0.82rem; line-height: 1.55; color: #94a3b8; }
+    .sb-tag { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sb-accent); }
+    .sb-btn {
+      padding: 0.55rem 1rem; border-radius: 8px; border: none;
+      font-weight: 700; font-size: 0.8rem; font-family: inherit; cursor: pointer;
+      background: linear-gradient(135deg, #0369a1, #4f46e5); color: #fff;
+    }
+    .sb-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .sb-btn--ghost { background: transparent; border: 1px solid var(--sb-border); color: #94a3b8; }
+    .sb-btn--sm { padding: 0.4rem 0.75rem; font-size: 0.72rem; }
+
+    .sb-app { min-height: 100vh; display: flex; flex-direction: column; }
+    .sb-top {
+      border-bottom: 1px solid var(--sb-border);
+      background: rgba(15, 23, 42, 0.95); padding: 0.65rem 1rem;
+    }
+    .sb-top-inner { max-width: 1600px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-start; justify-content: space-between; }
+    .sb-top h1 { font-size: 0.95rem; margin: 0; color: #f8fafc; }
+    .sb-top .sub { font-size: 0.68rem; color: #64748b; margin-top: 0.15rem; }
+    .sb-back { font-size: 0.72rem; font-weight: 600; color: var(--sb-accent); text-decoration: none; display: block; margin-bottom: 0.2rem; }
+    .sb-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .sb-pill { font-size: 0.65rem; font-weight: 600; padding: 0.28rem 0.55rem; border-radius: 999px; border: 1px solid var(--sb-border); background: rgba(30, 41, 59, 0.8); }
+    .sb-pill--score { color: #7dd3fc; }
+
+    .sb-main {
+      flex: 1; display: grid; gap: 0.65rem; padding: 0.65rem;
+      max-width: 1600px; margin: 0 auto; width: 100%;
+      grid-template-columns: minmax(240px, 280px) 1fr minmax(220px, 260px);
+      min-height: 0;
+    }
+    @media (max-width: 1100px) {
+      .sb-main { grid-template-columns: 1fr; }
+    }
+
+    .sb-panel {
+      background: var(--sb-panel); border: 1px solid var(--sb-border);
+      border-radius: 10px; display: flex; flex-direction: column; min-height: 0;
+      overflow: hidden;
+    }
+    .sb-panel-head {
+      padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--sb-border);
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #64748b;
+    }
+    .sb-panel-body { flex: 1; overflow-y: auto; padding: 0.55rem; min-height: 0; }
+
+    .sb-task-item {
+      padding: 0.45rem 0.5rem; border-radius: 6px; margin-bottom: 0.35rem;
+      font-size: 0.72rem; line-height: 1.4; border: 1px solid transparent; color: #64748b;
+    }
+    .sb-task-item--active { border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.08); color: #e2e8f0; }
+    .sb-task-item--done { color: #86efac; }
+    .sb-task-item--done::before { content: '✓ '; }
+
+    .sb-center-col {
+      display: flex; flex-direction: column; min-height: 0; gap: 0.5rem;
+    }
+    .sb-decision-dock {
+      flex-shrink: 0;
+      padding: 0.65rem 0.75rem;
+      background: var(--sb-panel);
+      border: 1px solid var(--sb-border);
+      border-radius: 10px;
+    }
+    .sb-decision-dock-label {
+      font-size: 0.58rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #7dd3fc; margin: 0 0 0.4rem;
+    }
+    #decisionArea {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: stretch;
+      position: relative; z-index: 2;
+    }
+    #decisionArea .sb-decision-label {
+      flex: 0 0 100%; width: 100%; margin-bottom: 0.15rem;
+    }
+    .sb-decision-card {
+      flex: 1 1 11rem; min-width: 9rem; max-width: 100%;
+      display: block; width: auto; text-align: left; margin-bottom: 0;
+      padding: 0.55rem 0.65rem; border-radius: 8px; cursor: pointer;
+      border: 1px solid rgba(71, 85, 105, 0.6);
+      background: rgba(15, 23, 42, 0.6); color: #cbd5e1;
+      font-size: 0.72rem; line-height: 1.4; font-family: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    #decisionArea #btnConfirmSingle,
+    #decisionArea #btnConfirmMulti,
+    #decisionArea #btnCheckOrder {
+      flex: 0 0 auto; width: auto; min-width: 9rem; margin-top: 0.15rem;
+    }
+    #decisionArea .sb-drag-list {
+      flex: 1 1 100%; width: 100%; margin: 0;
+    }
+    .sb-decision-dock .sb-feedback { margin-top: 0.45rem; }
+    .sb-decision-dock #btnNextStage { margin-top: 0.45rem; width: 100%; }
+    @media (max-width: 1100px) {
+      .sb-decision-card { flex: 1 1 100%; min-width: 0; }
+    }
+    .sb-decision-card:hover:not(:disabled) { border-color: rgba(56, 189, 248, 0.45); }
+    .sb-decision-card--pick {
+      border-color: var(--sb-accent); background: rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    }
+    .sb-decision-card--ok { border-color: rgba(52, 211, 153, 0.5); background: rgba(16, 185, 129, 0.1); }
+    .sb-decision-card--bad { border-color: rgba(248, 113, 113, 0.5); background: rgba(239, 68, 68, 0.08); }
+    .sb-decision-card:disabled { cursor: default; opacity: 0.85; }
+    .sb-decision-card strong { display: block; font-size: 0.62rem; color: #64748b; margin-bottom: 0.2rem; pointer-events: none; }
+
+    .sb-ticket {
+      padding: 0.65rem; border-radius: 8px; margin-bottom: 0.5rem;
+      background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.35);
+      font-size: 0.74rem; line-height: 1.5;
+    }
+    .sb-feedback {
+      margin-top: 0.5rem; padding: 0.55rem 0.65rem; border-radius: 8px;
+      font-size: 0.72rem; line-height: 1.5; display: none;
+    }
+    .sb-feedback.show { display: block; }
+    .sb-feedback--ok { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); color: #a7f3d0; }
+    .sb-feedback--bad { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(248, 113, 113, 0.35); color: #fecaca; }
+    .sb-feedback--info { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #bae6fd; }
+
+    .sb-win-wrap {
+      display: flex; flex-direction: column; min-height: 520px;
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid #334155; box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+    }
+    .sb-desktop {
+      flex: 1; position: relative;
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 50%, #1a365d 100%);
+      min-height: 380px; padding: 0.75rem;
+    }
+    .sb-desktop-icons { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .sb-desk-icon {
+      width: 4.5rem; text-align: center; cursor: pointer; padding: 0.35rem;
+      border-radius: 6px; border: 1px solid transparent;
+    }
+    .sb-desk-icon:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+    .sb-desk-icon i { font-size: 1.75rem; color: #e2e8f0; display: block; margin-bottom: 0.25rem; }
+    .sb-desk-icon span { font-size: 0.58rem; color: #cbd5e1; line-height: 1.2; display: block; }
+
+    .sb-taskbar {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: rgba(20, 28, 40, 0.95); border-top: 1px solid #334155;
+      padding: 0.35rem 0.5rem; min-height: 42px;
+    }
+    .sb-start-btn {
+      width: 2rem; height: 2rem; border-radius: 4px; border: none;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb); color: #fff;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    .sb-task-btn {
+      display: flex; align-items: center; gap: 0.35rem;
+      padding: 0.35rem 0.55rem; border-radius: 4px; border: none;
+      background: rgba(51, 65, 85, 0.5); color: #e2e8f0;
+      font-size: 0.68rem; cursor: pointer; font-family: inherit;
+    }
+    .sb-task-btn--active { background: rgba(71, 85, 105, 0.9); box-shadow: inset 0 -2px 0 var(--sb-accent); }
+    .sb-taskbar-clock { margin-left: auto; font-size: 0.65rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace; }
+
+    .sb-win {
+      position: absolute; left: 1rem; right: 1rem; top: 3.5rem; bottom: 0.5rem;
+      background: #fff; border-radius: 8px 8px 0 0;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      display: flex; flex-direction: column; color: #1e293b;
+      animation: sbWinIn 0.2s ease;
+    }
+    @keyframes sbWinIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .sb-win-titlebar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.55rem; background: #f3f3f3; border-bottom: 1px solid #e2e8f0;
+      border-radius: 8px 8px 0 0; font-size: 0.72rem;
+    }
+    .sb-win-dots { display: flex; gap: 0.3rem; }
+    .sb-win-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .sb-win-dots span:nth-child(1) { background: #ef4444; }
+    .sb-win-dots span:nth-child(2) { background: #fbbf24; }
+    .sb-win-dots span:nth-child(3) { background: #22c55e; }
+    .sb-win-title { flex: 1; font-weight: 600; color: #334155; }
+
+    .sb-explorer { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .sb-explorer-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;
+      padding: 0.4rem 0.55rem; background: #fafafa; border-bottom: 1px solid #e2e8f0;
+    }
+    .sb-address {
+      flex: 1; min-width: 10rem; padding: 0.3rem 0.5rem;
+      border: 1px solid #cbd5e1; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; background: #fff;
+    }
+    .sb-explorer-body { flex: 1; display: flex; min-height: 0; }
+    .sb-tree {
+      width: 38%; max-width: 11rem; border-right: 1px solid #e2e8f0;
+      padding: 0.35rem; font-size: 0.68rem; overflow-y: auto; background: #fafafa;
+    }
+    .sb-tree-item {
+      padding: 0.25rem 0.35rem; border-radius: 4px; cursor: pointer;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .sb-tree-item:hover { background: #e2e8f0; }
+    .sb-tree-item--active { background: #dbeafe; color: #1d4ed8; font-weight: 600; }
+    .sb-tree-item--denied { opacity: 0.55; }
+    .sb-files { flex: 1; padding: 0.35rem; overflow-y: auto; }
+    .sb-file-row {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.35rem 0.45rem; border-radius: 4px; cursor: pointer;
+      font-size: 0.72rem; position: relative;
+    }
+    .sb-file-row:hover { background: #e0f2fe; }
+    .sb-file-row--sel { background: #bae6fd; }
+    .sb-file-row i { color: #16a34a; width: 1.1rem; text-align: center; }
+    .sb-file-row i.xlsm { color: #15803d; }
+    .sb-file-badge {
+      font-size: 0.55rem; font-weight: 700; padding: 0.1rem 0.3rem;
+      border-radius: 3px; background: #fef3c7; color: #b45309; margin-left: auto;
+    }
+
+    .sb-evidence-item {
+      padding: 0.4rem 0.45rem; border-radius: 6px; margin-bottom: 0.35rem;
+      background: rgba(15, 23, 42, 0.5); border-left: 2px solid var(--sb-accent);
+      font-size: 0.65rem; line-height: 1.4;
+    }
+    .sb-note-area {
+      width: 100%; min-height: 4rem; padding: 0.45rem; border-radius: 6px;
+      border: 1px solid var(--sb-border); background: #0f172a; color: #94a3b8;
+      font-size: 0.68rem; font-family: inherit; resize: vertical;
+    }
+    .sb-note-actions { margin-top: 0.45rem; }
+    .sb-note-actions .sb-btn { width: 100%; margin-bottom: 0.35rem; }
+    .sb-note-actions .sb-btn:last-of-type { margin-bottom: 0; }
+    .sb-note-actions .sb-empty { margin-top: 0.35rem; font-size: 0.62rem; }
+    .sb-download-panel {
+      margin-top: 0.45rem; padding: 0.45rem; border-radius: 6px;
+      border: 1px solid var(--sb-border); background: rgba(15, 23, 42, 0.55);
+      max-height: 9rem; overflow-y: auto;
+    }
+    .sb-download-panel.hidden { display: none; }
+    .sb-download-file { font-size: 0.62rem; font-weight: 700; color: #7dd3fc; margin: 0 0 0.35rem; }
+    .sb-download-line {
+      display: block; width: 100%; text-align: left; margin-bottom: 0.3rem;
+      padding: 0.35rem 0.4rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid rgba(71, 85, 105, 0.5); background: rgba(30, 41, 59, 0.6);
+      color: #94a3b8; font-size: 0.6rem; line-height: 1.35; font-family: inherit;
+    }
+    .sb-download-line:hover { border-color: rgba(56, 189, 248, 0.4); }
+    .sb-download-line--sel { border-color: var(--sb-accent); background: rgba(56, 189, 248, 0.15); color: #e2e8f0; }
+    .sb-log-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem;
+      padding: 0.45rem 0.55rem; border-top: 1px solid #e2e8f0; background: #fafafa;
+      min-height: 2.5rem; position: relative;
+    }
+    .sb-log-toast {
+      position: absolute; left: 0.55rem; font-size: 0.65rem; font-weight: 600;
+      color: #15803d; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .sb-empty { font-size: 0.68rem; color: #64748b; font-style: italic; }
+
+    .sb-log-table { width: 100%; font-size: 0.62rem; border-collapse: collapse; }
+    .sb-log-table th, .sb-log-table td { padding: 0.3rem 0.35rem; border: 1px solid #e2e8f0; text-align: left; }
+    .sb-log-table th { background: #f1f5f9; color: #475569; }
+    .sb-log-row { cursor: pointer; }
+    .sb-log-row:hover { background: #e0f2fe; }
+    .sb-log-row--sel { background: #bae6fd; }
+
+    .sb-drag-list { list-style: none; margin: 0; padding: 0.25rem 0; position: relative; }
+    .sb-drag-item {
+      padding: 0.5rem 0.55rem; margin-bottom: 0.4rem; border-radius: 8px;
+      background: rgba(30, 41, 59, 0.8); border: 1px solid var(--sb-border);
+      font-size: 0.72rem; cursor: grab; display: flex; align-items: center; gap: 0.45rem;
+      user-select: none; touch-action: none;
+      box-sizing: border-box;
+    }
+    .sb-drag-item:active { cursor: grabbing; }
+    .sb-drag-item .sb-drag-grip { color: #64748b; flex-shrink: 0; width: 0.85rem; text-align: center; pointer-events: none; }
+    .sb-drag-item .sb-drag-text { flex: 1; line-height: 1.4; pointer-events: none; }
+    .sb-drag-controls { display: flex; flex-direction: column; gap: 0.15rem; flex-shrink: 0; }
+    .sb-drag-nudge {
+      width: 1.35rem; height: 1.1rem; padding: 0; border-radius: 4px;
+      border: 1px solid rgba(71, 85, 105, 0.7); background: rgba(15, 23, 42, 0.7);
+      color: #94a3b8; cursor: pointer; font-size: 0.55rem; line-height: 1;
+    }
+    .sb-drag-nudge:hover:not(:disabled) { border-color: var(--sb-accent); color: #e2e8f0; background: rgba(56, 189, 248, 0.12); }
+    .sb-drag-nudge:disabled { opacity: 0.35; cursor: not-allowed; }
+    .sb-drag-ghost {
+      position: fixed; z-index: 9000; pointer-events: none; margin: 0;
+      padding: 0.5rem 0.55rem; border-radius: 8px; font-size: 0.72rem;
+      display: flex; align-items: center; gap: 0.45rem;
+      border: 1px solid rgba(56, 189, 248, 0.75);
+      background: rgba(30, 41, 59, 0.97);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      transform: scale(1.02);
+      list-style: none;
+    }
+    .sb-drag-item--placeholder {
+      border-style: dashed; border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.08);
+      cursor: grabbing;
+    }
+    .sb-drag-item--placeholder .sb-drag-text,
+    .sb-drag-item--placeholder .sb-drag-grip,
+    .sb-drag-item--placeholder .sb-drag-controls {
+      visibility: hidden;
+    }
+    .sb-drag-list--dragging .sb-drag-item:not(.sb-drag-item--placeholder) {
+      transition: none;
+    }
+
+    .sb-report-page {
+      position: fixed; inset: 0; z-index: 800; overflow-y: auto;
+      background: linear-gradient(160deg, #0f172a 0%, #0b1220 100%);
+    }
+    .sb-report-inner { max-width: 44rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .sb-report-page:not(.hidden) { animation: sbReportIn 0.35s ease; }
+    @keyframes sbReportIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    .sb-report-field { margin-bottom: 0.75rem; }
+    .sb-report-field label {
+      display: block; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #7dd3fc; margin-bottom: 0.3rem;
+    }
+    .sb-report-field textarea {
+      width: 100%; min-height: 4.5rem; padding: 0.5rem; border-radius: 6px;
+      border: 1px solid var(--sb-border); background: #0f172a; color: #cbd5e1;
+      font-size: 0.72rem; line-height: 1.5; font-family: inherit; resize: vertical;
+    }
+    .sb-report-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;
+    }
+    .sb-report-meta span {
+      font-size: 0.65rem; font-weight: 600; padding: 0.28rem 0.5rem;
+      border-radius: 999px; border: 1px solid var(--sb-border); color: #94a3b8;
+    }
+
+    .sb-hash-panel { padding: 0.85rem; font-size: 0.76rem; }
+    .sb-hash-meta {
+      width: 100%; font-size: 0.68rem; border-collapse: collapse; margin-bottom: 0.65rem;
+    }
+    .sb-hash-meta th, .sb-hash-meta td {
+      padding: 0.28rem 0.4rem; border: 1px solid #e2e8f0; text-align: left; vertical-align: top;
+    }
+    .sb-hash-meta th { background: #f8fafc; color: #64748b; font-weight: 600; width: 38%; }
+    .sb-hash-progress { margin: 0.55rem 0; }
+    .sb-hash-step {
+      display: flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: #94a3b8;
+      padding: 0.25rem 0; transition: color 0.2s;
+    }
+    .sb-hash-step--active { color: #0369a1; font-weight: 600; }
+    .sb-hash-step--done { color: #15803d; }
+    .sb-hash-step i { width: 0.85rem; text-align: center; }
+    .sb-hash-output {
+      margin-top: 0.65rem; padding: 0.55rem; border-radius: 6px;
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+    }
+    .sb-hash-output dt { font-size: 0.62rem; font-weight: 700; color: #64748b; margin-top: 0.35rem; }
+    .sb-hash-output dt:first-child { margin-top: 0; }
+    .sb-hash-output dd { margin: 0.15rem 0 0; font-size: 0.62rem; word-break: break-all; color: #14532d; }
+
+    .sb-win-modal-bg {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center; z-index: 20;
+      padding: 1rem;
+    }
+    .sb-win-modal {
+      background: #fff; border-radius: 8px; box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+      max-width: 22rem; width: 100%; overflow: hidden; color: #1e293b;
+    }
+    .sb-win-modal--wide { max-width: 28rem; }
+    .sb-win-modal-head {
+      padding: 0.65rem 0.85rem; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.82rem;
+    }
+    .sb-win-modal-head i.danger { color: #dc2626; }
+    .sb-win-modal-body { padding: 0.85rem; font-size: 0.78rem; line-height: 1.5; }
+    .sb-win-modal-foot { padding: 0.55rem 0.85rem; border-top: 1px solid #e2e8f0; text-align: right; }
+
+    .sb-props-tabs { display: flex; border-bottom: 1px solid #e2e8f0; }
+    .sb-props-tab {
+      flex: 1; padding: 0.45rem; border: none; background: #f8fafc;
+      font-size: 0.68rem; font-weight: 600; cursor: pointer; color: #64748b;
+    }
+    .sb-props-tab--active { background: #fff; color: #0f172a; border-bottom: 2px solid #2563eb; }
+    .sb-props-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.65rem; font-size: 0.68rem; }
+    .sb-props-grid dt { color: #64748b; }
+    .sb-perm-table { width: 100%; font-size: 0.62rem; border-collapse: collapse; margin-top: 0.5rem; }
+    .sb-perm-table th, .sb-perm-table td { border: 1px solid #e2e8f0; padding: 0.3rem; }
+    .sb-perm-warn { color: #c2410c; font-weight: 700; }
+    .sb-edu-box {
+      margin-top: 0.5rem; padding: 0.45rem; border-radius: 6px;
+      background: #fff7ed; border: 1px solid #fed7aa; font-size: 0.68rem; color: #9a3412;
+    }
+
+    .sb-ctx-menu {
+      position: fixed; z-index: 600; background: #fff; border: 1px solid #cbd5e1;
+      border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); min-width: 10rem;
+      padding: 0.25rem 0; font-size: 0.72rem; color: #1e293b;
+    }
+    .sb-ctx-item { padding: 0.35rem 0.75rem; cursor: pointer; }
+    .sb-ctx-item:hover { background: #e0f2fe; }
+
+    .sb-final { max-width: 42rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .sb-report-box {
+      width: 100%; min-height: 14rem; padding: 0.75rem; border-radius: 8px;
+      border: 1px solid var(--sb-border); background: #0f172a;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; line-height: 1.5; color: #94a3b8;
+    }
+    .sb-score-big { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--sb-accent); text-align: center; margin: 0.75rem 0; }
+    .sb-gains { font-size: 0.78rem; line-height: 1.55; color: #94a3b8; }
+    .sb-gains li { margin-bottom: 0.35rem; }
+
+    .sb-top-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .sb-progress { width: 100%; max-width: 8rem; height: 4px; border-radius: 999px; background: rgba(51, 65, 85, 0.8); overflow: hidden; }
+    .sb-progress-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9, #38bdf8); border-radius: inherit; transition: width 0.3s ease; }
+
+    .sb-hint-wrap { position: relative; }
+    .sb-hint-btn {
+      width: 2.35rem; height: 2.35rem; border-radius: 50%; border: 1px solid rgba(251, 191, 36, 0.45);
+      background: rgba(251, 191, 36, 0.12); color: #fbbf24; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+    }
+    .sb-hint-btn:hover { background: rgba(251, 191, 36, 0.22); }
+    .sb-hint-btn[aria-expanded="true"] { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.35); }
+    .sb-hint-pop {
+      display: none; position: absolute; top: calc(100% + 8px); right: 0;
+      width: min(22rem, 90vw); padding: 0.85rem; border-radius: 10px;
+      background: #1e293b; border: 1px solid rgba(251, 191, 36, 0.35);
+      font-size: 0.76rem; line-height: 1.55; color: #e2e8f0;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45); z-index: 100;
+    }
+    .sb-hint-pop.show { display: block; }
+    .sb-hint-pop strong { display: block; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: #fbbf24; margin-bottom: 0.35rem; }
+
+    .sb-guide {
+      padding: 0.65rem 0.7rem; border-radius: 8px; margin-bottom: 0.55rem;
+      background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.28);
+    }
+    .sb-guide-title {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #7dd3fc; margin: 0 0 0.4rem;
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .sb-guide ol { margin: 0; padding-left: 1.15rem; font-size: 0.74rem; line-height: 1.55; color: #cbd5e1; }
+    .sb-guide li { margin-bottom: 0.3rem; }
+    .sb-guide li:last-child { margin-bottom: 0; }
+
+    .sb-section-label {
+      font-size: 0.58rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #64748b; margin: 0.65rem 0 0.35rem;
+    }
+    .sb-decision-label {
+      font-size: 0.72rem; font-weight: 600; color: #94a3b8; margin: 0 0 0.45rem;
+      padding-bottom: 0.35rem; border-bottom: 1px dashed rgba(71, 85, 105, 0.5);
+    }
+
+    .sb-win-column-label {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em;
+      color: #94a3b8; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .sb-win-column-label i { color: var(--sb-accent); }
+    .sb-win-hint-bar {
+      font-size: 0.68rem; padding: 0.4rem 0.65rem; margin-bottom: 0.35rem;
+      border-radius: 6px; background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25); color: #bae6fd;
+    }
+
+    .sb-panel-head i { margin-right: 0.25rem; opacity: 0.85; }
+    .sb-task-item { display: flex; align-items: flex-start; gap: 0.35rem; }
+    .sb-task-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; font-weight: 700;
+      color: #475569; min-width: 1rem;
+    }
+    .sb-task-item--active .sb-task-num { color: #38bdf8; }
+  </style>
+</head>
+<body class="sb-body">
+  <div id="introOverlay" class="sb-overlay">
+    <div class="sb-modal-card">
+      <span class="sb-tag">SEBS · İşletim Sistemi Güvenliği</span>
+      <h2 class="font-sg">Sessiz Bırakılan Dosya</h2>
+      <p><strong>Yanlış İzinli Paylaşım Krizi</strong> — FILE-SRV01 üzerinde finans paylaşımında şüpheli bir dosya tespit edildi.</p>
+      <p>Güvenlik analisti olarak Windows benzeri ortamda kanıt toplayacak, izin hatalarını bulacak ve güvenli müdahale sırasını uygulayacaksınız. Gerçek sistemde hiçbir işlem yapılmaz; tüm veriler eğitim amaçlıdır.</p>
+      <ul style="margin:0.5rem 0 1rem;padding-left:1.1rem">
+        <li><strong>Sol panel:</strong> Her aşamada ne yapacağınız adım adım yazılır; altta karar kutularına tıklarsınız.</li>
+        <li><strong>Orta alan:</strong> Simüle Windows — Dosya Gezgini, log ve hash araçları burada.</li>
+        <li><strong>Sağ panel:</strong> Topladığınız kanıtlar birikir.</li>
+        <li><strong>İpucu (💡):</strong> Takılırsanız sağ üstteki ipucu düğmesine basın.</li>
+      </ul>
+      <button type="button" class="sb-btn" id="btnStart" style="width:100%">Simülasyonu Başlat</button>
+    </div>
+  </div>
+
+  <div id="app" class="sb-app hidden">
+    <header class="sb-top">
+      <div class="sb-top-inner">
+        <div>
+          <a class="sb-back" href="/simulation/isletim-sistemi-guvenligi-ileri-simulasyonlari.html">← Simülasyonlar</a>
+          <h1 class="font-sg">Sessiz Bırakılan Dosya — Yanlış İzinli Paylaşım Krizi</h1>
+          <p class="sub" id="missionText">FILE-SRV01 · Finance paylaşımında şüpheli dosya incelemesi</p>
+        </div>
+        <div class="sb-top-actions">
+          <div class="sb-pills">
+            <span class="sb-pill" id="stagePill">Aşama 1/8</span>
+            <span class="sb-pill sb-pill--score">Puan: <span id="scoreLbl">0</span>/100</span>
+          </div>
+          <div class="sb-progress" title="İlerleme"><div class="sb-progress-fill" id="progressFill" style="width:12.5%"></div></div>
+          <div class="sb-hint-wrap">
+            <button type="button" class="sb-hint-btn" id="hintBtn" aria-label="İpucu göster" aria-expanded="false" title="İpucu">
+              <i class="fa-regular fa-lightbulb" aria-hidden="true"></i>
+            </button>
+            <div class="sb-hint-pop" id="hintPopover" role="tooltip"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="sb-main">
+      <aside class="sb-panel">
+        <div class="sb-panel-head"><i class="fa-solid fa-list-check"></i> Görev akışı</div>
+        <div class="sb-panel-body">
+          <div id="stepGuide"></div>
+          <p class="sb-section-label">Tüm aşamalar</p>
+          <div id="taskList"></div>
+          <p class="sb-section-label" id="decisionSectionLabel">Olay özeti</p>
+          <div id="stageContent"></div>
+        </div>
+      </aside>
+
+      <section class="sb-center-col">
+        <p class="sb-win-column-label"><i class="fa-solid fa-desktop"></i> Simüle edilmiş Windows ortamı — işlemlerinizi burada yapın</p>
+        <div class="sb-win-hint-bar" id="winActionHint">Dosya Gezgini açık. Görev adımlarını solda, karar seçeneklerini Windows ekranının altında bulun.</div>
+        <div class="sb-win-wrap" id="winWrap">
+          <div class="sb-desktop" id="desktop">
+            <div class="sb-desktop-icons">
+              <div class="sb-desk-icon" data-open="explorer"><i class="fa-solid fa-folder-open"></i><span>Bu Bilgisayar</span></div>
+              <div class="sb-desk-icon" data-open="explorer"><i class="fa-solid fa-folder-tree"></i><span>Dosya Gezgini</span></div>
+              <div class="sb-desk-icon" data-open="notes"><i class="fa-solid fa-note-sticky"></i><span>Güvenlik Notları</span></div>
+            </div>
+            <div id="winHost"></div>
+          </div>
+          <div class="sb-taskbar">
+            <button type="button" class="sb-start-btn" title="Başlat"><i class="fa-brands fa-windows"></i></button>
+            <button type="button" class="sb-task-btn sb-task-btn--active" data-app="explorer"><i class="fa-solid fa-folder-open"></i> Dosya Gezgini</button>
+            <button type="button" class="sb-task-btn" data-app="logs"><i class="fa-solid fa-list-ul"></i> Log Viewer</button>
+            <button type="button" class="sb-task-btn" data-app="security"><i class="fa-solid fa-shield-halved"></i> Güvenlik Merkezi</button>
+            <span class="sb-taskbar-clock" id="taskbarClock">08:20</span>
+          </div>
+        </div>
+        <div class="sb-decision-dock" id="decisionDock">
+          <p class="sb-decision-dock-label hidden" id="decisionLabel">Kararınız</p>
+          <div id="decisionArea"></div>
+          <div id="stageFeedback" class="sb-feedback"></div>
+          <button type="button" class="sb-btn sb-btn--sm hidden" id="btnNextStage"><i class="fa-solid fa-arrow-right"></i> Sonraki aşamaya geç</button>
+        </div>
+      </section>
+
+      <aside class="sb-panel">
+        <div class="sb-panel-head"><i class="fa-solid fa-note-sticky"></i> Analist not defteri</div>
+        <div class="sb-panel-body">
+          <textarea class="sb-note-area" id="analystNote" placeholder="Gözlemlerinizi yazın veya indirdiğiniz logları buraya yapıştırın…" rows="3"></textarea>
+          <div class="sb-note-actions">
+            <button type="button" class="sb-btn sb-btn--sm sb-btn--ghost" id="btnShowDownloads">İndirilen dosyaları göster</button>
+            <div id="downloadedFilesPanel" class="sb-download-panel hidden"></div>
+            <button type="button" class="sb-btn sb-btn--sm sb-btn--ghost" id="btnAddEvidence" disabled>Kanıt sepetine ekle</button>
+            <p class="sb-empty">Log satırı seçin, indirilen dosyadan işaretleyin veya gözlemlerinizi yazın.</p>
+          </div>
+        </div>
+        <div class="sb-panel-head"><i class="fa-solid fa-basket-shopping"></i> Kanıt sepeti</div>
+        <div class="sb-panel-body" id="evidenceBasket">
+          <p class="sb-empty">Henüz kanıt eklenmedi.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="reportScreen" class="sb-report-page hidden">
+    <div class="sb-report-inner">
+      <a class="sb-back" href="/simulation/isletim-sistemi-guvenligi-ileri-simulasyonlari.html">← Simülasyonlar</a>
+      <span class="sb-tag">Aşama 8 · Final raporu</span>
+      <h2 class="font-sg" style="margin:0.35rem 0 0.5rem">Ön İnceleme Raporu</h2>
+      <p style="font-size:0.82rem;color:#94a3b8;line-height:1.55;margin:0 0 0.75rem">
+        Rapor otomatik oluşturuldu. İsterseniz bölümleri düzenleyebilirsiniz; kaydettiğinizde simülasyon tamamlanır.
+      </p>
+      <div class="sb-report-meta" id="reportMeta"></div>
+      <div class="sb-report-field"><label for="reportBulgu">Bulgu</label><textarea id="reportBulgu" rows="4"></textarea></div>
+      <div class="sb-report-field"><label for="reportEtki">Etki</label><textarea id="reportEtki" rows="4"></textarea></div>
+      <div class="sb-report-field"><label for="reportOneri">Öneri</label><textarea id="reportOneri" rows="4"></textarea></div>
+      <div class="sb-report-field"><label for="reportKanit">Kanıt</label><textarea id="reportKanit" rows="5"></textarea></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem">
+        <button type="button" class="sb-btn sb-btn--ghost" id="btnCopyReportDraft">Raporu kopyala</button>
+        <button type="button" class="sb-btn" id="btnSaveReport" style="flex:1;min-width:10rem">Raporu kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="finalScreen" class="sb-final hidden">
+    <a class="sb-back" href="/simulation/isletim-sistemi-guvenligi-ileri-simulasyonlari.html">← Simülasyonlar</a>
+    <h2 class="font-sg">Simülasyon tamamlandı</h2>
+    <div class="sb-score-big" id="finalScore"></div>
+    <p id="finalMsg" style="text-align:center;font-size:0.85rem;color:#94a3b8;margin-bottom:1rem"></p>
+    <h3 style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#64748b">Ön İnceleme Raporu</h3>
+    <textarea class="sb-report-box" id="reportBox" readonly></textarea>
+    <ul class="sb-gains" id="gainsList" style="margin:1rem 0;padding-left:1.1rem"></ul>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem">
+      <button type="button" class="sb-btn sb-btn--ghost" id="btnCopyReport">Raporu kopyala</button>
+      <button type="button" class="sb-btn" id="btnRestart">Yeniden başlat</button>
+    </div>
+  </div>
+
+  <div id="ctxMenu" class="sb-ctx-menu hidden"></div>
+
+  <script>
+(function () {
+  'use strict';
+  var SIM_ID = 'sessiz-birakilan-dosya';
+  var SIM_NAME = 'Sessiz Bırakılan Dosya — Paylaşım Krizi';
+  var MODULE_NAME = 'İşletim Sistemi Güvenliği';
+  var simStartedAt = 0;
+  var HASH_INPUT = '\\\\FILE-SRV01\\Finance\\Incoming\\2026_Maas_Guncelleme_Formu.xlsm|421888|2026-05-10T03:38:00Z|intern.mert';
+  var HASH = '837bc309402830e8eb706e16bf71fe01f32aa2fec33e46a84a3c34a33c4274e1';
+
+  var STAGES = [
+    { id: 0, title: 'Olay bildirimi', pts: 15 },
+    { id: 1, title: 'Klasör deneyimi', pts: 20 },
+    { id: 2, title: 'Dosya özellikleri', pts: 15 },
+    { id: 3, title: 'Hash kontrolü', pts: 10 },
+    { id: 4, title: 'Log yorumu', pts: 15 },
+    { id: 5, title: 'Niyet varsayımı', pts: 10 },
+    { id: 6, title: 'Müdahale sırası', pts: 15 },
+    { id: 7, title: 'Final raporu', pts: 0 }
+  ];
+
+  var LOGS = [
+    { t: '03:31', ev: 'Failed Access', user: 'intern.mert', obj: '\\\\FILE-SRV01\\Finance\\Payroll' },
+    { t: '03:34', ev: 'Failed Access', user: 'intern.mert', obj: '\\\\FILE-SRV01\\Finance\\Payroll\\maas_listesi_2026.xlsx' },
+    { t: '03:37', ev: 'File Created', user: 'intern.mert', obj: '\\\\FILE-SRV01\\Finance\\Incoming\\2026_Maas_Guncelleme_Formu.xlsm' },
+    { t: '08:12', ev: 'Folder Accessed', user: 'ayse.finance', obj: '\\\\FILE-SRV01\\Finance\\Incoming' },
+    { t: '08:14', ev: 'Incident Reported', user: 'ayse.finance', obj: 'FIN-4402 — dosya açılmadan bildirildi' }
+  ];
+
+  var FILE_META = {
+    'aylik_rapor_ozeti.pdf': {
+      type: 'Adobe Acrobat Document (.pdf)',
+      location: '\\\\FILE-SRV01\\Finance\\Reports',
+      size: '284 KB',
+      created: '10 Mar 2026, 14:20',
+      modified: '10 Mar 2026, 14:22',
+      owner: 'FinanceTeam',
+      attributes: 'Archive'
+    },
+    'maas_listesi_2026.xlsx': {
+      type: 'Microsoft Excel Workbook (.xlsx)',
+      location: '\\\\FILE-SRV01\\Finance\\Payroll',
+      size: '1,2 MB',
+      created: '01 Jan 2026, 09:00',
+      modified: '05 May 2026, 11:30',
+      owner: 'HR-Finance',
+      attributes: 'Read-only (recommended)'
+    },
+    'odeme_planlari.xlsx': {
+      type: 'Microsoft Excel Workbook (.xlsx)',
+      location: '\\\\FILE-SRV01\\Finance\\Payroll',
+      size: '890 KB',
+      created: '01 Jan 2026, 09:05',
+      modified: '02 May 2026, 16:15',
+      owner: 'HR-Finance',
+      attributes: 'Archive'
+    }
+  };
+
+  var STAGE_GUIDES = [
+    { title: 'Ne yapmalısınız?', steps: [
+      'Ticket özetini okuyun.',
+      'En uygun ilk müdahaleyi seçin.',
+      'Sonraki aşamaya geçin.'
+    ], hint: 'Şüpheli dosyayı açmayın veya silmeyin. Önce sahiplik, zaman, konum ve izin gibi kanıtları kayıt altına almayı düşünün.', win: 'Bu aşamada Windows kullanmanız gerekmez.' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Dosya Gezgini\'nde Finance paylaşımını inceleyin.',
+      'Payroll ve Incoming klasörlerini deneyin.',
+      'Gözlemlerinize göre soruyu yanıtlayın.'
+    ], hint: 'Önce Payroll\'a erişimi, sonra Incoming klasörünü deneyin. Okuyamamak, yazamayacağı anlamına gelmez; yazma iznini ayrı değerlendirin.', win: 'Klasörlere sol ağaçtan veya dosya listesinden girin.' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Şüpheli dosyanın özelliklerini inceleyin.',
+      'Şüpheli göstergeleri işaretleyin.',
+      'Seçimleri onaylayın.'
+    ], hint: 'Properties penceresinde özellikle Security sekmesine bakın. Makro uzantısı, oluşturan, zaman ve kaynak güvenilirliği tek başına boyuttan daha anlamlıdır.', win: 'Dosyaya sağ tıklayın.' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Güvenlik Merkezi\'nde SHA-256 özetini üretin.',
+      'Soruyu yanıtlayın.'
+    ], hint: 'Önce hash üretin. Hash dosyanın parmak izidir; güvenli veya zararlı olduğunu tek başına kanıtlamaz, bütünlük izleme içindir.', win: 'Görev çubuğundan Güvenlik Merkezi.' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Log Viewer\'da kayıtları indirin veya satır seçin.',
+      'Gözlemleri not defterine yazın veya indirilen dosyadan seçin.',
+      'Kanıt sepetine ekleyip soruyu yanıtlayın.'
+    ], hint: 'Logları kanıta ekleyin. Başarısız erişim denemeleri ile dosya oluşturma olayları arasında bağlantı kuran yorumu arayın.', win: 'Görev çubuğundan Log Viewer.' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'En temkinli ifadeyi seçin.'
+    ], hint: 'Şüphe ile kesinlik arasındaki farkı koruyun; kişi veya dosya hakkında kanıtsız kesin hüküm vermeyin.', win: '' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Müdahale adımlarını sıralayın.',
+      'Sırayı kontrol edin.'
+    ], hint:
+      'Doğru sıra: 1) Finans ekibini dosyayı açmaması için bilgilendir. 2) Dosyanın konum, sahip, zaman, hash ve izin bilgilerini kaydet. 3) Logları ve erişim denemelerini incele. 4) Dosyayı açmadan güvenli inceleme / karantina sürecine yönlendir. 5) Yanlış yazma izinlerini tespit et. 6) Gereksiz yazma izinlerini kaldır veya kontrollü hale getir. 7) Bulgu → Etki → Öneri → Kanıt formatında rapor oluştur.',
+      win: '' },
+    { title: 'Ne yapmalısınız?', steps: [
+      'Rapor penceresi otomatik açılır.',
+      'İsterseniz bölümleri düzenleyin.',
+      'Raporu kaydederek simülasyonu tamamlayın.'
+    ], hint: 'Rapor otomatik oluşur; bölümleri okuyup gerekirse düzenleyin, ardından kaydederek bitirin.', win: '' }
+  ];
+
+  var INTERVENTION = [
+    'Finans ekibini dosyayı açmaması için bilgilendir.',
+    'Dosyanın konum, sahip, zaman, hash ve izin bilgilerini kaydet.',
+    'Logları ve erişim denemelerini incele.',
+    'Dosyayı açmadan güvenli inceleme / karantina sürecine yönlendir.',
+    'Yanlış yazma izinlerini tespit et.',
+    'Gereksiz yazma izinlerini kaldır veya kontrollü hale getir.',
+    'Bulgu → Etki → Öneri → Kanıt formatında rapor oluştur.'
+  ];
+
+  function isCorrectDragOrder(order) {
+    return order.length === INTERVENTION.length && order.every(function (v, i) { return v === i; });
+  }
+
+  function shuffleDragOrder() {
+    var n = INTERVENTION.length;
+    var arr = [];
+    var i;
+    for (i = 0; i < n; i++) arr.push(i);
+    do {
+      for (i = n - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+      }
+    } while (isCorrectDragOrder(arr));
+    return arr;
+  }
+
+  function computeSha256Hex(text) {
+    if (!window.crypto || !crypto.subtle) {
+      return Promise.resolve(HASH);
+    }
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+
+  var state = {
+    stage: 0,
+    score: 0,
+    evidence: [],
+    flags: {},
+    stageDone: {},
+    stageWrong: {},
+    selectedDecision: null,
+    signalPicks: {},
+    dragOrder: [],
+    currentPath: 'Finance',
+    activeApp: 'explorer',
+    selectedFile: null,
+    selectedLogs: {},
+    selectedDownloadLogs: {},
+    showDownloadPanel: false,
+    logDownloadToast: false,
+    hashStep: 0,
+    computedHash: '',
+    reportPageOpen: false,
+    propsTab: 'general',
+    decisionLocked: false,
+    multiMode: false,
+    decisionHandler: null,
+    decisionConfig: null
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(SIM_ID, JSON.stringify({
+        stage: state.stage, score: state.score, evidence: state.evidence,
+        flags: state.flags, stageDone: state.stageDone, dragOrder: state.dragOrder
+      }));
+    } catch (e) {}
+  }
+
+  function resetState() {
+    if (autoAdvanceTimer) {
+      clearTimeout(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+    }
+    state.stage = 0;
+    state.score = 0;
+    state.evidence = [];
+    state.flags = {};
+    state.stageDone = {};
+    state.stageWrong = {};
+    state.selectedDecision = null;
+    state.signalPicks = {};
+    state.dragOrder = shuffleDragOrder();
+    state.hashStep = 0;
+    state.computedHash = '';
+    state.reportPageOpen = false;
+    state.currentPath = 'Finance';
+    state.activeApp = 'explorer';
+    state.selectedFile = null;
+    state.selectedLogs = {};
+    state.selectedDownloadLogs = {};
+    state.showDownloadPanel = false;
+    state.logDownloadToast = false;
+    state.propsTab = 'general';
+    state.decisionLocked = false;
+    state.multiMode = false;
+    state.decisionHandler = null;
+    state.decisionConfig = null;
+    try { localStorage.removeItem(SIM_ID); } catch (e) {}
+    if ($('scoreLbl')) $('scoreLbl').textContent = '0';
+  }
+
+  function addEvidence(label, detail) {
+    if (state.evidence.some(function (e) { return e.label === label; })) return;
+    state.evidence.push({ label: label, detail: detail });
+    renderEvidence();
+    save();
+  }
+
+  function renderEvidence() {
+    var root = $('evidenceBasket');
+    if (!state.evidence.length) {
+      root.innerHTML = '<p class="sb-empty">Henüz kanıt eklenmedi.</p>';
+      return;
+    }
+    root.innerHTML = state.evidence.map(function (e) {
+      return '<div class="sb-evidence-item"><strong>' + esc(e.label) + '</strong><br>' + esc(e.detail) + '</div>';
+    }).join('');
+  }
+
+  function setFeedback(type, msg) {
+    var el = $('stageFeedback');
+    el.className = 'sb-feedback show sb-feedback--' + type;
+    el.textContent = msg;
+  }
+
+  function scrollToNextStageButton() {
+    var btn = $('btnNextStage');
+    if (!btn || btn.classList.contains('hidden')) return;
+    requestAnimationFrame(function () {
+      setTimeout(function () {
+        var dock = $('decisionDock');
+        if (dock) dock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    });
+  }
+
+  var AUTO_ADVANCE_MS = 1400;
+  var autoAdvanceTimer = null;
+
+  function updateScore(pts) {
+    state.score = Math.min(100, state.score + pts);
+    $('scoreLbl').textContent = state.score;
+    save();
+  }
+
+  function deductScore(pts) {
+    state.score = Math.max(0, state.score - (pts || 0));
+    $('scoreLbl').textContent = state.score;
+    save();
+  }
+
+  function scheduleAutoNextStage() {
+    if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = setTimeout(function () {
+      autoAdvanceTimer = null;
+      if (state.stage >= 7) return;
+      nextStage();
+    }, AUTO_ADVANCE_MS);
+  }
+
+  function lockDecisionCards(cards, correctIdx, wrongIdx) {
+    cards.forEach(function (b, j) {
+      b.disabled = true;
+      b.classList.remove('sb-decision-card--pick');
+      if (j === correctIdx) b.classList.add('sb-decision-card--ok');
+      if (wrongIdx != null && j === wrongIdx) b.classList.add('sb-decision-card--bad');
+    });
+  }
+
+  function updateSectionLabels() {
+    var dl = document.getElementById('decisionLabel');
+    var dsl = document.getElementById('decisionSectionLabel');
+    if (!dl || !dsl) return;
+    if (state.stage === 0) {
+      dsl.textContent = 'Olay özeti (ticket)';
+      dl.classList.add('hidden');
+    } else if (state.stage === 6) {
+      dsl.textContent = 'Müdahale adımları';
+      dl.classList.add('hidden');
+    } else if (state.stage === 7) {
+      dsl.textContent = 'Rapor';
+      dl.classList.add('hidden');
+    } else if (state.stage === 2) {
+      dsl.textContent = 'Dosya incelemesi';
+      dl.textContent = 'Şüpheli göstergeler — birden fazla seçebilirsiniz';
+      dl.classList.remove('hidden');
+    } else {
+      dsl.textContent = 'Bu aşamada';
+      dl.textContent = 'Kararınız — uygun kutuya tıklayın';
+      dl.classList.remove('hidden');
+    }
+  }
+
+  function renderStepGuide() {
+    var g = STAGE_GUIDES[state.stage];
+    if (!g) return;
+    var steps = g.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+    document.getElementById('stepGuide').innerHTML =
+      '<div class="sb-guide"><p class="sb-guide-title"><i class="fa-solid fa-route"></i> ' + esc(g.title) + '</p><ol>' + steps + '</ol></div>';
+    var hintBar = document.getElementById('winActionHint');
+    if (hintBar) hintBar.textContent = g.win || 'İşlemlerinizi Windows ekranında yapın; seçenekler hemen altında.';
+    updateHintPopover();
+    document.getElementById('progressFill').style.width = ((state.stage + 1) / 8 * 100) + '%';
+  }
+
+  function updateHintPopover() {
+    var g = STAGE_GUIDES[state.stage];
+    if (!g) return;
+    document.getElementById('hintPopover').innerHTML =
+      '<strong>İpucu — Aşama ' + (state.stage + 1) + '</strong><br><br>' + esc(g.hint);
+  }
+
+  function showHint() {
+    document.getElementById('hintPopover').classList.add('show');
+    document.getElementById('hintBtn').setAttribute('aria-expanded', 'true');
+  }
+  function hideHint() {
+    document.getElementById('hintPopover').classList.remove('show');
+    document.getElementById('hintBtn').setAttribute('aria-expanded', 'false');
+  }
+
+  function renderTasks() {
+    $('stagePill').textContent = 'Aşama ' + (state.stage + 1) + '/8';
+    $('taskList').innerHTML = STAGES.map(function (s, i) {
+      var cls = 'sb-task-item';
+      if (i === state.stage) cls += ' sb-task-item--active';
+      else if (state.stageDone[i]) cls += ' sb-task-item--done';
+      return '<div class="' + cls + '"><span class="sb-task-num">' + (i+1) + '</span><span>' + esc(s.title) + '</span></div>';
+    }).join('');
+  }
+
+  function pathLabel(p) {
+    if (p === 'Finance') return '\\\\FILE-SRV01\\Finance';
+    return '\\\\FILE-SRV01\\Finance\\' + p;
+  }
+
+  function renderExplorer() {
+    var path = state.currentPath;
+    var files = [];
+    if (path === 'Finance') {
+      files = [
+        { name: 'Payroll', type: 'folder', icon: 'fa-folder' },
+        { name: 'Incoming', type: 'folder', icon: 'fa-folder' },
+        { name: 'Reports', type: 'folder', icon: 'fa-folder' }
+      ];
+    } else if (path === 'Payroll') {
+      files = [
+        { name: 'maas_listesi_2026.xlsx', type: 'file' },
+        { name: 'odeme_planlari.xlsx', type: 'file' }
+      ];
+    } else if (path === 'Incoming') {
+      files = [{ name: '2026_Maas_Guncelleme_Formu.xlsm', type: 'xlsm', warn: true }];
+    } else if (path === 'Reports') {
+      files = [{ name: 'aylik_rapor_ozeti.pdf', type: 'file' }];
+    }
+
+    var tree = [
+      { id: 'Finance', label: 'Finance', children: ['Payroll', 'Incoming', 'Reports'] }
+    ];
+
+    var treeHtml = '<div class="sb-tree-item' + (path === 'Finance' ? ' sb-tree-item--active' : '') + '" data-path="Finance"><i class="fa-solid fa-folder"></i> Finance</div>';
+    treeHtml = '<div class="sb-tree-item' + (path === 'Finance' ? ' sb-tree-item--active' : '') + '" data-path="Finance"><i class="fa-solid fa-folder"></i> Finance</div>';
+    ['Payroll', 'Incoming', 'Reports'].forEach(function (c) {
+      var denied = c === 'Payroll';
+      treeHtml += '<div class="sb-tree-item' + (path === c ? ' sb-tree-item--active' : '') + (denied ? ' sb-tree-item--denied' : '') + '" data-path="' + c + '" style="padding-left:1rem"><i class="fa-solid fa-folder"></i> ' + c + '</div>';
+    });
+
+    var filesHtml = files.map(function (f) {
+      var sel = state.selectedFile === f.name ? ' sb-file-row--sel' : '';
+      var badge = f.warn ? '<span class="sb-file-badge">!</span>' : '';
+      var ic = f.type === 'folder' ? 'fa-folder' : (f.type === 'xlsm' ? 'fa-file-excel xlsm' : (f.name.indexOf('.pdf') >= 0 ? 'fa-file-pdf' : 'fa-file-excel'));
+      return '<div class="sb-file-row' + sel + '" data-file="' + esc(f.name) + '" data-type="' + f.type + '"><i class="fa-solid ' + ic + '"></i><span>' + esc(f.name) + '</span>' + badge + '</div>';
+    }).join('');
+
+    return (
+      '<div class="sb-win">' +
+      '<div class="sb-win-titlebar"><div class="sb-win-dots"><span></span><span></span><span></span></div><span class="sb-win-title">Dosya Gezgini</span></div>' +
+      '<div class="sb-explorer">' +
+      '<div class="sb-explorer-toolbar"><input class="sb-address" readonly value="' + esc(pathLabel(path)) + '"></div>' +
+      '<div class="sb-explorer-body"><div class="sb-tree">' + treeHtml + '</div><div class="sb-files">' + (filesHtml || '<p style="font-size:0.72rem;color:#64748b">Boş klasör</p>') + '</div></div></div></div>'
+    );
+  }
+
+  function buildLogExportText() {
+    var lines = [
+      'FILE-SRV01 — Security Log Export',
+      'Exported: 10 May 2026, 08:20',
+      '----------------------------------------'
+    ];
+    LOGS.forEach(function (l) {
+      lines.push(l.t + '\t' + l.ev + '\t' + l.user + '\t' + l.obj);
+    });
+    return lines.join('\n');
+  }
+
+  function logLineLabel(l) {
+    return l.t + ' · ' + l.ev + ' · ' + l.user + ' · ' + l.obj;
+  }
+
+  function hasLogStageEvidence() {
+    return state.evidence.some(function (e) {
+      return e.label.indexOf('Log') === 0 || e.label === 'Analist gözlemi';
+    });
+  }
+
+  function updateAddEvidenceButton() {
+    var btn = $('btnAddEvidence');
+    if (!btn) return;
+    var hasLogSel = Object.keys(state.selectedLogs).some(function (k) { return state.selectedLogs[k]; });
+    var hasDlSel = Object.keys(state.selectedDownloadLogs).some(function (k) { return state.selectedDownloadLogs[k]; });
+    var hasNote = ($('analystNote') && $('analystNote').value.trim().length > 0);
+    var hasFile = !!state.selectedFile;
+    btn.disabled = !(hasLogSel || hasDlSel || hasNote || hasFile);
+  }
+
+  function renderDownloadedFilesPanel() {
+    var panel = $('downloadedFilesPanel');
+    if (!panel) return;
+    if (!state.showDownloadPanel) {
+      panel.classList.add('hidden');
+      return;
+    }
+    panel.classList.remove('hidden');
+    if (!state.flags.logsDownloaded) {
+      panel.innerHTML = '<p class="sb-empty" style="margin:0">Henüz indirilmiş log yok. Log Viewer\'da «Log kayıtlarını indir» düğmesine basın.</p>';
+      return;
+    }
+    var lines = LOGS.map(function (l, i) {
+      var cls = 'sb-download-line' + (state.selectedDownloadLogs[i] ? ' sb-download-line--sel' : '');
+      return '<button type="button" class="' + cls + '" data-dl-log="' + i + '">' + esc(logLineLabel(l)) + '</button>';
+    }).join('');
+    panel.innerHTML =
+      '<p class="sb-download-file">security_logs_finance.txt</p>' +
+      '<p class="sb-empty" style="margin:0 0 0.35rem;font-style:normal">Satırları seçin veya metni not defterine yapıştırın.</p>' +
+      lines;
+    panel.querySelectorAll('[data-dl-log]').forEach(function (btn) {
+      btn.onclick = function () {
+        var i = +btn.getAttribute('data-dl-log');
+        state.selectedDownloadLogs[i] = !state.selectedDownloadLogs[i];
+        renderDownloadedFilesPanel();
+        updateAddEvidenceButton();
+      };
+    });
+  }
+
+  function downloadLogs() {
+    state.flags.logsDownloaded = true;
+    state.logExportText = buildLogExportText();
+    state.logDownloadToast = true;
+    renderWindows();
+    setFeedback('ok', 'İndirme tamamlandı. Logları not defterine yapıştırabilir veya «İndirilen dosyaları göster» ile satır seçebilirsiniz.');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(state.logExportText).catch(function () {});
+    }
+    save();
+    setTimeout(function () {
+      state.logDownloadToast = false;
+      if (state.activeApp === 'logs') renderWindows();
+    }, 3200);
+  }
+
+  function addSelectedLogsToEvidence(fromDownload) {
+    var sel = fromDownload ? state.selectedDownloadLogs : state.selectedLogs;
+    LOGS.forEach(function (l, i) {
+      if (sel[i]) addEvidence('Log ' + l.t, l.ev + ' — ' + l.user + ' — ' + l.obj);
+    });
+    if (fromDownload) state.selectedDownloadLogs = {};
+    else state.selectedLogs = {};
+  }
+
+  function renderLogViewer() {
+    var rows = LOGS.map(function (l, i) {
+      var sel = state.selectedLogs[i] ? ' sb-log-row--sel' : '';
+      return '<tr class="sb-log-row' + sel + '" data-log="' + i + '"><td>' + esc(l.t) + '</td><td>' + esc(l.ev) + '</td><td>' + esc(l.user) + '</td><td>' + esc(l.obj) + '</td></tr>';
+    }).join('');
+    var toast = state.logDownloadToast
+      ? '<span class="sb-log-toast"><i class="fa-solid fa-circle-check"></i> İndirme tamamlandı</span>'
+      : '';
+    var dlLabel = state.flags.logsDownloaded ? 'Log kayıtları indirildi' : 'Log kayıtlarını indir';
+    return (
+      '<div class="sb-win" style="display:flex;flex-direction:column">' +
+      '<div class="sb-win-titlebar"><div class="sb-win-dots"><span></span><span></span><span></span></div><span class="sb-win-title">Log Viewer</span></div>' +
+      '<div style="flex:1;overflow:auto;padding:0.5rem;min-height:0"><table class="sb-log-table"><thead><tr><th>Saat</th><th>Olay</th><th>Kullanıcı</th><th>Nesne</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="sb-log-footer">' + toast +
+      '<button type="button" class="sb-btn sb-btn--sm" id="btnDownloadLogs"' + (state.flags.logsDownloaded ? ' disabled' : '') + '>' + dlLabel + '</button>' +
+      '</div></div>'
+    );
+  }
+
+  function hashStepClass(step) {
+    if (state.flags.hashDone || state.hashStep > step) return ' sb-hash-step--done';
+    if (state.hashStep === step && state.flags.hashComputing) return ' sb-hash-step--active';
+    return '';
+  }
+
+  function renderSecurity() {
+    var done = state.flags.hashDone;
+    var computing = state.flags.hashComputing;
+    var hex = state.computedHash || HASH;
+    var progress = computing
+      ? '<div class="sb-hash-progress">' +
+        '<div class="sb-hash-step' + hashStepClass(1) + '"><i class="fa-solid fa-' + (state.hashStep > 1 ? 'check' : 'spinner fa-spin') + '"></i> Dosya tanımlayıcısı okunuyor</div>' +
+        '<div class="sb-hash-step' + hashStepClass(2) + '"><i class="fa-solid fa-' + (state.hashStep > 2 ? 'check' : (state.hashStep === 2 ? 'spinner fa-spin' : 'circle')) + '"></i> SHA-256 özet değeri hesaplanıyor</div>' +
+        '<div class="sb-hash-step' + hashStepClass(3) + '"><i class="fa-solid fa-circle"></i> Sonuç doğrulanıyor</div>' +
+        '</div>'
+      : '';
+    var result = done
+      ? '<div class="sb-hash-output"><dl>' +
+        '<dt>Algoritma</dt><dd>SHA-256 (FIPS 180-4)</dd>' +
+        '<dt>Girdi</dt><dd>Dosya yolu, boyut, değiştirilme zamanı, sahip (kanonik dize)</dd>' +
+        '<dt>Özet (hex, 256 bit)</dt><dd class="font-jb">' + esc(hex) + '</dd>' +
+        '</dl><p style="margin:0.45rem 0 0;font-size:0.68rem;color:#64748b">Bu değer dosyanın mevcut tanımlayıcılarının özetidir; güvenilir bir referans özet olmadan dosyanın güvenli olduğu sonucuna varılamaz.</p></div>'
+      : '';
+    return (
+      '<div class="sb-win">' +
+      '<div class="sb-win-titlebar"><div class="sb-win-dots"><span></span><span></span><span></span></div><span class="sb-win-title">Güvenlik Merkezi — Kanıt Aracı</span></div>' +
+      '<div class="sb-hash-panel">' +
+      '<table class="sb-hash-meta"><tbody>' +
+      '<tr><th>Dosya</th><td>2026_Maas_Guncelleme_Formu.xlsm</td></tr>' +
+      '<tr><th>Konum</th><td class="font-jb" style="font-size:0.62rem">\\\\FILE-SRV01\\Finance\\Incoming</td></tr>' +
+      '<tr><th>Boyut</th><td>421.888 bayt (412 KB)</td></tr>' +
+      '<tr><th>Değiştirilme</th><td>2026-05-10 03:38 UTC</td></tr>' +
+      '<tr><th>Sahip</th><td>intern.mert</td></tr>' +
+      '</tbody></table>' +
+      '<button type="button" class="sb-btn sb-btn--sm" id="btnHash"' + (done || computing ? ' disabled' : '') + '>SHA-256 Hesapla</button>' +
+      progress + result +
+      '</div></div>'
+    );
+  }
+
+  function runHashCalculation() {
+    if (state.flags.hashDone || state.flags.hashComputing) return;
+    state.flags.hashComputing = true;
+    state.hashStep = 1;
+    renderWindows();
+    setTimeout(function () {
+      state.hashStep = 2;
+      renderWindows();
+      setTimeout(function () {
+        state.hashStep = 3;
+        renderWindows();
+        computeSha256Hex(HASH_INPUT).then(function (hex) {
+          state.computedHash = hex;
+          state.flags.hashComputing = false;
+          state.flags.hashDone = true;
+          state.hashStep = 4;
+          addEvidence('SHA-256', hex);
+          renderWindows();
+          if (state.stage === 3) setFeedback('info', 'SHA-256 özeti üretildi. Soldaki soruyu yanıtlayın.');
+          save();
+        });
+      }, 700);
+    }, 550);
+  }
+
+  function renderWindows() {
+    var html = '';
+    if (state.activeApp === 'explorer') html = renderExplorer();
+    else if (state.activeApp === 'logs') html = renderLogViewer();
+    else if (state.activeApp === 'security') html = renderSecurity();
+    $('winHost').innerHTML = html;
+    bindWinEvents();
+    updateAddEvidenceButton();
+  }
+
+  function showModal(inner) {
+    var host = $('winHost');
+    var m = document.createElement('div');
+    m.className = 'sb-win-modal-bg';
+    m.id = 'winModal';
+    m.innerHTML = inner;
+    host.appendChild(m);
+    m.querySelectorAll('[data-close]').forEach(function (btn) {
+      btn.onclick = function () { m.remove(); };
+    });
+  }
+
+  function accessDenied() {
+    state.flags.payrollTried = true;
+    save();
+    showModal(
+      '<div class="sb-win-modal"><div class="sb-win-modal-head"><i class="fa-solid fa-circle-xmark danger"></i> Access Denied</div>' +
+      '<div class="sb-win-modal-body"><p><strong>You don\'t currently have permission to access this folder.</strong></p>' +
+      '<p>Bu klasöre erişim izniniz yok. Okuma yetkiniz bulunmuyor.</p></div>' +
+      '<div class="sb-win-modal-foot"><button type="button" class="sb-btn sb-btn--sm" data-close>Tamam</button></div></div>'
+    );
+    if (state.stage === 1) setFeedback('info', 'Payroll klasörüne erişim reddedildi. Şimdi Incoming klasörünü deneyin.');
+  }
+
+  function openFileWarning(name) {
+    showModal(
+      '<div class="sb-win-modal"><div class="sb-win-modal-head"><i class="fa-solid fa-triangle-exclamation danger"></i> Uyarı</div>' +
+      '<div class="sb-win-modal-body"><p>Bu dosya makro içerebilir. Eğitim senaryosunda şüpheli dosyalar doğrudan açılmamalıdır. Önce kanıt toplayın.</p></div>' +
+      '<div class="sb-win-modal-foot"><button type="button" class="sb-btn sb-btn--sm" data-close>Anladım</button></div></div>'
+    );
+    state.flags.fileClicked = true;
+    if (name.indexOf('xlsm') >= 0) {
+      addEvidence('Dosya adı', name);
+      addEvidence('Dosya yolu', '\\\\FILE-SRV01\\Finance\\Incoming');
+    }
+    save();
+  }
+
+  function showProperties() {
+    state.flags.propsOpened = true;
+    var tab = state.propsTab || 'general';
+    var tabs = ['general', 'details', 'security'];
+    var tabHtml = tabs.map(function (t) {
+      return '<button type="button" class="sb-props-tab' + (tab === t ? ' sb-props-tab--active' : '') + '" data-tab="' + t + '">' +
+        (t === 'general' ? 'General' : t === 'details' ? 'Details' : 'Security') + '</button>';
+    }).join('');
+
+    var body = '';
+    if (tab === 'general') {
+      body = '<dl class="sb-props-grid"><dt>File name</dt><dd>2026_Maas_Guncelleme_Formu.xlsm</dd>' +
+        '<dt>Type</dt><dd>Microsoft Excel Macro-Enabled Workbook</dd>' +
+        '<dt>Location</dt><dd>\\\\FILE-SRV01\\Finance\\Incoming</dd>' +
+        '<dt>Size</dt><dd>412 KB</dd><dt>Created</dt><dd>03:37</dd><dt>Modified</dt><dd>03:38</dd><dt>Owner</dt><dd>intern.mert</dd></dl>';
+    } else if (tab === 'details') {
+      body = '<dl class="sb-props-grid"><dt>Author</dt><dd>Unknown</dd><dt>Last saved by</dt><dd>Unknown</dd>' +
+        '<dt>Origin</dt><dd>Network Share</dd><dt>Macro capable</dt><dd>Yes</dd><dt>Known trusted source</dt><dd>No</dd></dl>';
+    } else {
+      body = '<p style="font-weight:700;margin:0 0 0.35rem">Finance klasörü</p><table class="sb-perm-table"><tr><th>Grup</th><th>İzin</th><th>Durum</th></tr>' +
+        '<tr><td>FinanceTeam</td><td>Modify</td><td>Normal</td></tr><tr><td>Administrators</td><td>Full Control</td><td>Normal</td></tr><tr><td>Interns</td><td>No Access</td><td>Normal</td></tr></table>' +
+        '<p style="font-weight:700;margin:0.65rem 0 0.35rem">Finance\\Incoming</p><table class="sb-perm-table"><tr><th>Grup</th><th>İzin</th><th>Durum</th></tr>' +
+        '<tr><td>FinanceTeam</td><td>Modify</td><td>Normal</td></tr>' +
+        '<tr><td>Authenticated Users</td><td>Create Files / Write Data</td><td class="sb-perm-warn">Şüpheli</td></tr>' +
+        '<tr><td>Interns</td><td>Create Files / Write Data</td><td class="sb-perm-warn">Şüpheli</td></tr>' +
+        '<tr><td>Interns</td><td>Read Data</td><td>Not</td></tr></table>' +
+        '<div class="sb-edu-box">Bir kullanıcının hassas dosyaları okuyamaması tek başına güvenli olduğu anlamına gelmez. Yazma izni varsa kullanıcı bu alana yeni dosya bırakabilir.</div>';
+      state.flags.securityTabSeen = true;
+    }
+
+    showModal(
+      '<div class="sb-win-modal sb-win-modal--wide"><div class="sb-win-modal-head"><i class="fa-solid fa-gear"></i> Properties</div>' +
+      '<div class="sb-props-tabs">' + tabHtml + '</div>' +
+      '<div class="sb-win-modal-body">' + body + '</div>' +
+      '<div class="sb-win-modal-foot"><button type="button" class="sb-btn sb-btn--sm" data-close>Kapat</button></div></div>'
+    );
+
+    document.querySelectorAll('.sb-props-tab').forEach(function (btn) {
+      btn.onclick = function () {
+        state.propsTab = btn.dataset.tab;
+        document.getElementById('winModal').remove();
+        showProperties();
+        if (state.stage === 2) checkStage2Ready();
+      };
+    });
+    if (state.stage === 2) checkStage2Ready();
+    save();
+  }
+
+  function showSimpleProperties(fileName) {
+    var meta = FILE_META[fileName];
+    if (!meta) return;
+    state.flags.propsOpened = true;
+    var body = '<dl class="sb-props-grid">' +
+      '<dt>File name</dt><dd>' + esc(fileName) + '</dd>' +
+      '<dt>Type of file</dt><dd>' + esc(meta.type) + '</dd>' +
+      '<dt>Location</dt><dd>' + esc(meta.location) + '</dd>' +
+      '<dt>Size</dt><dd>' + esc(meta.size) + '</dd>' +
+      '<dt>Created</dt><dd>' + esc(meta.created) + '</dd>' +
+      '<dt>Modified</dt><dd>' + esc(meta.modified) + '</dd>' +
+      '<dt>Owner</dt><dd>' + esc(meta.owner) + '</dd>' +
+      '<dt>Attributes</dt><dd>' + esc(meta.attributes) + '</dd></dl>';
+    showModal(
+      '<div class="sb-win-modal"><div class="sb-win-modal-head"><i class="fa-solid fa-gear"></i> ' + esc(fileName) + ' — Properties</div>' +
+      '<div class="sb-win-modal-body">' + body + '</div>' +
+      '<div class="sb-win-modal-foot"><button type="button" class="sb-btn sb-btn--sm" data-close>Tamam</button></div></div>'
+    );
+    save();
+  }
+
+  function openFileProperties(fileName) {
+    if (!fileName) return;
+    if (fileName.indexOf('xlsm') >= 0) {
+      state.propsTab = state.propsTab || 'general';
+      showProperties();
+    } else {
+      showSimpleProperties(fileName);
+    }
+  }
+
+  function bindWinEvents() {
+    document.querySelectorAll('.sb-tree-item').forEach(function (el) {
+      el.onclick = function () {
+        var p = el.dataset.path;
+        if (p === 'Payroll') { accessDenied(); return; }
+        state.currentPath = p;
+        state.selectedFile = null;
+        if (p === 'Incoming') state.flags.incomingVisited = true;
+        renderWindows();
+        if (state.stage === 1 && state.flags.payrollTried && p === 'Incoming') {
+          setFeedback('info', 'Gözlem adımları tamam. Şimdi soldaki karar kutusuna tıklayın.');
+        }
+        save();
+      };
+    });
+    document.querySelectorAll('.sb-file-row').forEach(function (el) {
+      el.onclick = function () {
+        if (el.dataset.type === 'folder') {
+          var fn = el.dataset.file;
+          if (fn === 'Payroll') { accessDenied(); return; }
+          state.currentPath = fn;
+          state.selectedFile = null;
+          if (fn === 'Incoming') state.flags.incomingVisited = true;
+          renderWindows();
+          save();
+          return;
+        }
+        state.selectedFile = el.dataset.file;
+        updateAddEvidenceButton();
+        renderWindows();
+        if (el.dataset.type === 'xlsm') openFileWarning(el.dataset.file);
+      };
+      el.oncontextmenu = function (e) {
+        e.preventDefault();
+        state.selectedFile = el.dataset.file;
+        showCtxMenu(e.clientX, e.clientY, el.dataset.file);
+      };
+    });
+    var hashBtn = document.getElementById('btnHash');
+    if (hashBtn) {
+      hashBtn.onclick = function () { runHashCalculation(); };
+    }
+    document.querySelectorAll('.sb-log-row').forEach(function (row) {
+      row.onclick = function () {
+        var i = +row.dataset.log;
+        state.selectedLogs[i] = !state.selectedLogs[i];
+        renderWindows();
+        updateAddEvidenceButton();
+      };
+    });
+    var dlBtn = document.getElementById('btnDownloadLogs');
+    if (dlBtn) {
+      dlBtn.onclick = function () {
+        if (!state.flags.logsDownloaded) downloadLogs();
+      };
+    }
+  }
+
+  function showCtxMenu(x, y, file) {
+    var menu = $('ctxMenu');
+    menu.classList.remove('hidden');
+    menu.style.left = x + 'px';
+    menu.style.top = y + 'px';
+    menu.innerHTML = '<div class="sb-ctx-item" data-action="props">Properties</div>';
+    menu.querySelector('[data-action="props"]').onclick = function () {
+      menu.classList.add('hidden');
+      updateAddEvidenceButton();
+      openFileProperties(file);
+    };
+    setTimeout(function () {
+      document.addEventListener('click', function h() {
+        menu.classList.add('hidden');
+        document.removeEventListener('click', h);
+      });
+    }, 0);
+  }
+
+  function renderDecisionCards(cards, multi) {
+    var html = cards.map(function (c, i) {
+      var cls = 'sb-decision-card';
+      if (multi && state.signalPicks[i]) cls += ' sb-decision-card--pick';
+      else if (!multi && state.selectedDecision === i) cls += ' sb-decision-card--pick';
+      if (c.result) cls += c.result === 'ok' ? ' sb-decision-card--ok' : ' sb-decision-card--bad';
+      return '<button type="button" class="' + cls + '" data-idx="' + i + '"' + (state.decisionLocked ? ' disabled' : '') + '>' +
+        (c.label ? '<strong>' + esc(c.label) + '</strong> ' : '') + esc(c.text) + '</button>';
+    }).join('');
+    if (multi) {
+      html += '<button type="button" class="sb-btn sb-btn--sm" id="btnConfirmMulti"' +
+        (state.decisionLocked ? ' disabled' : '') + '>Seçimleri onayla</button>';
+    } else {
+      html += '<button type="button" class="sb-btn sb-btn--sm" id="btnConfirmSingle"' +
+        (state.decisionLocked ? ' disabled' : '') + '>Seçimi onayla</button>';
+    }
+    return html;
+  }
+
+  function checkStage2Ready() {
+    if (state.flags.securityTabSeen && state.flags.propsOpened) {
+      setFeedback('info', 'Security sekmesini incelediniz. Şüpheli göstergeleri işaretleyin.');
+    }
+  }
+
+  function stage0Content() {
+    $('stageContent').innerHTML = '<div class="sb-ticket"><strong>Ticket #FIN-4402</strong><br><span style="color:#94a3b8;font-size:0.68rem">Durum: Açık · Öncelik: Yüksek</span><br><br>Finans ekibi sabah kontrolünde <strong>Finance\\Incoming</strong> klasöründe bilinmeyen bir Excel dosyası buldu (gece 03:37\'de oluşturulmuş). Sahip: <strong>intern.mert</strong>. Dosya oluşturulduktan sonra hiçbir kullanıcı tarafından açılmadı — siz ilk analistisiniz.</div>';
+    $('decisionArea').innerHTML = '<p class="sb-decision-label">En güvenli ilk müdahaleyi seçin</p>' + renderDecisionCards([
+      { text: 'Dosyayı açıp içeriğine bak.' },
+      { text: 'Dosyayı hemen sil.' },
+      { text: 'Dosya adı, sahibi, oluşturulma zamanı, dosya yolu ve izin bilgilerini kanıt olarak kaydet.' },
+      { text: 'Finans ekibini suçlayıp bileti kapat.' }
+    ], false);
+    bindDecision(0, 2, {
+      0: 'Şüpheli dosyalar doğrudan açılmamalıdır. Önce kanıt toplanmalıdır.',
+      1: 'Kanıt toplanmadan dosya silmek olay analizini bozar.',
+      3: 'Teknik kanıt olmadan kişi veya ekip suçlanmamalıdır.'
+    }, 'Doğru karar. Şüpheli dosya açılmadan önce sahiplik, zaman, konum, izin ve hash bilgisi kanıt olarak kaydedilmelidir.', 15);
+  }
+
+  function stage1Content() {
+    $('stageContent').innerHTML = '';
+    $('decisionArea').innerHTML = '<p class="sb-decision-label">intern.mert Payroll okuyamıyor ama Incoming\'e yazabiliyor — bu ne anlama gelir?</p>' +
+      renderDecisionCards([
+        { text: 'Risk yoktur, çünkü maaş dosyalarını okuyamıyor.' },
+        { text: 'Yazma izni ayrı bir risktir; kullanıcı hassas alana yeni dosya bırakabilir.' },
+        { text: 'Authenticated Users izni her zaman güvenlidir.' },
+        { text: 'Dosya küçük olduğu için zararsızdır.' }
+      ], false);
+    bindDecision(1, 1, {
+      0: 'Okuyamaması, yazamayacağı anlamına gelmez. Yazma izni ayrı bir güvenlik riskidir.',
+      2: 'Authenticated Users geniş yazma izni çoğu ortamda risklidir.',
+      3: 'Dosya boyutu tek başına güvenlik göstergesi değildir.'
+    }, 'Doğru. Yazma izni, okuma izninden bağımsız değerlendirilmelidir.', 20, function () {
+      return state.flags.payrollTried && state.flags.incomingVisited;
+    }, 'Önce Payroll denemesi ve Incoming klasörünü ziyaret edin.');
+  }
+
+  function stage2Content() {
+    $('stageContent').innerHTML = '<p style="font-size:0.74rem;line-height:1.5;color:#94a3b8">Şüpheli .xlsm dosyasına <strong>sağ tık → Properties</strong>. Üç sekmeyi de gezin; özellikle Security önemli.</p>';
+    var signals = [
+      { text: '.xlsm uzantısı (makro etkin)', key: 'xlsm' },
+      { text: 'intern.mert tarafından oluşturulması', key: 'owner' },
+      { text: 'Mesai dışı oluşturulması (03:37)', key: 'time' },
+      { text: 'Güvenilir kaynak bilgisinin olmaması', key: 'trust' },
+      { text: 'Dosyanın 412 KB olması', key: 'size', wrong: true }
+    ];
+    $('decisionArea').innerHTML = '<p class="sb-decision-label">Properties inceledikten sonra şüpheli göstergeleri işaretleyin</p>' +
+      renderDecisionCards(signals.map(function (s) { return { text: s.text, key: s.key, wrong: s.wrong }; }), true);
+    document.getElementById('btnConfirmMulti').onclick = function () {
+      if (state.decisionLocked) return;
+      if (!state.flags.securityTabSeen) {
+        setFeedback('bad', 'Önce dosya Properties &gt; Security sekmesini inceleyin.');
+        return;
+      }
+      var ok = state.signalPicks[0] && state.signalPicks[1] && state.signalPicks[2] && state.signalPicks[3] && !state.signalPicks[4];
+      if (ok) {
+        state.decisionLocked = true;
+        state.stageDone[2] = true;
+        updateScore(15);
+        addEvidence('Dosya türü', 'Excel Macro-Enabled Workbook (.xlsm)');
+        addEvidence('Oluşturan', 'intern.mert · 03:37');
+        setFeedback('ok', 'Doğru göstergeleri seçtiniz. Dosya boyutu tek başına zararlılık kanıtı değildir.');
+        $('decisionArea').querySelectorAll('.sb-decision-card').forEach(function (b) { b.disabled = true; });
+        $('btnNextStage').classList.remove('hidden');
+        scrollToNextStageButton();
+        save();
+      } else {
+        state.decisionLocked = true;
+        state.stageDone[2] = true;
+        state.stageWrong[2] = true;
+        deductScore(15);
+        var cards = $('decisionArea').querySelectorAll('.sb-decision-card');
+        cards.forEach(function (b, j) {
+          b.disabled = true;
+          b.classList.remove('sb-decision-card--pick');
+          if (j < 4) b.classList.add('sb-decision-card--ok');
+          if (j === 4 && state.signalPicks[4]) b.classList.add('sb-decision-card--bad');
+          if (j < 4 && !state.signalPicks[j]) b.classList.add('sb-decision-card--bad');
+        });
+        var cbtn = document.getElementById('btnConfirmMulti');
+        if (cbtn) cbtn.disabled = true;
+        setFeedback(
+          'bad',
+          'Seçimleriniz tam doğru değil. İlk dört gösterge şüpheli sayılır; dosya boyutu tek başına anlamlı değildir.'
+        );
+        save();
+        scheduleAutoNextStage();
+      }
+    };
+    state.multiMode = true;
+    state.decisionHandler = null;
+    state.decisionConfig = null;
+  }
+
+  function initDecisionBindings() {
+    var area = $('decisionArea');
+    if (!area || area.dataset.bound) return;
+    area.dataset.bound = '1';
+    area.addEventListener('click', function (e) {
+      if (e.target.id === 'btnConfirmSingle' || e.target.id === 'btnConfirmMulti') return;
+      var btn = e.target.closest('.sb-decision-card');
+      if (!btn || btn.disabled) return;
+      if (state.decisionLocked) return;
+      var idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (isNaN(idx)) return;
+      if (state.multiMode) {
+        state.signalPicks[idx] = !state.signalPicks[idx];
+        btn.classList.toggle('sb-decision-card--pick', !!state.signalPicks[idx]);
+        return;
+      }
+      if (state.decisionHandler) state.decisionHandler(btn, idx);
+    });
+  }
+
+  function clearDecisionPicks() {
+    $('decisionArea').querySelectorAll('.sb-decision-card').forEach(function (b) {
+      b.classList.remove('sb-decision-card--pick');
+    });
+  }
+
+  function attachConfirmSingle() {
+    var btn = document.getElementById('btnConfirmSingle');
+    if (btn) btn.onclick = confirmSingleDecision;
+  }
+
+  function confirmSingleDecision() {
+    if (state.decisionLocked || state.multiMode) return;
+    var cfg = state.decisionConfig;
+    if (!cfg) return;
+    if (state.selectedDecision == null) {
+      setFeedback('info', 'Önce bir seçenek işaretleyin, ardından «Seçimi onayla» düğmesine basın.');
+      return;
+    }
+    if (cfg.gateFn && !cfg.gateFn()) {
+      setFeedback('info', (cfg.gateMsg || 'Önce Windows ekranında gerekli adımları tamamlayın.') + ' Sonra seçiminizi onaylayın.');
+      return;
+    }
+    var i = state.selectedDecision;
+    var cards = $('decisionArea').querySelectorAll('.sb-decision-card');
+    if (i === cfg.correctIdx) {
+      state.decisionLocked = true;
+      state.stageDone[cfg.stage] = true;
+      updateScore(cfg.pts);
+      if (cfg.stage === 0) {
+        addEvidence('Ticket özeti', 'Incoming\'de intern.mert sahipli xlsm; açılmadı');
+      }
+      setFeedback('ok', cfg.okMsg);
+      cards.forEach(function (b, j) {
+        b.disabled = true;
+        b.classList.remove('sb-decision-card--pick', 'sb-decision-card--bad');
+        if (j === cfg.correctIdx) b.classList.add('sb-decision-card--ok');
+      });
+      var cbtn = document.getElementById('btnConfirmSingle');
+      if (cbtn) cbtn.disabled = true;
+      $('btnNextStage').classList.remove('hidden');
+      scrollToNextStageButton();
+      save();
+    } else {
+      state.decisionLocked = true;
+      state.stageDone[cfg.stage] = true;
+      state.stageWrong[cfg.stage] = true;
+      deductScore(cfg.pts || 10);
+      setFeedback('bad', cfg.wrongMsgs[i] || 'Bu seçenek uygun değil.');
+      lockDecisionCards(cards, cfg.correctIdx, i);
+      var cbtnWrong = document.getElementById('btnConfirmSingle');
+      if (cbtnWrong) cbtnWrong.disabled = true;
+      save();
+      scheduleAutoNextStage();
+    }
+  }
+
+  function stage3Content() {
+    $('stageContent').innerHTML = '<p style="font-size:0.74rem;line-height:1.5;color:#94a3b8">Alttaki görev çubuğundan <strong>Güvenlik Merkezi</strong> → SHA-256 özetini hesaplayın.</p>';
+    $('decisionArea').innerHTML = '<p class="sb-decision-label">Hash üretildi — bu ne anlama gelir?</p>' +
+      renderDecisionCards([
+        { text: 'Dosyanın güvenli olduğunu kanıtlar.' },
+        { text: 'Dosyanın zararlı olmadığını kanıtlar.' },
+        { text: 'Dosyanın mevcut halini tanımlamak ve daha sonra değişip değişmediğini izlemek için kullanılabilir.' },
+        { text: 'Dosyanın finans ekibinden geldiğini kanıtlar.' }
+      ], false);
+    bindDecision(3, 2, {
+      0: 'Hash güvenli olduğunu kanıtlamaz; referans gerekir.',
+      1: 'Hash zararlı olmadığını kanıtlamaz.',
+      3: 'Hash dosya kaynağını kanıtlamaz.'
+    }, 'Doğru. Hash bütünlük ve değişim izleme içindir.', 10, function () { return state.flags.hashDone; }, 'Önce Güvenlik Merkezi\'nde SHA-256 özetini hesaplayın.');
+  }
+
+  function stage4Content() {
+    $('stageContent').innerHTML = '<p style="font-size:0.74rem;line-height:1.5;color:#94a3b8"><strong>Log Viewer</strong> → logları indirin veya satır seçin. Gözlemleri not defterine yazın/yapıştırın veya <strong>İndirilen dosyaları göster</strong> ile seçin → <strong>Kanıt sepetine ekle</strong>.</p>';
+    $('decisionArea').innerHTML = '<p class="sb-decision-label">Logları kanıt sepetine ekledikten sonra en doğru yorum:</p>' +
+      renderDecisionCards([
+        { text: 'intern.mert önce Payroll\'a erişmeyi denemiş, başaramamış, sonra Incoming\'e dosya bırakmış olabilir.' },
+        { text: 'Başarısız erişim olduğu için olay önemsizdir.' },
+        { text: 'Finans çalışanı klasörde fark ettiği için dosya güvenilirdir.' },
+        { text: 'Loglar silinmelidir.' }
+      ], false);
+    bindDecision(4, 0, {
+      1: 'Başarısız erişim denemeleri olay zincirinin parçasıdır.',
+      2: 'Fark edilmesi veya bildirilmesi güvenilirlik kanıtı değildir.',
+      3: 'Loglar korunmalıdır, silinmemelidir.'
+    }, 'Doğru. Log zinciri erişim denemesi ve dosya oluşturma ilişkisini gösterir.', 15, function () {
+      return hasLogStageEvidence();
+    }, 'Önce log kanıtı ekleyin: satır seçin, indirilen dosyadan işaretleyin veya gözlemlerinizi yazıp kanıt sepetine ekleyin.');
+  }
+
+  function stage5Content() {
+    $('stageContent').innerHTML = '<p style="font-size:0.74rem;line-height:1.5">Analist etiği: teknik kanıt olmadan kesin hüküm vermeyin.</p>';
+    $('decisionArea').innerHTML = renderDecisionCards([
+      { text: 'intern.mert kesin saldırgandır.' },
+      { text: 'Dosya kesin zararlıdır.' },
+      { text: 'Olay şüphelidir; niyet ve zararlılık teknik analiz olmadan kesin söylenemez.' },
+      { text: 'Stajyer olduğu için olay önemsizdir.' }
+    ], false);
+    bindDecision(5, 2, {
+      0: 'Kişi hakkında kanıtsız kesin yargı doğru değildir.',
+      1: 'Dosya şüpheli olsa da zararlılık analiz gerektirir.',
+      3: 'Rol, olayın önemini belirlemez.'
+    }, 'Doğru. Şüphe ile kesinlik arasındaki farkı korudunuz.', 10);
+  }
+
+  function stage6Content() {
+    state.multiMode = false;
+    state.decisionHandler = null;
+    if (!state.stageDone[6] && (isCorrectDragOrder(state.dragOrder) || !state.dragOrder.length)) {
+      state.dragOrder = shuffleDragOrder();
+    }
+    $('stageContent').innerHTML = '<p style="font-size:0.74rem;line-height:1.5;color:#94a3b8">Müdahale adımlarını aşağıda sıralayın; Windows ekranında kanıt toplamaya devam edebilirsiniz.</p>';
+    $('decisionArea').innerHTML =
+      '<p class="sb-decision-label">Adımları sürükleyin veya oklarla sıralayın</p>' +
+      '<ul class="sb-drag-list" id="dragList"></ul>' +
+      '<button type="button" class="sb-btn sb-btn--sm" id="btnCheckOrder">Sırayı kontrol et</button>';
+    renderDragListItems();
+    bindDrag();
+    document.getElementById('btnCheckOrder').onclick = function () {
+      var correct = state.dragOrder.every(function (v, i) { return v === i; });
+      if (correct) {
+        state.stageDone[6] = true;
+        updateScore(15);
+        setFeedback('ok', 'Doğru müdahale sırası. Önce insanları koru, kanıt toplayın, analiz et, sonra düzelt.');
+        $('btnNextStage').classList.remove('hidden');
+        scrollToNextStageButton();
+        state.decisionLocked = true;
+        save();
+      } else {
+        state.stageDone[6] = true;
+        state.decisionLocked = true;
+        state.stageWrong[6] = true;
+        deductScore(15);
+        state.dragOrder = INTERVENTION.map(function (_, idx) { return idx; });
+        renderDragListItems();
+        setFeedback('bad', 'Sıra hatalı. Önce bilgilendirme ve kanıt, sonra analiz ve izin düzeltmesi, en son rapor.');
+        var orderBtn = document.getElementById('btnCheckOrder');
+        if (orderBtn) orderBtn.disabled = true;
+        save();
+        scheduleAutoNextStage();
+      }
+    };
+  }
+
+  function dragItemHtml(idx, pos, n) {
+    return '<li class="sb-drag-item" data-pos="' + pos + '" data-key="' + idx + '">' +
+      '<i class="fa-solid fa-grip-vertical sb-drag-grip"></i>' +
+      '<span class="sb-drag-text">' + esc(INTERVENTION[idx]) + '</span>' +
+      '<span class="sb-drag-controls">' +
+      '<button type="button" class="sb-drag-nudge" data-dir="up" title="Yukarı"' + (pos === 0 ? ' disabled' : '') + '><i class="fa-solid fa-chevron-up"></i></button>' +
+      '<button type="button" class="sb-drag-nudge" data-dir="down" title="Aşağı"' + (pos === n - 1 ? ' disabled' : '') + '><i class="fa-solid fa-chevron-down"></i></button>' +
+      '</span></li>';
+  }
+
+  function renderDragListItems() {
+    var list = document.getElementById('dragList');
+    if (!list) return;
+    var n = state.dragOrder.length;
+    list.innerHTML = state.dragOrder.map(function (idx, pos) {
+      return dragItemHtml(idx, pos, n);
+    }).join('');
+  }
+
+  function getDragInsertIndex(list, clientY, placeholderPos) {
+    var nodes = list.querySelectorAll('.sb-drag-item');
+    var n = nodes.length;
+    if (!n) return 0;
+    var ph = placeholderPos != null ? placeholderPos : -1;
+    for (var i = 0; i < n; i++) {
+      var rect = nodes[i].getBoundingClientRect();
+      var mid = rect.top + rect.height * 0.5;
+      if (i === ph) {
+        var band = Math.max(12, rect.height * 0.22);
+        if (clientY < rect.top + band) return i;
+        if (clientY > rect.bottom - band) return Math.min(i + 1, n - 1);
+        return i;
+      }
+      if (clientY < mid) return i;
+    }
+    return n - 1;
+  }
+
+  function reorderDragInDom(from, to) {
+    if (from === to) return from;
+    var list = document.getElementById('dragList');
+    if (!list) return from;
+    var order = state.dragOrder.slice();
+    var moved = order.splice(from, 1)[0];
+    order.splice(to, 0, moved);
+    state.dragOrder = order;
+    var nodes = Array.from(list.querySelectorAll('.sb-drag-item'));
+    var el = nodes[from];
+    nodes.splice(from, 1);
+    nodes.splice(to, 0, el);
+    nodes.forEach(function (n) { list.appendChild(n); });
+    var count = nodes.length;
+    nodes.forEach(function (node, i) {
+      node.dataset.pos = String(i);
+      var up = node.querySelector('.sb-drag-nudge[data-dir="up"]');
+      var down = node.querySelector('.sb-drag-nudge[data-dir="down"]');
+      if (up) up.disabled = i === 0;
+      if (down) down.disabled = i === count - 1;
+    });
+    return to;
+  }
+
+  function setDragPlaceholder(list, slotEl) {
+    if (!list) return;
+    list.querySelectorAll('.sb-drag-item').forEach(function (el) {
+      el.classList.toggle('sb-drag-item--placeholder', el === slotEl);
+    });
+  }
+
+  var dragPointer = {
+    active: false, from: -1, list: null, ghost: null, slotEl: null,
+    offsetY: 0, offsetX: 0, raf: 0, lastY: 0, lastX: 0, slotHeight: 0
+  };
+
+  function removeDragGhost() {
+    if (dragPointer.ghost && dragPointer.ghost.parentNode) {
+      dragPointer.ghost.parentNode.removeChild(dragPointer.ghost);
+    }
+    dragPointer.ghost = null;
+  }
+
+  function endDragPointer() {
+    if (!dragPointer.active) return;
+    var list = dragPointer.list;
+    var y = dragPointer.lastY;
+    var from = dragPointer.from;
+    dragPointer.active = false;
+    if (list) list.classList.remove('sb-drag-list--dragging');
+    if (list && from >= 0) {
+      var insertAt = getDragInsertIndex(list, y, from);
+      if (insertAt !== from) reorderDragInDom(from, insertAt);
+    }
+    if (dragPointer.slotEl) {
+      dragPointer.slotEl.classList.remove('sb-drag-item--placeholder');
+      dragPointer.slotEl.style.minHeight = '';
+    }
+    dragPointer.slotEl = null;
+    dragPointer.from = -1;
+    dragPointer.list = null;
+    dragPointer.slotHeight = 0;
+    document.body.style.userSelect = '';
+    document.removeEventListener('mousemove', onDragPointerMove);
+    document.removeEventListener('mouseup', endDragPointer);
+    document.removeEventListener('touchmove', onDragPointerMove);
+    document.removeEventListener('touchend', endDragPointer);
+    removeDragGhost();
+    save();
+  }
+
+  function onDragPointerMove(e) {
+    if (!dragPointer.active || !dragPointer.list) return;
+    if (e.cancelable) e.preventDefault();
+    dragPointer.lastY = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
+    dragPointer.lastX = e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
+    if (!dragPointer.raf) {
+      dragPointer.raf = requestAnimationFrame(function () {
+        dragPointer.raf = 0;
+        if (!dragPointer.active) return;
+        var y = dragPointer.lastY;
+        var x = dragPointer.lastX;
+        if (dragPointer.ghost) {
+          dragPointer.ghost.style.top = (y - dragPointer.offsetY) + 'px';
+          dragPointer.ghost.style.left = (x - dragPointer.offsetX) + 'px';
+        }
+        var insertAt = getDragInsertIndex(dragPointer.list, y, dragPointer.from);
+        if (insertAt !== dragPointer.from) {
+          var newPos = reorderDragInDom(dragPointer.from, insertAt);
+          dragPointer.from = newPos;
+          dragPointer.slotEl = dragPointer.list.querySelector('.sb-drag-item[data-pos="' + newPos + '"]');
+          if (dragPointer.slotEl) {
+            dragPointer.slotEl.style.minHeight = dragPointer.slotHeight + 'px';
+            setDragPlaceholder(dragPointer.list, dragPointer.slotEl);
+          }
+        }
+      });
+    }
+  }
+
+  function bindDrag() {
+    var list = document.getElementById('dragList');
+    if (!list || list.dataset.dragBound) return;
+    list.dataset.dragBound = '1';
+
+    function startDrag(item, e) {
+      if (state.decisionLocked) return;
+      if (e.target.closest('.sb-drag-nudge')) return;
+      if (e.button != null && e.button !== 0) return;
+      e.preventDefault();
+      var rect = item.getBoundingClientRect();
+      var clientY = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
+      var clientX = e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
+      dragPointer.active = true;
+      dragPointer.from = +item.dataset.pos;
+      dragPointer.list = list;
+      dragPointer.slotEl = item;
+      dragPointer.offsetY = clientY - rect.top;
+      dragPointer.offsetX = clientX - rect.left;
+      dragPointer.slotHeight = rect.height;
+      dragPointer.lastY = clientY;
+      dragPointer.lastX = clientX;
+      document.body.style.userSelect = 'none';
+      list.classList.add('sb-drag-list--dragging');
+      removeDragGhost();
+      var ghost = item.cloneNode(true);
+      ghost.className = 'sb-drag-ghost';
+      ghost.style.width = rect.width + 'px';
+      ghost.style.left = rect.left + 'px';
+      ghost.style.top = rect.top + 'px';
+      ghost.querySelectorAll('.sb-drag-controls').forEach(function (c) { c.remove(); });
+      document.body.appendChild(ghost);
+      dragPointer.ghost = ghost;
+      item.style.minHeight = Math.ceil(rect.height) + 'px';
+      setDragPlaceholder(list, item);
+      document.addEventListener('mousemove', onDragPointerMove);
+      document.addEventListener('mouseup', endDragPointer);
+      document.addEventListener('touchmove', onDragPointerMove, { passive: false });
+      document.addEventListener('touchend', endDragPointer);
+    }
+
+    list.addEventListener('mousedown', function (e) {
+      var item = e.target.closest('.sb-drag-item');
+      if (item) startDrag(item, e);
+    });
+    list.addEventListener('touchstart', function (e) {
+      var item = e.target.closest('.sb-drag-item');
+      if (item) startDrag(item, e);
+    }, { passive: false });
+
+    list.addEventListener('click', function (e) {
+      if (state.decisionLocked) return;
+      var btn = e.target.closest('.sb-drag-nudge');
+      if (!btn || btn.disabled) return;
+      e.preventDefault();
+      var item = btn.closest('.sb-drag-item');
+      if (!item) return;
+      var pos = +item.dataset.pos;
+      var to = btn.dataset.dir === 'up' ? pos - 1 : pos + 1;
+      if (to < 0 || to >= state.dragOrder.length) return;
+      reorderDragInDom(pos, to);
+    });
+  }
+
+  function stage7Content() {
+    openReportPage();
+  }
+
+  function bindDecision(stage, correctIdx, wrongMsgs, okMsg, pts, gateFn, gateMsg) {
+    state.multiMode = false;
+    state.decisionConfig = {
+      stage: stage, correctIdx: correctIdx, wrongMsgs: wrongMsgs,
+      okMsg: okMsg, pts: pts, gateFn: gateFn, gateMsg: gateMsg
+    };
+    state.decisionHandler = function (btn, i) {
+      clearDecisionPicks();
+      btn.classList.add('sb-decision-card--pick');
+      state.selectedDecision = i;
+    };
+    attachConfirmSingle();
+  }
+
+  function renderStage() {
+    state.selectedDecision = null;
+    state.signalPicks = {};
+    state.multiMode = false;
+    state.decisionHandler = null;
+    state.decisionConfig = null;
+    state.decisionLocked = !!state.stageDone[state.stage];
+    $('btnNextStage').classList.add('hidden');
+    $('stageFeedback').className = 'sb-feedback';
+    $('stageFeedback').textContent = '';
+    renderTasks();
+    renderStepGuide();
+    updateSectionLabels();
+    renderWindows();
+
+    if (state.stage === 0) stage0Content();
+    else if (state.stage === 1) stage1Content();
+    else if (state.stage === 2) stage2Content();
+    else if (state.stage === 3) stage3Content();
+    else if (state.stage === 4) stage4Content();
+    else if (state.stage === 5) stage5Content();
+    else if (state.stage === 6) {
+      if (!state.stageDone[6]) state.dragOrder = shuffleDragOrder();
+      stage6Content();
+    }
+    else stage7Content();
+
+    if (state.stage === 7) return;
+
+    var dock = $('decisionDock');
+    if (dock) dock.classList.remove('hidden');
+
+    if (state.decisionLocked && state.stage < 7) $('btnNextStage').classList.remove('hidden');
+    renderDownloadedFilesPanel();
+    updateAddEvidenceButton();
+    initDecisionBindings();
+    if (state.decisionLocked) {
+      $('decisionArea').querySelectorAll('.sb-decision-card').forEach(function (b) { b.disabled = true; });
+    }
+  }
+
+  function buildReportSections() {
+    return {
+      bulgu: '\\\\FILE-SRV01\\Finance\\Incoming klasöründe Authenticated Users ve Interns gruplarına dosya oluşturma/yazma izni verildiği tespit edilmiştir. Bu nedenle finans klasöründeki hassas dosyaları okuyamayan intern.mert kullanıcısı, aynı paylaşım altındaki Incoming klasörüne 2026_Maas_Guncelleme_Formu.xlsm adlı şüpheli bir dosya bırakabilmiştir.',
+      etki: 'Bu yapı, finans çalışanlarının kaynağı belirsiz dosyalarla karşılaşmasına neden olabilir. Kullanıcılar dosya adını güvenilir zannederek açarsa zararlı makro, sosyal mühendislik, veri manipülasyonu veya yanlış belge işleme riski oluşabilir.',
+      oneri: 'Finance\\Incoming klasöründeki yazma izinleri gözden geçirilmelidir. Authenticated Users ve Interns gruplarının yazma izni kaldırılmalı veya kontrollü yükleme alanı kullanılmalıdır. Finans çalışanları kaynağı bilinmeyen dosyaları açmamalı; dosya güvenli analiz sürecine alınmalıdır.',
+      kanit: state.evidence.length
+        ? state.evidence.map(function (e) { return '- ' + e.label + ': ' + e.detail; }).join('\n')
+        : '(Simülasyon sırasında toplanan kanıt kayıtları buraya yansır.)'
+    };
+  }
+
+  function buildReport() {
+    var s = buildReportSections();
+    return 'Bulgu:\n' + s.bulgu + '\n\nEtki:\n' + s.etki + '\n\nÖneri:\n' + s.oneri + '\n\nKanıt:\n' + s.kanit;
+  }
+
+  function compileReportFromForm() {
+    return 'Bulgu:\n' + ($('reportBulgu').value || '').trim() +
+      '\n\nEtki:\n' + ($('reportEtki').value || '').trim() +
+      '\n\nÖneri:\n' + ($('reportOneri').value || '').trim() +
+      '\n\nKanıt:\n' + ($('reportKanit').value || '').trim();
+  }
+
+  function openReportPage() {
+    if (state.reportPageOpen) return;
+    state.reportPageOpen = true;
+    state.stageDone[7] = true;
+    state.stage = 7;
+    var sections = buildReportSections();
+    $('app').classList.add('hidden');
+    $('reportScreen').classList.remove('hidden');
+    $('reportBulgu').value = sections.bulgu;
+    $('reportEtki').value = sections.etki;
+    $('reportOneri').value = sections.oneri;
+    $('reportKanit').value = sections.kanit;
+    var meta = $('reportMeta');
+    if (state.evidence.length) {
+      meta.innerHTML = state.evidence.map(function (e) {
+        return '<span>' + esc(e.label) + '</span>';
+      }).join('');
+    } else {
+      meta.innerHTML = '<span>Kanıt kaydı yok</span>';
+    }
+    save();
+  }
+
+  function showFinal() {
+    $('reportScreen').classList.add('hidden');
+    $('finalScreen').classList.remove('hidden');
+    $('finalScore').textContent = state.score + ' / 100';
+    $('finalMsg').textContent = state.score >= 75 ? 'Güçlü analist performansı.' : 'Temel adımları tamamladınız; izin ve kanıt konularını tekrar edebilirsiniz.';
+    $('reportBox').value = compileReportFromForm();
+    $('gainsList').innerHTML = [
+      'Okuma izni ile yazma izni arasındaki farkı yorumladın.',
+      'Şüpheli dosyayı açmadan kanıt topladın.',
+      'Dosya sahibi, zaman damgası, dosya yolu ve hash bilgisini kayıt altına aldın.',
+      'Log kayıtlarını olay zincirine dönüştürdün.',
+      'Teknik kanıt olmadan kesin hüküm vermedin.',
+      'Yanlış izin yapılandırmasını bulgu-etki-öneri-kanıt formatında raporladın.'
+    ].map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('');
+    if (window.SimulationTracker && window.SimulationTracker.saveCompletion) {
+      window.SimulationTracker.saveCompletion(SIM_ID, SIM_NAME, {
+        score: state.score,
+        maxScore: 100,
+        timeSpentSeconds: simStartedAt ? Math.round((Date.now() - simStartedAt) / 1000) : 0,
+        passed: state.score >= 70,
+        moduleName: MODULE_NAME,
+        redirectToDashboard: false
+      });
+    }
+    try { localStorage.removeItem(SIM_ID); } catch (e) {}
+  }
+
+  function nextStage() {
+    state.stage++;
+    state.decisionLocked = false;
+    renderStage();
+    save();
+  }
+
+  $('hintBtn').onclick = function (e) {
+    e.stopPropagation();
+    if ($('hintPopover').classList.contains('show')) hideHint();
+    else showHint();
+  };
+  document.addEventListener('click', function (e) {
+    var wrap = $('hintBtn') && $('hintBtn').parentElement;
+    if (!wrap || !wrap.contains(e.target)) hideHint();
+  });
+
+  $('btnStart').onclick = function () {
+    $('introOverlay').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    resetState();
+    initDecisionBindings();
+    renderStage();
+    simStartedAt = Date.now();
+    if (window.SimulationTracker && window.SimulationTracker.recordStart) {
+      window.SimulationTracker.recordStart(SIM_ID, SIM_NAME, { moduleName: MODULE_NAME });
+    }
+  };
+
+  $('btnNextStage').onclick = nextStage;
+
+  $('btnAddEvidence').onclick = function () {
+    var added = false;
+    if (Object.keys(state.selectedLogs).some(function (k) { return state.selectedLogs[k]; })) {
+      addSelectedLogsToEvidence(false);
+      added = true;
+    }
+    if (Object.keys(state.selectedDownloadLogs).some(function (k) { return state.selectedDownloadLogs[k]; })) {
+      addSelectedLogsToEvidence(true);
+      added = true;
+    }
+    var note = ($('analystNote').value || '').trim();
+    if (note) {
+      addEvidence('Analist gözlemi', note);
+      added = true;
+    }
+    if (state.selectedFile) {
+      addEvidence('Seçili dosya', state.selectedFile);
+      added = true;
+    }
+    if (added && state.stage === 4) {
+      setFeedback('info', 'Kanıt eklendi. Soldaki yorum sorusunu yanıtlayın.');
+    }
+    $('analystNote').value = '';
+    state.selectedFile = null;
+    renderWindows();
+    renderDownloadedFilesPanel();
+    updateAddEvidenceButton();
+    save();
+  };
+
+  $('btnShowDownloads').onclick = function () {
+    state.showDownloadPanel = !state.showDownloadPanel;
+    renderDownloadedFilesPanel();
+    if (state.showDownloadPanel && !state.flags.logsDownloaded) {
+      setFeedback('info', 'Önce Log Viewer\'da «Log kayıtlarını indir» düğmesine basın.');
+    }
+  };
+
+  if ($('analystNote') && !$('analystNote').dataset.bound) {
+    $('analystNote').dataset.bound = '1';
+    $('analystNote').addEventListener('input', updateAddEvidenceButton);
+  }
+
+  document.querySelectorAll('.sb-task-btn').forEach(function (btn) {
+    btn.onclick = function () {
+      document.querySelectorAll('.sb-task-btn').forEach(function (b) { b.classList.remove('sb-task-btn--active'); });
+      btn.classList.add('sb-task-btn--active');
+      state.activeApp = btn.dataset.app;
+      renderWindows();
+    };
+  });
+
+  document.querySelectorAll('.sb-desk-icon').forEach(function (ic) {
+    ic.onclick = function () {
+      state.activeApp = ic.dataset.open === 'notes' ? 'explorer' : ic.dataset.open;
+      document.querySelectorAll('.sb-task-btn').forEach(function (b) {
+        b.classList.toggle('sb-task-btn--active', b.dataset.app === state.activeApp);
+      });
+      renderWindows();
+    };
+  });
+
+  $('btnCopyReportDraft').onclick = function () {
+    navigator.clipboard.writeText(compileReportFromForm());
+  };
+
+  $('btnSaveReport').onclick = function () {
+    showFinal();
+  };
+
+  $('btnCopyReport').onclick = function () {
+    navigator.clipboard.writeText($('reportBox').value);
+  };
+
+  $('btnRestart').onclick = function () {
+    try { localStorage.removeItem(SIM_ID); } catch (e) {}
+    location.reload();
+  };
+})();
+  </script>
+  <script src="/simulation/simulation-access-check.js"></script>
+</body>
+</html>

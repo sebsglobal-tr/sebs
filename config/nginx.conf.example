@@ -1,0 +1,101 @@
+# Nginx Load Balancer Configuration
+# For 3K-40K concurrent users
+# Place this file in /etc/nginx/sites-available/sebs
+
+upstream sebs_backend {
+    # Least connections load balancing
+    least_conn;
+    
+    # Backend servers (adjust ports based on your setup)
+    server 127.0.0.1:8006 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:8007 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:8008 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:8009 max_fails=3 fail_timeout=30s;
+    
+    # Keep connections alive
+    keepalive 32;
+}
+
+# Rate limiting zones
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=general_limit:10m rate=50r/s;
+
+server {
+    listen 80;
+    server_name sebsglobal.com www.sebsglobal.com;
+
+    # Increase buffer sizes for large requests
+    client_max_body_size 10M;
+    client_body_buffer_size 128k;
+
+    # Timeouts
+    proxy_connect_timeout 60s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+
+    # Static files (served directly by Nginx)
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        root /path/to/sebs;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # API endpoints with rate limiting
+    location /api/ {
+        limit_req zone=api_limit burst=20 nodelay;
+        
+        proxy_pass http://sebs_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Keep-alive
+        proxy_set_header Connection "";
+    }
+
+    # General routes with rate limiting
+    location / {
+        limit_req zone=general_limit burst=100 nodelay;
+        
+        proxy_pass http://sebs_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Health check endpoint (no rate limiting)
+    location /api/health {
+        proxy_pass http://sebs_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        access_log off;
+    }
+}
+
+# SSL Configuration (if using HTTPS)
+# server {
+#     listen 443 ssl http2;
+#     server_name sebsglobal.com www.sebsglobal.com;
+#
+#     ssl_certificate /path/to/cert.pem;
+#     ssl_certificate_key /path/to/key.pem;
+#
+#     # SSL settings
+#     ssl_protocols TLSv1.2 TLSv1.3;
+#     ssl_ciphers HIGH:!aNULL:!MD5;
+#     ssl_prefer_server_ciphers on;
+#
+#     # Same location blocks as above
+# }
+

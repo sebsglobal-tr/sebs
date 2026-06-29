@@ -1,0 +1,26 @@
+﻿Görev,Öncelik,ID,Sorumlu,Tahmini gün,Durum,Not,Kategori
+Gizlilik politikası sayfası,P0,L-01,Hukuk + Dev,1,Tamamlandı,/gizlilik-politikasi.html — avukat incelemesi önerilir,Yasal
+Kullanım şartları (+ erken erişim maddesi),P0,L-02,Hukuk + Dev,1,Tamamlandı,/kullanim-sartlari.html,Yasal
+KVKK aydınlatma metni,P0,L-03,Hukuk + Dev,1,Tamamlandı,/kvkk-aydinlatma.html,Yasal
+Footer / kayıt / iletişim yasal linkleri,P0,L-04,Dev,0.5,Tamamlandı,"/gizlilik, /kullanim-sartlari, /kvkk — avukat incelemesi ayrı",Yasal
+Checkout: şimdi / yakında + onay kutusu,P0,C-01,Dev,1,Tamamlandı,pricing.html satın alma modalı,Checkout
+Production'da ücretsiz /api/purchase kapatma,P0,C-02,Dev,0.5,Tamamlandı,NODE_ENV=production → 503 PAYMENT_PROVIDER_REQUIRED,Checkout
+Iyzico: sandbox hesap + API ürün tipi teyidi,P0,P-01,İş + Iyzico,2-5,Bekliyor,Checkout Form API vs 3DS — yazılı teyit,Ödeme
+Backend: initialize + callback + sipariş tablosu,P0,P-02,Dev,3-5,Kısmen,Kod hazır; IYZICO_API_KEY ile canlı test bekliyor,Ödeme
+Frontend: Ödemeye devam → Iyzico yönlendirme,P0,P-03,Dev,1,Kısmen,pricing.html initialize çağırıyor,Ödeme
+Sunucu tarafı fiyat kataloğu,P0,P-04,Dev,1,Tamamlandı,backend/lib/package-prices.js,Ödeme
+Entitlement yalnızca başarılı ödeme sonrası,P0,P-05,Dev,1,Kısmen,Callback grant; prod /purchase kapalı,Ödeme
+Canlı smoke test: kayıt → ödeme → modül,P0,P-06,QA + Dev,1,Bekliyor,P-02–05 sonrası,QA
+Web Uygulama: paketten çıkar veya Yakında etiketi,P1,M-01,Ürün + Dev,0.5,Tamamlandı,pricing yol haritası + erişim engeli,Modül
+temel-siber / ag-guvenligi yönlendirme,P1,M-02,Dev,0.5,Tamamlandı,guncel-siber + network-guvenligi,Modül
+Simülasyon kataloğu rozet / link tutarlılığı,P1,M-03,Dev,1,Kısmen,coming-soon kartları Yakında; bilgi notu var,Simülasyon
+Nav birleştirme (login/dashboard = marketing),P1,U-01,Dev,2,Bekliyor,,UX
+"Eksik CSS/JS repoya al (styles.css, navigation.js)",P1,U-02,Dev,1-2,Kısmen,styles/modules/enhancements.css stub; navigation.js mevcut,Teknik
+Modül erişim kontrolü (satın almayan → pricing),P1,A-01,Dev,2-3,Kısmen,modules.html + module-access-gate.js (doğrudan URL),Erişim
+İade / destek süreci dokümantasyonu,P1,I-01,Operasyon,0.5,Tamamlandı,kullanim-sartlari.html İade ve destek,Operasyon
+Premium modüllerde UX standardizasyonu,P2,T-01,Dev,5-10,Bekliyor,İşletim referans,UX
+Web modülü müfredatını yayınla,P2,T-02,İçerik + Dev,5-15,Bekliyor,parts/ ~8k satır taslak,İçerik
+Bulut modülleri: premium motor veya satıştan çıkar,P2,T-03,Ürün,2,Bekliyor,,Modül
+3 modül uçtan uca QA,P2,T-04,QA,2,Bekliyor,Giriş + orta + ileri,QA
+Sertifika akışı doğrulama,P2,T-05,Dev + QA,1,Bekliyor,,QA
+Sitemap / SEO temizliği,P2,T-06,Dev,0.5,Bekliyor,temel-siber URL vb.,SEO

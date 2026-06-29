@@ -1,0 +1,39 @@
+{
+  "name": "sebs-global",
+  "private": true,
+  "version": "1.0.0",
+  "description": "SEBS Global — monorepo: frontend (statik), backend (Express API), database (SQL)",
+  "scripts": {
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "start:alt": "PORT=8010 npm --prefix backend start",
+    "restart": "./scripts/restart-local.sh",
+    "start:cluster": "npm --prefix backend run start:cluster",
+    "build": "node scripts/verify-build.js",
+    "setup-db": "node scripts/setup-database-tables.js",
+    "db:setup": "node scripts/db-setup.js",
+    "db:backup": "node scripts/db-backup.js",
+    "deploy:vercel": "npx vercel deploy --prod"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.1",
+    "argon2": "^0.44.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^8.5.2",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.11",
+    "pg": "^8.21.0",
+    "uuid": "^14.0.0",
+    "zod": "^4.4.3"
+  }
+}

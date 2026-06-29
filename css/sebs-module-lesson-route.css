@@ -1,0 +1,255 @@
+/* Premium modül: ders rotası (?ders=) — tek content-card görünür */
+body.lesson-route-mode .content-section {
+    display: none !important;
+}
+
+/* Bölüm dışına düşmüş test / başlık kalıntıları (enjeksiyon hatası) */
+body.lesson-route-mode main > h2,
+body.lesson-route-mode main > .eval-quiz-section {
+    display: none !important;
+}
+
+body.lesson-route-mode .content-section.lesson-route-current-section {
+    display: block !important;
+}
+
+/* Tek alt-ders modu: yalnızca aktif kart görünsün (iç içe sarmalayıcılar dahil) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .sebs-lesson-block {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card.lesson-route-current-card,
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .sebs-lesson-block.lesson-route-current-card {
+    display: block !important;
+    animation: sebs-lesson-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dış kabuk kart (içte alt ders kartları var — Temel Network vb.) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) > .content-card:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .content-card:has(> .content-card.lesson-route-current-card) {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) > .content-card:has(.lesson-route-current-card) > .content-card:not(.lesson-route-current-card) {
+    display: none !important;
+}
+
+/* Tek ders: üst seviye sarmalayıcılar (edu-narrative vb.) yalnızca aktif kartı taşıyorsa görünür */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-narrative:not(:has(.lesson-route-current-card)),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body:not(:has(.lesson-route-current-card)),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .lesson-content:not(:has(.lesson-route-current-card)) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-narrative:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .lesson-content:has(.lesson-route-current-card) {
+    display: block !important;
+}
+
+/* Dış content-card tek kabuk ise içteki alt ders kartları ayrı ayrı filtrelenir */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) > .content-card:has(.lesson-route-current-card) {
+    display: block !important;
+}
+
+/* Aktif ders kartı doğrudan .section-inner altında olabilir (:has yalnızca torunları sayar) */
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:not(:has(.lesson-route-current-card)):not(.lesson-route-current-card) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > *:has(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .section-inner > .lesson-route-current-card {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body > .content-card:not(.lesson-route-current-card),
+body.lesson-route-mode .lesson-route-current-section:not(.lesson-route-whole-section) .edu-chapter-body > .sebs-lesson-block:not(.lesson-route-current-card) {
+    display: none !important;
+}
+
+/* Tüm bölüm modu: boş alt sayfa yok — section-inner tamamen görünür */
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner > * {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner .content-card {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .section-inner > .concept-grid {
+    display: grid !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-whole-section .kr-cia-grid {
+    display: grid !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > h1,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .sg-isletim-intro,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .lesson-image-wrap,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .learning-objectives,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .kr-inline-breakout,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .figure-block,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > h1,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .sg-isletim-intro,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .lesson-image-wrap,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .learning-objectives,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .kr-inline-breakout,
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .figure-block {
+    display: block !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .section-inner > .concept-grid:not(.content-card .concept-grid),
+body.lesson-route-mode .lesson-route-current-section.lesson-route-show-module-intro .lesson-route-current-card > .concept-grid {
+    display: grid !important;
+}
+
+/* Düz ders yapısı (section-inner yok): tek bölüm = tek ders — İşletim ile aynı rota */
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header {
+    display: block !important;
+    margin: 0 0 1.35rem;
+    max-width: 100%;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header h2 {
+    display: none !important;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header p {
+    display: block !important;
+    text-transform: none;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: normal;
+    color: #475569;
+    margin: 0 0 0.85rem;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) .section-header p:last-child {
+    margin-bottom: 0;
+}
+
+body.lesson-route-mode .content-section.lesson-route-whole-section:not(:has(.section-inner)) > .content-card {
+    display: block !important;
+}
+
+/* Düz ders: gömülü modül testi yalnızca test adımında görünür */
+body.lesson-route-mode .lesson-route-whole-section .eval-quiz-section:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-whole-section h2.lesson-route-quiz-intro:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .lesson-controls {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .content-card > *:not(.eval-quiz-section):not(h2.lesson-route-quiz-intro) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section .eval-quiz-section.lesson-route-quiz-visible,
+body.lesson-route-mode .lesson-route-quiz-only.lesson-route-whole-section h2.lesson-route-quiz-intro.lesson-route-quiz-visible {
+    display: block !important;
+}
+
+/* section-inner: test yalnızca «Modül testi» adımında */
+body.lesson-route-mode .lesson-route-current-section .section-inner .eval-quiz-section:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-current-section .section-inner h2.lesson-route-quiz-intro:not(.lesson-route-quiz-visible) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-quiz-only .section-inner > .content-card:not(.lesson-route-current-card) {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-controls {
+    display: none !important;
+}
+
+/* Premium footer varken eski tamamla şeridini gizle (çift buton önlenir) */
+body.lesson-route-mode .content-card:has(.lesson-complete-footer) .lesson-controls,
+body.lesson-route-mode .lesson-route-current-card:has(.lesson-complete-footer) .lesson-controls,
+body.lesson-route-mode .section-inner:has(.lesson-complete-footer) > .lesson-controls {
+    display: none !important;
+}
+
+body.lesson-route-mode .lesson-route-hero-module {
+    display: none !important;
+}
+
+.lesson-route-hero {
+    margin: 0 0 2rem;
+    padding: 0;
+    max-width: 100%;
+}
+
+.lesson-route-hero-lesson {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    line-height: 1.28;
+}
+
+.lesson-route-hero-img-wrap {
+    margin: 0;
+    padding: 0.6rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.lesson-route-hero-img {
+    width: 100%;
+    max-width: 1100px;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+@keyframes sebs-lesson-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Klasik bölüm modu: tam içerik, ?ders= / tek kart yok */
+body.sebs-module-progress-section #lesson-route-hero {
+    display: none !important;
+}
+
+body.sebs-module-progress-section .content-section.active .section-inner > h1,
+body.sebs-module-progress-section .content-section.active .section-inner > h2,
+body.sebs-module-progress-section .content-section.active .section-inner > h3,
+body.sebs-module-progress-section .content-section.active .section-inner > h4,
+body.sebs-module-progress-section .content-section.active .section-inner > p,
+body.sebs-module-progress-section .content-section.active .section-inner > ul,
+body.sebs-module-progress-section .content-section.active .section-inner > ol,
+body.sebs-module-progress-section .content-section.active .section-inner > div,
+body.sebs-module-progress-section .content-section.active .section-inner > table,
+body.sebs-module-progress-section .content-section.active .section-inner > pre {
+    display: block;
+    max-width: 100%;
+}
+
+body.sebs-module-progress-section .content-section.active .section-inner > ul,
+body.sebs-module-progress-section .content-section.active .section-inner > ol {
+    display: block;
+}

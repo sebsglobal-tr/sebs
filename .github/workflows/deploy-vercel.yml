@@ -1,0 +1,51 @@
+# www.sebsglobal.com — statik frontend (frontend/ → Vercel)
+# Gerekli GitHub Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Kurulum: docs/DEPLOY.md
+
+name: Deploy frontend (Vercel)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Vercel secrets
+        id: secrets
+        run: |
+          missing=""
+          [ -z "${{ secrets.VERCEL_TOKEN }}" ] && missing="VERCEL_TOKEN "
+          [ -z "${{ secrets.VERCEL_ORG_ID }}" ] && missing="${missing}VERCEL_ORG_ID "
+          [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ] && missing="${missing}VERCEL_PROJECT_ID "
+          if [ -n "$missing" ]; then
+            echo "missing=1" >> "$GITHUB_OUTPUT"
+            echo "::error::Eksik GitHub secret: $missing — bkz. docs/DEPLOY.md (Vercel panelden Redeploy da yapılabilir)"
+            exit 1
+          fi
+          echo "missing=0" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify build
+        run: VERCEL=1 npm run build
+
+      - name: Deploy to Vercel (production)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npx vercel@39 deploy --prod --yes --token "$VERCEL_TOKEN"

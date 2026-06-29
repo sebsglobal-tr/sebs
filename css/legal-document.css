@@ -1,0 +1,666 @@
+/* Yasal metin ve Hakkımızda sayfaları — ortak tipografi ve bileşenler */
+
+/* Yasal / Hakkımızda: çift üst boşluk önleme (body padding + main padding) */
+body.landing-site-body.legal-page,
+body.landing-site-body.about-page {
+  padding-top: 0;
+}
+
+body.legal-page main {
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+}
+
+.legal-updated {
+  font-size: 0.875rem;
+  color: rgb(100 116 139);
+}
+
+.legal-prose {
+  color: rgb(51 65 85);
+  line-height: 1.7;
+}
+
+.legal-prose > p:first-of-type,
+.legal-prose > .legal-lead {
+  margin-top: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgb(71 85 105);
+}
+
+.legal-prose h2 {
+  margin-top: 2.75rem;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(15 23 42);
+}
+
+.legal-prose h2:first-of-type {
+  margin-top: 2rem;
+}
+
+.legal-prose h3 {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.legal-prose p {
+  margin-top: 0.875rem;
+}
+
+.legal-prose ul:not(.about-pillars):not(.legal-related-links) {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.legal-prose ul.about-pillars,
+.legal-prose ul.legal-related-links {
+  margin-top: 0.75rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.legal-prose li {
+  margin-top: 0.35rem;
+}
+
+.legal-prose ul.legal-related-links li,
+.legal-prose ul.about-pillars li {
+  margin-top: 0;
+}
+
+.legal-prose a {
+  color: rgb(37 99 235);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.legal-prose a:hover {
+  text-decoration: underline;
+}
+
+.legal-prose strong {
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.legal-prose .legal-toc {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
+  list-style: none;
+  padding-left: 1.25rem;
+}
+
+.legal-prose .legal-toc li {
+  margin-top: 0.35rem;
+}
+
+.legal-prose .legal-callout {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border-left: 4px solid rgb(37 99 235);
+  background: rgb(239 246 255);
+  font-size: 0.9375rem;
+  color: rgb(30 58 138);
+}
+
+.legal-prose table.legal-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.legal-prose table.legal-table th,
+.legal-prose table.legal-table td {
+  border: 1px solid rgb(226 232 240);
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-prose table.legal-table th {
+  background: rgb(248 250 252);
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.legal-prose table.legal-table-wrap {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.legal-doc-nav a[aria-current="page"] {
+  color: rgb(15 23 42);
+}
+
+.legal-doc-mobile-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.legal-related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.legal-related-links li {
+  margin: 0;
+}
+
+.legal-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+/* Hakkımızda — şirket bilgisi */
+.about-company-panel {
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
+}
+
+.about-company-panel dl {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .about-company-panel dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+  }
+}
+
+.about-company-panel dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(100 116 139);
+}
+
+.about-company-panel dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgb(15 23 42);
+  line-height: 1.5;
+}
+
+.about-company-panel dd a {
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-company-panel dd a:hover {
+  text-decoration: underline;
+}
+
+/* Kurucu ekip */
+.about-team-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .about-team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.about-team-card {
+  text-align: center;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+}
+
+.about-team-photo {
+  width: 7rem;
+  aspect-ratio: 4 / 5;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(241 245 249);
+}
+
+.about-team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-team-initials {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(71 85 105);
+  background: linear-gradient(145deg, rgb(241 245 249), rgb(226 232 240));
+}
+
+.about-team-card h3 {
+  margin-top: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+
+.about-team-role {
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(37 99 235);
+}
+
+.about-team-role--muted {
+  color: rgb(100 116 139);
+}
+
+.about-team-card p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgb(100 116 139);
+}
+
+/* Ödeme bandı (Hakkımızda gövdesi) */
+.sebs-payment-trust--about-inline {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  text-align: center;
+}
+
+.sebs-payment-trust--about-inline .sebs-payment-trust__band {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.75rem;
+}
+
+.legal-footer-payment {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(241 245 249);
+}
+
+.legal-footer-payment .sebs-payment-trust__band {
+  margin-top: 0.5rem;
+}
+
+/* ——— Hakkımızda sayfa düzeni ——— */
+.about-hero {
+  padding-top: 5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgb(226 232 240 / 0.9);
+}
+
+@media (min-width: 640px) {
+  .about-hero {
+    padding-top: 5.5rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.about-hero__inner {
+  max-width: 42rem;
+}
+
+.about-hero h1 {
+  margin: 0;
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(15 23 42);
+}
+
+.about-hero__lead {
+  margin-top: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgb(71 85 105);
+}
+
+.about-hero__links {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.about-hero__links a {
+  font-weight: 600;
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-hero__links a:hover {
+  text-decoration: underline;
+}
+
+.about-hero__sep {
+  margin: 0 0.5rem;
+  color: rgb(203 213 225);
+}
+
+.about-body {
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.about-section {
+  margin-top: 2.75rem;
+}
+
+.about-section:first-child {
+  margin-top: 0;
+}
+
+.about-section__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(15 23 42);
+}
+
+.about-section__intro {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgb(100 116 139);
+  max-width: 40rem;
+}
+
+.about-pillars-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .about-pillars-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.about-pillar-card {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+}
+
+.about-pillar-card strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-pillar-card span {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgb(100 116 139);
+}
+
+.about-vm-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .about-vm-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-vm-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+}
+
+.about-vm-card h3 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-vm-card p {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgb(100 116 139);
+}
+
+.about-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.about-legal-links li {
+  margin: 0;
+  list-style: none;
+}
+
+.about-legal-links a {
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgb(51 65 85);
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.about-legal-links a:hover {
+  border-color: rgb(191 219 254);
+  background: rgb(239 246 255);
+  color: rgb(30 64 175);
+}
+
+.about-cta-row {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgb(241 245 249);
+  font-size: 0.9375rem;
+}
+
+.about-cta-row a {
+  font-weight: 600;
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-cta-row a:hover {
+  text-decoration: underline;
+}
+
+.about-story-panel {
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+}
+
+.about-story-panel p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: rgb(71 85 105);
+}
+
+.about-story-panel p + p {
+  margin-top: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .about-pillars-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-pillars-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.about-process-steps {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .about-process-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-process-steps li {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  padding: 1rem 1.125rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255);
+}
+
+.about-process-steps__num {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: rgb(239 246 255);
+  color: rgb(29 78 216);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.about-process-steps li strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-process-steps li span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgb(100 116 139);
+}
+
+.about-section__cta-inline {
+  margin-top: 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.about-section__cta-inline a {
+  color: rgb(37 99 235);
+  text-decoration: none;
+}
+
+.about-section__cta-inline a:hover {
+  text-decoration: underline;
+}
+
+.about-trust-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .about-trust-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-trust-card {
+  padding: 1.125rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252);
+}
+
+.about-trust-card h3 {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgb(15 23 42);
+}
+
+.about-trust-card p {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgb(71 85 105);
+}
+
+.about-trust-card a {
+  color: rgb(37 99 235);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.about-trust-card a:hover {
+  text-decoration: underline;
+}
