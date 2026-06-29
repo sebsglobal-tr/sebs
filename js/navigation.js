@@ -540,42 +540,32 @@
             return;
         }
 
-        var NAV_ACCENT = 'landing-nav-pill-link landing-nav-pill-link--accent focus-ring';
+        var NAV_CLS = 'landing-nav-pill-link focus-ring';
         var NAV_MUTED = 'landing-nav-pill-link landing-nav-pill-link--muted focus-ring';
-        var NAV_PLATFORM_TRIG =
-            'landing-nav-pill-link landing-nav-pill-link--platform nav-platform-trigger inline-flex items-center gap-0.5 border-0 bg-transparent focus-ring';
 
-        function makeBlogLink() {
+        function makeLink(href, text, cls) {
             var a = document.createElement('a');
-            a.href = '/blog';
-            a.textContent = 'Blog';
-            a.className = NAV_ACCENT;
-            return a;
-        }
-
-        function makeHomeLink() {
-            var a = document.createElement('a');
-            a.href = '/';
-            a.textContent = 'Ana sayfa';
-            a.className = NAV_ACCENT;
+            a.href = href;
+            a.textContent = text;
+            a.className = cls;
             return a;
         }
 
         function makeDesktopPlatformBlock() {
             var wrap = document.createElement('div');
-            wrap.className = 'relative z-[55]';
+            wrap.className = 'relative';
             wrap.id = 'navPlatformWrap';
 
             var trig = document.createElement('button');
             trig.type = 'button';
             trig.id = 'navPlatformTrigger';
-            trig.className = NAV_PLATFORM_TRIG;
+            trig.className = NAV_CLS;
             trig.setAttribute('aria-expanded', 'false');
             trig.setAttribute('aria-haspopup', 'menu');
             trig.setAttribute('aria-controls', 'navPlatformPanel');
             trig.setAttribute('aria-label', 'Platform menüsü');
             var chev = document.createElement('span');
-            chev.className = 'nav-platform-chevron text-[0.7rem] leading-none opacity-75';
+            chev.className = 'nav-platform-chevron';
             chev.setAttribute('aria-hidden', 'true');
             chev.textContent = '▾';
             trig.appendChild(document.createTextNode('Platform'));
@@ -583,77 +573,27 @@
 
             var panel = document.createElement('div');
             panel.id = 'navPlatformPanel';
-            panel.className =
-                'nav-platform-dropdown absolute left-1/2 top-full z-[60] mt-2 hidden w-56 -translate-x-1/2 rounded-xl border border-slate-200 bg-white py-1 shadow-lg';
+            panel.className = 'nav-platform-dropdown hidden';
             panel.setAttribute('role', 'menu');
             panel.hidden = true;
 
-            var aMod = document.createElement('a');
-            aMod.href = '/modules.html';
-            aMod.textContent = 'Eğitim modülleri';
-            aMod.className =
-                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
-            aMod.setAttribute('role', 'menuitem');
-
-            var aSim = document.createElement('a');
-            aSim.href = '/simulations.html';
-            aSim.textContent = 'Simülasyonlar';
-            aSim.className =
-                'block px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus-ring';
-            aSim.setAttribute('role', 'menuitem');
-
-            panel.appendChild(aMod);
-            panel.appendChild(aSim);
+            panel.appendChild(makeLink('/modules.html', 'Eğitim modülleri', ''));
+            panel.appendChild(makeLink('/simulations.html', 'Simülasyonlar', ''));
             wrap.appendChild(trig);
             wrap.appendChild(panel);
             return wrap;
         }
 
-        function makeCareerPathsLink() {
-            var a = document.createElement('a');
-            a.href = '/pricing.html';
-            a.textContent = 'Paketler';
-            a.className = NAV_ACCENT;
-            return a;
-        }
-
-        function makeEmployersLink() {
-            var a = document.createElement('a');
-            a.href = '/isverenler.html';
-            a.textContent = 'İşverenler İçin';
-            a.className = NAV_MUTED;
-            return a;
-        }
-
-        function makeAboutLink() {
-            var a = document.createElement('a');
-            a.href = '/hakkimizda';
-            a.textContent = 'Hakkımızda';
-            a.className = NAV_MUTED;
-            return a;
-        }
-
-        function makeContactNavLink() {
-            var a = document.createElement('a');
-            a.href = '/contact.html';
-            a.textContent = 'İletişim';
-            a.className = NAV_MUTED;
-            return a;
-        }
-
         var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
         if (desktopNav) {
-            desktopNav.className =
-                'hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex';
-            desktopNav.setAttribute('aria-label', 'Ana menü');
             desktopNav.innerHTML = '';
-            desktopNav.appendChild(makeHomeLink());
+            desktopNav.appendChild(makeLink('/', 'Ana sayfa', NAV_CLS));
             desktopNav.appendChild(makeDesktopPlatformBlock());
-            desktopNav.appendChild(makeCareerPathsLink());
-            desktopNav.appendChild(makeEmployersLink());
-            desktopNav.appendChild(makeBlogLink());
-            desktopNav.appendChild(makeAboutLink());
-            desktopNav.appendChild(makeContactNavLink());
+            desktopNav.appendChild(makeLink('/pricing.html', 'Paketler', NAV_CLS));
+            desktopNav.appendChild(makeLink('/isverenler.html', 'İşverenler İçin', NAV_MUTED));
+            desktopNav.appendChild(makeLink('/blog', 'Blog', NAV_CLS));
+            desktopNav.appendChild(makeLink('/hakkimizda', 'Hakkımızda', NAV_MUTED));
+            desktopNav.appendChild(makeLink('/contact.html', 'İletişim', NAV_MUTED));
         }
 
         document.querySelectorAll('header.fixed a.landing-nav-contact').forEach(function (el) {
@@ -661,100 +601,145 @@
             el.setAttribute('aria-hidden', 'true');
         });
 
-        var headerRow = document.querySelector('header.fixed .mx-auto.flex.h-16');
+        var headerRow = document.querySelector('header.fixed > div');
         if (headerRow) {
             var first = headerRow.firstElementChild;
             if (first && first.tagName === 'A' && !first.classList.contains('shrink-0')) {
                 first.classList.add('shrink-0');
             }
-            var right = headerRow.querySelector(':scope > div.flex.items-center');
-            if (right && !right.classList.contains('shrink-0')) {
-                right.classList.add('shrink-0');
-            }
         }
 
-        var mobilePanel = document.querySelector('header.fixed details > div');
-        var guest = document.getElementById('mobileGuestLinks');
-        if (mobilePanel && guest) {
-            while (mobilePanel.firstChild && mobilePanel.firstChild !== guest) {
-                mobilePanel.removeChild(mobilePanel.firstChild);
-            }
-            var frag = document.createDocumentFragment();
+        /* ── Mobile drawer rebuild ───────────────────────────── */
+        var drawer = document.getElementById('landingMobileDrawer');
+        if (!drawer) {
+            drawer = document.createElement('div');
+            drawer.id = 'landingMobileDrawer';
+            drawer.className = 'landing-mobile-drawer';
+            drawer.innerHTML =
+                '<div class="drawer-overlay"></div>' +
+                '<div class="drawer-panel">' +
+                '  <div class="drawer-header">' +
+                '    <span style="font-weight:700;font-size:1.125rem;color:#111827">Menü</span>' +
+                '    <button type="button" class="drawer-close" aria-label="Menüyü kapat">&times;</button>' +
+                '  </div>' +
+                '  <nav class="drawer-nav" id="drawerNav"></nav>' +
+                '</div>';
+            document.body.appendChild(drawer);
 
-            var drawerAccent = 'landing-nav-drawer-link block px-4 py-2.5 text-sm font-semibold text-blue-700 hover:bg-slate-50';
-            var drawerMuted =
-                'landing-nav-drawer-link block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50';
-
-            var homeA = document.createElement('a');
-            homeA.href = '/';
-            homeA.textContent = 'Ana sayfa';
-            homeA.className = drawerAccent;
-
-            var platHead = document.createElement('div');
-            platHead.className =
-                'landing-nav-drawer-heading px-4 pb-1 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500';
-            platHead.textContent = 'Platform';
-
-            var modA = document.createElement('a');
-            modA.href = '/modules.html';
-            modA.textContent = 'Eğitim modülleri';
-            modA.className = drawerAccent;
-
-            var simA = document.createElement('a');
-            simA.href = '/simulations.html';
-            simA.textContent = 'Simülasyonlar';
-            simA.className = drawerAccent;
-
-            var hrMid = document.createElement('hr');
-            hrMid.className = 'my-1 border-slate-100';
-
-            var careerA = document.createElement('a');
-            careerA.href = '/pricing.html';
-            careerA.textContent = 'Paketler';
-            careerA.className = drawerAccent;
-
-            var empA = document.createElement('a');
-            empA.href = '/isverenler.html';
-            empA.textContent = 'İşverenler İçin';
-            empA.className = drawerMuted;
-
-            var blogA = document.createElement('a');
-            blogA.href = '/blog';
-            blogA.textContent = 'Blog';
-            blogA.className = drawerAccent;
-
-            var aboutA = document.createElement('a');
-            aboutA.href = '/hakkimizda';
-            aboutA.textContent = 'Hakkımızda';
-            aboutA.className = drawerMuted;
-
-            var contactA = document.createElement('a');
-            contactA.href = '/contact.html';
-            contactA.textContent = 'İletişim';
-            contactA.className = drawerMuted;
-
-            var hrBeforeAuth = document.createElement('hr');
-            hrBeforeAuth.className = 'my-1 border-slate-100';
-
-            frag.appendChild(homeA);
-            frag.appendChild(platHead);
-            frag.appendChild(modA);
-            frag.appendChild(simA);
-            frag.appendChild(hrMid);
-            frag.appendChild(careerA);
-            frag.appendChild(empA);
-            frag.appendChild(blogA);
-            frag.appendChild(aboutA);
-            frag.appendChild(contactA);
-            frag.appendChild(hrBeforeAuth);
-            mobilePanel.insertBefore(frag, guest);
-
-            var mu = document.getElementById('mobileUserLinks');
-            if (mu && mu.nextElementSibling && mu.nextElementSibling.tagName === 'A' &&
-                mu.nextElementSibling.getAttribute('href') === '/contact.html') {
-                mu.nextElementSibling.remove();
-            }
+            drawer.querySelector('.drawer-overlay').addEventListener('click', function () {
+                closeMobileDrawer();
+            });
+            drawer.querySelector('.drawer-close').addEventListener('click', function () {
+                closeMobileDrawer();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && drawer.classList.contains('active')) {
+                    closeMobileDrawer();
+                }
+            });
         }
+
+        function closeMobileDrawer() {
+            drawer.classList.remove('active');
+            var h = document.querySelector('.hamburger');
+            if (h) {
+                h.classList.remove('active');
+                h.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.remove('nav-menu-open');
+            document.documentElement.classList.remove('nav-menu-open');
+        }
+
+        window.closeMobileNav = closeMobileDrawer;
+
+        var drawerNav = document.getElementById('drawerNav');
+        if (drawerNav) {
+            var df = document.createDocumentFragment();
+
+            var drawerItems = [
+                { href: '/', text: 'Ana sayfa', isHeading: false },
+                { href: null, text: 'Platform', isHeading: true },
+                { href: '/modules.html', text: 'Eğitim modülleri', isHeading: false },
+                { href: '/simulations.html', text: 'Simülasyonlar', isHeading: false },
+                { href: null, text: null, isDivider: true },
+                { href: '/pricing.html', text: 'Paketler', isHeading: false },
+                { href: '/isverenler.html', text: 'İşverenler İçin', isHeading: false },
+                { href: '/blog', text: 'Blog', isHeading: false },
+                { href: '/hakkimizda', text: 'Hakkımızda', isHeading: false },
+                { href: '/contact.html', text: 'İletişim', isHeading: false },
+                { href: null, text: null, isDivider: true },
+            ];
+
+            drawerItems.forEach(function (item) {
+                if (item.isDivider) {
+                    var hr = document.createElement('hr');
+                    hr.className = 'drawer-divider';
+                    df.appendChild(hr);
+                } else if (item.isHeading) {
+                    var h = document.createElement('div');
+                    h.className = 'drawer-heading';
+                    h.textContent = item.text;
+                    df.appendChild(h);
+                } else {
+                    var a = document.createElement('a');
+                    a.href = item.href;
+                    a.textContent = item.text;
+                    df.appendChild(a);
+                }
+            });
+
+            drawerNav.innerHTML = '';
+            drawerNav.appendChild(df);
+
+            /* Append guest auth links */
+            var guestSection = document.createElement('div');
+            guestSection.className = 'drawer-auth';
+            guestSection.id = 'mobileGuestLinks';
+            var loginA = document.createElement('a');
+            loginA.href = '/login.html';
+            loginA.textContent = 'Giriş';
+            loginA.className = 'drawer-login';
+            var signupA = document.createElement('a');
+            signupA.href = '/signup.html';
+            signupA.textContent = 'Ücretsiz başla';
+            signupA.className = 'drawer-signup';
+            guestSection.appendChild(loginA);
+            guestSection.appendChild(signupA);
+            drawerNav.appendChild(guestSection);
+
+            /* User links (hidden by default) */
+            var userSection = document.createElement('div');
+            userSection.className = 'drawer-auth';
+            userSection.id = 'mobileUserLinks';
+            userSection.style.display = 'none';
+            var logoutBtn = document.createElement('button');
+            logoutBtn.type = 'button';
+            logoutBtn.className = 'btn-logout drawer-login';
+            logoutBtn.textContent = 'Çıkış';
+            userSection.appendChild(logoutBtn);
+            drawerNav.appendChild(userSection);
+        }
+
+        /* Wire hamburger */
+        var hamburger = document.querySelector('.hamburger');
+        if (hamburger) {
+            hamburger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var willOpen = !drawer.classList.contains('active');
+                drawer.classList.toggle('active', willOpen);
+                hamburger.classList.toggle('active', willOpen);
+                hamburger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                document.body.classList.toggle('nav-menu-open', willOpen);
+                document.documentElement.classList.toggle('nav-menu-open', willOpen);
+            });
+        }
+
+        /* Wire drawer nav links to close */
+        drawerNav.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                closeMobileDrawer();
+            });
+        });
     }
 
     function initHamburgerMenu() {
@@ -1044,32 +1029,28 @@
     setupAuthStateListener();
     
     let scrollTicking = false;
-    let lastScrollY = window.pageYOffset || window.scrollY;
-    
-    function updateNavbarOnScroll() {
-        const navbar = document.querySelector('.navbar');
-        if (!navbar) return;
-        
+
+    function updateHeaderOnScroll() {
+        const header = document.querySelector('body.landing-site-body header.fixed');
+        if (!header) return;
+
         const scrollY = window.pageYOffset || window.scrollY;
-        
-        if (scrollY > 50) {
-            navbar.classList.add('scrolled');
+        if (scrollY > 10) {
+            header.classList.add('is-scrolled');
         } else {
-            navbar.classList.remove('scrolled');
+            header.classList.remove('is-scrolled');
         }
-        
         scrollTicking = false;
     }
-    
-    window.addEventListener('scroll', () => {
-        lastScrollY = window.pageYOffset || window.scrollY;
+
+    window.addEventListener('scroll', function () {
         if (!scrollTicking) {
             scrollTicking = true;
-            requestAnimationFrame(updateNavbarOnScroll);
+            requestAnimationFrame(updateHeaderOnScroll);
         }
     }, { passive: true });
-    
-    updateNavbarOnScroll();
+
+    updateHeaderOnScroll();
 
 })();
 

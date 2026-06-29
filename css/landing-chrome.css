@@ -1,6 +1,6 @@
 
 body.landing-site-body {
-  padding-top: 4rem;
+  padding-top: 72px;
   background: #f8f7f4 !important;
   color: #0a0f1c !important;
 }
@@ -17,43 +17,35 @@ html[data-theme="dark"] body.landing-site-body::before {
     radial-gradient(42rem 32rem at 50% 100%, rgba(99, 102, 241, 0.12), transparent 62%);
 }
 
+/* ── Dark theme: navbar ───────────────────────────────────────── */
 html[data-theme="dark"] body.landing-site-body header.fixed {
-  background: rgba(10, 15, 26, 0.85) !important;
-  border-bottom-color: rgba(71, 85, 105, 0.45) !important;
+  background: rgba(10, 15, 26, 0.82) !important;
+  border-bottom-color: rgba(71, 85, 105, 0.35) !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
-  border-color: rgba(71, 85, 105, 0.5) !important;
-}
-
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--platform,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger,
 html[data-theme="dark"] body.landing-site-body header.fixed #loginBtn,
 html[data-theme="dark"] body.landing-site-body header.fixed #userName,
 html[data-theme="dark"] body.landing-site-body .theme-toggle-btn {
-  color: #cbd5e1 !important;
+  color: #cbd5e1;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent:hover,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--platform:hover,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted:hover {
-  background: rgba(30, 41, 59, 0.8) !important;
-  color: #f8fafc !important;
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link:hover,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger:hover {
+  color: #60a5fa !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent.is-active,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent[aria-current="page"],
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--platform.is-active {
-  color: #f8fafc !important;
-  background: rgba(51, 65, 85, 0.55) !important;
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link.is-active,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link[aria-current="page"],
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.is-active {
+  color: #60a5fa !important;
 }
 
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted.is-active,
-html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted[aria-current="page"] {
-  color: #f8fafc !important;
-  background: rgba(51, 65, 85, 0.55) !important;
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link.is-active::after,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link[aria-current="page"]::after,
+html[data-theme="dark"] body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.is-active::after {
+  background: #60a5fa;
 }
 
 html[data-theme="dark"] body.landing-site-body .section,
@@ -1824,225 +1816,533 @@ html[data-theme='dark'] body.landing-site-body header.fixed .landing-brand-wordm
   color: #f8fafc;
 }
 
-/* Hesap menüsü paneli header satırında kesilmesin */
-body.landing-site-body header.fixed .mx-auto.flex.h-16 {
-  overflow: visible !important;
-}
+/* =============================================================
+   NAVBAR — Premium SaaS Tasarımı
+   ============================================================= */
 
-body.landing-site-body header.fixed .mx-auto.flex.h-16 > .flex.items-center {
-  overflow: visible !important;
-}
-
-body.landing-site-body header.fixed #userProfile {
-  overflow: visible !important;
-}
-
-/* Üst menü — tam kapsül: yalnızca .landing-nav-pill-link içeren nav */
-body.landing-site-body header.fixed nav[aria-label="Ana menü"]:has(.landing-nav-pill-link) {
-  flex: 1 1 0%;
-  min-width: 0;
-  padding: 0.28rem 0.35rem;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.9) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    0 10px 24px -18px rgba(15, 23, 42, 0.45);
-}
-
-/* Basit menü: :has() yok / eski önbellek — sınıf ile kesin; geniş “boş hap” kalkar */
-body.landing-site-body header.fixed nav.landing-nav--compact {
-  flex: 0 0 auto !important;
-  flex-grow: 0 !important;
-  flex-shrink: 0 !important;
-  min-width: 0;
-  max-width: 100%;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  justify-content: center;
-}
-
-body.landing-site-body header.fixed nav[aria-label="Ana menü"]:not(:has(.landing-nav-pill-link)) {
-  flex: 0 0 auto !important;
-  flex-grow: 0 !important;
-  flex-shrink: 0 !important;
-  min-width: 0;
-  max-width: 100%;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  justify-content: center;
-}
-
-/* Kapsül içi: yalnızca doğrudan linkler + Platform tetikleyici (açılır paneldeki <a> hariç) */
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.landing-nav-pill-link {
-  position: relative;
-  cursor: pointer;
-  border-radius: 999px;
-  padding: 0.4rem 0.72rem;
-  font-size: 0.8125rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+/* ── Header base ────────────────────────────────────────── */
+body.landing-site-body header.fixed {
+  height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,.06);
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    background 0.3s cubic-bezier(.22,.61,.36,1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-@media (min-width: 1280px) {
-  body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link,
-  body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.landing-nav-pill-link {
-    font-size: 0.875rem;
-    padding: 0.42rem 0.78rem;
-  }
+body.landing-site-body header.fixed .mx-auto.flex.items-center {
+  height: 72px;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent {
-  font-weight: 600;
-  color: #1d4ed8;
+/* Header scroll state — .is-scrolled via JS scroll listener */
+body.landing-site-body header.fixed.is-scrolled {
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom-color: rgba(0,0,0,.06);
+  box-shadow: 0 1px 0 rgba(0,0,0,.02);
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--accent:hover {
-  color: #1e3a8a;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
+/* ── Container ──────────────────────────────────────────── */
+body.landing-site-body header.fixed > div {
+  max-width: 1400px;
+  padding: 0 40px;
+  margin: 0 auto;
+  height: 72px;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--platform {
-  font-weight: 600;
-  color: #475569;
+/* ── Logo ───────────────────────────────────────────────── */
+body.landing-site-body header.fixed .landing-brand-link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--platform:hover {
-  color: #0f172a;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
+body.landing-site-body header.fixed .landing-brand-link img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted {
+body.landing-site-body header.fixed .landing-brand-wordmark {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #111827;
+}
+
+/* ── Desktop nav — clean text links ─────────────────────── */
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] {
+  display: flex !important;
+  align-items: center;
+  gap: 2px;
+  margin-left: 40px;
+  flex: 1;
+}
+
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] #navPlatformWrap > #navPlatformTrigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: #64748b;
+  color: #111827;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  line-height: 1.2;
+  text-decoration: none !important;
+  transition: color 0.3s cubic-bezier(.22,.61,.36,1);
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] .landing-nav-pill-link--muted:hover {
-  color: #334155;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link:hover,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] #navPlatformWrap > #navPlatformTrigger:hover {
+  color: #2563eb;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent.is-active,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent[aria-current="page"],
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.landing-nav-pill-link--platform.is-active {
-  color: #1d4ed8;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
-}
-
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--muted.is-active,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--muted[aria-current="page"] {
-  color: #0f172a;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 20px -16px rgba(15, 23, 42, 0.45);
-}
-
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent::after,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.landing-nav-pill-link::after {
-  content: "";
+/* ── Active page: underline only ──────────────────────────── */
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link::after,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] #navPlatformWrap > #navPlatformTrigger::after {
+  content: '';
   position: absolute;
-  left: 0;
-  bottom: -0.32rem;
-  width: 100%;
+  left: 0.65rem;
+  right: 0.65rem;
+  bottom: 0.2rem;
   height: 2px;
-  border-radius: 999px;
+  border-radius: 2px;
+  background: #2563eb;
   transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.22s ease;
-  background: linear-gradient(90deg, var(--rc-brand), #38bdf8);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(.22,.61,.36,1);
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent:hover::after,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.landing-nav-pill-link:hover::after {
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link:hover::after,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] #navPlatformWrap > #navPlatformTrigger:hover::after {
+  transform: scaleX(0);
+}
+
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link.is-active::after,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link[aria-current=”page”]::after,
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] #navPlatformWrap > #navPlatformTrigger.is-active::after {
   transform: scaleX(1);
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--muted::after {
+/* No trailing line on muted links */
+body.landing-site-body header.fixed nav[aria-label=”Ana menü”] > a.landing-nav-pill-link--muted::after {
   display: none;
 }
 
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent.is-active::after,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] > a.landing-nav-pill-link--accent[aria-current="page"]::after,
-body.landing-site-body header.fixed nav[aria-label="Ana menü"] #navPlatformWrap > #navPlatformTrigger.is-active::after {
-  transform: scaleX(1);
+/* ── Platform chevron ────────────────────────────────────── */
+body.landing-site-body header.fixed .nav-platform-chevron {
+  font-size: 0.6rem;
+  transition: transform 0.3s cubic-bezier(.22,.61,.36,1);
+  display: inline-block;
 }
 
-/* Platform menüsü — hesap paneli ile uyumlu aç/kapa */
-body.landing-site-body header.fixed #navPlatformTrigger {
-  font: inherit;
-  z-index: 65;
+body.landing-site-body header.fixed #navPlatformTrigger[aria-expanded=”true”] .nav-platform-chevron {
+  transform: rotate(-180deg);
+}
+
+/* ── Platform dropdown panel ─────────────────────────────── */
+body.landing-site-body .nav-platform-dropdown {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  z-index: 60;
+  min-width: 200px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 4px 6px -2px rgba(0,0,0,.04),
+    0 12px 32px -8px rgba(0,0,0,.10),
+    0 0 0 1px rgba(0,0,0,.02);
+  transform: translateX(-50%) scale(.96);
+  transform-origin: top;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s cubic-bezier(.22,.61,.36,1),
+    transform 0.25s cubic-bezier(.22,.61,.36,1);
 }
 
 body.landing-site-body .nav-platform-dropdown:not(.hidden) {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  pointer-events: auto;
 }
 
-body.landing-site-body #navPlatformPanel.hidden,
-body.landing-site-body #navPlatformPanel[hidden] {
-  display: none !important;
+body.landing-site-body .nav-platform-dropdown a {
+  display: block;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+  border-radius: 12px;
+  text-decoration: none !important;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 body.landing-site-body .nav-platform-dropdown a:hover {
-  background: #f8fafc;
+  background: #f1f5f9;
+  color: #2563eb;
 }
 
-html[data-theme="dark"] body.landing-site-body .nav-platform-dropdown {
-  background: #111827 !important;
-  border-color: rgba(71, 85, 105, 0.55) !important;
+/* ── User profile card ──────────────────────────────────── */
+body.landing-site-body header.fixed #userProfile {
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center;
+}
+
+body.landing-site-body header.fixed #userProfileTrigger {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border-radius: 100px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.3s cubic-bezier(.22,.61,.36,1);
+}
+
+body.landing-site-body header.fixed #userProfileTrigger:hover {
+  border-color: rgba(0,0,0,.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  transform: translateY(-1px);
+}
+
+body.landing-site-body header.fixed #userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+body.landing-site-body header.fixed #userName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+body.landing-site-body header.fixed #userProfileTrigger .user-card-chevron {
+  font-size: 0.5rem;
+  color: #94a3b8;
+  transition: transform 0.3s cubic-bezier(.22,.61,.36,1);
+  margin-left: 2px;
+}
+
+body.landing-site-body header.fixed #userProfileTrigger[aria-expanded=”true”] .user-card-chevron {
+  transform: rotate(-180deg);
+}
+
+/* ── User account dropdown ──────────────────────────────── */
+body.landing-site-body .user-account-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 60;
+  min-width: 200px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   box-shadow:
-    0 1px 2px rgba(2, 6, 23, 0.45),
-    0 18px 34px -20px rgba(2, 6, 23, 0.75) !important;
+    0 4px 6px -2px rgba(0,0,0,.04),
+    0 12px 32px -8px rgba(0,0,0,.10);
+  transform: scale(.96);
+  transform-origin: top right;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s cubic-bezier(.22,.61,.36,1),
+    transform 0.25s cubic-bezier(.22,.61,.36,1);
 }
 
-html[data-theme="dark"] body.landing-site-body .nav-platform-dropdown a {
-  color: #e2e8f0 !important;
+body.landing-site-body .user-account-dropdown:not(.hidden) {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
-html[data-theme="dark"] body.landing-site-body .nav-platform-dropdown a:hover {
-  background: rgba(30, 41, 59, 0.85) !important;
+body.landing-site-body .user-account-dropdown a,
+body.landing-site-body .user-account-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+  border-radius: 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none !important;
+  transition: background 0.2s ease;
 }
 
-/*
- * Sağ navbar — profil hapı (#userProfileTrigger): açık temada beyaz hap stili;
- * koyu tamamlayıcısı yukarıda html[data-theme="dark"] bloklarında.
- */
-html:not([data-theme="dark"]) body.landing-site-body header.fixed #userProfileTrigger {
-  border-color: #e2e8f0 !important;
-  background: #f8fafc !important;
+body.landing-site-body .user-account-dropdown a:hover,
+body.landing-site-body .user-account-dropdown button:hover {
+  background: #f1f5f9;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body header.fixed #userProfileTrigger:hover {
-  border-color: #cbd5e1 !important;
-  background: #f1f5f9 !important;
+body.landing-site-body .user-account-dropdown .border-t {
+  margin: 6px 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
 }
 
-html:not([data-theme="dark"]) body.landing-site-body header.fixed #logoutBtn {
-  border-color: #e2e8f0 !important;
-  background: #ffffff !important;
-  color: #334155 !important;
+/* ── Auth buttons (login / signup) ────────────────────────── */
+body.landing-site-body header.fixed #loginBtn {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
-html:not([data-theme="dark"]) body.landing-site-body header.fixed #logoutBtn:hover {
-  background: #f8fafc !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
+body.landing-site-body header.fixed #loginBtn:hover {
+  color: #2563eb;
+  background: #f1f5f9;
+}
+
+body.landing-site-body header.fixed #signupBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #111827;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition:
+    background 0.2s ease,
+    transform 0.3s cubic-bezier(.22,.61,.36,1);
+}
+
+body.landing-site-body header.fixed #signupBtn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* ── Mobile hamburger ────────────────────────────────────── */
+body.landing-site-body header.fixed .hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  z-index: 110;
+}
+
+body.landing-site-body header.fixed .hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: #111827;
+  transition: all 0.3s cubic-bezier(.22,.61,.36,1);
+  transform-origin: center;
+}
+
+body.landing-site-body header.fixed .hamburger.active span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+body.landing-site-body header.fixed .hamburger.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+body.landing-site-body header.fixed .hamburger.active span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ── Mobile drawer — slide-in from left ──────────────────── */
+body.landing-site-body .landing-mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body.landing-site-body .landing-mobile-drawer.active {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.24);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(.22,.61,.36,1);
+}
+
+body.landing-site-body .landing-mobile-drawer.active .drawer-overlay {
+  opacity: 1;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 80vw;
+  background: #ffffff;
+  padding: 24px 20px 32px;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(.22,.61,.36,1);
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(0,0,0,.08);
+}
+
+body.landing-site-body .landing-mobile-drawer.active .drawer-panel {
+  transform: translateX(0);
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #64748b;
+  transition: background 0.2s ease;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-close:hover {
+  background: #e2e8f0;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-nav a {
+  display: block;
+  padding: 12px 10px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #111827;
+  border-radius: 10px;
+  text-decoration: none !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-nav a:hover {
+  background: #f1f5f9;
+  color: #2563eb;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-nav a[aria-current=”page”] {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-nav .drawer-heading {
+  padding: 8px 10px 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-divider {
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-auth {
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-auth .drawer-login {
+  display: block;
+  padding: 12px 10px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #111827;
+  border-radius: 10px;
+  text-decoration: none !important;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-auth .drawer-signup {
+  display: block;
+  padding: 12px 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #111827;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none !important;
+}
+
+body.landing-site-body .landing-mobile-drawer .drawer-auth .drawer-signup:hover {
+  background: #2563eb;
 }
 
 /* Giriş yapılmışken tema anahtarı hesap menüsünde; şeritte kalan yedek düğmeyi gizle */
