@@ -1,6 +1,6 @@
 (function (global) {
     /** Varsayılan API base URL — `SEBS_API_BASE_URL` (window) veya `VITE_API_BASE_URL` env var ile override edilebilir */
-    var DEFAULT_REMOTE_API_ORIGIN = 'https://sebs-z9tr.onrender.com';
+    var DEFAULT_REMOTE_API_ORIGIN = 'https://api.sebsglobal.com';
 
     function normalizeApiBase(raw) {
         if (!raw || typeof raw !== 'string') return '';
@@ -17,7 +17,6 @@
     function hostnameNeedsDefaultRemoteApi(hostname) {
         if (!hostname) return false;
         var h = String(hostname).toLowerCase();
-        if (h === 'sebs-z9tr.onrender.com') return false;
         if (h === 'localhost' || h === '127.0.0.1') return false;
         if (h === 'sebsglobal.com' || h === 'www.sebsglobal.com') return true;
         if (h.endsWith('.vercel.app')) return true;
@@ -44,9 +43,6 @@
             return sameOriginApi(loc);
         }
 
-        if (loc.hostname.toLowerCase() === 'sebs-z9tr.onrender.com') {
-            return sameOriginApi(loc);
-        }
 
         if (hostnameNeedsDefaultRemoteApi(loc.hostname)) {
             return normalizeApiBase(DEFAULT_REMOTE_API_ORIGIN);

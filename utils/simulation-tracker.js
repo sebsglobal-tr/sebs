@@ -36,9 +36,6 @@
         if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
             return sameOrigin;
         }
-        if (String(loc.hostname).toLowerCase() === 'sebs-z9tr.onrender.com') {
-            return sameOrigin;
-        }
         const h = String(loc.hostname).toLowerCase();
         const needsRemote =
             h === 'sebsglobal.com' ||
@@ -48,7 +45,7 @@
             h.endsWith('.netlify.app') ||
             h.endsWith('.cloudflarepages.com');
         if (needsRemote) {
-            return normalize('https://sebs-z9tr.onrender.com');
+            return normalize('https://api.sebsglobal.com');
         }
         return sameOrigin;
     }

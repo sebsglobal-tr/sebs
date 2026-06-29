@@ -36,7 +36,7 @@ function getApiBase() {
     if (typeof window.getSebsApiBase === 'function') {
         return window.getSebsApiBase();
     }
-    var defaultRemote = 'https://sebs-z9tr.onrender.com/api';
+    var defaultRemote = 'https://api.sebsglobal.com/api';
     var loc = window.location;
     if (loc && loc.hostname) {
         var h = String(loc.hostname).toLowerCase();
@@ -49,9 +49,6 @@ function getApiBase() {
             h.endsWith('.cloudflarepages.com')
         ) {
             return defaultRemote;
-        }
-        if (h === 'localhost' || h === '127.0.0.1' || h === 'sebs-z9tr.onrender.com') {
-            return (loc.origin || '').replace(/\/$/, '') + '/api';
         }
     }
     return (loc && loc.origin ? loc.origin : 'http://localhost:8006') + '/api';
