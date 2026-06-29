@@ -534,14 +534,14 @@
         document.body.classList.toggle('sebs-user-logged-in', !!loggedIn);
     }
 
-    /** Landing üst menü: Ana sayfa | Platform | Paketler | İşverenler | Blog | Hakkımızda | İletişim (landing-chrome.css). */
+    /** Üst menü: sebs-header__nav içini doldur + mobil drawer */
     function normalizeLandingNavOrder() {
         if (!document.body || !document.body.classList.contains('landing-site-body')) {
             return;
         }
 
-        var NAV_CLS = 'landing-nav-pill-link focus-ring';
-        var NAV_MUTED = 'landing-nav-pill-link landing-nav-pill-link--muted focus-ring';
+        var NAV_CLS = 'landing-nav-pill-link';
+        var NAV_MUTED = 'landing-nav-pill-link landing-nav-pill-link--muted';
 
         function makeLink(href, text, cls) {
             var a = document.createElement('a');
@@ -584,7 +584,7 @@
             return wrap;
         }
 
-        var desktopNav = document.querySelector('header.fixed nav[aria-label="Ana menü"]');
+        var desktopNav = document.getElementById('sebsHeaderNav');
         if (desktopNav) {
             desktopNav.innerHTML = '';
             desktopNav.appendChild(makeLink('/', 'Ana sayfa', NAV_CLS));
@@ -596,7 +596,7 @@
             desktopNav.appendChild(makeLink('/contact.html', 'İletişim', NAV_MUTED));
         }
 
-        document.querySelectorAll('header.fixed a.landing-nav-contact').forEach(function (el) {
+        document.querySelectorAll('.sebs-header__nav a.landing-nav-contact').forEach(function (el) {
             el.style.display = 'none';
             el.setAttribute('aria-hidden', 'true');
         });
@@ -609,42 +609,19 @@
             }
         }
 
-        /* ── Mobile drawer rebuild ───────────────────────────── */
-        var drawer = document.getElementById('landingMobileDrawer');
-        if (!drawer) {
-            drawer = document.createElement('div');
-            drawer.id = 'landingMobileDrawer';
-            drawer.className = 'landing-mobile-drawer';
-            drawer.innerHTML =
-                '<div class="drawer-overlay"></div>' +
-                '<div class="drawer-panel">' +
-                '  <div class="drawer-header">' +
-                '    <span style="font-weight:700;font-size:1.125rem;color:#111827">Menü</span>' +
-                '    <button type="button" class="drawer-close" aria-label="Menüyü kapat">&times;</button>' +
-                '  </div>' +
-                '  <nav class="drawer-nav" id="drawerNav"></nav>' +
-                '</div>';
-            document.body.appendChild(drawer);
-
-            drawer.querySelector('.drawer-overlay').addEventListener('click', function () {
-                closeMobileDrawer();
-            });
-            drawer.querySelector('.drawer-close').addEventListener('click', function () {
-                closeMobileDrawer();
-            });
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && drawer.classList.contains('active')) {
-                    closeMobileDrawer();
-                }
-            });
-        }
+        /* ── Mobile drawer ───────────────────────────────────── */
+        var drawer = document.getElementById('sebsMobileDrawer');
+        var drawerNav = document.getElementById('sebsDrawerNav');
+        var hamburger = document.getElementById('sebsHamburger');
 
         function closeMobileDrawer() {
-            drawer.classList.remove('active');
-            var h = document.querySelector('.hamburger');
-            if (h) {
-                h.classList.remove('active');
-                h.setAttribute('aria-expanded', 'false');
+            if (drawer) {
+                drawer.classList.remove('active');
+                drawer.setAttribute('aria-hidden', 'true');
+            }
+            if (hamburger) {
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
             }
             document.body.classList.remove('nav-menu-open');
             document.documentElement.classList.remove('nav-menu-open');
@@ -652,7 +629,34 @@
 
         window.closeMobileNav = closeMobileDrawer;
 
-        var drawerNav = document.getElementById('drawerNav');
+        if (hamburger && drawer) {
+            var overlay = drawer.querySelector('.sebs-drawer__overlay');
+            var closeBtn = document.getElementById('sebsDrawerClose');
+
+            if (overlay) {
+                overlay.addEventListener('click', closeMobileDrawer);
+            }
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeMobileDrawer);
+            }
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && drawer.classList.contains('active')) {
+                    closeMobileDrawer();
+                }
+            });
+
+            hamburger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var willOpen = !drawer.classList.contains('active');
+                drawer.classList.toggle('active', willOpen);
+                drawer.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+                hamburger.classList.toggle('active', willOpen);
+                hamburger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                document.body.classList.toggle('nav-menu-open', willOpen);
+                document.documentElement.classList.toggle('nav-menu-open', willOpen);
+            });
+        }
+
         if (drawerNav) {
             var df = document.createDocumentFragment();
 
@@ -691,7 +695,7 @@
             drawerNav.innerHTML = '';
             drawerNav.appendChild(df);
 
-            /* Append guest auth links */
+            /* Guest auth links */
             var guestSection = document.createElement('div');
             guestSection.className = 'drawer-auth';
             guestSection.id = 'mobileGuestLinks';
@@ -718,29 +722,13 @@
             logoutBtn.textContent = 'Çıkış';
             userSection.appendChild(logoutBtn);
             drawerNav.appendChild(userSection);
-        }
 
-        /* Wire hamburger */
-        var hamburger = document.querySelector('.hamburger');
-        if (hamburger) {
-            hamburger.addEventListener('click', function (e) {
-                e.stopPropagation();
-                var willOpen = !drawer.classList.contains('active');
-                drawer.classList.toggle('active', willOpen);
-                hamburger.classList.toggle('active', willOpen);
-                hamburger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-                document.body.classList.toggle('nav-menu-open', willOpen);
-                document.documentElement.classList.toggle('nav-menu-open', willOpen);
+            drawerNav.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    closeMobileDrawer();
+                });
             });
         }
-
-        /* Wire drawer nav links to close */
-        drawerNav.querySelectorAll('a').forEach(function (a) {
-            a.addEventListener('click', function () {
-                closeMobileDrawer();
-            });
-        });
-    }
 
     function initHamburgerMenu() {
         const hamburger = document.querySelector('.hamburger');
@@ -1031,7 +1019,7 @@
     let scrollTicking = false;
 
     function updateHeaderOnScroll() {
-        const header = document.querySelector('body.landing-site-body header.fixed');
+        const header = document.querySelector('.sebs-header');
         if (!header) return;
 
         const scrollY = window.pageYOffset || window.scrollY;
