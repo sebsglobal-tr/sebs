@@ -79,8 +79,8 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
             const useSubscription = pkg && shouldUseSubscription(pkg, billingMode);
 
             const data = useSubscription
-                ? await createSubscriptionSession(pool, req, req.user.userId, req.body)
-                : await createCheckoutSession(pool, req, req.user.userId, req.body);
+                ? await createSubscriptionSession(pool, req, req.user.id, req.body)
+                : await createCheckoutSession(pool, req, req.user.id, req.body);
 
             if (data && !data.billingMode) {
                 data.billingMode = resolveBillingModeFromRequest(req.body, pkg);
@@ -334,7 +334,7 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
                  FROM payment_orders
                  WHERE conversation_id = $1 AND user_id = $2
                  LIMIT 1`,
-                [conv, req.user.userId]
+                [conv, req.user.id]
             );
             if (!r.rows.length) {
                 return res.status(404).json({ success: false, message: 'Sipariş bulunamadı' });
@@ -348,7 +348,7 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
                      FROM user_subscriptions
                      WHERE iyzico_subscription_ref = $1 AND user_id = $2
                      LIMIT 1`,
-                    [row.subscription_ref, req.user.userId]
+                    [row.subscription_ref, req.user.id]
                 );
                 if (subR.rows.length) subscription = subR.rows[0];
             }
@@ -384,7 +384,7 @@ function registerIyzicoPaymentRoutes(app, { pool, authenticateToken }) {
                  WHERE user_id = $1
                  ORDER BY updated_at DESC
                  LIMIT 5`,
-                [req.user.userId]
+                [req.user.id]
             );
             return res.json({ success: true, data: { subscriptions: r.rows } });
         } catch (error) {
