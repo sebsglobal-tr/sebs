@@ -85,8 +85,8 @@ app.use('/api/evaluation', evaluationRoutes);
 /* ── Iyzico Payment Routes ─────────────────────────────── */
 import { authenticateSupabase } from './middleware/supabase-auth.middleware.js';
 try {
-  const { getPaymentPool } = _require('./lib/payment-pool.js');
-  const { registerIyzicoPaymentRoutes } = _require('./routes/iyzico-payments.js');
+  const { getPaymentPool } = _require('./lib/payment-pool.cjs');
+  const { registerIyzicoPaymentRoutes } = _require('./routes/iyzico-payments.cjs');
   const paymentPool = getPaymentPool();
   registerIyzicoPaymentRoutes(app, { pool: paymentPool, authenticateToken: authenticateSupabase });
   console.log('✅ Iyzico payment routes registered');
