@@ -329,6 +329,21 @@ model UserModuleSession {
   @@map("user_module_sessions")
 }
 
+// Enrollment Model
+model Enrollment {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  courseId   String   @map("course_id")
+  isActive   Boolean  @default(true) @map("is_active")
+  enrolledAt DateTime @default(now()) @map("enrolled_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
 // Certificate Model
 model Certificate {
   id             String   @id @default(uuid())
