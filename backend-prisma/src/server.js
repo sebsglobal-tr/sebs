@@ -34,9 +34,10 @@ app.use(helmet({
   contentSecurityPolicy: false // Allow inline scripts for frontend
 }));
 app.use(cors({
-  origin: '*', // Allow all origins for static files
+  origin: '*',
   credentials: true
 }));
+app.set('trust proxy', 1);
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -87,8 +88,10 @@ import { authenticateSupabase } from './middleware/supabase-auth.middleware.js';
 try {
   const { getPaymentPool } = _require('./lib/payment-pool.cjs');
   const { registerIyzicoPaymentRoutes } = _require('./routes/iyzico-payments.cjs');
+  const { registerPaymentApiRoutes } = _require('./routes/payment-api.cjs');
   const paymentPool = getPaymentPool();
   registerIyzicoPaymentRoutes(app, { pool: paymentPool, authenticateToken: authenticateSupabase });
+  registerPaymentApiRoutes(app, { pool: paymentPool });
   console.log('✅ Iyzico payment routes registered');
 } catch (err) {
   console.warn('⚠️ Iyzico payment routes skipped:', err.message);
