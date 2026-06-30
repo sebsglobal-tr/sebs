@@ -1,23 +1,23 @@
 const path = require('path');
 const fs = require('fs');
 const rateLimit = require('express-rate-limit');
-const { isIyzicoConfigured } = require('../lib/iyzico-checkout');
-const { parseWebhookBody, verifyHppWebhookSignature } = require('../lib/iyzico-webhook');
-const { shouldUseSubscription, resolveBillingModeFromRequest } = require('../lib/iyzico-subscription-plans');
+const { isIyzicoConfigured } = require('../lib/iyzico-checkout.cjs');
+const { parseWebhookBody, verifyHppWebhookSignature } = require('../lib/iyzico-webhook.cjs');
+const { shouldUseSubscription, resolveBillingModeFromRequest } = require('../lib/iyzico-subscription-plans.cjs');
 const {
     frontendBaseUrl,
     createCheckoutSession,
     processCheckoutToken,
     markPaymentFailed,
     findOrderByTokenOrConversation
-} = require('../lib/iyzico-payment-flow');
+} = require('../lib/iyzico-payment-flow.cjs');
 const {
     ensureSubscriptionTables,
     createSubscriptionSession,
     processSubscriptionToken,
     handleSubscriptionWebhook,
     isSubscriptionWebhookEvent
-} = require('../lib/iyzico-subscription-flow');
+} = require('../lib/iyzico-subscription-flow.cjs');
 
 async function ensurePaymentOrdersTable(pool) {
     try {

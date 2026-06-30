@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { getExpectedPrice, normalizeLevel, getRoadPackageLabel } = require('./package-prices');
+const { getExpectedPrice, normalizeLevel, getRoadPackageLabel } = require('./package-prices.cjs');
 
 let Iyzipay = null;
 try {

@@ -1,8 +1,8 @@
-const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./package-prices');
-const { initializeCheckoutForm, retrieveCheckoutForm } = require('./iyzico-checkout');
-const { grantPackagePurchase } = require('./grant-purchase');
-const { verifyHppWebhookSignature } = require('./iyzico-webhook');
-const { subscriptionPeriodDays, resolveBillingModeFromRequest } = require('./iyzico-subscription-plans');
+const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./package-prices.cjs');
+const { initializeCheckoutForm, retrieveCheckoutForm } = require('./iyzico-checkout.cjs');
+const { grantPackagePurchase } = require('./grant-purchase.cjs');
+const { verifyHppWebhookSignature } = require('./iyzico-webhook.cjs');
+const { subscriptionPeriodDays, resolveBillingModeFromRequest } = require('./iyzico-subscription-plans.cjs');
 
 const ROAD_PACKAGE_SLUGS = new Set(['ilk-adim', 'yukselis', 'zirve']);
 

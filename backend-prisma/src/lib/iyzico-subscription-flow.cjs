@@ -1,26 +1,26 @@
-const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./package-prices');
+const { getExpectedPrice, normalizeLevel, ROAD_STAGE_TO_LEVEL } = require('./package-prices.cjs');
 const {
     subscriptionPeriodDays,
     shouldUseSubscription,
     getPricingPlanRef,
     planRefToLevel,
     planRefToPackageSlug
-} = require('./iyzico-subscription-plans');
+} = require('./iyzico-subscription-plans.cjs');
 const {
     initializeSubscriptionCheckoutForm,
     retrieveSubscriptionCheckoutForm,
     retrieveSubscriptionDetail,
     upgradeSubscription
-} = require('./iyzico-subscription');
-const { grantPackagePurchase } = require('./grant-purchase');
+} = require('./iyzico-subscription.cjs');
+const { grantPackagePurchase } = require('./grant-purchase.cjs');
 const {
     backendBaseUrl,
     frontendBaseUrl,
     resolvePackageInput,
     findOrderByTokenOrConversation,
     markPaymentFailed
-} = require('./iyzico-payment-flow');
-const { verifyHppWebhookSignature } = require('./iyzico-webhook');
+} = require('./iyzico-payment-flow.cjs');
+const { verifyHppWebhookSignature } = require('./iyzico-webhook.cjs');
 
 function subscriptionCallbackUrl(req) {
     const explicit = (process.env.IYZICO_SUBSCRIPTION_CALLBACK_URL || '').trim();

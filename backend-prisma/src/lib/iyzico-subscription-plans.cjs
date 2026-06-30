@@ -1,4 +1,4 @@
-const { ROAD_STAGE_TO_LEVEL } = require('./package-prices');
+const { ROAD_STAGE_TO_LEVEL } = require('./package-prices.cjs');
 
 /** iyzico panelindeki ödeme planı referans kodları (env ile override edilebilir). */
 const DEFAULT_PLAN_REFS = {

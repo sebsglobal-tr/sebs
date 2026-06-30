@@ -5,8 +5,8 @@ const {
     conversationId,
     splitName,
     buildAddress
-} = require('./iyzico-checkout');
-const { getPricingPlanRef } = require('./iyzico-subscription-plans');
+} = require('./iyzico-checkout.cjs');
+const { getPricingPlanRef } = require('./iyzico-subscription-plans.cjs');
 
 let Iyzipay = null;
 try {
